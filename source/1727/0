@@ -1,0 +1,87 @@
+namespace Converter
+
+type Api = {
+    romanToInt: string -> int
+    intToRoman: int -> string
+    urnfieldToInt: string -> int
+    intToUrnfield: int -> string
+    romanToUrnfield: string -> string
+    urnfieldToRoman: string -> string
+}
+
+[<AutoOpen>]
+module Impl =
+    let romanMap = [
+        ("I" , 1   )
+        ("IV", 4   )
+        ("V" , 5   )
+        ("IX", 9   )
+        ("X" , 10  )
+        ("XL", 40  )
+        ("L" , 50  )
+        ("XC", 90  )
+        ("C" , 100 )
+        ("CD", 400 )
+        ("D" , 500 )
+        ("CM", 900 )
+        ("M" , 1000)
+    ]
+
+    let urnfieldMap = [
+        ("/" , 1   )
+        (@"\", 5   )
+    ]
+
+    let convertToInt map (text: string): int =
+        let fromRomToInt symb = 
+            map |> List.tryFind (fun (r, n) -> r = symb)
+                |> fun x -> match x with
+                            | Some(r, n) -> Some(n)
+                            | None -> None
+
+        let rec calculate (symbols: char list) temp =
+            match symbols with
+            | h1::h2::tail -> 
+                match fromRomToInt <| System.String.Concat [h1; h2] with
+                | Some(x) -> temp + x |> calculate tail
+                | None -> match fromRomToInt (h1.ToString()) with
+                          | Some(x) -> temp + x |> calculate ([h2]@tail)
+                          | None -> 0
+            | h::t ->     
+                match fromRomToInt <| h.ToString() with
+                | Some(x) -> temp + x
+                | None -> 0
+            | [] -> temp
+
+        calculate [for c in text -> c] 0
+
+
+    let convertToSymbols (prepend: bool) map number =
+        let getFstMatch number =
+            map |> List.rev 
+                |> List.find (fun (r, n) -> number - n >= 0)
+
+        let rec calculate number temp =
+            let fstMatch = getFstMatch number
+            let temp = match prepend with 
+                       | true -> temp + (fstMatch |> fst) 
+                       | false -> (fstMatch |> fst) + temp
+            match number - (fstMatch |> snd) with
+            | 0 -> temp
+            | n -> calculate n temp
+    
+        calculate number ""
+
+
+    let api: Api = {
+        romanToInt = convertToInt romanMap
+        intToRoman = convertToSymbols true romanMap
+        urnfieldToInt = convertToInt urnfieldMap
+        intToUrnfield = convertToSymbols false urnfieldMap
+        romanToUrnfield = 
+            convertToInt romanMap
+            >> convertToSymbols false urnfieldMap
+        urnfieldToRoman =
+            convertToInt urnfieldMap 
+            >> convertToSymbols true romanMap
+    }

@@ -1,0 +1,94 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+<span class="l">38: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">// Computation expression for </span>
+<span class="c">// Cartesian products.</span>
+<span class="c">// I use lists here, but any type with</span>
+<span class="c">// aggregate operations will work </span>
+<span class="c">// (e.g. sequences).</span>
+<span class="c">// Notice how tiny it would be without</span>
+<span class="c">// all these comments and formatting -- </span>
+<span class="c">// just three lines of code!</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="t">Product</span> () <span class="o">=</span>
+
+  <span class="k">member</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">this</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="f">Bind</span> (<span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="i">l</span>,<span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="f">f</span>) <span class="o">=</span>
+    <span class="c">// Collect lets you capture the result</span>
+    <span class="c">// in a list, but other operations </span>
+    <span class="c">// are possible.  For example, map </span>
+    <span class="c">// builds a hierarchy, and iter will </span>
+    <span class="c">// let you use the results without </span>
+    <span class="c">// aggregating them (return must be </span>
+    <span class="c">// modified as shown below).</span>
+    <span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs7', 7)" onmouseover="showTip(event, 'fs7', 7)" class="f">collect</span> <span onmouseout="hideTip(event, 'fs5', 8)" onmouseover="showTip(event, 'fs5', 8)" class="f">f</span> <span onmouseout="hideTip(event, 'fs4', 9)" onmouseover="showTip(event, 'fs4', 9)" class="i">l</span>
+
+  <span class="k">member</span> <span onmouseout="hideTip(event, 'fs2', 10)" onmouseover="showTip(event, 'fs2', 10)" class="i">this</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs8', 11)" onmouseover="showTip(event, 'fs8', 11)" class="f">Return</span> <span onmouseout="hideTip(event, 'fs9', 12)" onmouseover="showTip(event, 'fs9', 12)" class="i">n</span> <span class="o">=</span> 
+    <span class="c">// For collect and map:</span>
+    [<span onmouseout="hideTip(event, 'fs9', 13)" onmouseover="showTip(event, 'fs9', 13)" class="i">n</span>]
+    <span class="c">// For iter:</span>
+    <span class="c">//()</span>
+
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs10', 14)" onmouseover="showTip(event, 'fs10', 14)" class="i">enumeratedPizzas</span> <span class="o">=</span> 
+  <span onmouseout="hideTip(event, 'fs1', 15)" onmouseover="showTip(event, 'fs1', 15)" class="t">Product</span>() {
+    <span class="c">// I never met a pizza I didn&#39;t like.</span>
+    <span class="k">let!</span> <span onmouseout="hideTip(event, 'fs11', 16)" onmouseover="showTip(event, 'fs11', 16)" class="i">x</span> <span class="o">=</span> [<span class="s">&quot;New York&quot;</span>;<span class="s">&quot;Chicago&quot;</span>]
+    <span class="k">let!</span> <span onmouseout="hideTip(event, 'fs12', 17)" onmouseover="showTip(event, 'fs12', 17)" class="i">y</span> <span class="o">=</span> [<span class="s">&quot;Pepperoni&quot;</span>;<span class="s">&quot;Sausage&quot;</span>]
+    <span class="k">let!</span> <span onmouseout="hideTip(event, 'fs13', 18)" onmouseover="showTip(event, 'fs13', 18)" class="i">z</span> <span class="o">=</span> [<span class="s">&quot;Cheese&quot;</span>;<span class="s">&quot;Double Cheese&quot;</span>]
+    <span class="c">// I capture the results in a tuple,</span>
+    <span class="c">// but you can do whatever here,</span>
+    <span class="c">// depending on aggregation, etc.</span>
+    <span class="k">return</span> <span onmouseout="hideTip(event, 'fs11', 19)" onmouseover="showTip(event, 'fs11', 19)" class="i">x</span>,<span onmouseout="hideTip(event, 'fs12', 20)" onmouseover="showTip(event, 'fs12', 20)" class="i">y</span>,<span onmouseout="hideTip(event, 'fs13', 21)" onmouseover="showTip(event, 'fs13', 21)" class="i">z</span>
+  }
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">Multiple items<br />type Product =<br />&#160;&#160;new : unit -&gt; Product<br />&#160;&#160;member Bind : l:&#39;b list * f:(&#39;b -&gt; &#39;c list) -&gt; &#39;c list<br />&#160;&#160;member Return : n:&#39;a -&gt; &#39;a list<br /><br />Full name: Script.Product<br /><br />--------------------<br />new : unit -&gt; Product</div>
+<div class="tip" id="fs2">val this : Product</div>
+<div class="tip" id="fs3">member Product.Bind : l:&#39;b list * f:(&#39;b -&gt; &#39;c list) -&gt; &#39;c list<br /><br />Full name: Script.Product.Bind</div>
+<div class="tip" id="fs4">val l : &#39;b list</div>
+<div class="tip" id="fs5">val f : (&#39;b -&gt; &#39;c list)</div>
+<div class="tip" id="fs6">Multiple items<br />module List<br /><br />from Microsoft.FSharp.Collections<br /><br />--------------------<br />type List&lt;&#39;T&gt; =<br />&#160;&#160;| ( [] )<br />&#160;&#160;| ( :: ) of Head: &#39;T * Tail: &#39;T list<br />&#160;&#160;interface IEnumerable<br />&#160;&#160;interface IEnumerable&lt;&#39;T&gt;<br />&#160;&#160;member Head : &#39;T<br />&#160;&#160;member IsEmpty : bool<br />&#160;&#160;member Item : index:int -&gt; &#39;T with get<br />&#160;&#160;member Length : int<br />&#160;&#160;member Tail : &#39;T list<br />&#160;&#160;static member Cons : head:&#39;T * tail:&#39;T list -&gt; &#39;T list<br />&#160;&#160;static member Empty : &#39;T list<br /><br />Full name: Microsoft.FSharp.Collections.List&lt;_&gt;</div>
+<div class="tip" id="fs7">val collect : mapping:(&#39;T -&gt; &#39;U list) -&gt; list:&#39;T list -&gt; &#39;U list<br /><br />Full name: Microsoft.FSharp.Collections.List.collect</div>
+<div class="tip" id="fs8">member Product.Return : n:&#39;a -&gt; &#39;a list<br /><br />Full name: Script.Product.Return</div>
+<div class="tip" id="fs9">val n : &#39;a</div>
+<div class="tip" id="fs10">val enumeratedPizzas : (string * string * string) list<br /><br />Full name: Script.enumeratedPizzas</div>
+<div class="tip" id="fs11">val x : string</div>
+<div class="tip" id="fs12">val y : string</div>
+<div class="tip" id="fs13">val z : string</div>
+

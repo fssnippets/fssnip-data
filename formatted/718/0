@@ -1,0 +1,117 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+<span class="l">38: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">System</span>
+<span class="k">open</span> <span class="i">TescoApi</span><span class="o">.</span><span class="i">Tesco</span>
+
+<span class="c">// ------------------------------------------------------------------</span>
+
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="t">Code</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="t">string</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="t">Name</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs3', 5)" onmouseover="showTip(event, 'fs3', 5)" class="t">string</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs5', 6)" onmouseover="showTip(event, 'fs5', 6)" class="t">Price</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs6', 7)" onmouseover="showTip(event, 'fs6', 7)" class="t">decimal</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs7', 8)" onmouseover="showTip(event, 'fs7', 8)" class="t">Picture</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs3', 9)" onmouseover="showTip(event, 'fs3', 9)" class="t">string</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs8', 10)" onmouseover="showTip(event, 'fs8', 10)" class="t">Product</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs8', 11)" onmouseover="showTip(event, 'fs8', 11)" class="p">Product</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs2', 12)" onmouseover="showTip(event, 'fs2', 12)" class="t">Code</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs4', 13)" onmouseover="showTip(event, 'fs4', 13)" class="t">Name</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs7', 14)" onmouseover="showTip(event, 'fs7', 14)" class="t">Picture</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs5', 15)" onmouseover="showTip(event, 'fs5', 15)" class="t">Price</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs9', 16)" onmouseover="showTip(event, 'fs9', 16)" class="t">Quantity</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs6', 17)" onmouseover="showTip(event, 'fs6', 17)" class="t">decimal</span>
+
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs10', 18)" onmouseover="showTip(event, 'fs10', 18)" class="t">LineItem</span> <span class="o">=</span> 
+  | <span onmouseout="hideTip(event, 'fs11', 19)" onmouseover="showTip(event, 'fs11', 19)" class="p">SaleLineItem</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs12', 20)" onmouseover="showTip(event, 'fs12', 20)" class="t">int</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs8', 21)" onmouseover="showTip(event, 'fs8', 21)" class="t">Product</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs9', 22)" onmouseover="showTip(event, 'fs9', 22)" class="t">Quantity</span>
+  | <span onmouseout="hideTip(event, 'fs13', 23)" onmouseover="showTip(event, 'fs13', 23)" class="p">CancelLineItem</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs12', 24)" onmouseover="showTip(event, 'fs12', 24)" class="t">int</span>
+
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs14', 25)" onmouseover="showTip(event, 'fs14', 25)" class="t">LinePurchase</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs15', 26)" onmouseover="showTip(event, 'fs15', 26)" class="t">list</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs10', 27)" onmouseover="showTip(event, 'fs10', 27)" class="t">LineItem</span><span class="o">&gt;</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs16', 28)" onmouseover="showTip(event, 'fs16', 28)" class="t">FinalPurchase</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs17', 29)" onmouseover="showTip(event, 'fs17', 29)" class="t">Map</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs8', 30)" onmouseover="showTip(event, 'fs8', 30)" class="t">Product</span>, <span onmouseout="hideTip(event, 'fs9', 31)" onmouseover="showTip(event, 'fs9', 31)" class="t">Quantity</span><span class="o">&gt;</span>
+
+<span class="c">// ------------------------------------------------------------------</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs18', 32)" onmouseover="showTip(event, 'fs18', 32)" class="f">calculateFinal</span> (<span onmouseout="hideTip(event, 'fs19', 33)" onmouseover="showTip(event, 'fs19', 33)" class="i">line</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs14', 34)" onmouseover="showTip(event, 'fs14', 34)" class="t">LinePurchase</span>) <span class="o">:</span> <span onmouseout="hideTip(event, 'fs16', 35)" onmouseover="showTip(event, 'fs16', 35)" class="t">FinalPurchase</span> <span class="o">=</span>
+  <span onmouseout="hideTip(event, 'fs19', 36)" onmouseover="showTip(event, 'fs19', 36)" class="i">line</span>
+  <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs20', 37)" onmouseover="showTip(event, 'fs20', 37)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs21', 38)" onmouseover="showTip(event, 'fs21', 38)" class="f">choose</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs22', 39)" onmouseover="showTip(event, 'fs22', 39)" class="i">item</span> <span class="k">-&gt;</span>
+      <span class="k">match</span> <span onmouseout="hideTip(event, 'fs22', 40)" onmouseover="showTip(event, 'fs22', 40)" class="i">item</span> <span class="k">with</span>
+      | <span onmouseout="hideTip(event, 'fs11', 41)" onmouseover="showTip(event, 'fs11', 41)" class="p">SaleLineItem</span>(<span onmouseout="hideTip(event, 'fs23', 42)" onmouseover="showTip(event, 'fs23', 42)" class="i">id</span>, <span onmouseout="hideTip(event, 'fs24', 43)" onmouseover="showTip(event, 'fs24', 43)" class="i">prod</span>, <span onmouseout="hideTip(event, 'fs25', 44)" onmouseover="showTip(event, 'fs25', 44)" class="i">q</span>) <span class="k">-&gt;</span> 
+          <span class="k">let</span> <span onmouseout="hideTip(event, 'fs26', 45)" onmouseover="showTip(event, 'fs26', 45)" class="i">cancelled</span> <span class="o">=</span>
+            <span onmouseout="hideTip(event, 'fs19', 46)" onmouseover="showTip(event, 'fs19', 46)" class="i">line</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs20', 47)" onmouseover="showTip(event, 'fs20', 47)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs27', 48)" onmouseover="showTip(event, 'fs27', 48)" class="f">exists</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs22', 49)" onmouseover="showTip(event, 'fs22', 49)" class="i">item</span> <span class="k">-&gt;</span>
+              <span class="k">match</span> <span onmouseout="hideTip(event, 'fs22', 50)" onmouseover="showTip(event, 'fs22', 50)" class="i">item</span> <span class="k">with</span>
+              | <span onmouseout="hideTip(event, 'fs13', 51)" onmouseover="showTip(event, 'fs13', 51)" class="p">CancelLineItem</span> <span onmouseout="hideTip(event, 'fs28', 52)" onmouseover="showTip(event, 'fs28', 52)" class="i">cancelId</span> <span class="k">when</span> <span onmouseout="hideTip(event, 'fs28', 53)" onmouseover="showTip(event, 'fs28', 53)" class="i">cancelId</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs23', 54)" onmouseover="showTip(event, 'fs23', 54)" class="i">id</span> <span class="k">-&gt;</span> <span class="k">true</span>
+              | _ <span class="k">-&gt;</span> <span class="k">false</span>)
+          <span class="k">if</span> <span onmouseout="hideTip(event, 'fs26', 55)" onmouseover="showTip(event, 'fs26', 55)" class="i">cancelled</span> <span class="k">then</span> <span onmouseout="hideTip(event, 'fs29', 56)" onmouseover="showTip(event, 'fs29', 56)" class="p">None</span>
+          <span class="k">else</span> <span onmouseout="hideTip(event, 'fs30', 57)" onmouseover="showTip(event, 'fs30', 57)" class="p">Some</span> (<span onmouseout="hideTip(event, 'fs24', 58)" onmouseover="showTip(event, 'fs24', 58)" class="i">prod</span>, <span onmouseout="hideTip(event, 'fs25', 59)" onmouseover="showTip(event, 'fs25', 59)" class="i">q</span>)
+      | _ <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs29', 60)" onmouseover="showTip(event, 'fs29', 60)" class="p">None</span> )
+  <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs20', 61)" onmouseover="showTip(event, 'fs20', 61)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs31', 62)" onmouseover="showTip(event, 'fs31', 62)" class="f">groupBy</span> (<span class="k">fun</span> (<span onmouseout="hideTip(event, 'fs24', 63)" onmouseover="showTip(event, 'fs24', 63)" class="i">prod</span>, <span onmouseout="hideTip(event, 'fs25', 64)" onmouseover="showTip(event, 'fs25', 64)" class="i">q</span>) <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs24', 65)" onmouseover="showTip(event, 'fs24', 65)" class="i">prod</span>)
+  <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs20', 66)" onmouseover="showTip(event, 'fs20', 66)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs32', 67)" onmouseover="showTip(event, 'fs32', 67)" class="f">map</span> (<span class="k">fun</span> (<span onmouseout="hideTip(event, 'fs24', 68)" onmouseover="showTip(event, 'fs24', 68)" class="i">prod</span>, <span onmouseout="hideTip(event, 'fs33', 69)" onmouseover="showTip(event, 'fs33', 69)" class="i">items</span>) <span class="k">-&gt;</span> 
+        <span onmouseout="hideTip(event, 'fs24', 70)" onmouseover="showTip(event, 'fs24', 70)" class="i">prod</span>, <span onmouseout="hideTip(event, 'fs20', 71)" onmouseover="showTip(event, 'fs20', 71)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs34', 72)" onmouseover="showTip(event, 'fs34', 72)" class="f">sumBy</span> <span onmouseout="hideTip(event, 'fs35', 73)" onmouseover="showTip(event, 'fs35', 73)" class="f">snd</span> <span onmouseout="hideTip(event, 'fs33', 74)" onmouseover="showTip(event, 'fs33', 74)" class="i">items</span>)
+  <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs17', 75)" onmouseover="showTip(event, 'fs17', 75)" class="t">Map</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs36', 76)" onmouseover="showTip(event, 'fs36', 76)" class="f">ofSeq</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace System</div>
+<div class="tip" id="fs2">type Code = string<br /><br />Full name: Script.Code</div>
+<div class="tip" id="fs3">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />Full name: Microsoft.FSharp.Core.Operators.string<br /><br />--------------------<br />type string = String<br /><br />Full name: Microsoft.FSharp.Core.string</div>
+<div class="tip" id="fs4">type Name = string<br /><br />Full name: Script.Name</div>
+<div class="tip" id="fs5">type Price = decimal<br /><br />Full name: Script.Price</div>
+<div class="tip" id="fs6">Multiple items<br />val decimal : value:&#39;T -&gt; decimal (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.decimal<br /><br />--------------------<br />type decimal = Decimal<br /><br />Full name: Microsoft.FSharp.Core.decimal<br /><br />--------------------<br />type decimal&lt;&#39;Measure&gt; = decimal<br /><br />Full name: Microsoft.FSharp.Core.decimal&lt;_&gt;</div>
+<div class="tip" id="fs7">type Picture = string<br /><br />Full name: Script.Picture</div>
+<div class="tip" id="fs8">Multiple items<br />union case Product.Product: Code * Name * Picture * Price -&gt; Product<br /><br />--------------------<br />type Product = | Product of Code * Name * Picture * Price<br /><br />Full name: Script.Product</div>
+<div class="tip" id="fs9">type Quantity = decimal<br /><br />Full name: Script.Quantity</div>
+<div class="tip" id="fs10">type LineItem =<br />&#160;&#160;| SaleLineItem of int * Product * Quantity<br />&#160;&#160;| CancelLineItem of int<br /><br />Full name: Script.LineItem</div>
+<div class="tip" id="fs11">union case LineItem.SaleLineItem: int * Product * Quantity -&gt; LineItem</div>
+<div class="tip" id="fs12">Multiple items<br />val int : value:&#39;T -&gt; int (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.int<br /><br />--------------------<br />type int = int32<br /><br />Full name: Microsoft.FSharp.Core.int<br /><br />--------------------<br />type int&lt;&#39;Measure&gt; = int<br /><br />Full name: Microsoft.FSharp.Core.int&lt;_&gt;</div>
+<div class="tip" id="fs13">union case LineItem.CancelLineItem: int -&gt; LineItem</div>
+<div class="tip" id="fs14">type LinePurchase = LineItem list<br /><br />Full name: Script.LinePurchase</div>
+<div class="tip" id="fs15">type &#39;T list = List&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.list&lt;_&gt;</div>
+<div class="tip" id="fs16">type FinalPurchase = Map&lt;Product,Quantity&gt;<br /><br />Full name: Script.FinalPurchase</div>
+<div class="tip" id="fs17">Multiple items<br />module Map<br /><br />from Microsoft.FSharp.Collections<br /><br />--------------------<br />type Map&lt;&#39;Key,&#39;Value (requires comparison)&gt; =<br />&#160;&#160;interface IEnumerable<br />&#160;&#160;interface IComparable<br />&#160;&#160;interface IEnumerable&lt;KeyValuePair&lt;&#39;Key,&#39;Value&gt;&gt;<br />&#160;&#160;interface ICollection&lt;KeyValuePair&lt;&#39;Key,&#39;Value&gt;&gt;<br />&#160;&#160;interface IDictionary&lt;&#39;Key,&#39;Value&gt;<br />&#160;&#160;new : elements:seq&lt;&#39;Key * &#39;Value&gt; -&gt; Map&lt;&#39;Key,&#39;Value&gt;<br />&#160;&#160;member Add : key:&#39;Key * value:&#39;Value -&gt; Map&lt;&#39;Key,&#39;Value&gt;<br />&#160;&#160;member ContainsKey : key:&#39;Key -&gt; bool<br />&#160;&#160;override Equals : obj -&gt; bool<br />&#160;&#160;member Remove : key:&#39;Key -&gt; Map&lt;&#39;Key,&#39;Value&gt;<br />&#160;&#160;...<br /><br />Full name: Microsoft.FSharp.Collections.Map&lt;_,_&gt;<br /><br />--------------------<br />new : elements:seq&lt;&#39;Key * &#39;Value&gt; -&gt; Map&lt;&#39;Key,&#39;Value&gt;</div>
+<div class="tip" id="fs18">val calculateFinal : line:LinePurchase -&gt; FinalPurchase<br /><br />Full name: Script.calculateFinal</div>
+<div class="tip" id="fs19">val line : LinePurchase</div>
+<div class="tip" id="fs20">module Seq<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs21">val choose : chooser:(&#39;T -&gt; &#39;U option) -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;U&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.choose</div>
+<div class="tip" id="fs22">val item : LineItem</div>
+<div class="tip" id="fs23">val id : int</div>
+<div class="tip" id="fs24">val prod : Product</div>
+<div class="tip" id="fs25">val q : Quantity</div>
+<div class="tip" id="fs26">val cancelled : bool</div>
+<div class="tip" id="fs27">val exists : predicate:(&#39;T -&gt; bool) -&gt; source:seq&lt;&#39;T&gt; -&gt; bool<br /><br />Full name: Microsoft.FSharp.Collections.Seq.exists</div>
+<div class="tip" id="fs28">val cancelId : int</div>
+<div class="tip" id="fs29">union case Option.None: Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs30">union case Option.Some: Value: &#39;T -&gt; Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs31">val groupBy : projection:(&#39;T -&gt; &#39;Key) -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;Key * seq&lt;&#39;T&gt;&gt; (requires equality)<br /><br />Full name: Microsoft.FSharp.Collections.Seq.groupBy</div>
+<div class="tip" id="fs32">val map : mapping:(&#39;T -&gt; &#39;U) -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;U&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.map</div>
+<div class="tip" id="fs33">val items : seq&lt;Product * Quantity&gt;</div>
+<div class="tip" id="fs34">val sumBy : projection:(&#39;T -&gt; &#39;U) -&gt; source:seq&lt;&#39;T&gt; -&gt; &#39;U (requires member ( + ) and member get_Zero)<br /><br />Full name: Microsoft.FSharp.Collections.Seq.sumBy</div>
+<div class="tip" id="fs35">val snd : tuple:(&#39;T1 * &#39;T2) -&gt; &#39;T2<br /><br />Full name: Microsoft.FSharp.Core.Operators.snd</div>
+<div class="tip" id="fs36">val ofSeq : elements:seq&lt;&#39;Key * &#39;T&gt; -&gt; Map&lt;&#39;Key,&#39;T&gt; (requires comparison)<br /><br />Full name: Microsoft.FSharp.Collections.Map.ofSeq</div>
+

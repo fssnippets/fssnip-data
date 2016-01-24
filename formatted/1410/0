@@ -1,0 +1,66 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">Microsoft</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">FSharp</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="i">Control</span>
+
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="t">Reply</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span> <span class="o">=</span>
+    | <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="p">Success</span> <span class="k">of</span> <span class="o">&#39;</span><span class="i">T</span>
+    | <span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="p">Error</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs7', 7)" onmouseover="showTip(event, 'fs7', 7)" class="t">exn</span>
+<span class="k">with</span>
+    <span class="k">member</span> <span onmouseout="hideTip(event, 'fs8', 8)" onmouseover="showTip(event, 'fs8', 8)" class="i">e</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs9', 9)" onmouseover="showTip(event, 'fs9', 9)" class="i">Value</span> <span class="o">=</span>
+        <span class="k">match</span> <span onmouseout="hideTip(event, 'fs8', 10)" onmouseover="showTip(event, 'fs8', 10)" class="i">e</span> <span class="k">with</span>
+        | <span onmouseout="hideTip(event, 'fs5', 11)" onmouseover="showTip(event, 'fs5', 11)" class="p">Success</span> <span onmouseout="hideTip(event, 'fs10', 12)" onmouseover="showTip(event, 'fs10', 12)" class="i">t</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs10', 13)" onmouseover="showTip(event, 'fs10', 13)" class="i">t</span>
+        | <span onmouseout="hideTip(event, 'fs6', 14)" onmouseover="showTip(event, 'fs6', 14)" class="p">Error</span> <span onmouseout="hideTip(event, 'fs11', 15)" onmouseover="showTip(event, 'fs11', 15)" class="i">e</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs12', 16)" onmouseover="showTip(event, 'fs12', 16)" class="f">raise</span> <span onmouseout="hideTip(event, 'fs11', 17)" onmouseover="showTip(event, 'fs11', 17)" class="i">e</span>
+
+<span class="k">and</span> <span onmouseout="hideTip(event, 'fs13', 18)" onmouseover="showTip(event, 'fs13', 18)" class="t">ReplyChannel</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span> <span class="k">internal</span> (<span onmouseout="hideTip(event, 'fs14', 19)" onmouseover="showTip(event, 'fs14', 19)" class="i">rc</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs15', 20)" onmouseover="showTip(event, 'fs15', 20)" class="t">AsyncReplyChannel</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs4', 21)" onmouseover="showTip(event, 'fs4', 21)" class="t">Reply</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span><span class="o">&gt;</span>) <span class="o">=</span>
+    <span class="k">member</span> <span class="i">__</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs16', 22)" onmouseover="showTip(event, 'fs16', 22)" class="f">Reply</span> (<span onmouseout="hideTip(event, 'fs10', 23)" onmouseover="showTip(event, 'fs10', 23)" class="i">t</span> <span class="o">:</span> <span class="o">&#39;</span><span class="i">T</span>) <span class="o">=</span> <span onmouseout="hideTip(event, 'fs14', 24)" onmouseover="showTip(event, 'fs14', 24)" class="i">rc</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs17', 25)" onmouseover="showTip(event, 'fs17', 25)" class="f">Reply</span> <span class="o">&lt;|</span> <span onmouseout="hideTip(event, 'fs5', 26)" onmouseover="showTip(event, 'fs5', 26)" class="p">Success</span> <span onmouseout="hideTip(event, 'fs10', 27)" onmouseover="showTip(event, 'fs10', 27)" class="i">t</span>
+    <span class="k">member</span> <span onmouseout="hideTip(event, 'fs18', 28)" onmouseover="showTip(event, 'fs18', 28)" class="i">__</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs19', 29)" onmouseover="showTip(event, 'fs19', 29)" class="f">ReplyWithError</span> (<span onmouseout="hideTip(event, 'fs11', 30)" onmouseover="showTip(event, 'fs11', 30)" class="i">e</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs7', 31)" onmouseover="showTip(event, 'fs7', 31)" class="t">exn</span>) <span class="o">=</span> <span onmouseout="hideTip(event, 'fs14', 32)" onmouseover="showTip(event, 'fs14', 32)" class="i">rc</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs17', 33)" onmouseover="showTip(event, 'fs17', 33)" class="f">Reply</span> <span class="o">&lt;|</span> <span onmouseout="hideTip(event, 'fs6', 34)" onmouseover="showTip(event, 'fs6', 34)" class="p">Error</span> <span onmouseout="hideTip(event, 'fs11', 35)" onmouseover="showTip(event, 'fs11', 35)" class="i">e</span>
+
+<span class="k">and</span> <span onmouseout="hideTip(event, 'fs20', 36)" onmouseover="showTip(event, 'fs20', 36)" class="t">MailboxProcessor</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span> <span class="k">with</span>
+    <span class="k">member</span> <span onmouseout="hideTip(event, 'fs21', 37)" onmouseover="showTip(event, 'fs21', 37)" class="i">m</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs22', 38)" onmouseover="showTip(event, 'fs22', 38)" class="f">PostAndReply</span> (<span onmouseout="hideTip(event, 'fs23', 39)" onmouseover="showTip(event, 'fs23', 39)" class="f">msgB</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs13', 40)" onmouseover="showTip(event, 'fs13', 40)" class="t">ReplyChannel</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">R</span><span class="o">&gt;</span> <span class="k">-&gt;</span> <span class="o">&#39;</span><span class="i">T</span>) <span class="o">=</span>
+        <span onmouseout="hideTip(event, 'fs21', 41)" onmouseover="showTip(event, 'fs21', 41)" class="i">m</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs24', 42)" onmouseover="showTip(event, 'fs24', 42)" class="f">PostAndReply</span>(<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs25', 43)" onmouseover="showTip(event, 'fs25', 43)" class="i">ch</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs23', 44)" onmouseover="showTip(event, 'fs23', 44)" class="f">msgB</span> (<span class="k">new</span> <span onmouseout="hideTip(event, 'fs13', 45)" onmouseover="showTip(event, 'fs13', 45)" class="t">ReplyChannel</span><span class="o">&lt;</span>_<span class="o">&gt;</span>(<span onmouseout="hideTip(event, 'fs25', 46)" onmouseover="showTip(event, 'fs25', 46)" class="i">ch</span>)))<span class="o">.</span><span class="i">Value</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace Microsoft</div>
+<div class="tip" id="fs2">namespace Microsoft.FSharp</div>
+<div class="tip" id="fs3">namespace Microsoft.FSharp.Control</div>
+<div class="tip" id="fs4">type Reply&lt;&#39;T&gt; =<br />&#160;&#160;| Success of &#39;T<br />&#160;&#160;| Error of exn<br />&#160;&#160;member Value : &#39;T<br /><br />Full name: Script.Reply&lt;_&gt;</div>
+<div class="tip" id="fs5">union case Reply.Success: &#39;T -&gt; Reply&lt;&#39;T&gt;</div>
+<div class="tip" id="fs6">union case Reply.Error: exn -&gt; Reply&lt;&#39;T&gt;</div>
+<div class="tip" id="fs7">type exn = System.Exception<br /><br />Full name: Microsoft.FSharp.Core.exn</div>
+<div class="tip" id="fs8">val e : Reply&lt;&#39;T&gt;</div>
+<div class="tip" id="fs9">member Reply.Value : &#39;T<br /><br />Full name: Script.Reply`1.Value</div>
+<div class="tip" id="fs10">val t : &#39;T</div>
+<div class="tip" id="fs11">val e : exn</div>
+<div class="tip" id="fs12">val raise : exn:System.Exception -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.Operators.raise</div>
+<div class="tip" id="fs13">Multiple items<br />type ReplyChannel&lt;&#39;T&gt; =<br />&#160;&#160;internal new : rc:AsyncReplyChannel&lt;Reply&lt;&#39;T&gt;&gt; -&gt; ReplyChannel&lt;&#39;T&gt;<br />&#160;&#160;member Reply : t:&#39;T -&gt; unit<br />&#160;&#160;member ReplyWithError : e:exn -&gt; unit<br /><br />Full name: Script.ReplyChannel&lt;_&gt;<br /><br />--------------------<br />internal new : rc:AsyncReplyChannel&lt;Reply&lt;&#39;T&gt;&gt; -&gt; ReplyChannel&lt;&#39;T&gt;</div>
+<div class="tip" id="fs14">val rc : AsyncReplyChannel&lt;Reply&lt;&#39;T&gt;&gt;</div>
+<div class="tip" id="fs15">type AsyncReplyChannel&lt;&#39;Reply&gt;<br />member Reply : value:&#39;Reply -&gt; unit<br /><br />Full name: Microsoft.FSharp.Control.AsyncReplyChannel&lt;_&gt;</div>
+<div class="tip" id="fs16">Multiple items<br />member ReplyChannel.Reply : t:&#39;T -&gt; unit<br /><br />Full name: Script.ReplyChannel`1.Reply<br /><br />--------------------<br />type Reply&lt;&#39;T&gt; =<br />&#160;&#160;| Success of &#39;T<br />&#160;&#160;| Error of exn<br />&#160;&#160;member Value : &#39;T<br /><br />Full name: Script.Reply&lt;_&gt;</div>
+<div class="tip" id="fs17">member AsyncReplyChannel.Reply : value:&#39;Reply -&gt; unit</div>
+<div class="tip" id="fs18">val __ : ReplyChannel&lt;&#39;T&gt;</div>
+<div class="tip" id="fs19">member ReplyChannel.ReplyWithError : e:exn -&gt; unit<br /><br />Full name: Script.ReplyChannel`1.ReplyWithError</div>
+<div class="tip" id="fs20">Multiple items<br />type MailboxProcessor&lt;&#39;Msg&gt; =<br />&#160;&#160;interface IDisposable<br />&#160;&#160;new : body:(MailboxProcessor&lt;&#39;Msg&gt; -&gt; Async&lt;unit&gt;) * ?cancellationToken:CancellationToken -&gt; MailboxProcessor&lt;&#39;Msg&gt;<br />&#160;&#160;member Post : message:&#39;Msg -&gt; unit<br />&#160;&#160;member PostAndAsyncReply : buildMessage:(AsyncReplyChannel&lt;&#39;Reply&gt; -&gt; &#39;Msg) * ?timeout:int -&gt; Async&lt;&#39;Reply&gt;<br />&#160;&#160;member PostAndReply : buildMessage:(AsyncReplyChannel&lt;&#39;Reply&gt; -&gt; &#39;Msg) * ?timeout:int -&gt; &#39;Reply<br />&#160;&#160;member PostAndTryAsyncReply : buildMessage:(AsyncReplyChannel&lt;&#39;Reply&gt; -&gt; &#39;Msg) * ?timeout:int -&gt; Async&lt;&#39;Reply option&gt;<br />&#160;&#160;member Receive : ?timeout:int -&gt; Async&lt;&#39;Msg&gt;<br />&#160;&#160;member Scan : scanner:(&#39;Msg -&gt; Async&lt;&#39;T&gt; option) * ?timeout:int -&gt; Async&lt;&#39;T&gt;<br />&#160;&#160;member Start : unit -&gt; unit<br />&#160;&#160;member TryPostAndReply : buildMessage:(AsyncReplyChannel&lt;&#39;Reply&gt; -&gt; &#39;Msg) * ?timeout:int -&gt; &#39;Reply option<br />&#160;&#160;...<br /><br />Full name: Microsoft.FSharp.Control.MailboxProcessor&lt;_&gt;<br /><br />--------------------<br />new : body:(MailboxProcessor&lt;&#39;Msg&gt; -&gt; Async&lt;unit&gt;) * ?cancellationToken:System.Threading.CancellationToken -&gt; MailboxProcessor&lt;&#39;Msg&gt;</div>
+<div class="tip" id="fs21">val m : MailboxProcessor&lt;&#39;Msg&gt;</div>
+<div class="tip" id="fs22">member MailboxProcessor.PostAndReply : msgB:(ReplyChannel&lt;&#39;R&gt; -&gt; &#39;Msg) -&gt; &#39;R<br /><br />Full name: Script.PostAndReply</div>
+<div class="tip" id="fs23">val msgB : (ReplyChannel&lt;&#39;R&gt; -&gt; &#39;Msg)</div>
+<div class="tip" id="fs24">member MailboxProcessor.PostAndReply : msgB:(ReplyChannel&lt;&#39;R&gt; -&gt; &#39;Msg) -&gt; &#39;R<br />member MailboxProcessor.PostAndReply : buildMessage:(AsyncReplyChannel&lt;&#39;Reply&gt; -&gt; &#39;Msg) * ?timeout:int -&gt; &#39;Reply</div>
+<div class="tip" id="fs25">val ch : AsyncReplyChannel&lt;Reply&lt;&#39;R&gt;&gt;</div>
+

@@ -1,0 +1,169 @@
+open System
+open System.Linq
+open System.Collections.Generic
+
+let getSortedChars (s:string) =
+  s.ToCharArray()
+  |> Seq.distinct
+  |> Seq.sort
+  |> Seq.toArray
+  |> fun a -> new HashSet<_>(a)
+
+let getCharDiffDistance (s1:string) (s2:string) =
+  
+  let c1 = getSortedChars s1
+  let c2 = getSortedChars s2
+  
+  let notInOther (a: 'a seq) (b: HashSet<'a>) =
+    new HashSet<_>(
+      [
+      for c in a do
+        if not (b.Contains(c)) then
+          yield c
+      ]
+    )
+
+  let notInC2 = notInOther c1 c2
+  let notInC1 = notInOther c2 c1
+  let distance = notInC1.Count + notInC2.Count
+  distance
+
+let inline min3 one two three = 
+    if one < two && one < three then one
+    elif two < three then two
+    else three
+ 
+let wagnerFischerLazy (s: string) (t: string) =
+    let m = s.Length
+    let n = t.Length
+    let d = Array2D.create (m+1) (n+1) -1
+    let rec dist =
+        function
+        | i, 0 -> i
+        | 0, j -> j
+        | i, j when d.[i,j] <> -1 -> d.[i,j]
+        | i, j ->
+            let dval = 
+                if s.[i-1] = t.[j-1] then dist (i-1, j-1)
+                else
+                    min3
+                        (dist (i-1, j)   + 1) // a deletion
+                        (dist (i,   j-1) + 1) // an insertion
+                        (dist (i-1, j-1) + 1) // a substitution
+            d.[i, j] <- dval; dval 
+    dist (m, n)
+
+let getCloseMatches value values =
+    let distances = 
+      values
+      |> Seq.map (fun e -> (getCharDiffDistance value e * wagnerFischerLazy value e), (e, value))
+      |> Seq.sort
+      |> Seq.toList
+      |> Seq.truncate 5
+      |> Seq.toArray
+    distances
+
+
+open System.Linq
+open System.Data
+open System.Windows.Forms
+
+let setControl (t:TableLayoutPanel) c x y =
+  t.Controls.Add(c, x, y)
+
+let form = new Form(Text="Generic String Matcher",Width=1000, Height=800)
+let tabs = new TabControl(Dock=DockStyle.Fill)
+let inputTab = new TabPage("input")
+let gridsTab = new TabPage("grids")
+
+let inputList1 = new TextBox(Multiline = true, Dock=DockStyle.Fill)
+let inputList2 = new TextBox(Multiline = true, Dock=DockStyle.Fill)
+
+let inputLayout = new TableLayoutPanel(Dock=DockStyle.Fill)
+inputLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 50.f))
+inputLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 50.f))
+
+
+setControl inputLayout inputList1 0 0
+setControl inputLayout inputList2 0 1
+
+inputTab.Controls.Add(inputLayout)
+tabs.TabPages.Add(inputTab)
+tabs.TabPages.Add(gridsTab)
+
+let gridLayout = new TableLayoutPanel(Dock=DockStyle.Fill)
+
+let grid1 = new DataGridView(Dock=DockStyle.Fill, AutoSizeColumnsMode=DataGridViewAutoSizeColumnsMode .AllCells)
+let grid2 = new DataGridView(Dock=DockStyle.Fill, AutoSizeColumnsMode=DataGridViewAutoSizeColumnsMode .AllCells)
+let grid3 = new DataGridView(Dock=DockStyle.Fill, AutoSizeColumnsMode=DataGridViewAutoSizeColumnsMode .AllCells)
+
+setControl gridLayout grid1 0 0
+setControl gridLayout grid2 1 0
+setControl gridLayout grid3 2 0
+
+gridsTab.Controls.Add(gridLayout)
+
+form.Controls.Add(tabs)
+form.Show()
+
+let attachTextBoxToDataSource (textBox: TextBox) (datasource: DataTable) =
+  textBox.TextChanged.AddHandler(fun s e ->
+        datasource.BeginLoadData()
+
+        datasource.Rows.Clear()
+        textBox.Text.Split([|Environment.NewLine;"\n";"\r"|], StringSplitOptions.RemoveEmptyEntries)
+        |> Seq.iter (fun i -> datasource.Rows.Add(i) |> ignore)
+
+        datasource.EndLoadData()
+  )
+
+let datasource1, datasource2, datasource3 = new DataTable("l1"), new DataTable("l2"), new DataTable("results")
+
+datasource1.Columns.Add("value")
+datasource2.Columns.Add("value")
+datasource3.Columns.Add("value")
+datasource3.Columns.Add("distance")
+
+grid1.DataSource <- datasource1
+grid2.DataSource <- datasource2
+grid3.DataSource <- datasource3
+
+attachTextBoxToDataSource inputList1 datasource1
+attachTextBoxToDataSource inputList2 datasource2
+
+let getClosestMatches value values =
+    let distances = 
+      values
+      |> Seq.map (fun e -> (getCharDiffDistance value e * wagnerFischerLazy value e), (e, value))
+      |> Seq.sort
+      |> Seq.toList
+      |> Seq.toArray
+    distances
+
+let getStringsFromDataSource (datasource: DataTable) =
+  seq {
+    for r in datasource.Rows do
+      yield (string r.["value"])
+  }
+
+let attachGridSelectionChanged (grid: DataGridView) (otherSource: DataTable) (destination: DataTable) = 
+    grid.SelectionChanged.AddHandler(fun s e ->
+      datasource3.Clear()
+      if grid.SelectedCells.Count > 0 then
+        let value = string grid.SelectedCells.[0].Value
+        let values = getStringsFromDataSource otherSource
+        let results = getClosestMatches value values
+        for r in results do
+          destination.Rows.Add(
+            [|
+              fst r |> box
+              (snd >> fst) r |> box
+            |]
+          ) |> ignore
+    )
+
+attachGridSelectionChanged grid1 datasource2 datasource3
+attachGridSelectionChanged grid2 datasource1 datasource3
+
+inputList1.MaxLength <- Int32.MaxValue
+inputList2.MaxLength <- Int32.MaxValue

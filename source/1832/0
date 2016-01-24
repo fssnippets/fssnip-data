@@ -1,0 +1,14 @@
+open System
+
+type ArraySegment<'TItem> with
+    member segment.Item(index) =
+        segment.Array.[segment.Offset+index]
+    member segment.GetSlice(start, finish) =
+        let start = defaultArg start 0
+        let finish = defaultArg finish segment.Count
+        ArraySegment(segment.Array, segment.Offset + start, finish-start)
+
+let xs = ArraySegment [|1..10|]
+let ys = xs.[3..]
+let zs = ys.[..2]
+let five = zs.[1]

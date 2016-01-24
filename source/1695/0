@@ -1,0 +1,15 @@
+let defer f = { new System.IDisposable with member __.Dispose() = f () }
+
+let checkAnswer answerToEverything =
+    use cleanup = defer (fun () ->
+        // TODO: insert clean-up code here
+        printfn "Did clean-up, leaving scope...")
+    
+    if answerToEverything = 42 then
+        printfn "Well done!"
+    else
+        printfn "Oh, no!" 
+        failwith "Catastrophic culture failure."
+
+checkAnswer 42
+checkAnswer 365

@@ -1,0 +1,52 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">FsCheck</span>
+<span class="k">open</span> <span class="i">Prop</span>
+ 
+<span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="f">slowFib</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="i">x</span> <span class="o">=</span> <span class="k">if</span> <span onmouseout="hideTip(event, 'fs3', 4)" onmouseover="showTip(event, 'fs3', 4)" class="i">x</span> <span class="o">&lt;</span> <span class="n">2</span> <span class="k">then</span> <span class="n">1</span> <span class="k">else</span> <span onmouseout="hideTip(event, 'fs2', 5)" onmouseover="showTip(event, 'fs2', 5)" class="f">slowFib</span>(<span onmouseout="hideTip(event, 'fs3', 6)" onmouseover="showTip(event, 'fs3', 6)" class="i">x</span> <span class="o">-</span> <span class="n">2</span>) <span class="o">+</span> <span onmouseout="hideTip(event, 'fs2', 7)" onmouseover="showTip(event, 'fs2', 7)" class="f">slowFib</span>(<span onmouseout="hideTip(event, 'fs3', 8)" onmouseover="showTip(event, 'fs3', 8)" class="i">x</span> <span class="o">-</span> <span class="n">1</span>)
+ 
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs4', 9)" onmouseover="showTip(event, 'fs4', 9)" class="f">fastFib</span> <span onmouseout="hideTip(event, 'fs3', 10)" onmouseover="showTip(event, 'fs3', 10)" class="i">x</span> <span class="o">=</span>
+    <span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs5', 11)" onmouseover="showTip(event, 'fs5', 11)" class="f">fastFib&#39;</span> <span onmouseout="hideTip(event, 'fs3', 12)" onmouseover="showTip(event, 'fs3', 12)" class="i">x</span> <span onmouseout="hideTip(event, 'fs6', 13)" onmouseover="showTip(event, 'fs6', 13)" class="i">n2</span> <span onmouseout="hideTip(event, 'fs7', 14)" onmouseover="showTip(event, 'fs7', 14)" class="i">n1</span> <span class="o">=</span>
+        <span class="k">match</span> <span onmouseout="hideTip(event, 'fs3', 15)" onmouseover="showTip(event, 'fs3', 15)" class="i">x</span> <span class="k">with</span>
+        |<span class="n">0</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs6', 16)" onmouseover="showTip(event, 'fs6', 16)" class="i">n2</span>
+        |_ <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs5', 17)" onmouseover="showTip(event, 'fs5', 17)" class="f">fastFib&#39;</span> (<span onmouseout="hideTip(event, 'fs3', 18)" onmouseover="showTip(event, 'fs3', 18)" class="i">x</span> <span class="o">-</span> <span class="n">1</span>) <span onmouseout="hideTip(event, 'fs7', 19)" onmouseover="showTip(event, 'fs7', 19)" class="i">n1</span> (<span onmouseout="hideTip(event, 'fs6', 20)" onmouseover="showTip(event, 'fs6', 20)" class="i">n2</span> <span class="o">+</span> <span onmouseout="hideTip(event, 'fs7', 21)" onmouseover="showTip(event, 'fs7', 21)" class="i">n1</span>)
+ 
+    <span class="k">if</span> <span onmouseout="hideTip(event, 'fs3', 22)" onmouseover="showTip(event, 'fs3', 22)" class="i">x</span> <span class="o">&lt;</span> <span class="n">2</span> <span class="k">then</span> <span class="n">1</span> <span class="k">else</span> <span onmouseout="hideTip(event, 'fs5', 23)" onmouseover="showTip(event, 'fs5', 23)" class="f">fastFib&#39;</span> <span onmouseout="hideTip(event, 'fs3', 24)" onmouseover="showTip(event, 'fs3', 24)" class="i">x</span> <span class="n">1</span> <span class="n">1</span>
+ 
+[&lt;<span class="i">Property</span>&gt;]
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs8', 25)" onmouseover="showTip(event, 'fs8', 25)" class="f">``Fast Fib matches the simple slow one``</span>(<span onmouseout="hideTip(event, 'fs3', 26)" onmouseover="showTip(event, 'fs3', 26)" class="i">x</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs9', 27)" onmouseover="showTip(event, 'fs9', 27)" class="t">int</span>) <span class="o">=</span>
+    (<span onmouseout="hideTip(event, 'fs3', 28)" onmouseover="showTip(event, 'fs3', 28)" class="i">x</span> <span class="o">&gt;</span><span class="o">=</span> <span class="n">0</span> <span class="o">&amp;&amp;</span> <span onmouseout="hideTip(event, 'fs3', 29)" onmouseover="showTip(event, 'fs3', 29)" class="i">x</span> <span class="o">&lt;</span> <span class="n">25</span>) <span class="o">==&gt;</span> <span class="k">lazy</span> (<span onmouseout="hideTip(event, 'fs2', 30)" onmouseover="showTip(event, 'fs2', 30)" class="i">slowFib</span> <span onmouseout="hideTip(event, 'fs3', 31)" onmouseover="showTip(event, 'fs3', 31)" class="i">x</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs4', 32)" onmouseover="showTip(event, 'fs4', 32)" class="i">fastFib</span> <span onmouseout="hideTip(event, 'fs3', 33)" onmouseover="showTip(event, 'fs3', 33)" class="i">x</span>)
+    <span class="o">|&gt;</span> <span class="i">trivial</span> (<span onmouseout="hideTip(event, 'fs3', 34)" onmouseover="showTip(event, 'fs3', 34)" class="i">x</span> <span class="o">&lt;</span> <span class="n">2</span>)
+ 
+<span class="c">// Ok, passed 100 tests (30% trivial).</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace FsCheck</div>
+<div class="tip" id="fs2">val slowFib : x:int -&gt; int<br /><br />Full name: Script.slowFib</div>
+<div class="tip" id="fs3">val x : int</div>
+<div class="tip" id="fs4">val fastFib : x:int -&gt; int<br /><br />Full name: Script.fastFib</div>
+<div class="tip" id="fs5">val fastFib&#39; : (int -&gt; int -&gt; int -&gt; int)</div>
+<div class="tip" id="fs6">val n2 : int</div>
+<div class="tip" id="fs7">val n1 : int</div>
+<div class="tip" id="fs8">val ( Fast Fib matches the simple slow one ) : x:int -&gt; &#39;a<br /><br />Full name: Script.( Fast Fib matches the simple slow one )</div>
+<div class="tip" id="fs9">Multiple items<br />val int : value:&#39;T -&gt; int (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.int<br /><br />--------------------<br />type int = int32<br /><br />Full name: Microsoft.FSharp.Core.int<br /><br />--------------------<br />type int&lt;&#39;Measure&gt; = int<br /><br />Full name: Microsoft.FSharp.Core.int&lt;_&gt;</div>
+

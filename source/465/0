@@ -1,0 +1,1 @@
+let sqr x = x*x

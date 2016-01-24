@@ -1,0 +1,157 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+<span class="l">38: </span>
+<span class="l">39: </span>
+<span class="l">40: </span>
+<span class="l">41: </span>
+<span class="l">42: </span>
+<span class="l">43: </span>
+<span class="l">44: </span>
+<span class="l">45: </span>
+<span class="l">46: </span>
+<span class="l">47: </span>
+<span class="l">48: </span>
+<span class="l">49: </span>
+<span class="l">50: </span>
+<span class="l">51: </span>
+<span class="l">52: </span>
+<span class="l">53: </span>
+<span class="l">54: </span>
+<span class="l">55: </span>
+<span class="l">56: </span>
+<span class="l">57: </span>
+<span class="l">58: </span>
+<span class="l">59: </span>
+<span class="l">60: </span>
+<span class="l">61: </span>
+<span class="l">62: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="prep">#if</span> <span class="i">INTERACTIVE</span>
+<span class="inactive">#r</span><span class="inactive"> </span><span class="inactive">@&quot;Newtonsoft.Json.dll&quot;</span>
+<span class="prep">#endif</span>
+
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">Newtonsoft</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">Json</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="i">Linq</span>
+
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="t">Json</span> <span class="o">=</span>
+    | <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="p">JObj</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs4', 6)" onmouseover="showTip(event, 'fs4', 6)" class="t">Json</span> <span onmouseout="hideTip(event, 'fs6', 7)" onmouseover="showTip(event, 'fs6', 7)" class="t">seq</span>
+    | <span onmouseout="hideTip(event, 'fs7', 8)" onmouseover="showTip(event, 'fs7', 8)" class="p">JProp</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs8', 9)" onmouseover="showTip(event, 'fs8', 9)" class="t">string</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs4', 10)" onmouseover="showTip(event, 'fs4', 10)" class="t">Json</span>
+    | <span onmouseout="hideTip(event, 'fs9', 11)" onmouseover="showTip(event, 'fs9', 11)" class="p">JArr</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs4', 12)" onmouseover="showTip(event, 'fs4', 12)" class="t">Json</span> <span onmouseout="hideTip(event, 'fs6', 13)" onmouseover="showTip(event, 'fs6', 13)" class="t">seq</span>
+    | <span onmouseout="hideTip(event, 'fs10', 14)" onmouseover="showTip(event, 'fs10', 14)" class="p">JVal</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs11', 15)" onmouseover="showTip(event, 'fs11', 15)" class="t">obj</span>
+
+<span class="k">let</span> (<span class="o">!!</span>) (<span onmouseout="hideTip(event, 'fs12', 16)" onmouseover="showTip(event, 'fs12', 16)" class="i">o</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs11', 17)" onmouseover="showTip(event, 'fs11', 17)" class="t">obj</span>) <span class="o">=</span> <span onmouseout="hideTip(event, 'fs10', 18)" onmouseover="showTip(event, 'fs10', 18)" class="p">JVal</span> <span onmouseout="hideTip(event, 'fs12', 19)" onmouseover="showTip(event, 'fs12', 19)" class="i">o</span>
+
+<span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs13', 20)" onmouseover="showTip(event, 'fs13', 20)" class="f">toJson</span> <span class="o">=</span> <span class="k">function</span>
+    | <span onmouseout="hideTip(event, 'fs10', 21)" onmouseover="showTip(event, 'fs10', 21)" class="p">JVal</span> <span onmouseout="hideTip(event, 'fs14', 22)" onmouseover="showTip(event, 'fs14', 22)" class="i">v</span> <span class="k">-&gt;</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs15', 23)" onmouseover="showTip(event, 'fs15', 23)" class="t">JValue</span>(<span onmouseout="hideTip(event, 'fs14', 24)" onmouseover="showTip(event, 'fs14', 24)" class="i">v</span>) <span class="o">:&gt;</span> <span onmouseout="hideTip(event, 'fs16', 25)" onmouseover="showTip(event, 'fs16', 25)" class="t">JToken</span>
+    | <span onmouseout="hideTip(event, 'fs7', 26)" onmouseover="showTip(event, 'fs7', 26)" class="p">JProp</span>(<span onmouseout="hideTip(event, 'fs17', 27)" onmouseover="showTip(event, 'fs17', 27)" class="i">name</span>, (<span onmouseout="hideTip(event, 'fs7', 28)" onmouseover="showTip(event, 'fs7', 28)" class="p">JProp</span>(_) <span class="k">as</span> <span onmouseout="hideTip(event, 'fs18', 29)" onmouseover="showTip(event, 'fs18', 29)" class="i">v</span>)) <span class="k">-&gt;</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs19', 30)" onmouseover="showTip(event, 'fs19', 30)" class="t">JProperty</span>(<span onmouseout="hideTip(event, 'fs17', 31)" onmouseover="showTip(event, 'fs17', 31)" class="i">name</span>, <span class="k">new</span> <span onmouseout="hideTip(event, 'fs20', 32)" onmouseover="showTip(event, 'fs20', 32)" class="t">JObject</span>(<span onmouseout="hideTip(event, 'fs13', 33)" onmouseover="showTip(event, 'fs13', 33)" class="f">toJson</span> <span onmouseout="hideTip(event, 'fs18', 34)" onmouseover="showTip(event, 'fs18', 34)" class="i">v</span>)) <span class="o">:&gt;</span> <span onmouseout="hideTip(event, 'fs16', 35)" onmouseover="showTip(event, 'fs16', 35)" class="t">JToken</span>
+    | <span onmouseout="hideTip(event, 'fs7', 36)" onmouseover="showTip(event, 'fs7', 36)" class="p">JProp</span>(<span onmouseout="hideTip(event, 'fs17', 37)" onmouseover="showTip(event, 'fs17', 37)" class="i">name</span>, <span onmouseout="hideTip(event, 'fs18', 38)" onmouseover="showTip(event, 'fs18', 38)" class="i">v</span>) <span class="k">-&gt;</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs19', 39)" onmouseover="showTip(event, 'fs19', 39)" class="t">JProperty</span>(<span onmouseout="hideTip(event, 'fs17', 40)" onmouseover="showTip(event, 'fs17', 40)" class="i">name</span>, <span onmouseout="hideTip(event, 'fs13', 41)" onmouseover="showTip(event, 'fs13', 41)" class="f">toJson</span> <span onmouseout="hideTip(event, 'fs18', 42)" onmouseover="showTip(event, 'fs18', 42)" class="i">v</span>) <span class="o">:&gt;</span> <span onmouseout="hideTip(event, 'fs16', 43)" onmouseover="showTip(event, 'fs16', 43)" class="t">JToken</span>
+    | <span onmouseout="hideTip(event, 'fs9', 44)" onmouseover="showTip(event, 'fs9', 44)" class="p">JArr</span> <span onmouseout="hideTip(event, 'fs21', 45)" onmouseover="showTip(event, 'fs21', 45)" class="i">items</span> <span class="k">-&gt;</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs22', 46)" onmouseover="showTip(event, 'fs22', 46)" class="t">JArray</span>(<span onmouseout="hideTip(event, 'fs21', 47)" onmouseover="showTip(event, 'fs21', 47)" class="i">items</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs23', 48)" onmouseover="showTip(event, 'fs23', 48)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs24', 49)" onmouseover="showTip(event, 'fs24', 49)" class="f">map</span> <span onmouseout="hideTip(event, 'fs13', 50)" onmouseover="showTip(event, 'fs13', 50)" class="f">toJson</span>) <span class="o">:&gt;</span> <span onmouseout="hideTip(event, 'fs16', 51)" onmouseover="showTip(event, 'fs16', 51)" class="t">JToken</span>
+    | <span onmouseout="hideTip(event, 'fs5', 52)" onmouseover="showTip(event, 'fs5', 52)" class="p">JObj</span> <span onmouseout="hideTip(event, 'fs25', 53)" onmouseover="showTip(event, 'fs25', 53)" class="i">props</span> <span class="k">-&gt;</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs20', 54)" onmouseover="showTip(event, 'fs20', 54)" class="t">JObject</span>(<span onmouseout="hideTip(event, 'fs25', 55)" onmouseover="showTip(event, 'fs25', 55)" class="i">props</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs23', 56)" onmouseover="showTip(event, 'fs23', 56)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs24', 57)" onmouseover="showTip(event, 'fs24', 57)" class="f">map</span> <span onmouseout="hideTip(event, 'fs13', 58)" onmouseover="showTip(event, 'fs13', 58)" class="f">toJson</span>) <span class="o">:&gt;</span> <span onmouseout="hideTip(event, 'fs16', 59)" onmouseover="showTip(event, 'fs16', 59)" class="t">JToken</span>
+
+<span class="c">// Suppose we want to create the following Json object:</span>
+<span class="c">// {</span>
+<span class="c">//     &quot;id&quot;: 123,</span>
+<span class="c">//     &quot;props&quot;: {</span>
+<span class="c">//         &quot;prop&quot;: [</span>
+<span class="c">//             { &quot;id&quot;: 1, v: 123 },</span>
+<span class="c">//             { &quot;id&quot;: 2, v: 456 }</span>
+<span class="c">//         ]</span>
+<span class="c">//     }</span>
+<span class="c">// }</span>
+<span class="c">//</span>
+<span class="c">// Then the simplified lightweight Json creation will look like this:</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs26', 60)" onmouseover="showTip(event, 'fs26', 60)" class="i">j</span> <span class="o">=</span>
+    <span onmouseout="hideTip(event, 'fs5', 61)" onmouseover="showTip(event, 'fs5', 61)" class="p">JObj</span> [
+        <span onmouseout="hideTip(event, 'fs7', 62)" onmouseover="showTip(event, 'fs7', 62)" class="p">JProp</span>(<span class="s">&quot;id&quot;</span>, <span class="o">!!</span> <span class="s">&quot;123&quot;</span>);
+        <span onmouseout="hideTip(event, 'fs7', 63)" onmouseover="showTip(event, 'fs7', 63)" class="p">JProp</span>(
+            <span class="s">&quot;props&quot;</span>, 
+            <span onmouseout="hideTip(event, 'fs7', 64)" onmouseover="showTip(event, 'fs7', 64)" class="p">JProp</span>(
+                <span class="s">&quot;prop&quot;</span>, 
+                <span onmouseout="hideTip(event, 'fs9', 65)" onmouseover="showTip(event, 'fs9', 65)" class="p">JArr</span> [
+                    <span onmouseout="hideTip(event, 'fs5', 66)" onmouseover="showTip(event, 'fs5', 66)" class="p">JObj</span> [<span onmouseout="hideTip(event, 'fs7', 67)" onmouseover="showTip(event, 'fs7', 67)" class="p">JProp</span>(<span class="s">&quot;id&quot;</span>, <span class="o">!!</span> <span class="n">1</span>); <span onmouseout="hideTip(event, 'fs7', 68)" onmouseover="showTip(event, 'fs7', 68)" class="p">JProp</span>(<span class="s">&quot;v&quot;</span>, <span class="o">!!</span> <span class="n">123</span>)];
+                    <span onmouseout="hideTip(event, 'fs5', 69)" onmouseover="showTip(event, 'fs5', 69)" class="p">JObj</span> [<span onmouseout="hideTip(event, 'fs7', 70)" onmouseover="showTip(event, 'fs7', 70)" class="p">JProp</span>(<span class="s">&quot;id&quot;</span>, <span class="o">!!</span> <span class="n">2</span>); <span onmouseout="hideTip(event, 'fs7', 71)" onmouseover="showTip(event, 'fs7', 71)" class="p">JProp</span>(<span class="s">&quot;v&quot;</span>, <span class="o">!!</span> <span class="n">456</span>)]
+                ]))
+    ]
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs27', 72)" onmouseover="showTip(event, 'fs27', 72)" class="i">json</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs13', 73)" onmouseover="showTip(event, 'fs13', 73)" class="f">toJson</span> <span onmouseout="hideTip(event, 'fs26', 74)" onmouseover="showTip(event, 'fs26', 74)" class="i">j</span>
+
+<span class="c">// Compare it to pure Json.Net.</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs28', 75)" onmouseover="showTip(event, 'fs28', 75)" class="i">jj</span> <span class="o">=</span> 
+    <span class="k">new</span> <span onmouseout="hideTip(event, 'fs20', 76)" onmouseover="showTip(event, 'fs20', 76)" class="t">JObject</span>([
+        <span class="k">new</span> <span onmouseout="hideTip(event, 'fs19', 77)" onmouseover="showTip(event, 'fs19', 77)" class="t">JProperty</span>(<span class="s">&quot;id&quot;</span>, <span class="s">&quot;123&quot;</span>);
+        <span class="k">new</span> <span onmouseout="hideTip(event, 'fs19', 78)" onmouseover="showTip(event, 'fs19', 78)" class="t">JProperty</span>(
+            <span class="s">&quot;props&quot;</span>,
+            <span class="k">new</span> <span onmouseout="hideTip(event, 'fs20', 79)" onmouseover="showTip(event, 'fs20', 79)" class="t">JObject</span>(
+                <span class="k">new</span> <span onmouseout="hideTip(event, 'fs19', 80)" onmouseover="showTip(event, 'fs19', 80)" class="t">JProperty</span>(
+                    <span class="s">&quot;prop&quot;</span>,
+                    <span class="k">new</span> <span onmouseout="hideTip(event, 'fs22', 81)" onmouseover="showTip(event, 'fs22', 81)" class="t">JArray</span>([
+                        <span class="k">new</span> <span onmouseout="hideTip(event, 'fs20', 82)" onmouseover="showTip(event, 'fs20', 82)" class="t">JObject</span>([<span class="k">new</span> <span onmouseout="hideTip(event, 'fs19', 83)" onmouseover="showTip(event, 'fs19', 83)" class="t">JProperty</span>(<span class="s">&quot;id&quot;</span>, <span class="n">1</span>); <span class="k">new</span> <span onmouseout="hideTip(event, 'fs19', 84)" onmouseover="showTip(event, 'fs19', 84)" class="t">JProperty</span>(<span class="s">&quot;v&quot;</span>, <span class="n">123</span>)]);
+                        <span class="k">new</span> <span onmouseout="hideTip(event, 'fs20', 85)" onmouseover="showTip(event, 'fs20', 85)" class="t">JObject</span>([<span class="k">new</span> <span onmouseout="hideTip(event, 'fs19', 86)" onmouseover="showTip(event, 'fs19', 86)" class="t">JProperty</span>(<span class="s">&quot;id&quot;</span>, <span class="n">2</span>); <span class="k">new</span> <span onmouseout="hideTip(event, 'fs19', 87)" onmouseover="showTip(event, 'fs19', 87)" class="t">JProperty</span>(<span class="s">&quot;v&quot;</span>, <span class="n">456</span>)])
+                    ]))))
+    ])
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace Newtonsoft</div>
+<div class="tip" id="fs2">namespace Newtonsoft.Json</div>
+<div class="tip" id="fs3">namespace Newtonsoft.Json.Linq</div>
+<div class="tip" id="fs4">type Json =<br />&#160;&#160;| JObj of seq&lt;Json&gt;<br />&#160;&#160;| JProp of string * Json<br />&#160;&#160;| JArr of seq&lt;Json&gt;<br />&#160;&#160;| JVal of obj<br /><br />Full name: Script.Json</div>
+<div class="tip" id="fs5">union case Json.JObj: seq&lt;Json&gt; -&gt; Json</div>
+<div class="tip" id="fs6">Multiple items<br />val seq : sequence:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Core.Operators.seq<br /><br />--------------------<br />type seq&lt;&#39;T&gt; = System.Collections.Generic.IEnumerable&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.seq&lt;_&gt;</div>
+<div class="tip" id="fs7">union case Json.JProp: string * Json -&gt; Json</div>
+<div class="tip" id="fs8">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />Full name: Microsoft.FSharp.Core.Operators.string<br /><br />--------------------<br />type string = System.String<br /><br />Full name: Microsoft.FSharp.Core.string</div>
+<div class="tip" id="fs9">union case Json.JArr: seq&lt;Json&gt; -&gt; Json</div>
+<div class="tip" id="fs10">union case Json.JVal: obj -&gt; Json</div>
+<div class="tip" id="fs11">type obj = System.Object<br /><br />Full name: Microsoft.FSharp.Core.obj</div>
+<div class="tip" id="fs12">val o : obj</div>
+<div class="tip" id="fs13">val toJson : _arg1:Json -&gt; JToken<br /><br />Full name: Script.toJson</div>
+<div class="tip" id="fs14">val v : obj</div>
+<div class="tip" id="fs15">Multiple items<br />type JValue =<br />&#160;&#160;inherit JToken<br />&#160;&#160;new : other:JValue -&gt; JValue + 10 overloads<br />&#160;&#160;member CompareTo : obj:JValue -&gt; int<br />&#160;&#160;member Equals : other:JValue -&gt; bool + 1 overload<br />&#160;&#160;member GetHashCode : unit -&gt; int<br />&#160;&#160;member HasValues : bool<br />&#160;&#160;member ToString : unit -&gt; string + 3 overloads<br />&#160;&#160;member Type : JTokenType<br />&#160;&#160;member Value : obj with get, set<br />&#160;&#160;member WriteTo : writer:JsonWriter * [&lt;ParamArray&gt;] converters:JsonConverter[] -&gt; unit<br />&#160;&#160;static member CreateComment : value:string -&gt; JValue<br />&#160;&#160;...<br /><br />Full name: Newtonsoft.Json.Linq.JValue<br /><br />--------------------<br />JValue(other: JValue) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />JValue(value: int64) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />JValue(value: uint64) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />JValue(value: float) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />JValue(value: System.DateTime) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />JValue(value: bool) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />JValue(value: string) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />JValue(value: System.Guid) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />JValue(value: System.Uri) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />JValue(value: System.TimeSpan) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em></div>
+<div class="tip" id="fs16">type JToken =<br />&#160;&#160;member AddAfterSelf : content:obj -&gt; unit<br />&#160;&#160;member AddBeforeSelf : content:obj -&gt; unit<br />&#160;&#160;member AfterSelf : unit -&gt; IEnumerable&lt;JToken&gt;<br />&#160;&#160;member Ancestors : unit -&gt; IEnumerable&lt;JToken&gt;<br />&#160;&#160;member BeforeSelf : unit -&gt; IEnumerable&lt;JToken&gt;<br />&#160;&#160;member Children : unit -&gt; JEnumerable&lt;JToken&gt; + 1 overload<br />&#160;&#160;member CreateReader : unit -&gt; JsonReader<br />&#160;&#160;member DeepClone : unit -&gt; JToken<br />&#160;&#160;member First : JToken<br />&#160;&#160;member HasValues : bool<br />&#160;&#160;...<br /><br />Full name: Newtonsoft.Json.Linq.JToken</div>
+<div class="tip" id="fs17">val name : string</div>
+<div class="tip" id="fs18">val v : Json</div>
+<div class="tip" id="fs19">Multiple items<br />type JProperty =<br />&#160;&#160;inherit JContainer<br />&#160;&#160;new : other:JProperty -&gt; JProperty + 2 overloads<br />&#160;&#160;member Name : string<br />&#160;&#160;member Type : JTokenType<br />&#160;&#160;member Value : JToken with get, set<br />&#160;&#160;member WriteTo : writer:JsonWriter * [&lt;ParamArray&gt;] converters:JsonConverter[] -&gt; unit<br />&#160;&#160;static member Load : reader:JsonReader -&gt; JProperty<br /><br />Full name: Newtonsoft.Json.Linq.JProperty<br /><br />--------------------<br />JProperty(other: JProperty) : unit<br />JProperty(name: string, [&lt;System.ParamArray&gt;] content: obj []) : unit<br />JProperty(name: string, content: obj) : unit</div>
+<div class="tip" id="fs20">Multiple items<br />type JObject =<br />&#160;&#160;inherit JContainer<br />&#160;&#160;new : unit -&gt; JObject + 3 overloads<br />&#160;&#160;member Add : propertyName:string * value:JToken -&gt; unit<br />&#160;&#160;member GetEnumerator : unit -&gt; IEnumerator&lt;KeyValuePair&lt;string, JToken&gt;&gt;<br />&#160;&#160;member Item : obj -&gt; JToken with get, set<br />&#160;&#160;member Item : string -&gt; JToken with get, set<br />&#160;&#160;member Properties : unit -&gt; IEnumerable&lt;JProperty&gt;<br />&#160;&#160;member Property : name:string -&gt; JProperty<br />&#160;&#160;member PropertyValues : unit -&gt; JEnumerable&lt;JToken&gt;<br />&#160;&#160;member Remove : propertyName:string -&gt; bool<br />&#160;&#160;member TryGetValue : propertyName:string * value:JToken -&gt; bool<br />&#160;&#160;...<br /><br />Full name: Newtonsoft.Json.Linq.JObject<br /><br />--------------------<br />JObject() : unit<br />JObject(other: JObject) : unit<br />JObject([&lt;System.ParamArray&gt;] content: obj []) : unit<br />JObject(content: obj) : unit</div>
+<div class="tip" id="fs21">val items : seq&lt;Json&gt;</div>
+<div class="tip" id="fs22">Multiple items<br />type JArray =<br />&#160;&#160;inherit JContainer<br />&#160;&#160;new : unit -&gt; JArray + 3 overloads<br />&#160;&#160;member Add : item:JToken -&gt; unit<br />&#160;&#160;member Clear : unit -&gt; unit<br />&#160;&#160;member Contains : item:JToken -&gt; bool<br />&#160;&#160;member IndexOf : item:JToken -&gt; int<br />&#160;&#160;member Insert : index:int * item:JToken -&gt; unit<br />&#160;&#160;member Item : obj -&gt; JToken with get, set<br />&#160;&#160;member Item : int -&gt; JToken with get, set<br />&#160;&#160;member Remove : item:JToken -&gt; bool<br />&#160;&#160;member RemoveAt : index:int -&gt; unit<br />&#160;&#160;...<br /><br />Full name: Newtonsoft.Json.Linq.JArray<br /><br />--------------------<br />JArray() : unit<br />JArray(other: JArray) : unit<br />JArray([&lt;System.ParamArray&gt;] content: obj []) : unit<br />JArray(content: obj) : unit</div>
+<div class="tip" id="fs23">module Seq<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs24">val map : mapping:(&#39;T -&gt; &#39;U) -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;U&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.map</div>
+<div class="tip" id="fs25">val props : seq&lt;Json&gt;</div>
+<div class="tip" id="fs26">val j : Json<br /><br />Full name: Script.j</div>
+<div class="tip" id="fs27">val json : JToken<br /><br />Full name: Script.json</div>
+<div class="tip" id="fs28">val jj : JObject<br /><br />Full name: Script.jj</div>
+

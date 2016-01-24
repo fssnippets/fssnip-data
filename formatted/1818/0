@@ -1,0 +1,75 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">type</span> <span class="o">&#39;</span><span class="i">a</span> <span class="t">Tree</span> <span class="o">=</span> 
+    | <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="p">Empty</span> 
+    | <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="p">Branch</span> <span class="k">of</span> <span class="o">&#39;</span><span class="i">a</span> <span class="o">*</span> <span class="o">&#39;</span><span class="i">a</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="t">Tree</span> <span class="o">*</span> <span class="o">&#39;</span><span class="i">a</span> <span onmouseout="hideTip(event, 'fs3', 4)" onmouseover="showTip(event, 'fs3', 4)" class="t">Tree</span>
+
+
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs4', 5)" onmouseover="showTip(event, 'fs4', 5)" class="i">tree1</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs2', 6)" onmouseover="showTip(event, 'fs2', 6)" class="p">Branch</span> (<span class="s">&#39;a&#39;</span>, <span onmouseout="hideTip(event, 'fs2', 7)" onmouseover="showTip(event, 'fs2', 7)" class="p">Branch</span> (<span class="s">&#39;b&#39;</span>, <span onmouseout="hideTip(event, 'fs2', 8)" onmouseover="showTip(event, 'fs2', 8)" class="p">Branch</span> (<span class="s">&#39;d&#39;</span>, <span onmouseout="hideTip(event, 'fs1', 9)" onmouseover="showTip(event, 'fs1', 9)" class="p">Empty</span>, <span onmouseout="hideTip(event, 'fs1', 10)" onmouseover="showTip(event, 'fs1', 10)" class="p">Empty</span>),
+                               <span onmouseout="hideTip(event, 'fs2', 11)" onmouseover="showTip(event, 'fs2', 11)" class="p">Branch</span> (<span class="s">&#39;e&#39;</span>, <span onmouseout="hideTip(event, 'fs1', 12)" onmouseover="showTip(event, 'fs1', 12)" class="p">Empty</span>, <span onmouseout="hideTip(event, 'fs1', 13)" onmouseover="showTip(event, 'fs1', 13)" class="p">Empty</span>)),
+                         <span onmouseout="hideTip(event, 'fs2', 14)" onmouseover="showTip(event, 'fs2', 14)" class="p">Branch</span> (<span class="s">&#39;c&#39;</span>, <span onmouseout="hideTip(event, 'fs1', 15)" onmouseover="showTip(event, 'fs1', 15)" class="p">Empty</span>,
+                               <span onmouseout="hideTip(event, 'fs2', 16)" onmouseover="showTip(event, 'fs2', 16)" class="p">Branch</span> (<span class="s">&#39;f&#39;</span>, <span onmouseout="hideTip(event, 'fs2', 17)" onmouseover="showTip(event, 'fs2', 17)" class="p">Branch</span> (<span class="s">&#39;g&#39;</span>, <span onmouseout="hideTip(event, 'fs1', 18)" onmouseover="showTip(event, 'fs1', 18)" class="p">Empty</span>, <span onmouseout="hideTip(event, 'fs1', 19)" onmouseover="showTip(event, 'fs1', 19)" class="p">Empty</span>),
+                                           <span onmouseout="hideTip(event, 'fs1', 20)" onmouseover="showTip(event, 'fs1', 20)" class="p">Empty</span>))) 
+
+
+
+<span class="c">// based on Chris Okasaki&#39;s &#39;Breadth-first numbering: Lessons from a Small</span>
+<span class="c">// Exercise in Algorithm Design&#39;, translated to f#</span>
+<span class="c">// http://www.cs.tufts.edu/~nr/cs257/archive/chris-okasaki/breadth-first.pdf</span>
+
+<span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs5', 21)" onmouseover="showTip(event, 'fs5', 21)" class="f">breadthFirst2</span> <span class="o">=</span>
+    <span class="k">function</span>
+    | []                                <span class="k">-&gt;</span>  []
+    | <span onmouseout="hideTip(event, 'fs1', 22)" onmouseover="showTip(event, 'fs1', 22)" class="p">Empty</span><span class="o">::</span><span onmouseout="hideTip(event, 'fs6', 23)" onmouseover="showTip(event, 'fs6', 23)" class="i">trees</span>                      <span class="k">-&gt;</span>  <span onmouseout="hideTip(event, 'fs5', 24)" onmouseover="showTip(event, 'fs5', 24)" class="f">breadthFirst2</span> <span onmouseout="hideTip(event, 'fs6', 25)" onmouseover="showTip(event, 'fs6', 25)" class="i">trees</span>
+    | <span onmouseout="hideTip(event, 'fs2', 26)" onmouseover="showTip(event, 'fs2', 26)" class="p">Branch</span> (<span onmouseout="hideTip(event, 'fs7', 27)" onmouseover="showTip(event, 'fs7', 27)" class="i">x</span>, <span onmouseout="hideTip(event, 'fs8', 28)" onmouseover="showTip(event, 'fs8', 28)" class="i">left</span>, <span onmouseout="hideTip(event, 'fs9', 29)" onmouseover="showTip(event, 'fs9', 29)" class="i">right</span>) <span class="o">::</span> <span onmouseout="hideTip(event, 'fs6', 30)" onmouseover="showTip(event, 'fs6', 30)" class="i">trees</span>  <span class="k">-&gt;</span>  <span onmouseout="hideTip(event, 'fs7', 31)" onmouseover="showTip(event, 'fs7', 31)" class="i">x</span> <span class="o">::</span> <span onmouseout="hideTip(event, 'fs5', 32)" onmouseover="showTip(event, 'fs5', 32)" class="f">breadthFirst2</span> [<span class="k">yield!</span> <span onmouseout="hideTip(event, 'fs6', 33)" onmouseover="showTip(event, 'fs6', 33)" class="i">trees</span>; <span class="k">yield</span> <span class="i">left</span>; <span class="k">yield</span> <span class="i">right</span>]
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs10', 34)" onmouseover="showTip(event, 'fs10', 34)" class="f">breadthFirst</span> <span onmouseout="hideTip(event, 'fs11', 35)" onmouseover="showTip(event, 'fs11', 35)" class="i">tr</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs5', 36)" onmouseover="showTip(event, 'fs5', 36)" class="f">breadthFirst2</span> [<span onmouseout="hideTip(event, 'fs11', 37)" onmouseover="showTip(event, 'fs11', 37)" class="i">tr</span>]
+
+
+
+<span onmouseout="hideTip(event, 'fs12', 38)" onmouseover="showTip(event, 'fs12', 38)" class="f">printfn</span> <span class="s">&quot;</span><span class="pf">%A</span><span class="s">&quot;</span> (<span onmouseout="hideTip(event, 'fs10', 39)" onmouseover="showTip(event, 'fs10', 39)" class="f">breadthFirst</span> <span onmouseout="hideTip(event, 'fs4', 40)" onmouseover="showTip(event, 'fs4', 40)" class="i">tree1</span>)
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">union case Tree.Empty: &#39;a Tree</div>
+<div class="tip" id="fs2">union case Tree.Branch: &#39;a * &#39;a Tree * &#39;a Tree -&gt; &#39;a Tree</div>
+<div class="tip" id="fs3">type &#39;a Tree =<br />&#160;&#160;| Empty<br />&#160;&#160;| Branch of &#39;a * &#39;a Tree * &#39;a Tree<br /><br />Full name: Script.Tree&lt;_&gt;</div>
+<div class="tip" id="fs4">val tree1 : char Tree<br /><br />Full name: Script.tree1</div>
+<div class="tip" id="fs5">val breadthFirst2 : _arg1:&#39;a Tree list -&gt; &#39;a list<br /><br />Full name: Script.breadthFirst2</div>
+<div class="tip" id="fs6">val trees : &#39;a Tree list</div>
+<div class="tip" id="fs7">val x : &#39;a</div>
+<div class="tip" id="fs8">val left : &#39;a Tree</div>
+<div class="tip" id="fs9">val right : &#39;a Tree</div>
+<div class="tip" id="fs10">val breadthFirst : tr:&#39;a Tree -&gt; &#39;a list<br /><br />Full name: Script.breadthFirst</div>
+<div class="tip" id="fs11">val tr : &#39;a Tree</div>
+<div class="tip" id="fs12">val printfn : format:Printf.TextWriterFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.printfn</div>
+

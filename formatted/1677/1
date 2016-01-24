@@ -1,0 +1,238 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+<span class="l">38: </span>
+<span class="l">39: </span>
+<span class="l">40: </span>
+<span class="l">41: </span>
+<span class="l">42: </span>
+<span class="l">43: </span>
+<span class="l">44: </span>
+<span class="l">45: </span>
+<span class="l">46: </span>
+<span class="l">47: </span>
+<span class="l">48: </span>
+<span class="l">49: </span>
+<span class="l">50: </span>
+<span class="l">51: </span>
+<span class="l">52: </span>
+<span class="l">53: </span>
+<span class="l">54: </span>
+<span class="l">55: </span>
+<span class="l">56: </span>
+<span class="l">57: </span>
+<span class="l">58: </span>
+<span class="l">59: </span>
+<span class="l">60: </span>
+<span class="l">61: </span>
+<span class="l">62: </span>
+<span class="l">63: </span>
+<span class="l">64: </span>
+<span class="l">65: </span>
+<span class="l">66: </span>
+<span class="l">67: </span>
+<span class="l">68: </span>
+<span class="l">69: </span>
+<span class="l">70: </span>
+<span class="l">71: </span>
+<span class="l">72: </span>
+<span class="l">73: </span>
+<span class="l">74: </span>
+<span class="l">75: </span>
+<span class="l">76: </span>
+<span class="l">77: </span>
+<span class="l">78: </span>
+<span class="l">79: </span>
+<span class="l">80: </span>
+<span class="l">81: </span>
+<span class="l">82: </span>
+<span class="l">83: </span>
+<span class="l">84: </span>
+<span class="l">85: </span>
+<span class="l">86: </span>
+<span class="l">87: </span>
+<span class="l">88: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">module</span> <span class="t">ImmutableDict</span> <span class="o">=</span>
+   <span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">Collections</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="i">Generic</span>
+   <span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 4)" onmouseover="showTip(event, 'fs1', 4)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 5)" onmouseover="showTip(event, 'fs2', 5)" class="i">Collections</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs4', 6)" onmouseover="showTip(event, 'fs4', 6)" class="i">Immutable</span>
+
+   <span class="c">/// The empty dictionary.</span>
+   <span class="k">let</span> <span onmouseout="hideTip(event, 'fs5', 7)" onmouseover="showTip(event, 'fs5', 7)" class="i">empty</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">Key</span>,<span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span> <span class="o">=</span> 
+      <span class="i">ImmutableDictionary</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">Key</span>,<span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span><span class="o">.</span><span class="i">Empty</span> <span class="o">:&gt;</span> <span class="i">IImmutableDictionary</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">Key</span>,<span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span>
+
+   <span class="c">/// Tests whether the collection has any elements.</span>
+   <span class="k">let</span> <span onmouseout="hideTip(event, 'fs6', 8)" onmouseover="showTip(event, 'fs6', 8)" class="f">isEmpty</span> (<span onmouseout="hideTip(event, 'fs7', 9)" onmouseover="showTip(event, 'fs7', 9)" class="i">table</span><span class="o">:</span><span class="i">IImmutableDictionary</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">Key</span>,<span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span>) <span class="o">=</span>
+      <span onmouseout="hideTip(event, 'fs7', 10)" onmouseover="showTip(event, 'fs7', 10)" class="i">table</span><span class="o">.</span><span class="i">Count</span> <span class="o">=</span> <span class="n">0</span>
+
+   <span class="c">/// Returns a new dictionary with the binding added to the given dictionary.</span>
+   <span class="k">let</span> <span onmouseout="hideTip(event, 'fs8', 11)" onmouseover="showTip(event, 'fs8', 11)" class="f">add</span> <span onmouseout="hideTip(event, 'fs9', 12)" onmouseover="showTip(event, 'fs9', 12)" class="i">key</span> <span onmouseout="hideTip(event, 'fs10', 13)" onmouseover="showTip(event, 'fs10', 13)" class="i">value</span> (<span onmouseout="hideTip(event, 'fs11', 14)" onmouseover="showTip(event, 'fs11', 14)" class="i">table</span><span class="o">:</span><span class="i">IImmutableDictionary</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">Key</span>,<span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span>) <span class="o">=</span> 
+      <span onmouseout="hideTip(event, 'fs11', 15)" onmouseover="showTip(event, 'fs11', 15)" class="i">table</span><span class="o">.</span><span class="i">Add</span>(<span onmouseout="hideTip(event, 'fs9', 16)" onmouseover="showTip(event, 'fs9', 16)" class="i">key</span>,<span onmouseout="hideTip(event, 'fs10', 17)" onmouseover="showTip(event, 'fs10', 17)" class="i">value</span>)
+   
+   <span class="c">/// Removes an element from the collection.</span>
+   <span class="k">let</span> <span onmouseout="hideTip(event, 'fs12', 18)" onmouseover="showTip(event, 'fs12', 18)" class="f">remove</span> <span onmouseout="hideTip(event, 'fs9', 19)" onmouseover="showTip(event, 'fs9', 19)" class="i">key</span> (<span onmouseout="hideTip(event, 'fs13', 20)" onmouseover="showTip(event, 'fs13', 20)" class="i">table</span><span class="o">:</span><span class="i">IImmutableDictionary</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">Key</span>,<span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span>) <span class="o">=</span> 
+      <span onmouseout="hideTip(event, 'fs13', 21)" onmouseover="showTip(event, 'fs13', 21)" class="i">table</span><span class="o">.</span><span class="i">Remove</span>(<span onmouseout="hideTip(event, 'fs9', 22)" onmouseover="showTip(event, 'fs9', 22)" class="i">key</span>)
+      
+   <span class="c">/// Tests if an element is in collection.</span>
+   <span class="k">let</span> <span onmouseout="hideTip(event, 'fs14', 23)" onmouseover="showTip(event, 'fs14', 23)" class="f">containsKey</span> <span onmouseout="hideTip(event, 'fs9', 24)" onmouseover="showTip(event, 'fs9', 24)" class="i">key</span> (<span onmouseout="hideTip(event, 'fs13', 25)" onmouseover="showTip(event, 'fs13', 25)" class="i">table</span><span class="o">:</span><span class="i">IImmutableDictionary</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">Key</span>,<span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span>) <span class="o">=</span> 
+      <span onmouseout="hideTip(event, 'fs13', 26)" onmouseover="showTip(event, 'fs13', 26)" class="i">table</span><span class="o">.</span><span class="i">ContainsKey</span>(<span onmouseout="hideTip(event, 'fs9', 27)" onmouseover="showTip(event, 'fs9', 27)" class="i">key</span>)
+   
+   <span class="c">/// Looks up an element in the collection.</span>
+   <span class="k">let</span> <span onmouseout="hideTip(event, 'fs15', 28)" onmouseover="showTip(event, 'fs15', 28)" class="f">find</span> <span onmouseout="hideTip(event, 'fs9', 29)" onmouseover="showTip(event, 'fs9', 29)" class="i">key</span> (<span onmouseout="hideTip(event, 'fs13', 30)" onmouseover="showTip(event, 'fs13', 30)" class="i">table</span><span class="o">:</span><span class="i">IImmutableDictionary</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">Key</span>,<span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span>) <span class="o">=</span> 
+      <span class="k">match</span> <span onmouseout="hideTip(event, 'fs13', 31)" onmouseover="showTip(event, 'fs13', 31)" class="i">table</span><span class="o">.</span><span class="i">TryGetKey</span>(<span onmouseout="hideTip(event, 'fs9', 32)" onmouseover="showTip(event, 'fs9', 32)" class="i">key</span>) <span class="k">with</span>
+      | <span class="k">true</span>, <span onmouseout="hideTip(event, 'fs16', 33)" onmouseover="showTip(event, 'fs16', 33)" class="i">value</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs16', 34)" onmouseover="showTip(event, 'fs16', 34)" class="i">value</span>
+      | <span class="k">false</span>, _ <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs17', 35)" onmouseover="showTip(event, 'fs17', 35)" class="f">raise</span> (<span onmouseout="hideTip(event, 'fs18', 36)" onmouseover="showTip(event, 'fs18', 36)" class="t">KeyNotFoundException</span>())
+   
+   <span class="c">/// Looks up an element in the collection, returning </span>
+   <span class="c">/// a Some value if the element is in the domain of the map, </span>
+   <span class="c">/// or None if not.</span>
+   <span class="k">let</span> <span onmouseout="hideTip(event, 'fs19', 37)" onmouseover="showTip(event, 'fs19', 37)" class="f">tryFind</span> <span onmouseout="hideTip(event, 'fs9', 38)" onmouseover="showTip(event, 'fs9', 38)" class="i">key</span> (<span onmouseout="hideTip(event, 'fs13', 39)" onmouseover="showTip(event, 'fs13', 39)" class="i">table</span><span class="o">:</span><span class="i">IImmutableDictionary</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">Key</span>,<span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span>) <span class="o">=</span>
+      <span class="k">match</span> <span onmouseout="hideTip(event, 'fs13', 40)" onmouseover="showTip(event, 'fs13', 40)" class="i">table</span><span class="o">.</span><span class="i">TryGetKey</span>(<span onmouseout="hideTip(event, 'fs9', 41)" onmouseover="showTip(event, 'fs9', 41)" class="i">key</span>) <span class="k">with</span>
+      | <span class="k">true</span>, <span onmouseout="hideTip(event, 'fs16', 42)" onmouseover="showTip(event, 'fs16', 42)" class="i">value</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs20', 43)" onmouseover="showTip(event, 'fs20', 43)" class="p">Some</span> <span onmouseout="hideTip(event, 'fs16', 44)" onmouseover="showTip(event, 'fs16', 44)" class="i">value</span>
+      | <span class="k">false</span>, _ <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs21', 45)" onmouseover="showTip(event, 'fs21', 45)" class="p">None</span>
+
+   <span class="c">/// Returns an array of all key/value pairs in the mapping. </span>
+   <span class="k">let</span> <span onmouseout="hideTip(event, 'fs22', 46)" onmouseover="showTip(event, 'fs22', 46)" class="f">toArray</span> (<span onmouseout="hideTip(event, 'fs23', 47)" onmouseover="showTip(event, 'fs23', 47)" class="i">table</span><span class="o">:</span><span class="i">IImmutableDictionary</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">Key</span>,<span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span>) <span class="o">=</span>
+      [|<span class="k">for</span> <span onmouseout="hideTip(event, 'fs24', 48)" onmouseover="showTip(event, 'fs24', 48)" class="i">pair</span> <span class="k">in</span> <span onmouseout="hideTip(event, 'fs23', 49)" onmouseover="showTip(event, 'fs23', 49)" class="i">table</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs24', 50)" onmouseover="showTip(event, 'fs24', 50)" class="i">pair</span><span class="o">.</span><span class="i">Key</span>, <span onmouseout="hideTip(event, 'fs24', 51)" onmouseover="showTip(event, 'fs24', 51)" class="i">pair</span><span class="o">.</span><span class="i">Value</span>|]
+
+   <span class="c">/// Returns a new collection made from the given bindings.</span>
+   <span class="k">let</span> <span onmouseout="hideTip(event, 'fs25', 52)" onmouseover="showTip(event, 'fs25', 52)" class="f">ofSeq</span> (<span onmouseout="hideTip(event, 'fs26', 53)" onmouseover="showTip(event, 'fs26', 53)" class="i">elements</span><span class="o">:</span>(<span class="o">&#39;</span><span class="i">Key</span> <span class="o">*</span> <span class="o">&#39;</span><span class="i">T</span>) <span onmouseout="hideTip(event, 'fs27', 54)" onmouseover="showTip(event, 'fs27', 54)" class="t">seq</span>) <span class="o">=</span>
+      <span onmouseout="hideTip(event, 'fs27', 55)" onmouseover="showTip(event, 'fs27', 55)" class="i">seq</span> { <span class="k">for</span> (<span onmouseout="hideTip(event, 'fs28', 56)" onmouseover="showTip(event, 'fs28', 56)" class="i">k</span>,<span onmouseout="hideTip(event, 'fs29', 57)" onmouseover="showTip(event, 'fs29', 57)" class="i">v</span>) <span class="k">in</span> <span onmouseout="hideTip(event, 'fs26', 58)" onmouseover="showTip(event, 'fs26', 58)" class="i">elements</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs30', 59)" onmouseover="showTip(event, 'fs30', 59)" class="t">KeyValuePair</span>(<span onmouseout="hideTip(event, 'fs28', 60)" onmouseover="showTip(event, 'fs28', 60)" class="i">k</span>,<span onmouseout="hideTip(event, 'fs29', 61)" onmouseover="showTip(event, 'fs29', 61)" class="i">v</span>) }
+      <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs5', 62)" onmouseover="showTip(event, 'fs5', 62)" class="i">empty</span><span class="o">.</span><span class="i">AddRange</span>
+     
+   <span class="c">/// Creates a new collection whose elements are the results of applying </span>
+   <span class="c">/// the given function to each of the elements of the collection. </span>
+   <span class="k">let</span> <span onmouseout="hideTip(event, 'fs31', 63)" onmouseover="showTip(event, 'fs31', 63)" class="f">map</span> (<span onmouseout="hideTip(event, 'fs32', 64)" onmouseover="showTip(event, 'fs32', 64)" class="f">mapping</span><span class="o">:</span><span class="o">&#39;</span><span class="i">Key</span> <span class="k">-&gt;</span> <span class="o">&#39;</span><span class="i">T</span> <span class="k">-&gt;</span> <span class="o">&#39;</span><span class="i">U</span>) (<span onmouseout="hideTip(event, 'fs23', 65)" onmouseover="showTip(event, 'fs23', 65)" class="i">table</span><span class="o">:</span><span class="i">IImmutableDictionary</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">Key</span>,<span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span>) <span class="o">=</span>
+      <span onmouseout="hideTip(event, 'fs27', 66)" onmouseover="showTip(event, 'fs27', 66)" class="i">seq</span> { <span class="k">for</span> <span onmouseout="hideTip(event, 'fs24', 67)" onmouseover="showTip(event, 'fs24', 67)" class="i">pair</span> <span class="k">in</span> <span onmouseout="hideTip(event, 'fs23', 68)" onmouseover="showTip(event, 'fs23', 68)" class="i">table</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs30', 69)" onmouseover="showTip(event, 'fs30', 69)" class="t">KeyValuePair</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">Key</span>,<span class="o">&#39;</span><span class="i">U</span><span class="o">&gt;</span>(<span onmouseout="hideTip(event, 'fs24', 70)" onmouseover="showTip(event, 'fs24', 70)" class="i">pair</span><span class="o">.</span><span class="i">Key</span>, <span onmouseout="hideTip(event, 'fs32', 71)" onmouseover="showTip(event, 'fs32', 71)" class="f">mapping</span> <span onmouseout="hideTip(event, 'fs24', 72)" onmouseover="showTip(event, 'fs24', 72)" class="i">pair</span><span class="o">.</span><span class="i">Key</span> <span onmouseout="hideTip(event, 'fs24', 73)" onmouseover="showTip(event, 'fs24', 73)" class="i">pair</span><span class="o">.</span><span class="i">Value</span>) }
+      <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs5', 74)" onmouseover="showTip(event, 'fs5', 74)" class="i">empty</span><span class="o">.</span><span class="i">AddRange</span>
+   
+   <span class="c">/// Creates a new collection containing only the bindings for which the given predicate returns true.</span>
+   <span class="k">let</span> <span onmouseout="hideTip(event, 'fs33', 75)" onmouseover="showTip(event, 'fs33', 75)" class="f">filter</span> (<span onmouseout="hideTip(event, 'fs34', 76)" onmouseover="showTip(event, 'fs34', 76)" class="f">predicate</span><span class="o">:</span><span class="o">&#39;</span><span class="i">Key</span> <span class="k">-&gt;</span> <span class="o">&#39;</span><span class="i">T</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs35', 77)" onmouseover="showTip(event, 'fs35', 77)" class="t">bool</span>) (<span onmouseout="hideTip(event, 'fs23', 78)" onmouseover="showTip(event, 'fs23', 78)" class="i">table</span><span class="o">:</span><span class="i">IImmutableDictionary</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">Key</span>,<span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span>) <span class="o">=</span>
+      <span onmouseout="hideTip(event, 'fs27', 79)" onmouseover="showTip(event, 'fs27', 79)" class="i">seq</span> { <span class="k">for</span> <span onmouseout="hideTip(event, 'fs24', 80)" onmouseover="showTip(event, 'fs24', 80)" class="i">pair</span> <span class="k">in</span> <span onmouseout="hideTip(event, 'fs23', 81)" onmouseover="showTip(event, 'fs23', 81)" class="i">table</span> <span class="k">do</span> <span class="k">if</span> <span onmouseout="hideTip(event, 'fs34', 82)" onmouseover="showTip(event, 'fs34', 82)" class="f">predicate</span> <span onmouseout="hideTip(event, 'fs24', 83)" onmouseover="showTip(event, 'fs24', 83)" class="i">pair</span><span class="o">.</span><span class="i">Key</span> <span onmouseout="hideTip(event, 'fs24', 84)" onmouseover="showTip(event, 'fs24', 84)" class="i">pair</span><span class="o">.</span><span class="i">Value</span> <span class="k">then</span> <span class="k">yield</span> <span onmouseout="hideTip(event, 'fs24', 85)" onmouseover="showTip(event, 'fs24', 85)" class="i">pair</span> }
+      <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs5', 86)" onmouseover="showTip(event, 'fs5', 86)" class="i">empty</span><span class="o">.</span><span class="i">AddRange</span>
+
+   <span class="c">/// Returns true if the given predicate returns true for one of the bindings in the collection.</span>
+   <span class="k">let</span> <span onmouseout="hideTip(event, 'fs36', 87)" onmouseover="showTip(event, 'fs36', 87)" class="f">exists</span> (<span onmouseout="hideTip(event, 'fs34', 88)" onmouseover="showTip(event, 'fs34', 88)" class="f">predicate</span><span class="o">:</span><span class="o">&#39;</span><span class="i">Key</span> <span class="k">-&gt;</span> <span class="o">&#39;</span><span class="i">T</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs35', 89)" onmouseover="showTip(event, 'fs35', 89)" class="t">bool</span>) (<span onmouseout="hideTip(event, 'fs23', 90)" onmouseover="showTip(event, 'fs23', 90)" class="i">table</span><span class="o">:</span><span class="i">IImmutableDictionary</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">Key</span>,<span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span>) <span class="o">=</span>
+      <span onmouseout="hideTip(event, 'fs23', 91)" onmouseover="showTip(event, 'fs23', 91)" class="i">table</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs37', 92)" onmouseover="showTip(event, 'fs37', 92)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs38', 93)" onmouseover="showTip(event, 'fs38', 93)" class="f">exists</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs24', 94)" onmouseover="showTip(event, 'fs24', 94)" class="i">pair</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs34', 95)" onmouseover="showTip(event, 'fs34', 95)" class="f">predicate</span> <span onmouseout="hideTip(event, 'fs24', 96)" onmouseover="showTip(event, 'fs24', 96)" class="i">pair</span><span class="o">.</span><span class="i">Key</span> <span onmouseout="hideTip(event, 'fs24', 97)" onmouseover="showTip(event, 'fs24', 97)" class="i">pair</span><span class="o">.</span><span class="i">Value</span>)
+
+   <span class="c">/// Returns true if the given predicate returns true for all of the bindings in the collection.</span>
+   <span class="k">let</span> <span onmouseout="hideTip(event, 'fs39', 98)" onmouseover="showTip(event, 'fs39', 98)" class="f">forall</span> (<span onmouseout="hideTip(event, 'fs34', 99)" onmouseover="showTip(event, 'fs34', 99)" class="f">predicate</span><span class="o">:</span><span class="o">&#39;</span><span class="i">Key</span> <span class="k">-&gt;</span> <span class="o">&#39;</span><span class="i">T</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs35', 100)" onmouseover="showTip(event, 'fs35', 100)" class="t">bool</span>) (<span onmouseout="hideTip(event, 'fs23', 101)" onmouseover="showTip(event, 'fs23', 101)" class="i">table</span><span class="o">:</span><span class="i">IImmutableDictionary</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">Key</span>,<span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span>) <span class="o">=</span>
+      <span onmouseout="hideTip(event, 'fs23', 102)" onmouseover="showTip(event, 'fs23', 102)" class="i">table</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs37', 103)" onmouseover="showTip(event, 'fs37', 103)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs40', 104)" onmouseover="showTip(event, 'fs40', 104)" class="f">forall</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs24', 105)" onmouseover="showTip(event, 'fs24', 105)" class="i">pair</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs34', 106)" onmouseover="showTip(event, 'fs34', 106)" class="f">predicate</span> <span onmouseout="hideTip(event, 'fs24', 107)" onmouseover="showTip(event, 'fs24', 107)" class="i">pair</span><span class="o">.</span><span class="i">Key</span> <span onmouseout="hideTip(event, 'fs24', 108)" onmouseover="showTip(event, 'fs24', 108)" class="i">pair</span><span class="o">.</span><span class="i">Value</span>)
+
+   <span class="c">/// Evaluates the function on each mapping in the collection. </span>
+   <span class="c">/// Returns the key for the first mapping where the function returns true.</span>
+   <span class="k">let</span> <span onmouseout="hideTip(event, 'fs41', 109)" onmouseover="showTip(event, 'fs41', 109)" class="f">findKey</span> (<span onmouseout="hideTip(event, 'fs34', 110)" onmouseover="showTip(event, 'fs34', 110)" class="f">predicate</span><span class="o">:</span><span class="o">&#39;</span><span class="i">Key</span> <span class="k">-&gt;</span> <span class="o">&#39;</span><span class="i">T</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs35', 111)" onmouseover="showTip(event, 'fs35', 111)" class="t">bool</span>) (<span onmouseout="hideTip(event, 'fs23', 112)" onmouseover="showTip(event, 'fs23', 112)" class="i">table</span><span class="o">:</span><span class="i">IImmutableDictionary</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">Key</span>,<span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span>) <span class="o">=</span>
+      <span onmouseout="hideTip(event, 'fs23', 113)" onmouseover="showTip(event, 'fs23', 113)" class="i">table</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs37', 114)" onmouseover="showTip(event, 'fs37', 114)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs42', 115)" onmouseover="showTip(event, 'fs42', 115)" class="f">find</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs24', 116)" onmouseover="showTip(event, 'fs24', 116)" class="i">pair</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs34', 117)" onmouseover="showTip(event, 'fs34', 117)" class="f">predicate</span> <span onmouseout="hideTip(event, 'fs24', 118)" onmouseover="showTip(event, 'fs24', 118)" class="i">pair</span><span class="o">.</span><span class="i">Key</span> <span onmouseout="hideTip(event, 'fs24', 119)" onmouseover="showTip(event, 'fs24', 119)" class="i">pair</span><span class="o">.</span><span class="i">Value</span>) <span class="o">|&gt;</span> <span class="k">fun</span> <span onmouseout="hideTip(event, 'fs24', 120)" onmouseover="showTip(event, 'fs24', 120)" class="i">pair</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs24', 121)" onmouseover="showTip(event, 'fs24', 121)" class="i">pair</span><span class="o">.</span><span class="i">Key</span>
+
+   <span class="c">/// Evaluates the function on each mapping in the collection. </span>
+   <span class="c">/// Returns the key for the first mapping where the function returns true.</span>
+   <span class="k">let</span> <span onmouseout="hideTip(event, 'fs43', 122)" onmouseover="showTip(event, 'fs43', 122)" class="f">pick</span> (<span onmouseout="hideTip(event, 'fs44', 123)" onmouseover="showTip(event, 'fs44', 123)" class="f">chooser</span><span class="o">:</span><span class="o">&#39;</span><span class="i">Key</span> <span class="k">-&gt;</span> <span class="o">&#39;</span><span class="i">T</span> <span class="k">-&gt;</span> <span class="o">&#39;</span><span class="i">U</span> <span onmouseout="hideTip(event, 'fs45', 124)" onmouseover="showTip(event, 'fs45', 124)" class="t">option</span>) (<span onmouseout="hideTip(event, 'fs23', 125)" onmouseover="showTip(event, 'fs23', 125)" class="i">table</span><span class="o">:</span><span class="i">IImmutableDictionary</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">Key</span>,<span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span>) <span class="o">=</span>
+      <span onmouseout="hideTip(event, 'fs23', 126)" onmouseover="showTip(event, 'fs23', 126)" class="i">table</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs37', 127)" onmouseover="showTip(event, 'fs37', 127)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs46', 128)" onmouseover="showTip(event, 'fs46', 128)" class="f">pick</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs24', 129)" onmouseover="showTip(event, 'fs24', 129)" class="i">pair</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs44', 130)" onmouseover="showTip(event, 'fs44', 130)" class="f">chooser</span> <span onmouseout="hideTip(event, 'fs24', 131)" onmouseover="showTip(event, 'fs24', 131)" class="i">pair</span><span class="o">.</span><span class="i">Key</span> <span onmouseout="hideTip(event, 'fs24', 132)" onmouseover="showTip(event, 'fs24', 132)" class="i">pair</span><span class="o">.</span><span class="i">Value</span>)
+
+   <span class="c">/// Searches the collection looking for the first element where the given function </span>
+   <span class="c">/// returns a Some value.</span>
+   <span class="k">let</span> <span onmouseout="hideTip(event, 'fs47', 133)" onmouseover="showTip(event, 'fs47', 133)" class="f">tryPick</span> (<span onmouseout="hideTip(event, 'fs44', 134)" onmouseover="showTip(event, 'fs44', 134)" class="f">chooser</span><span class="o">:</span><span class="o">&#39;</span><span class="i">Key</span> <span class="k">-&gt;</span> <span class="o">&#39;</span><span class="i">T</span> <span class="k">-&gt;</span> <span class="o">&#39;</span><span class="i">U</span> <span onmouseout="hideTip(event, 'fs45', 135)" onmouseover="showTip(event, 'fs45', 135)" class="t">option</span>) (<span onmouseout="hideTip(event, 'fs23', 136)" onmouseover="showTip(event, 'fs23', 136)" class="i">table</span><span class="o">:</span><span class="i">IImmutableDictionary</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">Key</span>,<span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span>) <span class="o">=</span>
+      <span onmouseout="hideTip(event, 'fs23', 137)" onmouseover="showTip(event, 'fs23', 137)" class="i">table</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs37', 138)" onmouseover="showTip(event, 'fs37', 138)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs48', 139)" onmouseover="showTip(event, 'fs48', 139)" class="f">tryPick</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs24', 140)" onmouseover="showTip(event, 'fs24', 140)" class="i">pair</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs44', 141)" onmouseover="showTip(event, 'fs44', 141)" class="f">chooser</span> <span onmouseout="hideTip(event, 'fs24', 142)" onmouseover="showTip(event, 'fs24', 142)" class="i">pair</span><span class="o">.</span><span class="i">Key</span> <span onmouseout="hideTip(event, 'fs24', 143)" onmouseover="showTip(event, 'fs24', 143)" class="i">pair</span><span class="o">.</span><span class="i">Value</span>)
+
+   <span class="c">/// Applies the given function to each binding in the collection</span>
+   <span class="k">let</span> <span onmouseout="hideTip(event, 'fs49', 144)" onmouseover="showTip(event, 'fs49', 144)" class="f">iter</span> (<span onmouseout="hideTip(event, 'fs50', 145)" onmouseover="showTip(event, 'fs50', 145)" class="f">action</span><span class="o">:</span><span class="o">&#39;</span><span class="i">Key</span> <span class="k">-&gt;</span> <span class="o">&#39;</span><span class="i">T</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs51', 146)" onmouseover="showTip(event, 'fs51', 146)" class="t">unit</span>) (<span onmouseout="hideTip(event, 'fs23', 147)" onmouseover="showTip(event, 'fs23', 147)" class="i">table</span><span class="o">:</span><span class="i">IImmutableDictionary</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">Key</span>,<span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span>) <span class="o">=</span>
+      <span onmouseout="hideTip(event, 'fs23', 148)" onmouseover="showTip(event, 'fs23', 148)" class="i">table</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs37', 149)" onmouseover="showTip(event, 'fs37', 149)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs52', 150)" onmouseover="showTip(event, 'fs52', 150)" class="f">iter</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs24', 151)" onmouseover="showTip(event, 'fs24', 151)" class="i">pair</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs50', 152)" onmouseover="showTip(event, 'fs50', 152)" class="f">action</span> <span onmouseout="hideTip(event, 'fs24', 153)" onmouseover="showTip(event, 'fs24', 153)" class="i">pair</span><span class="o">.</span><span class="i">Key</span> <span onmouseout="hideTip(event, 'fs24', 154)" onmouseover="showTip(event, 'fs24', 154)" class="i">pair</span><span class="o">.</span><span class="i">Value</span>)
+  
+   <span class="c">/// Folds over the bindings in the collection</span>
+   <span class="k">let</span> <span onmouseout="hideTip(event, 'fs53', 155)" onmouseover="showTip(event, 'fs53', 155)" class="f">fold</span> (<span onmouseout="hideTip(event, 'fs54', 156)" onmouseover="showTip(event, 'fs54', 156)" class="f">folder</span><span class="o">:</span><span class="o">&#39;</span><span class="i">State</span> <span class="k">-&gt;</span> <span class="o">&#39;</span><span class="i">Key</span> <span class="k">-&gt;</span> <span class="o">&#39;</span><span class="i">T</span> <span class="k">-&gt;</span> <span class="o">&#39;</span><span class="i">State</span>) (<span onmouseout="hideTip(event, 'fs55', 157)" onmouseover="showTip(event, 'fs55', 157)" class="i">state</span><span class="o">:</span><span class="o">&#39;</span><span class="i">State</span>) (<span onmouseout="hideTip(event, 'fs23', 158)" onmouseover="showTip(event, 'fs23', 158)" class="i">table</span><span class="o">:</span><span class="i">IImmutableDictionary</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">Key</span>,<span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span>) <span class="o">=</span>
+      <span onmouseout="hideTip(event, 'fs23', 159)" onmouseover="showTip(event, 'fs23', 159)" class="i">table</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs37', 160)" onmouseover="showTip(event, 'fs37', 160)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs56', 161)" onmouseover="showTip(event, 'fs56', 161)" class="f">fold</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs57', 162)" onmouseover="showTip(event, 'fs57', 162)" class="i">acc</span> <span onmouseout="hideTip(event, 'fs24', 163)" onmouseover="showTip(event, 'fs24', 163)" class="i">pair</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs54', 164)" onmouseover="showTip(event, 'fs54', 164)" class="f">folder</span> <span onmouseout="hideTip(event, 'fs57', 165)" onmouseover="showTip(event, 'fs57', 165)" class="i">acc</span> <span onmouseout="hideTip(event, 'fs24', 166)" onmouseover="showTip(event, 'fs24', 166)" class="i">pair</span><span class="o">.</span><span class="i">Key</span> <span onmouseout="hideTip(event, 'fs24', 167)" onmouseover="showTip(event, 'fs24', 167)" class="i">pair</span><span class="o">.</span><span class="i">Value</span>) <span onmouseout="hideTip(event, 'fs55', 168)" onmouseover="showTip(event, 'fs55', 168)" class="i">state</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace System</div>
+<div class="tip" id="fs2">namespace System.Collections</div>
+<div class="tip" id="fs3">namespace System.Collections.Generic</div>
+<div class="tip" id="fs4">namespace System.Collections.Immutable</div>
+<div class="tip" id="fs5">val empty&lt;&#39;Key,&#39;T&gt; : obj<br /><br />Full name: Script.ImmutableDict.empty<br /><em><br /><br />&#160;The empty dictionary.</em></div>
+<div class="tip" id="fs6">val isEmpty : table:&#39;a -&gt; bool<br /><br />Full name: Script.ImmutableDict.isEmpty<br /><em><br /><br />&#160;Tests whether the collection has any elements.</em></div>
+<div class="tip" id="fs7">val table : &#39;a</div>
+<div class="tip" id="fs8">val add : key:&#39;a -&gt; value:&#39;b -&gt; table:&#39;c -&gt; &#39;d<br /><br />Full name: Script.ImmutableDict.add<br /><em><br /><br />&#160;Returns a new dictionary with the binding added to the given dictionary.</em></div>
+<div class="tip" id="fs9">val key : &#39;a</div>
+<div class="tip" id="fs10">val value : &#39;b</div>
+<div class="tip" id="fs11">val table : &#39;c</div>
+<div class="tip" id="fs12">val remove : key:&#39;a -&gt; table:&#39;b -&gt; &#39;c<br /><br />Full name: Script.ImmutableDict.remove<br /><em><br /><br />&#160;Removes an element from the collection.</em></div>
+<div class="tip" id="fs13">val table : &#39;b</div>
+<div class="tip" id="fs14">val containsKey : key:&#39;a -&gt; table:&#39;b -&gt; &#39;c<br /><br />Full name: Script.ImmutableDict.containsKey<br /><em><br /><br />&#160;Tests if an element is in collection.</em></div>
+<div class="tip" id="fs15">val find : key:&#39;a -&gt; table:&#39;b -&gt; &#39;c<br /><br />Full name: Script.ImmutableDict.find<br /><em><br /><br />&#160;Looks up an element in the collection.</em></div>
+<div class="tip" id="fs16">val value : &#39;c</div>
+<div class="tip" id="fs17">val raise : exn:System.Exception -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.Operators.raise</div>
+<div class="tip" id="fs18">Multiple items<br />type KeyNotFoundException =<br />&#160;&#160;inherit SystemException<br />&#160;&#160;new : unit -&gt; KeyNotFoundException + 2 overloads<br /><br />Full name: System.Collections.Generic.KeyNotFoundException<br /><br />--------------------<br />KeyNotFoundException() : unit<br />KeyNotFoundException(message: string) : unit<br />KeyNotFoundException(message: string, innerException: exn) : unit</div>
+<div class="tip" id="fs19">val tryFind : key:&#39;a -&gt; table:&#39;b -&gt; &#39;c option<br /><br />Full name: Script.ImmutableDict.tryFind<br /><em><br /><br />&#160;Looks up an element in the collection, returning <br />&#160;a Some value if the element is in the domain of the map, <br />&#160;or None if not.</em></div>
+<div class="tip" id="fs20">union case Option.Some: Value: &#39;T -&gt; Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs21">union case Option.None: Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs22">val toArray : table:seq&lt;&#39;a&gt; -&gt; (&#39;b * &#39;c) []<br /><br />Full name: Script.ImmutableDict.toArray<br /><em><br /><br />&#160;Returns an array of all key/value pairs in the mapping. </em></div>
+<div class="tip" id="fs23">val table : seq&lt;&#39;a&gt;</div>
+<div class="tip" id="fs24">val pair : &#39;a</div>
+<div class="tip" id="fs25">val ofSeq : elements:seq&lt;&#39;Key * &#39;T&gt; -&gt; &#39;a<br /><br />Full name: Script.ImmutableDict.ofSeq<br /><em><br /><br />&#160;Returns a new collection made from the given bindings.</em></div>
+<div class="tip" id="fs26">val elements : seq&lt;&#39;Key * &#39;T&gt;</div>
+<div class="tip" id="fs27">Multiple items<br />val seq : sequence:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Core.Operators.seq<br /><br />--------------------<br />type seq&lt;&#39;T&gt; = IEnumerable&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.seq&lt;_&gt;</div>
+<div class="tip" id="fs28">val k : &#39;Key</div>
+<div class="tip" id="fs29">val v : &#39;T</div>
+<div class="tip" id="fs30">Multiple items<br />type KeyValuePair&lt;&#39;TKey,&#39;TValue&gt; =<br />&#160;&#160;struct<br />&#160;&#160;&#160;&#160;new : key:&#39;TKey * value:&#39;TValue -&gt; KeyValuePair&lt;&#39;TKey, &#39;TValue&gt;<br />&#160;&#160;&#160;&#160;member Key : &#39;TKey<br />&#160;&#160;&#160;&#160;member ToString : unit -&gt; string<br />&#160;&#160;&#160;&#160;member Value : &#39;TValue<br />&#160;&#160;end<br /><br />Full name: System.Collections.Generic.KeyValuePair&lt;_,_&gt;<br /><br />--------------------<br />KeyValuePair()<br />KeyValuePair(key: &#39;TKey, value: &#39;TValue) : unit</div>
+<div class="tip" id="fs31">val map : mapping:(&#39;Key -&gt; &#39;T -&gt; &#39;U) -&gt; table:seq&lt;&#39;a&gt; -&gt; &#39;b<br /><br />Full name: Script.ImmutableDict.map<br /><em><br /><br />&#160;Creates a new collection whose elements are the results of applying <br />&#160;the given function to each of the elements of the collection. </em></div>
+<div class="tip" id="fs32">val mapping : (&#39;Key -&gt; &#39;T -&gt; &#39;U)</div>
+<div class="tip" id="fs33">val filter : predicate:(&#39;Key -&gt; &#39;T -&gt; bool) -&gt; table:seq&lt;&#39;a&gt; -&gt; &#39;b<br /><br />Full name: Script.ImmutableDict.filter<br /><em><br /><br />&#160;Creates a new collection containing only the bindings for which the given predicate returns true.</em></div>
+<div class="tip" id="fs34">val predicate : (&#39;Key -&gt; &#39;T -&gt; bool)</div>
+<div class="tip" id="fs35">type bool = System.Boolean<br /><br />Full name: Microsoft.FSharp.Core.bool</div>
+<div class="tip" id="fs36">val exists : predicate:(&#39;Key -&gt; &#39;T -&gt; bool) -&gt; table:seq&lt;&#39;a&gt; -&gt; bool<br /><br />Full name: Script.ImmutableDict.exists<br /><em><br /><br />&#160;Returns true if the given predicate returns true for one of the bindings in the collection.</em></div>
+<div class="tip" id="fs37">module Seq<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs38">val exists : predicate:(&#39;T -&gt; bool) -&gt; source:seq&lt;&#39;T&gt; -&gt; bool<br /><br />Full name: Microsoft.FSharp.Collections.Seq.exists</div>
+<div class="tip" id="fs39">val forall : predicate:(&#39;Key -&gt; &#39;T -&gt; bool) -&gt; table:seq&lt;&#39;a&gt; -&gt; bool<br /><br />Full name: Script.ImmutableDict.forall<br /><em><br /><br />&#160;Returns true if the given predicate returns true for all of the bindings in the collection.</em></div>
+<div class="tip" id="fs40">val forall : predicate:(&#39;T -&gt; bool) -&gt; source:seq&lt;&#39;T&gt; -&gt; bool<br /><br />Full name: Microsoft.FSharp.Collections.Seq.forall</div>
+<div class="tip" id="fs41">val findKey : predicate:(&#39;Key -&gt; &#39;T -&gt; bool) -&gt; table:seq&lt;&#39;a&gt; -&gt; &#39;b<br /><br />Full name: Script.ImmutableDict.findKey<br /><em><br /><br />&#160;Evaluates the function on each mapping in the collection. <br />&#160;Returns the key for the first mapping where the function returns true.</em></div>
+<div class="tip" id="fs42">val find : predicate:(&#39;T -&gt; bool) -&gt; source:seq&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Collections.Seq.find</div>
+<div class="tip" id="fs43">val pick : chooser:(&#39;Key -&gt; &#39;T -&gt; &#39;U option) -&gt; table:seq&lt;&#39;a&gt; -&gt; &#39;U<br /><br />Full name: Script.ImmutableDict.pick<br /><em><br /><br />&#160;Evaluates the function on each mapping in the collection. <br />&#160;Returns the key for the first mapping where the function returns true.</em></div>
+<div class="tip" id="fs44">val chooser : (&#39;Key -&gt; &#39;T -&gt; &#39;U option)</div>
+<div class="tip" id="fs45">type &#39;T option = Option&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Core.option&lt;_&gt;</div>
+<div class="tip" id="fs46">val pick : chooser:(&#39;T -&gt; &#39;U option) -&gt; source:seq&lt;&#39;T&gt; -&gt; &#39;U<br /><br />Full name: Microsoft.FSharp.Collections.Seq.pick</div>
+<div class="tip" id="fs47">val tryPick : chooser:(&#39;Key -&gt; &#39;T -&gt; &#39;U option) -&gt; table:seq&lt;&#39;a&gt; -&gt; &#39;U option<br /><br />Full name: Script.ImmutableDict.tryPick<br /><em><br /><br />&#160;Searches the collection looking for the first element where the given function <br />&#160;returns a Some value.</em></div>
+<div class="tip" id="fs48">val tryPick : chooser:(&#39;T -&gt; &#39;U option) -&gt; source:seq&lt;&#39;T&gt; -&gt; &#39;U option<br /><br />Full name: Microsoft.FSharp.Collections.Seq.tryPick</div>
+<div class="tip" id="fs49">val iter : action:(&#39;Key -&gt; &#39;T -&gt; unit) -&gt; table:seq&lt;&#39;a&gt; -&gt; unit<br /><br />Full name: Script.ImmutableDict.iter<br /><em><br /><br />&#160;Applies the given function to each binding in the collection</em></div>
+<div class="tip" id="fs50">val action : (&#39;Key -&gt; &#39;T -&gt; unit)</div>
+<div class="tip" id="fs51">type unit = Unit<br /><br />Full name: Microsoft.FSharp.Core.unit</div>
+<div class="tip" id="fs52">val iter : action:(&#39;T -&gt; unit) -&gt; source:seq&lt;&#39;T&gt; -&gt; unit<br /><br />Full name: Microsoft.FSharp.Collections.Seq.iter</div>
+<div class="tip" id="fs53">val fold : folder:(&#39;State -&gt; &#39;Key -&gt; &#39;T -&gt; &#39;State) -&gt; state:&#39;State -&gt; table:seq&lt;&#39;a&gt; -&gt; &#39;State<br /><br />Full name: Script.ImmutableDict.fold<br /><em><br /><br />&#160;Folds over the bindings in the collection</em></div>
+<div class="tip" id="fs54">val folder : (&#39;State -&gt; &#39;Key -&gt; &#39;T -&gt; &#39;State)</div>
+<div class="tip" id="fs55">val state : &#39;State</div>
+<div class="tip" id="fs56">val fold : folder:(&#39;State -&gt; &#39;T -&gt; &#39;State) -&gt; state:&#39;State -&gt; source:seq&lt;&#39;T&gt; -&gt; &#39;State<br /><br />Full name: Microsoft.FSharp.Collections.Seq.fold</div>
+<div class="tip" id="fs57">val acc : &#39;State</div>
+

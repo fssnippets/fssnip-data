@@ -1,0 +1,12 @@
+let replicate list num =
+    let rec replicateInner ch num =
+        match num with
+        | 0 -> []
+        | _ -> ch::replicateInner ch (num-1)
+
+    let rec replicateOuter list num =
+        match list with
+        | [] -> []
+        | h::t -> (replicateInner h num) @ replicateOuter t num
+
+    replicateOuter list num

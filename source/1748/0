@@ -1,0 +1,13 @@
+#load "packages/FsLab/FsLab.fsx"
+open FSharp.Data
+open XPlot.GoogleCharts
+
+type Shooting = HtmlProvider<"http://shootingtracker.com/wiki/Mass_Shootings_in_2015">
+let shoots = Shooting.GetSample()
+
+[ for r in shoots.Tables.``Mass Shootings in 2015``.Rows ->
+    r.Date.DayOfWeek, r.Killed ]
+|> Seq.groupBy fst
+|> Seq.sortBy fst
+|> Seq.map (fun (d, l) -> d.ToString(), Seq.sumBy snd l)
+|> Chart.Column

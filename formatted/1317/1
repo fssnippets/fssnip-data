@@ -1,0 +1,652 @@
+<h2><a name="Abstract-Syntax-Tree" class="anchor" href="#Abstract-Syntax-Tree">Abstract Syntax Tree</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+<span class="l">38: </span>
+<span class="l">39: </span>
+<span class="l">40: </span>
+<span class="l">41: </span>
+<span class="l">42: </span>
+<span class="l">43: </span>
+<span class="l">44: </span>
+<span class="l">45: </span>
+<span class="l">46: </span>
+<span class="l">47: </span>
+<span class="l">48: </span>
+<span class="l">49: </span>
+<span class="l">50: </span>
+<span class="l">51: </span>
+<span class="l">52: </span>
+<span class="l">53: </span>
+<span class="l">54: </span>
+<span class="l">55: </span>
+<span class="l">56: </span>
+<span class="l">57: </span>
+<span class="l">58: </span>
+<span class="l">59: </span>
+<span class="l">60: </span>
+<span class="l">61: </span>
+<span class="l">62: </span>
+<span class="l">63: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">type</span> <span class="t">Name</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="t">string</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="t">VarName</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="t">Name</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="t">TypeName</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs3', 5)" onmouseover="showTip(event, 'fs3', 5)" class="t">Name</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs5', 6)" onmouseover="showTip(event, 'fs5', 6)" class="t">MemberName</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs3', 7)" onmouseover="showTip(event, 'fs3', 7)" class="t">Name</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs6', 8)" onmouseover="showTip(event, 'fs6', 8)" class="t">LabelName</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs3', 9)" onmouseover="showTip(event, 'fs3', 9)" class="t">Name</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs7', 10)" onmouseover="showTip(event, 'fs7', 10)" class="t">Arg</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs7', 11)" onmouseover="showTip(event, 'fs7', 11)" class="p">Arg</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs4', 12)" onmouseover="showTip(event, 'fs4', 12)" class="t">TypeName</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs2', 13)" onmouseover="showTip(event, 'fs2', 13)" class="t">VarName</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs8', 14)" onmouseover="showTip(event, 'fs8', 14)" class="t">Value</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs9', 15)" onmouseover="showTip(event, 'fs9', 15)" class="t">obj</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs10', 16)" onmouseover="showTip(event, 'fs10', 16)" class="t">EnumValue</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs3', 17)" onmouseover="showTip(event, 'fs3', 17)" class="t">Name</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs8', 18)" onmouseover="showTip(event, 'fs8', 18)" class="t">Value</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs11', 19)" onmouseover="showTip(event, 'fs11', 19)" class="t">Import</span> <span class="o">=</span> 
+    | <span onmouseout="hideTip(event, 'fs11', 20)" onmouseover="showTip(event, 'fs11', 20)" class="p">Import</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs3', 21)" onmouseover="showTip(event, 'fs3', 21)" class="t">Name</span>
+    | <span onmouseout="hideTip(event, 'fs12', 22)" onmouseover="showTip(event, 'fs12', 22)" class="p">Abbreviation</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs3', 23)" onmouseover="showTip(event, 'fs3', 23)" class="t">Name</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs3', 24)" onmouseover="showTip(event, 'fs3', 24)" class="t">Name</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs13', 25)" onmouseover="showTip(event, 'fs13', 25)" class="t">Access</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs14', 26)" onmouseover="showTip(event, 'fs14', 26)" class="p">Public</span> | <span onmouseout="hideTip(event, 'fs15', 27)" onmouseover="showTip(event, 'fs15', 27)" class="p">Private</span> | <span onmouseout="hideTip(event, 'fs16', 28)" onmouseover="showTip(event, 'fs16', 28)" class="p">Protected</span> | <span onmouseout="hideTip(event, 'fs17', 29)" onmouseover="showTip(event, 'fs17', 29)" class="p">Internal</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs18', 30)" onmouseover="showTip(event, 'fs18', 30)" class="t">Modifier</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs19', 31)" onmouseover="showTip(event, 'fs19', 31)" class="p">Sealed</span> | <span onmouseout="hideTip(event, 'fs20', 32)" onmouseover="showTip(event, 'fs20', 32)" class="p">Static</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs21', 33)" onmouseover="showTip(event, 'fs21', 33)" class="t">Expr</span> <span class="o">=</span> 
+    | <span onmouseout="hideTip(event, 'fs22', 34)" onmouseover="showTip(event, 'fs22', 34)" class="p">Literal</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs8', 35)" onmouseover="showTip(event, 'fs8', 35)" class="t">Value</span>
+    | <span onmouseout="hideTip(event, 'fs23', 36)" onmouseover="showTip(event, 'fs23', 36)" class="p">Variable</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs2', 37)" onmouseover="showTip(event, 'fs2', 37)" class="t">VarName</span>
+    | <span onmouseout="hideTip(event, 'fs24', 38)" onmouseover="showTip(event, 'fs24', 38)" class="p">MethodInvoke</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs5', 39)" onmouseover="showTip(event, 'fs5', 39)" class="t">MemberName</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs21', 40)" onmouseover="showTip(event, 'fs21', 40)" class="t">Expr</span> <span onmouseout="hideTip(event, 'fs25', 41)" onmouseover="showTip(event, 'fs25', 41)" class="t">list</span>
+    | <span onmouseout="hideTip(event, 'fs26', 42)" onmouseover="showTip(event, 'fs26', 42)" class="p">PropertyGet</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs5', 43)" onmouseover="showTip(event, 'fs5', 43)" class="t">MemberName</span>
+    | <span onmouseout="hideTip(event, 'fs27', 44)" onmouseover="showTip(event, 'fs27', 44)" class="p">InfixOperator</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs21', 45)" onmouseover="showTip(event, 'fs21', 45)" class="t">Expr</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs1', 46)" onmouseover="showTip(event, 'fs1', 46)" class="t">string</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs21', 47)" onmouseover="showTip(event, 'fs21', 47)" class="t">Expr</span>
+    | <span onmouseout="hideTip(event, 'fs28', 48)" onmouseover="showTip(event, 'fs28', 48)" class="p">PrefixOperator</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs1', 49)" onmouseover="showTip(event, 'fs1', 49)" class="t">string</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs21', 50)" onmouseover="showTip(event, 'fs21', 50)" class="t">Expr</span>
+    | <span onmouseout="hideTip(event, 'fs29', 51)" onmouseover="showTip(event, 'fs29', 51)" class="p">PostfixOperator</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs21', 52)" onmouseover="showTip(event, 'fs21', 52)" class="t">Expr</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs1', 53)" onmouseover="showTip(event, 'fs1', 53)" class="t">string</span>
+    | <span onmouseout="hideTip(event, 'fs30', 54)" onmouseover="showTip(event, 'fs30', 54)" class="p">TernaryOperator</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs21', 55)" onmouseover="showTip(event, 'fs21', 55)" class="t">Expr</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs21', 56)" onmouseover="showTip(event, 'fs21', 56)" class="t">Expr</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs21', 57)" onmouseover="showTip(event, 'fs21', 57)" class="t">Expr</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs31', 58)" onmouseover="showTip(event, 'fs31', 58)" class="t">From</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs4', 59)" onmouseover="showTip(event, 'fs4', 59)" class="t">TypeName</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs3', 60)" onmouseover="showTip(event, 'fs3', 60)" class="t">Name</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs21', 61)" onmouseover="showTip(event, 'fs21', 61)" class="t">Expr</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs32', 62)" onmouseover="showTip(event, 'fs32', 62)" class="t">To</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs21', 63)" onmouseover="showTip(event, 'fs21', 63)" class="t">Expr</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs33', 64)" onmouseover="showTip(event, 'fs33', 64)" class="t">Step</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs21', 65)" onmouseover="showTip(event, 'fs21', 65)" class="t">Expr</span> <span onmouseout="hideTip(event, 'fs25', 66)" onmouseover="showTip(event, 'fs25', 66)" class="t">list</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs34', 67)" onmouseover="showTip(event, 'fs34', 67)" class="t">Statement</span> <span class="o">=</span>
+    | <span onmouseout="hideTip(event, 'fs35', 68)" onmouseover="showTip(event, 'fs35', 68)" class="p">Define</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs4', 69)" onmouseover="showTip(event, 'fs4', 69)" class="t">TypeName</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs2', 70)" onmouseover="showTip(event, 'fs2', 70)" class="t">VarName</span>
+    | <span onmouseout="hideTip(event, 'fs36', 71)" onmouseover="showTip(event, 'fs36', 71)" class="p">Construct</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs4', 72)" onmouseover="showTip(event, 'fs4', 72)" class="t">TypeName</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs2', 73)" onmouseover="showTip(event, 'fs2', 73)" class="t">VarName</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs21', 74)" onmouseover="showTip(event, 'fs21', 74)" class="t">Expr</span>
+    | <span onmouseout="hideTip(event, 'fs37', 75)" onmouseover="showTip(event, 'fs37', 75)" class="p">Assignment</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs2', 76)" onmouseover="showTip(event, 'fs2', 76)" class="t">VarName</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs21', 77)" onmouseover="showTip(event, 'fs21', 77)" class="t">Expr</span>
+    | <span onmouseout="hideTip(event, 'fs38', 78)" onmouseover="showTip(event, 'fs38', 78)" class="p">PropertySet</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs5', 79)" onmouseover="showTip(event, 'fs5', 79)" class="t">MemberName</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs21', 80)" onmouseover="showTip(event, 'fs21', 80)" class="t">Expr</span>
+    | <span onmouseout="hideTip(event, 'fs39', 81)" onmouseover="showTip(event, 'fs39', 81)" class="p">Invoke</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs5', 82)" onmouseover="showTip(event, 'fs5', 82)" class="t">MemberName</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs21', 83)" onmouseover="showTip(event, 'fs21', 83)" class="t">Expr</span> <span onmouseout="hideTip(event, 'fs25', 84)" onmouseover="showTip(event, 'fs25', 84)" class="t">list</span>
+    | <span onmouseout="hideTip(event, 'fs40', 85)" onmouseover="showTip(event, 'fs40', 85)" class="p">If</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs21', 86)" onmouseover="showTip(event, 'fs21', 86)" class="t">Expr</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs41', 87)" onmouseover="showTip(event, 'fs41', 87)" class="t">Block</span>
+    | <span onmouseout="hideTip(event, 'fs42', 88)" onmouseover="showTip(event, 'fs42', 88)" class="p">IfElse</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs21', 89)" onmouseover="showTip(event, 'fs21', 89)" class="t">Expr</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs41', 90)" onmouseover="showTip(event, 'fs41', 90)" class="t">Block</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs41', 91)" onmouseover="showTip(event, 'fs41', 91)" class="t">Block</span>
+    | <span onmouseout="hideTip(event, 'fs43', 92)" onmouseover="showTip(event, 'fs43', 92)" class="p">Switch</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs21', 93)" onmouseover="showTip(event, 'fs21', 93)" class="t">Expr</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs44', 94)" onmouseover="showTip(event, 'fs44', 94)" class="t">Case</span> <span onmouseout="hideTip(event, 'fs25', 95)" onmouseover="showTip(event, 'fs25', 95)" class="t">list</span>
+    | <span onmouseout="hideTip(event, 'fs45', 96)" onmouseover="showTip(event, 'fs45', 96)" class="p">For</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs31', 97)" onmouseover="showTip(event, 'fs31', 97)" class="t">From</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs32', 98)" onmouseover="showTip(event, 'fs32', 98)" class="t">To</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs33', 99)" onmouseover="showTip(event, 'fs33', 99)" class="t">Step</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs41', 100)" onmouseover="showTip(event, 'fs41', 100)" class="t">Block</span>
+    | <span onmouseout="hideTip(event, 'fs46', 101)" onmouseover="showTip(event, 'fs46', 101)" class="p">ForEach</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs4', 102)" onmouseover="showTip(event, 'fs4', 102)" class="t">TypeName</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs2', 103)" onmouseover="showTip(event, 'fs2', 103)" class="t">VarName</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs21', 104)" onmouseover="showTip(event, 'fs21', 104)" class="t">Expr</span>    
+    | <span onmouseout="hideTip(event, 'fs47', 105)" onmouseover="showTip(event, 'fs47', 105)" class="p">While</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs21', 106)" onmouseover="showTip(event, 'fs21', 106)" class="t">Expr</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs34', 107)" onmouseover="showTip(event, 'fs34', 107)" class="t">Statement</span> <span onmouseout="hideTip(event, 'fs25', 108)" onmouseover="showTip(event, 'fs25', 108)" class="t">list</span>
+    | <span onmouseout="hideTip(event, 'fs48', 109)" onmouseover="showTip(event, 'fs48', 109)" class="p">DoWhile</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs34', 110)" onmouseover="showTip(event, 'fs34', 110)" class="t">Statement</span> <span onmouseout="hideTip(event, 'fs49', 111)" onmouseover="showTip(event, 'fs49', 111)" class="t">List</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs21', 112)" onmouseover="showTip(event, 'fs21', 112)" class="t">Expr</span>
+    | <span onmouseout="hideTip(event, 'fs50', 113)" onmouseover="showTip(event, 'fs50', 113)" class="p">Try</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs41', 114)" onmouseover="showTip(event, 'fs41', 114)" class="t">Block</span>
+    | <span onmouseout="hideTip(event, 'fs51', 115)" onmouseover="showTip(event, 'fs51', 115)" class="p">Catch</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs4', 116)" onmouseover="showTip(event, 'fs4', 116)" class="t">TypeName</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs41', 117)" onmouseover="showTip(event, 'fs41', 117)" class="t">Block</span>
+    | <span onmouseout="hideTip(event, 'fs52', 118)" onmouseover="showTip(event, 'fs52', 118)" class="p">Finally</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs4', 119)" onmouseover="showTip(event, 'fs4', 119)" class="t">TypeName</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs41', 120)" onmouseover="showTip(event, 'fs41', 120)" class="t">Block</span>
+    | <span onmouseout="hideTip(event, 'fs53', 121)" onmouseover="showTip(event, 'fs53', 121)" class="p">Lock</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs21', 122)" onmouseover="showTip(event, 'fs21', 122)" class="t">Expr</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs41', 123)" onmouseover="showTip(event, 'fs41', 123)" class="t">Block</span>    
+    | <span onmouseout="hideTip(event, 'fs54', 124)" onmouseover="showTip(event, 'fs54', 124)" class="p">Using</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs21', 125)" onmouseover="showTip(event, 'fs21', 125)" class="t">Expr</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs41', 126)" onmouseover="showTip(event, 'fs41', 126)" class="t">Block</span>
+    | <span onmouseout="hideTip(event, 'fs55', 127)" onmouseover="showTip(event, 'fs55', 127)" class="p">Label</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs6', 128)" onmouseover="showTip(event, 'fs6', 128)" class="t">LabelName</span>
+    | <span onmouseout="hideTip(event, 'fs56', 129)" onmouseover="showTip(event, 'fs56', 129)" class="p">Goto</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs6', 130)" onmouseover="showTip(event, 'fs6', 130)" class="t">LabelName</span>
+    | <span onmouseout="hideTip(event, 'fs57', 131)" onmouseover="showTip(event, 'fs57', 131)" class="p">Break</span>
+    | <span onmouseout="hideTip(event, 'fs58', 132)" onmouseover="showTip(event, 'fs58', 132)" class="p">Continue</span>
+    | <span onmouseout="hideTip(event, 'fs59', 133)" onmouseover="showTip(event, 'fs59', 133)" class="p">Return</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs21', 134)" onmouseover="showTip(event, 'fs21', 134)" class="t">Expr</span>
+<span class="k">and</span> <span onmouseout="hideTip(event, 'fs44', 135)" onmouseover="showTip(event, 'fs44', 135)" class="t">Case</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs60', 136)" onmouseover="showTip(event, 'fs60', 136)" class="p">Case</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs8', 137)" onmouseover="showTip(event, 'fs8', 137)" class="t">Value</span> <span onmouseout="hideTip(event, 'fs61', 138)" onmouseover="showTip(event, 'fs61', 138)" class="t">option</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs41', 139)" onmouseover="showTip(event, 'fs41', 139)" class="t">Block</span>
+<span class="k">and</span> <span onmouseout="hideTip(event, 'fs41', 140)" onmouseover="showTip(event, 'fs41', 140)" class="t">Block</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs34', 141)" onmouseover="showTip(event, 'fs34', 141)" class="t">Statement</span> <span onmouseout="hideTip(event, 'fs25', 142)" onmouseover="showTip(event, 'fs25', 142)" class="t">list</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs62', 143)" onmouseover="showTip(event, 'fs62', 143)" class="t">MemberInfo</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs62', 144)" onmouseover="showTip(event, 'fs62', 144)" class="p">MemberInfo</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs13', 145)" onmouseover="showTip(event, 'fs13', 145)" class="t">Access</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs18', 146)" onmouseover="showTip(event, 'fs18', 146)" class="t">Modifier</span> <span onmouseout="hideTip(event, 'fs61', 147)" onmouseover="showTip(event, 'fs61', 147)" class="t">option</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs4', 148)" onmouseover="showTip(event, 'fs4', 148)" class="t">TypeName</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs3', 149)" onmouseover="showTip(event, 'fs3', 149)" class="t">Name</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs63', 150)" onmouseover="showTip(event, 'fs63', 150)" class="t">Member</span> <span class="o">=</span>
+    | <span onmouseout="hideTip(event, 'fs64', 151)" onmouseover="showTip(event, 'fs64', 151)" class="p">Field</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs62', 152)" onmouseover="showTip(event, 'fs62', 152)" class="t">MemberInfo</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs21', 153)" onmouseover="showTip(event, 'fs21', 153)" class="t">Expr</span> <span onmouseout="hideTip(event, 'fs61', 154)" onmouseover="showTip(event, 'fs61', 154)" class="t">option</span>
+    | <span onmouseout="hideTip(event, 'fs65', 155)" onmouseover="showTip(event, 'fs65', 155)" class="p">Constructor</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs62', 156)" onmouseover="showTip(event, 'fs62', 156)" class="t">MemberInfo</span>
+    | <span onmouseout="hideTip(event, 'fs66', 157)" onmouseover="showTip(event, 'fs66', 157)" class="p">Method</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs62', 158)" onmouseover="showTip(event, 'fs62', 158)" class="t">MemberInfo</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs7', 159)" onmouseover="showTip(event, 'fs7', 159)" class="t">Arg</span> <span onmouseout="hideTip(event, 'fs25', 160)" onmouseover="showTip(event, 'fs25', 160)" class="t">list</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs41', 161)" onmouseover="showTip(event, 'fs41', 161)" class="t">Block</span>
+    | <span onmouseout="hideTip(event, 'fs67', 162)" onmouseover="showTip(event, 'fs67', 162)" class="p">Property</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs62', 163)" onmouseover="showTip(event, 'fs62', 163)" class="t">MemberInfo</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs41', 164)" onmouseover="showTip(event, 'fs41', 164)" class="t">Block</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs68', 165)" onmouseover="showTip(event, 'fs68', 165)" class="t">CSharpType</span> <span class="o">=</span> 
+    | <span onmouseout="hideTip(event, 'fs69', 166)" onmouseover="showTip(event, 'fs69', 166)" class="p">Class</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs13', 167)" onmouseover="showTip(event, 'fs13', 167)" class="t">Access</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs18', 168)" onmouseover="showTip(event, 'fs18', 168)" class="t">Modifier</span> <span onmouseout="hideTip(event, 'fs61', 169)" onmouseover="showTip(event, 'fs61', 169)" class="t">option</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs3', 170)" onmouseover="showTip(event, 'fs3', 170)" class="t">Name</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs63', 171)" onmouseover="showTip(event, 'fs63', 171)" class="t">Member</span> <span onmouseout="hideTip(event, 'fs25', 172)" onmouseover="showTip(event, 'fs25', 172)" class="t">list</span>
+    | <span onmouseout="hideTip(event, 'fs70', 173)" onmouseover="showTip(event, 'fs70', 173)" class="p">Struct</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs13', 174)" onmouseover="showTip(event, 'fs13', 174)" class="t">Access</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs3', 175)" onmouseover="showTip(event, 'fs3', 175)" class="t">Name</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs63', 176)" onmouseover="showTip(event, 'fs63', 176)" class="t">Member</span> <span onmouseout="hideTip(event, 'fs25', 177)" onmouseover="showTip(event, 'fs25', 177)" class="t">list</span>
+    | <span onmouseout="hideTip(event, 'fs71', 178)" onmouseover="showTip(event, 'fs71', 178)" class="p">Enum</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs13', 179)" onmouseover="showTip(event, 'fs13', 179)" class="t">Access</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs4', 180)" onmouseover="showTip(event, 'fs4', 180)" class="t">TypeName</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs10', 181)" onmouseover="showTip(event, 'fs10', 181)" class="t">EnumValue</span> <span onmouseout="hideTip(event, 'fs25', 182)" onmouseover="showTip(event, 'fs25', 182)" class="t">list</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs72', 183)" onmouseover="showTip(event, 'fs72', 183)" class="t">Scope</span> <span class="o">=</span>
+    | <span onmouseout="hideTip(event, 'fs73', 184)" onmouseover="showTip(event, 'fs73', 184)" class="p">Namespace</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs11', 185)" onmouseover="showTip(event, 'fs11', 185)" class="t">Import</span> <span onmouseout="hideTip(event, 'fs25', 186)" onmouseover="showTip(event, 'fs25', 186)" class="t">list</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs3', 187)" onmouseover="showTip(event, 'fs3', 187)" class="t">Name</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs72', 188)" onmouseover="showTip(event, 'fs72', 188)" class="t">Scope</span> <span onmouseout="hideTip(event, 'fs25', 189)" onmouseover="showTip(event, 'fs25', 189)" class="t">list</span>
+    | <span onmouseout="hideTip(event, 'fs74', 190)" onmouseover="showTip(event, 'fs74', 190)" class="p">Types</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs11', 191)" onmouseover="showTip(event, 'fs11', 191)" class="t">Import</span> <span onmouseout="hideTip(event, 'fs25', 192)" onmouseover="showTip(event, 'fs25', 192)" class="t">list</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs68', 193)" onmouseover="showTip(event, 'fs68', 193)" class="t">CSharpType</span> <span onmouseout="hideTip(event, 'fs25', 194)" onmouseover="showTip(event, 'fs25', 194)" class="t">list</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Parser" class="anchor" href="#Parser">Parser</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">  1: </span>
+<span class="l">  2: </span>
+<span class="l">  3: </span>
+<span class="l">  4: </span>
+<span class="l">  5: </span>
+<span class="l">  6: </span>
+<span class="l">  7: </span>
+<span class="l">  8: </span>
+<span class="l">  9: </span>
+<span class="l"> 10: </span>
+<span class="l"> 11: </span>
+<span class="l"> 12: </span>
+<span class="l"> 13: </span>
+<span class="l"> 14: </span>
+<span class="l"> 15: </span>
+<span class="l"> 16: </span>
+<span class="l"> 17: </span>
+<span class="l"> 18: </span>
+<span class="l"> 19: </span>
+<span class="l"> 20: </span>
+<span class="l"> 21: </span>
+<span class="l"> 22: </span>
+<span class="l"> 23: </span>
+<span class="l"> 24: </span>
+<span class="l"> 25: </span>
+<span class="l"> 26: </span>
+<span class="l"> 27: </span>
+<span class="l"> 28: </span>
+<span class="l"> 29: </span>
+<span class="l"> 30: </span>
+<span class="l"> 31: </span>
+<span class="l"> 32: </span>
+<span class="l"> 33: </span>
+<span class="l"> 34: </span>
+<span class="l"> 35: </span>
+<span class="l"> 36: </span>
+<span class="l"> 37: </span>
+<span class="l"> 38: </span>
+<span class="l"> 39: </span>
+<span class="l"> 40: </span>
+<span class="l"> 41: </span>
+<span class="l"> 42: </span>
+<span class="l"> 43: </span>
+<span class="l"> 44: </span>
+<span class="l"> 45: </span>
+<span class="l"> 46: </span>
+<span class="l"> 47: </span>
+<span class="l"> 48: </span>
+<span class="l"> 49: </span>
+<span class="l"> 50: </span>
+<span class="l"> 51: </span>
+<span class="l"> 52: </span>
+<span class="l"> 53: </span>
+<span class="l"> 54: </span>
+<span class="l"> 55: </span>
+<span class="l"> 56: </span>
+<span class="l"> 57: </span>
+<span class="l"> 58: </span>
+<span class="l"> 59: </span>
+<span class="l"> 60: </span>
+<span class="l"> 61: </span>
+<span class="l"> 62: </span>
+<span class="l"> 63: </span>
+<span class="l"> 64: </span>
+<span class="l"> 65: </span>
+<span class="l"> 66: </span>
+<span class="l"> 67: </span>
+<span class="l"> 68: </span>
+<span class="l"> 69: </span>
+<span class="l"> 70: </span>
+<span class="l"> 71: </span>
+<span class="l"> 72: </span>
+<span class="l"> 73: </span>
+<span class="l"> 74: </span>
+<span class="l"> 75: </span>
+<span class="l"> 76: </span>
+<span class="l"> 77: </span>
+<span class="l"> 78: </span>
+<span class="l"> 79: </span>
+<span class="l"> 80: </span>
+<span class="l"> 81: </span>
+<span class="l"> 82: </span>
+<span class="l"> 83: </span>
+<span class="l"> 84: </span>
+<span class="l"> 85: </span>
+<span class="l"> 86: </span>
+<span class="l"> 87: </span>
+<span class="l"> 88: </span>
+<span class="l"> 89: </span>
+<span class="l"> 90: </span>
+<span class="l"> 91: </span>
+<span class="l"> 92: </span>
+<span class="l"> 93: </span>
+<span class="l"> 94: </span>
+<span class="l"> 95: </span>
+<span class="l"> 96: </span>
+<span class="l"> 97: </span>
+<span class="l"> 98: </span>
+<span class="l"> 99: </span>
+<span class="l">100: </span>
+<span class="l">101: </span>
+<span class="l">102: </span>
+<span class="l">103: </span>
+<span class="l">104: </span>
+<span class="l">105: </span>
+<span class="l">106: </span>
+<span class="l">107: </span>
+<span class="l">108: </span>
+<span class="l">109: </span>
+<span class="l">110: </span>
+<span class="l">111: </span>
+<span class="l">112: </span>
+<span class="l">113: </span>
+<span class="l">114: </span>
+<span class="l">115: </span>
+<span class="l">116: </span>
+<span class="l">117: </span>
+<span class="l">118: </span>
+<span class="l">119: </span>
+<span class="l">120: </span>
+<span class="l">121: </span>
+<span class="l">122: </span>
+<span class="l">123: </span>
+<span class="l">124: </span>
+<span class="l">125: </span>
+<span class="l">126: </span>
+<span class="l">127: </span>
+<span class="l">128: </span>
+<span class="l">129: </span>
+<span class="l">130: </span>
+<span class="l">131: </span>
+<span class="l">132: </span>
+<span class="l">133: </span>
+<span class="l">134: </span>
+<span class="l">135: </span>
+<span class="l">136: </span>
+<span class="l">137: </span>
+<span class="l">138: </span>
+<span class="l">139: </span>
+<span class="l">140: </span>
+<span class="l">141: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span onmouseout="hideTip(event, 'fs75', 195)" onmouseover="showTip(event, 'fs75', 195)" class="i">FParsec</span>
+
+<span class="c">// White space</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs76', 196)" onmouseover="showTip(event, 'fs76', 196)" class="f">ws</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs77', 197)" onmouseover="showTip(event, 'fs77', 197)" class="f">spaces</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs78', 198)" onmouseover="showTip(event, 'fs78', 198)" class="f">str_ws</span> <span onmouseout="hideTip(event, 'fs79', 199)" onmouseover="showTip(event, 'fs79', 199)" class="i">s</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs80', 200)" onmouseover="showTip(event, 'fs80', 200)" class="f">pstring</span> <span onmouseout="hideTip(event, 'fs79', 201)" onmouseover="showTip(event, 'fs79', 201)" class="i">s</span> <span class="o">.</span><span class="o">&gt;&gt;</span> <span onmouseout="hideTip(event, 'fs76', 202)" onmouseover="showTip(event, 'fs76', 202)" class="f">ws</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs81', 203)" onmouseover="showTip(event, 'fs81', 203)" class="f">str_ws1</span> <span onmouseout="hideTip(event, 'fs79', 204)" onmouseover="showTip(event, 'fs79', 204)" class="i">s</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs80', 205)" onmouseover="showTip(event, 'fs80', 205)" class="f">pstring</span> <span onmouseout="hideTip(event, 'fs79', 206)" onmouseover="showTip(event, 'fs79', 206)" class="i">s</span> <span class="o">.</span><span class="o">&gt;&gt;</span> <span onmouseout="hideTip(event, 'fs82', 207)" onmouseover="showTip(event, 'fs82', 207)" class="f">spaces1</span>
+
+<span class="c">// Literals</span>
+
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs83', 208)" onmouseover="showTip(event, 'fs83', 208)" class="t">Lit</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs84', 209)" onmouseover="showTip(event, 'fs84', 209)" class="t">NumberLiteralOptions</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs85', 210)" onmouseover="showTip(event, 'fs85', 210)" class="i">numberFormat</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs83', 211)" onmouseover="showTip(event, 'fs83', 211)" class="t">Lit</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs86', 212)" onmouseover="showTip(event, 'fs86', 212)" class="i">AllowMinusSign</span> <span class="o">|||</span> <span onmouseout="hideTip(event, 'fs83', 213)" onmouseover="showTip(event, 'fs83', 213)" class="t">Lit</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs87', 214)" onmouseover="showTip(event, 'fs87', 214)" class="i">AllowFraction</span> <span class="o">|||</span> <span onmouseout="hideTip(event, 'fs83', 215)" onmouseover="showTip(event, 'fs83', 215)" class="t">Lit</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs88', 216)" onmouseover="showTip(event, 'fs88', 216)" class="i">AllowExponent</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs89', 217)" onmouseover="showTip(event, 'fs89', 217)" class="f">pnumber</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs90', 218)" onmouseover="showTip(event, 'fs90', 218)" class="t">Parser</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs21', 219)" onmouseover="showTip(event, 'fs21', 219)" class="t">Expr</span>, <span onmouseout="hideTip(event, 'fs91', 220)" onmouseover="showTip(event, 'fs91', 220)" class="t">unit</span><span class="o">&gt;</span> <span class="o">=</span>
+    <span onmouseout="hideTip(event, 'fs92', 221)" onmouseover="showTip(event, 'fs92', 221)" class="f">numberLiteral</span> <span onmouseout="hideTip(event, 'fs85', 222)" onmouseover="showTip(event, 'fs85', 222)" class="i">numberFormat</span> <span class="s">&quot;number&quot;</span>
+    <span class="o">|&gt;&gt;</span> <span class="k">fun</span> <span onmouseout="hideTip(event, 'fs93', 223)" onmouseover="showTip(event, 'fs93', 223)" class="i">nl</span> <span class="k">-&gt;</span>
+            <span class="k">if</span> <span onmouseout="hideTip(event, 'fs93', 224)" onmouseover="showTip(event, 'fs93', 224)" class="i">nl</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs94', 225)" onmouseover="showTip(event, 'fs94', 225)" class="i">IsInteger</span> <span class="k">then</span> <span onmouseout="hideTip(event, 'fs22', 226)" onmouseover="showTip(event, 'fs22', 226)" class="p">Literal</span>(<span onmouseout="hideTip(event, 'fs95', 227)" onmouseover="showTip(event, 'fs95', 227)" class="f">int</span> <span onmouseout="hideTip(event, 'fs93', 228)" onmouseover="showTip(event, 'fs93', 228)" class="i">nl</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs96', 229)" onmouseover="showTip(event, 'fs96', 229)" class="i">String</span>)
+            <span class="k">else</span> <span onmouseout="hideTip(event, 'fs22', 230)" onmouseover="showTip(event, 'fs22', 230)" class="p">Literal</span>(<span onmouseout="hideTip(event, 'fs97', 231)" onmouseover="showTip(event, 'fs97', 231)" class="f">float</span> <span onmouseout="hideTip(event, 'fs93', 232)" onmouseover="showTip(event, 'fs93', 232)" class="i">nl</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs96', 233)" onmouseover="showTip(event, 'fs96', 233)" class="i">String</span>)
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs98', 234)" onmouseover="showTip(event, 'fs98', 234)" class="f">ptrue</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs78', 235)" onmouseover="showTip(event, 'fs78', 235)" class="f">str_ws</span> <span class="s">&quot;true&quot;</span> <span class="o">|&gt;&gt;</span> <span class="k">fun</span> _ <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs22', 236)" onmouseover="showTip(event, 'fs22', 236)" class="p">Literal</span>(<span class="k">true</span>)
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs99', 237)" onmouseover="showTip(event, 'fs99', 237)" class="f">pfalse</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs78', 238)" onmouseover="showTip(event, 'fs78', 238)" class="f">str_ws</span> <span class="s">&quot;false&quot;</span> <span class="o">|&gt;&gt;</span> <span class="k">fun</span> _ <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs22', 239)" onmouseover="showTip(event, 'fs22', 239)" class="p">Literal</span>(<span class="k">false</span>)
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs100', 240)" onmouseover="showTip(event, 'fs100', 240)" class="f">pbool</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs98', 241)" onmouseover="showTip(event, 'fs98', 241)" class="f">ptrue</span> <span class="o">&lt;|&gt;</span> <span onmouseout="hideTip(event, 'fs99', 242)" onmouseover="showTip(event, 'fs99', 242)" class="f">pfalse</span>
+
+<span class="c">// Expressions</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs101', 243)" onmouseover="showTip(event, 'fs101', 243)" class="f">pidentifier</span> <span class="o">=</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs102', 244)" onmouseover="showTip(event, 'fs102', 244)" class="f">isIdentifierFirstChar</span> <span onmouseout="hideTip(event, 'fs103', 245)" onmouseover="showTip(event, 'fs103', 245)" class="i">c</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs104', 246)" onmouseover="showTip(event, 'fs104', 246)" class="f">isLetter</span> <span onmouseout="hideTip(event, 'fs103', 247)" onmouseover="showTip(event, 'fs103', 247)" class="i">c</span> <span class="o">||</span> <span onmouseout="hideTip(event, 'fs103', 248)" onmouseover="showTip(event, 'fs103', 248)" class="i">c</span> <span class="o">=</span> <span class="s">&#39;_&#39;</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs105', 249)" onmouseover="showTip(event, 'fs105', 249)" class="f">isIdentifierChar</span> <span onmouseout="hideTip(event, 'fs103', 250)" onmouseover="showTip(event, 'fs103', 250)" class="i">c</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs104', 251)" onmouseover="showTip(event, 'fs104', 251)" class="f">isLetter</span> <span onmouseout="hideTip(event, 'fs103', 252)" onmouseover="showTip(event, 'fs103', 252)" class="i">c</span> <span class="o">||</span> <span onmouseout="hideTip(event, 'fs106', 253)" onmouseover="showTip(event, 'fs106', 253)" class="f">isDigit</span> <span onmouseout="hideTip(event, 'fs103', 254)" onmouseover="showTip(event, 'fs103', 254)" class="i">c</span> <span class="o">||</span> <span onmouseout="hideTip(event, 'fs103', 255)" onmouseover="showTip(event, 'fs103', 255)" class="i">c</span> <span class="o">=</span> <span class="s">&#39;_&#39;</span>
+    <span onmouseout="hideTip(event, 'fs107', 256)" onmouseover="showTip(event, 'fs107', 256)" class="f">many1Satisfy2L</span> <span onmouseout="hideTip(event, 'fs102', 257)" onmouseover="showTip(event, 'fs102', 257)" class="f">isIdentifierFirstChar</span> <span onmouseout="hideTip(event, 'fs105', 258)" onmouseover="showTip(event, 'fs105', 258)" class="f">isIdentifierChar</span> <span class="s">&quot;identifier&quot;</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs108', 259)" onmouseover="showTip(event, 'fs108', 259)" class="f">pidentifier_ws</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs101', 260)" onmouseover="showTip(event, 'fs101', 260)" class="f">pidentifier</span> <span class="o">.</span><span class="o">&gt;&gt;</span> <span onmouseout="hideTip(event, 'fs76', 261)" onmouseover="showTip(event, 'fs76', 261)" class="f">ws</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs109', 262)" onmouseover="showTip(event, 'fs109', 262)" class="f">pvar</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs101', 263)" onmouseover="showTip(event, 'fs101', 263)" class="f">pidentifier</span> <span class="o">|&gt;&gt;</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs110', 264)" onmouseover="showTip(event, 'fs110', 264)" class="i">x</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs23', 265)" onmouseover="showTip(event, 'fs23', 265)" class="p">Variable</span>(<span onmouseout="hideTip(event, 'fs110', 266)" onmouseover="showTip(event, 'fs110', 266)" class="i">x</span>))
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs111', 267)" onmouseover="showTip(event, 'fs111', 267)" class="f">pexpr</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs89', 268)" onmouseover="showTip(event, 'fs89', 268)" class="f">pnumber</span> <span class="o">&lt;|&gt;</span> <span onmouseout="hideTip(event, 'fs100', 269)" onmouseover="showTip(event, 'fs100', 269)" class="f">pbool</span> <span class="o">&lt;|&gt;</span> <span onmouseout="hideTip(event, 'fs109', 270)" onmouseover="showTip(event, 'fs109', 270)" class="f">pvar</span>
+
+<span class="c">// Statements</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs112', 271)" onmouseover="showTip(event, 'fs112', 271)" class="f">pstatement</span>, <span onmouseout="hideTip(event, 'fs113', 272)" onmouseover="showTip(event, 'fs113', 272)" class="v">pstatementimpl</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs114', 273)" onmouseover="showTip(event, 'fs114', 273)" class="f">createParserForwardedToRef</span>()
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs115', 274)" onmouseover="showTip(event, 'fs115', 274)" class="f">psinglestatement</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs112', 275)" onmouseover="showTip(event, 'fs112', 275)" class="f">pstatement</span> <span class="o">|&gt;&gt;</span> <span class="k">fun</span> <span onmouseout="hideTip(event, 'fs116', 276)" onmouseover="showTip(event, 'fs116', 276)" class="i">statement</span> <span class="k">-&gt;</span> [<span onmouseout="hideTip(event, 'fs116', 277)" onmouseover="showTip(event, 'fs116', 277)" class="i">statement</span>]
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs117', 278)" onmouseover="showTip(event, 'fs117', 278)" class="f">pstatementblock</span> <span class="o">=</span>
+    <span onmouseout="hideTip(event, 'fs115', 279)" onmouseover="showTip(event, 'fs115', 279)" class="f">psinglestatement</span> <span class="o">&lt;|&gt;</span>
+    <span onmouseout="hideTip(event, 'fs118', 280)" onmouseover="showTip(event, 'fs118', 280)" class="f">between</span> (<span onmouseout="hideTip(event, 'fs78', 281)" onmouseover="showTip(event, 'fs78', 281)" class="f">str_ws</span> <span class="s">&quot;{&quot;</span>) (<span onmouseout="hideTip(event, 'fs78', 282)" onmouseover="showTip(event, 'fs78', 282)" class="f">str_ws</span> <span class="s">&quot;}&quot;</span>) (<span onmouseout="hideTip(event, 'fs119', 283)" onmouseover="showTip(event, 'fs119', 283)" class="f">many</span> <span onmouseout="hideTip(event, 'fs112', 284)" onmouseover="showTip(event, 'fs112', 284)" class="f">pstatement</span>) 
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs120', 285)" onmouseover="showTip(event, 'fs120', 285)" class="f">pdefine</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs121', 286)" onmouseover="showTip(event, 'fs121', 286)" class="f">pipe2</span> (<span onmouseout="hideTip(event, 'fs101', 287)" onmouseover="showTip(event, 'fs101', 287)" class="f">pidentifier</span> <span class="o">.</span><span class="o">&gt;&gt;</span> <span onmouseout="hideTip(event, 'fs82', 288)" onmouseover="showTip(event, 'fs82', 288)" class="f">spaces1</span>) (<span onmouseout="hideTip(event, 'fs101', 289)" onmouseover="showTip(event, 'fs101', 289)" class="f">pidentifier</span>)
+                (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs122', 290)" onmouseover="showTip(event, 'fs122', 290)" class="i">ty</span> <span onmouseout="hideTip(event, 'fs123', 291)" onmouseover="showTip(event, 'fs123', 291)" class="i">name</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs35', 292)" onmouseover="showTip(event, 'fs35', 292)" class="p">Define</span>(<span onmouseout="hideTip(event, 'fs122', 293)" onmouseover="showTip(event, 'fs122', 293)" class="i">ty</span>,<span onmouseout="hideTip(event, 'fs123', 294)" onmouseover="showTip(event, 'fs123', 294)" class="i">name</span>))
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs124', 295)" onmouseover="showTip(event, 'fs124', 295)" class="f">passign</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs125', 296)" onmouseover="showTip(event, 'fs125', 296)" class="f">pipe3</span> <span onmouseout="hideTip(event, 'fs108', 297)" onmouseover="showTip(event, 'fs108', 297)" class="f">pidentifier_ws</span> (<span onmouseout="hideTip(event, 'fs78', 298)" onmouseover="showTip(event, 'fs78', 298)" class="f">str_ws</span> <span class="s">&quot;=&quot;</span>) <span onmouseout="hideTip(event, 'fs111', 299)" onmouseover="showTip(event, 'fs111', 299)" class="f">pexpr</span>
+               (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs126', 300)" onmouseover="showTip(event, 'fs126', 300)" class="i">var</span> _ <span onmouseout="hideTip(event, 'fs127', 301)" onmouseover="showTip(event, 'fs127', 301)" class="i">expr</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs37', 302)" onmouseover="showTip(event, 'fs37', 302)" class="p">Assignment</span>(<span onmouseout="hideTip(event, 'fs126', 303)" onmouseover="showTip(event, 'fs126', 303)" class="i">var</span>,<span onmouseout="hideTip(event, 'fs127', 304)" onmouseover="showTip(event, 'fs127', 304)" class="i">expr</span>))
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs128', 305)" onmouseover="showTip(event, 'fs128', 305)" class="f">pexpr&#39;</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs118', 306)" onmouseover="showTip(event, 'fs118', 306)" class="f">between</span> (<span onmouseout="hideTip(event, 'fs78', 307)" onmouseover="showTip(event, 'fs78', 307)" class="f">str_ws</span> <span class="s">&quot;(&quot;</span>) (<span onmouseout="hideTip(event, 'fs78', 308)" onmouseover="showTip(event, 'fs78', 308)" class="f">str_ws</span> <span class="s">&quot;)&quot;</span>) <span onmouseout="hideTip(event, 'fs111', 309)" onmouseover="showTip(event, 'fs111', 309)" class="f">pexpr</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs129', 310)" onmouseover="showTip(event, 'fs129', 310)" class="f">pwhile</span> <span class="o">=</span> 
+    <span onmouseout="hideTip(event, 'fs121', 311)" onmouseover="showTip(event, 'fs121', 311)" class="f">pipe2</span> (<span onmouseout="hideTip(event, 'fs78', 312)" onmouseover="showTip(event, 'fs78', 312)" class="f">str_ws</span> <span class="s">&quot;while&quot;</span> <span class="o">&gt;</span><span class="o">&gt;</span><span class="o">.</span> <span onmouseout="hideTip(event, 'fs128', 313)" onmouseover="showTip(event, 'fs128', 313)" class="f">pexpr&#39;</span>) <span onmouseout="hideTip(event, 'fs117', 314)" onmouseover="showTip(event, 'fs117', 314)" class="f">pstatementblock</span>        
+        (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs130', 315)" onmouseover="showTip(event, 'fs130', 315)" class="i">e</span> <span onmouseout="hideTip(event, 'fs131', 316)" onmouseover="showTip(event, 'fs131', 316)" class="i">block</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs47', 317)" onmouseover="showTip(event, 'fs47', 317)" class="p">While</span>(<span onmouseout="hideTip(event, 'fs130', 318)" onmouseover="showTip(event, 'fs130', 318)" class="i">e</span>,<span onmouseout="hideTip(event, 'fs131', 319)" onmouseover="showTip(event, 'fs131', 319)" class="i">block</span>))
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs132', 320)" onmouseover="showTip(event, 'fs132', 320)" class="f">pdowhile</span> <span class="o">=</span>
+    <span onmouseout="hideTip(event, 'fs121', 321)" onmouseover="showTip(event, 'fs121', 321)" class="f">pipe2</span>
+        (<span onmouseout="hideTip(event, 'fs78', 322)" onmouseover="showTip(event, 'fs78', 322)" class="f">str_ws</span> <span class="s">&quot;do&quot;</span> <span class="o">&gt;</span><span class="o">&gt;</span><span class="o">.</span> <span onmouseout="hideTip(event, 'fs117', 323)" onmouseover="showTip(event, 'fs117', 323)" class="f">pstatementblock</span>)
+        (<span onmouseout="hideTip(event, 'fs78', 324)" onmouseover="showTip(event, 'fs78', 324)" class="f">str_ws</span> <span class="s">&quot;while&quot;</span> <span class="o">&gt;</span><span class="o">&gt;</span><span class="o">.</span> <span onmouseout="hideTip(event, 'fs128', 325)" onmouseover="showTip(event, 'fs128', 325)" class="f">pexpr&#39;</span>)
+        (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs131', 326)" onmouseover="showTip(event, 'fs131', 326)" class="i">block</span> <span onmouseout="hideTip(event, 'fs130', 327)" onmouseover="showTip(event, 'fs130', 327)" class="i">e</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs48', 328)" onmouseover="showTip(event, 'fs48', 328)" class="p">DoWhile</span>(<span onmouseout="hideTip(event, 'fs131', 329)" onmouseover="showTip(event, 'fs131', 329)" class="i">block</span>, <span onmouseout="hideTip(event, 'fs130', 330)" onmouseover="showTip(event, 'fs130', 330)" class="i">e</span>))
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs133', 331)" onmouseover="showTip(event, 'fs133', 331)" class="f">pif</span> <span class="o">=</span>
+    <span onmouseout="hideTip(event, 'fs121', 332)" onmouseover="showTip(event, 'fs121', 332)" class="f">pipe2</span> (<span onmouseout="hideTip(event, 'fs78', 333)" onmouseover="showTip(event, 'fs78', 333)" class="f">str_ws</span> <span class="s">&quot;if&quot;</span> <span class="o">&gt;</span><span class="o">&gt;</span><span class="o">.</span> <span onmouseout="hideTip(event, 'fs128', 334)" onmouseover="showTip(event, 'fs128', 334)" class="f">pexpr&#39;</span>) <span onmouseout="hideTip(event, 'fs117', 335)" onmouseover="showTip(event, 'fs117', 335)" class="f">pstatementblock</span>
+        (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs130', 336)" onmouseover="showTip(event, 'fs130', 336)" class="i">e</span> <span onmouseout="hideTip(event, 'fs131', 337)" onmouseover="showTip(event, 'fs131', 337)" class="i">block</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs40', 338)" onmouseover="showTip(event, 'fs40', 338)" class="p">If</span>(<span onmouseout="hideTip(event, 'fs130', 339)" onmouseover="showTip(event, 'fs130', 339)" class="i">e</span>,<span onmouseout="hideTip(event, 'fs131', 340)" onmouseover="showTip(event, 'fs131', 340)" class="i">block</span>))
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs134', 341)" onmouseover="showTip(event, 'fs134', 341)" class="f">pifelse</span> <span class="o">=</span>
+    <span onmouseout="hideTip(event, 'fs125', 342)" onmouseover="showTip(event, 'fs125', 342)" class="f">pipe3</span> (<span onmouseout="hideTip(event, 'fs78', 343)" onmouseover="showTip(event, 'fs78', 343)" class="f">str_ws</span> <span class="s">&quot;if&quot;</span> <span class="o">&gt;</span><span class="o">&gt;</span><span class="o">.</span> <span onmouseout="hideTip(event, 'fs128', 344)" onmouseover="showTip(event, 'fs128', 344)" class="f">pexpr&#39;</span>) <span onmouseout="hideTip(event, 'fs117', 345)" onmouseover="showTip(event, 'fs117', 345)" class="f">pstatementblock</span> (<span onmouseout="hideTip(event, 'fs78', 346)" onmouseover="showTip(event, 'fs78', 346)" class="f">str_ws</span> <span class="s">&quot;else&quot;</span> <span class="o">&gt;</span><span class="o">&gt;</span><span class="o">.</span> <span onmouseout="hideTip(event, 'fs117', 347)" onmouseover="showTip(event, 'fs117', 347)" class="f">pstatementblock</span>)
+        (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs130', 348)" onmouseover="showTip(event, 'fs130', 348)" class="i">e</span> <span onmouseout="hideTip(event, 'fs135', 349)" onmouseover="showTip(event, 'fs135', 349)" class="i">t</span> <span onmouseout="hideTip(event, 'fs136', 350)" onmouseover="showTip(event, 'fs136', 350)" class="i">f</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs42', 351)" onmouseover="showTip(event, 'fs42', 351)" class="p">IfElse</span>(<span onmouseout="hideTip(event, 'fs130', 352)" onmouseover="showTip(event, 'fs130', 352)" class="i">e</span>,<span onmouseout="hideTip(event, 'fs135', 353)" onmouseover="showTip(event, 'fs135', 353)" class="i">t</span>,<span onmouseout="hideTip(event, 'fs136', 354)" onmouseover="showTip(event, 'fs136', 354)" class="i">f</span>))
+
+<span onmouseout="hideTip(event, 'fs113', 355)" onmouseover="showTip(event, 'fs113', 355)" class="v">pstatementimpl</span> <span class="o">:=</span>
+    <span onmouseout="hideTip(event, 'fs137', 356)" onmouseover="showTip(event, 'fs137', 356)" class="f">attempt</span> (<span onmouseout="hideTip(event, 'fs120', 357)" onmouseover="showTip(event, 'fs120', 357)" class="f">pdefine</span> <span class="o">.</span><span class="o">&gt;&gt;</span> <span onmouseout="hideTip(event, 'fs78', 358)" onmouseover="showTip(event, 'fs78', 358)" class="f">str_ws</span> <span class="s">&quot;;&quot;</span>) <span class="o">&lt;|&gt;</span>
+    <span onmouseout="hideTip(event, 'fs137', 359)" onmouseover="showTip(event, 'fs137', 359)" class="f">attempt</span> (<span onmouseout="hideTip(event, 'fs124', 360)" onmouseover="showTip(event, 'fs124', 360)" class="f">passign</span> <span class="o">.</span><span class="o">&gt;&gt;</span> <span onmouseout="hideTip(event, 'fs78', 361)" onmouseover="showTip(event, 'fs78', 361)" class="f">str_ws</span> <span class="s">&quot;;&quot;</span>) <span class="o">&lt;|&gt;</span>
+    <span onmouseout="hideTip(event, 'fs137', 362)" onmouseover="showTip(event, 'fs137', 362)" class="f">attempt</span> <span onmouseout="hideTip(event, 'fs134', 363)" onmouseover="showTip(event, 'fs134', 363)" class="f">pifelse</span> <span class="o">&lt;|&gt;</span> <span onmouseout="hideTip(event, 'fs137', 364)" onmouseover="showTip(event, 'fs137', 364)" class="f">attempt</span> <span onmouseout="hideTip(event, 'fs133', 365)" onmouseover="showTip(event, 'fs133', 365)" class="f">pif</span> <span class="o">&lt;|&gt;</span>
+    <span onmouseout="hideTip(event, 'fs137', 366)" onmouseover="showTip(event, 'fs137', 366)" class="f">attempt</span> <span onmouseout="hideTip(event, 'fs129', 367)" onmouseover="showTip(event, 'fs129', 367)" class="f">pwhile</span> <span class="o">&lt;|&gt;</span> <span onmouseout="hideTip(event, 'fs137', 368)" onmouseover="showTip(event, 'fs137', 368)" class="f">attempt</span> <span onmouseout="hideTip(event, 'fs132', 369)" onmouseover="showTip(event, 'fs132', 369)" class="f">pdowhile</span>
+
+<span class="c">// Access</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs138', 370)" onmouseover="showTip(event, 'fs138', 370)" class="f">ppublic</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs81', 371)" onmouseover="showTip(event, 'fs81', 371)" class="f">str_ws1</span> <span class="s">&quot;public&quot;</span> <span class="o">|&gt;&gt;</span> (<span class="k">fun</span> _ <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs14', 372)" onmouseover="showTip(event, 'fs14', 372)" class="p">Public</span>)
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs139', 373)" onmouseover="showTip(event, 'fs139', 373)" class="f">pprivate</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs81', 374)" onmouseover="showTip(event, 'fs81', 374)" class="f">str_ws1</span> <span class="s">&quot;private&quot;</span> <span class="o">|&gt;&gt;</span> (<span class="k">fun</span> _ <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs15', 375)" onmouseover="showTip(event, 'fs15', 375)" class="p">Private</span>)
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs140', 376)" onmouseover="showTip(event, 'fs140', 376)" class="f">pprotected</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs81', 377)" onmouseover="showTip(event, 'fs81', 377)" class="f">str_ws1</span> <span class="s">&quot;protected&quot;</span> <span class="o">|&gt;&gt;</span> (<span class="k">fun</span> _ <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs16', 378)" onmouseover="showTip(event, 'fs16', 378)" class="p">Protected</span>)
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs141', 379)" onmouseover="showTip(event, 'fs141', 379)" class="f">pinternal</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs81', 380)" onmouseover="showTip(event, 'fs81', 380)" class="f">str_ws1</span> <span class="s">&quot;internal&quot;</span> <span class="o">|&gt;&gt;</span> (<span class="k">fun</span> _ <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs142', 381)" onmouseover="showTip(event, 'fs142', 381)" class="p">Internal</span>)
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs143', 382)" onmouseover="showTip(event, 'fs143', 382)" class="f">paccess</span> <span class="o">=</span> 
+    <span onmouseout="hideTip(event, 'fs144', 383)" onmouseover="showTip(event, 'fs144', 383)" class="f">opt</span> (<span onmouseout="hideTip(event, 'fs138', 384)" onmouseover="showTip(event, 'fs138', 384)" class="f">ppublic</span> <span class="o">&lt;|&gt;</span> <span onmouseout="hideTip(event, 'fs139', 385)" onmouseover="showTip(event, 'fs139', 385)" class="f">pprivate</span> <span class="o">&lt;|&gt;</span> <span onmouseout="hideTip(event, 'fs140', 386)" onmouseover="showTip(event, 'fs140', 386)" class="f">pprotected</span> <span class="o">&lt;|&gt;</span> <span onmouseout="hideTip(event, 'fs141', 387)" onmouseover="showTip(event, 'fs141', 387)" class="f">pinternal</span>)
+    <span class="o">|&gt;&gt;</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs145', 388)" onmouseover="showTip(event, 'fs145', 388)" class="i">access</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs146', 389)" onmouseover="showTip(event, 'fs146', 389)" class="f">defaultArg</span> <span onmouseout="hideTip(event, 'fs145', 390)" onmouseover="showTip(event, 'fs145', 390)" class="i">access</span> <span onmouseout="hideTip(event, 'fs142', 391)" onmouseover="showTip(event, 'fs142', 391)" class="p">Internal</span>)
+
+<span class="c">// Modifiers</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs147', 392)" onmouseover="showTip(event, 'fs147', 392)" class="f">psealed</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs81', 393)" onmouseover="showTip(event, 'fs81', 393)" class="f">str_ws1</span> <span class="s">&quot;sealed&quot;</span> <span class="o">|&gt;&gt;</span> (<span class="k">fun</span> _ <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs19', 394)" onmouseover="showTip(event, 'fs19', 394)" class="p">Sealed</span>)
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs148', 395)" onmouseover="showTip(event, 'fs148', 395)" class="f">pstatic</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs81', 396)" onmouseover="showTip(event, 'fs81', 396)" class="f">str_ws1</span> <span class="s">&quot;static&quot;</span> <span class="o">|&gt;&gt;</span> (<span class="k">fun</span> _ <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs20', 397)" onmouseover="showTip(event, 'fs20', 397)" class="p">Static</span>)
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs149', 398)" onmouseover="showTip(event, 'fs149', 398)" class="f">pmodifier</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs147', 399)" onmouseover="showTip(event, 'fs147', 399)" class="f">psealed</span> <span class="o">&lt;|&gt;</span> <span onmouseout="hideTip(event, 'fs148', 400)" onmouseover="showTip(event, 'fs148', 400)" class="f">pstatic</span>
+
+<span class="c">// Arguments</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs150', 401)" onmouseover="showTip(event, 'fs150', 401)" class="f">parg</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs121', 402)" onmouseover="showTip(event, 'fs121', 402)" class="f">pipe2</span> <span onmouseout="hideTip(event, 'fs108', 403)" onmouseover="showTip(event, 'fs108', 403)" class="f">pidentifier_ws</span> <span onmouseout="hideTip(event, 'fs108', 404)" onmouseover="showTip(event, 'fs108', 404)" class="f">pidentifier_ws</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs122', 405)" onmouseover="showTip(event, 'fs122', 405)" class="i">ty</span> <span onmouseout="hideTip(event, 'fs123', 406)" onmouseover="showTip(event, 'fs123', 406)" class="i">name</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs7', 407)" onmouseover="showTip(event, 'fs7', 407)" class="p">Arg</span>(<span onmouseout="hideTip(event, 'fs122', 408)" onmouseover="showTip(event, 'fs122', 408)" class="i">ty</span>,<span onmouseout="hideTip(event, 'fs123', 409)" onmouseover="showTip(event, 'fs123', 409)" class="i">name</span>)) 
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs151', 410)" onmouseover="showTip(event, 'fs151', 410)" class="f">pargs</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs78', 411)" onmouseover="showTip(event, 'fs78', 411)" class="f">str_ws</span> <span class="s">&quot;(&quot;</span> <span class="o">&gt;</span><span class="o">&gt;</span><span class="o">.</span> <span onmouseout="hideTip(event, 'fs152', 412)" onmouseover="showTip(event, 'fs152', 412)" class="f">sepBy</span> <span onmouseout="hideTip(event, 'fs150', 413)" onmouseover="showTip(event, 'fs150', 413)" class="f">parg</span> (<span onmouseout="hideTip(event, 'fs78', 414)" onmouseover="showTip(event, 'fs78', 414)" class="f">str_ws</span> <span class="s">&quot;,&quot;</span>) <span class="o">.</span><span class="o">&gt;&gt;</span> <span onmouseout="hideTip(event, 'fs78', 415)" onmouseover="showTip(event, 'fs78', 415)" class="f">str_ws</span> <span class="s">&quot;)&quot;</span>
+
+<span class="c">// Members</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs153', 416)" onmouseover="showTip(event, 'fs153', 416)" class="f">pmemberinfo</span> <span class="o">=</span> 
+    <span onmouseout="hideTip(event, 'fs154', 417)" onmouseover="showTip(event, 'fs154', 417)" class="f">pipe4</span> <span onmouseout="hideTip(event, 'fs143', 418)" onmouseover="showTip(event, 'fs143', 418)" class="f">paccess</span> (<span onmouseout="hideTip(event, 'fs144', 419)" onmouseover="showTip(event, 'fs144', 419)" class="f">opt</span> <span onmouseout="hideTip(event, 'fs149', 420)" onmouseover="showTip(event, 'fs149', 420)" class="f">pmodifier</span>) <span onmouseout="hideTip(event, 'fs108', 421)" onmouseover="showTip(event, 'fs108', 421)" class="f">pidentifier_ws</span> <span onmouseout="hideTip(event, 'fs108', 422)" onmouseover="showTip(event, 'fs108', 422)" class="f">pidentifier_ws</span>
+     (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs155', 423)" onmouseover="showTip(event, 'fs155', 423)" class="i">access</span> <span onmouseout="hideTip(event, 'fs156', 424)" onmouseover="showTip(event, 'fs156', 424)" class="i">modifier</span> <span onmouseout="hideTip(event, 'fs122', 425)" onmouseover="showTip(event, 'fs122', 425)" class="i">ty</span> <span onmouseout="hideTip(event, 'fs123', 426)" onmouseover="showTip(event, 'fs123', 426)" class="i">name</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs62', 427)" onmouseover="showTip(event, 'fs62', 427)" class="p">MemberInfo</span>(<span onmouseout="hideTip(event, 'fs155', 428)" onmouseover="showTip(event, 'fs155', 428)" class="i">access</span>,<span onmouseout="hideTip(event, 'fs156', 429)" onmouseover="showTip(event, 'fs156', 429)" class="i">modifier</span>,<span onmouseout="hideTip(event, 'fs122', 430)" onmouseover="showTip(event, 'fs122', 430)" class="i">ty</span>,<span onmouseout="hideTip(event, 'fs123', 431)" onmouseover="showTip(event, 'fs123', 431)" class="i">name</span>))
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs157', 432)" onmouseover="showTip(event, 'fs157', 432)" class="f">pfield</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs153', 433)" onmouseover="showTip(event, 'fs153', 433)" class="f">pmemberinfo</span> <span class="o">.</span><span class="o">&gt;&gt;</span> <span onmouseout="hideTip(event, 'fs78', 434)" onmouseover="showTip(event, 'fs78', 434)" class="f">str_ws</span> <span class="s">&quot;;&quot;</span> <span class="o">|&gt;&gt;</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs158', 435)" onmouseover="showTip(event, 'fs158', 435)" class="i">mi</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs64', 436)" onmouseover="showTip(event, 'fs64', 436)" class="p">Field</span>(<span onmouseout="hideTip(event, 'fs158', 437)" onmouseover="showTip(event, 'fs158', 437)" class="i">mi</span>, <span onmouseout="hideTip(event, 'fs159', 438)" onmouseover="showTip(event, 'fs159', 438)" class="p">None</span>))
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs160', 439)" onmouseover="showTip(event, 'fs160', 439)" class="f">pproperty</span> <span class="o">=</span> 
+    <span onmouseout="hideTip(event, 'fs121', 440)" onmouseover="showTip(event, 'fs121', 440)" class="f">pipe2</span> <span onmouseout="hideTip(event, 'fs153', 441)" onmouseover="showTip(event, 'fs153', 441)" class="f">pmemberinfo</span> <span onmouseout="hideTip(event, 'fs117', 442)" onmouseover="showTip(event, 'fs117', 442)" class="f">pstatementblock</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs158', 443)" onmouseover="showTip(event, 'fs158', 443)" class="i">mi</span> <span onmouseout="hideTip(event, 'fs131', 444)" onmouseover="showTip(event, 'fs131', 444)" class="i">block</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs67', 445)" onmouseover="showTip(event, 'fs67', 445)" class="p">Property</span>(<span onmouseout="hideTip(event, 'fs158', 446)" onmouseover="showTip(event, 'fs158', 446)" class="i">mi</span>,<span onmouseout="hideTip(event, 'fs131', 447)" onmouseover="showTip(event, 'fs131', 447)" class="i">block</span>))
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs161', 448)" onmouseover="showTip(event, 'fs161', 448)" class="f">pmethod</span> <span class="o">=</span>
+    <span onmouseout="hideTip(event, 'fs125', 449)" onmouseover="showTip(event, 'fs125', 449)" class="f">pipe3</span> <span onmouseout="hideTip(event, 'fs153', 450)" onmouseover="showTip(event, 'fs153', 450)" class="f">pmemberinfo</span> <span onmouseout="hideTip(event, 'fs151', 451)" onmouseover="showTip(event, 'fs151', 451)" class="f">pargs</span> <span onmouseout="hideTip(event, 'fs117', 452)" onmouseover="showTip(event, 'fs117', 452)" class="f">pstatementblock</span> 
+     (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs158', 453)" onmouseover="showTip(event, 'fs158', 453)" class="i">mi</span> <span onmouseout="hideTip(event, 'fs162', 454)" onmouseover="showTip(event, 'fs162', 454)" class="i">args</span> <span onmouseout="hideTip(event, 'fs131', 455)" onmouseover="showTip(event, 'fs131', 455)" class="i">block</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs66', 456)" onmouseover="showTip(event, 'fs66', 456)" class="p">Method</span>(<span onmouseout="hideTip(event, 'fs158', 457)" onmouseover="showTip(event, 'fs158', 457)" class="i">mi</span>,<span onmouseout="hideTip(event, 'fs162', 458)" onmouseover="showTip(event, 'fs162', 458)" class="i">args</span>,<span onmouseout="hideTip(event, 'fs131', 459)" onmouseover="showTip(event, 'fs131', 459)" class="i">block</span>))
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs163', 460)" onmouseover="showTip(event, 'fs163', 460)" class="f">pmember</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs137', 461)" onmouseover="showTip(event, 'fs137', 461)" class="f">attempt</span> <span onmouseout="hideTip(event, 'fs157', 462)" onmouseover="showTip(event, 'fs157', 462)" class="f">pfield</span> <span class="o">&lt;|&gt;</span> <span onmouseout="hideTip(event, 'fs137', 463)" onmouseover="showTip(event, 'fs137', 463)" class="f">attempt</span> <span onmouseout="hideTip(event, 'fs160', 464)" onmouseover="showTip(event, 'fs160', 464)" class="f">pproperty</span> <span class="o">&lt;|&gt;</span> <span onmouseout="hideTip(event, 'fs137', 465)" onmouseover="showTip(event, 'fs137', 465)" class="f">attempt</span> <span onmouseout="hideTip(event, 'fs161', 466)" onmouseover="showTip(event, 'fs161', 466)" class="f">pmethod</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs164', 467)" onmouseover="showTip(event, 'fs164', 467)" class="f">pmemberblock</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs118', 468)" onmouseover="showTip(event, 'fs118', 468)" class="f">between</span> (<span onmouseout="hideTip(event, 'fs78', 469)" onmouseover="showTip(event, 'fs78', 469)" class="f">str_ws</span> <span class="s">&quot;{&quot;</span>) (<span onmouseout="hideTip(event, 'fs78', 470)" onmouseover="showTip(event, 'fs78', 470)" class="f">str_ws</span> <span class="s">&quot;}&quot;</span>) (<span onmouseout="hideTip(event, 'fs119', 471)" onmouseover="showTip(event, 'fs119', 471)" class="f">many</span> <span onmouseout="hideTip(event, 'fs163', 472)" onmouseover="showTip(event, 'fs163', 472)" class="f">pmember</span>) 
+                   <span class="o">|&gt;&gt;</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs165', 473)" onmouseover="showTip(event, 'fs165', 473)" class="i">members</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs165', 474)" onmouseover="showTip(event, 'fs165', 474)" class="i">members</span>)
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs166', 475)" onmouseover="showTip(event, 'fs166', 475)" class="f">penumblock</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs118', 476)" onmouseover="showTip(event, 'fs118', 476)" class="f">between</span> (<span onmouseout="hideTip(event, 'fs78', 477)" onmouseover="showTip(event, 'fs78', 477)" class="f">str_ws</span> <span class="s">&quot;{&quot;</span>) (<span onmouseout="hideTip(event, 'fs78', 478)" onmouseover="showTip(event, 'fs78', 478)" class="f">str_ws</span> <span class="s">&quot;}&quot;</span>) <span onmouseout="hideTip(event, 'fs76', 479)" onmouseover="showTip(event, 'fs76', 479)" class="f">ws</span> <span class="o">|&gt;&gt;</span> (<span class="k">fun</span> _ <span class="k">-&gt;</span> [])
+
+<span class="c">// Types</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs167', 480)" onmouseover="showTip(event, 'fs167', 480)" class="f">pclass</span> <span class="o">=</span> 
+    <span onmouseout="hideTip(event, 'fs168', 481)" onmouseover="showTip(event, 'fs168', 481)" class="f">pipe5</span> <span onmouseout="hideTip(event, 'fs143', 482)" onmouseover="showTip(event, 'fs143', 482)" class="f">paccess</span> (<span onmouseout="hideTip(event, 'fs144', 483)" onmouseover="showTip(event, 'fs144', 483)" class="f">opt</span> <span onmouseout="hideTip(event, 'fs149', 484)" onmouseover="showTip(event, 'fs149', 484)" class="f">pmodifier</span>) (<span onmouseout="hideTip(event, 'fs81', 485)" onmouseover="showTip(event, 'fs81', 485)" class="f">str_ws1</span> <span class="s">&quot;class&quot;</span>) <span onmouseout="hideTip(event, 'fs108', 486)" onmouseover="showTip(event, 'fs108', 486)" class="f">pidentifier_ws</span> <span onmouseout="hideTip(event, 'fs164', 487)" onmouseover="showTip(event, 'fs164', 487)" class="f">pmemberblock</span>
+     (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs155', 488)" onmouseover="showTip(event, 'fs155', 488)" class="i">access</span> <span onmouseout="hideTip(event, 'fs156', 489)" onmouseover="showTip(event, 'fs156', 489)" class="i">modifier</span> _ <span onmouseout="hideTip(event, 'fs123', 490)" onmouseover="showTip(event, 'fs123', 490)" class="i">name</span> <span onmouseout="hideTip(event, 'fs169', 491)" onmouseover="showTip(event, 'fs169', 491)" class="i">block</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs69', 492)" onmouseover="showTip(event, 'fs69', 492)" class="p">Class</span>(<span onmouseout="hideTip(event, 'fs155', 493)" onmouseover="showTip(event, 'fs155', 493)" class="i">access</span>, <span onmouseout="hideTip(event, 'fs156', 494)" onmouseover="showTip(event, 'fs156', 494)" class="i">modifier</span>, <span onmouseout="hideTip(event, 'fs123', 495)" onmouseover="showTip(event, 'fs123', 495)" class="i">name</span>, <span onmouseout="hideTip(event, 'fs169', 496)" onmouseover="showTip(event, 'fs169', 496)" class="i">block</span>))
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs170', 497)" onmouseover="showTip(event, 'fs170', 497)" class="f">pstruct</span> <span class="o">=</span>
+    <span onmouseout="hideTip(event, 'fs154', 498)" onmouseover="showTip(event, 'fs154', 498)" class="f">pipe4</span> <span onmouseout="hideTip(event, 'fs143', 499)" onmouseover="showTip(event, 'fs143', 499)" class="f">paccess</span> (<span onmouseout="hideTip(event, 'fs81', 500)" onmouseover="showTip(event, 'fs81', 500)" class="f">str_ws1</span> <span class="s">&quot;struct&quot;</span>) <span onmouseout="hideTip(event, 'fs108', 501)" onmouseover="showTip(event, 'fs108', 501)" class="f">pidentifier_ws</span> <span onmouseout="hideTip(event, 'fs164', 502)" onmouseover="showTip(event, 'fs164', 502)" class="f">pmemberblock</span>
+     (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs155', 503)" onmouseover="showTip(event, 'fs155', 503)" class="i">access</span> _ <span onmouseout="hideTip(event, 'fs123', 504)" onmouseover="showTip(event, 'fs123', 504)" class="i">name</span> <span onmouseout="hideTip(event, 'fs169', 505)" onmouseover="showTip(event, 'fs169', 505)" class="i">block</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs70', 506)" onmouseover="showTip(event, 'fs70', 506)" class="p">Struct</span>(<span onmouseout="hideTip(event, 'fs155', 507)" onmouseover="showTip(event, 'fs155', 507)" class="i">access</span>, <span onmouseout="hideTip(event, 'fs123', 508)" onmouseover="showTip(event, 'fs123', 508)" class="i">name</span>, <span onmouseout="hideTip(event, 'fs169', 509)" onmouseover="showTip(event, 'fs169', 509)" class="i">block</span>))
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs171', 510)" onmouseover="showTip(event, 'fs171', 510)" class="f">penum</span> <span class="o">=</span>
+    <span onmouseout="hideTip(event, 'fs154', 511)" onmouseover="showTip(event, 'fs154', 511)" class="f">pipe4</span> <span onmouseout="hideTip(event, 'fs143', 512)" onmouseover="showTip(event, 'fs143', 512)" class="f">paccess</span> (<span onmouseout="hideTip(event, 'fs81', 513)" onmouseover="showTip(event, 'fs81', 513)" class="f">str_ws1</span> <span class="s">&quot;enum&quot;</span>) <span onmouseout="hideTip(event, 'fs108', 514)" onmouseover="showTip(event, 'fs108', 514)" class="f">pidentifier_ws</span> <span onmouseout="hideTip(event, 'fs166', 515)" onmouseover="showTip(event, 'fs166', 515)" class="f">penumblock</span>
+     (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs155', 516)" onmouseover="showTip(event, 'fs155', 516)" class="i">access</span> _ <span onmouseout="hideTip(event, 'fs123', 517)" onmouseover="showTip(event, 'fs123', 517)" class="i">name</span> <span onmouseout="hideTip(event, 'fs169', 518)" onmouseover="showTip(event, 'fs169', 518)" class="i">block</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs70', 519)" onmouseover="showTip(event, 'fs70', 519)" class="p">Struct</span>(<span onmouseout="hideTip(event, 'fs155', 520)" onmouseover="showTip(event, 'fs155', 520)" class="i">access</span>, <span onmouseout="hideTip(event, 'fs123', 521)" onmouseover="showTip(event, 'fs123', 521)" class="i">name</span>, <span onmouseout="hideTip(event, 'fs169', 522)" onmouseover="showTip(event, 'fs169', 522)" class="i">block</span>))
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs172', 523)" onmouseover="showTip(event, 'fs172', 523)" class="f">ptypedeclaration</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs167', 524)" onmouseover="showTip(event, 'fs167', 524)" class="f">pclass</span> <span class="o">&lt;|&gt;</span> <span onmouseout="hideTip(event, 'fs170', 525)" onmouseover="showTip(event, 'fs170', 525)" class="f">pstruct</span> <span class="o">&lt;|&gt;</span> <span onmouseout="hideTip(event, 'fs171', 526)" onmouseover="showTip(event, 'fs171', 526)" class="f">penum</span>
+
+<span class="c">// Scopes</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs173', 527)" onmouseover="showTip(event, 'fs173', 527)" class="f">pscope</span>, <span onmouseout="hideTip(event, 'fs174', 528)" onmouseover="showTip(event, 'fs174', 528)" class="v">pscopeimpl</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs114', 529)" onmouseover="showTip(event, 'fs114', 529)" class="f">createParserForwardedToRef</span>()
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs175', 530)" onmouseover="showTip(event, 'fs175', 530)" class="f">pscopesblock</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs118', 531)" onmouseover="showTip(event, 'fs118', 531)" class="f">between</span> (<span onmouseout="hideTip(event, 'fs78', 532)" onmouseover="showTip(event, 'fs78', 532)" class="f">str_ws</span> <span class="s">&quot;{&quot;</span>) (<span onmouseout="hideTip(event, 'fs78', 533)" onmouseover="showTip(event, 'fs78', 533)" class="f">str_ws</span> <span class="s">&quot;}&quot;</span>) (<span onmouseout="hideTip(event, 'fs119', 534)" onmouseover="showTip(event, 'fs119', 534)" class="f">many</span> <span onmouseout="hideTip(event, 'fs173', 535)" onmouseover="showTip(event, 'fs173', 535)" class="f">pscope</span>) <span class="o">|&gt;&gt;</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs176', 536)" onmouseover="showTip(event, 'fs176', 536)" class="i">scopes</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs176', 537)" onmouseover="showTip(event, 'fs176', 537)" class="i">scopes</span>)
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs177', 538)" onmouseover="showTip(event, 'fs177', 538)" class="f">pimport</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs81', 539)" onmouseover="showTip(event, 'fs81', 539)" class="f">str_ws1</span> <span class="s">&quot;using&quot;</span> <span class="o">&gt;</span><span class="o">&gt;</span><span class="o">.</span> <span onmouseout="hideTip(event, 'fs101', 540)" onmouseover="showTip(event, 'fs101', 540)" class="f">pidentifier</span> <span class="o">.</span><span class="o">&gt;&gt;</span> <span onmouseout="hideTip(event, 'fs78', 541)" onmouseover="showTip(event, 'fs78', 541)" class="f">str_ws</span> <span class="s">&quot;;&quot;</span> <span class="o">|&gt;&gt;</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs123', 542)" onmouseover="showTip(event, 'fs123', 542)" class="i">name</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs11', 543)" onmouseover="showTip(event, 'fs11', 543)" class="p">Import</span>(<span onmouseout="hideTip(event, 'fs123', 544)" onmouseover="showTip(event, 'fs123', 544)" class="i">name</span>))
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs178', 545)" onmouseover="showTip(event, 'fs178', 545)" class="f">pnsblock</span> <span class="o">=</span>
+    <span onmouseout="hideTip(event, 'fs125', 546)" onmouseover="showTip(event, 'fs125', 546)" class="f">pipe3</span> (<span onmouseout="hideTip(event, 'fs119', 547)" onmouseover="showTip(event, 'fs119', 547)" class="f">many</span> <span onmouseout="hideTip(event, 'fs177', 548)" onmouseover="showTip(event, 'fs177', 548)" class="f">pimport</span>) (<span onmouseout="hideTip(event, 'fs81', 549)" onmouseover="showTip(event, 'fs81', 549)" class="f">str_ws1</span> <span class="s">&quot;namespace&quot;</span> <span class="o">&gt;</span><span class="o">&gt;</span><span class="o">.</span> <span onmouseout="hideTip(event, 'fs108', 550)" onmouseover="showTip(event, 'fs108', 550)" class="f">pidentifier_ws</span>) <span onmouseout="hideTip(event, 'fs175', 551)" onmouseover="showTip(event, 'fs175', 551)" class="f">pscopesblock</span>
+     (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs179', 552)" onmouseover="showTip(event, 'fs179', 552)" class="i">imports</span> <span onmouseout="hideTip(event, 'fs123', 553)" onmouseover="showTip(event, 'fs123', 553)" class="i">name</span> <span onmouseout="hideTip(event, 'fs180', 554)" onmouseover="showTip(event, 'fs180', 554)" class="i">block</span> <span class="k">-&gt;</span> 
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs181', 555)" onmouseover="showTip(event, 'fs181', 555)" class="i">types</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs74', 556)" onmouseover="showTip(event, 'fs74', 556)" class="p">Types</span>([],[])
+        <span onmouseout="hideTip(event, 'fs73', 557)" onmouseover="showTip(event, 'fs73', 557)" class="p">Namespace</span>(<span onmouseout="hideTip(event, 'fs179', 558)" onmouseover="showTip(event, 'fs179', 558)" class="i">imports</span>,<span onmouseout="hideTip(event, 'fs123', 559)" onmouseover="showTip(event, 'fs123', 559)" class="i">name</span>,<span onmouseout="hideTip(event, 'fs180', 560)" onmouseover="showTip(event, 'fs180', 560)" class="i">block</span>))
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs182', 561)" onmouseover="showTip(event, 'fs182', 561)" class="f">ptypes</span> <span class="o">=</span> 
+    <span onmouseout="hideTip(event, 'fs121', 562)" onmouseover="showTip(event, 'fs121', 562)" class="f">pipe2</span> (<span onmouseout="hideTip(event, 'fs119', 563)" onmouseover="showTip(event, 'fs119', 563)" class="f">many</span> <span onmouseout="hideTip(event, 'fs177', 564)" onmouseover="showTip(event, 'fs177', 564)" class="f">pimport</span>) (<span onmouseout="hideTip(event, 'fs183', 565)" onmouseover="showTip(event, 'fs183', 565)" class="f">many1</span> <span onmouseout="hideTip(event, 'fs172', 566)" onmouseover="showTip(event, 'fs172', 566)" class="f">ptypedeclaration</span>)
+     (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs179', 567)" onmouseover="showTip(event, 'fs179', 567)" class="i">imports</span> <span onmouseout="hideTip(event, 'fs184', 568)" onmouseover="showTip(event, 'fs184', 568)" class="i">classes</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs74', 569)" onmouseover="showTip(event, 'fs74', 569)" class="p">Types</span>(<span onmouseout="hideTip(event, 'fs179', 570)" onmouseover="showTip(event, 'fs179', 570)" class="i">imports</span>, <span onmouseout="hideTip(event, 'fs184', 571)" onmouseover="showTip(event, 'fs184', 571)" class="i">classes</span>))
+<span onmouseout="hideTip(event, 'fs174', 572)" onmouseover="showTip(event, 'fs174', 572)" class="v">pscopeimpl</span> <span class="o">:=</span> <span onmouseout="hideTip(event, 'fs178', 573)" onmouseover="showTip(event, 'fs178', 573)" class="f">pnsblock</span> <span class="o">&lt;|&gt;</span> (<span onmouseout="hideTip(event, 'fs182', 574)" onmouseover="showTip(event, 'fs182', 574)" class="f">ptypes</span>)
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Example" class="anchor" href="#Example">Example</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">let</span> <span onmouseout="hideTip(event, 'fs185', 575)" onmouseover="showTip(event, 'fs185', 575)" class="i">program</span> <span class="o">=</span> <span class="s">&quot;&quot;&quot;using X; </span>
+<span class="s">using Y; </span>
+<span class="s">namespace A { </span>
+<span class="s">  namespace B { </span>
+<span class="s">  class A { </span>
+<span class="s">    float y;</span>
+<span class="s">    void foo(string arg) {</span>
+<span class="s">      bool x;</span>
+<span class="s">      x = true;      </span>
+<span class="s">      while(x) { </span>
+<span class="s">        if (true) { x = false; } else if (false) { }</span>
+<span class="s">      }</span>
+<span class="s">    }</span>
+<span class="s">  } </span>
+<span class="s">  struct B { } </span>
+<span class="s">  enum C { }</span>
+<span class="s">  } </span>
+<span class="s">}</span>
+<span class="s">&quot;&quot;&quot;</span>
+
+<span onmouseout="hideTip(event, 'fs186', 576)" onmouseover="showTip(event, 'fs186', 576)" class="f">run</span> <span onmouseout="hideTip(event, 'fs173', 577)" onmouseover="showTip(event, 'fs173', 577)" class="f">pscope</span> <span onmouseout="hideTip(event, 'fs185', 578)" onmouseover="showTip(event, 'fs185', 578)" class="i">program</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />Full name: Microsoft.FSharp.Core.Operators.string<br /><br />--------------------<br />type string = System.String<br /><br />Full name: Microsoft.FSharp.Core.string</div>
+<div class="tip" id="fs2">type VarName = Name<br /><br />Full name: Script.VarName</div>
+<div class="tip" id="fs3">type Name = string<br /><br />Full name: Script.Name</div>
+<div class="tip" id="fs4">type TypeName = Name<br /><br />Full name: Script.TypeName</div>
+<div class="tip" id="fs5">type MemberName = Name<br /><br />Full name: Script.MemberName</div>
+<div class="tip" id="fs6">type LabelName = Name<br /><br />Full name: Script.LabelName</div>
+<div class="tip" id="fs7">Multiple items<br />union case Arg.Arg: TypeName * VarName -&gt; Arg<br /><br />--------------------<br />type Arg = | Arg of TypeName * VarName<br /><br />Full name: Script.Arg</div>
+<div class="tip" id="fs8">type Value = obj<br /><br />Full name: Script.Value</div>
+<div class="tip" id="fs9">type obj = System.Object<br /><br />Full name: Microsoft.FSharp.Core.obj</div>
+<div class="tip" id="fs10">type EnumValue = Name * Value<br /><br />Full name: Script.EnumValue</div>
+<div class="tip" id="fs11">Multiple items<br />union case Import.Import: Name -&gt; Import<br /><br />--------------------<br />type Import =<br />&#160;&#160;| Import of Name<br />&#160;&#160;| Abbreviation of Name * Name<br /><br />Full name: Script.Import</div>
+<div class="tip" id="fs12">union case Import.Abbreviation: Name * Name -&gt; Import</div>
+<div class="tip" id="fs13">type Access =<br />&#160;&#160;| Public<br />&#160;&#160;| Private<br />&#160;&#160;| Protected<br />&#160;&#160;| Internal<br /><br />Full name: Script.Access</div>
+<div class="tip" id="fs14">union case Access.Public: Access</div>
+<div class="tip" id="fs15">union case Access.Private: Access</div>
+<div class="tip" id="fs16">union case Access.Protected: Access</div>
+<div class="tip" id="fs17">union case Access.Internal: Access</div>
+<div class="tip" id="fs18">type Modifier =<br />&#160;&#160;| Sealed<br />&#160;&#160;| Static<br /><br />Full name: Script.Modifier</div>
+<div class="tip" id="fs19">Multiple items<br />union case Modifier.Sealed: Modifier<br /><br />--------------------<br />type SealedAttribute =<br />&#160;&#160;inherit Attribute<br />&#160;&#160;new : unit -&gt; SealedAttribute<br />&#160;&#160;new : value:bool -&gt; SealedAttribute<br />&#160;&#160;member Value : bool<br /><br />Full name: Microsoft.FSharp.Core.SealedAttribute<br /><br />--------------------<br />new : unit -&gt; SealedAttribute<br />new : value:bool -&gt; SealedAttribute</div>
+<div class="tip" id="fs20">union case Modifier.Static: Modifier</div>
+<div class="tip" id="fs21">type Expr =<br />&#160;&#160;| Literal of Value<br />&#160;&#160;| Variable of VarName<br />&#160;&#160;| MethodInvoke of MemberName * Expr list<br />&#160;&#160;| PropertyGet of MemberName<br />&#160;&#160;| InfixOperator of Expr * string * Expr<br />&#160;&#160;| PrefixOperator of string * Expr<br />&#160;&#160;| PostfixOperator of Expr * string<br />&#160;&#160;| TernaryOperator of Expr * Expr * Expr<br /><br />Full name: Script.Expr</div>
+<div class="tip" id="fs22">Multiple items<br />union case Expr.Literal: Value -&gt; Expr<br /><br />--------------------<br />type LiteralAttribute =<br />&#160;&#160;inherit Attribute<br />&#160;&#160;new : unit -&gt; LiteralAttribute<br /><br />Full name: Microsoft.FSharp.Core.LiteralAttribute<br /><br />--------------------<br />new : unit -&gt; LiteralAttribute</div>
+<div class="tip" id="fs23">union case Expr.Variable: VarName -&gt; Expr</div>
+<div class="tip" id="fs24">union case Expr.MethodInvoke: MemberName * Expr list -&gt; Expr</div>
+<div class="tip" id="fs25">type &#39;T list = List&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.list&lt;_&gt;</div>
+<div class="tip" id="fs26">union case Expr.PropertyGet: MemberName -&gt; Expr</div>
+<div class="tip" id="fs27">union case Expr.InfixOperator: Expr * string * Expr -&gt; Expr</div>
+<div class="tip" id="fs28">union case Expr.PrefixOperator: string * Expr -&gt; Expr</div>
+<div class="tip" id="fs29">union case Expr.PostfixOperator: Expr * string -&gt; Expr</div>
+<div class="tip" id="fs30">union case Expr.TernaryOperator: Expr * Expr * Expr -&gt; Expr</div>
+<div class="tip" id="fs31">type From = TypeName * Name * Expr<br /><br />Full name: Script.From</div>
+<div class="tip" id="fs32">type To = Expr<br /><br />Full name: Script.To</div>
+<div class="tip" id="fs33">type Step = Expr list<br /><br />Full name: Script.Step</div>
+<div class="tip" id="fs34">type Statement =<br />&#160;&#160;| Define of TypeName * VarName<br />&#160;&#160;| Construct of TypeName * VarName * Expr<br />&#160;&#160;| Assignment of VarName * Expr<br />&#160;&#160;| PropertySet of MemberName * Expr<br />&#160;&#160;| Invoke of MemberName * Expr list<br />&#160;&#160;| If of Expr * Block<br />&#160;&#160;| IfElse of Expr * Block * Block<br />&#160;&#160;| Switch of Expr * Case list<br />&#160;&#160;| For of From * To * Step * Block<br />&#160;&#160;| ForEach of TypeName * VarName * Expr<br />&#160;&#160;...<br /><br />Full name: Script.Statement</div>
+<div class="tip" id="fs35">union case Statement.Define: TypeName * VarName -&gt; Statement</div>
+<div class="tip" id="fs36">union case Statement.Construct: TypeName * VarName * Expr -&gt; Statement</div>
+<div class="tip" id="fs37">union case Statement.Assignment: VarName * Expr -&gt; Statement</div>
+<div class="tip" id="fs38">union case Statement.PropertySet: MemberName * Expr -&gt; Statement</div>
+<div class="tip" id="fs39">union case Statement.Invoke: MemberName * Expr list -&gt; Statement</div>
+<div class="tip" id="fs40">union case Statement.If: Expr * Block -&gt; Statement</div>
+<div class="tip" id="fs41">type Block = Statement list<br /><br />Full name: Script.Block</div>
+<div class="tip" id="fs42">union case Statement.IfElse: Expr * Block * Block -&gt; Statement</div>
+<div class="tip" id="fs43">union case Statement.Switch: Expr * Case list -&gt; Statement</div>
+<div class="tip" id="fs44">type Case = | Case of Value option * Block<br /><br />Full name: Script.Case</div>
+<div class="tip" id="fs45">union case Statement.For: From * To * Step * Block -&gt; Statement</div>
+<div class="tip" id="fs46">union case Statement.ForEach: TypeName * VarName * Expr -&gt; Statement</div>
+<div class="tip" id="fs47">union case Statement.While: Expr * Statement list -&gt; Statement</div>
+<div class="tip" id="fs48">union case Statement.DoWhile: List&lt;Statement&gt; * Expr -&gt; Statement</div>
+<div class="tip" id="fs49">Multiple items<br />module List<br /><br />from Microsoft.FSharp.Collections<br /><br />--------------------<br />type List&lt;&#39;T&gt; =<br />&#160;&#160;| ( [] )<br />&#160;&#160;| ( :: ) of Head: &#39;T * Tail: &#39;T list<br />&#160;&#160;interface IEnumerable<br />&#160;&#160;interface IEnumerable&lt;&#39;T&gt;<br />&#160;&#160;member Head : &#39;T<br />&#160;&#160;member IsEmpty : bool<br />&#160;&#160;member Item : index:int -&gt; &#39;T with get<br />&#160;&#160;member Length : int<br />&#160;&#160;member Tail : &#39;T list<br />&#160;&#160;static member Cons : head:&#39;T * tail:&#39;T list -&gt; &#39;T list<br />&#160;&#160;static member Empty : &#39;T list<br /><br />Full name: Microsoft.FSharp.Collections.List&lt;_&gt;</div>
+<div class="tip" id="fs50">union case Statement.Try: Block -&gt; Statement</div>
+<div class="tip" id="fs51">union case Statement.Catch: TypeName * Block -&gt; Statement</div>
+<div class="tip" id="fs52">union case Statement.Finally: TypeName * Block -&gt; Statement</div>
+<div class="tip" id="fs53">union case Statement.Lock: Expr * Block -&gt; Statement</div>
+<div class="tip" id="fs54">union case Statement.Using: Expr * Block -&gt; Statement</div>
+<div class="tip" id="fs55">union case Statement.Label: LabelName -&gt; Statement</div>
+<div class="tip" id="fs56">union case Statement.Goto: LabelName -&gt; Statement</div>
+<div class="tip" id="fs57">union case Statement.Break: Statement</div>
+<div class="tip" id="fs58">union case Statement.Continue: Statement</div>
+<div class="tip" id="fs59">union case Statement.Return: Expr -&gt; Statement</div>
+<div class="tip" id="fs60">Multiple items<br />union case Case.Case: Value option * Block -&gt; Case<br /><br />--------------------<br />type Case = | Case of Value option * Block<br /><br />Full name: Script.Case</div>
+<div class="tip" id="fs61">type &#39;T option = Option&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Core.option&lt;_&gt;</div>
+<div class="tip" id="fs62">Multiple items<br />union case MemberInfo.MemberInfo: Access * Modifier option * TypeName * Name -&gt; MemberInfo<br /><br />--------------------<br />type MemberInfo = | MemberInfo of Access * Modifier option * TypeName * Name<br /><br />Full name: Script.MemberInfo</div>
+<div class="tip" id="fs63">type Member =<br />&#160;&#160;| Field of MemberInfo * Expr option<br />&#160;&#160;| Constructor of MemberInfo<br />&#160;&#160;| Method of MemberInfo * Arg list * Block<br />&#160;&#160;| Property of MemberInfo * Block<br /><br />Full name: Script.Member</div>
+<div class="tip" id="fs64">union case Member.Field: MemberInfo * Expr option -&gt; Member</div>
+<div class="tip" id="fs65">union case Member.Constructor: MemberInfo -&gt; Member</div>
+<div class="tip" id="fs66">union case Member.Method: MemberInfo * Arg list * Block -&gt; Member</div>
+<div class="tip" id="fs67">union case Member.Property: MemberInfo * Block -&gt; Member</div>
+<div class="tip" id="fs68">type CSharpType =<br />&#160;&#160;| Class of Access * Modifier option * Name * Member list<br />&#160;&#160;| Struct of Access * Name * Member list<br />&#160;&#160;| Enum of Access * TypeName * EnumValue list<br /><br />Full name: Script.CSharpType</div>
+<div class="tip" id="fs69">Multiple items<br />union case CSharpType.Class: Access * Modifier option * Name * Member list -&gt; CSharpType<br /><br />--------------------<br />type ClassAttribute =<br />&#160;&#160;inherit Attribute<br />&#160;&#160;new : unit -&gt; ClassAttribute<br /><br />Full name: Microsoft.FSharp.Core.ClassAttribute<br /><br />--------------------<br />new : unit -&gt; ClassAttribute</div>
+<div class="tip" id="fs70">Multiple items<br />union case CSharpType.Struct: Access * Name * Member list -&gt; CSharpType<br /><br />--------------------<br />type StructAttribute =<br />&#160;&#160;inherit Attribute<br />&#160;&#160;new : unit -&gt; StructAttribute<br /><br />Full name: Microsoft.FSharp.Core.StructAttribute<br /><br />--------------------<br />new : unit -&gt; StructAttribute</div>
+<div class="tip" id="fs71">union case CSharpType.Enum: Access * TypeName * EnumValue list -&gt; CSharpType</div>
+<div class="tip" id="fs72">type Scope =<br />&#160;&#160;| Namespace of Import list * Name * Scope list<br />&#160;&#160;| Types of Import list * CSharpType list<br /><br />Full name: Script.Scope</div>
+<div class="tip" id="fs73">union case Scope.Namespace: Import list * Name * Scope list -&gt; Scope</div>
+<div class="tip" id="fs74">union case Scope.Types: Import list * CSharpType list -&gt; Scope</div>
+<div class="tip" id="fs75">namespace FParsec</div>
+<div class="tip" id="fs76">val ws : Parser&lt;unit,&#39;a&gt;<br /><br />Full name: Script.ws</div>
+<div class="tip" id="fs77">val spaces : Parser&lt;unit,&#39;u&gt;<br /><br />Full name: FParsec.CharParsers.spaces</div>
+<div class="tip" id="fs78">val str_ws : s:string -&gt; Parser&lt;string,&#39;a&gt;<br /><br />Full name: Script.str_ws</div>
+<div class="tip" id="fs79">val s : string</div>
+<div class="tip" id="fs80">val pstring : string -&gt; Parser&lt;string,&#39;u&gt;<br /><br />Full name: FParsec.CharParsers.pstring</div>
+<div class="tip" id="fs81">val str_ws1 : s:string -&gt; Parser&lt;string,&#39;a&gt;<br /><br />Full name: Script.str_ws1</div>
+<div class="tip" id="fs82">val spaces1 : Parser&lt;unit,&#39;u&gt;<br /><br />Full name: FParsec.CharParsers.spaces1</div>
+<div class="tip" id="fs83">type Lit = NumberLiteralOptions<br /><br />Full name: Script.Lit</div>
+<div class="tip" id="fs84">type NumberLiteralOptions =<br />&#160;&#160;|  None  =  0<br />&#160;&#160;|  AllowSuffix  =  1<br />&#160;&#160;|  AllowMinusSign  =  2<br />&#160;&#160;|  AllowPlusSign  =  4<br />&#160;&#160;|  AllowFraction  =  8<br />&#160;&#160;|  AllowFractionWOIntegerPart  =  16<br />&#160;&#160;|  AllowExponent  =  32<br />&#160;&#160;|  AllowHexadecimal  =  64<br />&#160;&#160;|  AllowBinary  =  128<br />&#160;&#160;|  AllowOctal  =  256<br />&#160;&#160;|  AllowInfinity  =  512<br />&#160;&#160;|  AllowNaN  =  1024<br />&#160;&#160;|  IncludeSuffixCharsInString  =  2048<br />&#160;&#160;|  DefaultInteger  =  454<br />&#160;&#160;|  DefaultUnsignedInteger  =  448<br />&#160;&#160;|  DefaultFloat  =  1646<br /><br />Full name: FParsec.CharParsers.NumberLiteralOptions</div>
+<div class="tip" id="fs85">val numberFormat : NumberLiteralOptions<br /><br />Full name: Script.numberFormat</div>
+<div class="tip" id="fs86">NumberLiteralOptions.AllowMinusSign: NumberLiteralOptions = 2</div>
+<div class="tip" id="fs87">NumberLiteralOptions.AllowFraction: NumberLiteralOptions = 8</div>
+<div class="tip" id="fs88">NumberLiteralOptions.AllowExponent: NumberLiteralOptions = 32</div>
+<div class="tip" id="fs89">val pnumber : Parser&lt;Expr,unit&gt;<br /><br />Full name: Script.pnumber</div>
+<div class="tip" id="fs90">type Parser&lt;&#39;Result,&#39;UserState&gt; = CharStream&lt;&#39;UserState&gt; -&gt; Reply&lt;&#39;Result&gt;<br /><br />Full name: FParsec.Primitives.Parser&lt;_,_&gt;</div>
+<div class="tip" id="fs91">type unit = Unit<br /><br />Full name: Microsoft.FSharp.Core.unit</div>
+<div class="tip" id="fs92">val numberLiteral : NumberLiteralOptions -&gt; string -&gt; Parser&lt;NumberLiteral,&#39;u&gt;<br /><br />Full name: FParsec.CharParsers.numberLiteral</div>
+<div class="tip" id="fs93">val nl : NumberLiteral</div>
+<div class="tip" id="fs94">property NumberLiteral.IsInteger: bool</div>
+<div class="tip" id="fs95">Multiple items<br />val int : value:&#39;T -&gt; int (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.int<br /><br />--------------------<br />type int = int32<br /><br />Full name: Microsoft.FSharp.Core.int<br /><br />--------------------<br />type int&lt;&#39;Measure&gt; = int<br /><br />Full name: Microsoft.FSharp.Core.int&lt;_&gt;</div>
+<div class="tip" id="fs96">property NumberLiteral.String: string</div>
+<div class="tip" id="fs97">Multiple items<br />val float : value:&#39;T -&gt; float (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.float<br /><br />--------------------<br />type float = System.Double<br /><br />Full name: Microsoft.FSharp.Core.float<br /><br />--------------------<br />type float&lt;&#39;Measure&gt; = float<br /><br />Full name: Microsoft.FSharp.Core.float&lt;_&gt;</div>
+<div class="tip" id="fs98">val ptrue : Parser&lt;Expr,unit&gt;<br /><br />Full name: Script.ptrue</div>
+<div class="tip" id="fs99">val pfalse : Parser&lt;Expr,unit&gt;<br /><br />Full name: Script.pfalse</div>
+<div class="tip" id="fs100">val pbool : Parser&lt;Expr,unit&gt;<br /><br />Full name: Script.pbool</div>
+<div class="tip" id="fs101">val pidentifier : Parser&lt;string,unit&gt;<br /><br />Full name: Script.pidentifier</div>
+<div class="tip" id="fs102">val isIdentifierFirstChar : (char -&gt; bool)</div>
+<div class="tip" id="fs103">val c : char</div>
+<div class="tip" id="fs104">val isLetter : char -&gt; bool<br /><br />Full name: FParsec.CharParsers.isLetter</div>
+<div class="tip" id="fs105">val isIdentifierChar : (char -&gt; bool)</div>
+<div class="tip" id="fs106">val isDigit : char -&gt; bool<br /><br />Full name: FParsec.CharParsers.isDigit</div>
+<div class="tip" id="fs107">val many1Satisfy2L : (char -&gt; bool) -&gt; (char -&gt; bool) -&gt; string -&gt; Parser&lt;string,&#39;u&gt;<br /><br />Full name: FParsec.CharParsers.many1Satisfy2L</div>
+<div class="tip" id="fs108">val pidentifier_ws : Parser&lt;string,unit&gt;<br /><br />Full name: Script.pidentifier_ws</div>
+<div class="tip" id="fs109">val pvar : Parser&lt;Expr,unit&gt;<br /><br />Full name: Script.pvar</div>
+<div class="tip" id="fs110">val x : string</div>
+<div class="tip" id="fs111">val pexpr : Parser&lt;Expr,unit&gt;<br /><br />Full name: Script.pexpr</div>
+<div class="tip" id="fs112">val pstatement : Parser&lt;Statement,unit&gt;<br /><br />Full name: Script.pstatement</div>
+<div class="tip" id="fs113">val pstatementimpl : Parser&lt;Statement,unit&gt; ref<br /><br />Full name: Script.pstatementimpl</div>
+<div class="tip" id="fs114">val createParserForwardedToRef : unit -&gt; Parser&lt;&#39;a,&#39;u&gt; * Parser&lt;&#39;a,&#39;u&gt; ref<br /><br />Full name: FParsec.Primitives.createParserForwardedToRef</div>
+<div class="tip" id="fs115">val psinglestatement : Parser&lt;Statement list,unit&gt;<br /><br />Full name: Script.psinglestatement</div>
+<div class="tip" id="fs116">val statement : Statement</div>
+<div class="tip" id="fs117">val pstatementblock : Parser&lt;Statement list,unit&gt;<br /><br />Full name: Script.pstatementblock</div>
+<div class="tip" id="fs118">val between : Parser&lt;&#39;a,&#39;u&gt; -&gt; Parser&lt;&#39;b,&#39;u&gt; -&gt; Parser&lt;&#39;c,&#39;u&gt; -&gt; Parser&lt;&#39;c,&#39;u&gt;<br /><br />Full name: FParsec.Primitives.between</div>
+<div class="tip" id="fs119">val many : Parser&lt;&#39;a,&#39;u&gt; -&gt; Parser&lt;&#39;a list,&#39;u&gt;<br /><br />Full name: FParsec.Primitives.many</div>
+<div class="tip" id="fs120">val pdefine : Parser&lt;Statement,unit&gt;<br /><br />Full name: Script.pdefine</div>
+<div class="tip" id="fs121">val pipe2 : Parser&lt;&#39;a,&#39;u&gt; -&gt; Parser&lt;&#39;b,&#39;u&gt; -&gt; (&#39;a -&gt; &#39;b -&gt; &#39;c) -&gt; Parser&lt;&#39;c,&#39;u&gt;<br /><br />Full name: FParsec.Primitives.pipe2</div>
+<div class="tip" id="fs122">val ty : string</div>
+<div class="tip" id="fs123">val name : string</div>
+<div class="tip" id="fs124">val passign : Parser&lt;Statement,unit&gt;<br /><br />Full name: Script.passign</div>
+<div class="tip" id="fs125">val pipe3 : Parser&lt;&#39;a,&#39;u&gt; -&gt; Parser&lt;&#39;b,&#39;u&gt; -&gt; Parser&lt;&#39;c,&#39;u&gt; -&gt; (&#39;a -&gt; &#39;b -&gt; &#39;c -&gt; &#39;d) -&gt; Parser&lt;&#39;d,&#39;u&gt;<br /><br />Full name: FParsec.Primitives.pipe3</div>
+<div class="tip" id="fs126">val var : string</div>
+<div class="tip" id="fs127">val expr : Expr</div>
+<div class="tip" id="fs128">val pexpr&#39; : Parser&lt;Expr,unit&gt;<br /><br />Full name: Script.pexpr&#39;</div>
+<div class="tip" id="fs129">val pwhile : Parser&lt;Statement,unit&gt;<br /><br />Full name: Script.pwhile</div>
+<div class="tip" id="fs130">val e : Expr</div>
+<div class="tip" id="fs131">val block : Statement list</div>
+<div class="tip" id="fs132">val pdowhile : Parser&lt;Statement,unit&gt;<br /><br />Full name: Script.pdowhile</div>
+<div class="tip" id="fs133">val pif : Parser&lt;Statement,unit&gt;<br /><br />Full name: Script.pif</div>
+<div class="tip" id="fs134">val pifelse : Parser&lt;Statement,unit&gt;<br /><br />Full name: Script.pifelse</div>
+<div class="tip" id="fs135">val t : Statement list</div>
+<div class="tip" id="fs136">val f : Statement list</div>
+<div class="tip" id="fs137">val attempt : Parser&lt;&#39;a,&#39;u&gt; -&gt; Parser&lt;&#39;a,&#39;u&gt;<br /><br />Full name: FParsec.Primitives.attempt</div>
+<div class="tip" id="fs138">val ppublic : Parser&lt;Access,unit&gt;<br /><br />Full name: Script.ppublic</div>
+<div class="tip" id="fs139">val pprivate : Parser&lt;Access,unit&gt;<br /><br />Full name: Script.pprivate</div>
+<div class="tip" id="fs140">val pprotected : Parser&lt;Access,unit&gt;<br /><br />Full name: Script.pprotected</div>
+<div class="tip" id="fs141">val pinternal : Parser&lt;Access,unit&gt;<br /><br />Full name: Script.pinternal</div>
+<div class="tip" id="fs142">Multiple items<br />union case Access.Internal: Access<br /><br />--------------------<br />namespace FParsec.Internal</div>
+<div class="tip" id="fs143">val paccess : Parser&lt;Access,unit&gt;<br /><br />Full name: Script.paccess</div>
+<div class="tip" id="fs144">val opt : Parser&lt;&#39;a,&#39;u&gt; -&gt; Parser&lt;&#39;a option,&#39;u&gt;<br /><br />Full name: FParsec.Primitives.opt</div>
+<div class="tip" id="fs145">val access : Access option</div>
+<div class="tip" id="fs146">val defaultArg : arg:&#39;T option -&gt; defaultValue:&#39;T -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.Operators.defaultArg</div>
+<div class="tip" id="fs147">val psealed : Parser&lt;Modifier,unit&gt;<br /><br />Full name: Script.psealed</div>
+<div class="tip" id="fs148">val pstatic : Parser&lt;Modifier,unit&gt;<br /><br />Full name: Script.pstatic</div>
+<div class="tip" id="fs149">val pmodifier : Parser&lt;Modifier,unit&gt;<br /><br />Full name: Script.pmodifier</div>
+<div class="tip" id="fs150">val parg : Parser&lt;Arg,unit&gt;<br /><br />Full name: Script.parg</div>
+<div class="tip" id="fs151">val pargs : Parser&lt;Arg list,unit&gt;<br /><br />Full name: Script.pargs</div>
+<div class="tip" id="fs152">val sepBy : Parser&lt;&#39;a,&#39;u&gt; -&gt; Parser&lt;&#39;b,&#39;u&gt; -&gt; Parser&lt;&#39;a list,&#39;u&gt;<br /><br />Full name: FParsec.Primitives.sepBy</div>
+<div class="tip" id="fs153">val pmemberinfo : Parser&lt;MemberInfo,unit&gt;<br /><br />Full name: Script.pmemberinfo</div>
+<div class="tip" id="fs154">val pipe4 : Parser&lt;&#39;a,&#39;u&gt; -&gt; Parser&lt;&#39;b,&#39;u&gt; -&gt; Parser&lt;&#39;c,&#39;u&gt; -&gt; Parser&lt;&#39;d,&#39;u&gt; -&gt; (&#39;a -&gt; &#39;b -&gt; &#39;c -&gt; &#39;d -&gt; &#39;e) -&gt; Parser&lt;&#39;e,&#39;u&gt;<br /><br />Full name: FParsec.Primitives.pipe4</div>
+<div class="tip" id="fs155">val access : Access</div>
+<div class="tip" id="fs156">val modifier : Modifier option</div>
+<div class="tip" id="fs157">val pfield : Parser&lt;Member,unit&gt;<br /><br />Full name: Script.pfield</div>
+<div class="tip" id="fs158">val mi : MemberInfo</div>
+<div class="tip" id="fs159">union case Option.None: Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs160">val pproperty : Parser&lt;Member,unit&gt;<br /><br />Full name: Script.pproperty</div>
+<div class="tip" id="fs161">val pmethod : Parser&lt;Member,unit&gt;<br /><br />Full name: Script.pmethod</div>
+<div class="tip" id="fs162">val args : Arg list</div>
+<div class="tip" id="fs163">val pmember : Parser&lt;Member,unit&gt;<br /><br />Full name: Script.pmember</div>
+<div class="tip" id="fs164">val pmemberblock : Parser&lt;Member list,unit&gt;<br /><br />Full name: Script.pmemberblock</div>
+<div class="tip" id="fs165">val members : Member list</div>
+<div class="tip" id="fs166">val penumblock : Parser&lt;Member list,unit&gt;<br /><br />Full name: Script.penumblock</div>
+<div class="tip" id="fs167">val pclass : Parser&lt;CSharpType,unit&gt;<br /><br />Full name: Script.pclass</div>
+<div class="tip" id="fs168">val pipe5 : Parser&lt;&#39;a,&#39;u&gt; -&gt; Parser&lt;&#39;b,&#39;u&gt; -&gt; Parser&lt;&#39;c,&#39;u&gt; -&gt; Parser&lt;&#39;d,&#39;u&gt; -&gt; Parser&lt;&#39;e,&#39;u&gt; -&gt; (&#39;a -&gt; &#39;b -&gt; &#39;c -&gt; &#39;d -&gt; &#39;e -&gt; &#39;f) -&gt; Parser&lt;&#39;f,&#39;u&gt;<br /><br />Full name: FParsec.Primitives.pipe5</div>
+<div class="tip" id="fs169">val block : Member list</div>
+<div class="tip" id="fs170">val pstruct : Parser&lt;CSharpType,unit&gt;<br /><br />Full name: Script.pstruct</div>
+<div class="tip" id="fs171">val penum : Parser&lt;CSharpType,unit&gt;<br /><br />Full name: Script.penum</div>
+<div class="tip" id="fs172">val ptypedeclaration : Parser&lt;CSharpType,unit&gt;<br /><br />Full name: Script.ptypedeclaration</div>
+<div class="tip" id="fs173">val pscope : Parser&lt;Scope,unit&gt;<br /><br />Full name: Script.pscope</div>
+<div class="tip" id="fs174">val pscopeimpl : Parser&lt;Scope,unit&gt; ref<br /><br />Full name: Script.pscopeimpl</div>
+<div class="tip" id="fs175">val pscopesblock : Parser&lt;Scope list,unit&gt;<br /><br />Full name: Script.pscopesblock</div>
+<div class="tip" id="fs176">val scopes : Scope list</div>
+<div class="tip" id="fs177">val pimport : Parser&lt;Import,unit&gt;<br /><br />Full name: Script.pimport</div>
+<div class="tip" id="fs178">val pnsblock : Parser&lt;Scope,unit&gt;<br /><br />Full name: Script.pnsblock</div>
+<div class="tip" id="fs179">val imports : Import list</div>
+<div class="tip" id="fs180">val block : Scope list</div>
+<div class="tip" id="fs181">val types : Scope</div>
+<div class="tip" id="fs182">val ptypes : Parser&lt;Scope,unit&gt;<br /><br />Full name: Script.ptypes</div>
+<div class="tip" id="fs183">val many1 : Parser&lt;&#39;a,&#39;u&gt; -&gt; Parser&lt;&#39;a list,&#39;u&gt;<br /><br />Full name: FParsec.Primitives.many1</div>
+<div class="tip" id="fs184">val classes : CSharpType list</div>
+<div class="tip" id="fs185">val program : string<br /><br />Full name: Script.program</div>
+<div class="tip" id="fs186">val run : Parser&lt;&#39;Result,unit&gt; -&gt; string -&gt; ParserResult&lt;&#39;Result,unit&gt;<br /><br />Full name: FParsec.CharParsers.run</div>
+

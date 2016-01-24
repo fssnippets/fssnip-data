@@ -1,0 +1,100 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">// inspired by http://stackoverflow.com/a/11191070</span>
+
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">System</span>
+
+<span class="k">type</span> <span class="k">private</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="t">Completed</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span>(<span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="i">value</span> <span class="o">:</span> <span class="o">&#39;</span><span class="i">T</span>) <span class="o">=</span>
+    <span class="k">inherit</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="t">Exception</span>()
+    <span class="k">member</span> <span class="i">__</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="i">Value</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs3', 6)" onmouseover="showTip(event, 'fs3', 6)" class="i">value</span>
+
+<span class="k">exception</span> <span class="k">private</span> <span onmouseout="hideTip(event, 'fs6', 7)" onmouseover="showTip(event, 'fs6', 7)" class="t">Timeout</span>
+
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs7', 8)" onmouseover="showTip(event, 'fs7', 8)" class="t">Async</span> <span class="k">with</span>
+    <span class="k">static</span> <span class="k">member</span> <span onmouseout="hideTip(event, 'fs8', 9)" onmouseover="showTip(event, 'fs8', 9)" class="f">CancelAfter</span> <span onmouseout="hideTip(event, 'fs9', 10)" onmouseover="showTip(event, 'fs9', 10)" class="i">timeout</span> (<span onmouseout="hideTip(event, 'fs10', 11)" onmouseover="showTip(event, 'fs10', 11)" class="i">f</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs7', 12)" onmouseover="showTip(event, 'fs7', 12)" class="t">Async</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span>) <span class="o">=</span>
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs11', 13)" onmouseover="showTip(event, 'fs11', 13)" class="f">econt</span> <span onmouseout="hideTip(event, 'fs12', 14)" onmouseover="showTip(event, 'fs12', 14)" class="i">e</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs7', 15)" onmouseover="showTip(event, 'fs7', 15)" class="t">Async</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs13', 16)" onmouseover="showTip(event, 'fs13', 16)" class="f">FromContinuations</span>(<span class="k">fun</span> (_,<span onmouseout="hideTip(event, 'fs14', 17)" onmouseover="showTip(event, 'fs14', 17)" class="f">econt</span>,_) <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs14', 18)" onmouseover="showTip(event, 'fs14', 18)" class="f">econt</span> <span onmouseout="hideTip(event, 'fs12', 19)" onmouseover="showTip(event, 'fs12', 19)" class="i">e</span>)
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs15', 20)" onmouseover="showTip(event, 'fs15', 20)" class="i">worker</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs16', 21)" onmouseover="showTip(event, 'fs16', 21)" class="i">async</span> {
+            <span class="k">let!</span> <span onmouseout="hideTip(event, 'fs17', 22)" onmouseover="showTip(event, 'fs17', 22)" class="i">r</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs10', 23)" onmouseover="showTip(event, 'fs10', 23)" class="i">f</span>
+            <span class="k">return!</span> <span onmouseout="hideTip(event, 'fs11', 24)" onmouseover="showTip(event, 'fs11', 24)" class="f">econt</span> <span class="o">&lt;|</span> <span onmouseout="hideTip(event, 'fs2', 25)" onmouseover="showTip(event, 'fs2', 25)" class="t">Completed</span>(<span onmouseout="hideTip(event, 'fs17', 26)" onmouseover="showTip(event, 'fs17', 26)" class="i">r</span>)
+        }
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs18', 27)" onmouseover="showTip(event, 'fs18', 27)" class="i">timer</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs16', 28)" onmouseover="showTip(event, 'fs16', 28)" class="i">async</span> {
+            <span class="k">do!</span> <span onmouseout="hideTip(event, 'fs7', 29)" onmouseover="showTip(event, 'fs7', 29)" class="t">Async</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs19', 30)" onmouseover="showTip(event, 'fs19', 30)" class="f">Sleep</span> <span onmouseout="hideTip(event, 'fs9', 31)" onmouseover="showTip(event, 'fs9', 31)" class="i">timeout</span>
+            <span class="k">return!</span> <span onmouseout="hideTip(event, 'fs11', 32)" onmouseover="showTip(event, 'fs11', 32)" class="f">econt</span> <span onmouseout="hideTip(event, 'fs6', 33)" onmouseover="showTip(event, 'fs6', 33)" class="t">Timeout</span>
+        }
+
+        <span onmouseout="hideTip(event, 'fs16', 34)" onmouseover="showTip(event, 'fs16', 34)" class="i">async</span> {
+            <span class="k">try</span> 
+                <span class="k">let!</span> _ <span class="o">=</span> <span onmouseout="hideTip(event, 'fs7', 35)" onmouseover="showTip(event, 'fs7', 35)" class="t">Async</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs20', 36)" onmouseover="showTip(event, 'fs20', 36)" class="f">Parallel</span> [<span onmouseout="hideTip(event, 'fs15', 37)" onmouseover="showTip(event, 'fs15', 37)" class="i">worker</span> ; <span onmouseout="hideTip(event, 'fs18', 38)" onmouseover="showTip(event, 'fs18', 38)" class="i">timer</span>]
+                <span class="k">return</span> <span onmouseout="hideTip(event, 'fs21', 39)" onmouseover="showTip(event, 'fs21', 39)" class="f">failwith</span> <span class="s">&quot;unreachable exception reached.&quot;</span>
+            <span class="k">with</span> 
+            | <span class="o">:?</span> <span onmouseout="hideTip(event, 'fs2', 40)" onmouseover="showTip(event, 'fs2', 40)" class="t">Completed</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span> <span class="k">as</span> <span onmouseout="hideTip(event, 'fs22', 41)" onmouseover="showTip(event, 'fs22', 41)" class="i">t</span> <span class="k">-&gt;</span> <span class="k">return</span> <span onmouseout="hideTip(event, 'fs23', 42)" onmouseover="showTip(event, 'fs23', 42)" class="p">Some</span> <span onmouseout="hideTip(event, 'fs22', 43)" onmouseover="showTip(event, 'fs22', 43)" class="i">t</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs24', 44)" onmouseover="showTip(event, 'fs24', 44)" class="i">Value</span>
+            | <span onmouseout="hideTip(event, 'fs6', 45)" onmouseover="showTip(event, 'fs6', 45)" class="t">Timeout</span> <span class="k">-&gt;</span> <span class="k">return</span> <span onmouseout="hideTip(event, 'fs25', 46)" onmouseover="showTip(event, 'fs25', 46)" class="p">None</span>
+        }
+
+<span class="c">// example</span>
+<span onmouseout="hideTip(event, 'fs7', 47)" onmouseover="showTip(event, 'fs7', 47)" class="t">Async</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs19', 48)" onmouseover="showTip(event, 'fs19', 48)" class="f">Sleep</span> <span class="n">400</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs7', 49)" onmouseover="showTip(event, 'fs7', 49)" class="t">Async</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs26', 50)" onmouseover="showTip(event, 'fs26', 50)" class="f">CancelAfter</span> <span class="n">500</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs7', 51)" onmouseover="showTip(event, 'fs7', 51)" class="t">Async</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs27', 52)" onmouseover="showTip(event, 'fs27', 52)" class="f">RunSynchronously</span>
+<span onmouseout="hideTip(event, 'fs7', 53)" onmouseover="showTip(event, 'fs7', 53)" class="t">Async</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs19', 54)" onmouseover="showTip(event, 'fs19', 54)" class="f">Sleep</span> <span class="n">400</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs7', 55)" onmouseover="showTip(event, 'fs7', 55)" class="t">Async</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs26', 56)" onmouseover="showTip(event, 'fs26', 56)" class="f">CancelAfter</span> <span class="n">300</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs7', 57)" onmouseover="showTip(event, 'fs7', 57)" class="t">Async</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs27', 58)" onmouseover="showTip(event, 'fs27', 58)" class="f">RunSynchronously</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace System</div>
+<div class="tip" id="fs2">Multiple items<br />type private Completed&lt;&#39;T&gt; =<br />&#160;&#160;inherit Exception<br />&#160;&#160;new : value:&#39;T -&gt; Completed&lt;&#39;T&gt;<br />&#160;&#160;member Value : &#39;T<br /><br />Full name: Script.Completed&lt;_&gt;<br /><br />--------------------<br />private new : value:&#39;T -&gt; Completed&lt;&#39;T&gt;</div>
+<div class="tip" id="fs3">val value : &#39;T</div>
+<div class="tip" id="fs4">Multiple items<br />type Exception =<br />&#160;&#160;new : unit -&gt; Exception + 2 overloads<br />&#160;&#160;member Data : IDictionary<br />&#160;&#160;member GetBaseException : unit -&gt; Exception<br />&#160;&#160;member GetObjectData : info:SerializationInfo * context:StreamingContext -&gt; unit<br />&#160;&#160;member GetType : unit -&gt; Type<br />&#160;&#160;member HelpLink : string with get, set<br />&#160;&#160;member InnerException : Exception<br />&#160;&#160;member Message : string<br />&#160;&#160;member Source : string with get, set<br />&#160;&#160;member StackTrace : string<br />&#160;&#160;...<br /><br />Full name: System.Exception<br /><br />--------------------<br />Exception() : unit<br />Exception(message: string) : unit<br />Exception(message: string, innerException: exn) : unit<br />Exception(info: Runtime.Serialization.SerializationInfo, context: Runtime.Serialization.StreamingContext) : unit</div>
+<div class="tip" id="fs5">member private Completed.Value : &#39;T<br /><br />Full name: Script.Completed`1.Value</div>
+<div class="tip" id="fs6">exception private Timeout<br /><br />Full name: Script.Timeout</div>
+<div class="tip" id="fs7">Multiple items<br />type Async<br />static member AsBeginEnd : computation:(&#39;Arg -&gt; Async&lt;&#39;T&gt;) -&gt; (&#39;Arg * AsyncCallback * obj -&gt; IAsyncResult) * (IAsyncResult -&gt; &#39;T) * (IAsyncResult -&gt; unit)<br />static member AwaitEvent : event:IEvent&lt;&#39;Del,&#39;T&gt; * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt; (requires delegate and &#39;Del :&gt; Delegate)<br />static member AwaitIAsyncResult : iar:IAsyncResult * ?millisecondsTimeout:int -&gt; Async&lt;bool&gt;<br />static member AwaitTask : task:Task&lt;&#39;T&gt; -&gt; Async&lt;&#39;T&gt;<br />static member AwaitWaitHandle : waitHandle:WaitHandle * ?millisecondsTimeout:int -&gt; Async&lt;bool&gt;<br />static member CancelDefaultToken : unit -&gt; unit<br />static member Catch : computation:Async&lt;&#39;T&gt; -&gt; Async&lt;Choice&lt;&#39;T,exn&gt;&gt;<br />static member FromBeginEnd : beginAction:(AsyncCallback * obj -&gt; IAsyncResult) * endAction:(IAsyncResult -&gt; &#39;T) * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member FromBeginEnd : arg:&#39;Arg1 * beginAction:(&#39;Arg1 * AsyncCallback * obj -&gt; IAsyncResult) * endAction:(IAsyncResult -&gt; &#39;T) * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member FromBeginEnd : arg1:&#39;Arg1 * arg2:&#39;Arg2 * beginAction:(&#39;Arg1 * &#39;Arg2 * AsyncCallback * obj -&gt; IAsyncResult) * endAction:(IAsyncResult -&gt; &#39;T) * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member FromBeginEnd : arg1:&#39;Arg1 * arg2:&#39;Arg2 * arg3:&#39;Arg3 * beginAction:(&#39;Arg1 * &#39;Arg2 * &#39;Arg3 * AsyncCallback * obj -&gt; IAsyncResult) * endAction:(IAsyncResult -&gt; &#39;T) * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member FromContinuations : callback:((&#39;T -&gt; unit) * (exn -&gt; unit) * (OperationCanceledException -&gt; unit) -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member Ignore : computation:Async&lt;&#39;T&gt; -&gt; Async&lt;unit&gt;<br />static member OnCancel : interruption:(unit -&gt; unit) -&gt; Async&lt;IDisposable&gt;<br />static member Parallel : computations:seq&lt;Async&lt;&#39;T&gt;&gt; -&gt; Async&lt;&#39;T []&gt;<br />static member RunSynchronously : computation:Async&lt;&#39;T&gt; * ?timeout:int * ?cancellationToken:CancellationToken -&gt; &#39;T<br />static member Sleep : millisecondsDueTime:int -&gt; Async&lt;unit&gt;<br />static member Start : computation:Async&lt;unit&gt; * ?cancellationToken:CancellationToken -&gt; unit<br />static member StartAsTask : computation:Async&lt;&#39;T&gt; * ?taskCreationOptions:TaskCreationOptions * ?cancellationToken:CancellationToken -&gt; Task&lt;&#39;T&gt;<br />static member StartChild : computation:Async&lt;&#39;T&gt; * ?millisecondsTimeout:int -&gt; Async&lt;Async&lt;&#39;T&gt;&gt;<br />static member StartChildAsTask : computation:Async&lt;&#39;T&gt; * ?taskCreationOptions:TaskCreationOptions -&gt; Async&lt;Task&lt;&#39;T&gt;&gt;<br />static member StartImmediate : computation:Async&lt;unit&gt; * ?cancellationToken:CancellationToken -&gt; unit<br />static member StartWithContinuations : computation:Async&lt;&#39;T&gt; * continuation:(&#39;T -&gt; unit) * exceptionContinuation:(exn -&gt; unit) * cancellationContinuation:(OperationCanceledException -&gt; unit) * ?cancellationToken:CancellationToken -&gt; unit<br />static member SwitchToContext : syncContext:SynchronizationContext -&gt; Async&lt;unit&gt;<br />static member SwitchToNewThread : unit -&gt; Async&lt;unit&gt;<br />static member SwitchToThreadPool : unit -&gt; Async&lt;unit&gt;<br />static member TryCancelled : computation:Async&lt;&#39;T&gt; * compensation:(OperationCanceledException -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member CancellationToken : Async&lt;CancellationToken&gt;<br />static member DefaultCancellationToken : CancellationToken<br /><br />Full name: Microsoft.FSharp.Control.Async<br /><br />--------------------<br />type Async&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Control.Async&lt;_&gt;</div>
+<div class="tip" id="fs8">static member Async.CancelAfter : timeout:int -&gt; f:Async&lt;&#39;T&gt; -&gt; Async&lt;&#39;T option&gt;<br /><br />Full name: Script.CancelAfter</div>
+<div class="tip" id="fs9">val timeout : int</div>
+<div class="tip" id="fs10">val f : Async&lt;&#39;T&gt;</div>
+<div class="tip" id="fs11">val econt : (exn -&gt; Async&lt;&#39;a&gt;)</div>
+<div class="tip" id="fs12">val e : exn</div>
+<div class="tip" id="fs13">static member Async.FromContinuations : callback:((&#39;T -&gt; unit) * (exn -&gt; unit) * (OperationCanceledException -&gt; unit) -&gt; unit) -&gt; Async&lt;&#39;T&gt;</div>
+<div class="tip" id="fs14">val econt : (exn -&gt; unit)</div>
+<div class="tip" id="fs15">val worker : Async&lt;obj&gt;</div>
+<div class="tip" id="fs16">val async : AsyncBuilder<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.async</div>
+<div class="tip" id="fs17">val r : &#39;T</div>
+<div class="tip" id="fs18">val timer : Async&lt;obj&gt;</div>
+<div class="tip" id="fs19">static member Async.Sleep : millisecondsDueTime:int -&gt; Async&lt;unit&gt;</div>
+<div class="tip" id="fs20">static member Async.Parallel : computations:seq&lt;Async&lt;&#39;T&gt;&gt; -&gt; Async&lt;&#39;T []&gt;</div>
+<div class="tip" id="fs21">val failwith : message:string -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.Operators.failwith</div>
+<div class="tip" id="fs22">val t : Completed&lt;&#39;T&gt;</div>
+<div class="tip" id="fs23">union case Option.Some: Value: &#39;T -&gt; Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs24">property Completed.Value: &#39;T</div>
+<div class="tip" id="fs25">union case Option.None: Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs26">static member Async.CancelAfter : timeout:int -&gt; f:Async&lt;&#39;T&gt; -&gt; Async&lt;&#39;T option&gt;</div>
+<div class="tip" id="fs27">static member Async.RunSynchronously : computation:Async&lt;&#39;T&gt; * ?timeout:int * ?cancellationToken:Threading.CancellationToken -&gt; &#39;T</div>
+

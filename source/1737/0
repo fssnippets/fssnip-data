@@ -1,0 +1,37 @@
+#r "C:\\git\\bitbucket\\folder-generator\\packages\\Microsoft.Web.Administration.7.0.0.0\\lib\\net20\\Microsoft.Web.Administration.dll"
+
+open System
+open Microsoft.Web.Administration
+                    
+let siteName = "doms-wicked-site"
+
+let name(siteType: string) = 
+    String.Format("{0}_{1}", siteName, siteType)
+        
+let serverManager = new ServerManager()
+        
+let createSite(siteName: string) = 
+    serverManager.Sites.Add(siteName, String.Format(@"C:\Sites\{0}", siteName), 80)
+
+let applicationPool(poolName: string) = 
+    let livePool:ApplicationPool = serverManager.ApplicationPools.Add(poolName)
+    livePool.Enable32BitAppOnWin64 <- true;
+    livePool.ManagedRuntimeVersion <- "v4.0";            
+    livePool
+
+let site(siteName: string, poolName: string) = 
+    let liveSite:Site = createSite(siteName)
+    liveSite.ServerAutoStart <- true
+    liveSite.ApplicationDefaults.ApplicationPoolName <- poolName       
+    liveSite.TraceFailedRequestsLogging.Enabled <- true;
+    liveSite.TraceFailedRequestsLogging.Directory <- String.Format(@"C:\IISLogs\{0}", siteName)
+
+let liveName = name("live")
+let livePool = applicationPool(liveName)            
+let liveSite = site(liveName, livePool.Name)
+
+let accName = name("acc")
+let accPool = applicationPool(accName)            
+site(accName, accPool.Name) |> ignore
+        
+serverManager.CommitChanges()   

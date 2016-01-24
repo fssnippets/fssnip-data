@@ -1,0 +1,45 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="prep">#r</span> <span class="s">&quot;FSharp.PowerPack.Linq.dll&quot;</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">Microsoft</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">FSharp</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="i">Quotations</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 4)" onmouseover="showTip(event, 'fs1', 4)" class="i">Microsoft</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 5)" onmouseover="showTip(event, 'fs2', 5)" class="i">FSharp</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs4', 6)" onmouseover="showTip(event, 'fs4', 6)" class="i">Linq</span><span class="o">.</span><span class="i">QuotationEvaluation</span>
+    
+<span class="c">// Create a part of expression using &quot;Expr&quot; calls </span>
+<span class="c">// (this creates arbitrary untyped quotation)</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs5', 7)" onmouseover="showTip(event, 'fs5', 7)" class="i">expr</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs6', 8)" onmouseover="showTip(event, 'fs6', 8)" class="t">Expr</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs7', 9)" onmouseover="showTip(event, 'fs7', 9)" class="f">Value</span>(<span class="n">13</span>)
+
+<span class="c">// Create a part using quotation syntax </span>
+<span class="c">// (splicing untyped part in using %%)</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs8', 10)" onmouseover="showTip(event, 'fs8', 10)" class="i">expr2</span> <span class="o">=</span> &lt;@ (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs9', 11)" onmouseover="showTip(event, 'fs9', 11)" class="i">x</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs9', 12)" onmouseover="showTip(event, 'fs9', 12)" class="i">x</span> <span class="o">*</span> <span class="o">%%</span><span onmouseout="hideTip(event, 'fs5', 13)" onmouseover="showTip(event, 'fs5', 13)" class="i">expr</span>) @&gt;
+    
+<span class="c">// Compile the quotation &amp; Run returned function</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs10', 14)" onmouseover="showTip(event, 'fs10', 14)" class="f">f</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs8', 15)" onmouseover="showTip(event, 'fs8', 15)" class="i">expr2</span><span class="o">.</span><span class="i">Compile</span>()()
+<span onmouseout="hideTip(event, 'fs10', 16)" onmouseover="showTip(event, 'fs10', 16)" class="f">f</span> <span class="n">10</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace Microsoft</div>
+<div class="tip" id="fs2">namespace Microsoft.FSharp</div>
+<div class="tip" id="fs3">namespace Microsoft.FSharp.Quotations</div>
+<div class="tip" id="fs4">namespace Microsoft.FSharp.Linq</div>
+<div class="tip" id="fs5">val expr : Expr<br /><br />Full name: Script.expr</div>
+<div class="tip" id="fs6">Multiple items<br />type Expr =<br />&#160;&#160;override Equals : obj:obj -&gt; bool<br />&#160;&#160;member GetFreeVars : unit -&gt; seq&lt;Var&gt;<br />&#160;&#160;member Substitute : substitution:(Var -&gt; Expr option) -&gt; Expr<br />&#160;&#160;member ToString : full:bool -&gt; string<br />&#160;&#160;member CustomAttributes : Expr list<br />&#160;&#160;member Type : Type<br />&#160;&#160;static member AddressOf : target:Expr -&gt; Expr<br />&#160;&#160;static member AddressSet : target:Expr * value:Expr -&gt; Expr<br />&#160;&#160;static member Application : functionExpr:Expr * argument:Expr -&gt; Expr<br />&#160;&#160;static member Applications : functionExpr:Expr * arguments:Expr list list -&gt; Expr<br />&#160;&#160;...<br /><br />Full name: Microsoft.FSharp.Quotations.Expr<br /><br />--------------------<br />type Expr&lt;&#39;T&gt; =<br />&#160;&#160;inherit Expr<br />&#160;&#160;member Raw : Expr<br /><br />Full name: Microsoft.FSharp.Quotations.Expr&lt;_&gt;</div>
+<div class="tip" id="fs7">static member Expr.Value : value:&#39;T -&gt; Expr<br />static member Expr.Value : value:obj * expressionType:System.Type -&gt; Expr</div>
+<div class="tip" id="fs8">val expr2 : Expr&lt;(int -&gt; int)&gt;<br /><br />Full name: Script.expr2</div>
+<div class="tip" id="fs9">val x : int</div>
+<div class="tip" id="fs10">val f : (int -&gt; obj)<br /><br />Full name: Script.f</div>
+

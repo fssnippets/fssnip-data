@@ -1,0 +1,1 @@
+Seq.init 999999 (fun i -> Seq.unfold (fun i -> if (i > 1L) then Some(i, if i % 2L = 0L then i / 2L else i * 3L + 1L) else None) (int64(i))) |> Seq.sortBy (fun x -> -(Seq.length  x) - 1) |> Seq.head |> Seq.head

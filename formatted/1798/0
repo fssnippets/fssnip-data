@@ -1,0 +1,69 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">System</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 2)" onmouseover="showTip(event, 'fs1', 2)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 3)" onmouseover="showTip(event, 'fs2', 3)" class="i">Text</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 4)" onmouseover="showTip(event, 'fs1', 4)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 5)" onmouseover="showTip(event, 'fs3', 5)" class="i">Security</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs4', 6)" onmouseover="showTip(event, 'fs4', 6)" class="i">Cryptography</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs5', 7)" onmouseover="showTip(event, 'fs5', 7)" class="f">bytesToHex</span> (<span onmouseout="hideTip(event, 'fs6', 8)" onmouseover="showTip(event, 'fs6', 8)" class="i">bytes</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs7', 9)" onmouseover="showTip(event, 'fs7', 9)" class="t">byte</span>[]) <span class="o">=</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs8', 10)" onmouseover="showTip(event, 'fs8', 10)" class="i">builder</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs9', 11)" onmouseover="showTip(event, 'fs9', 11)" class="t">StringBuilder</span>(<span onmouseout="hideTip(event, 'fs6', 12)" onmouseover="showTip(event, 'fs6', 12)" class="i">bytes</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs10', 13)" onmouseover="showTip(event, 'fs10', 13)" class="i">Length</span> <span class="o">*</span> <span class="n">2</span>)  
+    <span class="k">for</span> <span onmouseout="hideTip(event, 'fs11', 14)" onmouseover="showTip(event, 'fs11', 14)" class="i">i</span> <span class="o">=</span> <span class="n">0</span> <span class="k">to</span> (<span onmouseout="hideTip(event, 'fs6', 15)" onmouseover="showTip(event, 'fs6', 15)" class="i">bytes</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs10', 16)" onmouseover="showTip(event, 'fs10', 16)" class="i">Length</span> <span class="o">-</span> <span class="n">1</span>) <span class="k">do</span>
+        <span onmouseout="hideTip(event, 'fs8', 17)" onmouseover="showTip(event, 'fs8', 17)" class="i">builder</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs12', 18)" onmouseover="showTip(event, 'fs12', 18)" class="f">AppendFormat</span>(<span class="s">&quot;{0:X2}&quot;</span>, <span onmouseout="hideTip(event, 'fs6', 19)" onmouseover="showTip(event, 'fs6', 19)" class="i">bytes</span><span class="o">.</span>[<span onmouseout="hideTip(event, 'fs11', 20)" onmouseover="showTip(event, 'fs11', 20)" class="i">i</span>]) <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs13', 21)" onmouseover="showTip(event, 'fs13', 21)" class="f">ignore</span>
+    <span onmouseout="hideTip(event, 'fs8', 22)" onmouseover="showTip(event, 'fs8', 22)" class="i">builder</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs14', 23)" onmouseover="showTip(event, 'fs14', 23)" class="f">ToString</span>()
+    
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs15', 24)" onmouseover="showTip(event, 'fs15', 24)" class="f">keyGen</span> <span onmouseout="hideTip(event, 'fs16', 25)" onmouseover="showTip(event, 'fs16', 25)" class="i">byteCount</span> <span class="o">=</span>
+    <span class="k">use</span> <span onmouseout="hideTip(event, 'fs17', 26)" onmouseover="showTip(event, 'fs17', 26)" class="i">rng</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs18', 27)" onmouseover="showTip(event, 'fs18', 27)" class="t">RNGCryptoServiceProvider</span>()
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs6', 28)" onmouseover="showTip(event, 'fs6', 28)" class="i">bytes</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs19', 29)" onmouseover="showTip(event, 'fs19', 29)" class="t">Array</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs20', 30)" onmouseover="showTip(event, 'fs20', 30)" class="f">zeroCreate</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs7', 31)" onmouseover="showTip(event, 'fs7', 31)" class="t">byte</span><span class="o">&gt;</span> <span onmouseout="hideTip(event, 'fs16', 32)" onmouseover="showTip(event, 'fs16', 32)" class="i">byteCount</span>
+    <span onmouseout="hideTip(event, 'fs17', 33)" onmouseover="showTip(event, 'fs17', 33)" class="i">rng</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs21', 34)" onmouseover="showTip(event, 'fs21', 34)" class="f">GetBytes</span>(<span onmouseout="hideTip(event, 'fs6', 35)" onmouseover="showTip(event, 'fs6', 35)" class="i">bytes</span>);
+    <span onmouseout="hideTip(event, 'fs5', 36)" onmouseover="showTip(event, 'fs5', 36)" class="f">bytesToHex</span> <span onmouseout="hideTip(event, 'fs6', 37)" onmouseover="showTip(event, 'fs6', 37)" class="i">bytes</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs22', 38)" onmouseover="showTip(event, 'fs22', 38)" class="i">validationKey</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs15', 39)" onmouseover="showTip(event, 'fs15', 39)" class="f">keyGen</span> <span class="n">64</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs23', 40)" onmouseover="showTip(event, 'fs23', 40)" class="i">decryptionKey</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs15', 41)" onmouseover="showTip(event, 'fs15', 41)" class="f">keyGen</span> <span class="n">32</span>
+
+<span onmouseout="hideTip(event, 'fs24', 42)" onmouseover="showTip(event, 'fs24', 42)" class="f">printfn</span> <span class="s">&quot;&lt;machineKey validationKey=</span><span class="e">\&quot;</span><span class="s"></span><span class="pf">%s</span><span class="s"></span><span class="e">\&quot;</span><span class="s"> decryptionKey=</span><span class="e">\&quot;</span><span class="s"></span><span class="pf">%s</span><span class="s"></span><span class="e">\&quot;</span><span class="s"> validation=</span><span class="e">\&quot;</span><span class="s">SHA1</span><span class="e">\&quot;</span><span class="s"> /&gt;&quot;</span> <span onmouseout="hideTip(event, 'fs22', 43)" onmouseover="showTip(event, 'fs22', 43)" class="i">validationKey</span> <span onmouseout="hideTip(event, 'fs23', 44)" onmouseover="showTip(event, 'fs23', 44)" class="i">decryptionKey</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace System</div>
+<div class="tip" id="fs2">namespace System.Text</div>
+<div class="tip" id="fs3">namespace System.Security</div>
+<div class="tip" id="fs4">namespace System.Security.Cryptography</div>
+<div class="tip" id="fs5">val bytesToHex : bytes:byte [] -&gt; string<br /><br />Full name: Script.bytesToHex</div>
+<div class="tip" id="fs6">val bytes : byte []</div>
+<div class="tip" id="fs7">Multiple items<br />val byte : value:&#39;T -&gt; byte (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.byte<br /><br />--------------------<br />type byte = Byte<br /><br />Full name: Microsoft.FSharp.Core.byte</div>
+<div class="tip" id="fs8">val builder : StringBuilder</div>
+<div class="tip" id="fs9">Multiple items<br />type StringBuilder =<br />&#160;&#160;new : unit -&gt; StringBuilder + 5 overloads<br />&#160;&#160;member Append : value:string -&gt; StringBuilder + 18 overloads<br />&#160;&#160;member AppendFormat : format:string * arg0:obj -&gt; StringBuilder + 4 overloads<br />&#160;&#160;member AppendLine : unit -&gt; StringBuilder + 1 overload<br />&#160;&#160;member Capacity : int with get, set<br />&#160;&#160;member Chars : int -&gt; char with get, set<br />&#160;&#160;member Clear : unit -&gt; StringBuilder<br />&#160;&#160;member CopyTo : sourceIndex:int * destination:char[] * destinationIndex:int * count:int -&gt; unit<br />&#160;&#160;member EnsureCapacity : capacity:int -&gt; int<br />&#160;&#160;member Equals : sb:StringBuilder -&gt; bool<br />&#160;&#160;...<br /><br />Full name: System.Text.StringBuilder<br /><br />--------------------<br />StringBuilder() : unit<br />StringBuilder(capacity: int) : unit<br />StringBuilder(value: string) : unit<br />StringBuilder(value: string, capacity: int) : unit<br />StringBuilder(capacity: int, maxCapacity: int) : unit<br />StringBuilder(value: string, startIndex: int, length: int, capacity: int) : unit</div>
+<div class="tip" id="fs10">property Array.Length: int</div>
+<div class="tip" id="fs11">val i : int</div>
+<div class="tip" id="fs12">StringBuilder.AppendFormat(format: string, [&lt;ParamArray&gt;] args: obj []) : StringBuilder<br />StringBuilder.AppendFormat(format: string, arg0: obj) : StringBuilder<br />StringBuilder.AppendFormat(provider: IFormatProvider, format: string, [&lt;ParamArray&gt;] args: obj []) : StringBuilder<br />StringBuilder.AppendFormat(format: string, arg0: obj, arg1: obj) : StringBuilder<br />StringBuilder.AppendFormat(format: string, arg0: obj, arg1: obj, arg2: obj) : StringBuilder</div>
+<div class="tip" id="fs13">val ignore : value:&#39;T -&gt; unit<br /><br />Full name: Microsoft.FSharp.Core.Operators.ignore</div>
+<div class="tip" id="fs14">StringBuilder.ToString() : string<br />StringBuilder.ToString(startIndex: int, length: int) : string</div>
+<div class="tip" id="fs15">val keyGen : byteCount:int -&gt; string<br /><br />Full name: Script.keyGen</div>
+<div class="tip" id="fs16">val byteCount : int</div>
+<div class="tip" id="fs17">val rng : RNGCryptoServiceProvider</div>
+<div class="tip" id="fs18">Multiple items<br />type RNGCryptoServiceProvider =<br />&#160;&#160;inherit RandomNumberGenerator<br />&#160;&#160;new : unit -&gt; RNGCryptoServiceProvider + 3 overloads<br />&#160;&#160;member GetBytes : data:byte[] -&gt; unit<br />&#160;&#160;member GetNonZeroBytes : data:byte[] -&gt; unit<br /><br />Full name: System.Security.Cryptography.RNGCryptoServiceProvider<br /><br />--------------------<br />RNGCryptoServiceProvider() : unit<br />RNGCryptoServiceProvider(str: string) : unit<br />RNGCryptoServiceProvider(rgb: byte []) : unit<br />RNGCryptoServiceProvider(cspParams: CspParameters) : unit</div>
+<div class="tip" id="fs19">type Array =<br />&#160;&#160;member Clone : unit -&gt; obj<br />&#160;&#160;member CopyTo : array:Array * index:int -&gt; unit + 1 overload<br />&#160;&#160;member GetEnumerator : unit -&gt; IEnumerator<br />&#160;&#160;member GetLength : dimension:int -&gt; int<br />&#160;&#160;member GetLongLength : dimension:int -&gt; int64<br />&#160;&#160;member GetLowerBound : dimension:int -&gt; int<br />&#160;&#160;member GetUpperBound : dimension:int -&gt; int<br />&#160;&#160;member GetValue : [&lt;ParamArray&gt;] indices:int[] -&gt; obj + 7 overloads<br />&#160;&#160;member Initialize : unit -&gt; unit<br />&#160;&#160;member IsFixedSize : bool<br />&#160;&#160;...<br /><br />Full name: System.Array</div>
+<div class="tip" id="fs20">val zeroCreate : count:int -&gt; &#39;T []<br /><br />Full name: Microsoft.FSharp.Collections.Array.zeroCreate</div>
+<div class="tip" id="fs21">RNGCryptoServiceProvider.GetBytes(data: byte []) : unit</div>
+<div class="tip" id="fs22">val validationKey : string<br /><br />Full name: Script.validationKey</div>
+<div class="tip" id="fs23">val decryptionKey : string<br /><br />Full name: Script.decryptionKey</div>
+<div class="tip" id="fs24">val printfn : format:Printf.TextWriterFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.printfn</div>
+

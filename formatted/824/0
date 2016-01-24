@@ -1,0 +1,39 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">type</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="t">TracksideView</span>(<span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">position</span>, <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="i">graphics</span>) <span class="o">=</span> 
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="i">camera</span> <span class="o">=</span> <span class="i">TargetCamera</span>(<span onmouseout="hideTip(event, 'fs2', 5)" onmouseover="showTip(event, 'fs2', 5)" class="i">position</span>, <span class="i">Vector3</span>(), <span onmouseout="hideTip(event, 'fs3', 6)" onmouseover="showTip(event, 'fs3', 6)" class="i">graphics</span>)
+    <span class="k">member</span> <span class="k">val</span> <span class="v">Target</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs5', 7)" onmouseover="showTip(event, 'fs5', 7)" class="t">option</span><span class="o">&lt;</span><span class="i">ITransform</span><span class="o">&gt;</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs6', 8)" onmouseover="showTip(event, 'fs6', 8)" class="p">None</span> <span class="k">with</span> <span class="i">get</span>, <span onmouseout="hideTip(event, 'fs7', 9)" onmouseover="showTip(event, 'fs7', 9)" class="i">set</span>
+
+    <span class="k">interface</span> <span class="i">IView</span> <span class="k">with</span>
+        <span class="k">member</span> <span onmouseout="hideTip(event, 'fs8', 10)" onmouseover="showTip(event, 'fs8', 10)" class="i">o</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs9', 11)" onmouseover="showTip(event, 'fs9', 11)" class="i">Camera</span> <span class="o">=</span> <span class="k">upcast</span> <span onmouseout="hideTip(event, 'fs4', 12)" onmouseover="showTip(event, 'fs4', 12)" class="i">camera</span>
+        <span class="k">member</span> <span onmouseout="hideTip(event, 'fs8', 13)" onmouseover="showTip(event, 'fs8', 13)" class="i">o</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs10', 14)" onmouseover="showTip(event, 'fs10', 14)" class="f">Update</span>() <span class="o">=</span>
+            <span onmouseout="hideTip(event, 'fs8', 15)" onmouseover="showTip(event, 'fs8', 15)" class="i">o</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs11', 16)" onmouseover="showTip(event, 'fs11', 16)" class="i">Target</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs12', 17)" onmouseover="showTip(event, 'fs12', 17)" class="t">Option</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs13', 18)" onmouseover="showTip(event, 'fs13', 18)" class="f">iter</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs14', 19)" onmouseover="showTip(event, 'fs14', 19)" class="i">target</span> <span class="k">-&gt;</span>
+                <span onmouseout="hideTip(event, 'fs4', 20)" onmouseover="showTip(event, 'fs4', 20)" class="i">camera</span><span class="o">.</span><span class="i">Target</span> <span class="o">&lt;-</span> <span onmouseout="hideTip(event, 'fs14', 21)" onmouseover="showTip(event, 'fs14', 21)" class="i">target</span><span class="o">.</span><span class="i">Transform</span><span class="o">.</span><span class="i">Position</span>
+                <span onmouseout="hideTip(event, 'fs4', 22)" onmouseover="showTip(event, 'fs4', 22)" class="i">camera</span><span class="o">.</span><span class="i">Update</span>())
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">Multiple items<br />type TracksideView =<br />&#160;&#160;interface obj<br />&#160;&#160;new : position:obj * graphics:obj -&gt; TracksideView<br />&#160;&#160;override Update : unit -&gt; unit<br />&#160;&#160;override Camera : obj<br />&#160;&#160;member Target : obj option<br />&#160;&#160;member Target : obj option with set<br /><br />Full name: Script.TracksideView<br /><br />--------------------<br />new : position:obj * graphics:obj -&gt; TracksideView</div>
+<div class="tip" id="fs2">val position : obj</div>
+<div class="tip" id="fs3">val graphics : obj</div>
+<div class="tip" id="fs4">val camera : obj</div>
+<div class="tip" id="fs5">type &#39;T option = Option&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Core.option&lt;_&gt;</div>
+<div class="tip" id="fs6">union case Option.None: Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs7">val set : elements:seq&lt;&#39;T&gt; -&gt; Set&lt;&#39;T&gt; (requires comparison)<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.set</div>
+<div class="tip" id="fs8">val o : TracksideView</div>
+<div class="tip" id="fs9">override TracksideView.Camera : obj<br /><br />Full name: Script.TracksideView.Camera</div>
+<div class="tip" id="fs10">override TracksideView.Update : unit -&gt; unit<br /><br />Full name: Script.TracksideView.Update</div>
+<div class="tip" id="fs11">property TracksideView.Target: obj option</div>
+<div class="tip" id="fs12">module Option<br /><br />from Microsoft.FSharp.Core</div>
+<div class="tip" id="fs13">val iter : action:(&#39;T -&gt; unit) -&gt; option:&#39;T option -&gt; unit<br /><br />Full name: Microsoft.FSharp.Core.Option.iter</div>
+<div class="tip" id="fs14">val target : obj</div>
+

@@ -1,0 +1,99 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+<span class="l">38: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="prep">#r</span> <span class="s">&quot;FSharp.Powerpack&quot;</span>
+
+<span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="f">repeat</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">n</span> <span class="o">=</span> <span class="i">LazyList</span><span class="o">.</span><span class="i">consDelayed</span> <span onmouseout="hideTip(event, 'fs2', 3)" onmouseover="showTip(event, 'fs2', 3)" class="i">n</span> (<span class="k">fun</span> () <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs1', 4)" onmouseover="showTip(event, 'fs1', 4)" class="i">repeat</span> <span onmouseout="hideTip(event, 'fs2', 5)" onmouseover="showTip(event, 'fs2', 5)" class="i">n</span>)
+<span onmouseout="hideTip(event, 'fs1', 6)" onmouseover="showTip(event, 'fs1', 6)" class="f">repeat</span> <span class="n">1</span> <span class="c">// seq [1; 1; 1; 1; ...]</span>
+
+<span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs3', 7)" onmouseover="showTip(event, 'fs3', 7)" class="f">integersFrom</span> <span onmouseout="hideTip(event, 'fs2', 8)" onmouseover="showTip(event, 'fs2', 8)" class="i">n</span> <span class="o">=</span> <span class="i">LazyList</span><span class="o">.</span><span class="i">consDelayed</span> <span onmouseout="hideTip(event, 'fs2', 9)" onmouseover="showTip(event, 'fs2', 9)" class="i">n</span> (<span class="k">fun</span> () <span class="k">-&gt;</span> <span class="i">LazyList</span><span class="o">.</span><span class="i">map</span> ((<span class="o">+</span>) <span class="n">1</span>) <span class="o">&lt;|</span> <span onmouseout="hideTip(event, 'fs3', 10)" onmouseover="showTip(event, 'fs3', 10)" class="i">integersFrom</span> <span onmouseout="hideTip(event, 'fs2', 11)" onmouseover="showTip(event, 'fs2', 11)" class="i">n</span>) 
+<span onmouseout="hideTip(event, 'fs3', 12)" onmouseover="showTip(event, 'fs3', 12)" class="f">integersFrom</span> <span class="n">3</span> <span class="c">// seq [3; 4; 5; 6; ...]</span>
+
+
+<span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs4', 13)" onmouseover="showTip(event, 'fs4', 13)" class="f">fibs</span>() <span class="o">=</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs5', 14)" onmouseover="showTip(event, 'fs5', 14)" class="i">zipWith</span> <span class="o">=</span> <span class="i">LazyList</span><span class="o">.</span><span class="i">map2</span>
+    <span class="i">LazyList</span><span class="o">.</span><span class="i">consDelayed</span> <span class="n">0</span> (<span class="k">fun</span> () <span class="k">-&gt;</span> <span class="i">LazyList</span><span class="o">.</span><span class="i">consDelayed</span> <span class="n">1</span> (<span class="k">fun</span> () <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs5', 15)" onmouseover="showTip(event, 'fs5', 15)" class="i">zipWith</span> (<span class="o">+</span>) <span class="o">&lt;|</span> <span onmouseout="hideTip(event, 'fs4', 16)" onmouseover="showTip(event, 'fs4', 16)" class="i">fibs</span>() <span class="o">&lt;|</span> (<span class="i">LazyList</span><span class="o">.</span><span class="i">tail</span> <span class="o">&lt;|</span> <span onmouseout="hideTip(event, 'fs4', 17)" onmouseover="showTip(event, 'fs4', 17)" class="i">fibs</span>())))
+
+<span onmouseout="hideTip(event, 'fs4', 18)" onmouseover="showTip(event, 'fs4', 18)" class="f">fibs</span>() <span class="o">|&gt;</span> <span class="i">LazyList</span><span class="o">.</span><span class="i">take</span> <span class="n">10</span> <span class="o">|&gt;</span> <span class="i">LazyList</span><span class="o">.</span><span class="i">toList</span> <span class="c">// [0; 1; 1; 2; 3; 5; 8; 13; 21; 34]</span>
+
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs6', 19)" onmouseover="showTip(event, 'fs6', 19)" class="f">primes</span>() <span class="o">=</span> 
+ <span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs7', 20)" onmouseover="showTip(event, 'fs7', 20)" class="f">sieve</span> <span onmouseout="hideTip(event, 'fs8', 21)" onmouseover="showTip(event, 'fs8', 21)" class="i">integers</span> <span class="o">=</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs9', 22)" onmouseover="showTip(event, 'fs9', 22)" class="i">prime</span>, <span onmouseout="hideTip(event, 'fs10', 23)" onmouseover="showTip(event, 'fs10', 23)" class="i">rest</span> <span class="o">=</span> <span class="i">LazyList</span><span class="o">.</span><span class="i">head</span> <span onmouseout="hideTip(event, 'fs8', 24)" onmouseover="showTip(event, 'fs8', 24)" class="i">integers</span>, <span class="i">LazyList</span><span class="o">.</span><span class="i">tail</span> <span onmouseout="hideTip(event, 'fs8', 25)" onmouseover="showTip(event, 'fs8', 25)" class="i">integers</span>
+    <span class="i">LazyList</span><span class="o">.</span><span class="i">consDelayed</span> <span onmouseout="hideTip(event, 'fs9', 26)" onmouseover="showTip(event, 'fs9', 26)" class="i">prime</span> (<span class="k">fun</span> () <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs7', 27)" onmouseover="showTip(event, 'fs7', 27)" class="i">sieve</span> <span class="o">&lt;|</span> <span class="i">LazyList</span><span class="o">.</span><span class="i">filter</span> (<span class="k">fun</span> <span class="i">v</span> <span class="k">-&gt;</span> <span class="i">v</span> <span class="o">%</span> <span onmouseout="hideTip(event, 'fs9', 28)" onmouseover="showTip(event, 'fs9', 28)" class="i">prime</span> <span class="o">&gt;</span> <span class="n">0</span>) <span onmouseout="hideTip(event, 'fs10', 29)" onmouseover="showTip(event, 'fs10', 29)" class="i">rest</span>)
+ <span onmouseout="hideTip(event, 'fs7', 30)" onmouseover="showTip(event, 'fs7', 30)" class="f">sieve</span> (<span onmouseout="hideTip(event, 'fs3', 31)" onmouseover="showTip(event, 'fs3', 31)" class="f">integersFrom</span> <span class="n">2</span>)
+
+<span onmouseout="hideTip(event, 'fs6', 32)" onmouseover="showTip(event, 'fs6', 32)" class="f">primes</span>() <span class="o">|&gt;</span> <span class="i">LazyList</span><span class="o">.</span><span class="i">take</span> <span class="n">10</span> <span class="o">|&gt;</span> <span class="i">LazyList</span><span class="o">.</span><span class="i">toList</span> <span class="c">// [2; 3; 5; 7; 11; 13; 17; 19; 23; 29]</span>
+
+<span class="c">// http://rosettacode.org/wiki/Hamming_numbers</span>
+<span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs11', 33)" onmouseover="showTip(event, 'fs11', 33)" class="f">hamming</span>() <span class="o">=</span> 
+    <span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs12', 34)" onmouseover="showTip(event, 'fs12', 34)" class="f">merge</span> <span onmouseout="hideTip(event, 'fs13', 35)" onmouseover="showTip(event, 'fs13', 35)" class="i">firstSeq</span> <span onmouseout="hideTip(event, 'fs14', 36)" onmouseover="showTip(event, 'fs14', 36)" class="i">secondSeq</span> <span class="o">=</span>
+            <span class="k">let</span> <span onmouseout="hideTip(event, 'fs15', 37)" onmouseover="showTip(event, 'fs15', 37)" class="i">first</span>, <span onmouseout="hideTip(event, 'fs16', 38)" onmouseover="showTip(event, 'fs16', 38)" class="i">firstSeq&#39;</span> <span class="o">=</span> <span class="i">LazyList</span><span class="o">.</span><span class="i">head</span> <span onmouseout="hideTip(event, 'fs13', 39)" onmouseover="showTip(event, 'fs13', 39)" class="i">firstSeq</span>, <span class="i">LazyList</span><span class="o">.</span><span class="i">tail</span> <span onmouseout="hideTip(event, 'fs13', 40)" onmouseover="showTip(event, 'fs13', 40)" class="i">firstSeq</span>
+            <span class="k">let</span> <span onmouseout="hideTip(event, 'fs17', 41)" onmouseover="showTip(event, 'fs17', 41)" class="i">second</span>, <span onmouseout="hideTip(event, 'fs18', 42)" onmouseover="showTip(event, 'fs18', 42)" class="i">secondSeq&#39;</span> <span class="o">=</span> <span class="i">LazyList</span><span class="o">.</span><span class="i">head</span> <span onmouseout="hideTip(event, 'fs14', 43)" onmouseover="showTip(event, 'fs14', 43)" class="i">secondSeq</span>, <span class="i">LazyList</span><span class="o">.</span><span class="i">tail</span> <span onmouseout="hideTip(event, 'fs14', 44)" onmouseover="showTip(event, 'fs14', 44)" class="i">secondSeq</span>
+            <span class="k">match</span> <span onmouseout="hideTip(event, 'fs15', 45)" onmouseover="showTip(event, 'fs15', 45)" class="i">first</span>, <span onmouseout="hideTip(event, 'fs17', 46)" onmouseover="showTip(event, 'fs17', 46)" class="i">second</span> <span class="k">with</span>
+            | _ <span class="k">when</span> <span onmouseout="hideTip(event, 'fs15', 47)" onmouseover="showTip(event, 'fs15', 47)" class="i">first</span> <span class="o">&lt;</span> <span onmouseout="hideTip(event, 'fs17', 48)" onmouseover="showTip(event, 'fs17', 48)" class="i">second</span> <span class="k">-&gt;</span> <span class="i">LazyList</span><span class="o">.</span><span class="i">consDelayed</span> <span onmouseout="hideTip(event, 'fs15', 49)" onmouseover="showTip(event, 'fs15', 49)" class="i">first</span> (<span class="k">fun</span> () <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs12', 50)" onmouseover="showTip(event, 'fs12', 50)" class="i">merge</span> <span onmouseout="hideTip(event, 'fs16', 51)" onmouseover="showTip(event, 'fs16', 51)" class="i">firstSeq&#39;</span> <span onmouseout="hideTip(event, 'fs14', 52)" onmouseover="showTip(event, 'fs14', 52)" class="i">secondSeq</span>)
+            | _ <span class="k">when</span> <span onmouseout="hideTip(event, 'fs15', 53)" onmouseover="showTip(event, 'fs15', 53)" class="i">first</span> <span class="o">&gt;</span> <span onmouseout="hideTip(event, 'fs17', 54)" onmouseover="showTip(event, 'fs17', 54)" class="i">second</span> <span class="k">-&gt;</span> <span class="i">LazyList</span><span class="o">.</span><span class="i">consDelayed</span> <span onmouseout="hideTip(event, 'fs17', 55)" onmouseover="showTip(event, 'fs17', 55)" class="i">second</span> (<span class="k">fun</span> () <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs12', 56)" onmouseover="showTip(event, 'fs12', 56)" class="i">merge</span> <span onmouseout="hideTip(event, 'fs13', 57)" onmouseover="showTip(event, 'fs13', 57)" class="i">firstSeq</span> <span onmouseout="hideTip(event, 'fs18', 58)" onmouseover="showTip(event, 'fs18', 58)" class="i">secondSeq&#39;</span>)
+            | _ <span class="k">-&gt;</span> <span class="i">LazyList</span><span class="o">.</span><span class="i">consDelayed</span> <span onmouseout="hideTip(event, 'fs15', 59)" onmouseover="showTip(event, 'fs15', 59)" class="i">first</span> (<span class="k">fun</span> () <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs12', 60)" onmouseover="showTip(event, 'fs12', 60)" class="i">merge</span> <span onmouseout="hideTip(event, 'fs16', 61)" onmouseover="showTip(event, 'fs16', 61)" class="i">firstSeq&#39;</span> <span onmouseout="hideTip(event, 'fs18', 62)" onmouseover="showTip(event, 'fs18', 62)" class="i">secondSeq&#39;</span>)
+
+    <span class="i">LazyList</span><span class="o">.</span><span class="i">consDelayed</span> <span class="n">1</span> (<span class="k">fun</span> () <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs12', 63)" onmouseover="showTip(event, 'fs12', 63)" class="i">merge</span> (<span class="i">LazyList</span><span class="o">.</span><span class="i">map</span> <span class="o">&lt;|</span> (<span class="o">(*)</span><span class="n">2</span>) <span class="o">&lt;|</span> <span onmouseout="hideTip(event, 'fs11', 64)" onmouseover="showTip(event, 'fs11', 64)" class="i">hamming</span>()) (<span onmouseout="hideTip(event, 'fs12', 65)" onmouseover="showTip(event, 'fs12', 65)" class="i">merge</span>  (<span class="i">LazyList</span><span class="o">.</span><span class="i">map</span> (<span class="o">(*)</span><span class="n">3</span>) <span class="o">&lt;|</span> <span onmouseout="hideTip(event, 'fs11', 66)" onmouseover="showTip(event, 'fs11', 66)" class="i">hamming</span>())  (<span class="i">LazyList</span><span class="o">.</span><span class="i">map</span> (<span class="o">(*)</span><span class="n">5</span>) <span class="o">&lt;|</span> <span onmouseout="hideTip(event, 'fs11', 67)" onmouseover="showTip(event, 'fs11', 67)" class="i">hamming</span>())))
+     
+
+<span onmouseout="hideTip(event, 'fs11', 68)" onmouseover="showTip(event, 'fs11', 68)" class="f">hamming</span>() <span class="o">|&gt;</span> <span class="i">LazyList</span><span class="o">.</span><span class="i">take</span> <span class="n">10</span> <span class="o">|&gt;</span> <span class="i">LazyList</span><span class="o">.</span><span class="i">toList</span> <span class="c">// [1; 2; 3; 4; 5; 6; 8; 9; 10; 12]</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">val repeat : n:&#39;a -&gt; &#39;b<br /><br />Full name: Script.repeat</div>
+<div class="tip" id="fs2">val n : &#39;a</div>
+<div class="tip" id="fs3">val integersFrom : n:&#39;a -&gt; &#39;b<br /><br />Full name: Script.integersFrom</div>
+<div class="tip" id="fs4">val fibs : unit -&gt; &#39;a<br /><br />Full name: Script.fibs</div>
+<div class="tip" id="fs5">val zipWith : obj</div>
+<div class="tip" id="fs6">val primes : unit -&gt; &#39;a<br /><br />Full name: Script.primes</div>
+<div class="tip" id="fs7">val sieve : (&#39;b -&gt; &#39;c)</div>
+<div class="tip" id="fs8">val integers : &#39;b</div>
+<div class="tip" id="fs9">val prime : obj</div>
+<div class="tip" id="fs10">val rest : obj</div>
+<div class="tip" id="fs11">val hamming : unit -&gt; &#39;a<br /><br />Full name: Script.hamming</div>
+<div class="tip" id="fs12">val merge : (&#39;b -&gt; &#39;c -&gt; &#39;d)</div>
+<div class="tip" id="fs13">val firstSeq : &#39;b</div>
+<div class="tip" id="fs14">val secondSeq : &#39;c</div>
+<div class="tip" id="fs15">val first : System.IComparable</div>
+<div class="tip" id="fs16">val firstSeq&#39; : obj</div>
+<div class="tip" id="fs17">val second : System.IComparable</div>
+<div class="tip" id="fs18">val secondSeq&#39; : obj</div>
+

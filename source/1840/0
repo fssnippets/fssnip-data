@@ -1,0 +1,22 @@
+#if INTERACTIVE
+#r "System.Drawing.dll"
+#endif
+
+open System.Drawing
+
+let isSierpinskiCarpetPixelFilled(x, y) =
+   let rec f (x,y) =
+      if x > 0 || y > 0 then
+         if x % 3 = 1 && y % 3 = 1 then false
+         else f (x/3,y/3)
+      else true
+   f (x,y)
+
+let width,height = 728, 728   
+let image = new Bitmap(width, height)   
+for y = 0 to height-1 do
+   for x = 0 to width-1 do
+      if isSierpinskiCarpetPixelFilled(x,y) 
+      then image.SetPixel(x,y,Color.Black)
+   
+image.Save("carpet.png", Imaging.ImageFormat.Png)

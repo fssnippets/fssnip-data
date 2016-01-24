@@ -1,0 +1,71 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">// Load charting and WorldBank type provider</span>
+<span class="k">open</span> <span class="i">Samples</span><span class="o">.</span><span class="i">Charting</span><span class="o">.</span><span class="i">DojoChart</span>
+<span class="prep">#r</span> <span class="s">&quot;Samples.WorldBank.dll&quot;</span>
+
+<span class="c">// Initiate connection to the WorldBank </span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">data</span> <span class="o">=</span> <span class="i">Samples</span><span class="o">.</span><span class="i">WorldBank</span><span class="o">.</span><span class="i">GetDataContext</span>()
+
+<span class="c">// ------------------------------------------------------------------</span>
+<span class="c">// DEMO: Plotting university enrollment data</span>
+<span class="c">// ------------------------------------------------------------------</span>
+
+<span class="c">// Get University enrollment from OECD and CZ</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">oecd</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs1', 3)" onmouseover="showTip(event, 'fs1', 3)" class="i">data</span><span class="o">.</span><span class="i">Countries</span><span class="o">.</span><span class="i">``OECD members``</span><span class="o">.</span><span class="i">Indicators</span><span class="o">.</span><span class="i">``School enrollment, tertiary (% gross)``</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs3', 4)" onmouseover="showTip(event, 'fs3', 4)" class="i">cz</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs1', 5)" onmouseover="showTip(event, 'fs1', 5)" class="i">data</span><span class="o">.</span><span class="i">Countries</span><span class="o">.</span><span class="i">``Czech Republic``</span><span class="o">.</span><span class="i">Indicators</span><span class="o">.</span><span class="i">``School enrollment, tertiary (% gross)``</span>
+
+<span class="c">// Pass data as arguments to chart</span>
+<span class="i">Chart</span><span class="o">.</span><span class="i">Line</span>(<span onmouseout="hideTip(event, 'fs2', 6)" onmouseover="showTip(event, 'fs2', 6)" class="i">oecd</span>)
+<span class="i">Chart</span><span class="o">.</span><span class="i">Line</span>(<span onmouseout="hideTip(event, 'fs3', 7)" onmouseover="showTip(event, 'fs3', 7)" class="i">cz</span>)
+
+<span class="c">// Alternative using F# &quot;pipelining&quot;</span>
+<span onmouseout="hideTip(event, 'fs2', 8)" onmouseover="showTip(event, 'fs2', 8)" class="i">oecd</span> <span class="o">|&gt;</span> <span class="i">Chart</span><span class="o">.</span><span class="i">Line</span>
+<span onmouseout="hideTip(event, 'fs3', 9)" onmouseover="showTip(event, 'fs3', 9)" class="i">cz</span> <span class="o">|&gt;</span> <span class="i">Chart</span><span class="o">.</span><span class="i">Line</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs4', 10)" onmouseover="showTip(event, 'fs4', 10)" class="i">charts</span> <span class="o">=</span> [ <span class="i">Chart</span><span class="o">.</span><span class="i">Line</span>(<span onmouseout="hideTip(event, 'fs3', 11)" onmouseover="showTip(event, 'fs3', 11)" class="i">cz</span>, <span class="i">Name</span><span class="o">=</span><span class="s">&quot;CZ&quot;</span>); <span class="i">Chart</span><span class="o">.</span><span class="i">Line</span>(<span onmouseout="hideTip(event, 'fs2', 12)" onmouseover="showTip(event, 'fs2', 12)" class="i">oecd</span>, <span class="i">Name</span><span class="o">=</span><span class="s">&quot;OECD&quot;</span>) ]
+<span class="i">Chart</span><span class="o">.</span><span class="i">Combine</span>(<span onmouseout="hideTip(event, 'fs4', 13)" onmouseover="showTip(event, 'fs4', 13)" class="i">charts</span>)<span class="o">.</span><span class="i">WithLegend</span>()
+
+<span class="c">// ------------------------------------------------------------------</span>
+<span class="c">// TASK: Compare &quot;Central government debt&quot; of UK, USA, Greece, ...</span>
+<span class="c">// ------------------------------------------------------------------</span>
+
+<span class="c">// (...)</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">val data : obj<br /><br />Full name: Script.data</div>
+<div class="tip" id="fs2">val oecd : obj<br /><br />Full name: Script.oecd</div>
+<div class="tip" id="fs3">val cz : obj<br /><br />Full name: Script.cz</div>
+<div class="tip" id="fs4">val charts : obj list<br /><br />Full name: Script.charts</div>
+

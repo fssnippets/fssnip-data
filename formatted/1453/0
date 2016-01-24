@@ -1,0 +1,63 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// Split a list into chunks using the specified separator</span>
+<span class="c">/// This takes a list and returns a list of lists (chunks)</span>
+<span class="c">/// that represent individual groups, separated by the given</span>
+<span class="c">/// separator &#39;v&#39;</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="f">splitBy</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">v</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="i">list</span> <span class="o">=</span>
+  <span class="k">let</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="f">yieldRevNonEmpty</span> <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="i">list</span> <span class="o">=</span> 
+    <span class="k">if</span> <span onmouseout="hideTip(event, 'fs5', 6)" onmouseover="showTip(event, 'fs5', 6)" class="i">list</span> <span class="o">=</span> [] <span class="k">then</span> []
+    <span class="k">else</span> [<span onmouseout="hideTip(event, 'fs6', 7)" onmouseover="showTip(event, 'fs6', 7)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs7', 8)" onmouseover="showTip(event, 'fs7', 8)" class="f">rev</span> <span onmouseout="hideTip(event, 'fs5', 9)" onmouseover="showTip(event, 'fs5', 9)" class="i">list</span>]
+
+  <span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs8', 10)" onmouseover="showTip(event, 'fs8', 10)" class="f">loop</span> <span onmouseout="hideTip(event, 'fs9', 11)" onmouseover="showTip(event, 'fs9', 11)" class="i">groupSoFar</span> <span onmouseout="hideTip(event, 'fs3', 12)" onmouseover="showTip(event, 'fs3', 12)" class="i">list</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs10', 13)" onmouseover="showTip(event, 'fs10', 13)" class="i">seq</span> { 
+    <span class="k">match</span> <span onmouseout="hideTip(event, 'fs3', 14)" onmouseover="showTip(event, 'fs3', 14)" class="i">list</span> <span class="k">with</span>
+    | [] <span class="k">-&gt;</span> <span class="k">yield!</span> <span onmouseout="hideTip(event, 'fs4', 15)" onmouseover="showTip(event, 'fs4', 15)" class="f">yieldRevNonEmpty</span> <span onmouseout="hideTip(event, 'fs9', 16)" onmouseover="showTip(event, 'fs9', 16)" class="i">groupSoFar</span>
+    | <span onmouseout="hideTip(event, 'fs11', 17)" onmouseover="showTip(event, 'fs11', 17)" class="i">head</span><span class="o">::</span><span onmouseout="hideTip(event, 'fs12', 18)" onmouseover="showTip(event, 'fs12', 18)" class="i">tail</span> <span class="k">when</span> <span class="i">head</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs2', 19)" onmouseover="showTip(event, 'fs2', 19)" class="i">v</span> <span class="k">-&gt;</span>
+        <span class="k">yield!</span> <span onmouseout="hideTip(event, 'fs4', 20)" onmouseover="showTip(event, 'fs4', 20)" class="f">yieldRevNonEmpty</span> <span onmouseout="hideTip(event, 'fs9', 21)" onmouseover="showTip(event, 'fs9', 21)" class="i">groupSoFar</span>
+        <span class="k">yield!</span> <span onmouseout="hideTip(event, 'fs8', 22)" onmouseover="showTip(event, 'fs8', 22)" class="f">loop</span> [] <span onmouseout="hideTip(event, 'fs12', 23)" onmouseover="showTip(event, 'fs12', 23)" class="i">tail</span>
+    | <span onmouseout="hideTip(event, 'fs11', 24)" onmouseover="showTip(event, 'fs11', 24)" class="i">head</span><span class="o">::</span><span onmouseout="hideTip(event, 'fs12', 25)" onmouseover="showTip(event, 'fs12', 25)" class="i">tail</span> <span class="k">-&gt;</span>
+        <span class="k">yield!</span> <span onmouseout="hideTip(event, 'fs8', 26)" onmouseover="showTip(event, 'fs8', 26)" class="f">loop</span> (<span class="i">head</span><span class="o">::</span><span onmouseout="hideTip(event, 'fs9', 27)" onmouseover="showTip(event, 'fs9', 27)" class="i">groupSoFar</span>) <span onmouseout="hideTip(event, 'fs12', 28)" onmouseover="showTip(event, 'fs12', 28)" class="i">tail</span> }
+  <span onmouseout="hideTip(event, 'fs8', 29)" onmouseover="showTip(event, 'fs8', 29)" class="f">loop</span> [] <span onmouseout="hideTip(event, 'fs3', 30)" onmouseover="showTip(event, 'fs3', 30)" class="i">list</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs6', 31)" onmouseover="showTip(event, 'fs6', 31)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs13', 32)" onmouseover="showTip(event, 'fs13', 32)" class="f">ofSeq</span>
+
+<span class="c">// The following uses 0 as a separator</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs14', 33)" onmouseover="showTip(event, 'fs14', 33)" class="i">nums</span> <span class="o">=</span> [<span class="n">0</span>;<span class="n">1</span>;<span class="n">2</span>;<span class="n">0</span>;<span class="n">1</span>;<span class="n">3</span>;<span class="n">0</span>;<span class="n">4</span>;<span class="n">5</span>;<span class="n">0</span>]
+<span onmouseout="hideTip(event, 'fs1', 34)" onmouseover="showTip(event, 'fs1', 34)" class="f">splitBy</span> <span class="n">0</span> <span onmouseout="hideTip(event, 'fs14', 35)" onmouseover="showTip(event, 'fs14', 35)" class="i">nums</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">val splitBy : v:&#39;a -&gt; list:&#39;a list -&gt; &#39;a list list (requires equality)<br /><br />Full name: Script.splitBy<br /><em><br /><br />&#160;Split a list into chunks using the specified separator<br />&#160;This takes a list and returns a list of lists (chunks)<br />&#160;that represent individual groups, separated by the given<br />&#160;separator &#39;v&#39;</em></div>
+<div class="tip" id="fs2">val v : &#39;a (requires equality)</div>
+<div class="tip" id="fs3">Multiple items<br />val list : &#39;a list (requires equality)<br /><br />--------------------<br />type &#39;T list = List&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.list&lt;_&gt;</div>
+<div class="tip" id="fs4">val yieldRevNonEmpty : (&#39;b list -&gt; &#39;b list list) (requires equality)</div>
+<div class="tip" id="fs5">Multiple items<br />val list : &#39;b list (requires equality)<br /><br />--------------------<br />type &#39;T list = List&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.list&lt;_&gt;</div>
+<div class="tip" id="fs6">Multiple items<br />module List<br /><br />from Microsoft.FSharp.Collections<br /><br />--------------------<br />type List&lt;&#39;T&gt; =<br />&#160;&#160;| ( [] )<br />&#160;&#160;| ( :: ) of Head: &#39;T * Tail: &#39;T list<br />&#160;&#160;interface IEnumerable<br />&#160;&#160;interface IEnumerable&lt;&#39;T&gt;<br />&#160;&#160;member Head : &#39;T<br />&#160;&#160;member IsEmpty : bool<br />&#160;&#160;member Item : index:int -&gt; &#39;T with get<br />&#160;&#160;member Length : int<br />&#160;&#160;member Tail : &#39;T list<br />&#160;&#160;static member Cons : head:&#39;T * tail:&#39;T list -&gt; &#39;T list<br />&#160;&#160;static member Empty : &#39;T list<br /><br />Full name: Microsoft.FSharp.Collections.List&lt;_&gt;</div>
+<div class="tip" id="fs7">val rev : list:&#39;T list -&gt; &#39;T list<br /><br />Full name: Microsoft.FSharp.Collections.List.rev</div>
+<div class="tip" id="fs8">val loop : (&#39;a list -&gt; &#39;a list -&gt; seq&lt;&#39;a list&gt;) (requires equality)</div>
+<div class="tip" id="fs9">val groupSoFar : &#39;a list (requires equality)</div>
+<div class="tip" id="fs10">Multiple items<br />val seq : sequence:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Core.Operators.seq<br /><br />--------------------<br />type seq&lt;&#39;T&gt; = System.Collections.Generic.IEnumerable&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.seq&lt;_&gt;</div>
+<div class="tip" id="fs11">val head : &#39;a (requires equality)</div>
+<div class="tip" id="fs12">val tail : &#39;a list (requires equality)</div>
+<div class="tip" id="fs13">val ofSeq : source:seq&lt;&#39;T&gt; -&gt; &#39;T list<br /><br />Full name: Microsoft.FSharp.Collections.List.ofSeq</div>
+<div class="tip" id="fs14">val nums : int list<br /><br />Full name: Script.nums</div>
+

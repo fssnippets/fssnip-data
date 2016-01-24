@@ -1,0 +1,124 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+<span class="l">38: </span>
+<span class="l">39: </span>
+<span class="l">40: </span>
+<span class="l">41: </span>
+<span class="l">42: </span>
+<span class="l">43: </span>
+<span class="l">44: </span>
+<span class="l">45: </span>
+<span class="l">46: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">System</span>
+
+<span class="c">/// Defines how a contract can be constructed</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="t">Contract</span> <span class="o">=</span> 
+  | <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="p">Trade</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="t">int</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="t">string</span>
+  | <span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="p">After</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs7', 7)" onmouseover="showTip(event, 'fs7', 7)" class="t">DateTime</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs2', 8)" onmouseover="showTip(event, 'fs2', 8)" class="t">Contract</span>
+  | <span onmouseout="hideTip(event, 'fs8', 9)" onmouseover="showTip(event, 'fs8', 9)" class="p">Until</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs7', 10)" onmouseover="showTip(event, 'fs7', 10)" class="t">DateTime</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs2', 11)" onmouseover="showTip(event, 'fs2', 11)" class="t">Contract</span>
+  | <span onmouseout="hideTip(event, 'fs9', 12)" onmouseover="showTip(event, 'fs9', 12)" class="p">Combine</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs2', 13)" onmouseover="showTip(event, 'fs2', 13)" class="t">Contract</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs2', 14)" onmouseover="showTip(event, 'fs2', 14)" class="t">Contract</span>
+
+
+<span class="c">/// Evaluate contract on a specific day</span>
+<span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs10', 15)" onmouseover="showTip(event, 'fs10', 15)" class="f">eval</span> <span onmouseout="hideTip(event, 'fs11', 16)" onmouseover="showTip(event, 'fs11', 16)" class="i">contract</span> (<span onmouseout="hideTip(event, 'fs12', 17)" onmouseover="showTip(event, 'fs12', 17)" class="i">day</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs7', 18)" onmouseover="showTip(event, 'fs7', 18)" class="t">DateTime</span>) <span class="o">=</span> 
+  [ <span class="k">match</span> <span onmouseout="hideTip(event, 'fs11', 19)" onmouseover="showTip(event, 'fs11', 19)" class="i">contract</span> <span class="k">with</span>
+    | <span onmouseout="hideTip(event, 'fs3', 20)" onmouseover="showTip(event, 'fs3', 20)" class="p">Trade</span>(<span onmouseout="hideTip(event, 'fs13', 21)" onmouseover="showTip(event, 'fs13', 21)" class="i">a</span>, <span onmouseout="hideTip(event, 'fs14', 22)" onmouseover="showTip(event, 'fs14', 22)" class="i">n</span>) <span class="k">-&gt;</span> <span class="k">yield</span> (<span onmouseout="hideTip(event, 'fs13', 23)" onmouseover="showTip(event, 'fs13', 23)" class="i">a</span>, <span onmouseout="hideTip(event, 'fs14', 24)" onmouseover="showTip(event, 'fs14', 24)" class="i">n</span>) 
+    | <span onmouseout="hideTip(event, 'fs9', 25)" onmouseover="showTip(event, 'fs9', 25)" class="p">Combine</span>(<span onmouseout="hideTip(event, 'fs15', 26)" onmouseover="showTip(event, 'fs15', 26)" class="i">c1</span>, <span onmouseout="hideTip(event, 'fs16', 27)" onmouseover="showTip(event, 'fs16', 27)" class="i">c2</span>) <span class="k">-&gt;</span> 
+        <span class="k">yield!</span> <span onmouseout="hideTip(event, 'fs10', 28)" onmouseover="showTip(event, 'fs10', 28)" class="f">eval</span> <span onmouseout="hideTip(event, 'fs15', 29)" onmouseover="showTip(event, 'fs15', 29)" class="i">c1</span> <span onmouseout="hideTip(event, 'fs12', 30)" onmouseover="showTip(event, 'fs12', 30)" class="i">day</span>
+        <span class="k">yield!</span> <span onmouseout="hideTip(event, 'fs10', 31)" onmouseover="showTip(event, 'fs10', 31)" class="f">eval</span> <span onmouseout="hideTip(event, 'fs16', 32)" onmouseover="showTip(event, 'fs16', 32)" class="i">c2</span> <span onmouseout="hideTip(event, 'fs12', 33)" onmouseover="showTip(event, 'fs12', 33)" class="i">day</span>
+    | <span onmouseout="hideTip(event, 'fs6', 34)" onmouseover="showTip(event, 'fs6', 34)" class="p">After</span>(<span onmouseout="hideTip(event, 'fs17', 35)" onmouseover="showTip(event, 'fs17', 35)" class="i">dt</span>, <span onmouseout="hideTip(event, 'fs18', 36)" onmouseover="showTip(event, 'fs18', 36)" class="i">c</span>) <span class="k">when</span> <span onmouseout="hideTip(event, 'fs12', 37)" onmouseover="showTip(event, 'fs12', 37)" class="i">day</span> <span class="o">&gt;</span> <span onmouseout="hideTip(event, 'fs17', 38)" onmouseover="showTip(event, 'fs17', 38)" class="i">dt</span> <span class="k">-&gt;</span> <span class="k">yield!</span> <span onmouseout="hideTip(event, 'fs10', 39)" onmouseover="showTip(event, 'fs10', 39)" class="f">eval</span> <span onmouseout="hideTip(event, 'fs18', 40)" onmouseover="showTip(event, 'fs18', 40)" class="i">c</span> <span onmouseout="hideTip(event, 'fs12', 41)" onmouseover="showTip(event, 'fs12', 41)" class="i">day</span>
+    | <span onmouseout="hideTip(event, 'fs8', 42)" onmouseover="showTip(event, 'fs8', 42)" class="p">Until</span>(<span onmouseout="hideTip(event, 'fs17', 43)" onmouseover="showTip(event, 'fs17', 43)" class="i">dt</span>, <span onmouseout="hideTip(event, 'fs18', 44)" onmouseover="showTip(event, 'fs18', 44)" class="i">c</span>) <span class="k">when</span> <span onmouseout="hideTip(event, 'fs12', 45)" onmouseover="showTip(event, 'fs12', 45)" class="i">day</span> <span class="o">&lt;</span> <span onmouseout="hideTip(event, 'fs17', 46)" onmouseover="showTip(event, 'fs17', 46)" class="i">dt</span> <span class="k">-&gt;</span> <span class="k">yield!</span> <span onmouseout="hideTip(event, 'fs10', 47)" onmouseover="showTip(event, 'fs10', 47)" class="f">eval</span> <span onmouseout="hideTip(event, 'fs18', 48)" onmouseover="showTip(event, 'fs18', 48)" class="i">c</span> <span onmouseout="hideTip(event, 'fs12', 49)" onmouseover="showTip(event, 'fs12', 49)" class="i">day</span>
+    | _ <span class="k">-&gt;</span> () ]
+
+
+<span class="c">// Functions for creating contracts</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs19', 50)" onmouseover="showTip(event, 'fs19', 50)" class="f">trade</span> (<span onmouseout="hideTip(event, 'fs20', 51)" onmouseover="showTip(event, 'fs20', 51)" class="i">amount</span>, <span onmouseout="hideTip(event, 'fs21', 52)" onmouseover="showTip(event, 'fs21', 52)" class="i">what</span>) <span class="o">=</span> <span onmouseout="hideTip(event, 'fs3', 53)" onmouseover="showTip(event, 'fs3', 53)" class="p">Trade</span> (<span onmouseout="hideTip(event, 'fs20', 54)" onmouseover="showTip(event, 'fs20', 54)" class="i">amount</span>, <span onmouseout="hideTip(event, 'fs21', 55)" onmouseover="showTip(event, 'fs21', 55)" class="i">what</span>)
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs22', 56)" onmouseover="showTip(event, 'fs22', 56)" class="f">after</span> <span onmouseout="hideTip(event, 'fs17', 57)" onmouseover="showTip(event, 'fs17', 57)" class="i">dt</span> <span onmouseout="hideTip(event, 'fs11', 58)" onmouseover="showTip(event, 'fs11', 58)" class="i">contract</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs6', 59)" onmouseover="showTip(event, 'fs6', 59)" class="p">After</span> (<span onmouseout="hideTip(event, 'fs17', 60)" onmouseover="showTip(event, 'fs17', 60)" class="i">dt</span>, <span onmouseout="hideTip(event, 'fs11', 61)" onmouseover="showTip(event, 'fs11', 61)" class="i">contract</span>)
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs23', 62)" onmouseover="showTip(event, 'fs23', 62)" class="f">until</span> <span onmouseout="hideTip(event, 'fs17', 63)" onmouseover="showTip(event, 'fs17', 63)" class="i">dt</span> <span onmouseout="hideTip(event, 'fs11', 64)" onmouseover="showTip(event, 'fs11', 64)" class="i">contract</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs8', 65)" onmouseover="showTip(event, 'fs8', 65)" class="p">Until</span> (<span onmouseout="hideTip(event, 'fs17', 66)" onmouseover="showTip(event, 'fs17', 66)" class="i">dt</span>, <span onmouseout="hideTip(event, 'fs11', 67)" onmouseover="showTip(event, 'fs11', 67)" class="i">contract</span>)
+<span class="k">let</span> (<span class="o">$</span>) <span onmouseout="hideTip(event, 'fs15', 68)" onmouseover="showTip(event, 'fs15', 68)" class="i">c1</span> <span onmouseout="hideTip(event, 'fs16', 69)" onmouseover="showTip(event, 'fs16', 69)" class="i">c2</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs9', 70)" onmouseover="showTip(event, 'fs9', 70)" class="p">Combine</span>(<span onmouseout="hideTip(event, 'fs15', 71)" onmouseover="showTip(event, 'fs15', 71)" class="i">c1</span>, <span onmouseout="hideTip(event, 'fs16', 72)" onmouseover="showTip(event, 'fs16', 72)" class="i">c2</span>)
+
+<span class="c">// ------------------------------------------------------------------</span>
+<span class="c">// Examples of a trade description</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs24', 73)" onmouseover="showTip(event, 'fs24', 73)" class="i">msft</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs19', 74)" onmouseover="showTip(event, 'fs19', 74)" class="f">trade</span> (<span class="n">500</span>, <span class="s">&quot;MSFT&quot;</span>)
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs25', 75)" onmouseover="showTip(event, 'fs25', 75)" class="i">goog</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs19', 76)" onmouseover="showTip(event, 'fs19', 76)" class="f">trade</span> (<span class="n">100</span>, <span class="s">&quot;GOOG&quot;</span>)
+
+<span onmouseout="hideTip(event, 'fs10', 77)" onmouseover="showTip(event, 'fs10', 77)" class="f">eval</span> <span onmouseout="hideTip(event, 'fs24', 78)" onmouseover="showTip(event, 'fs24', 78)" class="i">msft</span> <span onmouseout="hideTip(event, 'fs7', 79)" onmouseover="showTip(event, 'fs7', 79)" class="t">DateTime</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs26', 80)" onmouseover="showTip(event, 'fs26', 80)" class="i">Now</span>
+<span onmouseout="hideTip(event, 'fs10', 81)" onmouseover="showTip(event, 'fs10', 81)" class="f">eval</span> <span onmouseout="hideTip(event, 'fs25', 82)" onmouseover="showTip(event, 'fs25', 82)" class="i">goog</span> <span onmouseout="hideTip(event, 'fs7', 83)" onmouseover="showTip(event, 'fs7', 83)" class="t">DateTime</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs26', 84)" onmouseover="showTip(event, 'fs26', 84)" class="i">Now</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs27', 85)" onmouseover="showTip(event, 'fs27', 85)" class="i">itstocks</span> <span class="o">=</span>   
+  <span onmouseout="hideTip(event, 'fs22', 86)" onmouseover="showTip(event, 'fs22', 86)" class="f">after</span> (<span onmouseout="hideTip(event, 'fs7', 87)" onmouseover="showTip(event, 'fs7', 87)" class="t">DateTime</span>(<span class="n">2009</span>, <span class="n">4</span>, <span class="n">15</span>)) <span onmouseout="hideTip(event, 'fs24', 88)" onmouseover="showTip(event, 'fs24', 88)" class="i">msft</span> <span class="o">$</span>
+  <span onmouseout="hideTip(event, 'fs22', 89)" onmouseover="showTip(event, 'fs22', 89)" class="f">after</span> 
+    (<span onmouseout="hideTip(event, 'fs7', 90)" onmouseover="showTip(event, 'fs7', 90)" class="t">DateTime</span>(<span class="n">2009</span>, <span class="n">4</span>, <span class="n">10</span>)) 
+    (<span onmouseout="hideTip(event, 'fs23', 91)" onmouseover="showTip(event, 'fs23', 91)" class="f">until</span> (<span onmouseout="hideTip(event, 'fs7', 92)" onmouseover="showTip(event, 'fs7', 92)" class="t">DateTime</span>(<span class="n">2009</span>, <span class="n">4</span>, <span class="n">20</span>)) <span onmouseout="hideTip(event, 'fs25', 93)" onmouseover="showTip(event, 'fs25', 93)" class="i">goog</span>)
+
+<span onmouseout="hideTip(event, 'fs10', 94)" onmouseover="showTip(event, 'fs10', 94)" class="f">eval</span> <span onmouseout="hideTip(event, 'fs27', 95)" onmouseover="showTip(event, 'fs27', 95)" class="i">itstocks</span> <span onmouseout="hideTip(event, 'fs7', 96)" onmouseover="showTip(event, 'fs7', 96)" class="t">DateTime</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs26', 97)" onmouseover="showTip(event, 'fs26', 97)" class="i">Now</span>
+<span onmouseout="hideTip(event, 'fs10', 98)" onmouseover="showTip(event, 'fs10', 98)" class="f">eval</span> <span onmouseout="hideTip(event, 'fs27', 99)" onmouseover="showTip(event, 'fs27', 99)" class="i">itstocks</span> (<span onmouseout="hideTip(event, 'fs7', 100)" onmouseover="showTip(event, 'fs7', 100)" class="t">DateTime</span>(<span class="n">2009</span>, <span class="n">4</span>, <span class="n">12</span>))
+<span onmouseout="hideTip(event, 'fs10', 101)" onmouseover="showTip(event, 'fs10', 101)" class="f">eval</span> <span onmouseout="hideTip(event, 'fs27', 102)" onmouseover="showTip(event, 'fs27', 102)" class="i">itstocks</span> (<span onmouseout="hideTip(event, 'fs7', 103)" onmouseover="showTip(event, 'fs7', 103)" class="t">DateTime</span>(<span class="n">2009</span>, <span class="n">4</span>, <span class="n">18</span>))
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace System</div>
+<div class="tip" id="fs2">type Contract =<br />&#160;&#160;| Trade of int * string<br />&#160;&#160;| After of DateTime * Contract<br />&#160;&#160;| Until of DateTime * Contract<br />&#160;&#160;| Combine of Contract * Contract<br /><br />Full name: Script.Contract<br /><em><br /><br />&#160;Defines how a contract can be constructed</em></div>
+<div class="tip" id="fs3">union case Contract.Trade: int * string -&gt; Contract</div>
+<div class="tip" id="fs4">Multiple items<br />val int : value:&#39;T -&gt; int (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.int<br /><br />--------------------<br />type int = int32<br /><br />Full name: Microsoft.FSharp.Core.int<br /><br />--------------------<br />type int&lt;&#39;Measure&gt; = int<br /><br />Full name: Microsoft.FSharp.Core.int&lt;_&gt;</div>
+<div class="tip" id="fs5">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />Full name: Microsoft.FSharp.Core.Operators.string<br /><br />--------------------<br />type string = String<br /><br />Full name: Microsoft.FSharp.Core.string</div>
+<div class="tip" id="fs6">union case Contract.After: DateTime * Contract -&gt; Contract</div>
+<div class="tip" id="fs7">Multiple items<br />type DateTime =<br />&#160;&#160;struct<br />&#160;&#160;&#160;&#160;new : ticks:int64 -&gt; DateTime + 10 overloads<br />&#160;&#160;&#160;&#160;member Add : value:TimeSpan -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddDays : value:float -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddHours : value:float -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddMilliseconds : value:float -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddMinutes : value:float -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddMonths : months:int -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddSeconds : value:float -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddTicks : value:int64 -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddYears : value:int -&gt; DateTime<br />&#160;&#160;&#160;&#160;...<br />&#160;&#160;end<br /><br />Full name: System.DateTime<br /><br />--------------------<br />DateTime()<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />DateTime(ticks: int64) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />DateTime(ticks: int64, kind: DateTimeKind) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />DateTime(year: int, month: int, day: int) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />DateTime(year: int, month: int, day: int, calendar: Globalization.Calendar) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />DateTime(year: int, month: int, day: int, hour: int, minute: int, second: int) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />DateTime(year: int, month: int, day: int, hour: int, minute: int, second: int, kind: DateTimeKind) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />DateTime(year: int, month: int, day: int, hour: int, minute: int, second: int, calendar: Globalization.Calendar) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />DateTime(year: int, month: int, day: int, hour: int, minute: int, second: int, millisecond: int) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />DateTime(year: int, month: int, day: int, hour: int, minute: int, second: int, millisecond: int, kind: DateTimeKind) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em></div>
+<div class="tip" id="fs8">union case Contract.Until: DateTime * Contract -&gt; Contract</div>
+<div class="tip" id="fs9">union case Contract.Combine: Contract * Contract -&gt; Contract</div>
+<div class="tip" id="fs10">val eval : contract:Contract -&gt; day:DateTime -&gt; (int * string) list<br /><br />Full name: Script.eval<br /><em><br /><br />&#160;Evaluate contract on a specific day</em></div>
+<div class="tip" id="fs11">val contract : Contract</div>
+<div class="tip" id="fs12">val day : DateTime</div>
+<div class="tip" id="fs13">val a : int</div>
+<div class="tip" id="fs14">val n : string</div>
+<div class="tip" id="fs15">val c1 : Contract</div>
+<div class="tip" id="fs16">val c2 : Contract</div>
+<div class="tip" id="fs17">val dt : DateTime</div>
+<div class="tip" id="fs18">val c : Contract</div>
+<div class="tip" id="fs19">val trade : amount:int * what:string -&gt; Contract<br /><br />Full name: Script.trade</div>
+<div class="tip" id="fs20">val amount : int</div>
+<div class="tip" id="fs21">val what : string</div>
+<div class="tip" id="fs22">val after : dt:DateTime -&gt; contract:Contract -&gt; Contract<br /><br />Full name: Script.after</div>
+<div class="tip" id="fs23">val until : dt:DateTime -&gt; contract:Contract -&gt; Contract<br /><br />Full name: Script.until</div>
+<div class="tip" id="fs24">val msft : Contract<br /><br />Full name: Script.msft</div>
+<div class="tip" id="fs25">val goog : Contract<br /><br />Full name: Script.goog</div>
+<div class="tip" id="fs26">property DateTime.Now: DateTime</div>
+<div class="tip" id="fs27">val itstocks : Contract<br /><br />Full name: Script.itstocks</div>
+

@@ -1,0 +1,116 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+<span class="l">38: </span>
+<span class="l">39: </span>
+<span class="l">40: </span>
+<span class="l">41: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">type</span> <span class="t">XRM</span> <span class="o">=</span> <span class="i">Common</span><span class="o">.</span><span class="i">XRM</span><span class="o">.</span><span class="i">TypeProvider</span><span class="o">.</span><span class="i">XrmDataProvider</span><span class="o">&lt;</span><span class="s">&quot;http://lonvscrm001t:777/GREENERGY/XRMServices/2011/Organization.svc&quot;</span><span class="o">&gt;</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">dc</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">XRM</span><span class="o">.</span><span class="i">GetDataContext</span>()
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="i">VISIT</span> <span class="o">=</span> 
+    <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="i">query</span> { <span class="k">for</span> <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="i">system</span> <span class="k">in</span> <span onmouseout="hideTip(event, 'fs1', 6)" onmouseover="showTip(event, 'fs1', 6)" class="i">dc</span><span class="o">.</span><span class="i">gry_greenergysystem</span> <span class="k">do</span>
+            <span onmouseout="hideTip(event, 'fs6', 7)" onmouseover="showTip(event, 'fs6', 7)" class="k">where</span> (<span onmouseout="hideTip(event, 'fs5', 8)" onmouseover="showTip(event, 'fs5', 8)" class="i">system</span><span class="o">.</span><span class="i">gry_name</span> <span class="o">=</span> <span class="s">&quot;VISIT&quot;</span>)
+            <span onmouseout="hideTip(event, 'fs7', 9)" onmouseover="showTip(event, 'fs7', 9)" class="k">select</span> <span onmouseout="hideTip(event, 'fs5', 10)" onmouseover="showTip(event, 'fs5', 10)" class="i">system</span> } <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs8', 11)" onmouseover="showTip(event, 'fs8', 11)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs9', 12)" onmouseover="showTip(event, 'fs9', 12)" class="f">head</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs10', 13)" onmouseover="showTip(event, 'fs10', 13)" class="i">drivers</span> <span class="o">=</span> 
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs11', 14)" onmouseover="showTip(event, 'fs11', 14)" class="i">haulierDrivers</span> <span class="o">=</span> 
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs12', 15)" onmouseover="showTip(event, 'fs12', 15)" class="i">haulier</span> <span class="o">=</span> 
+            <span onmouseout="hideTip(event, 'fs4', 16)" onmouseover="showTip(event, 'fs4', 16)" class="i">query</span> { <span class="k">for</span> <span onmouseout="hideTip(event, 'fs12', 17)" onmouseover="showTip(event, 'fs12', 17)" class="i">haulier</span> <span class="k">in</span> <span onmouseout="hideTip(event, 'fs1', 18)" onmouseover="showTip(event, 'fs1', 18)" class="i">dc</span><span class="o">.</span><span class="i">gry_haulier</span> <span class="k">do</span>
+                    <span onmouseout="hideTip(event, 'fs6', 19)" onmouseover="showTip(event, 'fs6', 19)" class="k">where</span> (<span onmouseout="hideTip(event, 'fs12', 20)" onmouseover="showTip(event, 'fs12', 20)" class="i">haulier</span><span class="o">.</span><span class="i">gry_hauliercode</span> <span class="o">=</span> <span class="s">&quot;Sucklings&quot;</span>)
+                    <span onmouseout="hideTip(event, 'fs7', 21)" onmouseover="showTip(event, 'fs7', 21)" class="k">select</span> <span onmouseout="hideTip(event, 'fs12', 22)" onmouseover="showTip(event, 'fs12', 22)" class="i">haulier</span> } <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs8', 23)" onmouseover="showTip(event, 'fs8', 23)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs9', 24)" onmouseover="showTip(event, 'fs9', 24)" class="f">head</span>
+        <span onmouseout="hideTip(event, 'fs4', 25)" onmouseover="showTip(event, 'fs4', 25)" class="i">query</span> { <span class="k">for</span> <span onmouseout="hideTip(event, 'fs13', 26)" onmouseover="showTip(event, 'fs13', 26)" class="i">driverHaulier</span> <span class="k">in</span> <span onmouseout="hideTip(event, 'fs1', 27)" onmouseover="showTip(event, 'fs1', 27)" class="i">dc</span><span class="o">.</span><span class="i">gry_driverhaulier</span> <span class="k">do</span>
+                <span onmouseout="hideTip(event, 'fs6', 28)" onmouseover="showTip(event, 'fs6', 28)" class="k">where</span> (<span onmouseout="hideTip(event, 'fs13', 29)" onmouseover="showTip(event, 'fs13', 29)" class="i">driverHaulier</span><span class="o">.</span><span class="i">gry_haulier_lk</span><span class="o">.</span><span class="i">Id</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs12', 30)" onmouseover="showTip(event, 'fs12', 30)" class="i">haulier</span><span class="o">.</span><span class="i">Id</span>)
+                <span onmouseout="hideTip(event, 'fs7', 31)" onmouseover="showTip(event, 'fs7', 31)" class="k">select</span> <span onmouseout="hideTip(event, 'fs13', 32)" onmouseover="showTip(event, 'fs13', 32)" class="i">driverHaulier</span> } 
+    [<span class="k">for</span> <span onmouseout="hideTip(event, 'fs14', 33)" onmouseover="showTip(event, 'fs14', 33)" class="i">hd</span> <span class="k">in</span> <span onmouseout="hideTip(event, 'fs11', 34)" onmouseover="showTip(event, 'fs11', 34)" class="i">haulierDrivers</span> <span class="k">-&gt;</span>            
+        <span onmouseout="hideTip(event, 'fs4', 35)" onmouseover="showTip(event, 'fs4', 35)" class="i">query</span>{ <span class="k">for</span> <span onmouseout="hideTip(event, 'fs15', 36)" onmouseover="showTip(event, 'fs15', 36)" class="i">driver</span> <span class="k">in</span> <span onmouseout="hideTip(event, 'fs1', 37)" onmouseover="showTip(event, 'fs1', 37)" class="i">dc</span><span class="o">.</span><span class="i">gry_driver</span> <span class="k">do</span>
+               <span onmouseout="hideTip(event, 'fs6', 38)" onmouseover="showTip(event, 'fs6', 38)" class="k">where</span> (<span onmouseout="hideTip(event, 'fs15', 39)" onmouseover="showTip(event, 'fs15', 39)" class="i">driver</span><span class="o">.</span><span class="i">gry_driverid</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs14', 40)" onmouseover="showTip(event, 'fs14', 40)" class="i">hd</span><span class="o">.</span><span class="i">gry_driver_lk</span><span class="o">.</span><span class="i">Id</span>)
+               <span onmouseout="hideTip(event, 'fs7', 41)" onmouseover="showTip(event, 'fs7', 41)" class="k">select</span> <span onmouseout="hideTip(event, 'fs15', 42)" onmouseover="showTip(event, 'fs15', 42)" class="i">driver</span> } <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs8', 43)" onmouseover="showTip(event, 'fs8', 43)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs9', 44)" onmouseover="showTip(event, 'fs9', 44)" class="f">head</span>  ]
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs16', 45)" onmouseover="showTip(event, 'fs16', 45)" class="i">driverConnections</span> <span class="o">=</span>
+    [<span class="k">for</span> <span onmouseout="hideTip(event, 'fs15', 46)" onmouseover="showTip(event, 'fs15', 46)" class="i">driver</span> <span class="k">in</span> <span onmouseout="hideTip(event, 'fs10', 47)" onmouseover="showTip(event, 'fs10', 47)" class="i">drivers</span> <span class="k">-&gt;</span>
+        (<span onmouseout="hideTip(event, 'fs15', 48)" onmouseover="showTip(event, 'fs15', 48)" class="i">driver</span>,  
+            <span class="c">// find all the driver&#39;s objectreference connections</span>
+            <span class="k">let</span> <span onmouseout="hideTip(event, 'fs17', 49)" onmouseover="showTip(event, 'fs17', 49)" class="i">objectReferenceRefs</span> <span class="o">=</span>
+                <span onmouseout="hideTip(event, 'fs4', 50)" onmouseover="showTip(event, 'fs4', 50)" class="i">query</span>{ <span class="k">for</span> <span onmouseout="hideTip(event, 'fs18', 51)" onmouseover="showTip(event, 'fs18', 51)" class="i">connection</span> <span class="k">in</span> <span onmouseout="hideTip(event, 'fs1', 52)" onmouseover="showTip(event, 'fs1', 52)" class="i">dc</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs18', 53)" onmouseover="showTip(event, 'fs18', 53)" class="i">connection</span> <span class="k">do</span>
+                       <span onmouseout="hideTip(event, 'fs6', 54)" onmouseover="showTip(event, 'fs6', 54)" class="k">where</span> (<span onmouseout="hideTip(event, 'fs18', 55)" onmouseover="showTip(event, 'fs18', 55)" class="i">connection</span><span class="o">.</span><span class="i">record1id</span><span class="o">.</span><span class="i">Id</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs15', 56)" onmouseover="showTip(event, 'fs15', 56)" class="i">driver</span><span class="o">.</span><span class="i">gry_driverid</span>)
+                       <span onmouseout="hideTip(event, 'fs7', 57)" onmouseover="showTip(event, 'fs7', 57)" class="k">select</span> <span onmouseout="hideTip(event, 'fs18', 58)" onmouseover="showTip(event, 'fs18', 58)" class="i">connection</span>} 
+                       <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs8', 59)" onmouseover="showTip(event, 'fs8', 59)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs19', 60)" onmouseover="showTip(event, 'fs19', 60)" class="f">filter</span>( <span class="k">fun</span> <span onmouseout="hideTip(event, 'fs20', 61)" onmouseover="showTip(event, 'fs20', 61)" class="i">conn</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs20', 62)" onmouseover="showTip(event, 'fs20', 62)" class="i">conn</span><span class="o">.</span><span class="i">record2id</span><span class="o">.</span><span class="i">LogicalName</span> <span class="o">=</span> <span class="s">&quot;gry_objectreference&quot;</span>) 
+                       <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs8', 63)" onmouseover="showTip(event, 'fs8', 63)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs21', 64)" onmouseover="showTip(event, 'fs21', 64)" class="f">toList</span>
+            <span class="c">// lookup the objectreference that is linked to visit and return the &quot;referencedas&quot; field </span>
+            <span class="c">// which will show the driver&#39;s ID in visit</span>
+            <span onmouseout="hideTip(event, 'fs17', 65)" onmouseover="showTip(event, 'fs17', 65)" class="i">objectReferenceRefs</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs22', 66)" onmouseover="showTip(event, 'fs22', 66)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs23', 67)" onmouseover="showTip(event, 'fs23', 67)" class="f">pick</span>( <span class="k">fun</span> <span onmouseout="hideTip(event, 'fs24', 68)" onmouseover="showTip(event, 'fs24', 68)" class="i">orefref</span> <span class="k">-&gt;</span> 
+                <span class="k">match</span> <span onmouseout="hideTip(event, 'fs4', 69)" onmouseover="showTip(event, 'fs4', 69)" class="i">query</span>{ <span class="k">for</span> <span onmouseout="hideTip(event, 'fs25', 70)" onmouseover="showTip(event, 'fs25', 70)" class="i">oref</span> <span class="k">in</span> <span onmouseout="hideTip(event, 'fs1', 71)" onmouseover="showTip(event, 'fs1', 71)" class="i">dc</span><span class="o">.</span><span class="i">gry_objectreference</span> <span class="k">do</span>
+                             <span onmouseout="hideTip(event, 'fs6', 72)" onmouseover="showTip(event, 'fs6', 72)" class="k">where</span> (<span onmouseout="hideTip(event, 'fs25', 73)" onmouseover="showTip(event, 'fs25', 73)" class="i">oref</span><span class="o">.</span><span class="i">gry_objectreferenceid</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs24', 74)" onmouseover="showTip(event, 'fs24', 74)" class="i">orefref</span><span class="o">.</span><span class="i">record2id</span><span class="o">.</span><span class="i">Id</span> 
+                                    <span class="o">&amp;&amp;</span> <span onmouseout="hideTip(event, 'fs25', 75)" onmouseover="showTip(event, 'fs25', 75)" class="i">oref</span><span class="o">.</span><span class="i">gry_greenergysystem_lk</span><span class="o">.</span><span class="i">Id</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs3', 76)" onmouseover="showTip(event, 'fs3', 76)" class="i">VISIT</span><span class="o">.</span><span class="i">gry_greenergysystemid</span> )
+                             <span onmouseout="hideTip(event, 'fs7', 77)" onmouseover="showTip(event, 'fs7', 77)" class="k">select</span> <span onmouseout="hideTip(event, 'fs25', 78)" onmouseover="showTip(event, 'fs25', 78)" class="i">oref</span> }  <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs8', 79)" onmouseover="showTip(event, 'fs8', 79)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs21', 80)" onmouseover="showTip(event, 'fs21', 80)" class="f">toList</span> <span class="k">with</span> 
+                | [] <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs26', 81)" onmouseover="showTip(event, 'fs26', 81)" class="p">None</span> | <span onmouseout="hideTip(event, 'fs27', 82)" onmouseover="showTip(event, 'fs27', 82)" class="i">xs</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs28', 83)" onmouseover="showTip(event, 'fs28', 83)" class="p">Some</span>((<span onmouseout="hideTip(event, 'fs27', 84)" onmouseover="showTip(event, 'fs27', 84)" class="i">xs</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs29', 85)" onmouseover="showTip(event, 'fs29', 85)" class="i">Head</span>)<span class="o">.</span><span class="i">gry_referencedas</span>))) ]
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">val dc : obj<br /><br />Full name: Script.dc</div>
+<div class="tip" id="fs2">type XRM = obj<br /><br />Full name: Script.XRM</div>
+<div class="tip" id="fs3">val VISIT : obj<br /><br />Full name: Script.VISIT</div>
+<div class="tip" id="fs4">val query : Linq.QueryBuilder<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.query</div>
+<div class="tip" id="fs5">val system : obj</div>
+<div class="tip" id="fs6">custom operation: where (bool)<br /><br />Calls Linq.QueryBuilder.Where </div>
+<div class="tip" id="fs7">custom operation: select (&#39;Result)<br /><br />Calls Linq.QueryBuilder.Select </div>
+<div class="tip" id="fs8">module Seq<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs9">val head : source:seq&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Collections.Seq.head</div>
+<div class="tip" id="fs10">val drivers : obj list<br /><br />Full name: Script.drivers</div>
+<div class="tip" id="fs11">val haulierDrivers : System.Linq.IQueryable&lt;obj&gt;</div>
+<div class="tip" id="fs12">val haulier : obj</div>
+<div class="tip" id="fs13">val driverHaulier : obj</div>
+<div class="tip" id="fs14">val hd : obj</div>
+<div class="tip" id="fs15">val driver : obj</div>
+<div class="tip" id="fs16">val driverConnections : (obj * obj) list<br /><br />Full name: Script.driverConnections</div>
+<div class="tip" id="fs17">val objectReferenceRefs : obj list</div>
+<div class="tip" id="fs18">val connection : obj</div>
+<div class="tip" id="fs19">val filter : predicate:(&#39;T -&gt; bool) -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.filter</div>
+<div class="tip" id="fs20">val conn : obj</div>
+<div class="tip" id="fs21">val toList : source:seq&lt;&#39;T&gt; -&gt; &#39;T list<br /><br />Full name: Microsoft.FSharp.Collections.Seq.toList</div>
+<div class="tip" id="fs22">Multiple items<br />module List<br /><br />from Microsoft.FSharp.Collections<br /><br />--------------------<br />type List&lt;&#39;T&gt; =<br />&#160;&#160;| ( [] )<br />&#160;&#160;| ( :: ) of Head: &#39;T * Tail: &#39;T list<br />&#160;&#160;interface IEnumerable<br />&#160;&#160;interface IEnumerable&lt;&#39;T&gt;<br />&#160;&#160;member Head : &#39;T<br />&#160;&#160;member IsEmpty : bool<br />&#160;&#160;member Item : index:int -&gt; &#39;T with get<br />&#160;&#160;member Length : int<br />&#160;&#160;member Tail : &#39;T list<br />&#160;&#160;static member Cons : head:&#39;T * tail:&#39;T list -&gt; &#39;T list<br />&#160;&#160;static member Empty : &#39;T list<br /><br />Full name: Microsoft.FSharp.Collections.List&lt;_&gt;</div>
+<div class="tip" id="fs23">val pick : chooser:(&#39;T -&gt; &#39;U option) -&gt; list:&#39;T list -&gt; &#39;U<br /><br />Full name: Microsoft.FSharp.Collections.List.pick</div>
+<div class="tip" id="fs24">val orefref : obj</div>
+<div class="tip" id="fs25">val oref : obj</div>
+<div class="tip" id="fs26">union case Option.None: Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs27">val xs : obj list</div>
+<div class="tip" id="fs28">union case Option.Some: Value: &#39;T -&gt; Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs29">property List.Head: obj</div>
+

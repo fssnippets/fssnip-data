@@ -1,0 +1,72 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">//generic routine to calculate tax</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="f">taxOf</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">salary</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="i">taxRates</span> <span class="o">=</span> 
+    ((<span class="n">0m</span>,<span class="n">0</span>)<span class="o">::</span><span onmouseout="hideTip(event, 'fs3', 4)" onmouseover="showTip(event, 'fs3', 4)" class="i">taxRates</span>, <span onmouseout="hideTip(event, 'fs3', 5)" onmouseover="showTip(event, 'fs3', 5)" class="i">taxRates</span>) 
+        <span class="o">||&gt;</span> <span onmouseout="hideTip(event, 'fs4', 6)" onmouseover="showTip(event, 'fs4', 6)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs5', 7)" onmouseover="showTip(event, 'fs5', 7)" class="f">zip</span> 
+         <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs4', 8)" onmouseover="showTip(event, 'fs4', 8)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs6', 9)" onmouseover="showTip(event, 'fs6', 9)" class="f">map</span>(<span class="k">fun</span> ((_, <span onmouseout="hideTip(event, 'fs7', 10)" onmouseover="showTip(event, 'fs7', 10)" class="i">prevBand</span>),(<span onmouseout="hideTip(event, 'fs8', 11)" onmouseover="showTip(event, 'fs8', 11)" class="i">rate</span>, <span onmouseout="hideTip(event, 'fs9', 12)" onmouseover="showTip(event, 'fs9', 12)" class="i">band</span>)) <span class="k">-&gt;</span> (<span onmouseout="hideTip(event, 'fs7', 13)" onmouseover="showTip(event, 'fs7', 13)" class="i">prevBand</span>, <span class="i">rate</span>, <span onmouseout="hideTip(event, 'fs9', 14)" onmouseover="showTip(event, 'fs9', 14)" class="i">band</span>))
+         <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs4', 15)" onmouseover="showTip(event, 'fs4', 15)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs10', 16)" onmouseover="showTip(event, 'fs10', 16)" class="f">sumBy</span>(<span class="k">fun</span> (<span onmouseout="hideTip(event, 'fs7', 17)" onmouseover="showTip(event, 'fs7', 17)" class="i">prevBand</span>, <span onmouseout="hideTip(event, 'fs8', 18)" onmouseover="showTip(event, 'fs8', 18)" class="i">rate</span>, <span onmouseout="hideTip(event, 'fs9', 19)" onmouseover="showTip(event, 'fs9', 19)" class="i">band</span>) <span class="k">-&gt;</span> 
+            <span class="k">match</span> <span onmouseout="hideTip(event, 'fs2', 20)" onmouseover="showTip(event, 'fs2', 20)" class="i">salary</span> <span class="k">with</span> 
+                | <span onmouseout="hideTip(event, 'fs11', 21)" onmouseover="showTip(event, 'fs11', 21)" class="i">x</span> <span class="k">when</span> <span onmouseout="hideTip(event, 'fs11', 22)" onmouseover="showTip(event, 'fs11', 22)" class="i">x</span> <span class="o">&lt;</span> <span onmouseout="hideTip(event, 'fs7', 23)" onmouseover="showTip(event, 'fs7', 23)" class="i">prevBand</span> <span class="k">-&gt;</span> <span class="n">0m</span>
+                | <span onmouseout="hideTip(event, 'fs11', 24)" onmouseover="showTip(event, 'fs11', 24)" class="i">x</span> <span class="k">when</span> <span onmouseout="hideTip(event, 'fs11', 25)" onmouseover="showTip(event, 'fs11', 25)" class="i">x</span> <span class="o">&gt;</span> <span onmouseout="hideTip(event, 'fs9', 26)" onmouseover="showTip(event, 'fs9', 26)" class="i">band</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs12', 27)" onmouseover="showTip(event, 'fs12', 27)" class="f">decimal</span>(<span onmouseout="hideTip(event, 'fs9', 28)" onmouseover="showTip(event, 'fs9', 28)" class="i">band</span> <span class="o">-</span> <span onmouseout="hideTip(event, 'fs7', 29)" onmouseover="showTip(event, 'fs7', 29)" class="i">prevBand</span>) <span class="o">*</span> <span onmouseout="hideTip(event, 'fs8', 30)" onmouseover="showTip(event, 'fs8', 30)" class="i">rate</span>
+                | <span onmouseout="hideTip(event, 'fs11', 31)" onmouseover="showTip(event, 'fs11', 31)" class="i">x</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs12', 32)" onmouseover="showTip(event, 'fs12', 32)" class="f">decimal</span>(<span onmouseout="hideTip(event, 'fs11', 33)" onmouseover="showTip(event, 'fs11', 33)" class="i">x</span> <span class="o">-</span> <span onmouseout="hideTip(event, 'fs7', 34)" onmouseover="showTip(event, 'fs7', 34)" class="i">prevBand</span>) <span class="o">*</span> <span onmouseout="hideTip(event, 'fs8', 35)" onmouseover="showTip(event, 'fs8', 35)" class="i">rate</span>
+            )
+
+<span class="c">//define custom tax bands and rates</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs13', 36)" onmouseover="showTip(event, 'fs13', 36)" class="i">israelTaxRates</span> <span class="o">=</span> [
+    ( <span class="n">0.1m</span>, <span class="n">5070</span>); 
+    (<span class="n">0.14m</span>, <span class="n">8660</span>); 
+    (<span class="n">0.23m</span>, <span class="n">14070</span>); 
+    ( <span class="n">0.3m</span>, <span class="n">21240</span>); 
+    (<span class="n">0.33m</span>, <span class="n">40230</span>); 
+    (<span class="n">0.45m</span>, <span onmouseout="hideTip(event, 'fs14', 37)" onmouseover="showTip(event, 'fs14', 37)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs15', 38)" onmouseover="showTip(event, 'fs15', 38)" class="t">Int32</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs16', 39)" onmouseover="showTip(event, 'fs16', 39)" class="i">MaxValue</span>)]
+
+<span class="c">//use currying to build a higher order function to calculate US Tax Rates</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs17', 40)" onmouseover="showTip(event, 'fs17', 40)" class="f">taxOfIsrael</span> <span onmouseout="hideTip(event, 'fs2', 41)" onmouseover="showTip(event, 'fs2', 41)" class="i">salary</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs13', 42)" onmouseover="showTip(event, 'fs13', 42)" class="i">israelTaxRates</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs1', 43)" onmouseover="showTip(event, 'fs1', 43)" class="f">taxOf</span> <span onmouseout="hideTip(event, 'fs2', 44)" onmouseover="showTip(event, 'fs2', 44)" class="i">salary</span>
+                
+<span onmouseout="hideTip(event, 'fs17', 45)" onmouseover="showTip(event, 'fs17', 45)" class="f">taxOfIsrael</span> <span class="n">10000</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">val taxOf : salary:int -&gt; taxRates:(decimal * int) list -&gt; decimal<br /><br />Full name: Script.taxOf</div>
+<div class="tip" id="fs2">val salary : int</div>
+<div class="tip" id="fs3">val taxRates : (decimal * int) list</div>
+<div class="tip" id="fs4">module Seq<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs5">val zip : source1:seq&lt;&#39;T1&gt; -&gt; source2:seq&lt;&#39;T2&gt; -&gt; seq&lt;&#39;T1 * &#39;T2&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.zip</div>
+<div class="tip" id="fs6">val map : mapping:(&#39;T -&gt; &#39;U) -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;U&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.map</div>
+<div class="tip" id="fs7">val prevBand : int</div>
+<div class="tip" id="fs8">val rate : decimal</div>
+<div class="tip" id="fs9">val band : int</div>
+<div class="tip" id="fs10">val sumBy : projection:(&#39;T -&gt; &#39;U) -&gt; source:seq&lt;&#39;T&gt; -&gt; &#39;U (requires member ( + ) and member get_Zero)<br /><br />Full name: Microsoft.FSharp.Collections.Seq.sumBy</div>
+<div class="tip" id="fs11">val x : int</div>
+<div class="tip" id="fs12">Multiple items<br />val decimal : value:&#39;T -&gt; decimal (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.decimal<br /><br />--------------------<br />type decimal = System.Decimal<br /><br />Full name: Microsoft.FSharp.Core.decimal<br /><br />--------------------<br />type decimal&lt;&#39;Measure&gt; = decimal<br /><br />Full name: Microsoft.FSharp.Core.decimal&lt;_&gt;</div>
+<div class="tip" id="fs13">val israelTaxRates : (decimal * int) list<br /><br />Full name: Script.israelTaxRates</div>
+<div class="tip" id="fs14">namespace System</div>
+<div class="tip" id="fs15">type Int32 =<br />&#160;&#160;struct<br />&#160;&#160;&#160;&#160;member CompareTo : value:obj -&gt; int + 1 overload<br />&#160;&#160;&#160;&#160;member Equals : obj:obj -&gt; bool + 1 overload<br />&#160;&#160;&#160;&#160;member GetHashCode : unit -&gt; int<br />&#160;&#160;&#160;&#160;member GetTypeCode : unit -&gt; TypeCode<br />&#160;&#160;&#160;&#160;member ToString : unit -&gt; string + 3 overloads<br />&#160;&#160;&#160;&#160;static val MaxValue : int<br />&#160;&#160;&#160;&#160;static val MinValue : int<br />&#160;&#160;&#160;&#160;static member Parse : s:string -&gt; int + 3 overloads<br />&#160;&#160;&#160;&#160;static member TryParse : s:string * result:int -&gt; bool + 1 overload<br />&#160;&#160;end<br /><br />Full name: System.Int32</div>
+<div class="tip" id="fs16">field int.MaxValue = 2147483647</div>
+<div class="tip" id="fs17">val taxOfIsrael : salary:int -&gt; decimal<br /><br />Full name: Script.taxOfIsrael</div>
+

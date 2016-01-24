@@ -1,0 +1,65 @@
+module BtcTesting
+
+open System
+open System.Security.Cryptography
+
+/// https://en.bitcoin.it/wiki/Base58Check_encoding
+let base58encode (hash:byte[]) =
+    let code_string = ['1'..'9']@['A'..'H']@['J'..'N']@['P'..'Z']@['a'..'k']@['m'..'z'] |> List.toArray
+    let data = hash |> Array.toList
+    
+    let rec toBigInt = function
+        |[], acc -> acc
+        |h::t, acc -> toBigInt(t, acc*256I + bigint(int h)) 
+
+    let rec base58encodeLeft = function
+        | i,acc when i>0I ->
+            let reminder = ref 0I
+            let dividend = bigint.DivRem(i, 58I, reminder)
+            let char = code_string.[(int)reminder.contents]
+            base58encodeLeft(dividend, char::acc)
+        | _,acc -> acc
+
+    let appendOnes = 
+        let rec insertOnes = function
+            | h::t,acc when h=0uy -> insertOnes(t, '1'::acc)
+            | _,acc -> acc
+        insertOnes(data, [])
+
+    let big = toBigInt(data, 0I)
+    let encoded = appendOnes @ base58encodeLeft(big, []) |> List.toArray
+    String(encoded)
+
+/// String to byte-array. This is taken from:
+/// http://www.fssnip.net/gf
+let fromHex (s:string) = 
+  s
+  |> Seq.windowed 2
+  |> Seq.mapi (fun i j -> (i,j))
+  |> Seq.filter (fun (i,j) -> i % 2=0)
+  |> Seq.map (fun (_,j) -> Byte.Parse(new System.String(j),System.Globalization.NumberStyles.AllowHexSpecifier))
+  |> Array.ofSeq
+        
+/// https://en.bitcoin.it/wiki/Wallet_import_format
+let keyToWif (key:string) =
+    use sha = new SHA256Managed()
+    let extended = "80"+key |> fromHex
+    let hashCheck = extended
+                    |> sha.ComputeHash
+                    |> sha.ComputeHash
+    Array.append extended hashCheck.[0..3] 
+    |> Array.rev
+    |> base58encode
+
+/// Generates random HEX-string
+let privateKey() = 
+    let chars = ['a'..'f']@['0'..'9'] |> List.toArray
+    let length = chars.Length
+    let data = Array.zeroCreate 64
+    use provider = new RNGCryptoServiceProvider()
+    do provider.GetNonZeroBytes(data)
+    let random = data |> Array.map(fun b -> chars.[(int)b % length ])
+    System.String(random)
+
+// let pk = privateKey();;
+// pk |> keyToWif;;

@@ -1,0 +1,60 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">System</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="f">extract</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="i">list</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="i">num</span> <span class="o">=</span> 
+    <span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="f">pick</span> <span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="i">list</span> <span onmouseout="hideTip(event, 'fs4', 7)" onmouseover="showTip(event, 'fs4', 7)" class="i">num</span> <span onmouseout="hideTip(event, 'fs7', 8)" onmouseover="showTip(event, 'fs7', 8)" class="i">i</span> <span class="o">=</span> 
+        <span class="k">match</span> <span onmouseout="hideTip(event, 'fs6', 9)" onmouseover="showTip(event, 'fs6', 9)" class="i">list</span> <span class="k">with</span>
+        | <span onmouseout="hideTip(event, 'fs8', 10)" onmouseover="showTip(event, 'fs8', 10)" class="i">h</span> <span class="o">::</span> <span onmouseout="hideTip(event, 'fs9', 11)" onmouseover="showTip(event, 'fs9', 11)" class="i">t</span> <span class="k">-&gt;</span> 
+            <span class="k">if</span> <span onmouseout="hideTip(event, 'fs7', 12)" onmouseover="showTip(event, 'fs7', 12)" class="i">i</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs4', 13)" onmouseover="showTip(event, 'fs4', 13)" class="i">num</span> <span class="k">then</span> <span onmouseout="hideTip(event, 'fs8', 14)" onmouseover="showTip(event, 'fs8', 14)" class="i">h</span>
+            <span class="k">else</span> <span onmouseout="hideTip(event, 'fs5', 15)" onmouseover="showTip(event, 'fs5', 15)" class="f">pick</span> <span onmouseout="hideTip(event, 'fs9', 16)" onmouseover="showTip(event, 'fs9', 16)" class="i">t</span> <span onmouseout="hideTip(event, 'fs4', 17)" onmouseover="showTip(event, 'fs4', 17)" class="i">num</span> (<span onmouseout="hideTip(event, 'fs7', 18)" onmouseover="showTip(event, 'fs7', 18)" class="i">i</span> <span class="o">+</span> <span class="n">1</span>)
+        | _ <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs10', 19)" onmouseover="showTip(event, 'fs10', 19)" class="f">failwith</span> <span class="s">&quot;error&quot;</span>
+    
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs11', 20)" onmouseover="showTip(event, 'fs11', 20)" class="f">getRandom</span> <span class="o">=</span> 
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs12', 21)" onmouseover="showTip(event, 'fs12', 21)" class="v">r</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs13', 22)" onmouseover="showTip(event, 'fs13', 22)" class="f">ref</span> (<span onmouseout="hideTip(event, 'fs14', 23)" onmouseover="showTip(event, 'fs14', 23)" class="t">Random</span>())
+        <span class="k">fun</span> <span onmouseout="hideTip(event, 'fs15', 24)" onmouseover="showTip(event, 'fs15', 24)" class="i">max</span> <span class="k">-&gt;</span> (<span class="o">!</span><span onmouseout="hideTip(event, 'fs12', 25)" onmouseover="showTip(event, 'fs12', 25)" class="v">r</span>)<span class="o">.</span><span class="f">Next</span>(<span class="n">1</span>, <span onmouseout="hideTip(event, 'fs15', 26)" onmouseover="showTip(event, 'fs15', 26)" class="i">max</span> <span class="o">+</span> <span class="n">1</span>)
+    
+    <span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs16', 27)" onmouseover="showTip(event, 'fs16', 27)" class="f">extractInner</span> <span onmouseout="hideTip(event, 'fs6', 28)" onmouseover="showTip(event, 'fs6', 28)" class="i">list</span> <span onmouseout="hideTip(event, 'fs4', 29)" onmouseover="showTip(event, 'fs4', 29)" class="i">num</span> <span onmouseout="hideTip(event, 'fs7', 30)" onmouseover="showTip(event, 'fs7', 30)" class="i">i</span> <span class="o">=</span> 
+        <span class="k">if</span> <span onmouseout="hideTip(event, 'fs7', 31)" onmouseover="showTip(event, 'fs7', 31)" class="i">i</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs4', 32)" onmouseover="showTip(event, 'fs4', 32)" class="i">num</span> <span class="k">then</span> []
+        <span class="k">else</span> (<span onmouseout="hideTip(event, 'fs5', 33)" onmouseover="showTip(event, 'fs5', 33)" class="f">pick</span> <span onmouseout="hideTip(event, 'fs6', 34)" onmouseover="showTip(event, 'fs6', 34)" class="i">list</span> (<span onmouseout="hideTip(event, 'fs11', 35)" onmouseover="showTip(event, 'fs11', 35)" class="f">getRandom</span> <span onmouseout="hideTip(event, 'fs6', 36)" onmouseover="showTip(event, 'fs6', 36)" class="i">list</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs17', 37)" onmouseover="showTip(event, 'fs17', 37)" class="i">Length</span>) <span class="n">1</span>) <span class="o">::</span> <span onmouseout="hideTip(event, 'fs16', 38)" onmouseover="showTip(event, 'fs16', 38)" class="f">extractInner</span> <span onmouseout="hideTip(event, 'fs6', 39)" onmouseover="showTip(event, 'fs6', 39)" class="i">list</span> <span onmouseout="hideTip(event, 'fs4', 40)" onmouseover="showTip(event, 'fs4', 40)" class="i">num</span> (<span onmouseout="hideTip(event, 'fs7', 41)" onmouseover="showTip(event, 'fs7', 41)" class="i">i</span> <span class="o">+</span> <span class="n">1</span>)
+    
+    <span onmouseout="hideTip(event, 'fs16', 42)" onmouseover="showTip(event, 'fs16', 42)" class="f">extractInner</span> <span onmouseout="hideTip(event, 'fs6', 43)" onmouseover="showTip(event, 'fs6', 43)" class="i">list</span> <span onmouseout="hideTip(event, 'fs4', 44)" onmouseover="showTip(event, 'fs4', 44)" class="i">num</span> <span class="n">0</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace System</div>
+<div class="tip" id="fs2">val extract : list:&#39;a list -&gt; num:int -&gt; &#39;a list<br /><br />Full name: Script.extract</div>
+<div class="tip" id="fs3">Multiple items<br />val list : &#39;a list<br /><br />--------------------<br />type &#39;T list = List&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.list&lt;_&gt;</div>
+<div class="tip" id="fs4">val num : int</div>
+<div class="tip" id="fs5">val pick : (&#39;b list -&gt; int -&gt; int -&gt; &#39;b)</div>
+<div class="tip" id="fs6">Multiple items<br />val list : &#39;b list<br /><br />--------------------<br />type &#39;T list = List&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.list&lt;_&gt;</div>
+<div class="tip" id="fs7">val i : int</div>
+<div class="tip" id="fs8">val h : &#39;b</div>
+<div class="tip" id="fs9">val t : &#39;b list</div>
+<div class="tip" id="fs10">val failwith : message:string -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.Operators.failwith</div>
+<div class="tip" id="fs11">val getRandom : (int -&gt; int)</div>
+<div class="tip" id="fs12">val r : Random ref</div>
+<div class="tip" id="fs13">Multiple items<br />val ref : value:&#39;T -&gt; &#39;T ref<br /><br />Full name: Microsoft.FSharp.Core.Operators.ref<br /><br />--------------------<br />type &#39;T ref = Ref&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Core.ref&lt;_&gt;</div>
+<div class="tip" id="fs14">Multiple items<br />type Random =<br />&#160;&#160;new : unit -&gt; Random + 1 overload<br />&#160;&#160;member Next : unit -&gt; int + 2 overloads<br />&#160;&#160;member NextBytes : buffer:byte[] -&gt; unit<br />&#160;&#160;member NextDouble : unit -&gt; float<br /><br />Full name: System.Random<br /><br />--------------------<br />Random() : unit<br />Random(Seed: int) : unit</div>
+<div class="tip" id="fs15">val max : int</div>
+<div class="tip" id="fs16">val extractInner : (&#39;b list -&gt; int -&gt; int -&gt; &#39;b list)</div>
+<div class="tip" id="fs17">property List.Length: int</div>
+

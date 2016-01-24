@@ -1,0 +1,104 @@
+module FSharpEngine
+
+open System
+open Microsoft.Xna.Framework
+// From http://www.fssnip.net/er
+// Define an immutable stack Literally dont understand how unions work, should read up on that
+type ImmutableStack<'T> =
+    | Empty 
+    | Stack of 'T * ImmutableStack<'T>
+
+    member s.Push x = Stack(x, s)
+
+    // Returns a (unit -> 'T) How to make it just a 'T
+    member s.Pop() = 
+      match s with
+      | Empty -> failwith "Underflow"
+      | Stack(t,_) -> t
+
+    // returns the top member of the stack; Returns an ImmutableStack<'T> how to make it just a 'T  ??
+    member s.Top() = 
+      match s with
+      | Empty -> failwith "Contain no elements"
+      | Stack(_,st) -> st
+
+    // makes an empty Stack
+    member s.IEmpty = 
+      match s with
+      | Empty -> true
+      | _ -> false
+
+    // Returns a (unit -> 'T List); How to make it Return a list of type 'T
+    member s.All() = 
+      let rec loop acc = function
+      | Empty -> acc
+      | Stack(t,st) -> loop (t::acc) st
+      loop [] s
+
+// How am I going to deal with f#'s ordering?
+type State(Name:String, Id:int, game:Game, StateManager:GameStateManager) as self =
+    inherit DrawableGameComponent(game)
+    let ChildComponents:List<GameComponent> = List.empty
+
+    let self = self
+
+    let show = 
+        base.Visible<-true
+        base.Enabled<-true
+
+        for c in ChildComponents do
+            c.Enabled<-true
+            match c with
+            | :? DrawableGameComponent as dgc -> dgc.Visible<-true
+            | _ -> ()
+
+    let hide =
+        base.Visible<-false
+        base.Enabled<-false
+
+        for c in ChildComponents do
+            c.Enabled<-false
+            match c with
+            | :? DrawableGameComponent as dgc -> dgc.Visible<-false
+            | _ -> ()
+
+    // if current state is this state show otherwise hide
+    member s.StateChange sender e =
+        match StateManager.CurrentState with
+        | self -> show
+        | _ -> hide
+            
+
+    override s.Initialize() = 
+        base.Initialize()
+
+    // make that update method in the program and the draw one too?
+
+ type GameStateManager(game:Game) as self = 
+    inherit GameComponent(game)
+    let states:ImmutableStack<State> = ImmutableStack.Empty
+    let startDrawOrder = 5000
+    let drawOrderInc = 100
+    let mutable drawOrder = 0
+
+    let OnStateChange = new Event<EventHandler<EventArgs>,EventArgs>()
+
+    member private gsm.RemoveState() = 
+        let state = states.Pop
+        OnStateChange.Publish.RemoveHandler state.StateChange
+        base.Game.Components.Remove(states.Pop()) 
+
+    member gsm.CurrentState = states.Top
+
+    member gsm.PopState() =
+        if states.All.Length > 0 then
+            gsm.RemoveState
+            drawOrder = drawOrder - drawOrderInc
+            if OnStateChange != null then
+                OnStateChange.Trigger(self, null)
+
+    override gsm.Initialize() =
+        base.Initialize()
+
+    override gsm.Update(gameTime:GameTime) = 
+        base.Update(gameTime)

@@ -1,0 +1,198 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+<span class="l">38: </span>
+<span class="l">39: </span>
+<span class="l">40: </span>
+<span class="l">41: </span>
+<span class="l">42: </span>
+<span class="l">43: </span>
+<span class="l">44: </span>
+<span class="l">45: </span>
+<span class="l">46: </span>
+<span class="l">47: </span>
+<span class="l">48: </span>
+<span class="l">49: </span>
+<span class="l">50: </span>
+<span class="l">51: </span>
+<span class="l">52: </span>
+<span class="l">53: </span>
+<span class="l">54: </span>
+<span class="l">55: </span>
+<span class="l">56: </span>
+<span class="l">57: </span>
+<span class="l">58: </span>
+<span class="l">59: </span>
+<span class="l">60: </span>
+<span class="l">61: </span>
+<span class="l">62: </span>
+<span class="l">63: </span>
+<span class="l">64: </span>
+<span class="l">65: </span>
+<span class="l">66: </span>
+<span class="l">67: </span>
+<span class="l">68: </span>
+<span class="l">69: </span>
+<span class="l">70: </span>
+<span class="l">71: </span>
+<span class="l">72: </span>
+<span class="l">73: </span>
+<span class="l">74: </span>
+<span class="l">75: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp">    <span class="c">/// The two players</span>
+    <span class="k">type</span> <span class="t">Player</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="p">A</span> | <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="p">B</span>
+
+    <span class="c">/// The point score in for a player in a game</span>
+    <span class="k">type</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="t">PlayerPoints</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="p">Zero</span> | <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="p">Fifteen</span> | <span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="p">Thirty</span> | <span onmouseout="hideTip(event, 'fs7', 7)" onmouseover="showTip(event, 'fs7', 7)" class="p">Forty</span> 
+
+    <span class="c">/// The score of a game</span>
+    <span class="k">type</span> <span onmouseout="hideTip(event, 'fs8', 8)" onmouseover="showTip(event, 'fs8', 8)" class="t">Score</span> <span class="o">=</span> 
+        | <span onmouseout="hideTip(event, 'fs9', 9)" onmouseover="showTip(event, 'fs9', 9)" class="p">Points</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs3', 10)" onmouseover="showTip(event, 'fs3', 10)" class="t">PlayerPoints</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs3', 11)" onmouseover="showTip(event, 'fs3', 11)" class="t">PlayerPoints</span> 
+        | <span onmouseout="hideTip(event, 'fs10', 12)" onmouseover="showTip(event, 'fs10', 12)" class="p">Advantage</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs11', 13)" onmouseover="showTip(event, 'fs11', 13)" class="t">Player</span> 
+        | <span onmouseout="hideTip(event, 'fs12', 14)" onmouseover="showTip(event, 'fs12', 14)" class="p">Deuce</span> 
+        | <span onmouseout="hideTip(event, 'fs13', 15)" onmouseover="showTip(event, 'fs13', 15)" class="p">Game</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs11', 16)" onmouseover="showTip(event, 'fs11', 16)" class="t">Player</span>
+
+    <span class="c">/// Compute the next score in a game </span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs14', 17)" onmouseover="showTip(event, 'fs14', 17)" class="f">nextPointScore</span> <span onmouseout="hideTip(event, 'fs15', 18)" onmouseover="showTip(event, 'fs15', 18)" class="i">a</span> <span class="o">=</span> 
+        <span class="k">match</span> <span onmouseout="hideTip(event, 'fs15', 19)" onmouseover="showTip(event, 'fs15', 19)" class="i">a</span> <span class="k">with</span> 
+        | <span onmouseout="hideTip(event, 'fs4', 20)" onmouseover="showTip(event, 'fs4', 20)" class="p">Zero</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs5', 21)" onmouseover="showTip(event, 'fs5', 21)" class="p">Fifteen</span>
+        | <span onmouseout="hideTip(event, 'fs5', 22)" onmouseover="showTip(event, 'fs5', 22)" class="p">Fifteen</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs6', 23)" onmouseover="showTip(event, 'fs6', 23)" class="p">Thirty</span>
+        | <span onmouseout="hideTip(event, 'fs6', 24)" onmouseover="showTip(event, 'fs6', 24)" class="p">Thirty</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs7', 25)" onmouseover="showTip(event, 'fs7', 25)" class="p">Forty</span>
+        | <span onmouseout="hideTip(event, 'fs7', 26)" onmouseover="showTip(event, 'fs7', 26)" class="p">Forty</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs16', 27)" onmouseover="showTip(event, 'fs16', 27)" class="f">failwith</span> <span class="s">&quot;what??&quot;</span>
+
+    <span class="c">/// Check if we&#39;ve reached deuce</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs17', 28)" onmouseover="showTip(event, 'fs17', 28)" class="f">normalize</span> <span onmouseout="hideTip(event, 'fs18', 29)" onmouseover="showTip(event, 'fs18', 29)" class="i">score</span> <span class="o">=</span> 
+        <span class="k">match</span> <span onmouseout="hideTip(event, 'fs18', 30)" onmouseover="showTip(event, 'fs18', 30)" class="i">score</span> <span class="k">with</span> 
+        | <span onmouseout="hideTip(event, 'fs9', 31)" onmouseover="showTip(event, 'fs9', 31)" class="p">Points</span>(<span onmouseout="hideTip(event, 'fs7', 32)" onmouseover="showTip(event, 'fs7', 32)" class="p">Forty</span>,<span onmouseout="hideTip(event, 'fs7', 33)" onmouseover="showTip(event, 'fs7', 33)" class="p">Forty</span>) <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs12', 34)" onmouseover="showTip(event, 'fs12', 34)" class="p">Deuce</span>
+        | _ <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs18', 35)" onmouseover="showTip(event, 'fs18', 35)" class="i">score</span>
+
+    <span class="c">/// Score a point in a game</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs19', 36)" onmouseover="showTip(event, 'fs19', 36)" class="f">scorePoint</span> <span onmouseout="hideTip(event, 'fs18', 37)" onmouseover="showTip(event, 'fs18', 37)" class="i">score</span> <span onmouseout="hideTip(event, 'fs20', 38)" onmouseover="showTip(event, 'fs20', 38)" class="i">point</span> <span class="o">=</span>
+        <span class="k">match</span> <span onmouseout="hideTip(event, 'fs18', 39)" onmouseover="showTip(event, 'fs18', 39)" class="i">score</span>, <span onmouseout="hideTip(event, 'fs20', 40)" onmouseover="showTip(event, 'fs20', 40)" class="i">point</span> <span class="k">with</span> 
+        | <span onmouseout="hideTip(event, 'fs10', 41)" onmouseover="showTip(event, 'fs10', 41)" class="p">Advantage</span> <span onmouseout="hideTip(event, 'fs21', 42)" onmouseover="showTip(event, 'fs21', 42)" class="i">player1</span>, <span onmouseout="hideTip(event, 'fs22', 43)" onmouseover="showTip(event, 'fs22', 43)" class="i">player2</span> <span class="k">when</span>  <span class="i">player1</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs22', 44)" onmouseover="showTip(event, 'fs22', 44)" class="i">player2</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs13', 45)" onmouseover="showTip(event, 'fs13', 45)" class="p">Game</span> <span class="i">player1</span>
+        | <span onmouseout="hideTip(event, 'fs10', 46)" onmouseover="showTip(event, 'fs10', 46)" class="p">Advantage</span> <span onmouseout="hideTip(event, 'fs21', 47)" onmouseover="showTip(event, 'fs21', 47)" class="i">player1</span>, <span onmouseout="hideTip(event, 'fs22', 48)" onmouseover="showTip(event, 'fs22', 48)" class="i">player2</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs12', 49)" onmouseover="showTip(event, 'fs12', 49)" class="p">Deuce</span>
+        | <span onmouseout="hideTip(event, 'fs12', 50)" onmouseover="showTip(event, 'fs12', 50)" class="p">Deuce</span>, <span onmouseout="hideTip(event, 'fs23', 51)" onmouseover="showTip(event, 'fs23', 51)" class="i">player</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs10', 52)" onmouseover="showTip(event, 'fs10', 52)" class="p">Advantage</span> <span onmouseout="hideTip(event, 'fs23', 53)" onmouseover="showTip(event, 'fs23', 53)" class="i">player</span>
+        | <span onmouseout="hideTip(event, 'fs9', 54)" onmouseover="showTip(event, 'fs9', 54)" class="p">Points</span>(<span onmouseout="hideTip(event, 'fs7', 55)" onmouseover="showTip(event, 'fs7', 55)" class="p">Forty</span>, _), <span onmouseout="hideTip(event, 'fs1', 56)" onmouseover="showTip(event, 'fs1', 56)" class="p">A</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs13', 57)" onmouseover="showTip(event, 'fs13', 57)" class="p">Game</span> <span onmouseout="hideTip(event, 'fs1', 58)" onmouseover="showTip(event, 'fs1', 58)" class="p">A</span>
+        | <span onmouseout="hideTip(event, 'fs9', 59)" onmouseover="showTip(event, 'fs9', 59)" class="p">Points</span>(_, <span onmouseout="hideTip(event, 'fs7', 60)" onmouseover="showTip(event, 'fs7', 60)" class="p">Forty</span>), <span onmouseout="hideTip(event, 'fs2', 61)" onmouseover="showTip(event, 'fs2', 61)" class="p">B</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs13', 62)" onmouseover="showTip(event, 'fs13', 62)" class="p">Game</span> <span onmouseout="hideTip(event, 'fs2', 63)" onmouseover="showTip(event, 'fs2', 63)" class="p">B</span>
+        | <span onmouseout="hideTip(event, 'fs9', 64)" onmouseover="showTip(event, 'fs9', 64)" class="p">Points</span>(<span onmouseout="hideTip(event, 'fs15', 65)" onmouseover="showTip(event, 'fs15', 65)" class="i">a</span>, <span onmouseout="hideTip(event, 'fs24', 66)" onmouseover="showTip(event, 'fs24', 66)" class="i">b</span>), <span onmouseout="hideTip(event, 'fs1', 67)" onmouseover="showTip(event, 'fs1', 67)" class="p">A</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs17', 68)" onmouseover="showTip(event, 'fs17', 68)" class="f">normalize</span> (<span onmouseout="hideTip(event, 'fs9', 69)" onmouseover="showTip(event, 'fs9', 69)" class="p">Points</span> (<span onmouseout="hideTip(event, 'fs14', 70)" onmouseover="showTip(event, 'fs14', 70)" class="f">nextPointScore</span> <span onmouseout="hideTip(event, 'fs15', 71)" onmouseover="showTip(event, 'fs15', 71)" class="i">a</span>, <span onmouseout="hideTip(event, 'fs24', 72)" onmouseover="showTip(event, 'fs24', 72)" class="i">b</span>))
+        | <span onmouseout="hideTip(event, 'fs9', 73)" onmouseover="showTip(event, 'fs9', 73)" class="p">Points</span>(<span onmouseout="hideTip(event, 'fs15', 74)" onmouseover="showTip(event, 'fs15', 74)" class="i">a</span>, <span onmouseout="hideTip(event, 'fs24', 75)" onmouseover="showTip(event, 'fs24', 75)" class="i">b</span>), <span onmouseout="hideTip(event, 'fs2', 76)" onmouseover="showTip(event, 'fs2', 76)" class="p">B</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs17', 77)" onmouseover="showTip(event, 'fs17', 77)" class="f">normalize</span> (<span onmouseout="hideTip(event, 'fs9', 78)" onmouseover="showTip(event, 'fs9', 78)" class="p">Points</span> (<span onmouseout="hideTip(event, 'fs15', 79)" onmouseover="showTip(event, 'fs15', 79)" class="i">a</span>, <span onmouseout="hideTip(event, 'fs14', 80)" onmouseover="showTip(event, 'fs14', 80)" class="f">nextPointScore</span> <span onmouseout="hideTip(event, 'fs24', 81)" onmouseover="showTip(event, 'fs24', 81)" class="i">b</span>))
+        | <span onmouseout="hideTip(event, 'fs13', 82)" onmouseover="showTip(event, 'fs13', 82)" class="p">Game</span> _ , _ <span class="k">-&gt;</span> <span class="c">(* printfn &quot;the game is over!&quot;; *)</span> <span onmouseout="hideTip(event, 'fs18', 83)" onmouseover="showTip(event, 'fs18', 83)" class="i">score</span>
+
+    <span class="c">/// Score a whole game, where the game is represented as a sequence of points</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs25', 84)" onmouseover="showTip(event, 'fs25', 84)" class="f">scoreGame</span> (<span onmouseout="hideTip(event, 'fs26', 85)" onmouseover="showTip(event, 'fs26', 85)" class="i">points</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs27', 86)" onmouseover="showTip(event, 'fs27', 86)" class="t">seq</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs11', 87)" onmouseover="showTip(event, 'fs11', 87)" class="t">Player</span><span class="o">&gt;</span>) <span class="o">=</span> 
+        <span onmouseout="hideTip(event, 'fs28', 88)" onmouseover="showTip(event, 'fs28', 88)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs29', 89)" onmouseover="showTip(event, 'fs29', 89)" class="f">scan</span> <span onmouseout="hideTip(event, 'fs19', 90)" onmouseover="showTip(event, 'fs19', 90)" class="f">scorePoint</span> (<span onmouseout="hideTip(event, 'fs9', 91)" onmouseover="showTip(event, 'fs9', 91)" class="p">Points</span>(<span onmouseout="hideTip(event, 'fs4', 92)" onmouseover="showTip(event, 'fs4', 92)" class="p">Zero</span>,<span onmouseout="hideTip(event, 'fs4', 93)" onmouseover="showTip(event, 'fs4', 93)" class="p">Zero</span>)) <span onmouseout="hideTip(event, 'fs26', 94)" onmouseover="showTip(event, 'fs26', 94)" class="i">points</span>
+
+    <span class="c">/// A sample game - A wins every point</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs30', 95)" onmouseover="showTip(event, 'fs30', 95)" class="i">game1</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs27', 96)" onmouseover="showTip(event, 'fs27', 96)" class="i">seq</span> { <span class="k">while</span> <span class="k">true</span> <span class="k">do</span> <span class="k">yield</span> <span onmouseout="hideTip(event, 'fs1', 97)" onmouseover="showTip(event, 'fs1', 97)" class="p">A</span> }
+
+    <span class="c">/// A sample game - A and B swap points indefinitely</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs31', 98)" onmouseover="showTip(event, 'fs31', 98)" class="i">game2</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs27', 99)" onmouseover="showTip(event, 'fs27', 99)" class="i">seq</span> { <span class="k">while</span> <span class="k">true</span> <span class="k">do</span> 
+                         <span class="k">yield</span> <span onmouseout="hideTip(event, 'fs1', 100)" onmouseover="showTip(event, 'fs1', 100)" class="p">A</span> 
+                         <span class="k">yield</span> <span onmouseout="hideTip(event, 'fs2', 101)" onmouseover="showTip(event, 'fs2', 101)" class="p">B</span> }
+
+    <span class="c">/// A sample game - A and B trade points but A wins more points than B</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs32', 102)" onmouseover="showTip(event, 'fs32', 102)" class="i">game3</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs27', 103)" onmouseover="showTip(event, 'fs27', 103)" class="i">seq</span> { <span class="k">while</span> <span class="k">true</span> <span class="k">do</span> 
+                         <span class="k">yield</span> <span onmouseout="hideTip(event, 'fs1', 104)" onmouseover="showTip(event, 'fs1', 104)" class="p">A</span> 
+                         <span class="k">yield</span> <span onmouseout="hideTip(event, 'fs2', 105)" onmouseover="showTip(event, 'fs2', 105)" class="p">B</span> 
+                         <span class="k">yield</span> <span onmouseout="hideTip(event, 'fs1', 106)" onmouseover="showTip(event, 'fs1', 106)" class="p">A</span> }
+
+    <span onmouseout="hideTip(event, 'fs25', 107)" onmouseover="showTip(event, 'fs25', 107)" class="f">scoreGame</span> <span onmouseout="hideTip(event, 'fs30', 108)" onmouseover="showTip(event, 'fs30', 108)" class="i">game1</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs28', 109)" onmouseover="showTip(event, 'fs28', 109)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs33', 110)" onmouseover="showTip(event, 'fs33', 110)" class="f">truncate</span> <span class="n">10</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs28', 111)" onmouseover="showTip(event, 'fs28', 111)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs34', 112)" onmouseover="showTip(event, 'fs34', 112)" class="f">toList</span>
+
+
+    <span onmouseout="hideTip(event, 'fs25', 113)" onmouseover="showTip(event, 'fs25', 113)" class="f">scoreGame</span> <span onmouseout="hideTip(event, 'fs31', 114)" onmouseover="showTip(event, 'fs31', 114)" class="i">game2</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs28', 115)" onmouseover="showTip(event, 'fs28', 115)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs33', 116)" onmouseover="showTip(event, 'fs33', 116)" class="f">truncate</span> <span class="n">10</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs28', 117)" onmouseover="showTip(event, 'fs28', 117)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs34', 118)" onmouseover="showTip(event, 'fs34', 118)" class="f">toList</span>
+
+    <span onmouseout="hideTip(event, 'fs25', 119)" onmouseover="showTip(event, 'fs25', 119)" class="f">scoreGame</span> <span onmouseout="hideTip(event, 'fs32', 120)" onmouseover="showTip(event, 'fs32', 120)" class="i">game3</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs28', 121)" onmouseover="showTip(event, 'fs28', 121)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs33', 122)" onmouseover="showTip(event, 'fs33', 122)" class="f">truncate</span> <span class="n">10</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs28', 123)" onmouseover="showTip(event, 'fs28', 123)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs34', 124)" onmouseover="showTip(event, 'fs34', 124)" class="f">toList</span>
+
+
+    <span class="c">/// Generate a random game</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs35', 125)" onmouseover="showTip(event, 'fs35', 125)" class="f">randomGame</span> <span onmouseout="hideTip(event, 'fs36', 126)" onmouseover="showTip(event, 'fs36', 126)" class="i">i</span> <span class="o">=</span> 
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs37', 127)" onmouseover="showTip(event, 'fs37', 127)" class="i">rnd</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs38', 128)" onmouseover="showTip(event, 'fs38', 128)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs39', 129)" onmouseover="showTip(event, 'fs39', 129)" class="t">Random</span>(<span onmouseout="hideTip(event, 'fs36', 130)" onmouseover="showTip(event, 'fs36', 130)" class="i">i</span>) 
+        <span onmouseout="hideTip(event, 'fs27', 131)" onmouseover="showTip(event, 'fs27', 131)" class="i">seq</span> { <span class="k">while</span> <span class="k">true</span> <span class="k">do</span> <span class="k">if</span> <span onmouseout="hideTip(event, 'fs37', 132)" onmouseover="showTip(event, 'fs37', 132)" class="i">rnd</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs40', 133)" onmouseover="showTip(event, 'fs40', 133)" class="f">NextDouble</span>() <span class="o">&lt;</span> <span class="n">0.5</span> <span class="k">then</span> <span class="k">yield</span> <span onmouseout="hideTip(event, 'fs1', 134)" onmouseover="showTip(event, 'fs1', 134)" class="p">A</span> <span class="k">else</span> <span class="k">yield</span> <span onmouseout="hideTip(event, 'fs2', 135)" onmouseover="showTip(event, 'fs2', 135)" class="p">B</span> }
+
+    <span class="c">// Random testing of 1000 games</span>
+    <span class="k">for</span> <span onmouseout="hideTip(event, 'fs41', 136)" onmouseover="showTip(event, 'fs41', 136)" class="i">i</span> <span class="k">in</span> <span class="n">1</span> <span class="o">..</span> <span class="n">1000</span> <span class="k">do</span> 
+        <span onmouseout="hideTip(event, 'fs25', 137)" onmouseover="showTip(event, 'fs25', 137)" class="f">scoreGame</span> (<span onmouseout="hideTip(event, 'fs35', 138)" onmouseover="showTip(event, 'fs35', 138)" class="f">randomGame</span> <span onmouseout="hideTip(event, 'fs41', 139)" onmouseover="showTip(event, 'fs41', 139)" class="i">i</span>)
+           <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs28', 140)" onmouseover="showTip(event, 'fs28', 140)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs42', 141)" onmouseover="showTip(event, 'fs42', 141)" class="f">nth</span> <span class="n">10</span> 
+           <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs43', 142)" onmouseover="showTip(event, 'fs43', 142)" class="f">printfn</span> <span class="s">&quot;result is </span><span class="pf">%A</span><span class="s">&quot;</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">union case Player.A: Player</div>
+<div class="tip" id="fs2">union case Player.B: Player</div>
+<div class="tip" id="fs3">type PlayerPoints =<br />&#160;&#160;| Zero<br />&#160;&#160;| Fifteen<br />&#160;&#160;| Thirty<br />&#160;&#160;| Forty<br /><br />Full name: Script.PlayerPoints<br /><em><br /><br />&#160;The point score in for a player in a game</em></div>
+<div class="tip" id="fs4">union case PlayerPoints.Zero: PlayerPoints</div>
+<div class="tip" id="fs5">union case PlayerPoints.Fifteen: PlayerPoints</div>
+<div class="tip" id="fs6">union case PlayerPoints.Thirty: PlayerPoints</div>
+<div class="tip" id="fs7">union case PlayerPoints.Forty: PlayerPoints</div>
+<div class="tip" id="fs8">type Score =<br />&#160;&#160;| Points of PlayerPoints * PlayerPoints<br />&#160;&#160;| Advantage of Player<br />&#160;&#160;| Deuce<br />&#160;&#160;| Game of Player<br /><br />Full name: Script.Score<br /><em><br /><br />&#160;The score of a game</em></div>
+<div class="tip" id="fs9">union case Score.Points: PlayerPoints * PlayerPoints -&gt; Score</div>
+<div class="tip" id="fs10">union case Score.Advantage: Player -&gt; Score</div>
+<div class="tip" id="fs11">type Player =<br />&#160;&#160;| A<br />&#160;&#160;| B<br /><br />Full name: Script.Player<br /><em><br /><br />&#160;The two players</em></div>
+<div class="tip" id="fs12">union case Score.Deuce: Score</div>
+<div class="tip" id="fs13">union case Score.Game: Player -&gt; Score</div>
+<div class="tip" id="fs14">val nextPointScore : a:PlayerPoints -&gt; PlayerPoints<br /><br />Full name: Script.nextPointScore<br /><em><br /><br />&#160;Compute the next score in a game </em></div>
+<div class="tip" id="fs15">val a : PlayerPoints</div>
+<div class="tip" id="fs16">val failwith : message:string -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.Operators.failwith</div>
+<div class="tip" id="fs17">val normalize : score:Score -&gt; Score<br /><br />Full name: Script.normalize<br /><em><br /><br />&#160;Check if we&#39;ve reached deuce</em></div>
+<div class="tip" id="fs18">val score : Score</div>
+<div class="tip" id="fs19">val scorePoint : score:Score -&gt; point:Player -&gt; Score<br /><br />Full name: Script.scorePoint<br /><em><br /><br />&#160;Score a point in a game</em></div>
+<div class="tip" id="fs20">val point : Player</div>
+<div class="tip" id="fs21">val player1 : Player</div>
+<div class="tip" id="fs22">val player2 : Player</div>
+<div class="tip" id="fs23">val player : Player</div>
+<div class="tip" id="fs24">val b : PlayerPoints</div>
+<div class="tip" id="fs25">val scoreGame : points:seq&lt;Player&gt; -&gt; seq&lt;Score&gt;<br /><br />Full name: Script.scoreGame<br /><em><br /><br />&#160;Score a whole game, where the game is represented as a sequence of points</em></div>
+<div class="tip" id="fs26">val points : seq&lt;Player&gt;</div>
+<div class="tip" id="fs27">Multiple items<br />val seq : sequence:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Core.Operators.seq<br /><br />--------------------<br />type seq&lt;&#39;T&gt; = System.Collections.Generic.IEnumerable&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.seq&lt;_&gt;</div>
+<div class="tip" id="fs28">module Seq<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs29">val scan : folder:(&#39;State -&gt; &#39;T -&gt; &#39;State) -&gt; state:&#39;State -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;State&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.scan</div>
+<div class="tip" id="fs30">val game1 : seq&lt;Player&gt;<br /><br />Full name: Script.game1<br /><em><br /><br />&#160;A sample game - A wins every point</em></div>
+<div class="tip" id="fs31">val game2 : seq&lt;Player&gt;<br /><br />Full name: Script.game2<br /><em><br /><br />&#160;A sample game - A and B swap points indefinitely</em></div>
+<div class="tip" id="fs32">val game3 : seq&lt;Player&gt;<br /><br />Full name: Script.game3<br /><em><br /><br />&#160;A sample game - A and B trade points but A wins more points than B</em></div>
+<div class="tip" id="fs33">val truncate : count:int -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.truncate</div>
+<div class="tip" id="fs34">val toList : source:seq&lt;&#39;T&gt; -&gt; &#39;T list<br /><br />Full name: Microsoft.FSharp.Collections.Seq.toList</div>
+<div class="tip" id="fs35">val randomGame : i:int -&gt; seq&lt;Player&gt;<br /><br />Full name: Script.randomGame<br /><em><br /><br />&#160;Generate a random game</em></div>
+<div class="tip" id="fs36">val i : int</div>
+<div class="tip" id="fs37">val rnd : System.Random</div>
+<div class="tip" id="fs38">namespace System</div>
+<div class="tip" id="fs39">Multiple items<br />type Random =<br />&#160;&#160;new : unit -&gt; Random + 1 overload<br />&#160;&#160;member Next : unit -&gt; int + 2 overloads<br />&#160;&#160;member NextBytes : buffer:byte[] -&gt; unit<br />&#160;&#160;member NextDouble : unit -&gt; float<br /><br />Full name: System.Random<br /><br />--------------------<br />System.Random() : unit<br />System.Random(Seed: int) : unit</div>
+<div class="tip" id="fs40">System.Random.NextDouble() : float</div>
+<div class="tip" id="fs41">val i : int32</div>
+<div class="tip" id="fs42">val nth : index:int -&gt; source:seq&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Collections.Seq.nth</div>
+<div class="tip" id="fs43">val printfn : format:Printf.TextWriterFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.printfn</div>
+

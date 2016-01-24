@@ -1,0 +1,152 @@
+    open System
+
+    let isFractional n =
+        n <> (Decimal.Truncate n)
+
+    let correct n =
+        //round after 20th digit after decimal point to fix propagation of floating point errors
+        Decimal.Round(n, 20) 
+
+    let resultAndWhetherItHasFractionalSubResults (n : list<decimal>) = 
+        let result = n.[0] + 13M * n.[1] / n.[2] + n.[3] + 12M * n.[4]  - n.[5] - 11M + n.[6] * n.[7] / n.[8] - 10M
+        let hasFractionalSubResults = isFractional (correct(n.[1] / n.[2])) || isFractional (correct(n.[7] / n.[8]))
+        (correct result, hasFractionalSubResults) //return tuple
+        
+    let ``1st solution in blog post`` = resultAndWhetherItHasFractionalSubResults ([1; 2; 6; 4; 7; 8; 3; 5; 9]  |> List.map (fun n -> n |> decimal))
+
+    // source: http://stackoverflow.com/questions/286427/calculating-permutations-in-f
+    let rec permute list taken = 
+      seq { 
+        if Set.count taken = List.length list 
+            then yield List.empty 
+        else
+            for element in list do
+              if not (Set.contains element taken) then 
+                for permutation in permute list (Set.add element taken)  do
+                  yield element::permutation 
+        } |> List.ofSeq
+    
+    //returns solutions as tuple in the form of ((input, (result, hasFractionalSubResults))
+    let solutions allowFractionalSubResults= 
+        let numbers = [1; 2; 3; 4; 5; 6; 7; 8; 9] |> List.map (fun n -> n |> decimal)
+        permute numbers Set.empty 
+        |> List.map (fun input -> (input, resultAndWhetherItHasFractionalSubResults input)) 
+        |> List.filter (fun (input, (result, hasFractionalSubResults)) -> result = 66M && (allowFractionalSubResults || (not hasFractionalSubResults)))
+
+
+    let ``solutions WITH fractional sub-results`` = solutions  true
+    let ``number of solutions WITH fractional sub-results`` = ``solutions WITH fractional sub-results`` |> List.length
+
+    let ``solutions WITHOUT fractional sub-results`` = solutions  false
+    let ``number of solutions WITHOUT fractional sub-results`` = ``solutions WITHOUT fractional sub-results`` |> List.length
+
+
+(********OUTPUT*****************
+
+ val ( solutions WITH fractional sub-results ) :
+    (decimal list * (decimal * bool)) list =
+    [([1M; 2M; 6M; 4M; 7M; 8M; 3M; 5M; 9M], (66.00000000000000000000M, true));
+     ([1M; 2M; 6M; 4M; 7M; 8M; 5M; 3M; 9M], (66.00000000000000000000M, true));
+     ([1M; 3M; 2M; 4M; 5M; 8M; 7M; 9M; 6M], (66.0M, true));
+     ([1M; 3M; 2M; 4M; 5M; 8M; 9M; 7M; 6M], (66.0M, true));
+     ([1M; 3M; 2M; 9M; 5M; 6M; 4M; 7M; 8M], (66.0M, true));
+     ([1M; 3M; 2M; 9M; 5M; 6M; 7M; 4M; 8M], (66.0M, true));
+     ([1M; 3M; 4M; 7M; 6M; 5M; 2M; 9M; 8M], (66.00M, true));
+     ([1M; 3M; 4M; 7M; 6M; 5M; 9M; 2M; 8M], (66.00M, true));
+     ([1M; 3M; 6M; 2M; 7M; 9M; 4M; 5M; 8M], (66.0M, true));
+     ([1M; 3M; 6M; 2M; 7M; 9M; 5M; 4M; 8M], (66.0M, true));
+     ([1M; 3M; 9M; 4M; 7M; 8M; 2M; 5M; 6M], (66.00000000000000000000M, true));
+     ([1M; 3M; 9M; 4M; 7M; 8M; 5M; 2M; 6M], (66.00000000000000000000M, true));
+     ([1M; 4M; 8M; 2M; 7M; 9M; 3M; 5M; 6M], (66.0M, true));
+     ([1M; 4M; 8M; 2M; 7M; 9M; 5M; 3M; 6M], (66.0M, true));
+     ([1M; 5M; 2M; 3M; 4M; 8M; 7M; 9M; 6M], (66.0M, true));
+     ([1M; 5M; 2M; 3M; 4M; 8M; 9M; 7M; 6M], (66.0M, true));
+     ([1M; 5M; 2M; 8M; 4M; 7M; 3M; 9M; 6M], (66.0M, true));
+     ([1M; 5M; 2M; 8M; 4M; 7M; 9M; 3M; 6M], (66.0M, true));
+     ([1M; 5M; 3M; 9M; 4M; 2M; 7M; 8M; 6M], (66.00000000000000000000M, true));
+     ([1M; 5M; 3M; 9M; 4M; 2M; 8M; 7M; 6M], (66.00000000000000000000M, true));
+     ([1M; 8M; 3M; 7M; 4M; 5M; 2M; 6M; 9M], (66.00000000000000000000M, true));
+     ([1M; 8M; 3M; 7M; 4M; 5M; 6M; 2M; 9M], (66.00000000000000000000M, true));
+     ([1M; 9M; 6M; 4M; 5M; 8M; 3M; 7M; 2M], (66.0M, true));
+     ([1M; 9M; 6M; 4M; 5M; 8M; 7M; 3M; 2M], (66.0M, true));
+     ([1M; 9M; 6M; 7M; 5M; 2M; 3M; 4M; 8M], (66.0M, true));
+     ([1M; 9M; 6M; 7M; 5M; 2M; 4M; 3M; 8M], (66.0M, true));
+     ([2M; 1M; 4M; 3M; 7M; 9M; 5M; 6M; 8M], (66.00M, true));
+     ([2M; 1M; 4M; 3M; 7M; 9M; 6M; 5M; 8M], (66.00M, true));
+     ([2M; 3M; 6M; 1M; 7M; 9M; 4M; 5M; 8M], (66.0M, true));
+     ([2M; 3M; 6M; 1M; 7M; 9M; 5M; 4M; 8M], (66.0M, true));
+     ([2M; 4M; 8M; 1M; 7M; 9M; 3M; 5M; 6M], (66.0M, true));
+     ([2M; 4M; 8M; 1M; 7M; 9M; 5M; 3M; 6M], (66.0M, true));
+     ([2M; 6M; 9M; 8M; 5M; 1M; 4M; 7M; 3M], (66.00000000000000000000M, true));
+     ([2M; 6M; 9M; 8M; 5M; 1M; 7M; 4M; 3M], (66.00000000000000000000M, true));
+     ([2M; 8M; 6M; 9M; 4M; 1M; 5M; 7M; 3M], (66.00000000000000000000M, true));
+     ([2M; 8M; 6M; 9M; 4M; 1M; 7M; 5M; 3M], (66.00000000000000000000M, true));
+     ([2M; 9M; 6M; 3M; 5M; 1M; 4M; 7M; 8M], (66.0M, true));
+     ([2M; 9M; 6M; 3M; 5M; 1M; 7M; 4M; 8M], (66.0M, true));
+     ([3M; 1M; 4M; 2M; 7M; 9M; 5M; 6M; 8M], (66.00M, true));
+     ([3M; 1M; 4M; 2M; 7M; 9M; 6M; 5M; 8M], (66.00M, true));
+     ([3M; 2M; 1M; 5M; 4M; 7M; 8M; 9M; 6M], (66M, true));
+     ([3M; 2M; 1M; 5M; 4M; 7M; 9M; 8M; 6M], (66M, true));
+     ([3M; 2M; 4M; 8M; 5M; 1M; 7M; 9M; 6M], (66.0M, true));
+     ([3M; 2M; 4M; 8M; 5M; 1M; 9M; 7M; 6M], (66.0M, true));
+     ([3M; 2M; 8M; 6M; 5M; 1M; 7M; 9M; 4M], (66.00M, true));
+     ([3M; 2M; 8M; 6M; 5M; 1M; 9M; 7M; 4M], (66.00M, true));
+     ([3M; 5M; 2M; 1M; 4M; 8M; 7M; 9M; 6M], (66.0M, true));
+     ([3M; 5M; 2M; 1M; 4M; 8M; 9M; 7M; 6M], (66.0M, true));
+     ([3M; 6M; 4M; 9M; 5M; 8M; 1M; 7M; 2M], (66.0M, true));
+     ([3M; 6M; 4M; 9M; 5M; 8M; 7M; 1M; 2M], (66.0M, true));
+     ([3M; 9M; 2M; 8M; 1M; 5M; 6M; 7M; 4M], (66.0M, true));
+     ([3M; 9M; 2M; 8M; 1M; 5M; 7M; 6M; 4M], (66.0M, true));
+     ([3M; 9M; 6M; 2M; 5M; 1M; 4M; 7M; 8M], (66.0M, true));
+     ([3M; 9M; 6M; 2M; 5M; 1M; 7M; 4M; 8M], (66.0M, true));
+     ([4M; 2M; 6M; 1M; 7M; 8M; 3M; 5M; 9M], (66.00000000000000000000M, true));
+     ([4M; 2M; 6M; 1M; 7M; 8M; 5M; 3M; 9M], (66.00000000000000000000M, true));
+     ([4M; 3M; 2M; 1M; 5M; 8M; 7M; 9M; 6M], (66.0M, true));
+     ([4M; 3M; 2M; 1M; 5M; 8M; 9M; 7M; 6M], (66.0M, true));
+     ([4M; 3M; 9M; 1M; 7M; 8M; 2M; 5M; 6M], (66.00000000000000000000M, true));
+     ([4M; 3M; 9M; 1M; 7M; 8M; 5M; 2M; 6M], (66.00000000000000000000M, true));
+     ([4M; 9M; 6M; 1M; 5M; 8M; 3M; 7M; 2M], (66.0M, true));
+     ([4M; 9M; 6M; 1M; 5M; 8M; 7M; 3M; 2M], (66.0M, true));
+     ([5M; 1M; 2M; 9M; 6M; 7M; 3M; 4M; 8M], (66.0M, true));
+     ([5M; 1M; 2M; 9M; 6M; 7M; 4M; 3M; 8M], (66.0M, true));
+     ([5M; 2M; 1M; 3M; 4M; 7M; 8M; 9M; 6M], (66M, true));
+     ([5M; 2M; 1M; 3M; 4M; 7M; 9M; 8M; 6M], (66M, true));
+     ([5M; 3M; 1M; 7M; 2M; 6M; 8M; 9M; 4M], (66M, true));
+     ([5M; 3M; 1M; 7M; 2M; 6M; 9M; 8M; 4M], (66M, false));
+     ([5M; 4M; 1M; 9M; 2M; 7M; 3M; 8M; 6M], (66M, true));
+     ([5M; 4M; 1M; 9M; 2M; 7M; 8M; 3M; 6M], (66M, true));
+     ([5M; 4M; 8M; 9M; 6M; 7M; 1M; 3M; 2M], (66.0M, true));
+     ([5M; 4M; 8M; 9M; 6M; 7M; 3M; 1M; 2M], (66.0M, true));
+     ([5M; 7M; 2M; 8M; 3M; 9M; 1M; 6M; 4M], (66.0M, true));
+     ([5M; 7M; 2M; 8M; 3M; 9M; 6M; 1M; 4M], (66.0M, true));
+     ([5M; 9M; 3M; 6M; 2M; 1M; 7M; 8M; 4M], (66M, false));
+     ([5M; 9M; 3M; 6M; 2M; 1M; 8M; 7M; 4M], (66M, true));
+     ([6M; 2M; 8M; 3M; 5M; 1M; 7M; 9M; 4M], (66.00M, true));
+     ([6M; 2M; 8M; 3M; 5M; 1M; 9M; 7M; 4M], (66.00M, true));
+     ([6M; 3M; 1M; 9M; 2M; 5M; 7M; 8M; 4M], (66M, false));
+     ([6M; 3M; 1M; 9M; 2M; 5M; 8M; 7M; 4M], (66M, true));
+     ([6M; 9M; 3M; 5M; 2M; 1M; 7M; 8M; 4M], (66M, false));
+     ([6M; 9M; 3M; 5M; 2M; 1M; 8M; 7M; 4M], (66M, true));
+     ([7M; 1M; 4M; 9M; 6M; 5M; 2M; 3M; 8M], (66.00M, true));
+     ([7M; 1M; 4M; 9M; 6M; 5M; 3M; 2M; 8M], (66.00M, true));
+     ([7M; 2M; 8M; 9M; 6M; 5M; 1M; 3M; 4M], (66.00M, true));
+     ([7M; 2M; 8M; 9M; 6M; 5M; 3M; 1M; 4M], (66.00M, true));
+     ([7M; 3M; 1M; 5M; 2M; 6M; 8M; 9M; 4M], (66M, true));
+     ([7M; 3M; 1M; 5M; 2M; 6M; 9M; 8M; 4M], (66M, false));
+     ([7M; 3M; 2M; 8M; 5M; 9M; 1M; 6M; 4M], (66.0M, true));
+     ([7M; 3M; 2M; 8M; 5M; 9M; 6M; 1M; 4M], (66.0M, true));
+     ([7M; 3M; 4M; 1M; 6M; 5M; 2M; 9M; 8M], (66.00M, ...)); ...]
+  val ( number of solutions WITH fractional sub-results ) : int = 136
+  val ( solutions WITHOUT fractional sub-results ) :
+    (decimal list * (decimal * bool)) list =
+    [([5M; 3M; 1M; 7M; 2M; 6M; 9M; 8M; 4M], (66M, false));
+     ([5M; 9M; 3M; 6M; 2M; 1M; 7M; 8M; 4M], (66M, false));
+     ([6M; 3M; 1M; 9M; 2M; 5M; 7M; 8M; 4M], (66M, false));
+     ([6M; 9M; 3M; 5M; 2M; 1M; 7M; 8M; 4M], (66M, false));
+     ([7M; 3M; 1M; 5M; 2M; 6M; 9M; 8M; 4M], (66M, false));
+     ([9M; 3M; 1M; 6M; 2M; 5M; 7M; 8M; 4M], (66M, false))]
+  val ( number of solutions WITHOUT fractional sub-results ) : int = 6
+end
+
+
+*)

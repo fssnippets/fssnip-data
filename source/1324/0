@@ -1,0 +1,1 @@
+module String = let notNullOrEmpty = not << System.String.IsNullOrEmpty

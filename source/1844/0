@@ -1,0 +1,43 @@
+    try
+        logger.Debug( sprintf "upload started, maintenance %A" login.maintenance ) 
+        prepareForUpload login.maintenance
+        let itemsToUpload = FloresActivitiesToUpload()
+        for item in itemsToUpload do
+            if optionstringIsEmpty item.ExternalId then
+                let actId = createActivity( login, item )
+                if not (String.IsNullOrWhiteSpace(actId) ) then
+                    changeExternalId( item, actId )
+                    setFloresActivityAsUploaded(item)
+            else
+                try 
+                    let updActId = updateActivity( login, item )
+                    if not (String.IsNullOrWhiteSpace(updActId) ) then
+                        setFloresActivityAsUploaded(item)
+                with 
+                    | ex -> 
+                        try 
+                            saveDLUPIssues(item.ExternalId.Value, null, ex.ToString() ) 
+                            let actId = createActivity( login, item )
+                            changeExternalId( item, actId )
+                        with
+                            | ex ->
+                                saveDLUPIssues(item.ExternalId.Value, null, ex.ToString() ) 
+                                reraise()
+        if login.maintenance then
+            getActivitiesToBeDeleted
+            |> Seq.filter ( fun p -> not(optionstringIsEmpty p.ExternalId ) )
+            |> Seq.iter ( fun p -> 
+                devlog.Debug( sprintf "deleting %A" p )
+                try 
+                    // we mark first, delete later. This is because if delete fails, there is no way to do something anyway
+                    MarkAsReallyDeleted p.InternalId
+                    delete login p.ExternalId.Value
+                with 
+                | ex ->
+                    saveDLUPIssues(p.ExternalId.Value, null, ex.ToString() ) 
+            
+            )
+
+        logger.Debug( "upload successfully finished" )
+    with 
+        | ex -> raise (ArgumentException( "upload failed", ex ))

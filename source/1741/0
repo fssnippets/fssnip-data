@@ -1,0 +1,19 @@
+open System
+open System.Reactive
+open System.Reactive.Subjects
+open System.Threading.Tasks
+
+type Task<'a> with
+    member t.ToObservale() : IObservable<'a> =
+        let subject = new AsyncSubject<'a>()
+        t.ContinueWith(fun (f:Task<'a>) ->
+        if f.IsFaulted then
+            subject.OnError(f.Exception)
+        else
+            subject.OnNext(f.Result)
+            subject.OnCompleted() ) |> ignore
+        subject :> IObservable<'a>
+
+// Test
+let t = Task.Run<int>(new Func<int>(fun () -> 42))
+t.ToObservale().Subscribe(fun x-> printfn "The answer to everything %d" x) 

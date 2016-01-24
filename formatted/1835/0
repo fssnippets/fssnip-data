@@ -1,0 +1,121 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">IO</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 3)" onmouseover="showTip(event, 'fs1', 3)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 4)" onmouseover="showTip(event, 'fs3', 4)" class="i">Reflection</span>
+
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs4', 5)" onmouseover="showTip(event, 'fs4', 5)" class="t">Reference</span> <span class="o">=</span>
+    { <span onmouseout="hideTip(event, 'fs5', 6)" onmouseover="showTip(event, 'fs5', 6)" class="i">Assembly</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs6', 7)" onmouseover="showTip(event, 'fs6', 7)" class="t">AssemblyName</span>
+      <span onmouseout="hideTip(event, 'fs7', 8)" onmouseover="showTip(event, 'fs7', 8)" class="i">ReferencedAssembly</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs6', 9)" onmouseover="showTip(event, 'fs6', 9)" class="t">AssemblyName</span> }
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs8', 10)" onmouseover="showTip(event, 'fs8', 10)" class="f">assemblies</span> <span onmouseout="hideTip(event, 'fs9', 11)" onmouseover="showTip(event, 'fs9', 11)" class="i">path</span> <span class="o">=</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs10', 12)" onmouseover="showTip(event, 'fs10', 12)" class="i">d</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs11', 13)" onmouseover="showTip(event, 'fs11', 13)" class="t">DirectoryInfo</span>(<span onmouseout="hideTip(event, 'fs9', 14)" onmouseover="showTip(event, 'fs9', 14)" class="i">path</span>)
+    [| <span class="k">yield!</span> <span onmouseout="hideTip(event, 'fs10', 15)" onmouseover="showTip(event, 'fs10', 15)" class="i">d</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs12', 16)" onmouseover="showTip(event, 'fs12', 16)" class="f">GetFiles</span>(<span class="s">&quot;*.dll&quot;</span>, <span onmouseout="hideTip(event, 'fs13', 17)" onmouseover="showTip(event, 'fs13', 17)" class="t">SearchOption</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs14', 18)" onmouseover="showTip(event, 'fs14', 18)" class="i">AllDirectories</span>)
+       <span class="k">yield!</span> <span onmouseout="hideTip(event, 'fs10', 19)" onmouseover="showTip(event, 'fs10', 19)" class="i">d</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs12', 20)" onmouseover="showTip(event, 'fs12', 20)" class="f">GetFiles</span>(<span class="s">&quot;*.exe&quot;</span>, <span onmouseout="hideTip(event, 'fs13', 21)" onmouseover="showTip(event, 'fs13', 21)" class="t">SearchOption</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs14', 22)" onmouseover="showTip(event, 'fs14', 22)" class="i">AllDirectories</span>) |]
+    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs15', 23)" onmouseover="showTip(event, 'fs15', 23)" class="t">Array</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs16', 24)" onmouseover="showTip(event, 'fs16', 24)" class="f">map</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs17', 25)" onmouseover="showTip(event, 'fs17', 25)" class="i">f</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs18', 26)" onmouseover="showTip(event, 'fs18', 26)" class="t">Assembly</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs19', 27)" onmouseover="showTip(event, 'fs19', 27)" class="f">LoadFile</span>(<span onmouseout="hideTip(event, 'fs17', 28)" onmouseover="showTip(event, 'fs17', 28)" class="i">f</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs20', 29)" onmouseover="showTip(event, 'fs20', 29)" class="i">FullName</span>))
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs21', 30)" onmouseover="showTip(event, 'fs21', 30)" class="f">references</span> (<span onmouseout="hideTip(event, 'fs22', 31)" onmouseover="showTip(event, 'fs22', 31)" class="i">assemblies</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs18', 32)" onmouseover="showTip(event, 'fs18', 32)" class="t">Assembly</span> <span onmouseout="hideTip(event, 'fs23', 33)" onmouseover="showTip(event, 'fs23', 33)" class="t">array</span>) <span class="o">=</span>
+    [| <span class="k">for</span> <span onmouseout="hideTip(event, 'fs24', 34)" onmouseover="showTip(event, 'fs24', 34)" class="i">a</span> <span class="k">in</span> <span onmouseout="hideTip(event, 'fs22', 35)" onmouseover="showTip(event, 'fs22', 35)" class="i">assemblies</span> <span class="k">do</span>
+           <span class="k">for</span> <span onmouseout="hideTip(event, 'fs25', 36)" onmouseover="showTip(event, 'fs25', 36)" class="i">r</span> <span class="k">in</span> <span onmouseout="hideTip(event, 'fs24', 37)" onmouseover="showTip(event, 'fs24', 37)" class="i">a</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs26', 38)" onmouseover="showTip(event, 'fs26', 38)" class="f">GetReferencedAssemblies</span>() <span class="k">do</span>
+               <span class="k">yield</span> { <span onmouseout="hideTip(event, 'fs18', 39)" onmouseover="showTip(event, 'fs18', 39)" class="i">Assembly</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs24', 40)" onmouseover="showTip(event, 'fs24', 40)" class="i">a</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs27', 41)" onmouseover="showTip(event, 'fs27', 41)" class="f">GetName</span>(); <span class="i">ReferencedAssembly</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs25', 42)" onmouseover="showTip(event, 'fs25', 42)" class="i">r</span> } |]
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs28', 43)" onmouseover="showTip(event, 'fs28', 43)" class="f">conflicts</span> (<span onmouseout="hideTip(event, 'fs29', 44)" onmouseover="showTip(event, 'fs29', 44)" class="i">references</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs4', 45)" onmouseover="showTip(event, 'fs4', 45)" class="t">Reference</span> <span onmouseout="hideTip(event, 'fs23', 46)" onmouseover="showTip(event, 'fs23', 46)" class="t">array</span>) <span class="o">=</span>
+    <span onmouseout="hideTip(event, 'fs29', 47)" onmouseover="showTip(event, 'fs29', 47)" class="i">references</span>
+    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs15', 48)" onmouseover="showTip(event, 'fs15', 48)" class="i">Array</span><span class="o">.</span><span class="i">groupBy</span> (<span class="k">fun</span> <span class="i">r</span> <span class="k">-&gt;</span> <span class="i">r</span><span class="o">.</span><span class="i">ReferencedAssembly</span><span class="o">.</span><span class="i">Name</span>)
+    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs15', 49)" onmouseover="showTip(event, 'fs15', 49)" class="t">Array</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs30', 50)" onmouseover="showTip(event, 'fs30', 50)" class="f">filter</span> (<span class="k">fun</span> (_,<span onmouseout="hideTip(event, 'fs31', 51)" onmouseover="showTip(event, 'fs31', 51)" class="i">rs</span>) <span class="k">-&gt;</span> 
+        <span onmouseout="hideTip(event, 'fs31', 52)" onmouseover="showTip(event, 'fs31', 52)" class="i">rs</span> 
+        <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs15', 53)" onmouseover="showTip(event, 'fs15', 53)" class="i">Array</span><span class="o">.</span><span class="i">distinctBy</span> (<span class="k">fun</span> <span class="i">r</span> <span class="k">-&gt;</span> <span class="i">r</span><span class="o">.</span><span class="i">ReferencedAssembly</span><span class="o">.</span><span class="i">FullName</span>) 
+        <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs15', 54)" onmouseover="showTip(event, 'fs15', 54)" class="t">Array</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs32', 55)" onmouseover="showTip(event, 'fs32', 55)" class="f">length</span> <span class="o">&gt;</span> <span class="n">1</span>)
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs33', 56)" onmouseover="showTip(event, 'fs33', 56)" class="f">printConflicts</span> <span onmouseout="hideTip(event, 'fs9', 57)" onmouseover="showTip(event, 'fs9', 57)" class="i">path</span> <span class="o">=</span>
+    <span onmouseout="hideTip(event, 'fs8', 58)" onmouseover="showTip(event, 'fs8', 58)" class="f">assemblies</span> <span onmouseout="hideTip(event, 'fs9', 59)" onmouseover="showTip(event, 'fs9', 59)" class="i">path</span>
+    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs21', 60)" onmouseover="showTip(event, 'fs21', 60)" class="f">references</span>
+    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs28', 61)" onmouseover="showTip(event, 'fs28', 61)" class="f">conflicts</span>
+    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs15', 62)" onmouseover="showTip(event, 'fs15', 62)" class="t">Array</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs34', 63)" onmouseover="showTip(event, 'fs34', 63)" class="f">iter</span> (<span class="k">fun</span> (<span onmouseout="hideTip(event, 'fs35', 64)" onmouseover="showTip(event, 'fs35', 64)" class="i">n</span>,<span onmouseout="hideTip(event, 'fs36', 65)" onmouseover="showTip(event, 'fs36', 65)" class="i">rs</span>) <span class="k">-&gt;</span>
+        <span onmouseout="hideTip(event, 'fs37', 66)" onmouseover="showTip(event, 'fs37', 66)" class="f">printfn</span> <span class="s">&quot;Possible conflicts for </span><span class="pf">%s</span><span class="s">&quot;</span> <span onmouseout="hideTip(event, 'fs35', 67)" onmouseover="showTip(event, 'fs35', 67)" class="i">n</span>
+        <span onmouseout="hideTip(event, 'fs36', 68)" onmouseover="showTip(event, 'fs36', 68)" class="i">rs</span> 
+        <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs15', 69)" onmouseover="showTip(event, 'fs15', 69)" class="t">Array</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs34', 70)" onmouseover="showTip(event, 'fs34', 70)" class="f">iter</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs38', 71)" onmouseover="showTip(event, 'fs38', 71)" class="i">r</span> <span class="k">-&gt;</span> 
+            <span onmouseout="hideTip(event, 'fs37', 72)" onmouseover="showTip(event, 'fs37', 72)" class="f">printfn</span> <span class="s">&quot;</span><span class="pf">%s</span><span class="s"> references </span><span class="pf">%s</span><span class="s">&quot;</span>
+                (<span onmouseout="hideTip(event, 'fs38', 73)" onmouseover="showTip(event, 'fs38', 73)" class="i">r</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs39', 74)" onmouseover="showTip(event, 'fs39', 74)" class="i">Assembly</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs40', 75)" onmouseover="showTip(event, 'fs40', 75)" class="i">Name</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs41', 76)" onmouseover="showTip(event, 'fs41', 76)" class="f">PadRight</span>(<span class="n">25</span>)) 
+                <span onmouseout="hideTip(event, 'fs38', 77)" onmouseover="showTip(event, 'fs38', 77)" class="i">r</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs7', 78)" onmouseover="showTip(event, 'fs7', 78)" class="i">ReferencedAssembly</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs42', 79)" onmouseover="showTip(event, 'fs42', 79)" class="i">FullName</span>))
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace System</div>
+<div class="tip" id="fs2">namespace System.IO</div>
+<div class="tip" id="fs3">namespace System.Reflection</div>
+<div class="tip" id="fs4">type Reference =<br />&#160;&#160;{Assembly: AssemblyName;<br />&#160;&#160;&#160;ReferencedAssembly: AssemblyName;}<br /><br />Full name: Script.Reference</div>
+<div class="tip" id="fs5">Multiple items<br />Reference.Assembly: AssemblyName<br /><br />--------------------<br />type Assembly =<br />&#160;&#160;member CodeBase : string<br />&#160;&#160;member CreateInstance : typeName:string -&gt; obj + 2 overloads<br />&#160;&#160;member EntryPoint : MethodInfo<br />&#160;&#160;member Equals : o:obj -&gt; bool<br />&#160;&#160;member EscapedCodeBase : string<br />&#160;&#160;member Evidence : Evidence<br />&#160;&#160;member FullName : string<br />&#160;&#160;member GetCustomAttributes : inherit:bool -&gt; obj[] + 1 overload<br />&#160;&#160;member GetCustomAttributesData : unit -&gt; IList&lt;CustomAttributeData&gt;<br />&#160;&#160;member GetExportedTypes : unit -&gt; Type[]<br />&#160;&#160;...<br /><br />Full name: System.Reflection.Assembly</div>
+<div class="tip" id="fs6">Multiple items<br />type AssemblyName =<br />&#160;&#160;new : unit -&gt; AssemblyName + 1 overload<br />&#160;&#160;member Clone : unit -&gt; obj<br />&#160;&#160;member CodeBase : string with get, set<br />&#160;&#160;member CultureInfo : CultureInfo with get, set<br />&#160;&#160;member EscapedCodeBase : string<br />&#160;&#160;member Flags : AssemblyNameFlags with get, set<br />&#160;&#160;member FullName : string<br />&#160;&#160;member GetObjectData : info:SerializationInfo * context:StreamingContext -&gt; unit<br />&#160;&#160;member GetPublicKey : unit -&gt; byte[]<br />&#160;&#160;member GetPublicKeyToken : unit -&gt; byte[]<br />&#160;&#160;...<br /><br />Full name: System.Reflection.AssemblyName<br /><br />--------------------<br />AssemblyName() : unit<br />AssemblyName(assemblyName: string) : unit</div>
+<div class="tip" id="fs7">Reference.ReferencedAssembly: AssemblyName</div>
+<div class="tip" id="fs8">val assemblies : path:string -&gt; Assembly []<br /><br />Full name: Script.assemblies</div>
+<div class="tip" id="fs9">val path : string</div>
+<div class="tip" id="fs10">val d : DirectoryInfo</div>
+<div class="tip" id="fs11">Multiple items<br />type DirectoryInfo =<br />&#160;&#160;inherit FileSystemInfo<br />&#160;&#160;new : path:string -&gt; DirectoryInfo<br />&#160;&#160;member Create : unit -&gt; unit + 1 overload<br />&#160;&#160;member CreateSubdirectory : path:string -&gt; DirectoryInfo + 1 overload<br />&#160;&#160;member Delete : unit -&gt; unit + 1 overload<br />&#160;&#160;member EnumerateDirectories : unit -&gt; IEnumerable&lt;DirectoryInfo&gt; + 2 overloads<br />&#160;&#160;member EnumerateFileSystemInfos : unit -&gt; IEnumerable&lt;FileSystemInfo&gt; + 2 overloads<br />&#160;&#160;member EnumerateFiles : unit -&gt; IEnumerable&lt;FileInfo&gt; + 2 overloads<br />&#160;&#160;member Exists : bool<br />&#160;&#160;member GetAccessControl : unit -&gt; DirectorySecurity + 1 overload<br />&#160;&#160;member GetDirectories : unit -&gt; DirectoryInfo[] + 2 overloads<br />&#160;&#160;...<br /><br />Full name: System.IO.DirectoryInfo<br /><br />--------------------<br />DirectoryInfo(path: string) : unit</div>
+<div class="tip" id="fs12">DirectoryInfo.GetFiles() : FileInfo []<br />DirectoryInfo.GetFiles(searchPattern: string) : FileInfo []<br />DirectoryInfo.GetFiles(searchPattern: string, searchOption: SearchOption) : FileInfo []</div>
+<div class="tip" id="fs13">type SearchOption =<br />&#160;&#160;| TopDirectoryOnly = 0<br />&#160;&#160;| AllDirectories = 1<br /><br />Full name: System.IO.SearchOption</div>
+<div class="tip" id="fs14">field SearchOption.AllDirectories = 1</div>
+<div class="tip" id="fs15">module Array<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs16">val map : mapping:(&#39;T -&gt; &#39;U) -&gt; array:&#39;T [] -&gt; &#39;U []<br /><br />Full name: Microsoft.FSharp.Collections.Array.map</div>
+<div class="tip" id="fs17">val f : FileInfo</div>
+<div class="tip" id="fs18">type Assembly =<br />&#160;&#160;member CodeBase : string<br />&#160;&#160;member CreateInstance : typeName:string -&gt; obj + 2 overloads<br />&#160;&#160;member EntryPoint : MethodInfo<br />&#160;&#160;member Equals : o:obj -&gt; bool<br />&#160;&#160;member EscapedCodeBase : string<br />&#160;&#160;member Evidence : Evidence<br />&#160;&#160;member FullName : string<br />&#160;&#160;member GetCustomAttributes : inherit:bool -&gt; obj[] + 1 overload<br />&#160;&#160;member GetCustomAttributesData : unit -&gt; IList&lt;CustomAttributeData&gt;<br />&#160;&#160;member GetExportedTypes : unit -&gt; Type[]<br />&#160;&#160;...<br /><br />Full name: System.Reflection.Assembly</div>
+<div class="tip" id="fs19">Assembly.LoadFile(path: string) : Assembly</div>
+<div class="tip" id="fs20">property FileSystemInfo.FullName: string</div>
+<div class="tip" id="fs21">val references : assemblies:Assembly array -&gt; Reference []<br /><br />Full name: Script.references</div>
+<div class="tip" id="fs22">val assemblies : Assembly array</div>
+<div class="tip" id="fs23">type &#39;T array = &#39;T []<br /><br />Full name: Microsoft.FSharp.Core.array&lt;_&gt;</div>
+<div class="tip" id="fs24">val a : Assembly</div>
+<div class="tip" id="fs25">val r : AssemblyName</div>
+<div class="tip" id="fs26">Assembly.GetReferencedAssemblies() : AssemblyName []</div>
+<div class="tip" id="fs27">Assembly.GetName() : AssemblyName<br />Assembly.GetName(copiedName: bool) : AssemblyName</div>
+<div class="tip" id="fs28">val conflicts : references:Reference array -&gt; (&#39;a * &#39;b) []<br /><br />Full name: Script.conflicts</div>
+<div class="tip" id="fs29">val references : Reference array</div>
+<div class="tip" id="fs30">val filter : predicate:(&#39;T -&gt; bool) -&gt; array:&#39;T [] -&gt; &#39;T []<br /><br />Full name: Microsoft.FSharp.Collections.Array.filter</div>
+<div class="tip" id="fs31">val rs : &#39;b</div>
+<div class="tip" id="fs32">val length : array:&#39;T [] -&gt; int<br /><br />Full name: Microsoft.FSharp.Collections.Array.length</div>
+<div class="tip" id="fs33">val printConflicts : path:string -&gt; unit<br /><br />Full name: Script.printConflicts</div>
+<div class="tip" id="fs34">val iter : action:(&#39;T -&gt; unit) -&gt; array:&#39;T [] -&gt; unit<br /><br />Full name: Microsoft.FSharp.Collections.Array.iter</div>
+<div class="tip" id="fs35">val n : string</div>
+<div class="tip" id="fs36">val rs : Reference []</div>
+<div class="tip" id="fs37">val printfn : format:Printf.TextWriterFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.printfn</div>
+<div class="tip" id="fs38">val r : Reference</div>
+<div class="tip" id="fs39">Reference.Assembly: AssemblyName</div>
+<div class="tip" id="fs40">property AssemblyName.Name: string</div>
+<div class="tip" id="fs41">System.String.PadRight(totalWidth: int) : string<br />System.String.PadRight(totalWidth: int, paddingChar: char) : string</div>
+<div class="tip" id="fs42">property AssemblyName.FullName: string</div>
+

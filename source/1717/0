@@ -1,0 +1,56 @@
+open System
+
+let roundCount = 4
+let biggestTable = 12
+
+
+let random = new System.Random()
+let getRandomNumber() = random.Next(biggestTable) + 1
+
+let wait seconds =
+    let delay = TimeSpan.FromSeconds (float seconds)
+    System.Threading.Tasks.Task.Delay(delay).Wait()
+
+let displayResult correct =
+    let originalForgroundColor = Console.ForegroundColor
+    Console.ForegroundColor <- 
+        if correct then ConsoleColor.Green else ConsoleColor.Red
+    printfn "%s" (if correct then "Well Done!" else "sorry :(")
+    Console.ForegroundColor <- originalForgroundColor    
+  
+let playRound() =
+    let a = getRandomNumber()
+    let b = getRandomNumber()
+    printf "%d x %d = " a b
+    let answer = int (Console.ReadLine())
+    let correct = (a * b) = answer
+    displayResult correct
+    printfn ""
+    if correct then 1 else 0
+
+let playGame roundCount = 
+    let score = 
+        [1..roundCount] 
+        |> Seq.map(fun _ -> playRound())
+        |> Seq.sum
+
+    printfn "you scored %d out of %d (%d%%)" score roundCount (int (100. * (float score / float roundCount)))
+
+let timeGame game =
+    let start = DateTime.UtcNow
+    game()
+    let finish = DateTime.UtcNow
+    printfn "you took %d seconds to play that game." (int ((finish - start).TotalSeconds))
+
+printfn "Welcome Brain Freezer"
+while true do
+    ["Ready..."; "Steady..."; "GO!"] 
+        |> Seq.iter(fun message -> 
+            wait 1
+            printfn "%s" message)
+
+    timeGame (fun unit -> playGame roundCount)
+    printfn ""
+    let breather = 5
+    printfn "The next game starts in %d seconds" breather
+    wait breather

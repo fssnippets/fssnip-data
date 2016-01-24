@@ -1,0 +1,38 @@
+let threetwoone () =
+    printfn "[ENTER] when ready"
+    let a = System.Console.ReadLine()
+    for i = 3 downto 1 do
+        printfn "%d" i
+        System.Threading.Thread.Sleep(1000)
+        ()
+let runRound () = 
+    let sw = System.Diagnostics.Stopwatch()
+    sw.Start()
+    let randomGenerator = new System.Random();
+    let mutable score = 0
+    let initialColor = System.Console.ForegroundColor
+    for i = 1 to 2 do
+        System.Console.ForegroundColor <- initialColor
+        let a = randomGenerator.Next(11)+1
+        let b = randomGenerator.Next(11)+1
+        let res = (a*b).ToString()
+        printf "%d x %d = " a b
+        let answer = System.Console.ReadLine()
+        if answer = res then
+            System.Console.ForegroundColor <- System.ConsoleColor.Green
+            printfn "\nOK \u2713"
+            score <- score + 1
+        else
+            System.Console.ForegroundColor <- System.ConsoleColor.Red
+            printfn "\nBAD SHOULD BE %s" res
+        ()
+
+    sw.Stop()
+    System.Console.ForegroundColor <- initialColor
+    printfn "You answered correctly %d times" score
+    let completedIn = sw.Elapsed.ToString("ss")
+    printfn "completed in %s s" completedIn
+
+while 1=1 do
+    threetwoone ()
+    runRound ()

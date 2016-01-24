@@ -1,0 +1,110 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">System</span>
+
+<span class="k">module</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="t">Observable</span> <span class="o">=</span>
+
+  <span class="c">/// Returns an observable that yields sliding windows of </span>
+  <span class="c">/// containing elements drawn from the input observable. </span>
+  <span class="c">/// Each window is returned as a fresh array.</span>
+  <span class="k">let</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="f">windowed</span> (<span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="i">count</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="t">int</span>) (<span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="i">source</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs7', 7)" onmouseover="showTip(event, 'fs7', 7)" class="t">IObservable</span><span class="o">&lt;</span>_<span class="o">&gt;</span>) <span class="o">=</span>
+    { <span class="k">new</span> <span onmouseout="hideTip(event, 'fs7', 8)" onmouseover="showTip(event, 'fs7', 8)" class="t">IObservable</span><span class="o">&lt;</span>_<span class="o">&gt;</span> <span class="k">with</span>
+        <span class="k">member</span> <span onmouseout="hideTip(event, 'fs8', 9)" onmouseover="showTip(event, 'fs8', 9)" class="i">x</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs9', 10)" onmouseover="showTip(event, 'fs9', 10)" class="f">Subscribe</span>(<span onmouseout="hideTip(event, 'fs10', 11)" onmouseover="showTip(event, 'fs10', 11)" class="i">observer</span>) <span class="o">=</span>
+          <span class="c">// Start an agent that remembers partial windows of length </span>
+          <span class="c">// smaller than the count (new agent for every observer)</span>
+          <span class="k">let</span> <span onmouseout="hideTip(event, 'fs11', 12)" onmouseover="showTip(event, 'fs11', 12)" class="i">agent</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs12', 13)" onmouseover="showTip(event, 'fs12', 13)" class="t">MailboxProcessor</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs13', 14)" onmouseover="showTip(event, 'fs13', 14)" class="f">Start</span>(<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs11', 15)" onmouseover="showTip(event, 'fs11', 15)" class="i">agent</span> <span class="k">-&gt;</span>
+            <span class="c">// The parameter &#39;lists&#39; contains partial lists and their lengths</span>
+            <span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs14', 16)" onmouseover="showTip(event, 'fs14', 16)" class="f">loop</span> <span onmouseout="hideTip(event, 'fs15', 17)" onmouseover="showTip(event, 'fs15', 17)" class="i">lists</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs16', 18)" onmouseover="showTip(event, 'fs16', 18)" class="i">async</span> { 
+              <span class="c">// Receive the next value</span>
+              <span class="k">let!</span> <span onmouseout="hideTip(event, 'fs17', 19)" onmouseover="showTip(event, 'fs17', 19)" class="i">value</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs11', 20)" onmouseover="showTip(event, 'fs11', 20)" class="i">agent</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs18', 21)" onmouseover="showTip(event, 'fs18', 21)" class="f">Receive</span>()
+
+              <span class="c">// Add new empty list and then the new element to all lists.</span>
+              <span class="c">// Then split the lists into &#39;full&#39; that should be sent</span>
+              <span class="c">// to the observer and &#39;partial&#39; which need more elements.</span>
+              <span class="k">let</span> <span onmouseout="hideTip(event, 'fs19', 22)" onmouseover="showTip(event, 'fs19', 22)" class="i">full</span>, <span onmouseout="hideTip(event, 'fs20', 23)" onmouseover="showTip(event, 'fs20', 23)" class="i">partial</span> <span class="o">=</span>
+                ((<span class="n">0</span>, []) <span class="o">::</span> <span onmouseout="hideTip(event, 'fs15', 24)" onmouseover="showTip(event, 'fs15', 24)" class="i">lists</span>)
+                <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs21', 25)" onmouseover="showTip(event, 'fs21', 25)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs22', 26)" onmouseover="showTip(event, 'fs22', 26)" class="f">map</span> (<span class="k">fun</span> (<span onmouseout="hideTip(event, 'fs23', 27)" onmouseover="showTip(event, 'fs23', 27)" class="i">length</span>, <span onmouseout="hideTip(event, 'fs24', 28)" onmouseover="showTip(event, 'fs24', 28)" class="i">l</span>) <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs23', 29)" onmouseover="showTip(event, 'fs23', 29)" class="i">length</span> <span class="o">+</span> <span class="n">1</span>, <span onmouseout="hideTip(event, 'fs17', 30)" onmouseover="showTip(event, 'fs17', 30)" class="i">value</span><span class="o">::</span><span onmouseout="hideTip(event, 'fs24', 31)" onmouseover="showTip(event, 'fs24', 31)" class="i">l</span>)
+                <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs21', 32)" onmouseover="showTip(event, 'fs21', 32)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs25', 33)" onmouseover="showTip(event, 'fs25', 33)" class="f">partition</span> (<span class="k">fun</span> (<span onmouseout="hideTip(event, 'fs23', 34)" onmouseover="showTip(event, 'fs23', 34)" class="i">length</span>, <span onmouseout="hideTip(event, 'fs24', 35)" onmouseover="showTip(event, 'fs24', 35)" class="i">l</span>) <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs23', 36)" onmouseover="showTip(event, 'fs23', 36)" class="i">length</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs4', 37)" onmouseover="showTip(event, 'fs4', 37)" class="i">count</span>)
+              
+              <span class="c">// Send all full lists to the observer (as arrays)</span>
+              <span class="k">for</span> (_, <span onmouseout="hideTip(event, 'fs24', 38)" onmouseover="showTip(event, 'fs24', 38)" class="i">l</span>) <span class="k">in</span> <span onmouseout="hideTip(event, 'fs19', 39)" onmouseover="showTip(event, 'fs19', 39)" class="i">full</span> <span class="k">do</span>
+                <span onmouseout="hideTip(event, 'fs10', 40)" onmouseover="showTip(event, 'fs10', 40)" class="i">observer</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs26', 41)" onmouseover="showTip(event, 'fs26', 41)" class="f">OnNext</span>(<span onmouseout="hideTip(event, 'fs24', 42)" onmouseover="showTip(event, 'fs24', 42)" class="i">l</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs27', 43)" onmouseover="showTip(event, 'fs27', 43)" class="t">Array</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs28', 44)" onmouseover="showTip(event, 'fs28', 44)" class="f">ofSeq</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs27', 45)" onmouseover="showTip(event, 'fs27', 45)" class="t">Array</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs29', 46)" onmouseover="showTip(event, 'fs29', 46)" class="f">rev</span>) 
+              <span class="c">// Continue looping with incomplete lists</span>
+              <span class="k">return!</span> <span onmouseout="hideTip(event, 'fs14', 47)" onmouseover="showTip(event, 'fs14', 47)" class="f">loop</span> <span onmouseout="hideTip(event, 'fs20', 48)" onmouseover="showTip(event, 'fs20', 48)" class="i">partial</span> }
+
+            <span class="c">// Start with an empty list of partial lists</span>
+            <span onmouseout="hideTip(event, 'fs14', 49)" onmouseover="showTip(event, 'fs14', 49)" class="f">loop</span> [])
+
+          <span class="c">// Send incoming values to the agent</span>
+          <span onmouseout="hideTip(event, 'fs6', 50)" onmouseover="showTip(event, 'fs6', 50)" class="i">source</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs30', 51)" onmouseover="showTip(event, 'fs30', 51)" class="f">Subscribe</span>(<span onmouseout="hideTip(event, 'fs11', 52)" onmouseover="showTip(event, 'fs11', 52)" class="i">agent</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs31', 53)" onmouseover="showTip(event, 'fs31', 53)" class="f">Post</span>) }
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace System</div>
+<div class="tip" id="fs2">Multiple items<br />module Observable<br /><br />from Script<br /><br />--------------------<br />module Observable<br /><br />from Microsoft.FSharp.Control</div>
+<div class="tip" id="fs3">val windowed : count:int -&gt; source:IObservable&lt;&#39;a&gt; -&gt; IObservable&lt;&#39;a []&gt;<br /><br />Full name: Script.Observable.windowed<br /><em><br /><br />&#160;Returns an observable that yields sliding windows of <br />&#160;containing elements drawn from the input observable. <br />&#160;Each window is returned as a fresh array.</em></div>
+<div class="tip" id="fs4">val count : int</div>
+<div class="tip" id="fs5">Multiple items<br />val int : value:&#39;T -&gt; int (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.int<br /><br />--------------------<br />type int = int32<br /><br />Full name: Microsoft.FSharp.Core.int<br /><br />--------------------<br />type int&lt;&#39;Measure&gt; = int<br /><br />Full name: Microsoft.FSharp.Core.int&lt;_&gt;</div>
+<div class="tip" id="fs6">val source : IObservable&lt;&#39;a&gt;</div>
+<div class="tip" id="fs7">type IObservable&lt;&#39;T&gt; =<br />&#160;&#160;member Subscribe : observer:IObserver&lt;&#39;T&gt; -&gt; IDisposable<br /><br />Full name: System.IObservable&lt;_&gt;</div>
+<div class="tip" id="fs8">val x : IObservable&lt;&#39;a []&gt;</div>
+<div class="tip" id="fs9">member IObservable.Subscribe : callback:(&#39;T -&gt; unit) -&gt; IDisposable<br />IObservable.Subscribe(observer: IObserver&lt;&#39;a []&gt;) : IDisposable</div>
+<div class="tip" id="fs10">val observer : IObserver&lt;&#39;a []&gt;</div>
+<div class="tip" id="fs11">val agent : MailboxProcessor&lt;&#39;a&gt;</div>
+<div class="tip" id="fs12">Multiple items<br />type MailboxProcessor&lt;&#39;Msg&gt; =<br />&#160;&#160;interface IDisposable<br />&#160;&#160;new : body:(MailboxProcessor&lt;&#39;Msg&gt; -&gt; Async&lt;unit&gt;) * ?cancellationToken:CancellationToken -&gt; MailboxProcessor&lt;&#39;Msg&gt;<br />&#160;&#160;member Post : message:&#39;Msg -&gt; unit<br />&#160;&#160;member PostAndAsyncReply : buildMessage:(AsyncReplyChannel&lt;&#39;Reply&gt; -&gt; &#39;Msg) * ?timeout:int -&gt; Async&lt;&#39;Reply&gt;<br />&#160;&#160;member PostAndReply : buildMessage:(AsyncReplyChannel&lt;&#39;Reply&gt; -&gt; &#39;Msg) * ?timeout:int -&gt; &#39;Reply<br />&#160;&#160;member PostAndTryAsyncReply : buildMessage:(AsyncReplyChannel&lt;&#39;Reply&gt; -&gt; &#39;Msg) * ?timeout:int -&gt; Async&lt;&#39;Reply option&gt;<br />&#160;&#160;member Receive : ?timeout:int -&gt; Async&lt;&#39;Msg&gt;<br />&#160;&#160;member Scan : scanner:(&#39;Msg -&gt; Async&lt;&#39;T&gt; option) * ?timeout:int -&gt; Async&lt;&#39;T&gt;<br />&#160;&#160;member Start : unit -&gt; unit<br />&#160;&#160;member TryPostAndReply : buildMessage:(AsyncReplyChannel&lt;&#39;Reply&gt; -&gt; &#39;Msg) * ?timeout:int -&gt; &#39;Reply option<br />&#160;&#160;...<br /><br />Full name: Microsoft.FSharp.Control.MailboxProcessor&lt;_&gt;<br /><br />--------------------<br />new : body:(MailboxProcessor&lt;&#39;Msg&gt; -&gt; Async&lt;unit&gt;) * ?cancellationToken:Threading.CancellationToken -&gt; MailboxProcessor&lt;&#39;Msg&gt;</div>
+<div class="tip" id="fs13">static member MailboxProcessor.Start : body:(MailboxProcessor&lt;&#39;Msg&gt; -&gt; Async&lt;unit&gt;) * ?cancellationToken:Threading.CancellationToken -&gt; MailboxProcessor&lt;&#39;Msg&gt;</div>
+<div class="tip" id="fs14">val loop : ((int * &#39;a list) list -&gt; Async&lt;&#39;b&gt;)</div>
+<div class="tip" id="fs15">val lists : (int * &#39;a list) list</div>
+<div class="tip" id="fs16">val async : AsyncBuilder<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.async</div>
+<div class="tip" id="fs17">val value : &#39;a</div>
+<div class="tip" id="fs18">member MailboxProcessor.Receive : ?timeout:int -&gt; Async&lt;&#39;Msg&gt;</div>
+<div class="tip" id="fs19">val full : (int * &#39;a list) list</div>
+<div class="tip" id="fs20">val partial : (int * &#39;a list) list</div>
+<div class="tip" id="fs21">Multiple items<br />module List<br /><br />from Microsoft.FSharp.Collections<br /><br />--------------------<br />type List&lt;&#39;T&gt; =<br />&#160;&#160;| ( [] )<br />&#160;&#160;| ( :: ) of Head: &#39;T * Tail: &#39;T list<br />&#160;&#160;interface IEnumerable<br />&#160;&#160;interface IEnumerable&lt;&#39;T&gt;<br />&#160;&#160;member Head : &#39;T<br />&#160;&#160;member IsEmpty : bool<br />&#160;&#160;member Item : index:int -&gt; &#39;T with get<br />&#160;&#160;member Length : int<br />&#160;&#160;member Tail : &#39;T list<br />&#160;&#160;static member Cons : head:&#39;T * tail:&#39;T list -&gt; &#39;T list<br />&#160;&#160;static member Empty : &#39;T list<br /><br />Full name: Microsoft.FSharp.Collections.List&lt;_&gt;</div>
+<div class="tip" id="fs22">val map : mapping:(&#39;T -&gt; &#39;U) -&gt; list:&#39;T list -&gt; &#39;U list<br /><br />Full name: Microsoft.FSharp.Collections.List.map</div>
+<div class="tip" id="fs23">val length : int</div>
+<div class="tip" id="fs24">val l : &#39;a list</div>
+<div class="tip" id="fs25">val partition : predicate:(&#39;T -&gt; bool) -&gt; list:&#39;T list -&gt; &#39;T list * &#39;T list<br /><br />Full name: Microsoft.FSharp.Collections.List.partition</div>
+<div class="tip" id="fs26">IObserver.OnNext(value: &#39;a []) : unit</div>
+<div class="tip" id="fs27">type Array =<br />&#160;&#160;member Clone : unit -&gt; obj<br />&#160;&#160;member CopyTo : array:Array * index:int -&gt; unit + 1 overload<br />&#160;&#160;member GetEnumerator : unit -&gt; IEnumerator<br />&#160;&#160;member GetLength : dimension:int -&gt; int<br />&#160;&#160;member GetLongLength : dimension:int -&gt; int64<br />&#160;&#160;member GetLowerBound : dimension:int -&gt; int<br />&#160;&#160;member GetUpperBound : dimension:int -&gt; int<br />&#160;&#160;member GetValue : [&lt;ParamArray&gt;] indices:int[] -&gt; obj + 7 overloads<br />&#160;&#160;member Initialize : unit -&gt; unit<br />&#160;&#160;member IsFixedSize : bool<br />&#160;&#160;...<br /><br />Full name: System.Array</div>
+<div class="tip" id="fs28">val ofSeq : source:seq&lt;&#39;T&gt; -&gt; &#39;T []<br /><br />Full name: Microsoft.FSharp.Collections.Array.ofSeq</div>
+<div class="tip" id="fs29">val rev : array:&#39;T [] -&gt; &#39;T []<br /><br />Full name: Microsoft.FSharp.Collections.Array.rev</div>
+<div class="tip" id="fs30">member IObservable.Subscribe : callback:(&#39;T -&gt; unit) -&gt; IDisposable<br />IObservable.Subscribe(observer: IObserver&lt;&#39;a&gt;) : IDisposable</div>
+<div class="tip" id="fs31">member MailboxProcessor.Post : message:&#39;Msg -&gt; unit</div>
+

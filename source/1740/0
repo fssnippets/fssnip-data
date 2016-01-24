@@ -1,0 +1,29 @@
+/// Applies the specified function to all items in the list.
+/// If any of the function calls results in a Failure, the
+/// map function returns failure immediately.
+let mapOrFail f items = 
+    let rec loop acc items =
+        match items with
+        | x::xs -> 
+            match f x with
+            | Success r -> loop (r::acc) xs
+            | fail -> fail
+        | [] -> Success(List.rev acc)
+    loop [] items
+
+
+let getPurchaseInfo (custId:CustId)  : Result<ProductInfo list> =
+
+    // Open api connection (I'm not calling 'Close' at the end
+    // because this is should be done done automatically, as the
+    // client implements IDisposable)
+    use api = new ApiClient()
+    api.Open()
+
+    // Get product ids purchased by customer id
+    let productIdsResult = api.Get<ProductId list> custId
+    match productIdsResult with
+    | Success productIds -> 
+        productIds |> mapOrFail (api.Get<ProductInfo> productId)
+    | Failure err -> 
+        Failure err 

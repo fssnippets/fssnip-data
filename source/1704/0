@@ -1,0 +1,167 @@
+module Application
+
+open System
+open System.Threading
+
+type Microsoft.FSharp.Control.Async with 
+    static member TryFinallyAsync comp deferred =
+
+        let finish (compResult, deferredResult) (cont, econt, ccont) =
+            match (compResult, deferredResult) with
+            | (Choice1Of3 (),      Choice1Of3 ())          -> cont ()
+            | (Choice2Of3 compExn, Choice1Of3 ())          -> econt compExn
+            | (Choice3Of3 compExn, Choice1Of3 ())          -> ccont compExn
+            | (Choice1Of3 (),      Choice2Of3 deferredExn) -> econt deferredExn
+            | (Choice2Of3 compExn, Choice2Of3 deferredExn) -> econt <| new Exception(deferredExn.Message, compExn)
+            | (Choice3Of3 compExn, Choice2Of3 deferredExn) -> econt deferredExn
+            | (_,                  Choice3Of3 deferredExn) -> econt <| new Exception("Unexpected cancellation.", deferredExn)
+
+        let startDeferred compResult (cont, econt, ccont) =
+            Async.StartWithContinuations(deferred,
+                (fun ()  -> finish (compResult, Choice1Of3 ())  (cont, econt, ccont)),
+                (fun exn -> finish (compResult, Choice2Of3 exn) (cont, econt, ccont)),
+                (fun exn -> finish (compResult, Choice3Of3 exn) (cont, econt, ccont)))
+
+        let startComp ct (cont, econt, ccont) =
+            Async.StartWithContinuations(comp,
+                (fun ()  -> startDeferred (Choice1Of3 ())  (cont, econt, ccont)),
+                (fun exn -> startDeferred (Choice2Of3 exn) (cont, econt, ccont)),
+                (fun exn -> startDeferred (Choice3Of3 exn) (cont, econt, ccont)),
+                ct)
+                
+        async { let! ct = Async.CancellationToken
+                do! Async.FromContinuations (startComp ct) }
+
+let continueMsg = "\nPress enter to continue..."
+
+[<EntryPoint>]
+let main _ =
+    printfn "Demo - no cancellation or error"
+    let workflow1 =
+        async { printfn "Starting work..."
+                do! Async.Sleep 1000
+                printfn "Finished work." }
+        |> Async.TryFinallyAsync <|
+        async {
+            printfn "Starting 'finally' clause."
+            do! Async.Sleep 1000
+            printfn "Completed 'finally' clause." }
+
+    Async.StartWithContinuations(workflow1,
+        (fun ()  -> printfn "Success!%s" continueMsg),
+        (fun exn -> printfn "Error: %s%s" exn.Message continueMsg),
+        (fun exn -> printfn "Cancelled: %s%s" exn.Message continueMsg))
+
+    Console.ReadLine() |> ignore
+
+    printfn "Demo - error in main workflow"
+    let workflow2 =
+        async { do! Async.Sleep 1000
+                printfn "Starting work..."
+                failwith "Failed to do the work." }
+        |> Async.TryFinallyAsync <|
+        async { printfn "Starting 'finally' clause."
+                do! Async.Sleep 1000
+                printfn "Completed with 'finally' clause." }
+
+    Async.StartWithContinuations(workflow2,
+        (fun ()  -> printfn "Success!%s" continueMsg),
+        (fun exn -> printfn "Error: %s%s" exn.Message continueMsg),
+        (fun exn -> printfn "Cancelled: %s%s" exn.Message continueMsg))
+
+    Console.ReadLine() |> ignore
+
+    printfn "Demo - cancellation in main workflow:"
+    let workflow3 =
+        async { printfn "Starting work...."
+                do! Async.Sleep 1000
+                printfn "Finished the work." }
+        |> Async.TryFinallyAsync <|
+        async { printfn "Starting 'finally' clause."
+                do! Async.Sleep 1000
+                printfn "Completed with 'finally' clause." }
+
+    let cancellationCapability1 = new CancellationTokenSource()
+    Async.StartWithContinuations(workflow3,
+        (fun ()  -> printfn "Success!%s" continueMsg),
+        (fun exn -> printfn "Error: %s%s" exn.Message continueMsg),
+        (fun exn -> printfn "Cancelled: %s%s" exn.Message continueMsg),
+        cancellationCapability1.Token)
+
+    Thread.Sleep 500
+    cancellationCapability1.Cancel()
+    Console.ReadLine() |> ignore
+
+    printfn "Demo - cancellation after main workflow:"
+    let workflow4 =
+        async { printfn "Starting work...."
+                do! Async.Sleep 1000
+                printfn "Finished the work." }
+        |> Async.TryFinallyAsync <|
+        async { printfn "Starting 'finally' clause."
+                do! Async.Sleep 1000
+                printfn "Completed with 'finally' clause." }
+
+    let cancellationCapability2 = new CancellationTokenSource()
+    Async.StartWithContinuations(workflow4,
+        (fun ()  -> printfn "Success!%s" continueMsg),
+        (fun exn -> printfn "Error: %s%s" exn.Message continueMsg),
+        (fun exn -> printfn "Cancelled: %s%s" exn.Message continueMsg),
+        cancellationCapability2.Token)
+
+    Thread.Sleep 1900
+    cancellationCapability2.Cancel()
+    Console.ReadLine() |> ignore
+
+    printfn "Demo - error during finally clause:"
+    let workflow5 =
+        async { printfn "Starting work...."
+                do! Async.Sleep 2000
+                printfn "Finished the work." }
+        |> Async.TryFinallyAsync <|
+        async { printfn "Starting 'finally' clause."
+                failwith "Failed during 'finally' clause." }
+
+    Async.StartWithContinuations(workflow5,
+        (fun ()  -> printfn "Success!%s" continueMsg),
+        (fun exn -> printfn "Error: %s%s" exn.Message continueMsg),
+        (fun exn -> printfn "Cancelled: %s%s" exn.Message continueMsg))
+
+    Console.ReadLine() |> ignore
+
+    printfn "Demo - error during both clauses:"
+    let workflow6 =
+        async { printfn "Starting work...."
+                failwith "Failed to do the work." }
+        |> Async.TryFinallyAsync <|
+        async { printfn "Starting 'finally' clause."
+                failwith "Failed during 'finally' clause." }
+
+    Async.StartWithContinuations(workflow6,
+        (fun ()  -> printfn "Success!%s" continueMsg),
+        (fun exn -> printfn "Error: %s%s" exn.Message continueMsg),
+        (fun exn -> printfn "Cancelled: %s%s" exn.Message continueMsg))
+
+    Console.ReadLine() |> ignore
+
+    printfn "Demo - cancellation during main workflow and error in 'finally' clause:"
+    let workflow7 =
+        async { printfn "Starting work...."
+                do! Async.Sleep 1000
+                printfn "Finished the work." }
+        |> Async.TryFinallyAsync <|
+        async { printfn "Starting 'finally' clause."
+                failwith "Failed during 'finally' clause." }
+
+    let cancellationCapability1 = new CancellationTokenSource()
+    Async.StartWithContinuations(workflow7,
+        (fun ()  -> printfn "Success!%s" continueMsg),
+        (fun exn -> printfn "Error: %s%s" exn.Message continueMsg),
+        (fun exn -> printfn "Cancelled: %s%s" exn.Message continueMsg),
+        cancellationCapability1.Token)
+
+    Thread.Sleep 500
+    cancellationCapability1.Cancel()
+    Console.ReadLine() |> ignore
+
+    0

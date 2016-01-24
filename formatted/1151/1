@@ -1,0 +1,90 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">IO</span>
+
+<span class="c">/// Write WAVE PCM soundfile (8KHz Mono 8-bit)</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="f">write</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="i">stream</span> (<span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="i">data</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="t">byte</span>[]) <span class="o">=</span>
+    <span class="k">use</span> <span onmouseout="hideTip(event, 'fs7', 7)" onmouseover="showTip(event, 'fs7', 7)" class="i">writer</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs8', 8)" onmouseover="showTip(event, 'fs8', 8)" class="t">BinaryWriter</span>(<span onmouseout="hideTip(event, 'fs4', 9)" onmouseover="showTip(event, 'fs4', 9)" class="i">stream</span>)
+    <span class="c">// RIFF</span>
+    <span onmouseout="hideTip(event, 'fs7', 10)" onmouseover="showTip(event, 'fs7', 10)" class="i">writer</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs9', 11)" onmouseover="showTip(event, 'fs9', 11)" class="f">Write</span>(<span class="s">&quot;RIFF&quot;B</span>)
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs10', 12)" onmouseover="showTip(event, 'fs10', 12)" class="i">size</span> <span class="o">=</span> <span class="n">36</span> <span class="o">+</span> <span onmouseout="hideTip(event, 'fs5', 13)" onmouseover="showTip(event, 'fs5', 13)" class="i">data</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs11', 14)" onmouseover="showTip(event, 'fs11', 14)" class="i">Length</span> <span class="k">in</span> <span onmouseout="hideTip(event, 'fs7', 15)" onmouseover="showTip(event, 'fs7', 15)" class="i">writer</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs9', 16)" onmouseover="showTip(event, 'fs9', 16)" class="f">Write</span>(<span onmouseout="hideTip(event, 'fs10', 17)" onmouseover="showTip(event, 'fs10', 17)" class="i">size</span>)
+    <span onmouseout="hideTip(event, 'fs7', 18)" onmouseover="showTip(event, 'fs7', 18)" class="i">writer</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs9', 19)" onmouseover="showTip(event, 'fs9', 19)" class="f">Write</span>(<span class="s">&quot;WAVE&quot;B</span>)
+    <span class="c">// fmt</span>
+    <span onmouseout="hideTip(event, 'fs7', 20)" onmouseover="showTip(event, 'fs7', 20)" class="i">writer</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs9', 21)" onmouseover="showTip(event, 'fs9', 21)" class="f">Write</span>(<span class="s">&quot;fmt &quot;B</span>)
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs12', 22)" onmouseover="showTip(event, 'fs12', 22)" class="i">headerSize</span> <span class="o">=</span> <span class="n">16</span> <span class="k">in</span> <span onmouseout="hideTip(event, 'fs7', 23)" onmouseover="showTip(event, 'fs7', 23)" class="i">writer</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs9', 24)" onmouseover="showTip(event, 'fs9', 24)" class="f">Write</span>(<span onmouseout="hideTip(event, 'fs12', 25)" onmouseover="showTip(event, 'fs12', 25)" class="i">headerSize</span>)
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs13', 26)" onmouseover="showTip(event, 'fs13', 26)" class="i">pcmFormat</span> <span class="o">=</span> <span class="n">1s</span> <span class="k">in</span> <span onmouseout="hideTip(event, 'fs7', 27)" onmouseover="showTip(event, 'fs7', 27)" class="i">writer</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs9', 28)" onmouseover="showTip(event, 'fs9', 28)" class="f">Write</span>(<span onmouseout="hideTip(event, 'fs13', 29)" onmouseover="showTip(event, 'fs13', 29)" class="i">pcmFormat</span>)
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs14', 30)" onmouseover="showTip(event, 'fs14', 30)" class="i">mono</span> <span class="o">=</span> <span class="n">1s</span> <span class="k">in</span> <span onmouseout="hideTip(event, 'fs7', 31)" onmouseover="showTip(event, 'fs7', 31)" class="i">writer</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs9', 32)" onmouseover="showTip(event, 'fs9', 32)" class="f">Write</span>(<span onmouseout="hideTip(event, 'fs14', 33)" onmouseover="showTip(event, 'fs14', 33)" class="i">mono</span>)
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs15', 34)" onmouseover="showTip(event, 'fs15', 34)" class="i">sampleRate</span> <span class="o">=</span> <span class="n">8000</span> <span class="k">in</span> <span onmouseout="hideTip(event, 'fs7', 35)" onmouseover="showTip(event, 'fs7', 35)" class="i">writer</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs9', 36)" onmouseover="showTip(event, 'fs9', 36)" class="f">Write</span>(<span onmouseout="hideTip(event, 'fs15', 37)" onmouseover="showTip(event, 'fs15', 37)" class="i">sampleRate</span>)
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs16', 38)" onmouseover="showTip(event, 'fs16', 38)" class="i">byteRate</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs15', 39)" onmouseover="showTip(event, 'fs15', 39)" class="i">sampleRate</span> <span class="k">in</span> <span onmouseout="hideTip(event, 'fs7', 40)" onmouseover="showTip(event, 'fs7', 40)" class="i">writer</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs9', 41)" onmouseover="showTip(event, 'fs9', 41)" class="f">Write</span>(<span onmouseout="hideTip(event, 'fs16', 42)" onmouseover="showTip(event, 'fs16', 42)" class="i">byteRate</span>)
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs17', 43)" onmouseover="showTip(event, 'fs17', 43)" class="i">blockAlign</span> <span class="o">=</span> <span class="n">1s</span> <span class="k">in</span> <span onmouseout="hideTip(event, 'fs7', 44)" onmouseover="showTip(event, 'fs7', 44)" class="i">writer</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs9', 45)" onmouseover="showTip(event, 'fs9', 45)" class="f">Write</span>(<span onmouseout="hideTip(event, 'fs17', 46)" onmouseover="showTip(event, 'fs17', 46)" class="i">blockAlign</span>)
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs18', 47)" onmouseover="showTip(event, 'fs18', 47)" class="i">bitsPerSample</span> <span class="o">=</span> <span class="n">8s</span> <span class="k">in</span> <span onmouseout="hideTip(event, 'fs7', 48)" onmouseover="showTip(event, 'fs7', 48)" class="i">writer</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs9', 49)" onmouseover="showTip(event, 'fs9', 49)" class="f">Write</span>(<span onmouseout="hideTip(event, 'fs18', 50)" onmouseover="showTip(event, 'fs18', 50)" class="i">bitsPerSample</span>)
+    <span class="c">// data</span>
+    <span onmouseout="hideTip(event, 'fs7', 51)" onmouseover="showTip(event, 'fs7', 51)" class="i">writer</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs9', 52)" onmouseover="showTip(event, 'fs9', 52)" class="f">Write</span>(<span class="s">&quot;data&quot;B</span>)
+    <span onmouseout="hideTip(event, 'fs7', 53)" onmouseover="showTip(event, 'fs7', 53)" class="i">writer</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs9', 54)" onmouseover="showTip(event, 'fs9', 54)" class="f">Write</span>(<span onmouseout="hideTip(event, 'fs5', 55)" onmouseover="showTip(event, 'fs5', 55)" class="i">data</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs11', 56)" onmouseover="showTip(event, 'fs11', 56)" class="i">Length</span>)
+    <span onmouseout="hideTip(event, 'fs7', 57)" onmouseover="showTip(event, 'fs7', 57)" class="i">writer</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs9', 58)" onmouseover="showTip(event, 'fs9', 58)" class="f">Write</span>(<span onmouseout="hideTip(event, 'fs5', 59)" onmouseover="showTip(event, 'fs5', 59)" class="i">data</span>)
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs19', 60)" onmouseover="showTip(event, 'fs19', 60)" class="f">sample</span> <span onmouseout="hideTip(event, 'fs20', 61)" onmouseover="showTip(event, 'fs20', 61)" class="i">x</span> <span class="o">=</span> (<span onmouseout="hideTip(event, 'fs20', 62)" onmouseover="showTip(event, 'fs20', 62)" class="i">x</span> <span class="o">+</span> <span class="n">1.</span>)<span class="o">/</span><span class="n">2.</span> <span class="o">*</span> <span class="n">255.</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs6', 63)" onmouseover="showTip(event, 'fs6', 63)" class="f">byte</span> 
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs21', 64)" onmouseover="showTip(event, 'fs21', 64)" class="i">data</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs22', 65)" onmouseover="showTip(event, 'fs22', 65)" class="t">Array</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs23', 66)" onmouseover="showTip(event, 'fs23', 66)" class="f">init</span> <span class="n">16000</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs24', 67)" onmouseover="showTip(event, 'fs24', 67)" class="i">i</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs25', 68)" onmouseover="showTip(event, 'fs25', 68)" class="f">sin</span> (<span onmouseout="hideTip(event, 'fs26', 69)" onmouseover="showTip(event, 'fs26', 69)" class="f">float</span> <span onmouseout="hideTip(event, 'fs24', 70)" onmouseover="showTip(event, 'fs24', 70)" class="i">i</span><span class="o">/</span><span onmouseout="hideTip(event, 'fs26', 71)" onmouseover="showTip(event, 'fs26', 71)" class="f">float</span> <span class="n">8</span>) <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs19', 72)" onmouseover="showTip(event, 'fs19', 72)" class="f">sample</span>)
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs27', 73)" onmouseover="showTip(event, 'fs27', 73)" class="i">stream</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs28', 74)" onmouseover="showTip(event, 'fs28', 74)" class="t">File</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs29', 75)" onmouseover="showTip(event, 'fs29', 75)" class="f">Create</span>(<span class="s">@&quot;C:\tone.wav&quot;</span>)
+<span onmouseout="hideTip(event, 'fs3', 76)" onmouseover="showTip(event, 'fs3', 76)" class="f">write</span> <span onmouseout="hideTip(event, 'fs27', 77)" onmouseover="showTip(event, 'fs27', 77)" class="i">stream</span> <span onmouseout="hideTip(event, 'fs21', 78)" onmouseover="showTip(event, 'fs21', 78)" class="i">data</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace System</div>
+<div class="tip" id="fs2">namespace System.IO</div>
+<div class="tip" id="fs3">val write : stream:Stream -&gt; data:byte [] -&gt; unit<br /><br />Full name: Script.write<br /><em><br /><br />&#160;Write WAVE PCM soundfile (8KHz Mono 8-bit)</em></div>
+<div class="tip" id="fs4">val stream : Stream</div>
+<div class="tip" id="fs5">val data : byte []</div>
+<div class="tip" id="fs6">Multiple items<br />val byte : value:&#39;T -&gt; byte (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.byte<br /><br />--------------------<br />type byte = System.Byte<br /><br />Full name: Microsoft.FSharp.Core.byte</div>
+<div class="tip" id="fs7">val writer : BinaryWriter</div>
+<div class="tip" id="fs8">Multiple items<br />type BinaryWriter =<br />&#160;&#160;new : output:Stream -&gt; BinaryWriter + 1 overload<br />&#160;&#160;member BaseStream : Stream<br />&#160;&#160;member Close : unit -&gt; unit<br />&#160;&#160;member Dispose : unit -&gt; unit<br />&#160;&#160;member Flush : unit -&gt; unit<br />&#160;&#160;member Seek : offset:int * origin:SeekOrigin -&gt; int64<br />&#160;&#160;member Write : value:bool -&gt; unit + 17 overloads<br />&#160;&#160;static val Null : BinaryWriter<br /><br />Full name: System.IO.BinaryWriter<br /><br />--------------------<br />BinaryWriter(output: Stream) : unit<br />BinaryWriter(output: Stream, encoding: System.Text.Encoding) : unit</div>
+<div class="tip" id="fs9">BinaryWriter.Write(value: string) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />BinaryWriter.Write(value: float32) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />BinaryWriter.Write(value: uint64) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />BinaryWriter.Write(value: int64) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />BinaryWriter.Write(value: uint32) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />BinaryWriter.Write(value: int) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />BinaryWriter.Write(value: uint16) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />BinaryWriter.Write(value: int16) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />BinaryWriter.Write(value: decimal) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />BinaryWriter.Write(value: float) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em></div>
+<div class="tip" id="fs10">val size : int</div>
+<div class="tip" id="fs11">property System.Array.Length: int</div>
+<div class="tip" id="fs12">val headerSize : int</div>
+<div class="tip" id="fs13">val pcmFormat : int16</div>
+<div class="tip" id="fs14">val mono : int16</div>
+<div class="tip" id="fs15">val sampleRate : int</div>
+<div class="tip" id="fs16">val byteRate : int</div>
+<div class="tip" id="fs17">val blockAlign : int16</div>
+<div class="tip" id="fs18">val bitsPerSample : int16</div>
+<div class="tip" id="fs19">val sample : x:float -&gt; byte<br /><br />Full name: Script.sample</div>
+<div class="tip" id="fs20">val x : float</div>
+<div class="tip" id="fs21">val data : byte []<br /><br />Full name: Script.data</div>
+<div class="tip" id="fs22">module Array<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs23">val init : count:int -&gt; initializer:(int -&gt; &#39;T) -&gt; &#39;T []<br /><br />Full name: Microsoft.FSharp.Collections.Array.init</div>
+<div class="tip" id="fs24">val i : int</div>
+<div class="tip" id="fs25">val sin : value:&#39;T -&gt; &#39;T (requires member Sin)<br /><br />Full name: Microsoft.FSharp.Core.Operators.sin</div>
+<div class="tip" id="fs26">Multiple items<br />val float : value:&#39;T -&gt; float (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.float<br /><br />--------------------<br />type float = System.Double<br /><br />Full name: Microsoft.FSharp.Core.float<br /><br />--------------------<br />type float&lt;&#39;Measure&gt; = float<br /><br />Full name: Microsoft.FSharp.Core.float&lt;_&gt;</div>
+<div class="tip" id="fs27">val stream : FileStream<br /><br />Full name: Script.stream</div>
+<div class="tip" id="fs28">type File =<br />&#160;&#160;static member AppendAllLines : path:string * contents:IEnumerable&lt;string&gt; -&gt; unit + 1 overload<br />&#160;&#160;static member AppendAllText : path:string * contents:string -&gt; unit + 1 overload<br />&#160;&#160;static member AppendText : path:string -&gt; StreamWriter<br />&#160;&#160;static member Copy : sourceFileName:string * destFileName:string -&gt; unit + 1 overload<br />&#160;&#160;static member Create : path:string -&gt; FileStream + 3 overloads<br />&#160;&#160;static member CreateText : path:string -&gt; StreamWriter<br />&#160;&#160;static member Decrypt : path:string -&gt; unit<br />&#160;&#160;static member Delete : path:string -&gt; unit<br />&#160;&#160;static member Encrypt : path:string -&gt; unit<br />&#160;&#160;static member Exists : path:string -&gt; bool<br />&#160;&#160;...<br /><br />Full name: System.IO.File</div>
+<div class="tip" id="fs29">File.Create(path: string) : FileStream<br />File.Create(path: string, bufferSize: int) : FileStream<br />File.Create(path: string, bufferSize: int, options: FileOptions) : FileStream<br />File.Create(path: string, bufferSize: int, options: FileOptions, fileSecurity: System.Security.AccessControl.FileSecurity) : FileStream</div>
+

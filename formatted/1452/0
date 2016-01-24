@@ -1,0 +1,53 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp">[&lt;<span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="t">Measure</span>&gt;] <span class="k">type</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="t">eur</span>;       <span class="c">//defino la dimension dinero</span>
+[&lt;<span onmouseout="hideTip(event, 'fs1', 3)" onmouseover="showTip(event, 'fs1', 3)" class="t">Measure</span>&gt;] <span class="k">type</span> <span onmouseout="hideTip(event, 'fs3', 4)" onmouseover="showTip(event, 'fs3', 4)" class="t">month</span>;     <span class="c">//defino el tiempo en meses</span>
+[&lt;<span onmouseout="hideTip(event, 'fs1', 5)" onmouseover="showTip(event, 'fs1', 5)" class="t">Measure</span>&gt;] <span class="k">type</span> <span onmouseout="hideTip(event, 'fs4', 6)" onmouseover="showTip(event, 'fs4', 6)" class="t">day</span>;       <span class="c">//defino tiempo en dias</span>
+[&lt;<span onmouseout="hideTip(event, 'fs1', 7)" onmouseover="showTip(event, 'fs1', 7)" class="t">Measure</span>&gt;]
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs5', 8)" onmouseover="showTip(event, 'fs5', 8)" class="t">hour</span> <span class="o">=</span> 
+  <span class="k">static</span> <span class="k">member</span> <span onmouseout="hideTip(event, 'fs6', 9)" onmouseover="showTip(event, 'fs6', 9)" class="i">workDay</span> <span class="o">=</span> <span class="n">8.0</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs5', 10)" onmouseover="showTip(event, 'fs5', 10)" class="t">hour</span><span class="o">/</span><span onmouseout="hideTip(event, 'fs4', 11)" onmouseover="showTip(event, 'fs4', 11)" class="t">day</span><span class="o">&gt;</span>;    <span class="c">//defino el tiempo en horas y la conversion por dia laborable</span>
+[&lt;<span onmouseout="hideTip(event, 'fs1', 12)" onmouseover="showTip(event, 'fs1', 12)" class="t">Measure</span>&gt;] 
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs7', 13)" onmouseover="showTip(event, 'fs7', 13)" class="t">min</span> <span class="o">=</span> 
+  <span class="k">static</span> <span class="k">member</span> <span onmouseout="hideTip(event, 'fs8', 14)" onmouseover="showTip(event, 'fs8', 14)" class="i">perHour</span> <span class="o">=</span> <span class="n">60.0</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs7', 15)" onmouseover="showTip(event, 'fs7', 15)" class="t">min</span> <span onmouseout="hideTip(event, 'fs5', 16)" onmouseover="showTip(event, 'fs5', 16)" class="t">hour</span><span class="o">^-</span><span class="n">1</span><span class="o">&gt;</span>;    <span class="c">//defino el tiempo en minutos y la conversion a horas</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs9', 17)" onmouseover="showTip(event, 'fs9', 17)" class="i">hourRate</span> <span class="o">=</span> <span class="n">60.0</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs2', 18)" onmouseover="showTip(event, 'fs2', 18)" class="t">eur</span><span class="o">/</span><span onmouseout="hideTip(event, 'fs5', 19)" onmouseover="showTip(event, 'fs5', 19)" class="t">hour</span><span class="o">&gt;</span>;      <span class="c">//defino la tarifa horaria</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs10', 20)" onmouseover="showTip(event, 'fs10', 20)" class="i">avgMonthlyEffort</span> <span class="o">=</span> <span class="n">20.0</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs4', 21)" onmouseover="showTip(event, 'fs4', 21)" class="t">day</span><span class="o">/</span><span onmouseout="hideTip(event, 'fs3', 22)" onmouseover="showTip(event, 'fs3', 22)" class="t">month</span><span class="o">&gt;</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs5', 23)" onmouseover="showTip(event, 'fs5', 23)" class="t">hour</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs11', 24)" onmouseover="showTip(event, 'fs11', 24)" class="i">workDay</span> <span class="c">//cuantas horas de esfuerzo tiene un mes con 20 dias laborables?</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs12', 25)" onmouseover="showTip(event, 'fs12', 25)" class="i">avgMonthlyCost</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs10', 26)" onmouseover="showTip(event, 'fs10', 26)" class="i">avgMonthlyEffort</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs9', 27)" onmouseover="showTip(event, 'fs9', 27)" class="i">hourRate</span> <span class="c">//cuanto cuesta segun la tarifa?</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs13', 28)" onmouseover="showTip(event, 'fs13', 28)" class="i">monthCost</span> <span class="o">=</span> <span class="n">8000.0</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs2', 29)" onmouseover="showTip(event, 'fs2', 29)" class="t">eur</span><span class="o">/</span><span onmouseout="hideTip(event, 'fs3', 30)" onmouseover="showTip(event, 'fs3', 30)" class="t">month</span><span class="o">&gt;</span> <span class="c">//defino que un mes me ha costado 8000 euros</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs14', 31)" onmouseover="showTip(event, 'fs14', 31)" class="i">hourCost</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs13', 32)" onmouseover="showTip(event, 'fs13', 32)" class="i">monthCost</span> <span class="o">/</span> <span class="n">20.0</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs4', 33)" onmouseover="showTip(event, 'fs4', 33)" class="t">day</span><span class="o">/</span><span onmouseout="hideTip(event, 'fs3', 34)" onmouseover="showTip(event, 'fs3', 34)" class="t">month</span><span class="o">&gt;</span> <span class="o">/</span> <span onmouseout="hideTip(event, 'fs5', 35)" onmouseover="showTip(event, 'fs5', 35)" class="t">hour</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs11', 36)" onmouseover="showTip(event, 'fs11', 36)" class="i">workDay</span> <span class="c">//&#191;que tarifa me han aplicado?</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">Multiple items<br />type MeasureAttribute =<br />&#160;&#160;inherit Attribute<br />&#160;&#160;new : unit -&gt; MeasureAttribute<br /><br />Full name: Microsoft.FSharp.Core.MeasureAttribute<br /><br />--------------------<br />new : unit -&gt; MeasureAttribute</div>
+<div class="tip" id="fs2">[&lt;Measure&gt;]<br />type eur<br /><br />Full name: Script.eur</div>
+<div class="tip" id="fs3">[&lt;Measure&gt;]<br />type month<br /><br />Full name: Script.month</div>
+<div class="tip" id="fs4">[&lt;Measure&gt;]<br />type day<br /><br />Full name: Script.day</div>
+<div class="tip" id="fs5">[&lt;Measure&gt;]<br />type hour =<br />&#160;&#160;static member workDay : float&lt;hour/day&gt;<br /><br />Full name: Script.hour</div>
+<div class="tip" id="fs6">static member hour.workDay : float&lt;hour/day&gt;<br /><br />Full name: Script.hour.workDay</div>
+<div class="tip" id="fs7">[&lt;Measure&gt;]<br />type min =<br />&#160;&#160;static member perHour : float&lt;min/hour&gt;<br /><br />Full name: Script.min</div>
+<div class="tip" id="fs8">static member min.perHour : float&lt;min/hour&gt;<br /><br />Full name: Script.min.perHour</div>
+<div class="tip" id="fs9">val hourRate : float&lt;eur/hour&gt;<br /><br />Full name: Script.hourRate</div>
+<div class="tip" id="fs10">val avgMonthlyEffort : float&lt;hour/month&gt;<br /><br />Full name: Script.avgMonthlyEffort</div>
+<div class="tip" id="fs11">property hour.workDay: float&lt;hour/day&gt;</div>
+<div class="tip" id="fs12">val avgMonthlyCost : float&lt;eur/month&gt;<br /><br />Full name: Script.avgMonthlyCost</div>
+<div class="tip" id="fs13">val monthCost : float&lt;eur/month&gt;<br /><br />Full name: Script.monthCost</div>
+<div class="tip" id="fs14">val hourCost : float&lt;eur/hour&gt;<br /><br />Full name: Script.hourCost</div>
+

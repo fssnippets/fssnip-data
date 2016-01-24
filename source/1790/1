@@ -1,0 +1,48 @@
+// No idea if I got this right...but I use some of the data types we learned in module 3...
+module mainModule
+    open System
+
+    type numberAndItsGoldenRatio =
+        {   number : int
+            goldenRatio : float }
+
+    let GetGoldenRatio number =
+        number * Math.Sqrt(5.0) / 2.0
+    
+    let GetNumberAndItsGoldenRatio number =
+        {   number = number
+            goldenRatio = GetGoldenRatio(float number) }
+
+    [<EntryPoint>]    
+    let main argv =
+
+        Console.WriteLine("Please enter some numbers. I will calculate the golden ratio for you")
+
+        let numbersAndTheirGoldenRatio =
+            [ let mutable run = true
+              while run do
+                  Console.WriteLine("Do you want to add more numbers (y/n)? ")
+                  if Console.ReadLine().ToLower() = "y" then
+                      Console.WriteLine("Enter a number: ")
+                      let number = Console.ReadLine()
+                      yield GetNumberAndItsGoldenRatio (int number)
+                  else run <- false ]
+
+        for x in numbersAndTheirGoldenRatio do
+            printfn "Number: %A, GR: %A" x.number x.goldenRatio
+        Console.ReadKey()
+        0
+//////////////////////////////////////////////////////////////////////////
+//update from: Musa Jahanghir  also on http://pastebin.com/2EcsFVq7
+open System
+let ϕ  = 0.5 + 0.5 * Math.Sqrt 5.0 
+[<EntryPoint>] 
+let main argv =
+    printf "Enter the length for the list (positive integer): "     //SIZE
+    let lol =                        Console.ReadLine() |> int
+    let lof = [ for i in 1..lol ->   printf "Enter a number %i: " i //READ
+                                     Console.ReadLine() |> float]
+    lof |>  List.map (fun x -> printfn "%A" (x, x * ϕ)) |> ignore   //WRITE
+    Console                                  .ReadKey() |> ignore   //WRAP
+    0 
+///////////////////////////////////////////////////////////////////////////

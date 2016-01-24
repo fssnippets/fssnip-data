@@ -1,0 +1,62 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">type</span> <span class="t">Tree</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">a</span><span class="o">&gt;</span> <span class="o">=</span>
+  | <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="p">Node</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="t">Tree</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">a</span><span class="o">&gt;</span> <span class="o">*</span> <span class="o">&#39;</span><span class="i">a</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs2', 3)" onmouseover="showTip(event, 'fs2', 3)" class="t">Tree</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">a</span><span class="o">&gt;</span>
+  | <span onmouseout="hideTip(event, 'fs3', 4)" onmouseover="showTip(event, 'fs3', 4)" class="p">Leaf</span>
+
+<span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs4', 5)" onmouseover="showTip(event, 'fs4', 5)" class="f">fold</span> (<span onmouseout="hideTip(event, 'fs5', 6)" onmouseover="showTip(event, 'fs5', 6)" class="f">f</span> <span class="o">:</span> <span class="o">&#39;</span><span class="i">b</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs2', 7)" onmouseover="showTip(event, 'fs2', 7)" class="t">Tree</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">a</span><span class="o">&gt;</span> <span class="k">-&gt;</span> <span class="o">&#39;</span><span class="i">b</span>) (<span onmouseout="hideTip(event, 'fs6', 8)" onmouseover="showTip(event, 'fs6', 8)" class="i">m</span>  <span class="o">:</span> <span class="o">&#39;</span><span class="i">b</span>) (<span onmouseout="hideTip(event, 'fs7', 9)" onmouseover="showTip(event, 'fs7', 9)" class="i">t</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs2', 10)" onmouseover="showTip(event, 'fs2', 10)" class="t">Tree</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">a</span><span class="o">&gt;</span>) <span class="o">:</span> <span class="o">&#39;</span><span class="i">b</span> <span class="o">=</span>
+  <span class="k">let</span> <span onmouseout="hideTip(event, 'fs8', 11)" onmouseover="showTip(event, 'fs8', 11)" class="i">m&#39;</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs5', 12)" onmouseover="showTip(event, 'fs5', 12)" class="f">f</span> <span onmouseout="hideTip(event, 'fs6', 13)" onmouseover="showTip(event, 'fs6', 13)" class="i">m</span> <span onmouseout="hideTip(event, 'fs7', 14)" onmouseover="showTip(event, 'fs7', 14)" class="i">t</span>
+  <span class="k">match</span> <span onmouseout="hideTip(event, 'fs7', 15)" onmouseover="showTip(event, 'fs7', 15)" class="i">t</span> <span class="k">with</span>
+    | <span onmouseout="hideTip(event, 'fs1', 16)" onmouseover="showTip(event, 'fs1', 16)" class="p">Node</span>(<span onmouseout="hideTip(event, 'fs9', 17)" onmouseover="showTip(event, 'fs9', 17)" class="i">tl</span>, _, <span onmouseout="hideTip(event, 'fs10', 18)" onmouseover="showTip(event, 'fs10', 18)" class="i">tr</span>) <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs4', 19)" onmouseover="showTip(event, 'fs4', 19)" class="f">fold</span> <span onmouseout="hideTip(event, 'fs5', 20)" onmouseover="showTip(event, 'fs5', 20)" class="f">f</span> (<span onmouseout="hideTip(event, 'fs4', 21)" onmouseover="showTip(event, 'fs4', 21)" class="f">fold</span> <span onmouseout="hideTip(event, 'fs5', 22)" onmouseover="showTip(event, 'fs5', 22)" class="f">f</span> <span onmouseout="hideTip(event, 'fs8', 23)" onmouseover="showTip(event, 'fs8', 23)" class="i">m&#39;</span> <span onmouseout="hideTip(event, 'fs9', 24)" onmouseover="showTip(event, 'fs9', 24)" class="i">tl</span>) <span onmouseout="hideTip(event, 'fs10', 25)" onmouseover="showTip(event, 'fs10', 25)" class="i">tr</span>
+    | <span onmouseout="hideTip(event, 'fs11', 26)" onmouseover="showTip(event, 'fs11', 26)" class="i">Leav</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs8', 27)" onmouseover="showTip(event, 'fs8', 27)" class="i">m&#39;</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs12', 28)" onmouseover="showTip(event, 'fs12', 28)" class="f">sum</span> <span onmouseout="hideTip(event, 'fs13', 29)" onmouseover="showTip(event, 'fs13', 29)" class="i">t</span> <span class="o">=</span>
+  <span class="k">let</span> <span onmouseout="hideTip(event, 'fs14', 30)" onmouseover="showTip(event, 'fs14', 30)" class="f">folder</span> <span onmouseout="hideTip(event, 'fs15', 31)" onmouseover="showTip(event, 'fs15', 31)" class="i">m</span> <span onmouseout="hideTip(event, 'fs16', 32)" onmouseover="showTip(event, 'fs16', 32)" class="i">t&#39;</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs17', 33)" onmouseover="showTip(event, 'fs17', 33)" class="t">int</span> <span class="o">=</span>
+    <span class="k">match</span> <span onmouseout="hideTip(event, 'fs16', 34)" onmouseover="showTip(event, 'fs16', 34)" class="i">t&#39;</span> <span class="k">with</span>
+      | <span onmouseout="hideTip(event, 'fs1', 35)" onmouseover="showTip(event, 'fs1', 35)" class="p">Node</span>(_, <span onmouseout="hideTip(event, 'fs18', 36)" onmouseover="showTip(event, 'fs18', 36)" class="i">v</span>, _) <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs15', 37)" onmouseover="showTip(event, 'fs15', 37)" class="i">m</span> <span class="o">+</span> <span onmouseout="hideTip(event, 'fs18', 38)" onmouseover="showTip(event, 'fs18', 38)" class="i">v</span>
+      | <span onmouseout="hideTip(event, 'fs3', 39)" onmouseover="showTip(event, 'fs3', 39)" class="p">Leaf</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs15', 40)" onmouseover="showTip(event, 'fs15', 40)" class="i">m</span>
+  <span onmouseout="hideTip(event, 'fs4', 41)" onmouseover="showTip(event, 'fs4', 41)" class="f">fold</span> <span onmouseout="hideTip(event, 'fs14', 42)" onmouseover="showTip(event, 'fs14', 42)" class="f">folder</span> <span class="n">0</span> <span onmouseout="hideTip(event, 'fs13', 43)" onmouseover="showTip(event, 'fs13', 43)" class="i">t</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs19', 44)" onmouseover="showTip(event, 'fs19', 44)" class="i">testTree</span> <span class="o">=</span>
+  <span onmouseout="hideTip(event, 'fs1', 45)" onmouseover="showTip(event, 'fs1', 45)" class="p">Node</span>(<span onmouseout="hideTip(event, 'fs1', 46)" onmouseover="showTip(event, 'fs1', 46)" class="p">Node</span>(<span onmouseout="hideTip(event, 'fs1', 47)" onmouseover="showTip(event, 'fs1', 47)" class="p">Node</span>(<span onmouseout="hideTip(event, 'fs3', 48)" onmouseover="showTip(event, 'fs3', 48)" class="p">Leaf</span>, <span class="n">9</span>, <span onmouseout="hideTip(event, 'fs3', 49)" onmouseover="showTip(event, 'fs3', 49)" class="p">Leaf</span>), <span class="n">2</span>, <span onmouseout="hideTip(event, 'fs1', 50)" onmouseover="showTip(event, 'fs1', 50)" class="p">Node</span>(<span onmouseout="hideTip(event, 'fs3', 51)" onmouseover="showTip(event, 'fs3', 51)" class="p">Leaf</span>, <span class="n">21</span>, <span onmouseout="hideTip(event, 'fs3', 52)" onmouseover="showTip(event, 'fs3', 52)" class="p">Leaf</span>)), <span class="n">12</span>, <span onmouseout="hideTip(event, 'fs3', 53)" onmouseover="showTip(event, 'fs3', 53)" class="p">Leaf</span>)
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">union case Tree.Node: Tree&lt;&#39;a&gt; * &#39;a * Tree&lt;&#39;a&gt; -&gt; Tree&lt;&#39;a&gt;</div>
+<div class="tip" id="fs2">type Tree&lt;&#39;a&gt; =<br />&#160;&#160;| Node of Tree&lt;&#39;a&gt; * &#39;a * Tree&lt;&#39;a&gt;<br />&#160;&#160;| Leaf<br /><br />Full name: Script.Tree&lt;_&gt;</div>
+<div class="tip" id="fs3">union case Tree.Leaf: Tree&lt;&#39;a&gt;</div>
+<div class="tip" id="fs4">val fold : f:(&#39;b -&gt; Tree&lt;&#39;a&gt; -&gt; &#39;b) -&gt; m:&#39;b -&gt; t:Tree&lt;&#39;a&gt; -&gt; &#39;b<br /><br />Full name: Script.fold</div>
+<div class="tip" id="fs5">val f : (&#39;b -&gt; Tree&lt;&#39;a&gt; -&gt; &#39;b)</div>
+<div class="tip" id="fs6">val m : &#39;b</div>
+<div class="tip" id="fs7">val t : Tree&lt;&#39;a&gt;</div>
+<div class="tip" id="fs8">val m&#39; : &#39;b</div>
+<div class="tip" id="fs9">val tl : Tree&lt;&#39;a&gt;</div>
+<div class="tip" id="fs10">val tr : Tree&lt;&#39;a&gt;</div>
+<div class="tip" id="fs11">val Leav : Tree&lt;&#39;a&gt;</div>
+<div class="tip" id="fs12">val sum : t:Tree&lt;int&gt; -&gt; int<br /><br />Full name: Script.sum</div>
+<div class="tip" id="fs13">val t : Tree&lt;int&gt;</div>
+<div class="tip" id="fs14">val folder : (int -&gt; Tree&lt;int&gt; -&gt; int)</div>
+<div class="tip" id="fs15">val m : int</div>
+<div class="tip" id="fs16">val t&#39; : Tree&lt;int&gt;</div>
+<div class="tip" id="fs17">Multiple items<br />val int : value:&#39;T -&gt; int (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.int<br /><br />--------------------<br />type int = int32<br /><br />Full name: Microsoft.FSharp.Core.int<br /><br />--------------------<br />type int&lt;&#39;Measure&gt; = int<br /><br />Full name: Microsoft.FSharp.Core.int&lt;_&gt;</div>
+<div class="tip" id="fs18">val v : int</div>
+<div class="tip" id="fs19">val testTree : Tree&lt;int&gt;<br /><br />Full name: Script.testTree</div>
+

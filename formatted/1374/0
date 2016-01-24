@@ -1,0 +1,71 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">module</span> <span class="t">Email</span> <span class="o">=</span>
+    <span class="k">type</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="t">EmailAddress</span> <span class="o">=</span>
+        <span class="k">private</span>
+        | <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="p">ValidEmail</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="t">string</span>
+        | <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="p">InvalidEmail</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs3', 5)" onmouseover="showTip(event, 'fs3', 5)" class="t">string</span>
+    
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs5', 6)" onmouseover="showTip(event, 'fs5', 6)" class="f">ofString</span> <span class="o">=</span> <span class="k">function</span>
+        | <span class="s">&quot;validEmail&quot;</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs2', 7)" onmouseover="showTip(event, 'fs2', 7)" class="p">ValidEmail</span> <span class="s">&quot;validEmail&quot;</span>
+        | <span onmouseout="hideTip(event, 'fs6', 8)" onmouseover="showTip(event, 'fs6', 8)" class="i">invalid</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs4', 9)" onmouseover="showTip(event, 'fs4', 9)" class="p">InvalidEmail</span> <span onmouseout="hideTip(event, 'fs6', 10)" onmouseover="showTip(event, 'fs6', 10)" class="i">invalid</span> 
+    
+    <span class="k">let</span> (|<span onmouseout="hideTip(event, 'fs2', 11)" onmouseover="showTip(event, 'fs2', 11)" class="p">ValidEmail</span>|<span onmouseout="hideTip(event, 'fs4', 12)" onmouseover="showTip(event, 'fs4', 12)" class="p">InvalidEmail</span>|) <span class="o">=</span> <span class="k">function</span>
+        | <span class="p">ValidEmail</span> <span onmouseout="hideTip(event, 'fs7', 13)" onmouseover="showTip(event, 'fs7', 13)" class="i">email</span> <span class="k">-&gt;</span> <span class="p">ValidEmail</span> <span onmouseout="hideTip(event, 'fs7', 14)" onmouseover="showTip(event, 'fs7', 14)" class="i">email</span>
+        | <span class="p">InvalidEmail</span> <span onmouseout="hideTip(event, 'fs7', 15)" onmouseover="showTip(event, 'fs7', 15)" class="i">email</span> <span class="k">-&gt;</span> <span class="p">InvalidEmail</span> <span onmouseout="hideTip(event, 'fs7', 16)" onmouseover="showTip(event, 'fs7', 16)" class="i">email</span>
+
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs8', 17)" onmouseover="showTip(event, 'fs8', 17)" class="i">Email</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs9', 18)" onmouseover="showTip(event, 'fs9', 18)" class="i">invalid</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs8', 19)" onmouseover="showTip(event, 'fs8', 19)" class="t">Email</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs5', 20)" onmouseover="showTip(event, 'fs5', 20)" class="f">ofString</span> <span class="s">&quot;invalid&quot;</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs10', 21)" onmouseover="showTip(event, 'fs10', 21)" class="i">valid</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs8', 22)" onmouseover="showTip(event, 'fs8', 22)" class="t">Email</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs5', 23)" onmouseover="showTip(event, 'fs5', 23)" class="f">ofString</span> <span class="s">&quot;validEmail&quot;</span>
+
+<span class="k">match</span> <span onmouseout="hideTip(event, 'fs9', 24)" onmouseover="showTip(event, 'fs9', 24)" class="i">invalid</span> <span class="k">with</span>
+| <span onmouseout="hideTip(event, 'fs11', 25)" onmouseover="showTip(event, 'fs11', 25)" class="p">InvalidEmail</span> <span onmouseout="hideTip(event, 'fs6', 26)" onmouseover="showTip(event, 'fs6', 26)" class="i">invalid</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs12', 27)" onmouseover="showTip(event, 'fs12', 27)" class="f">printfn</span> <span class="s">&quot;invalid was InvalidEmail </span><span class="pf">%s</span><span class="s">&quot;</span> <span onmouseout="hideTip(event, 'fs6', 28)" onmouseover="showTip(event, 'fs6', 28)" class="i">invalid</span>
+| <span onmouseout="hideTip(event, 'fs13', 29)" onmouseover="showTip(event, 'fs13', 29)" class="p">ValidEmail</span> <span onmouseout="hideTip(event, 'fs14', 30)" onmouseover="showTip(event, 'fs14', 30)" class="i">valid</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs12', 31)" onmouseover="showTip(event, 'fs12', 31)" class="f">printfn</span> <span class="s">&quot;invalid was ValidEmail </span><span class="pf">%s</span><span class="s">&quot;</span> <span onmouseout="hideTip(event, 'fs14', 32)" onmouseover="showTip(event, 'fs14', 32)" class="i">valid</span>
+
+<span class="k">match</span> <span onmouseout="hideTip(event, 'fs14', 33)" onmouseover="showTip(event, 'fs14', 33)" class="i">valid</span> <span class="k">with</span>
+| <span onmouseout="hideTip(event, 'fs11', 34)" onmouseover="showTip(event, 'fs11', 34)" class="p">InvalidEmail</span> <span onmouseout="hideTip(event, 'fs6', 35)" onmouseover="showTip(event, 'fs6', 35)" class="i">invalid</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs12', 36)" onmouseover="showTip(event, 'fs12', 36)" class="f">printfn</span> <span class="s">&quot;valid was InvalidEmail </span><span class="pf">%s</span><span class="s">&quot;</span> <span onmouseout="hideTip(event, 'fs6', 37)" onmouseover="showTip(event, 'fs6', 37)" class="i">invalid</span>
+| <span onmouseout="hideTip(event, 'fs13', 38)" onmouseover="showTip(event, 'fs13', 38)" class="p">ValidEmail</span> <span onmouseout="hideTip(event, 'fs14', 39)" onmouseover="showTip(event, 'fs14', 39)" class="i">valid</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs12', 40)" onmouseover="showTip(event, 'fs12', 40)" class="f">printfn</span> <span class="s">&quot;valid was ValidEmail </span><span class="pf">%s</span><span class="s">&quot;</span> <span onmouseout="hideTip(event, 'fs14', 41)" onmouseover="showTip(event, 'fs14', 41)" class="i">valid</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">type EmailAddress =<br />&#160;&#160;private | ValidEmail of string<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| InvalidEmail of string<br /><br />Full name: Script.Email.EmailAddress</div>
+<div class="tip" id="fs2">union case EmailAddress.ValidEmail: string -&gt; EmailAddress</div>
+<div class="tip" id="fs3">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />Full name: Microsoft.FSharp.Core.Operators.string<br /><br />--------------------<br />type string = System.String<br /><br />Full name: Microsoft.FSharp.Core.string</div>
+<div class="tip" id="fs4">union case EmailAddress.InvalidEmail: string -&gt; EmailAddress</div>
+<div class="tip" id="fs5">val ofString : _arg1:string -&gt; EmailAddress<br /><br />Full name: Script.Email.ofString</div>
+<div class="tip" id="fs6">val invalid : string</div>
+<div class="tip" id="fs7">val email : string</div>
+<div class="tip" id="fs8">module Email<br /><br />from Script</div>
+<div class="tip" id="fs9">val invalid : EmailAddress<br /><br />Full name: Script.invalid</div>
+<div class="tip" id="fs10">val valid : EmailAddress<br /><br />Full name: Script.valid</div>
+<div class="tip" id="fs11">active recognizer InvalidEmail: EmailAddress -&gt; Choice&lt;string,string&gt;<br /><br />Full name: Script.Email.( |ValidEmail|InvalidEmail| )</div>
+<div class="tip" id="fs12">val printfn : format:Printf.TextWriterFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.printfn</div>
+<div class="tip" id="fs13">active recognizer ValidEmail: EmailAddress -&gt; Choice&lt;string,string&gt;<br /><br />Full name: Script.Email.( |ValidEmail|InvalidEmail| )</div>
+<div class="tip" id="fs14">val valid : string</div>
+

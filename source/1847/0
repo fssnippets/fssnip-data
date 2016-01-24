@@ -1,0 +1,79 @@
+open System.IO
+open System.Text.RegularExpressions
+
+type BookData =
+    {
+        FileName: string
+        WordFreqs: (string * float) list
+    }
+
+let removeBad str =
+    Regex.Replace(str, "[^a-zA-Z]", " ")
+
+let genCounts (mapCounts:Map<string,int>) str =
+    match mapCounts.ContainsKey str with
+    | true -> mapCounts.Add (str, mapCounts.[str] + 1)
+    | false -> mapCounts.Add (str,1)
+   
+let mostCommonWords (str:string) numWords =
+    let allWords = str.Split([|' ';'\r';'\n';'-'|], System.StringSplitOptions.RemoveEmptyEntries)
+    let (wordCount:float) = float allWords.Length
+
+    allWords
+    |> Array.filter (fun key -> key.Length > 8)
+    |> Array.fold genCounts Map.empty
+    |> Map.toArray
+    |> Array.map ( fun (word,count) -> (word, float count / wordCount) )
+    |> Array.sortByDescending (fun (key,value) -> value)
+    |> Array.take numWords
+    |> Array.toList
+
+let processBooks() : seq<BookData> =
+    let dirInfo = new DirectoryInfo("./Mystery Files")
+    seq {for file in dirInfo.GetFiles("*.txt") do
+            //printfn "%s" file.FullName
+
+            // scan : ('State -> 'T -> 'State) -> 'State -> 'T list -> 'State list
+
+            let contents = File.ReadAllLines(file.FullName) 
+                           |> Array.scan (fun state line ->
+                             let foundCutoff = line.Contains("*** START: FULL LICENSE ***")
+                             match state,foundCutoff with
+                             | Some _,true -> None
+                             | Some _,false -> Some line
+                             | None, _ -> None) (Some "")
+                           |> Array.filter (fun strOpt -> Option.isSome strOpt)
+                           |> Array.map (fun strOpt -> strOpt.Value) 
+                           |> Array.fold (fun state line -> state + " " + line) ""
+
+            let book = { FileName = file.FullName; WordFreqs = (mostCommonWords (removeBad (contents.ToLower())) 10)}
+            yield book }
+
+[<EntryPoint>]
+let main argv = 
+    //printfn "%A" argv
+    let allBooks = processBooks()
+    let combinedWords =
+        allBooks
+        |> Seq.map (fun bookData -> bookData.WordFreqs )
+        |> Seq.concat
+        |> Seq.map fst
+        |> Seq.fold genCounts Map.empty
+    combinedWords |> Map.iter (fun key value -> printfn "%s:%d" key value) 
+
+    //allBooks |> (fun listValues -> printfn "%A" listValues)
+    //printfn "%A" allBooks
+
+    let allBooksWithUnique =
+        allBooks
+        |> Seq.map (fun bookData ->
+            let uniqWords = bookData.WordFreqs
+                            |> List.filter (fun (word,_) -> combinedWords.[word] = 1 )
+            { bookData with WordFreqs = uniqWords} )
+    allBooksWithUnique |> Seq.iter (fun bookData -> printfn "%s\n%A\n\n" bookData.FileName bookData.WordFreqs)    
+    
+
+
+
+
+    0 // return an integer exit code

@@ -1,0 +1,10 @@
+/// Takes an array and splits it to arrays of arrays
+let slice (myArray : _[]) = 
+    let chunkSize = 800
+    match myArray.Length <= chunkSize with
+    | true -> [|myArray|]
+    | false -> 
+        myArray
+        |> Array.mapi (fun i x -> i,x)
+        |> Array.groupBy (fun (i,x) -> i / chunkSize)
+        |> Array.map (snd >> Array.map snd)

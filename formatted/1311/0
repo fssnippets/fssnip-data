@@ -1,0 +1,84 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">System</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 2)" onmouseover="showTip(event, 'fs1', 2)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 3)" onmouseover="showTip(event, 'fs2', 3)" class="i">IO</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 4)" onmouseover="showTip(event, 'fs1', 4)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 5)" onmouseover="showTip(event, 'fs3', 5)" class="i">Text</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs4', 6)" onmouseover="showTip(event, 'fs4', 6)" class="f">hexdump</span> (<span onmouseout="hideTip(event, 'fs5', 7)" onmouseover="showTip(event, 'fs5', 7)" class="i">bytes</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs6', 8)" onmouseover="showTip(event, 'fs6', 8)" class="t">byte</span>[]) <span class="o">=</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs7', 9)" onmouseover="showTip(event, 'fs7', 9)" class="i">memStream</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs8', 10)" onmouseover="showTip(event, 'fs8', 10)" class="t">MemoryStream</span>(<span onmouseout="hideTip(event, 'fs5', 11)" onmouseover="showTip(event, 'fs5', 11)" class="i">bytes</span>)
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs9', 12)" onmouseover="showTip(event, 'fs9', 12)" class="i">buffer</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs10', 13)" onmouseover="showTip(event, 'fs10', 13)" class="t">Array</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs11', 14)" onmouseover="showTip(event, 'fs11', 14)" class="f">zeroCreate</span> <span class="n">16</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs12', 15)" onmouseover="showTip(event, 'fs12', 15)" class="v">read</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs13', 16)" onmouseover="showTip(event, 'fs13', 16)" class="f">ref</span> <span class="n">1</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs14', 17)" onmouseover="showTip(event, 'fs14', 17)" class="v">totalRead</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs13', 18)" onmouseover="showTip(event, 'fs13', 18)" class="f">ref</span> <span class="n">0</span>
+    <span class="k">while</span> <span class="o">!</span><span onmouseout="hideTip(event, 'fs12', 19)" onmouseover="showTip(event, 'fs12', 19)" class="v">read</span> <span class="o">&gt;</span> <span class="n">0</span> <span class="k">do</span>
+        <span onmouseout="hideTip(event, 'fs12', 20)" onmouseover="showTip(event, 'fs12', 20)" class="v">read</span> <span class="o">:=</span> <span onmouseout="hideTip(event, 'fs7', 21)" onmouseover="showTip(event, 'fs7', 21)" class="i">memStream</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs15', 22)" onmouseover="showTip(event, 'fs15', 22)" class="f">Read</span>(<span onmouseout="hideTip(event, 'fs9', 23)" onmouseover="showTip(event, 'fs9', 23)" class="i">buffer</span>, <span class="n">0</span>, <span onmouseout="hideTip(event, 'fs9', 24)" onmouseover="showTip(event, 'fs9', 24)" class="i">buffer</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs16', 25)" onmouseover="showTip(event, 'fs16', 25)" class="i">Length</span>)
+        <span onmouseout="hideTip(event, 'fs17', 26)" onmouseover="showTip(event, 'fs17', 26)" class="f">printf</span> <span class="s">&quot;</span><span class="pf">%08x</span><span class="s">  &quot;</span> <span class="o">!</span><span onmouseout="hideTip(event, 'fs14', 27)" onmouseover="showTip(event, 'fs14', 27)" class="v">totalRead</span>
+        <span class="k">for</span> <span onmouseout="hideTip(event, 'fs18', 28)" onmouseover="showTip(event, 'fs18', 28)" class="i">x</span> <span class="k">in</span> <span class="n">0</span> <span class="o">..</span> <span class="n">3</span> <span class="k">do</span> <span onmouseout="hideTip(event, 'fs17', 29)" onmouseover="showTip(event, 'fs17', 29)" class="f">printf</span> <span class="s">&quot;</span><span class="pf">%02x</span><span class="s"> &quot;</span> <span onmouseout="hideTip(event, 'fs9', 30)" onmouseover="showTip(event, 'fs9', 30)" class="i">buffer</span><span class="o">.</span>[<span onmouseout="hideTip(event, 'fs18', 31)" onmouseover="showTip(event, 'fs18', 31)" class="i">x</span>]
+        <span onmouseout="hideTip(event, 'fs17', 32)" onmouseover="showTip(event, 'fs17', 32)" class="f">printf</span> <span class="s">&quot; &quot;</span>
+        <span class="k">for</span> <span onmouseout="hideTip(event, 'fs18', 33)" onmouseover="showTip(event, 'fs18', 33)" class="i">x</span> <span class="k">in</span> <span class="n">4</span> <span class="o">..</span> <span class="n">7</span> <span class="k">do</span> <span onmouseout="hideTip(event, 'fs17', 34)" onmouseover="showTip(event, 'fs17', 34)" class="f">printf</span> <span class="s">&quot;</span><span class="pf">%02x</span><span class="s"> &quot;</span> <span onmouseout="hideTip(event, 'fs9', 35)" onmouseover="showTip(event, 'fs9', 35)" class="i">buffer</span><span class="o">.</span>[<span onmouseout="hideTip(event, 'fs18', 36)" onmouseover="showTip(event, 'fs18', 36)" class="i">x</span>]
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs19', 37)" onmouseover="showTip(event, 'fs19', 37)" class="i">chars</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs20', 38)" onmouseover="showTip(event, 'fs20', 38)" class="t">Encoding</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs21', 39)" onmouseover="showTip(event, 'fs21', 39)" class="i">ASCII</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs22', 40)" onmouseover="showTip(event, 'fs22', 40)" class="f">GetChars</span>(<span onmouseout="hideTip(event, 'fs9', 41)" onmouseover="showTip(event, 'fs9', 41)" class="i">buffer</span>)
+        <span onmouseout="hideTip(event, 'fs17', 42)" onmouseover="showTip(event, 'fs17', 42)" class="f">printf</span> <span class="s">&quot;  |&quot;</span>
+        <span class="k">for</span> <span onmouseout="hideTip(event, 'fs23', 43)" onmouseover="showTip(event, 'fs23', 43)" class="i">x</span> <span class="k">in</span> <span onmouseout="hideTip(event, 'fs19', 44)" onmouseover="showTip(event, 'fs19', 44)" class="i">chars</span> <span class="k">do</span>
+            <span class="k">let</span> <span onmouseout="hideTip(event, 'fs24', 45)" onmouseover="showTip(event, 'fs24', 45)" class="i">printChar</span> <span class="o">=</span>
+                <span class="k">if</span> <span onmouseout="hideTip(event, 'fs25', 46)" onmouseover="showTip(event, 'fs25', 46)" class="t">Char</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs26', 47)" onmouseover="showTip(event, 'fs26', 47)" class="f">IsControl</span>(<span onmouseout="hideTip(event, 'fs23', 48)" onmouseover="showTip(event, 'fs23', 48)" class="i">x</span>) <span class="k">then</span>
+                    <span class="s">&#39;.&#39;</span>
+                <span class="k">else</span>
+                    <span onmouseout="hideTip(event, 'fs23', 49)" onmouseover="showTip(event, 'fs23', 49)" class="i">x</span>
+            <span onmouseout="hideTip(event, 'fs17', 50)" onmouseover="showTip(event, 'fs17', 50)" class="f">printf</span> <span class="s">&quot;</span><span class="pf">%c</span><span class="s">&quot;</span> <span onmouseout="hideTip(event, 'fs24', 51)" onmouseover="showTip(event, 'fs24', 51)" class="i">printChar</span>
+        <span onmouseout="hideTip(event, 'fs27', 52)" onmouseover="showTip(event, 'fs27', 52)" class="f">printfn</span> <span class="s">&quot;|&quot;</span>
+        <span onmouseout="hideTip(event, 'fs14', 53)" onmouseover="showTip(event, 'fs14', 53)" class="v">totalRead</span> <span class="o">:=</span> <span class="o">!</span><span onmouseout="hideTip(event, 'fs14', 54)" onmouseover="showTip(event, 'fs14', 54)" class="v">totalRead</span> <span class="o">+</span> <span class="o">!</span><span onmouseout="hideTip(event, 'fs12', 55)" onmouseover="showTip(event, 'fs12', 55)" class="v">read</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace System</div>
+<div class="tip" id="fs2">namespace System.IO</div>
+<div class="tip" id="fs3">namespace System.Text</div>
+<div class="tip" id="fs4">val hexdump : bytes:byte [] -&gt; unit<br /><br />Full name: Script.hexdump</div>
+<div class="tip" id="fs5">val bytes : byte []</div>
+<div class="tip" id="fs6">Multiple items<br />val byte : value:&#39;T -&gt; byte (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.byte<br /><br />--------------------<br />type byte = Byte<br /><br />Full name: Microsoft.FSharp.Core.byte</div>
+<div class="tip" id="fs7">val memStream : MemoryStream</div>
+<div class="tip" id="fs8">Multiple items<br />type MemoryStream =<br />&#160;&#160;inherit Stream<br />&#160;&#160;new : unit -&gt; MemoryStream + 6 overloads<br />&#160;&#160;member CanRead : bool<br />&#160;&#160;member CanSeek : bool<br />&#160;&#160;member CanWrite : bool<br />&#160;&#160;member Capacity : int with get, set<br />&#160;&#160;member Flush : unit -&gt; unit<br />&#160;&#160;member GetBuffer : unit -&gt; byte[]<br />&#160;&#160;member Length : int64<br />&#160;&#160;member Position : int64 with get, set<br />&#160;&#160;member Read : buffer:byte[] * offset:int * count:int -&gt; int<br />&#160;&#160;...<br /><br />Full name: System.IO.MemoryStream<br /><br />--------------------<br />MemoryStream() : unit<br />MemoryStream(capacity: int) : unit<br />MemoryStream(buffer: byte []) : unit<br />MemoryStream(buffer: byte [], writable: bool) : unit<br />MemoryStream(buffer: byte [], index: int, count: int) : unit<br />MemoryStream(buffer: byte [], index: int, count: int, writable: bool) : unit<br />MemoryStream(buffer: byte [], index: int, count: int, writable: bool, publiclyVisible: bool) : unit</div>
+<div class="tip" id="fs9">val buffer : byte []</div>
+<div class="tip" id="fs10">type Array =<br />&#160;&#160;member Clone : unit -&gt; obj<br />&#160;&#160;member CopyTo : array:Array * index:int -&gt; unit + 1 overload<br />&#160;&#160;member GetEnumerator : unit -&gt; IEnumerator<br />&#160;&#160;member GetLength : dimension:int -&gt; int<br />&#160;&#160;member GetLongLength : dimension:int -&gt; int64<br />&#160;&#160;member GetLowerBound : dimension:int -&gt; int<br />&#160;&#160;member GetUpperBound : dimension:int -&gt; int<br />&#160;&#160;member GetValue : [&lt;ParamArray&gt;] indices:int[] -&gt; obj + 7 overloads<br />&#160;&#160;member Initialize : unit -&gt; unit<br />&#160;&#160;member IsFixedSize : bool<br />&#160;&#160;...<br /><br />Full name: System.Array</div>
+<div class="tip" id="fs11">val zeroCreate : count:int -&gt; &#39;T []<br /><br />Full name: Microsoft.FSharp.Collections.Array.zeroCreate</div>
+<div class="tip" id="fs12">val read : int ref</div>
+<div class="tip" id="fs13">Multiple items<br />val ref : value:&#39;T -&gt; &#39;T ref<br /><br />Full name: Microsoft.FSharp.Core.Operators.ref<br /><br />--------------------<br />type &#39;T ref = Ref&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Core.ref&lt;_&gt;</div>
+<div class="tip" id="fs14">val totalRead : int ref</div>
+<div class="tip" id="fs15">MemoryStream.Read(buffer: byte [], offset: int, count: int) : int</div>
+<div class="tip" id="fs16">property Array.Length: int</div>
+<div class="tip" id="fs17">val printf : format:Printf.TextWriterFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.printf</div>
+<div class="tip" id="fs18">val x : int32</div>
+<div class="tip" id="fs19">val chars : char []</div>
+<div class="tip" id="fs20">type Encoding =<br />&#160;&#160;member BodyName : string<br />&#160;&#160;member Clone : unit -&gt; obj<br />&#160;&#160;member CodePage : int<br />&#160;&#160;member DecoderFallback : DecoderFallback with get, set<br />&#160;&#160;member EncoderFallback : EncoderFallback with get, set<br />&#160;&#160;member EncodingName : string<br />&#160;&#160;member Equals : value:obj -&gt; bool<br />&#160;&#160;member GetByteCount : chars:char[] -&gt; int + 3 overloads<br />&#160;&#160;member GetBytes : chars:char[] -&gt; byte[] + 5 overloads<br />&#160;&#160;member GetCharCount : bytes:byte[] -&gt; int + 2 overloads<br />&#160;&#160;...<br /><br />Full name: System.Text.Encoding</div>
+<div class="tip" id="fs21">property Encoding.ASCII: Encoding</div>
+<div class="tip" id="fs22">Encoding.GetChars(bytes: byte []) : char []<br />Encoding.GetChars(bytes: byte [], index: int, count: int) : char []<br />Encoding.GetChars(bytes: nativeptr&lt;byte&gt;, byteCount: int, chars: nativeptr&lt;char&gt;, charCount: int) : int<br />Encoding.GetChars(bytes: byte [], byteIndex: int, byteCount: int, chars: char [], charIndex: int) : int</div>
+<div class="tip" id="fs23">val x : char</div>
+<div class="tip" id="fs24">val printChar : char</div>
+<div class="tip" id="fs25">type Char =<br />&#160;&#160;struct<br />&#160;&#160;&#160;&#160;member CompareTo : value:obj -&gt; int + 1 overload<br />&#160;&#160;&#160;&#160;member Equals : obj:obj -&gt; bool + 1 overload<br />&#160;&#160;&#160;&#160;member GetHashCode : unit -&gt; int<br />&#160;&#160;&#160;&#160;member GetTypeCode : unit -&gt; TypeCode<br />&#160;&#160;&#160;&#160;member ToString : unit -&gt; string + 1 overload<br />&#160;&#160;&#160;&#160;static val MaxValue : char<br />&#160;&#160;&#160;&#160;static val MinValue : char<br />&#160;&#160;&#160;&#160;static member ConvertFromUtf32 : utf32:int -&gt; string<br />&#160;&#160;&#160;&#160;static member ConvertToUtf32 : highSurrogate:char * lowSurrogate:char -&gt; int + 1 overload<br />&#160;&#160;&#160;&#160;static member GetNumericValue : c:char -&gt; float + 1 overload<br />&#160;&#160;&#160;&#160;...<br />&#160;&#160;end<br /><br />Full name: System.Char</div>
+<div class="tip" id="fs26">Char.IsControl(c: char) : bool<br />Char.IsControl(s: string, index: int) : bool</div>
+<div class="tip" id="fs27">val printfn : format:Printf.TextWriterFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.printfn</div>
+

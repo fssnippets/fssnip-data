@@ -1,0 +1,22 @@
+open LanguagePrimitives
+
+type NumericConversions = NumericConversions with
+  // Add more conversions below as you see fit.
+  static member inline convert(x : int, _ : int) = int x
+  static member inline convert(x : int, _ : float) = float x
+  static member inline convert(x : int, _ : float32) = float32 x
+  static member inline convert(x : float, _ : int) = int x
+  static member inline convert(x : float, _ : float) = float x
+  static member inline convert(x : float, _ : float32) = float32 x
+  static member inline convert(x : float32, _ : int) = int x
+  static member inline convert(x : float32, _ : float) = float x
+  static member inline convert(x : float32, _ : float32) = float32 x
+
+// (Note that tooltips may be messed up because the snippet site compiler reports some bogus error - I don't know why.)
+let inline convertNumericInstance(a : ^a, b : ^b, c : ^c) = ((^a or ^b or ^c) : (static member convert : ^b * ^c -> ^c) (b, c))
+
+/// This function complements the generic numeric literal G by providing generic conversions of numbers using type inference.
+let inline G x = convertNumericInstance(NumericConversions, x, GenericZero)
+
+/// Example: the (normalized) sinc function. It uses the conversion function G to adopt pi to the inferred type.
+let inline sinc x = if x = GenericZero then GenericOne else let px = G System.Math.PI * x in sin(px) / px

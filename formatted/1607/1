@@ -1,0 +1,70 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">// Create Console-application, then NuGet: Install-Package Akka</span>
+<span class="k">module</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="t">AkkaConsoleApplication</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">Akka</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs2', 3)" onmouseover="showTip(event, 'fs2', 3)" class="i">Akka</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 4)" onmouseover="showTip(event, 'fs3', 4)" class="i">Actor</span>
+ 
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs4', 5)" onmouseover="showTip(event, 'fs4', 5)" class="t">Greet</span>(<span onmouseout="hideTip(event, 'fs5', 6)" onmouseover="showTip(event, 'fs5', 6)" class="i">who</span>) <span class="o">=</span>
+    <span class="k">member</span> <span onmouseout="hideTip(event, 'fs6', 7)" onmouseover="showTip(event, 'fs6', 7)" class="i">x</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs7', 8)" onmouseover="showTip(event, 'fs7', 8)" class="i">Who</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs5', 9)" onmouseover="showTip(event, 'fs5', 9)" class="i">who</span>
+ 
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs8', 10)" onmouseover="showTip(event, 'fs8', 10)" class="t">GreetingActor</span>() <span class="k">as</span> <span onmouseout="hideTip(event, 'fs9', 11)" onmouseover="showTip(event, 'fs9', 11)" class="v">g</span> <span class="o">=</span>
+    <span class="k">inherit</span> <span onmouseout="hideTip(event, 'fs10', 12)" onmouseover="showTip(event, 'fs10', 12)" class="t">ReceiveActor</span>()
+    <span class="k">do</span> <span onmouseout="hideTip(event, 'fs9', 13)" onmouseover="showTip(event, 'fs9', 13)" class="v">g</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs11', 14)" onmouseover="showTip(event, 'fs11', 14)" class="f">Receive</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs4', 15)" onmouseover="showTip(event, 'fs4', 15)" class="t">Greet</span><span class="o">&gt;</span>(<span class="k">fun</span> (<span onmouseout="hideTip(event, 'fs12', 16)" onmouseover="showTip(event, 'fs12', 16)" class="i">greet</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs4', 17)" onmouseover="showTip(event, 'fs4', 17)" class="t">Greet</span>) <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs13', 18)" onmouseover="showTip(event, 'fs13', 18)" class="f">printfn</span> <span class="s">&quot;Hello </span><span class="pf">%s</span><span class="s">&quot;</span> <span onmouseout="hideTip(event, 'fs12', 19)" onmouseover="showTip(event, 'fs12', 19)" class="i">greet</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs14', 20)" onmouseover="showTip(event, 'fs14', 20)" class="i">Who</span>)
+ 
+[&lt;<span onmouseout="hideTip(event, 'fs15', 21)" onmouseover="showTip(event, 'fs15', 21)" class="t">EntryPoint</span>&gt;]  <span class="c">// Works also from F#-Interactive.</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs16', 22)" onmouseover="showTip(event, 'fs16', 22)" class="f">main</span> <span onmouseout="hideTip(event, 'fs17', 23)" onmouseover="showTip(event, 'fs17', 23)" class="i">argv</span> <span class="o">=</span> <span class="c">// More details: http://getakka.net/docs/Getting%20started</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs18', 24)" onmouseover="showTip(event, 'fs18', 24)" class="i">system</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs19', 25)" onmouseover="showTip(event, 'fs19', 25)" class="t">ActorSystem</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs20', 26)" onmouseover="showTip(event, 'fs20', 26)" class="f">Create</span> <span class="s">&quot;MySystem&quot;</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs21', 27)" onmouseover="showTip(event, 'fs21', 27)" class="i">greeter</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs18', 28)" onmouseover="showTip(event, 'fs18', 28)" class="i">system</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs22', 29)" onmouseover="showTip(event, 'fs22', 29)" class="f">ActorOf</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs8', 30)" onmouseover="showTip(event, 'fs8', 30)" class="t">GreetingActor</span><span class="o">&gt;</span> <span class="s">&quot;greeter&quot;</span>
+    <span class="s">&quot;World&quot;</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs4', 31)" onmouseover="showTip(event, 'fs4', 31)" class="t">Greet</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs21', 32)" onmouseover="showTip(event, 'fs21', 32)" class="i">greeter</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs23', 33)" onmouseover="showTip(event, 'fs23', 33)" class="f">Tell</span>
+    <span onmouseout="hideTip(event, 'fs24', 34)" onmouseover="showTip(event, 'fs24', 34)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs25', 35)" onmouseover="showTip(event, 'fs25', 35)" class="t">Console</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs26', 36)" onmouseover="showTip(event, 'fs26', 36)" class="f">ReadLine</span>() <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs27', 37)" onmouseover="showTip(event, 'fs27', 37)" class="f">ignore</span>
+    <span class="n">0</span> <span class="c">// return an integer exit code</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">module AkkaConsoleApplication</div>
+<div class="tip" id="fs2">namespace Akka</div>
+<div class="tip" id="fs3">namespace Akka.Actor</div>
+<div class="tip" id="fs4">Multiple items<br />type Greet =<br />&#160;&#160;new : who:string -&gt; Greet<br />&#160;&#160;member Who : string<br /><br />Full name: AkkaConsoleApplication.Greet<br /><br />--------------------<br />new : who:string -&gt; Greet</div>
+<div class="tip" id="fs5">val who : string</div>
+<div class="tip" id="fs6">val x : Greet</div>
+<div class="tip" id="fs7">member Greet.Who : string<br /><br />Full name: AkkaConsoleApplication.Greet.Who</div>
+<div class="tip" id="fs8">Multiple items<br />type GreetingActor =<br />&#160;&#160;inherit ReceiveActor<br />&#160;&#160;new : unit -&gt; GreetingActor<br /><br />Full name: AkkaConsoleApplication.GreetingActor<br /><br />--------------------<br />new : unit -&gt; GreetingActor</div>
+<div class="tip" id="fs9">val g : GreetingActor</div>
+<div class="tip" id="fs10">Multiple items<br />type ReceiveActor =<br />&#160;&#160;inherit UntypedActor<br /><br />Full name: Akka.Actor.ReceiveActor<br /><br />--------------------<br />ReceiveActor() : unit</div>
+<div class="tip" id="fs11">type Receive =<br />&#160;&#160;delegate of obj -&gt; bool<br /><br />Full name: Akka.Actor.Receive</div>
+<div class="tip" id="fs12">val greet : Greet</div>
+<div class="tip" id="fs13">val printfn : format:Printf.TextWriterFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.printfn</div>
+<div class="tip" id="fs14">property Greet.Who: string</div>
+<div class="tip" id="fs15">Multiple items<br />type EntryPointAttribute =<br />&#160;&#160;inherit Attribute<br />&#160;&#160;new : unit -&gt; EntryPointAttribute<br /><br />Full name: Microsoft.FSharp.Core.EntryPointAttribute<br /><br />--------------------<br />new : unit -&gt; EntryPointAttribute</div>
+<div class="tip" id="fs16">val main : argv:string [] -&gt; int<br /><br />Full name: AkkaConsoleApplication.main</div>
+<div class="tip" id="fs17">val argv : string []</div>
+<div class="tip" id="fs18">val system : ActorSystem</div>
+<div class="tip" id="fs19">type ActorSystem =<br />&#160;&#160;member ActorOf : props:Props * ?name:string -&gt; IActorRef<br />&#160;&#160;member ActorSelection : actorPath:ActorPath -&gt; ActorSelection + 1 overload<br />&#160;&#160;member AwaitTermination : unit -&gt; unit + 2 overloads<br />&#160;&#160;member DeadLetters : IActorRef<br />&#160;&#160;member Dispatchers : Dispatchers<br />&#160;&#160;member Dispose : unit -&gt; unit<br />&#160;&#160;member EventStream : EventStream<br />&#160;&#160;member GetExtension&lt;&#39;T&gt; : unit -&gt; &#39;T + 1 overload<br />&#160;&#160;member HasExtension&lt;&#39;T&gt; : unit -&gt; bool + 1 overload<br />&#160;&#160;member Log : ILoggingAdapter<br />&#160;&#160;...<br /><br />Full name: Akka.Actor.ActorSystem</div>
+<div class="tip" id="fs20">ActorSystem.Create(name: string) : ActorSystem<br />ActorSystem.Create(name: string, config: Configuration.Config) : ActorSystem</div>
+<div class="tip" id="fs21">val greeter : IActorRef</div>
+<div class="tip" id="fs22">(extension) IActorRefFactory.ActorOf&lt;&#39;TActor (requires default constructor and &#39;TActor :&gt; ActorBase)&gt;(?name: string) : IActorRef<br />ActorSystem.ActorOf(props: Props, ?name: string) : IActorRef</div>
+<div class="tip" id="fs23">(extension) IActorRef.Tell(message: obj) : unit<br />ICanTell.Tell(message: obj, sender: IActorRef) : unit</div>
+<div class="tip" id="fs24">namespace System</div>
+<div class="tip" id="fs25">type Console =<br />&#160;&#160;static member BackgroundColor : ConsoleColor with get, set<br />&#160;&#160;static member Beep : unit -&gt; unit + 1 overload<br />&#160;&#160;static member BufferHeight : int with get, set<br />&#160;&#160;static member BufferWidth : int with get, set<br />&#160;&#160;static member CapsLock : bool<br />&#160;&#160;static member Clear : unit -&gt; unit<br />&#160;&#160;static member CursorLeft : int with get, set<br />&#160;&#160;static member CursorSize : int with get, set<br />&#160;&#160;static member CursorTop : int with get, set<br />&#160;&#160;static member CursorVisible : bool with get, set<br />&#160;&#160;...<br /><br />Full name: System.Console</div>
+<div class="tip" id="fs26">System.Console.ReadLine() : string</div>
+<div class="tip" id="fs27">val ignore : value:&#39;T -&gt; unit<br /><br />Full name: Microsoft.FSharp.Core.Operators.ignore</div>
+

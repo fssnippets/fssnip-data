@@ -1,0 +1,171 @@
+<h2><a name="Description" class="anchor" href="#Description">Description</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----</span>
+<span class="c">// -- Copy text file but omit certain lines, i.e. keep only specified lines.</span>
+<span class="c">// ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----</span>
+
+<span class="c">// At work we had a semicolon separated file that was too large for the</span>
+<span class="c">// current Excel version. We knew we didn&#39;t need the entire file anyway.</span>
+<span class="c">// A colleague had Visual Studio and hence F# installed on his computer,</span>
+<span class="c">// so we filtered away everything except the lines containing particular</span>
+<span class="c">// key values that we needed. Soon after we had a small filtered copy of</span>
+<span class="c">// the csv file that we could easily load in Excel.</span>
+
+<span class="c">// In the example below, the lines (or rows) that are copied to the new</span>
+<span class="c">// text file are the ones that contain either the text &quot;;Some value;&quot; or</span>
+<span class="c">// &quot;;Some other value;&quot; (or both), which in practice turns out to be the</span>
+<span class="c">// rows where one of the separated values are either &quot;Some value&quot; or</span>
+<span class="c">// &quot;Some other value&quot;.</span>
+
+<span class="c">// In our case we knew that the key was so particular that there would</span>
+<span class="c">// be no possibility that we would end up with too many lines. In other</span>
+<span class="c">// cases maybe it wouldn&#39;t hurt to end up with too many lines as long as</span>
+<span class="c">// the resulting file is short enough to be imported to Excel.</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Script-definition" class="anchor" href="#Script-definition">Script definition</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">IO</span>
+
+
+<span class="c">/// Read all lines from UTF-8 encoded text file as a sequence.</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="f">linesFromFile</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="i">filename</span> <span class="o">=</span>
+    <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="i">seq</span> { <span class="k">use</span> <span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="i">reader</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs7', 7)" onmouseover="showTip(event, 'fs7', 7)" class="t">File</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs8', 8)" onmouseover="showTip(event, 'fs8', 8)" class="f">OpenText</span> <span onmouseout="hideTip(event, 'fs4', 9)" onmouseover="showTip(event, 'fs4', 9)" class="i">filename</span>
+          <span class="k">while</span> <span onmouseout="hideTip(event, 'fs9', 10)" onmouseover="showTip(event, 'fs9', 10)" class="f">not</span> <span onmouseout="hideTip(event, 'fs6', 11)" onmouseover="showTip(event, 'fs6', 11)" class="i">reader</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs10', 12)" onmouseover="showTip(event, 'fs10', 12)" class="i">EndOfStream</span>
+             <span class="k">do</span> <span class="k">yield</span> <span onmouseout="hideTip(event, 'fs6', 13)" onmouseover="showTip(event, 'fs6', 13)" class="i">reader</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs11', 14)" onmouseover="showTip(event, 'fs11', 14)" class="f">ReadLine</span> () }
+
+
+<span class="c">/// Create a new UTF-8 encoded text file and</span>
+<span class="c">/// write all lines from a sequence to the new file.</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs12', 15)" onmouseover="showTip(event, 'fs12', 15)" class="f">linesTofile</span> <span onmouseout="hideTip(event, 'fs4', 16)" onmouseover="showTip(event, 'fs4', 16)" class="i">filename</span> (<span onmouseout="hideTip(event, 'fs13', 17)" onmouseover="showTip(event, 'fs13', 17)" class="i">lines</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs14', 18)" onmouseover="showTip(event, 'fs14', 18)" class="t">string</span> <span onmouseout="hideTip(event, 'fs5', 19)" onmouseover="showTip(event, 'fs5', 19)" class="t">seq</span>) <span class="o">=</span>
+    <span class="k">use</span> <span onmouseout="hideTip(event, 'fs15', 20)" onmouseover="showTip(event, 'fs15', 20)" class="i">writer</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs7', 21)" onmouseover="showTip(event, 'fs7', 21)" class="t">File</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs16', 22)" onmouseover="showTip(event, 'fs16', 22)" class="f">CreateText</span> <span onmouseout="hideTip(event, 'fs4', 23)" onmouseover="showTip(event, 'fs4', 23)" class="i">filename</span>
+    <span class="k">for</span> <span onmouseout="hideTip(event, 'fs17', 24)" onmouseover="showTip(event, 'fs17', 24)" class="i">line</span> <span class="k">in</span> <span onmouseout="hideTip(event, 'fs13', 25)" onmouseover="showTip(event, 'fs13', 25)" class="i">lines</span>
+     <span class="k">do</span> <span onmouseout="hideTip(event, 'fs15', 26)" onmouseover="showTip(event, 'fs15', 26)" class="i">writer</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs18', 27)" onmouseover="showTip(event, 'fs18', 27)" class="f">WriteLine</span> <span onmouseout="hideTip(event, 'fs17', 28)" onmouseover="showTip(event, 'fs17', 28)" class="i">line</span>
+
+
+<span class="c">/// Filter to apply for each line.</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs19', 29)" onmouseover="showTip(event, 'fs19', 29)" class="f">lineFilter</span> <span onmouseout="hideTip(event, 'fs20', 30)" onmouseover="showTip(event, 'fs20', 30)" class="i">keeperPhrases</span> (<span onmouseout="hideTip(event, 'fs17', 31)" onmouseover="showTip(event, 'fs17', 31)" class="i">line</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs14', 32)" onmouseover="showTip(event, 'fs14', 32)" class="t">string</span>) <span class="o">=</span>
+    <span onmouseout="hideTip(event, 'fs21', 33)" onmouseover="showTip(event, 'fs21', 33)" class="t">Array</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs22', 34)" onmouseover="showTip(event, 'fs22', 34)" class="f">exists</span> <span onmouseout="hideTip(event, 'fs17', 35)" onmouseover="showTip(event, 'fs17', 35)" class="i">line</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs23', 36)" onmouseover="showTip(event, 'fs23', 36)" class="f">Contains</span> <span onmouseout="hideTip(event, 'fs20', 37)" onmouseover="showTip(event, 'fs20', 37)" class="i">keeperPhrases</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Usage-example" class="anchor" href="#Usage-example">Usage example</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp">[&lt;<span onmouseout="hideTip(event, 'fs24', 38)" onmouseover="showTip(event, 'fs24', 38)" class="t">Literal</span>&gt;]
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs25', 39)" onmouseover="showTip(event, 'fs25', 39)" class="i">inputfilename</span> <span class="o">=</span> <span class="s">@&quot;C:\inputfile.csv&quot;</span>
+
+[&lt;<span onmouseout="hideTip(event, 'fs24', 40)" onmouseover="showTip(event, 'fs24', 40)" class="t">Literal</span>&gt;]
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs26', 41)" onmouseover="showTip(event, 'fs26', 41)" class="i">outputfilename</span> <span class="o">=</span> <span class="s">@&quot;C:\filteredfile.csv&quot;</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs27', 42)" onmouseover="showTip(event, 'fs27', 42)" class="i">textToKeep</span> <span class="o">=</span> [| <span class="s">@&quot;;Some value;&quot;</span>; <span class="s">@&quot;;Some other value;&quot;</span> |]
+
+<span class="c">// When the final do command is issued the first file, named &quot;inputfile.csv&quot;,</span>
+<span class="c">// is made into a sequence of text lines (strings) that are read as they are</span>
+<span class="c">// needed.</span>
+<span class="c">// The sequence is filtered, so that some text lines are kept while others</span>
+<span class="c">// are skipped. The lines that are kept are those that contains the text</span>
+<span class="c">// &quot;;Some value;&quot; or &quot;;Some other value;&quot; (or both) somewhere in the line.</span>
+<span class="c">// The kept lines are written to the output file, named &quot;filteredfile.csv&quot;,</span>
+<span class="c">// as the the input file is processed.</span>
+
+<span class="c">// Read, filter and write sequence:</span>
+<span class="k">do</span> <span onmouseout="hideTip(event, 'fs3', 43)" onmouseover="showTip(event, 'fs3', 43)" class="f">linesFromFile</span> <span onmouseout="hideTip(event, 'fs25', 44)" onmouseover="showTip(event, 'fs25', 44)" class="i">inputfilename</span>
+   <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs28', 45)" onmouseover="showTip(event, 'fs28', 45)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs29', 46)" onmouseover="showTip(event, 'fs29', 46)" class="f">filter</span> (<span onmouseout="hideTip(event, 'fs19', 47)" onmouseover="showTip(event, 'fs19', 47)" class="f">lineFilter</span> <span onmouseout="hideTip(event, 'fs27', 48)" onmouseover="showTip(event, 'fs27', 48)" class="i">textToKeep</span>)
+   <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs12', 49)" onmouseover="showTip(event, 'fs12', 49)" class="f">linesTofile</span> <span onmouseout="hideTip(event, 'fs26', 50)" onmouseover="showTip(event, 'fs26', 50)" class="i">outputfilename</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace System</div>
+<div class="tip" id="fs2">namespace System.IO</div>
+<div class="tip" id="fs3">val linesFromFile : filename:string -&gt; seq&lt;string&gt;<br /><br />Full name: Script.linesFromFile<br /><em><br /><br />&#160;Read all lines from UTF-8 encoded text file as a sequence.</em></div>
+<div class="tip" id="fs4">val filename : string</div>
+<div class="tip" id="fs5">Multiple items<br />val seq : sequence:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Core.Operators.seq<br /><br />--------------------<br />type seq&lt;&#39;T&gt; = System.Collections.Generic.IEnumerable&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.seq&lt;_&gt;</div>
+<div class="tip" id="fs6">val reader : StreamReader</div>
+<div class="tip" id="fs7">type File =<br />&#160;&#160;static member AppendAllLines : path:string * contents:IEnumerable&lt;string&gt; -&gt; unit + 1 overload<br />&#160;&#160;static member AppendAllText : path:string * contents:string -&gt; unit + 1 overload<br />&#160;&#160;static member AppendText : path:string -&gt; StreamWriter<br />&#160;&#160;static member Copy : sourceFileName:string * destFileName:string -&gt; unit + 1 overload<br />&#160;&#160;static member Create : path:string -&gt; FileStream + 3 overloads<br />&#160;&#160;static member CreateText : path:string -&gt; StreamWriter<br />&#160;&#160;static member Decrypt : path:string -&gt; unit<br />&#160;&#160;static member Delete : path:string -&gt; unit<br />&#160;&#160;static member Encrypt : path:string -&gt; unit<br />&#160;&#160;static member Exists : path:string -&gt; bool<br />&#160;&#160;...<br /><br />Full name: System.IO.File</div>
+<div class="tip" id="fs8">File.OpenText(path: string) : StreamReader</div>
+<div class="tip" id="fs9">val not : value:bool -&gt; bool<br /><br />Full name: Microsoft.FSharp.Core.Operators.not</div>
+<div class="tip" id="fs10">property StreamReader.EndOfStream: bool</div>
+<div class="tip" id="fs11">StreamReader.ReadLine() : string</div>
+<div class="tip" id="fs12">val linesTofile : filename:string -&gt; lines:seq&lt;string&gt; -&gt; unit<br /><br />Full name: Script.linesTofile<br /><em><br /><br />&#160;Create a new UTF-8 encoded text file and<br />&#160;write all lines from a sequence to the new file.</em></div>
+<div class="tip" id="fs13">val lines : seq&lt;string&gt;</div>
+<div class="tip" id="fs14">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />Full name: Microsoft.FSharp.Core.Operators.string<br /><br />--------------------<br />type string = System.String<br /><br />Full name: Microsoft.FSharp.Core.string</div>
+<div class="tip" id="fs15">val writer : StreamWriter</div>
+<div class="tip" id="fs16">File.CreateText(path: string) : StreamWriter</div>
+<div class="tip" id="fs17">val line : string</div>
+<div class="tip" id="fs18">TextWriter.WriteLine() : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />TextWriter.WriteLine(value: obj) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />TextWriter.WriteLine(value: string) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />TextWriter.WriteLine(value: decimal) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />TextWriter.WriteLine(value: float) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />TextWriter.WriteLine(value: float32) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />TextWriter.WriteLine(value: uint64) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />TextWriter.WriteLine(value: int64) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />TextWriter.WriteLine(value: uint32) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />TextWriter.WriteLine(value: int) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em></div>
+<div class="tip" id="fs19">val lineFilter : keeperPhrases:string [] -&gt; line:string -&gt; bool<br /><br />Full name: Script.lineFilter<br /><em><br /><br />&#160;Filter to apply for each line.</em></div>
+<div class="tip" id="fs20">val keeperPhrases : string []</div>
+<div class="tip" id="fs21">module Array<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs22">val exists : predicate:(&#39;T -&gt; bool) -&gt; array:&#39;T [] -&gt; bool<br /><br />Full name: Microsoft.FSharp.Collections.Array.exists</div>
+<div class="tip" id="fs23">System.String.Contains(value: string) : bool</div>
+<div class="tip" id="fs24">Multiple items<br />type LiteralAttribute =<br />&#160;&#160;inherit Attribute<br />&#160;&#160;new : unit -&gt; LiteralAttribute<br /><br />Full name: Microsoft.FSharp.Core.LiteralAttribute<br /><br />--------------------<br />new : unit -&gt; LiteralAttribute</div>
+<div class="tip" id="fs25">val inputfilename : string<br /><br />Full name: Script.inputfilename</div>
+<div class="tip" id="fs26">val outputfilename : string<br /><br />Full name: Script.outputfilename</div>
+<div class="tip" id="fs27">val textToKeep : string []<br /><br />Full name: Script.textToKeep</div>
+<div class="tip" id="fs28">module Seq<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs29">val filter : predicate:(&#39;T -&gt; bool) -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.filter</div>
+

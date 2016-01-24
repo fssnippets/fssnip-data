@@ -1,0 +1,40 @@
+open System.IO
+
+/// Writes BMP binary data
+let write (writer:BinaryWriter) (pixels:int[][]) =
+   let height = pixels.Length
+   let width = pixels.[0].Length
+   let sizeOfBmpHeader = 14
+   let sizeOfDibHeader = 108
+   // BMP Header
+   writer.Write("BM"B)
+   writer.Write(sizeOfBmpHeader+sizeOfDibHeader+(4*width*height))  
+   writer.Write([|0uy;0uy|])  
+   writer.Write([|0uy;0uy|])
+   writer.Write(sizeOfBmpHeader+sizeOfDibHeader)
+   // DIB Header
+   writer.Write(sizeOfDibHeader)
+   writer.Write(width)
+   writer.Write(height)
+   writer.Write(1us)
+   writer.Write(32us)
+   writer.Write(3)
+   writer.Write(width*height*4)
+   writer.Write(2835)
+   writer.Write(2835)
+   writer.Write(0)
+   writer.Write(0)
+   writer.Write(0x00ff0000)
+   writer.Write(0x0000ff00)
+   writer.Write(0x000000ff)
+   writer.Write(0xff000000)
+   writer.Write("Win "B |> Array.rev)
+   writer.Write(Array.create 0x24 0uy)
+   writer.Write(0)
+   writer.Write(0)
+   writer.Write(0)
+   // Pixel Array
+   for i = pixels.Length-1 downto 0 do
+      let row = pixels.[i]
+      for pixel in row do
+         writer.Write(pixel)   

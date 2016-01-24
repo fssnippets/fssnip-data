@@ -1,0 +1,1 @@
+let es = String.collect(function '\r'->"\\r"|'\n'->"\\n"|'\t'->"\\t"|'"'->"\\\""|c->string c)

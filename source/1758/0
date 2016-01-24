@@ -1,0 +1,54 @@
+// Set here the path to FSharp.Data on your computer
+#r @"../NuGet/FSharp.Data.2.2.5/lib/net40/FSharp.Data.dll"
+#r "System.Xml.Linq.dll"
+
+open FSharp.Data
+open System.Xml.Linq
+open System.Reflection
+open FSharp.Quotations
+open FSharp.Quotations.Patterns
+open Microsoft.FSharp.Linq.RuntimeHelpers.LeafExpressionConverter
+
+type Xml =
+  static member private xel (o: obj) =
+    let pi = o.GetType().GetProperty("XElement")
+    if pi <> null && pi.PropertyType = typeof<XElement>
+    then pi.GetValue(o) |> unbox<XElement> |> Some
+    else None
+
+  static member inline Set([<ReflectedDefinition>] el: Expr< ^T >, v: ^T) =
+    match el with
+    | Let(_, Call(_, _, [parent; Value(:? string as name, _)]), _)
+    | Let(_, Call(_, _, [Call(_, _, [parent; Value(:? string as name, _)])]), _) ->
+      let parent =
+        EvaluateQuotation parent
+        |> Xml.xel
+        |> function Some x -> x | None -> failwith "Object must be XElement"
+      match parent.Attribute(XName.Get name) with
+      | null ->
+        parent.Element(XName.Get name).SetValue(v)
+      | att -> att.Value <- string v
+    | _ -> failwithf "Not supported expression:\n%A" el
+
+
+// Example
+type MyXml = XmlProvider<"http://www.w3schools.com/xml/simple.xml">
+let foodMenu = MyXml.Load("http://www.w3schools.com/xml/simple.xml")
+let waffles = foodMenu.Foods |> Seq.find (fun x -> x.Name.Contains("Waffles"))
+
+Xml.Set(waffles.Description, "Sugar bomb")
+//Xml.Set(waffles.Calories, "Plenty")         // Error, must be int
+//Xml.Set(waffles.Price, 10)                  // Error, must be decimal
+
+// Bonus: another helpful function... with duck typing :)
+let inline addChild (el: ^a when ^a : (member XElement: XElement))
+                    (child: ^b when ^b : (member XElement: XElement)) =
+  (^a: (member XElement: XElement) el).Add (^b: (member XElement: XElement) child)
+
+MyXml.Food(name = "Tortilla Española",
+           price = 1000M,
+           description = "Very tasty Spanish omelette",
+           calories = 0)
+|> addChild foodMenu
+
+foodMenu.XElement.Save("/temp/foodMenu.xml")

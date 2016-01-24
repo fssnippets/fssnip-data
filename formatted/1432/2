@@ -1,0 +1,92 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">module</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="t">ZipProvider</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="i">IO</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs2', 4)" onmouseover="showTip(event, 'fs2', 4)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 5)" onmouseover="showTip(event, 'fs3', 5)" class="i">IO</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs4', 6)" onmouseover="showTip(event, 'fs4', 6)" class="i">Compression</span>
+<span class="k">open</span> <span class="i">Samples</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs5', 7)" onmouseover="showTip(event, 'fs5', 7)" class="i">FSharp</span><span class="o">.</span><span class="i">ProvidedTypes</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs6', 8)" onmouseover="showTip(event, 'fs6', 8)" class="i">Microsoft</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs5', 9)" onmouseover="showTip(event, 'fs5', 9)" class="i">FSharp</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs7', 10)" onmouseover="showTip(event, 'fs7', 10)" class="i">Core</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs8', 11)" onmouseover="showTip(event, 'fs8', 11)" class="i">CompilerServices</span>
+
+<span class="k">type</span> <span class="i">ZipArchiveEntry</span> <span class="k">with</span>
+  <span class="k">member</span> <span class="i">arh</span><span class="o">.</span><span class="i">Text</span><span class="o">=</span>
+    <span class="k">use</span> <span class="i">rdr</span><span class="o">=</span><span class="k">new</span> <span onmouseout="hideTip(event, 'fs9', 12)" onmouseover="showTip(event, 'fs9', 12)" class="i">StreamReader</span>(<span class="i">arh</span><span class="o">.</span><span class="i">Open</span>())
+    <span class="i">rdr</span><span class="o">.</span><span class="i">ReadToEnd</span>()
+
+[&lt;<span onmouseout="hideTip(event, 'fs10', 13)" onmouseover="showTip(event, 'fs10', 13)" class="t">TypeProvider</span>&gt;]
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs11', 14)" onmouseover="showTip(event, 'fs11', 14)" class="t">ZipPr</span>() <span class="k">as</span> <span onmouseout="hideTip(event, 'fs12', 15)" onmouseover="showTip(event, 'fs12', 15)" class="v">this</span> <span class="o">=</span>
+    <span class="k">inherit</span> <span class="i">TypeProviderForNamespaces</span>()
+    <span class="k">let</span> <span class="i">asm</span>,<span class="i">ns</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs2', 16)" onmouseover="showTip(event, 'fs2', 16)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs13', 17)" onmouseover="showTip(event, 'fs13', 17)" class="i">Reflection</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs14', 18)" onmouseover="showTip(event, 'fs14', 18)" class="i">Assembly</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs15', 19)" onmouseover="showTip(event, 'fs15', 19)" class="i">GetExecutingAssembly</span>(),<span class="s">&quot;ZipProvider&quot;</span>
+    <span class="k">let</span> <span class="i">IniTy</span> <span class="o">=</span> <span class="i">ProvidedTypeDefinition</span>(<span class="i">asm</span>, <span class="i">ns</span>, <span class="s">&quot;ZipProv&quot;</span>, <span onmouseout="hideTip(event, 'fs16', 20)" onmouseover="showTip(event, 'fs16', 20)" class="i">None</span>)
+    <span class="k">do</span> <span class="i">IniTy</span><span class="o">.</span><span class="i">DefineStaticParameters</span>(
+         [<span class="i">ProvidedStaticParameter</span>(<span class="s">&quot;path&quot;</span>, <span onmouseout="hideTip(event, 'fs17', 21)" onmouseover="showTip(event, 'fs17', 21)" class="i">typeof</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs18', 22)" onmouseover="showTip(event, 'fs18', 22)" class="i">string</span><span class="o">&gt;</span>)],
+          <span class="k">fun</span> <span class="i">tyName</span> [|<span class="o">:?</span> <span onmouseout="hideTip(event, 'fs18', 23)" onmouseover="showTip(event, 'fs18', 23)" class="i">string</span> <span class="k">as</span> <span class="i">path</span>|] <span class="k">-&gt;</span>
+           <span class="k">let</span> <span class="i">ty</span> <span class="o">=</span> <span class="i">ProvidedTypeDefinition</span>(<span class="i">asm</span>, <span class="i">ns</span>, <span class="i">tyName</span>, <span onmouseout="hideTip(event, 'fs16', 24)" onmouseover="showTip(event, 'fs16', 24)" class="i">None</span>)
+           <span class="i">ProvidedConstructor</span>([<span class="i">ProvidedParameter</span>(<span class="s">&quot;path&quot;</span>,<span onmouseout="hideTip(event, 'fs17', 25)" onmouseover="showTip(event, 'fs17', 25)" class="i">typeof</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs18', 26)" onmouseover="showTip(event, 'fs18', 26)" class="i">string</span><span class="o">&gt;</span>)],
+                               <span class="i">InvokeCode</span><span class="o">=</span>(<span class="k">fun</span> [<span class="i">path</span>]<span class="k">-&gt;</span> &lt;@@ <span class="i">ZipFile</span><span class="o">.</span><span class="i">OpenRead</span>(<span class="o">%%</span><span class="i">path</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs18', 27)" onmouseover="showTip(event, 'fs18', 27)" class="i">string</span>) @@&gt;))
+             <span class="o">|&gt;</span><span class="i">ty</span><span class="o">.</span><span class="i">AddMember</span> 
+           <span class="i">ZipFile</span><span class="o">.</span><span class="i">OpenRead</span>(<span class="i">path</span>)<span class="o">.</span><span class="i">Entries</span>
+             <span class="o">|&gt;</span><span onmouseout="hideTip(event, 'fs19', 28)" onmouseover="showTip(event, 'fs19', 28)" class="i">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs20', 29)" onmouseover="showTip(event, 'fs20', 29)" class="i">map</span> (<span class="k">fun</span> <span class="i">ent</span><span class="k">-&gt;</span><span class="k">let</span> <span class="i">name</span><span class="o">=</span><span class="i">ent</span><span class="o">.</span><span class="i">FullName</span>
+                                 <span class="i">ProvidedProperty</span>(<span class="i">name</span>,<span onmouseout="hideTip(event, 'fs17', 30)" onmouseover="showTip(event, 'fs17', 30)" class="i">typeof</span><span class="o">&lt;</span><span class="i">ZipArchiveEntry</span><span class="o">&gt;</span>,
+                                                  <span class="i">GetterCode</span><span class="o">=</span><span class="k">fun</span> [<span class="i">arg</span>] <span class="k">-&gt;</span> &lt;@@ ((<span class="o">%%</span><span class="i">arg</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs21', 31)" onmouseover="showTip(event, 'fs21', 31)" class="i">obj</span>)<span class="o">:?&gt;</span><span class="i">ZipArchive</span>)<span class="o">.</span><span class="i">GetEntry</span>(<span class="i">name</span>) @@&gt;))
+             <span class="o">|&gt;</span><span onmouseout="hideTip(event, 'fs19', 32)" onmouseover="showTip(event, 'fs19', 32)" class="i">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs22', 33)" onmouseover="showTip(event, 'fs22', 33)" class="i">toList</span><span class="o">|&gt;</span><span class="i">ty</span><span class="o">.</span><span class="i">AddMembers</span>
+           <span class="i">ty</span>)
+       <span class="i">this</span><span class="o">.</span><span class="i">AddNamespace</span>(<span class="i">ns</span>, [<span class="i">IniTy</span>])
+[&lt;<span onmouseout="hideTip(event, 'fs23', 34)" onmouseover="showTip(event, 'fs23', 34)" class="t">TypeProviderAssembly</span>&gt;]
+<span class="k">do</span>()
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">module ZipProvider</div>
+<div class="tip" id="fs2">namespace System</div>
+<div class="tip" id="fs3">namespace System.IO</div>
+<div class="tip" id="fs4">namespace System.IO.Compression</div>
+<div class="tip" id="fs5">namespace Microsoft.FSharp</div>
+<div class="tip" id="fs6">namespace Microsoft</div>
+<div class="tip" id="fs7">namespace Microsoft.FSharp.Core</div>
+<div class="tip" id="fs8">namespace Microsoft.FSharp.Core.CompilerServices</div>
+<div class="tip" id="fs9">Multiple items<br />type StreamReader =<br />&#160;&#160;inherit TextReader<br />&#160;&#160;new : stream:Stream -&gt; StreamReader + 9 overloads<br />&#160;&#160;member BaseStream : Stream<br />&#160;&#160;member Close : unit -&gt; unit<br />&#160;&#160;member CurrentEncoding : Encoding<br />&#160;&#160;member DiscardBufferedData : unit -&gt; unit<br />&#160;&#160;member EndOfStream : bool<br />&#160;&#160;member Peek : unit -&gt; int<br />&#160;&#160;member Read : unit -&gt; int + 1 overload<br />&#160;&#160;member ReadLine : unit -&gt; string<br />&#160;&#160;member ReadToEnd : unit -&gt; string<br />&#160;&#160;...<br /><br />Full name: System.IO.StreamReader<br /><br />--------------------<br />StreamReader(stream: Stream) : unit<br />StreamReader(path: string) : unit<br />StreamReader(stream: Stream, detectEncodingFromByteOrderMarks: bool) : unit<br />StreamReader(stream: Stream, encoding: System.Text.Encoding) : unit<br />StreamReader(path: string, detectEncodingFromByteOrderMarks: bool) : unit<br />StreamReader(path: string, encoding: System.Text.Encoding) : unit<br />StreamReader(stream: Stream, encoding: System.Text.Encoding, detectEncodingFromByteOrderMarks: bool) : unit<br />StreamReader(path: string, encoding: System.Text.Encoding, detectEncodingFromByteOrderMarks: bool) : unit<br />StreamReader(stream: Stream, encoding: System.Text.Encoding, detectEncodingFromByteOrderMarks: bool, bufferSize: int) : unit<br />StreamReader(path: string, encoding: System.Text.Encoding, detectEncodingFromByteOrderMarks: bool, bufferSize: int) : unit</div>
+<div class="tip" id="fs10">Multiple items<br />type TypeProviderAttribute =<br />&#160;&#160;inherit Attribute<br />&#160;&#160;new : unit -&gt; TypeProviderAttribute<br /><br />Full name: Microsoft.FSharp.Core.CompilerServices.TypeProviderAttribute<br /><br />--------------------<br />new : unit -&gt; TypeProviderAttribute</div>
+<div class="tip" id="fs11">Multiple items<br />type ZipPr =<br />&#160;&#160;inherit obj<br />&#160;&#160;new : unit -&gt; ZipPr<br /><br />Full name: ZipProvider.ZipPr<br /><br />--------------------<br />new : unit -&gt; ZipPr</div>
+<div class="tip" id="fs12">val this : ZipPr</div>
+<div class="tip" id="fs13">namespace System.Reflection</div>
+<div class="tip" id="fs14">type Assembly =<br />&#160;&#160;member CodeBase : string<br />&#160;&#160;member CreateInstance : typeName:string -&gt; obj + 2 overloads<br />&#160;&#160;member EntryPoint : MethodInfo<br />&#160;&#160;member Equals : o:obj -&gt; bool<br />&#160;&#160;member EscapedCodeBase : string<br />&#160;&#160;member Evidence : Evidence<br />&#160;&#160;member FullName : string<br />&#160;&#160;member GetCustomAttributes : inherit:bool -&gt; obj[] + 1 overload<br />&#160;&#160;member GetCustomAttributesData : unit -&gt; IList&lt;CustomAttributeData&gt;<br />&#160;&#160;member GetExportedTypes : unit -&gt; Type[]<br />&#160;&#160;...<br /><br />Full name: System.Reflection.Assembly</div>
+<div class="tip" id="fs15">System.Reflection.Assembly.GetExecutingAssembly() : System.Reflection.Assembly</div>
+<div class="tip" id="fs16">union case Option.None: Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs17">val typeof&lt;&#39;T&gt; : System.Type<br /><br />Full name: Microsoft.FSharp.Core.Operators.typeof</div>
+<div class="tip" id="fs18">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />Full name: Microsoft.FSharp.Core.Operators.string<br /><br />--------------------<br />type string = System.String<br /><br />Full name: Microsoft.FSharp.Core.string</div>
+<div class="tip" id="fs19">module Seq<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs20">val map : mapping:(&#39;T -&gt; &#39;U) -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;U&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.map</div>
+<div class="tip" id="fs21">type obj = System.Object<br /><br />Full name: Microsoft.FSharp.Core.obj</div>
+<div class="tip" id="fs22">val toList : source:seq&lt;&#39;T&gt; -&gt; &#39;T list<br /><br />Full name: Microsoft.FSharp.Collections.Seq.toList</div>
+<div class="tip" id="fs23">Multiple items<br />type TypeProviderAssemblyAttribute =<br />&#160;&#160;inherit Attribute<br />&#160;&#160;new : unit -&gt; TypeProviderAssemblyAttribute<br />&#160;&#160;new : assemblyName:string -&gt; TypeProviderAssemblyAttribute<br />&#160;&#160;member AssemblyName : string<br /><br />Full name: Microsoft.FSharp.Core.CompilerServices.TypeProviderAssemblyAttribute<br /><br />--------------------<br />new : unit -&gt; TypeProviderAssemblyAttribute<br />new : assemblyName:string -&gt; TypeProviderAssemblyAttribute</div>
+

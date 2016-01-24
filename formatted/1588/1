@@ -1,0 +1,901 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">namespace</span> <span class="i">RZ</span><span class="o">.</span><span class="i">Wpf</span>
+<span class="c">// v20140921</span>
+
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">System</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 2)" onmouseover="showTip(event, 'fs1', 2)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 3)" onmouseover="showTip(event, 'fs2', 3)" class="i">Collections</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 4)" onmouseover="showTip(event, 'fs3', 4)" class="i">Specialized</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 5)" onmouseover="showTip(event, 'fs1', 5)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs4', 6)" onmouseover="showTip(event, 'fs4', 6)" class="i">IO</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 7)" onmouseover="showTip(event, 'fs1', 7)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs5', 8)" onmouseover="showTip(event, 'fs5', 8)" class="i">Xml</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs6', 9)" onmouseover="showTip(event, 'fs6', 9)" class="i">Linq</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 10)" onmouseover="showTip(event, 'fs1', 10)" class="i">System</span><span class="o">.</span><span class="i">Xaml</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 11)" onmouseover="showTip(event, 'fs1', 11)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs7', 12)" onmouseover="showTip(event, 'fs7', 12)" class="i">Windows</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 13)" onmouseover="showTip(event, 'fs1', 13)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs7', 14)" onmouseover="showTip(event, 'fs7', 14)" class="i">Windows</span><span class="o">.</span><span class="i">Markup</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 15)" onmouseover="showTip(event, 'fs1', 15)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs8', 16)" onmouseover="showTip(event, 'fs8', 16)" class="i">Linq</span>
+<span class="k">open</span> <span class="i">RZ</span><span class="o">.</span><span class="i">NetWrapper</span>
+
+<span class="k">module</span> <span class="t">Utils</span> <span class="o">=</span> 
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs9', 17)" onmouseover="showTip(event, 'fs9', 17)" class="f">memoize</span> (<span onmouseout="hideTip(event, 'fs10', 18)" onmouseover="showTip(event, 'fs10', 18)" class="f">f</span><span class="o">:</span> <span class="o">&#39;</span><span class="i">a</span> <span class="k">-&gt;</span> <span class="o">&#39;</span><span class="i">b</span>) <span class="o">=</span>
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs11', 19)" onmouseover="showTip(event, 'fs11', 19)" class="i">dict</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs1', 20)" onmouseover="showTip(event, 'fs1', 20)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 21)" onmouseover="showTip(event, 'fs2', 21)" class="i">Collections</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs12', 22)" onmouseover="showTip(event, 'fs12', 22)" class="i">Concurrent</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs13', 23)" onmouseover="showTip(event, 'fs13', 23)" class="t">ConcurrentDictionary</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">a</span>,<span class="o">&#39;</span><span class="i">b</span><span class="o">&gt;</span>()
+
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs14', 24)" onmouseover="showTip(event, 'fs14', 24)" class="f">memoizedFunc</span> <span onmouseout="hideTip(event, 'fs15', 25)" onmouseover="showTip(event, 'fs15', 25)" class="i">input</span> <span class="o">=</span>
+            <span class="k">match</span> <span onmouseout="hideTip(event, 'fs11', 26)" onmouseover="showTip(event, 'fs11', 26)" class="i">dict</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs16', 27)" onmouseover="showTip(event, 'fs16', 27)" class="f">TryGetValue</span> <span onmouseout="hideTip(event, 'fs15', 28)" onmouseover="showTip(event, 'fs15', 28)" class="i">input</span> <span class="k">with</span>
+            | <span class="k">true</span>, <span onmouseout="hideTip(event, 'fs17', 29)" onmouseover="showTip(event, 'fs17', 29)" class="i">x</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs17', 30)" onmouseover="showTip(event, 'fs17', 30)" class="i">x</span>
+            | <span class="k">false</span>, _ <span class="k">-&gt;</span>
+                <span class="k">let</span> <span onmouseout="hideTip(event, 'fs18', 31)" onmouseover="showTip(event, 'fs18', 31)" class="i">answer</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs10', 32)" onmouseover="showTip(event, 'fs10', 32)" class="f">f</span> <span onmouseout="hideTip(event, 'fs15', 33)" onmouseover="showTip(event, 'fs15', 33)" class="i">input</span>
+                <span onmouseout="hideTip(event, 'fs11', 34)" onmouseover="showTip(event, 'fs11', 34)" class="i">dict</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs19', 35)" onmouseover="showTip(event, 'fs19', 35)" class="f">TryAdd</span>(<span onmouseout="hideTip(event, 'fs15', 36)" onmouseover="showTip(event, 'fs15', 36)" class="i">input</span>, <span onmouseout="hideTip(event, 'fs18', 37)" onmouseover="showTip(event, 'fs18', 37)" class="i">answer</span>) <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs20', 38)" onmouseover="showTip(event, 'fs20', 38)" class="f">ignore</span>
+                <span onmouseout="hideTip(event, 'fs18', 39)" onmouseover="showTip(event, 'fs18', 39)" class="i">answer</span>
+        <span onmouseout="hideTip(event, 'fs14', 40)" onmouseover="showTip(event, 'fs14', 40)" class="f">memoizedFunc</span>
+</code></pre></td>
+</tr>
+</table>
+<p><strong><em></em></strong><strong><em></em></strong><strong><em><em></em> Resources </em></strong><strong><em></em></strong><strong><em></em></strong><strong><em></em></strong><em></em></p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">module</span> <span class="t">ResourceManager</span> <span class="o">=</span>
+    <span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 41)" onmouseover="showTip(event, 'fs1', 41)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs21', 42)" onmouseover="showTip(event, 'fs21', 42)" class="i">Reflection</span>
+
+    <span class="k">let</span> <span class="k">private</span> <span onmouseout="hideTip(event, 'fs22', 43)" onmouseover="showTip(event, 'fs22', 43)" class="f">getResourceLookup0</span> (<span onmouseout="hideTip(event, 'fs23', 44)" onmouseover="showTip(event, 'fs23', 44)" class="i">asm</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs24', 45)" onmouseover="showTip(event, 'fs24', 45)" class="t">Assembly</span>) <span class="o">=</span>
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs25', 46)" onmouseover="showTip(event, 'fs25', 46)" class="f">makeXamlString</span> (<span onmouseout="hideTip(event, 'fs26', 47)" onmouseover="showTip(event, 'fs26', 47)" class="i">stream</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs27', 48)" onmouseover="showTip(event, 'fs27', 48)" class="t">Stream</span>) <span class="o">=</span>
+            <span class="k">use</span> <span onmouseout="hideTip(event, 'fs28', 49)" onmouseover="showTip(event, 'fs28', 49)" class="i">reader</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs29', 50)" onmouseover="showTip(event, 'fs29', 50)" class="t">StreamReader</span>(<span onmouseout="hideTip(event, 'fs26', 51)" onmouseover="showTip(event, 'fs26', 51)" class="i">stream</span>)
+            <span class="k">in</span>  <span onmouseout="hideTip(event, 'fs28', 52)" onmouseover="showTip(event, 'fs28', 52)" class="i">reader</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs30', 53)" onmouseover="showTip(event, 'fs30', 53)" class="f">ReadToEnd</span>()
+
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs31', 54)" onmouseover="showTip(event, 'fs31', 54)" class="f">readResourceStream</span> (<span onmouseout="hideTip(event, 'fs26', 55)" onmouseover="showTip(event, 'fs26', 55)" class="i">stream</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs27', 56)" onmouseover="showTip(event, 'fs27', 56)" class="t">Stream</span>) <span class="o">=</span>
+            <span class="k">use</span> <span onmouseout="hideTip(event, 'fs32', 57)" onmouseover="showTip(event, 'fs32', 57)" class="i">reader</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs1', 58)" onmouseover="showTip(event, 'fs1', 58)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs33', 59)" onmouseover="showTip(event, 'fs33', 59)" class="i">Resources</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs34', 60)" onmouseover="showTip(event, 'fs34', 60)" class="t">ResourceReader</span>(<span onmouseout="hideTip(event, 'fs26', 61)" onmouseover="showTip(event, 'fs26', 61)" class="i">stream</span>)
+            <span onmouseout="hideTip(event, 'fs32', 62)" onmouseover="showTip(event, 'fs32', 62)" class="i">reader</span>
+            <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs35', 63)" onmouseover="showTip(event, 'fs35', 63)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs36', 64)" onmouseover="showTip(event, 'fs36', 64)" class="f">cast</span> <span class="o">:&gt;</span> <span onmouseout="hideTip(event, 'fs37', 65)" onmouseover="showTip(event, 'fs37', 65)" class="t">seq</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs38', 66)" onmouseover="showTip(event, 'fs38', 66)" class="i">Collections</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs39', 67)" onmouseover="showTip(event, 'fs39', 67)" class="t">DictionaryEntry</span><span class="o">&gt;</span>
+            <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs35', 68)" onmouseover="showTip(event, 'fs35', 68)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs40', 69)" onmouseover="showTip(event, 'fs40', 69)" class="f">map</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs41', 70)" onmouseover="showTip(event, 'fs41', 70)" class="i">entry</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs41', 71)" onmouseover="showTip(event, 'fs41', 71)" class="i">entry</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs42', 72)" onmouseover="showTip(event, 'fs42', 72)" class="i">Key</span> <span class="o">:?&gt;</span> <span onmouseout="hideTip(event, 'fs43', 73)" onmouseover="showTip(event, 'fs43', 73)" class="t">string</span>, <span onmouseout="hideTip(event, 'fs25', 74)" onmouseover="showTip(event, 'fs25', 74)" class="f">makeXamlString</span> (<span onmouseout="hideTip(event, 'fs41', 75)" onmouseover="showTip(event, 'fs41', 75)" class="i">entry</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs44', 76)" onmouseover="showTip(event, 'fs44', 76)" class="i">Value</span> <span class="o">:?&gt;</span> <span onmouseout="hideTip(event, 'fs27', 77)" onmouseover="showTip(event, 'fs27', 77)" class="t">Stream</span>))
+            <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs45', 78)" onmouseover="showTip(event, 'fs45', 78)" class="t">Map</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs46', 79)" onmouseover="showTip(event, 'fs46', 79)" class="f">ofSeq</span>
+
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs47', 80)" onmouseover="showTip(event, 'fs47', 80)" class="f">getWpfResourceName</span> (<span onmouseout="hideTip(event, 'fs23', 81)" onmouseover="showTip(event, 'fs23', 81)" class="i">asm</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs24', 82)" onmouseover="showTip(event, 'fs24', 82)" class="t">Assembly</span>) <span class="o">=</span> <span onmouseout="hideTip(event, 'fs48', 83)" onmouseover="showTip(event, 'fs48', 83)" class="f">sprintf</span> <span class="s">&quot;</span><span class="pf">%s</span><span class="s">.g.resources&quot;</span> <span class="o">&lt;|</span> <span onmouseout="hideTip(event, 'fs23', 84)" onmouseover="showTip(event, 'fs23', 84)" class="i">asm</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs49', 85)" onmouseover="showTip(event, 'fs49', 85)" class="f">GetName</span>()<span class="o">.</span><span class="i">Name</span>
+
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs50', 86)" onmouseover="showTip(event, 'fs50', 86)" class="i">resourceName</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs47', 87)" onmouseover="showTip(event, 'fs47', 87)" class="f">getWpfResourceName</span> <span onmouseout="hideTip(event, 'fs23', 88)" onmouseover="showTip(event, 'fs23', 88)" class="i">asm</span>
+        <span class="k">in</span>  <span class="k">match</span> <span onmouseout="hideTip(event, 'fs23', 89)" onmouseover="showTip(event, 'fs23', 89)" class="i">asm</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs51', 90)" onmouseover="showTip(event, 'fs51', 90)" class="f">GetManifestResourceStream</span> <span onmouseout="hideTip(event, 'fs50', 91)" onmouseover="showTip(event, 'fs50', 91)" class="i">resourceName</span> <span class="k">with</span>
+            | <span class="k">null</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs45', 92)" onmouseover="showTip(event, 'fs45', 92)" class="t">Map</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs52', 93)" onmouseover="showTip(event, 'fs52', 93)" class="i">empty</span>
+            | <span onmouseout="hideTip(event, 'fs26', 94)" onmouseover="showTip(event, 'fs26', 94)" class="i">stream</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs31', 95)" onmouseover="showTip(event, 'fs31', 95)" class="f">readResourceStream</span> <span onmouseout="hideTip(event, 'fs26', 96)" onmouseover="showTip(event, 'fs26', 96)" class="i">stream</span>
+
+    <span class="k">let</span> <span class="k">private</span> <span onmouseout="hideTip(event, 'fs53', 97)" onmouseover="showTip(event, 'fs53', 97)" class="f">getResourceLookup</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs54', 98)" onmouseover="showTip(event, 'fs54', 98)" class="t">Utils</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs9', 99)" onmouseover="showTip(event, 'fs9', 99)" class="f">memoize</span> <span onmouseout="hideTip(event, 'fs22', 100)" onmouseover="showTip(event, 'fs22', 100)" class="f">getResourceLookup0</span>
+
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs55', 101)" onmouseover="showTip(event, 'fs55', 101)" class="f">findWpfResource</span> (<span onmouseout="hideTip(event, 'fs56', 102)" onmouseover="showTip(event, 'fs56', 102)" class="i">name</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs43', 103)" onmouseover="showTip(event, 'fs43', 103)" class="t">string</span>) <span class="o">=</span> <span onmouseout="hideTip(event, 'fs53', 104)" onmouseover="showTip(event, 'fs53', 104)" class="f">getResourceLookup</span> <span class="o">&gt;</span><span class="o">&gt;</span> <span onmouseout="hideTip(event, 'fs45', 105)" onmouseover="showTip(event, 'fs45', 105)" class="t">Map</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs57', 106)" onmouseover="showTip(event, 'fs57', 106)" class="f">tryFind</span> (<span onmouseout="hideTip(event, 'fs56', 107)" onmouseover="showTip(event, 'fs56', 107)" class="i">name</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs58', 108)" onmouseover="showTip(event, 'fs58', 108)" class="f">ToLower</span>())
+</code></pre></td>
+</tr>
+</table>
+<p><strong><em></em></strong><strong><em></em></strong><strong><em><em></em> Timer </em></strong><strong><em></em></strong><strong><em></em></strong><strong><em></em></strong><em></em></p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">  1: </span>
+<span class="l">  2: </span>
+<span class="l">  3: </span>
+<span class="l">  4: </span>
+<span class="l">  5: </span>
+<span class="l">  6: </span>
+<span class="l">  7: </span>
+<span class="l">  8: </span>
+<span class="l">  9: </span>
+<span class="l"> 10: </span>
+<span class="l"> 11: </span>
+<span class="l"> 12: </span>
+<span class="l"> 13: </span>
+<span class="l"> 14: </span>
+<span class="l"> 15: </span>
+<span class="l"> 16: </span>
+<span class="l"> 17: </span>
+<span class="l"> 18: </span>
+<span class="l"> 19: </span>
+<span class="l"> 20: </span>
+<span class="l"> 21: </span>
+<span class="l"> 22: </span>
+<span class="l"> 23: </span>
+<span class="l"> 24: </span>
+<span class="l"> 25: </span>
+<span class="l"> 26: </span>
+<span class="l"> 27: </span>
+<span class="l"> 28: </span>
+<span class="l"> 29: </span>
+<span class="l"> 30: </span>
+<span class="l"> 31: </span>
+<span class="l"> 32: </span>
+<span class="l"> 33: </span>
+<span class="l"> 34: </span>
+<span class="l"> 35: </span>
+<span class="l"> 36: </span>
+<span class="l"> 37: </span>
+<span class="l"> 38: </span>
+<span class="l"> 39: </span>
+<span class="l"> 40: </span>
+<span class="l"> 41: </span>
+<span class="l"> 42: </span>
+<span class="l"> 43: </span>
+<span class="l"> 44: </span>
+<span class="l"> 45: </span>
+<span class="l"> 46: </span>
+<span class="l"> 47: </span>
+<span class="l"> 48: </span>
+<span class="l"> 49: </span>
+<span class="l"> 50: </span>
+<span class="l"> 51: </span>
+<span class="l"> 52: </span>
+<span class="l"> 53: </span>
+<span class="l"> 54: </span>
+<span class="l"> 55: </span>
+<span class="l"> 56: </span>
+<span class="l"> 57: </span>
+<span class="l"> 58: </span>
+<span class="l"> 59: </span>
+<span class="l"> 60: </span>
+<span class="l"> 61: </span>
+<span class="l"> 62: </span>
+<span class="l"> 63: </span>
+<span class="l"> 64: </span>
+<span class="l"> 65: </span>
+<span class="l"> 66: </span>
+<span class="l"> 67: </span>
+<span class="l"> 68: </span>
+<span class="l"> 69: </span>
+<span class="l"> 70: </span>
+<span class="l"> 71: </span>
+<span class="l"> 72: </span>
+<span class="l"> 73: </span>
+<span class="l"> 74: </span>
+<span class="l"> 75: </span>
+<span class="l"> 76: </span>
+<span class="l"> 77: </span>
+<span class="l"> 78: </span>
+<span class="l"> 79: </span>
+<span class="l"> 80: </span>
+<span class="l"> 81: </span>
+<span class="l"> 82: </span>
+<span class="l"> 83: </span>
+<span class="l"> 84: </span>
+<span class="l"> 85: </span>
+<span class="l"> 86: </span>
+<span class="l"> 87: </span>
+<span class="l"> 88: </span>
+<span class="l"> 89: </span>
+<span class="l"> 90: </span>
+<span class="l"> 91: </span>
+<span class="l"> 92: </span>
+<span class="l"> 93: </span>
+<span class="l"> 94: </span>
+<span class="l"> 95: </span>
+<span class="l"> 96: </span>
+<span class="l"> 97: </span>
+<span class="l"> 98: </span>
+<span class="l"> 99: </span>
+<span class="l">100: </span>
+<span class="l">101: </span>
+<span class="l">102: </span>
+<span class="l">103: </span>
+<span class="l">104: </span>
+<span class="l">105: </span>
+<span class="l">106: </span>
+<span class="l">107: </span>
+<span class="l">108: </span>
+<span class="l">109: </span>
+<span class="l">110: </span>
+<span class="l">111: </span>
+<span class="l">112: </span>
+<span class="l">113: </span>
+<span class="l">114: </span>
+<span class="l">115: </span>
+<span class="l">116: </span>
+<span class="l">117: </span>
+<span class="l">118: </span>
+<span class="l">119: </span>
+<span class="l">120: </span>
+<span class="l">121: </span>
+<span class="l">122: </span>
+<span class="l">123: </span>
+<span class="l">124: </span>
+<span class="l">125: </span>
+<span class="l">126: </span>
+<span class="l">127: </span>
+<span class="l">128: </span>
+<span class="l">129: </span>
+<span class="l">130: </span>
+<span class="l">131: </span>
+<span class="l">132: </span>
+<span class="l">133: </span>
+<span class="l">134: </span>
+<span class="l">135: </span>
+<span class="l">136: </span>
+<span class="l">137: </span>
+<span class="l">138: </span>
+<span class="l">139: </span>
+<span class="l">140: </span>
+<span class="l">141: </span>
+<span class="l">142: </span>
+<span class="l">143: </span>
+<span class="l">144: </span>
+<span class="l">145: </span>
+<span class="l">146: </span>
+<span class="l">147: </span>
+<span class="l">148: </span>
+<span class="l">149: </span>
+<span class="l">150: </span>
+<span class="l">151: </span>
+<span class="l">152: </span>
+<span class="l">153: </span>
+<span class="l">154: </span>
+<span class="l">155: </span>
+<span class="l">156: </span>
+<span class="l">157: </span>
+<span class="l">158: </span>
+<span class="l">159: </span>
+<span class="l">160: </span>
+<span class="l">161: </span>
+<span class="l">162: </span>
+<span class="l">163: </span>
+<span class="l">164: </span>
+<span class="l">165: </span>
+<span class="l">166: </span>
+<span class="l">167: </span>
+<span class="l">168: </span>
+<span class="l">169: </span>
+<span class="l">170: </span>
+<span class="l">171: </span>
+<span class="l">172: </span>
+<span class="l">173: </span>
+<span class="l">174: </span>
+<span class="l">175: </span>
+<span class="l">176: </span>
+<span class="l">177: </span>
+<span class="l">178: </span>
+<span class="l">179: </span>
+<span class="l">180: </span>
+<span class="l">181: </span>
+<span class="l">182: </span>
+<span class="l">183: </span>
+<span class="l">184: </span>
+<span class="l">185: </span>
+<span class="l">186: </span>
+<span class="l">187: </span>
+<span class="l">188: </span>
+<span class="l">189: </span>
+<span class="l">190: </span>
+<span class="l">191: </span>
+<span class="l">192: </span>
+<span class="l">193: </span>
+<span class="l">194: </span>
+<span class="l">195: </span>
+<span class="l">196: </span>
+<span class="l">197: </span>
+<span class="l">198: </span>
+<span class="l">199: </span>
+<span class="l">200: </span>
+<span class="l">201: </span>
+<span class="l">202: </span>
+<span class="l">203: </span>
+<span class="l">204: </span>
+<span class="l">205: </span>
+<span class="l">206: </span>
+<span class="l">207: </span>
+<span class="l">208: </span>
+<span class="l">209: </span>
+<span class="l">210: </span>
+<span class="l">211: </span>
+<span class="l">212: </span>
+<span class="l">213: </span>
+<span class="l">214: </span>
+<span class="l">215: </span>
+<span class="l">216: </span>
+<span class="l">217: </span>
+<span class="l">218: </span>
+<span class="l">219: </span>
+<span class="l">220: </span>
+<span class="l">221: </span>
+<span class="l">222: </span>
+<span class="l">223: </span>
+<span class="l">224: </span>
+<span class="l">225: </span>
+<span class="l">226: </span>
+<span class="l">227: </span>
+<span class="l">228: </span>
+<span class="l">229: </span>
+<span class="l">230: </span>
+<span class="l">231: </span>
+<span class="l">232: </span>
+<span class="l">233: </span>
+<span class="l">234: </span>
+<span class="l">235: </span>
+<span class="l">236: </span>
+<span class="l">237: </span>
+<span class="l">238: </span>
+<span class="l">239: </span>
+<span class="l">240: </span>
+<span class="l">241: </span>
+<span class="l">242: </span>
+<span class="l">243: </span>
+<span class="l">244: </span>
+<span class="l">245: </span>
+<span class="l">246: </span>
+<span class="l">247: </span>
+<span class="l">248: </span>
+<span class="l">249: </span>
+<span class="l">250: </span>
+<span class="l">251: </span>
+<span class="l">252: </span>
+<span class="l">253: </span>
+<span class="l">254: </span>
+<span class="l">255: </span>
+<span class="l">256: </span>
+<span class="l">257: </span>
+<span class="l">258: </span>
+<span class="l">259: </span>
+<span class="l">260: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">module</span> <span class="t">DispatcherTimer</span> <span class="o">=</span>
+    <span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 109)" onmouseover="showTip(event, 'fs1', 109)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs7', 110)" onmouseover="showTip(event, 'fs7', 110)" class="i">Windows</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs59', 111)" onmouseover="showTip(event, 'fs59', 111)" class="i">Threading</span>
+
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs60', 112)" onmouseover="showTip(event, 'fs60', 112)" class="f">create</span> <span onmouseout="hideTip(event, 'fs61', 113)" onmouseover="showTip(event, 'fs61', 113)" class="i">period</span> <span class="o">=</span> <span class="i">DispatcherTimer</span>(<span class="i">Interval</span><span class="o">=</span><span onmouseout="hideTip(event, 'fs61', 114)" onmouseover="showTip(event, 'fs61', 114)" class="i">period</span>)
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs62', 115)" onmouseover="showTip(event, 'fs62', 115)" class="f">start</span> <span onmouseout="hideTip(event, 'fs63', 116)" onmouseover="showTip(event, 'fs63', 116)" class="i">timer</span> <span class="o">=</span> (<span onmouseout="hideTip(event, 'fs63', 117)" onmouseover="showTip(event, 'fs63', 117)" class="i">timer</span><span class="o">:</span><span class="i">DispatcherTimer</span>)<span class="o">.</span><span class="i">Start</span>()
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs64', 118)" onmouseover="showTip(event, 'fs64', 118)" class="f">startTimer</span> <span onmouseout="hideTip(event, 'fs61', 119)" onmouseover="showTip(event, 'fs61', 119)" class="i">period</span> <span onmouseout="hideTip(event, 'fs65', 120)" onmouseover="showTip(event, 'fs65', 120)" class="f">handler</span> <span class="o">=</span>
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs66', 121)" onmouseover="showTip(event, 'fs66', 121)" class="i">t</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs60', 122)" onmouseover="showTip(event, 'fs60', 122)" class="f">create</span> <span onmouseout="hideTip(event, 'fs61', 123)" onmouseover="showTip(event, 'fs61', 123)" class="i">period</span>
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs67', 124)" onmouseover="showTip(event, 'fs67', 124)" class="i">r</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs66', 125)" onmouseover="showTip(event, 'fs66', 125)" class="i">t</span><span class="o">.</span><span class="i">Tick</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs68', 126)" onmouseover="showTip(event, 'fs68', 126)" class="t">Observable</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs69', 127)" onmouseover="showTip(event, 'fs69', 127)" class="f">subscribe</span> <span onmouseout="hideTip(event, 'fs65', 128)" onmouseover="showTip(event, 'fs65', 128)" class="f">handler</span>
+        <span onmouseout="hideTip(event, 'fs62', 129)" onmouseover="showTip(event, 'fs62', 129)" class="f">start</span> <span onmouseout="hideTip(event, 'fs66', 130)" onmouseover="showTip(event, 'fs66', 130)" class="i">t</span>
+        { <span class="k">new</span> <span onmouseout="hideTip(event, 'fs70', 131)" onmouseover="showTip(event, 'fs70', 131)" class="t">IDisposable</span> <span class="k">with</span> <span class="k">member</span> <span onmouseout="hideTip(event, 'fs71', 132)" onmouseover="showTip(event, 'fs71', 132)" class="i">me</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs72', 133)" onmouseover="showTip(event, 'fs72', 133)" class="f">Dispose</span>() <span class="o">=</span> <span onmouseout="hideTip(event, 'fs67', 134)" onmouseover="showTip(event, 'fs67', 134)" class="i">r</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs72', 135)" onmouseover="showTip(event, 'fs72', 135)" class="f">Dispose</span>(); <span onmouseout="hideTip(event, 'fs66', 136)" onmouseover="showTip(event, 'fs66', 136)" class="i">t</span><span class="o">.</span><span class="i">Stop</span>() }
+
+<span class="c">// ------------------------- View Model ------------------------- //</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs73', 137)" onmouseover="showTip(event, 'fs73', 137)" class="t">UIEvent</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs43', 138)" onmouseover="showTip(event, 'fs43', 138)" class="t">string</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs74', 139)" onmouseover="showTip(event, 'fs74', 139)" class="t">obj</span>
+
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs75', 140)" onmouseover="showTip(event, 'fs75', 140)" class="t">ViewModelBase</span>() <span class="o">=</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs76', 141)" onmouseover="showTip(event, 'fs76', 141)" class="i">propertyChangedEvent</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs77', 142)" onmouseover="showTip(event, 'fs77', 142)" class="t">DelegateEvent</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs78', 143)" onmouseover="showTip(event, 'fs78', 143)" class="i">ComponentModel</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs79', 144)" onmouseover="showTip(event, 'fs79', 144)" class="t">PropertyChangedEventHandler</span><span class="o">&gt;</span>()
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs80', 145)" onmouseover="showTip(event, 'fs80', 145)" class="i">runEvent</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs81', 146)" onmouseover="showTip(event, 'fs81', 146)" class="t">Event</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs73', 147)" onmouseover="showTip(event, 'fs73', 147)" class="t">UIEvent</span><span class="o">&gt;</span>()
+
+    <span class="k">interface</span> <span onmouseout="hideTip(event, 'fs78', 148)" onmouseover="showTip(event, 'fs78', 148)" class="i">ComponentModel</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs82', 149)" onmouseover="showTip(event, 'fs82', 149)" class="t">INotifyPropertyChanged</span> <span class="k">with</span>
+        [&lt;<span onmouseout="hideTip(event, 'fs83', 150)" onmouseover="showTip(event, 'fs83', 150)" class="t">CLIEvent</span>&gt;]
+        <span class="k">member</span> <span onmouseout="hideTip(event, 'fs84', 151)" onmouseover="showTip(event, 'fs84', 151)" class="i">x</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs85', 152)" onmouseover="showTip(event, 'fs85', 152)" class="f">PropertyChanged</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs76', 153)" onmouseover="showTip(event, 'fs76', 153)" class="i">propertyChangedEvent</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs86', 154)" onmouseover="showTip(event, 'fs86', 154)" class="f">Publish</span>
+
+    [&lt;<span onmouseout="hideTip(event, 'fs83', 155)" onmouseover="showTip(event, 'fs83', 155)" class="t">CLIEvent</span>&gt;]
+    <span class="k">member</span> <span onmouseout="hideTip(event, 'fs84', 156)" onmouseover="showTip(event, 'fs84', 156)" class="i">x</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs87', 157)" onmouseover="showTip(event, 'fs87', 157)" class="f">UIEvent</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs80', 158)" onmouseover="showTip(event, 'fs80', 158)" class="i">runEvent</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs88', 159)" onmouseover="showTip(event, 'fs88', 159)" class="f">Publish</span>
+
+    <span class="k">member</span> <span onmouseout="hideTip(event, 'fs84', 160)" onmouseover="showTip(event, 'fs84', 160)" class="i">x</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs89', 161)" onmouseover="showTip(event, 'fs89', 161)" class="f">OnUIEvent</span> <span onmouseout="hideTip(event, 'fs90', 162)" onmouseover="showTip(event, 'fs90', 162)" class="i">data</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs80', 163)" onmouseover="showTip(event, 'fs80', 163)" class="i">runEvent</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs91', 164)" onmouseover="showTip(event, 'fs91', 164)" class="f">Trigger</span> <span onmouseout="hideTip(event, 'fs90', 165)" onmouseover="showTip(event, 'fs90', 165)" class="i">data</span>
+    <span class="k">member</span> <span onmouseout="hideTip(event, 'fs84', 166)" onmouseover="showTip(event, 'fs84', 166)" class="i">x</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs92', 167)" onmouseover="showTip(event, 'fs92', 167)" class="f">OnPropertyChanged</span> <span onmouseout="hideTip(event, 'fs93', 168)" onmouseover="showTip(event, 'fs93', 168)" class="i">propertyName</span> <span class="o">=</span> 
+        <span onmouseout="hideTip(event, 'fs76', 169)" onmouseover="showTip(event, 'fs76', 169)" class="i">propertyChangedEvent</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs94', 170)" onmouseover="showTip(event, 'fs94', 170)" class="f">Trigger</span>([| <span onmouseout="hideTip(event, 'fs84', 171)" onmouseover="showTip(event, 'fs84', 171)" class="i">x</span>; <span class="k">new</span> <span onmouseout="hideTip(event, 'fs78', 172)" onmouseover="showTip(event, 'fs78', 172)" class="i">ComponentModel</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs95', 173)" onmouseover="showTip(event, 'fs95', 173)" class="t">PropertyChangedEventArgs</span>(<span onmouseout="hideTip(event, 'fs93', 174)" onmouseover="showTip(event, 'fs93', 174)" class="i">propertyName</span>) |])
+        
+    <span class="k">member</span> <span onmouseout="hideTip(event, 'fs96', 175)" onmouseover="showTip(event, 'fs96', 175)" class="i">self</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs97', 176)" onmouseover="showTip(event, 'fs97', 176)" class="f">setValue</span>(<span onmouseout="hideTip(event, 'fs98', 177)" onmouseover="showTip(event, 'fs98', 177)" class="i">field</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs99', 178)" onmouseover="showTip(event, 'fs99', 178)" class="t">byref</span><span class="o">&lt;</span>_<span class="o">&gt;</span>, <span onmouseout="hideTip(event, 'fs100', 179)" onmouseover="showTip(event, 'fs100', 179)" class="i">value</span>, [&lt;<span onmouseout="hideTip(event, 'fs101', 180)" onmouseover="showTip(event, 'fs101', 180)" class="t">ParamArray</span>&gt;] <span onmouseout="hideTip(event, 'fs102', 181)" onmouseover="showTip(event, 'fs102', 181)" class="i">fieldNames</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs43', 182)" onmouseover="showTip(event, 'fs43', 182)" class="t">string</span>[]) <span class="o">=</span>
+            <span class="k">if</span> <span onmouseout="hideTip(event, 'fs98', 183)" onmouseover="showTip(event, 'fs98', 183)" class="i">field</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs100', 184)" onmouseover="showTip(event, 'fs100', 184)" class="i">value</span> <span class="k">then</span> ()
+            <span class="k">else</span> <span onmouseout="hideTip(event, 'fs98', 185)" onmouseover="showTip(event, 'fs98', 185)" class="i">field</span> <span class="o">&lt;-</span> <span onmouseout="hideTip(event, 'fs100', 186)" onmouseover="showTip(event, 'fs100', 186)" class="i">value</span>
+                 <span onmouseout="hideTip(event, 'fs103', 187)" onmouseover="showTip(event, 'fs103', 187)" class="t">Array</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs104', 188)" onmouseover="showTip(event, 'fs104', 188)" class="f">iter</span> <span onmouseout="hideTip(event, 'fs96', 189)" onmouseover="showTip(event, 'fs96', 189)" class="i">self</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs105', 190)" onmouseover="showTip(event, 'fs105', 190)" class="f">OnPropertyChanged</span> <span onmouseout="hideTip(event, 'fs102', 191)" onmouseover="showTip(event, 'fs102', 191)" class="i">fieldNames</span>
+
+    <span class="k">member</span> <span onmouseout="hideTip(event, 'fs84', 192)" onmouseover="showTip(event, 'fs84', 192)" class="i">x</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs106', 193)" onmouseover="showTip(event, 'fs106', 193)" class="f">SubscribeUIEvent</span>(<span onmouseout="hideTip(event, 'fs107', 194)" onmouseover="showTip(event, 'fs107', 194)" class="i">evt</span>, <span onmouseout="hideTip(event, 'fs108', 195)" onmouseover="showTip(event, 'fs108', 195)" class="f">f</span>) <span class="o">=</span> <span onmouseout="hideTip(event, 'fs84', 196)" onmouseover="showTip(event, 'fs84', 196)" class="i">x</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs109', 197)" onmouseover="showTip(event, 'fs109', 197)" class="i">UIEvent</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs68', 198)" onmouseover="showTip(event, 'fs68', 198)" class="t">Observable</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs110', 199)" onmouseover="showTip(event, 'fs110', 199)" class="f">filter</span> (<span class="k">fun</span> (<span onmouseout="hideTip(event, 'fs111', 200)" onmouseover="showTip(event, 'fs111', 200)" class="i">n</span>, _) <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs111', 201)" onmouseover="showTip(event, 'fs111', 201)" class="i">n</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs107', 202)" onmouseover="showTip(event, 'fs107', 202)" class="i">evt</span>) <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs68', 203)" onmouseover="showTip(event, 'fs68', 203)" class="t">Observable</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs69', 204)" onmouseover="showTip(event, 'fs69', 204)" class="f">subscribe</span> (<span class="k">fun</span> (_, <span onmouseout="hideTip(event, 'fs112', 205)" onmouseover="showTip(event, 'fs112', 205)" class="i">data</span>) <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs108', 206)" onmouseover="showTip(event, 'fs108', 206)" class="f">f</span> <span onmouseout="hideTip(event, 'fs112', 207)" onmouseover="showTip(event, 'fs112', 207)" class="i">data</span>) <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs20', 208)" onmouseover="showTip(event, 'fs20', 208)" class="f">ignore</span>
+
+<span class="c">// ------------- WPF Observable Collection -------------------- //</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs113', 209)" onmouseover="showTip(event, 'fs113', 209)" class="t">IObservableTracker</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">Args</span><span class="o">&gt;</span> <span class="o">=</span>
+    <span class="k">abstract</span> <span class="k">member</span> <span onmouseout="hideTip(event, 'fs114', 210)" onmouseover="showTip(event, 'fs114', 210)" class="f">Disposed</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs115', 211)" onmouseover="showTip(event, 'fs115', 211)" class="t">ObserverTracker</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">Args</span><span class="o">&gt;</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs116', 212)" onmouseover="showTip(event, 'fs116', 212)" class="t">unit</span>
+
+<span class="k">and</span> <span onmouseout="hideTip(event, 'fs115', 213)" onmouseover="showTip(event, 'fs115', 213)" class="t">ObserverTracker</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">Args</span><span class="o">&gt;</span>(<span onmouseout="hideTip(event, 'fs117', 214)" onmouseover="showTip(event, 'fs117', 214)" class="i">observer</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs118', 215)" onmouseover="showTip(event, 'fs118', 215)" class="t">IObserver</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">Args</span><span class="o">&gt;</span>, <span onmouseout="hideTip(event, 'fs119', 216)" onmouseover="showTip(event, 'fs119', 216)" class="i">tracker</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs113', 217)" onmouseover="showTip(event, 'fs113', 217)" class="t">IObservableTracker</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">Args</span><span class="o">&gt;</span>) <span class="o">=</span>
+    <span class="k">let</span> <span class="k">mutable</span> <span onmouseout="hideTip(event, 'fs120', 218)" onmouseover="showTip(event, 'fs120', 218)" class="v">disposed</span> <span class="o">=</span> <span class="k">false</span>
+
+    <span class="k">member</span> <span onmouseout="hideTip(event, 'fs121', 219)" onmouseover="showTip(event, 'fs121', 219)" class="i">this</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs122', 220)" onmouseover="showTip(event, 'fs122', 220)" class="f">Callback</span>(<span onmouseout="hideTip(event, 'fs123', 221)" onmouseover="showTip(event, 'fs123', 221)" class="i">sender</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs74', 222)" onmouseover="showTip(event, 'fs74', 222)" class="t">obj</span>, <span onmouseout="hideTip(event, 'fs124', 223)" onmouseover="showTip(event, 'fs124', 223)" class="i">args</span><span class="o">:</span> <span class="o">&#39;</span><span class="i">Args</span>) <span class="o">=</span> <span onmouseout="hideTip(event, 'fs117', 224)" onmouseover="showTip(event, 'fs117', 224)" class="i">observer</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs125', 225)" onmouseover="showTip(event, 'fs125', 225)" class="f">OnNext</span>(<span onmouseout="hideTip(event, 'fs124', 226)" onmouseover="showTip(event, 'fs124', 226)" class="i">args</span>)
+
+    <span class="k">interface</span> <span onmouseout="hideTip(event, 'fs70', 227)" onmouseover="showTip(event, 'fs70', 227)" class="t">IDisposable</span> <span class="k">with</span>
+        <span class="k">member</span> <span onmouseout="hideTip(event, 'fs121', 228)" onmouseover="showTip(event, 'fs121', 228)" class="i">this</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs126', 229)" onmouseover="showTip(event, 'fs126', 229)" class="f">Dispose</span>() <span class="o">=</span> <span class="k">if</span> <span onmouseout="hideTip(event, 'fs127', 230)" onmouseover="showTip(event, 'fs127', 230)" class="f">not</span> <span onmouseout="hideTip(event, 'fs120', 231)" onmouseover="showTip(event, 'fs120', 231)" class="v">disposed</span> <span class="k">then</span>
+                                    <span onmouseout="hideTip(event, 'fs120', 232)" onmouseover="showTip(event, 'fs120', 232)" class="v">disposed</span> <span class="o">&lt;-</span> <span class="k">true</span>
+                                    <span onmouseout="hideTip(event, 'fs117', 233)" onmouseover="showTip(event, 'fs117', 233)" class="i">observer</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs128', 234)" onmouseover="showTip(event, 'fs128', 234)" class="f">OnCompleted</span>()
+                                    <span onmouseout="hideTip(event, 'fs119', 235)" onmouseover="showTip(event, 'fs119', 235)" class="i">tracker</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs129', 236)" onmouseover="showTip(event, 'fs129', 236)" class="f">Disposed</span>(<span onmouseout="hideTip(event, 'fs121', 237)" onmouseover="showTip(event, 'fs121', 237)" class="i">this</span>)
+
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs130', 238)" onmouseover="showTip(event, 'fs130', 238)" class="f">TrackableEvent</span><span class="o">&lt;</span><span class="o">&#39;</span><span onmouseout="hideTip(event, 'fs131', 239)" onmouseover="showTip(event, 'fs131', 239)" class="i">Delegate</span>, <span class="o">&#39;</span><span class="i">Args</span> <span class="k">when</span> <span class="o">&#39;</span><span onmouseout="hideTip(event, 'fs131', 240)" onmouseover="showTip(event, 'fs131', 240)" class="i">Delegate</span><span class="o">:</span> <span class="k">delegate</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">Args</span>, <span onmouseout="hideTip(event, 'fs116', 241)" onmouseover="showTip(event, 'fs116', 241)" class="t">unit</span><span class="o">&gt;</span> <span class="k">and</span> <span class="o">&#39;</span><span onmouseout="hideTip(event, 'fs131', 242)" onmouseover="showTip(event, 'fs131', 242)" class="i">Delegate</span> <span class="o">:&gt;</span> <span onmouseout="hideTip(event, 'fs1', 243)" onmouseover="showTip(event, 'fs1', 243)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs131', 244)" onmouseover="showTip(event, 'fs131', 244)" class="t">Delegate</span><span class="o">&gt;</span>() <span class="k">as</span> <span onmouseout="hideTip(event, 'fs132', 245)" onmouseover="showTip(event, 'fs132', 245)" class="v">this</span> <span class="o">=</span>
+    <span class="k">static</span> <span class="k">let</span> <span onmouseout="hideTip(event, 'fs133', 246)" onmouseover="showTip(event, 'fs133', 246)" class="f">dummy</span>(<span onmouseout="hideTip(event, 'fs134', 247)" onmouseover="showTip(event, 'fs134', 247)" class="i">s</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs74', 248)" onmouseover="showTip(event, 'fs74', 248)" class="t">obj</span>, <span onmouseout="hideTip(event, 'fs135', 249)" onmouseover="showTip(event, 'fs135', 249)" class="i">a</span><span class="o">:</span><span class="o">&#39;</span><span class="i">Args</span>) <span class="o">=</span> ()
+
+    [&lt;<span onmouseout="hideTip(event, 'fs136', 250)" onmouseover="showTip(event, 'fs136', 250)" class="t">DefaultValue</span>&gt;]
+    <span class="k">val</span> <span class="k">mutable</span> <span onmouseout="hideTip(event, 'fs137', 251)" onmouseover="showTip(event, 'fs137', 251)" class="v">del</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs131', 252)" onmouseover="showTip(event, 'fs131', 252)" class="t">Delegate</span>
+    <span class="k">do</span> <span class="v">this</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs137', 253)" onmouseover="showTip(event, 'fs137', 253)" class="v">del</span> <span class="o">&lt;-</span> <span onmouseout="hideTip(event, 'fs131', 254)" onmouseover="showTip(event, 'fs131', 254)" class="t">Delegate</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs138', 255)" onmouseover="showTip(event, 'fs138', 255)" class="f">CreateDelegate</span>(<span onmouseout="hideTip(event, 'fs139', 256)" onmouseover="showTip(event, 'fs139', 256)" class="i">typeof</span><span class="o">&lt;</span><span class="o">&#39;</span><span onmouseout="hideTip(event, 'fs131', 257)" onmouseover="showTip(event, 'fs131', 257)" class="i">Delegate</span><span class="o">&gt;</span>, <span onmouseout="hideTip(event, 'fs139', 258)" onmouseover="showTip(event, 'fs139', 258)" class="i">typeof</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs130', 259)" onmouseover="showTip(event, 'fs130', 259)" class="t">TrackableEvent</span><span class="o">&lt;</span><span class="o">&#39;</span><span onmouseout="hideTip(event, 'fs131', 260)" onmouseover="showTip(event, 'fs131', 260)" class="i">Delegate</span>,<span class="o">&#39;</span><span class="i">Args</span><span class="o">&gt;</span><span class="o">&gt;</span>, <span class="s">&quot;dummy&quot;</span>)
+
+    <span class="k">member</span> <span onmouseout="hideTip(event, 'fs132', 261)" onmouseover="showTip(event, 'fs132', 261)" class="i">this</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs140', 262)" onmouseover="showTip(event, 'fs140', 262)" class="i">Publish</span> <span class="o">=</span> (<span onmouseout="hideTip(event, 'fs132', 263)" onmouseover="showTip(event, 'fs132', 263)" class="i">this</span> <span class="o">:&gt;</span> <span onmouseout="hideTip(event, 'fs141', 264)" onmouseover="showTip(event, 'fs141', 264)" class="t">IEvent</span><span class="o">&lt;</span><span class="o">&#39;</span><span onmouseout="hideTip(event, 'fs131', 265)" onmouseover="showTip(event, 'fs131', 265)" class="i">Delegate</span>,<span class="o">&#39;</span><span class="i">Args</span><span class="o">&gt;</span>)
+
+    <span class="k">abstract</span> <span onmouseout="hideTip(event, 'fs142', 266)" onmouseover="showTip(event, 'fs142', 266)" class="f">Trigger</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs74', 267)" onmouseover="showTip(event, 'fs74', 267)" class="t">obj</span> <span class="o">*</span> <span class="o">&#39;</span><span class="i">Args</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs116', 268)" onmouseover="showTip(event, 'fs116', 268)" class="t">unit</span>
+    <span class="k">default</span> <span onmouseout="hideTip(event, 'fs132', 269)" onmouseover="showTip(event, 'fs132', 269)" class="i">this</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs143', 270)" onmouseover="showTip(event, 'fs143', 270)" class="f">Trigger</span>(<span onmouseout="hideTip(event, 'fs123', 271)" onmouseover="showTip(event, 'fs123', 271)" class="i">sender</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs74', 272)" onmouseover="showTip(event, 'fs74', 272)" class="t">obj</span>, <span onmouseout="hideTip(event, 'fs124', 273)" onmouseover="showTip(event, 'fs124', 273)" class="i">args</span><span class="o">:</span> <span class="o">&#39;</span><span class="i">Args</span>) <span class="o">=</span>
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs144', 274)" onmouseover="showTip(event, 'fs144', 274)" class="i">argPack</span> <span class="o">=</span> [|<span onmouseout="hideTip(event, 'fs123', 275)" onmouseover="showTip(event, 'fs123', 275)" class="i">sender</span>; <span onmouseout="hideTip(event, 'fs124', 276)" onmouseover="showTip(event, 'fs124', 276)" class="i">args</span> <span class="o">:&gt;</span> <span onmouseout="hideTip(event, 'fs74', 277)" onmouseover="showTip(event, 'fs74', 277)" class="t">obj</span>|]
+        <span onmouseout="hideTip(event, 'fs132', 278)" onmouseover="showTip(event, 'fs132', 278)" class="i">this</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs137', 279)" onmouseover="showTip(event, 'fs137', 279)" class="v">del</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs145', 280)" onmouseover="showTip(event, 'fs145', 280)" class="f">GetInvocationList</span>()
+        <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs103', 281)" onmouseover="showTip(event, 'fs103', 281)" class="t">Array</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs104', 282)" onmouseover="showTip(event, 'fs104', 282)" class="f">iter</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs146', 283)" onmouseover="showTip(event, 'fs146', 283)" class="i">d</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs20', 284)" onmouseover="showTip(event, 'fs20', 284)" class="f">ignore</span> <span class="o">&lt;|</span> <span onmouseout="hideTip(event, 'fs146', 285)" onmouseover="showTip(event, 'fs146', 285)" class="i">d</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs147', 286)" onmouseover="showTip(event, 'fs147', 286)" class="f">DynamicInvoke</span>(<span onmouseout="hideTip(event, 'fs144', 287)" onmouseover="showTip(event, 'fs144', 287)" class="i">argPack</span>))
+
+    <span class="k">interface</span> <span onmouseout="hideTip(event, 'fs113', 288)" onmouseover="showTip(event, 'fs113', 288)" class="t">IObservableTracker</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">Args</span><span class="o">&gt;</span> <span class="k">with</span>
+        <span class="k">member</span> <span onmouseout="hideTip(event, 'fs132', 289)" onmouseover="showTip(event, 'fs132', 289)" class="i">this</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs148', 290)" onmouseover="showTip(event, 'fs148', 290)" class="f">Disposed</span>(<span onmouseout="hideTip(event, 'fs149', 291)" onmouseover="showTip(event, 'fs149', 291)" class="i">tracked</span>) <span class="o">=</span>
+            <span class="k">let</span> <span onmouseout="hideTip(event, 'fs146', 292)" onmouseover="showTip(event, 'fs146', 292)" class="i">d</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs131', 293)" onmouseover="showTip(event, 'fs131', 293)" class="t">Delegate</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs138', 294)" onmouseover="showTip(event, 'fs138', 294)" class="f">CreateDelegate</span>(<span onmouseout="hideTip(event, 'fs139', 295)" onmouseover="showTip(event, 'fs139', 295)" class="i">typeof</span><span class="o">&lt;</span><span class="o">&#39;</span><span onmouseout="hideTip(event, 'fs131', 296)" onmouseover="showTip(event, 'fs131', 296)" class="i">Delegate</span><span class="o">&gt;</span>, <span onmouseout="hideTip(event, 'fs149', 297)" onmouseover="showTip(event, 'fs149', 297)" class="i">tracked</span>, <span class="s">&quot;Callback&quot;</span>)
+            <span onmouseout="hideTip(event, 'fs132', 298)" onmouseover="showTip(event, 'fs132', 298)" class="i">this</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs137', 299)" onmouseover="showTip(event, 'fs137', 299)" class="v">del</span> <span class="o">&lt;-</span> <span onmouseout="hideTip(event, 'fs131', 300)" onmouseover="showTip(event, 'fs131', 300)" class="t">Delegate</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs150', 301)" onmouseover="showTip(event, 'fs150', 301)" class="f">Remove</span>(<span onmouseout="hideTip(event, 'fs132', 302)" onmouseover="showTip(event, 'fs132', 302)" class="i">this</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs137', 303)" onmouseover="showTip(event, 'fs137', 303)" class="v">del</span>, <span onmouseout="hideTip(event, 'fs146', 304)" onmouseover="showTip(event, 'fs146', 304)" class="i">d</span>)
+
+    <span class="k">interface</span> <span onmouseout="hideTip(event, 'fs141', 305)" onmouseover="showTip(event, 'fs141', 305)" class="t">IEvent</span><span class="o">&lt;</span><span class="o">&#39;</span><span onmouseout="hideTip(event, 'fs131', 306)" onmouseover="showTip(event, 'fs131', 306)" class="i">Delegate</span>,<span class="o">&#39;</span><span class="i">Args</span><span class="o">&gt;</span> <span class="k">with</span>
+        <span class="k">member</span> <span onmouseout="hideTip(event, 'fs132', 307)" onmouseover="showTip(event, 'fs132', 307)" class="i">this</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs151', 308)" onmouseover="showTip(event, 'fs151', 308)" class="f">Subscribe</span>(<span onmouseout="hideTip(event, 'fs117', 309)" onmouseover="showTip(event, 'fs117', 309)" class="i">observer</span>) <span class="o">=</span>
+            <span class="k">let</span> <span onmouseout="hideTip(event, 'fs152', 310)" onmouseover="showTip(event, 'fs152', 310)" class="i">tracker</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs115', 311)" onmouseover="showTip(event, 'fs115', 311)" class="t">ObserverTracker</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">Args</span><span class="o">&gt;</span>(<span onmouseout="hideTip(event, 'fs117', 312)" onmouseover="showTip(event, 'fs117', 312)" class="i">observer</span>, <span onmouseout="hideTip(event, 'fs132', 313)" onmouseover="showTip(event, 'fs132', 313)" class="i">this</span>)
+            <span class="k">let</span> <span onmouseout="hideTip(event, 'fs146', 314)" onmouseover="showTip(event, 'fs146', 314)" class="i">d</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs131', 315)" onmouseover="showTip(event, 'fs131', 315)" class="t">Delegate</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs138', 316)" onmouseover="showTip(event, 'fs138', 316)" class="f">CreateDelegate</span>(<span onmouseout="hideTip(event, 'fs139', 317)" onmouseover="showTip(event, 'fs139', 317)" class="i">typeof</span><span class="o">&lt;</span><span class="o">&#39;</span><span onmouseout="hideTip(event, 'fs131', 318)" onmouseover="showTip(event, 'fs131', 318)" class="i">Delegate</span><span class="o">&gt;</span>, <span onmouseout="hideTip(event, 'fs152', 319)" onmouseover="showTip(event, 'fs152', 319)" class="i">tracker</span>, <span class="s">&quot;Callback&quot;</span>)
+            <span onmouseout="hideTip(event, 'fs132', 320)" onmouseover="showTip(event, 'fs132', 320)" class="i">this</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs137', 321)" onmouseover="showTip(event, 'fs137', 321)" class="v">del</span> <span class="o">&lt;-</span> <span onmouseout="hideTip(event, 'fs131', 322)" onmouseover="showTip(event, 'fs131', 322)" class="t">Delegate</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs153', 323)" onmouseover="showTip(event, 'fs153', 323)" class="f">Combine</span>(<span onmouseout="hideTip(event, 'fs132', 324)" onmouseover="showTip(event, 'fs132', 324)" class="i">this</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs137', 325)" onmouseover="showTip(event, 'fs137', 325)" class="v">del</span>, <span onmouseout="hideTip(event, 'fs146', 326)" onmouseover="showTip(event, 'fs146', 326)" class="i">d</span>)
+            <span onmouseout="hideTip(event, 'fs152', 327)" onmouseover="showTip(event, 'fs152', 327)" class="i">tracker</span> <span class="o">:&gt;</span> <span onmouseout="hideTip(event, 'fs70', 328)" onmouseover="showTip(event, 'fs70', 328)" class="t">IDisposable</span>
+
+        <span class="k">member</span> <span onmouseout="hideTip(event, 'fs132', 329)" onmouseover="showTip(event, 'fs132', 329)" class="i">this</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs154', 330)" onmouseover="showTip(event, 'fs154', 330)" class="f">AddHandler</span>(<span onmouseout="hideTip(event, 'fs155', 331)" onmouseover="showTip(event, 'fs155', 331)" class="i">d</span><span class="o">:</span> <span class="o">&#39;</span><span onmouseout="hideTip(event, 'fs131', 332)" onmouseover="showTip(event, 'fs131', 332)" class="i">Delegate</span>) <span class="o">=</span> <span onmouseout="hideTip(event, 'fs132', 333)" onmouseover="showTip(event, 'fs132', 333)" class="i">this</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs137', 334)" onmouseover="showTip(event, 'fs137', 334)" class="v">del</span> <span class="o">&lt;-</span> <span onmouseout="hideTip(event, 'fs131', 335)" onmouseover="showTip(event, 'fs131', 335)" class="t">Delegate</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs153', 336)" onmouseover="showTip(event, 'fs153', 336)" class="f">Combine</span>(<span onmouseout="hideTip(event, 'fs132', 337)" onmouseover="showTip(event, 'fs132', 337)" class="i">this</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs137', 338)" onmouseover="showTip(event, 'fs137', 338)" class="v">del</span>, <span onmouseout="hideTip(event, 'fs155', 339)" onmouseover="showTip(event, 'fs155', 339)" class="i">d</span>)
+        <span class="k">member</span> <span onmouseout="hideTip(event, 'fs132', 340)" onmouseover="showTip(event, 'fs132', 340)" class="i">this</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs156', 341)" onmouseover="showTip(event, 'fs156', 341)" class="f">RemoveHandler</span>(<span onmouseout="hideTip(event, 'fs155', 342)" onmouseover="showTip(event, 'fs155', 342)" class="i">d</span><span class="o">:</span> <span class="o">&#39;</span><span onmouseout="hideTip(event, 'fs131', 343)" onmouseover="showTip(event, 'fs131', 343)" class="i">Delegate</span>) <span class="o">=</span> <span onmouseout="hideTip(event, 'fs132', 344)" onmouseover="showTip(event, 'fs132', 344)" class="i">this</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs137', 345)" onmouseover="showTip(event, 'fs137', 345)" class="v">del</span> <span class="o">&lt;-</span> <span onmouseout="hideTip(event, 'fs131', 346)" onmouseover="showTip(event, 'fs131', 346)" class="t">Delegate</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs150', 347)" onmouseover="showTip(event, 'fs150', 347)" class="f">Remove</span>(<span onmouseout="hideTip(event, 'fs132', 348)" onmouseover="showTip(event, 'fs132', 348)" class="i">this</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs137', 349)" onmouseover="showTip(event, 'fs137', 349)" class="v">del</span>, <span onmouseout="hideTip(event, 'fs155', 350)" onmouseover="showTip(event, 'fs155', 350)" class="i">d</span>)
+
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs157', 351)" onmouseover="showTip(event, 'fs157', 351)" class="t">WpfAwareEvent</span><span class="o">&lt;</span><span class="o">&#39;</span><span onmouseout="hideTip(event, 'fs131', 352)" onmouseover="showTip(event, 'fs131', 352)" class="i">Delegate</span>, <span class="o">&#39;</span><span class="i">Args</span> <span class="k">when</span> <span class="o">&#39;</span><span onmouseout="hideTip(event, 'fs131', 353)" onmouseover="showTip(event, 'fs131', 353)" class="i">Delegate</span><span class="o">:</span> <span class="k">delegate</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">Args</span>, <span onmouseout="hideTip(event, 'fs116', 354)" onmouseover="showTip(event, 'fs116', 354)" class="t">unit</span><span class="o">&gt;</span> <span class="k">and</span> <span class="o">&#39;</span><span onmouseout="hideTip(event, 'fs131', 355)" onmouseover="showTip(event, 'fs131', 355)" class="i">Delegate</span> <span class="o">:&gt;</span> <span onmouseout="hideTip(event, 'fs1', 356)" onmouseover="showTip(event, 'fs1', 356)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs131', 357)" onmouseover="showTip(event, 'fs131', 357)" class="t">Delegate</span><span class="o">&gt;</span>() <span class="o">=</span>
+    <span class="k">inherit</span> <span onmouseout="hideTip(event, 'fs130', 358)" onmouseover="showTip(event, 'fs130', 358)" class="t">TrackableEvent</span><span class="o">&lt;</span><span class="o">&#39;</span><span onmouseout="hideTip(event, 'fs131', 359)" onmouseover="showTip(event, 'fs131', 359)" class="i">Delegate</span>, <span class="o">&#39;</span><span class="i">Args</span><span class="o">&gt;</span>()
+
+    <span class="k">override</span> <span onmouseout="hideTip(event, 'fs158', 360)" onmouseover="showTip(event, 'fs158', 360)" class="i">this</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs159', 361)" onmouseover="showTip(event, 'fs159', 361)" class="f">Trigger</span>(<span onmouseout="hideTip(event, 'fs123', 362)" onmouseover="showTip(event, 'fs123', 362)" class="i">sender</span>, <span onmouseout="hideTip(event, 'fs124', 363)" onmouseover="showTip(event, 'fs124', 363)" class="i">args</span>) <span class="o">=</span>
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs144', 364)" onmouseover="showTip(event, 'fs144', 364)" class="i">argPack</span> <span class="o">=</span> [|<span onmouseout="hideTip(event, 'fs123', 365)" onmouseover="showTip(event, 'fs123', 365)" class="i">sender</span>; <span onmouseout="hideTip(event, 'fs124', 366)" onmouseover="showTip(event, 'fs124', 366)" class="i">args</span> <span class="o">:&gt;</span> <span onmouseout="hideTip(event, 'fs74', 367)" onmouseover="showTip(event, 'fs74', 367)" class="t">obj</span>|]
+        <span onmouseout="hideTip(event, 'fs158', 368)" onmouseover="showTip(event, 'fs158', 368)" class="i">this</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs137', 369)" onmouseover="showTip(event, 'fs137', 369)" class="v">del</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs145', 370)" onmouseover="showTip(event, 'fs145', 370)" class="f">GetInvocationList</span>()
+        <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs103', 371)" onmouseover="showTip(event, 'fs103', 371)" class="t">Array</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs104', 372)" onmouseover="showTip(event, 'fs104', 372)" class="f">iter</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs146', 373)" onmouseover="showTip(event, 'fs146', 373)" class="i">d</span> <span class="k">-&gt;</span>
+            <span class="k">match</span> <span onmouseout="hideTip(event, 'fs146', 374)" onmouseover="showTip(event, 'fs146', 374)" class="i">d</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs160', 375)" onmouseover="showTip(event, 'fs160', 375)" class="i">Target</span> <span class="k">with</span>
+            | <span class="o">:?</span> <span onmouseout="hideTip(event, 'fs59', 376)" onmouseover="showTip(event, 'fs59', 376)" class="i">Threading</span><span class="o">.</span><span class="i">DispatcherObject</span> <span class="k">as</span> <span onmouseout="hideTip(event, 'fs161', 377)" onmouseover="showTip(event, 'fs161', 377)" class="i">wpfObj</span> <span class="k">when</span> <span onmouseout="hideTip(event, 'fs127', 378)" onmouseover="showTip(event, 'fs127', 378)" class="f">not</span>(<span onmouseout="hideTip(event, 'fs161', 379)" onmouseover="showTip(event, 'fs161', 379)" class="i">wpfObj</span><span class="o">.</span><span class="i">CheckAccess</span>()) <span class="k">-&gt;</span>
+                <span onmouseout="hideTip(event, 'fs20', 380)" onmouseover="showTip(event, 'fs20', 380)" class="f">ignore</span> <span class="o">&lt;|</span> <span onmouseout="hideTip(event, 'fs161', 381)" onmouseover="showTip(event, 'fs161', 381)" class="i">wpfObj</span><span class="o">.</span><span class="i">Dispatcher</span><span class="o">.</span><span class="i">Invoke</span>(<span onmouseout="hideTip(event, 'fs146', 382)" onmouseover="showTip(event, 'fs146', 382)" class="i">d</span>, <span onmouseout="hideTip(event, 'fs144', 383)" onmouseover="showTip(event, 'fs144', 383)" class="i">argPack</span>)
+            | _ <span class="k">-&gt;</span>
+                <span onmouseout="hideTip(event, 'fs20', 384)" onmouseover="showTip(event, 'fs20', 384)" class="f">ignore</span> <span class="o">&lt;|</span> <span onmouseout="hideTip(event, 'fs146', 385)" onmouseover="showTip(event, 'fs146', 385)" class="i">d</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs147', 386)" onmouseover="showTip(event, 'fs147', 386)" class="f">DynamicInvoke</span>(<span onmouseout="hideTip(event, 'fs144', 387)" onmouseover="showTip(event, 'fs144', 387)" class="i">argPack</span>))
+
+
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs162', 388)" onmouseover="showTip(event, 'fs162', 388)" class="f">WpfObservableCollection</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span>() <span class="k">as</span> <span onmouseout="hideTip(event, 'fs163', 389)" onmouseover="showTip(event, 'fs163', 389)" class="v">this</span> <span class="o">=</span>
+    <span class="k">inherit</span> <span onmouseout="hideTip(event, 'fs38', 390)" onmouseover="showTip(event, 'fs38', 390)" class="i">Collections</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs164', 391)" onmouseover="showTip(event, 'fs164', 391)" class="i">ObjectModel</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs165', 392)" onmouseover="showTip(event, 'fs165', 392)" class="t">Collection</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span>()
+
+    [&lt;<span onmouseout="hideTip(event, 'fs166', 393)" onmouseover="showTip(event, 'fs166', 393)" class="t">Literal</span>&gt;] <span class="k">static</span> <span class="k">let</span> <span onmouseout="hideTip(event, 'fs167', 394)" onmouseover="showTip(event, 'fs167', 394)" class="i">CountString</span> <span class="o">=</span> <span class="s">&quot;Count&quot;</span>
+    [&lt;<span onmouseout="hideTip(event, 'fs166', 395)" onmouseover="showTip(event, 'fs166', 395)" class="t">Literal</span>&gt;] <span class="k">static</span> <span class="k">let</span> <span onmouseout="hideTip(event, 'fs168', 396)" onmouseover="showTip(event, 'fs168', 396)" class="i">IndexerName</span> <span class="o">=</span> <span class="s">&quot;Index&quot;</span>
+
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs169', 397)" onmouseover="showTip(event, 'fs169', 397)" class="i">collectionChanged</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs157', 398)" onmouseover="showTip(event, 'fs157', 398)" class="t">WpfAwareEvent</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs170', 399)" onmouseover="showTip(event, 'fs170', 399)" class="t">NotifyCollectionChangedEventHandler</span>, <span onmouseout="hideTip(event, 'fs171', 400)" onmouseover="showTip(event, 'fs171', 400)" class="t">NotifyCollectionChangedEventArgs</span><span class="o">&gt;</span>()
+
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs76', 401)" onmouseover="showTip(event, 'fs76', 401)" class="i">propertyChangedEvent</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs77', 402)" onmouseover="showTip(event, 'fs77', 402)" class="t">DelegateEvent</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs78', 403)" onmouseover="showTip(event, 'fs78', 403)" class="i">ComponentModel</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs79', 404)" onmouseover="showTip(event, 'fs79', 404)" class="t">PropertyChangedEventHandler</span><span class="o">&gt;</span>()
+
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs172', 405)" onmouseover="showTip(event, 'fs172', 405)" class="f">onPropertyChanged</span> <span onmouseout="hideTip(event, 'fs93', 406)" onmouseover="showTip(event, 'fs93', 406)" class="i">propertyName</span> <span class="o">=</span> 
+        <span onmouseout="hideTip(event, 'fs76', 407)" onmouseover="showTip(event, 'fs76', 407)" class="i">propertyChangedEvent</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs94', 408)" onmouseover="showTip(event, 'fs94', 408)" class="f">Trigger</span>([| <span onmouseout="hideTip(event, 'fs163', 409)" onmouseover="showTip(event, 'fs163', 409)" class="v">this</span>; <span onmouseout="hideTip(event, 'fs78', 410)" onmouseover="showTip(event, 'fs78', 410)" class="i">ComponentModel</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs95', 411)" onmouseover="showTip(event, 'fs95', 411)" class="t">PropertyChangedEventArgs</span>(<span onmouseout="hideTip(event, 'fs93', 412)" onmouseover="showTip(event, 'fs93', 412)" class="i">propertyName</span>) |])
+        
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs173', 413)" onmouseover="showTip(event, 'fs173', 413)" class="f">setValue</span>(<span onmouseout="hideTip(event, 'fs98', 414)" onmouseover="showTip(event, 'fs98', 414)" class="i">field</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs99', 415)" onmouseover="showTip(event, 'fs99', 415)" class="t">byref</span><span class="o">&lt;</span>_<span class="o">&gt;</span>, <span onmouseout="hideTip(event, 'fs100', 416)" onmouseover="showTip(event, 'fs100', 416)" class="i">value</span>, [&lt;<span onmouseout="hideTip(event, 'fs101', 417)" onmouseover="showTip(event, 'fs101', 417)" class="t">ParamArray</span>&gt;] <span onmouseout="hideTip(event, 'fs102', 418)" onmouseover="showTip(event, 'fs102', 418)" class="i">fieldNames</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs43', 419)" onmouseover="showTip(event, 'fs43', 419)" class="t">string</span>[]) <span class="o">=</span>
+            <span class="k">if</span> <span onmouseout="hideTip(event, 'fs98', 420)" onmouseover="showTip(event, 'fs98', 420)" class="i">field</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs100', 421)" onmouseover="showTip(event, 'fs100', 421)" class="i">value</span> <span class="k">then</span> ()
+            <span class="k">else</span> <span onmouseout="hideTip(event, 'fs98', 422)" onmouseover="showTip(event, 'fs98', 422)" class="i">field</span> <span class="o">&lt;-</span> <span onmouseout="hideTip(event, 'fs100', 423)" onmouseover="showTip(event, 'fs100', 423)" class="i">value</span>
+                 <span onmouseout="hideTip(event, 'fs103', 424)" onmouseover="showTip(event, 'fs103', 424)" class="t">Array</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs104', 425)" onmouseover="showTip(event, 'fs104', 425)" class="f">iter</span> <span onmouseout="hideTip(event, 'fs172', 426)" onmouseover="showTip(event, 'fs172', 426)" class="f">onPropertyChanged</span> <span onmouseout="hideTip(event, 'fs102', 427)" onmouseover="showTip(event, 'fs102', 427)" class="i">fieldNames</span>
+
+    <span class="k">override</span> <span onmouseout="hideTip(event, 'fs163', 428)" onmouseover="showTip(event, 'fs163', 428)" class="i">this</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs174', 429)" onmouseover="showTip(event, 'fs174', 429)" class="f">ClearItems</span>() <span class="o">=</span>
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs175', 430)" onmouseover="showTip(event, 'fs175', 430)" class="i">oldItems</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs163', 431)" onmouseover="showTip(event, 'fs163', 431)" class="i">this</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs176', 432)" onmouseover="showTip(event, 'fs176', 432)" class="i">Items</span>
+        <span class="k">base</span><span class="o">.</span><span class="f">ClearItems</span>()
+        <span onmouseout="hideTip(event, 'fs172', 433)" onmouseover="showTip(event, 'fs172', 433)" class="f">onPropertyChanged</span>(<span onmouseout="hideTip(event, 'fs167', 434)" onmouseover="showTip(event, 'fs167', 434)" class="i">CountString</span>)
+        <span onmouseout="hideTip(event, 'fs172', 435)" onmouseover="showTip(event, 'fs172', 435)" class="f">onPropertyChanged</span>(<span onmouseout="hideTip(event, 'fs168', 436)" onmouseover="showTip(event, 'fs168', 436)" class="i">IndexerName</span>)
+        <span onmouseout="hideTip(event, 'fs169', 437)" onmouseover="showTip(event, 'fs169', 437)" class="i">collectionChanged</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs177', 438)" onmouseover="showTip(event, 'fs177', 438)" class="f">Trigger</span>(<span onmouseout="hideTip(event, 'fs163', 439)" onmouseover="showTip(event, 'fs163', 439)" class="i">this</span>, <span onmouseout="hideTip(event, 'fs171', 440)" onmouseover="showTip(event, 'fs171', 440)" class="t">NotifyCollectionChangedEventArgs</span>(<span onmouseout="hideTip(event, 'fs178', 441)" onmouseover="showTip(event, 'fs178', 441)" class="t">NotifyCollectionChangedAction</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs179', 442)" onmouseover="showTip(event, 'fs179', 442)" class="i">Reset</span>, <span onmouseout="hideTip(event, 'fs175', 443)" onmouseover="showTip(event, 'fs175', 443)" class="i">oldItems</span>, <span class="n">0</span>))
+
+    <span class="k">override</span> <span onmouseout="hideTip(event, 'fs163', 444)" onmouseover="showTip(event, 'fs163', 444)" class="i">this</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs180', 445)" onmouseover="showTip(event, 'fs180', 445)" class="f">InsertItem</span>(<span onmouseout="hideTip(event, 'fs181', 446)" onmouseover="showTip(event, 'fs181', 446)" class="i">index</span>, <span onmouseout="hideTip(event, 'fs182', 447)" onmouseover="showTip(event, 'fs182', 447)" class="i">item</span>) <span class="o">=</span>
+        <span class="k">base</span><span class="o">.</span><span class="f">InsertItem</span>(<span onmouseout="hideTip(event, 'fs181', 448)" onmouseover="showTip(event, 'fs181', 448)" class="i">index</span>, <span onmouseout="hideTip(event, 'fs182', 449)" onmouseover="showTip(event, 'fs182', 449)" class="i">item</span>)
+        <span onmouseout="hideTip(event, 'fs172', 450)" onmouseover="showTip(event, 'fs172', 450)" class="f">onPropertyChanged</span>(<span onmouseout="hideTip(event, 'fs167', 451)" onmouseover="showTip(event, 'fs167', 451)" class="i">CountString</span>)
+        <span onmouseout="hideTip(event, 'fs172', 452)" onmouseover="showTip(event, 'fs172', 452)" class="f">onPropertyChanged</span>(<span onmouseout="hideTip(event, 'fs168', 453)" onmouseover="showTip(event, 'fs168', 453)" class="i">IndexerName</span>)
+        <span onmouseout="hideTip(event, 'fs169', 454)" onmouseover="showTip(event, 'fs169', 454)" class="i">collectionChanged</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs177', 455)" onmouseover="showTip(event, 'fs177', 455)" class="f">Trigger</span>(<span onmouseout="hideTip(event, 'fs163', 456)" onmouseover="showTip(event, 'fs163', 456)" class="i">this</span>, <span onmouseout="hideTip(event, 'fs171', 457)" onmouseover="showTip(event, 'fs171', 457)" class="t">NotifyCollectionChangedEventArgs</span>(<span onmouseout="hideTip(event, 'fs178', 458)" onmouseover="showTip(event, 'fs178', 458)" class="t">NotifyCollectionChangedAction</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs183', 459)" onmouseover="showTip(event, 'fs183', 459)" class="i">Add</span>, <span onmouseout="hideTip(event, 'fs182', 460)" onmouseover="showTip(event, 'fs182', 460)" class="i">item</span>, <span onmouseout="hideTip(event, 'fs181', 461)" onmouseover="showTip(event, 'fs181', 461)" class="i">index</span>))
+
+    <span class="k">override</span> <span onmouseout="hideTip(event, 'fs163', 462)" onmouseover="showTip(event, 'fs163', 462)" class="i">this</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs184', 463)" onmouseover="showTip(event, 'fs184', 463)" class="f">RemoveItem</span>(<span onmouseout="hideTip(event, 'fs181', 464)" onmouseover="showTip(event, 'fs181', 464)" class="i">index</span>) <span class="o">=</span>
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs185', 465)" onmouseover="showTip(event, 'fs185', 465)" class="i">removedItem</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs163', 466)" onmouseover="showTip(event, 'fs163', 466)" class="i">this</span><span class="o">.</span>[<span onmouseout="hideTip(event, 'fs181', 467)" onmouseover="showTip(event, 'fs181', 467)" class="i">index</span>]
+        <span class="k">base</span><span class="o">.</span><span class="f">RemoveItem</span>(<span onmouseout="hideTip(event, 'fs181', 468)" onmouseover="showTip(event, 'fs181', 468)" class="i">index</span>)
+        <span onmouseout="hideTip(event, 'fs172', 469)" onmouseover="showTip(event, 'fs172', 469)" class="f">onPropertyChanged</span>(<span onmouseout="hideTip(event, 'fs167', 470)" onmouseover="showTip(event, 'fs167', 470)" class="i">CountString</span>)
+        <span onmouseout="hideTip(event, 'fs172', 471)" onmouseover="showTip(event, 'fs172', 471)" class="f">onPropertyChanged</span>(<span onmouseout="hideTip(event, 'fs168', 472)" onmouseover="showTip(event, 'fs168', 472)" class="i">IndexerName</span>)
+        <span onmouseout="hideTip(event, 'fs169', 473)" onmouseover="showTip(event, 'fs169', 473)" class="i">collectionChanged</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs177', 474)" onmouseover="showTip(event, 'fs177', 474)" class="f">Trigger</span>(<span onmouseout="hideTip(event, 'fs163', 475)" onmouseover="showTip(event, 'fs163', 475)" class="i">this</span>, <span onmouseout="hideTip(event, 'fs171', 476)" onmouseover="showTip(event, 'fs171', 476)" class="t">NotifyCollectionChangedEventArgs</span>(<span onmouseout="hideTip(event, 'fs178', 477)" onmouseover="showTip(event, 'fs178', 477)" class="t">NotifyCollectionChangedAction</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs186', 478)" onmouseover="showTip(event, 'fs186', 478)" class="i">Remove</span>, <span onmouseout="hideTip(event, 'fs185', 479)" onmouseover="showTip(event, 'fs185', 479)" class="i">removedItem</span>, <span onmouseout="hideTip(event, 'fs181', 480)" onmouseover="showTip(event, 'fs181', 480)" class="i">index</span>))
+
+    <span class="k">override</span> <span onmouseout="hideTip(event, 'fs163', 481)" onmouseover="showTip(event, 'fs163', 481)" class="i">this</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs187', 482)" onmouseover="showTip(event, 'fs187', 482)" class="f">SetItem</span>(<span onmouseout="hideTip(event, 'fs181', 483)" onmouseover="showTip(event, 'fs181', 483)" class="i">index</span>, <span onmouseout="hideTip(event, 'fs182', 484)" onmouseover="showTip(event, 'fs182', 484)" class="i">item</span>) <span class="o">=</span> 
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs188', 485)" onmouseover="showTip(event, 'fs188', 485)" class="i">oldItem</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs163', 486)" onmouseover="showTip(event, 'fs163', 486)" class="i">this</span><span class="o">.</span>[<span onmouseout="hideTip(event, 'fs181', 487)" onmouseover="showTip(event, 'fs181', 487)" class="i">index</span>]
+        <span class="k">base</span><span class="o">.</span><span class="f">SetItem</span>(<span onmouseout="hideTip(event, 'fs181', 488)" onmouseover="showTip(event, 'fs181', 488)" class="i">index</span>, <span onmouseout="hideTip(event, 'fs182', 489)" onmouseover="showTip(event, 'fs182', 489)" class="i">item</span>)
+        <span onmouseout="hideTip(event, 'fs172', 490)" onmouseover="showTip(event, 'fs172', 490)" class="f">onPropertyChanged</span>(<span onmouseout="hideTip(event, 'fs168', 491)" onmouseover="showTip(event, 'fs168', 491)" class="i">IndexerName</span>)
+        <span onmouseout="hideTip(event, 'fs169', 492)" onmouseover="showTip(event, 'fs169', 492)" class="i">collectionChanged</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs177', 493)" onmouseover="showTip(event, 'fs177', 493)" class="f">Trigger</span>(<span onmouseout="hideTip(event, 'fs163', 494)" onmouseover="showTip(event, 'fs163', 494)" class="i">this</span>, <span onmouseout="hideTip(event, 'fs171', 495)" onmouseover="showTip(event, 'fs171', 495)" class="t">NotifyCollectionChangedEventArgs</span>(<span onmouseout="hideTip(event, 'fs178', 496)" onmouseover="showTip(event, 'fs178', 496)" class="t">NotifyCollectionChangedAction</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs189', 497)" onmouseover="showTip(event, 'fs189', 497)" class="i">Replace</span>, <span onmouseout="hideTip(event, 'fs182', 498)" onmouseover="showTip(event, 'fs182', 498)" class="i">item</span>, <span onmouseout="hideTip(event, 'fs188', 499)" onmouseover="showTip(event, 'fs188', 499)" class="i">oldItem</span>, <span onmouseout="hideTip(event, 'fs181', 500)" onmouseover="showTip(event, 'fs181', 500)" class="i">index</span>))
+
+    <span class="k">interface</span> <span onmouseout="hideTip(event, 'fs78', 501)" onmouseover="showTip(event, 'fs78', 501)" class="i">ComponentModel</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs82', 502)" onmouseover="showTip(event, 'fs82', 502)" class="t">INotifyPropertyChanged</span> <span class="k">with</span>
+        [&lt;<span onmouseout="hideTip(event, 'fs83', 503)" onmouseover="showTip(event, 'fs83', 503)" class="t">CLIEvent</span>&gt;]
+        <span class="k">member</span> <span onmouseout="hideTip(event, 'fs190', 504)" onmouseover="showTip(event, 'fs190', 504)" class="i">me</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs191', 505)" onmouseover="showTip(event, 'fs191', 505)" class="f">PropertyChanged</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs76', 506)" onmouseover="showTip(event, 'fs76', 506)" class="i">propertyChangedEvent</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs86', 507)" onmouseover="showTip(event, 'fs86', 507)" class="f">Publish</span>
+
+    <span class="k">interface</span> <span onmouseout="hideTip(event, 'fs192', 508)" onmouseover="showTip(event, 'fs192', 508)" class="t">INotifyCollectionChanged</span> <span class="k">with</span>
+        [&lt;<span onmouseout="hideTip(event, 'fs83', 509)" onmouseover="showTip(event, 'fs83', 509)" class="t">CLIEvent</span>&gt;]
+        <span class="k">member</span> <span onmouseout="hideTip(event, 'fs163', 510)" onmouseover="showTip(event, 'fs163', 510)" class="i">this</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs193', 511)" onmouseover="showTip(event, 'fs193', 511)" class="f">CollectionChanged</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs169', 512)" onmouseover="showTip(event, 'fs169', 512)" class="i">collectionChanged</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs194', 513)" onmouseover="showTip(event, 'fs194', 513)" class="f">Publish</span>
+
+
+<span class="c">// ------------------------- WPF Loader ------------------------- //</span>
+
+<span class="c">/// &lt;summary&gt;</span>
+<span class="c">/// Provide ready signal when XAML is completely read.</span>
+<span class="c">/// &lt;/summary&gt;</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs195', 514)" onmouseover="showTip(event, 'fs195', 514)" class="t">IXamlConnector</span> <span class="o">=</span>
+    <span class="k">abstract</span> <span onmouseout="hideTip(event, 'fs196', 515)" onmouseover="showTip(event, 'fs196', 515)" class="f">Ready</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs116', 516)" onmouseover="showTip(event, 'fs116', 516)" class="t">unit</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs116', 517)" onmouseover="showTip(event, 'fs116', 517)" class="t">unit</span>
+
+[&lt;<span onmouseout="hideTip(event, 'fs197', 518)" onmouseover="showTip(event, 'fs197', 518)" class="t">RequireQualifiedAccess</span>&gt;]
+<span class="k">module</span> <span class="t">XamlLoader</span> <span class="o">=</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs198', 519)" onmouseover="showTip(event, 'fs198', 519)" class="f">locateType</span> (<span onmouseout="hideTip(event, 'fs199', 520)" onmouseover="showTip(event, 'fs199', 520)" class="i">typeName</span>) <span class="o">=</span>
+        <span onmouseout="hideTip(event, 'fs200', 521)" onmouseover="showTip(event, 'fs200', 521)" class="t">AppDomain</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs201', 522)" onmouseover="showTip(event, 'fs201', 522)" class="i">CurrentDomain</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs202', 523)" onmouseover="showTip(event, 'fs202', 523)" class="f">GetAssemblies</span>()<span class="o">.</span><span class="f">AsParallel</span>()
+        <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs35', 524)" onmouseover="showTip(event, 'fs35', 524)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs40', 525)" onmouseover="showTip(event, 'fs40', 525)" class="f">map</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs203', 526)" onmouseover="showTip(event, 'fs203', 526)" class="i">asm</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs203', 527)" onmouseover="showTip(event, 'fs203', 527)" class="i">asm</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs204', 528)" onmouseover="showTip(event, 'fs204', 528)" class="f">GetType</span>(<span onmouseout="hideTip(event, 'fs199', 529)" onmouseover="showTip(event, 'fs199', 529)" class="i">typeName</span>))
+        <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs35', 530)" onmouseover="showTip(event, 'fs35', 530)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs205', 531)" onmouseover="showTip(event, 'fs205', 531)" class="f">filter</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs206', 532)" onmouseover="showTip(event, 'fs206', 532)" class="i">t</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs206', 533)" onmouseover="showTip(event, 'fs206', 533)" class="i">t</span> <span class="o">&lt;&gt;</span> <span class="k">null</span>)
+        <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs35', 534)" onmouseover="showTip(event, 'fs35', 534)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs207', 535)" onmouseover="showTip(event, 'fs207', 535)" class="f">head</span>
+
+    <span class="k">let</span> <span class="k">private</span> <span onmouseout="hideTip(event, 'fs208', 536)" onmouseover="showTip(event, 'fs208', 536)" class="f">getRootObject</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">a</span><span class="o">&gt;</span> (<span onmouseout="hideTip(event, 'fs209', 537)" onmouseover="showTip(event, 'fs209', 537)" class="i">xaml</span>) <span class="o">=</span>
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs210', 538)" onmouseover="showTip(event, 'fs210', 538)" class="i">xml</span> <span class="o">=</span> <span class="i">XElement</span><span class="o">.</span><span class="i">Parse</span>(<span onmouseout="hideTip(event, 'fs209', 539)" onmouseover="showTip(event, 'fs209', 539)" class="i">xaml</span>)
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs211', 540)" onmouseover="showTip(event, 'fs211', 540)" class="i">clsName</span> <span class="o">=</span> <span class="i">XName</span><span class="o">.</span><span class="i">Get</span>(<span class="s">&quot;Class&quot;</span>, <span class="s">&quot;http://schemas.microsoft.com/winfx/2006/xaml&quot;</span>)
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs212', 541)" onmouseover="showTip(event, 'fs212', 541)" class="i">attr</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs210', 542)" onmouseover="showTip(event, 'fs210', 542)" class="i">xml</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs213', 543)" onmouseover="showTip(event, 'fs213', 543)" class="i">Attribute</span>(<span onmouseout="hideTip(event, 'fs211', 544)" onmouseover="showTip(event, 'fs211', 544)" class="i">clsName</span>)
+        <span class="k">if</span> <span onmouseout="hideTip(event, 'fs212', 545)" onmouseover="showTip(event, 'fs212', 545)" class="i">attr</span> <span class="o">=</span> <span class="k">null</span> <span class="k">then</span>
+            <span onmouseout="hideTip(event, 'fs214', 546)" onmouseover="showTip(event, 'fs214', 546)" class="p">None</span>
+        <span class="k">else</span>
+            <span class="k">match</span> <span onmouseout="hideTip(event, 'fs198', 547)" onmouseover="showTip(event, 'fs198', 547)" class="f">locateType</span>(<span onmouseout="hideTip(event, 'fs212', 548)" onmouseover="showTip(event, 'fs212', 548)" class="i">attr</span><span class="o">.</span><span class="i">Value</span>) <span class="k">with</span>
+            | <span class="k">null</span>     <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs215', 549)" onmouseover="showTip(event, 'fs215', 549)" class="f">failwithf</span> <span class="s">&quot;Type </span><span class="pf">%s</span><span class="s"> not found.&quot;</span> <span onmouseout="hideTip(event, 'fs212', 550)" onmouseover="showTip(event, 'fs212', 550)" class="i">attr</span><span class="o">.</span><span class="i">Value</span>
+            | <span onmouseout="hideTip(event, 'fs216', 551)" onmouseover="showTip(event, 'fs216', 551)" class="i">rootType</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs217', 552)" onmouseover="showTip(event, 'fs217', 552)" class="p">Some</span> (<span onmouseout="hideTip(event, 'fs218', 553)" onmouseover="showTip(event, 'fs218', 553)" class="t">Activator</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs219', 554)" onmouseover="showTip(event, 'fs219', 554)" class="f">CreateInstance</span>(<span onmouseout="hideTip(event, 'fs216', 555)" onmouseover="showTip(event, 'fs216', 555)" class="i">rootType</span>) <span class="o">:?&gt;</span> <span class="o">&#39;</span><span class="i">a</span>)
+
+    <span class="k">let</span> <span class="k">private</span> <span onmouseout="hideTip(event, 'fs220', 556)" onmouseover="showTip(event, 'fs220', 556)" class="f">loadStreamInternal</span>(<span onmouseout="hideTip(event, 'fs221', 557)" onmouseover="showTip(event, 'fs221', 557)" class="i">reader</span><span class="o">:</span> <span class="i">XamlXmlReader</span>, <span onmouseout="hideTip(event, 'fs222', 558)" onmouseover="showTip(event, 'fs222', 558)" class="i">rootObject</span>) <span class="o">=</span>
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs223', 559)" onmouseover="showTip(event, 'fs223', 559)" class="i">writerSettings</span> <span class="o">=</span> <span class="i">XamlObjectWriterSettings</span>()
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs224', 560)" onmouseover="showTip(event, 'fs224', 560)" class="i">connector</span> <span class="o">=</span> <span class="k">match</span> <span onmouseout="hideTip(event, 'fs222', 561)" onmouseover="showTip(event, 'fs222', 561)" class="i">rootObject</span> <span class="k">with</span>
+                        | <span onmouseout="hideTip(event, 'fs217', 562)" onmouseover="showTip(event, 'fs217', 562)" class="p">Some</span> <span onmouseout="hideTip(event, 'fs225', 563)" onmouseover="showTip(event, 'fs225', 563)" class="i">root</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs223', 564)" onmouseover="showTip(event, 'fs223', 564)" class="i">writerSettings</span><span class="o">.</span><span class="i">RootObjectInstance</span> <span class="o">&lt;-</span> <span onmouseout="hideTip(event, 'fs225', 565)" onmouseover="showTip(event, 'fs225', 565)" class="i">root</span>
+                                       <span class="k">match</span> (<span onmouseout="hideTip(event, 'fs225', 566)" onmouseover="showTip(event, 'fs225', 566)" class="i">root</span> <span class="o">:&gt;</span> <span onmouseout="hideTip(event, 'fs74', 567)" onmouseover="showTip(event, 'fs74', 567)" class="t">obj</span>) <span class="k">with</span>
+                                       | <span class="o">:?</span> <span onmouseout="hideTip(event, 'fs195', 568)" onmouseover="showTip(event, 'fs195', 568)" class="t">IXamlConnector</span> <span class="k">as</span> <span onmouseout="hideTip(event, 'fs226', 569)" onmouseover="showTip(event, 'fs226', 569)" class="i">c</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs217', 570)" onmouseover="showTip(event, 'fs217', 570)" class="p">Some</span> <span onmouseout="hideTip(event, 'fs226', 571)" onmouseover="showTip(event, 'fs226', 571)" class="i">c</span>
+                                       | _ <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs214', 572)" onmouseover="showTip(event, 'fs214', 572)" class="p">None</span>
+                        | <span onmouseout="hideTip(event, 'fs214', 573)" onmouseover="showTip(event, 'fs214', 573)" class="p">None</span>      <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs214', 574)" onmouseover="showTip(event, 'fs214', 574)" class="p">None</span>
+
+        <span class="k">use</span> <span onmouseout="hideTip(event, 'fs227', 575)" onmouseover="showTip(event, 'fs227', 575)" class="i">writer</span> <span class="o">=</span> <span class="k">new</span> <span class="i">XamlObjectWriter</span>(<span onmouseout="hideTip(event, 'fs221', 576)" onmouseover="showTip(event, 'fs221', 576)" class="i">reader</span><span class="o">.</span><span class="i">SchemaContext</span>, <span onmouseout="hideTip(event, 'fs223', 577)" onmouseover="showTip(event, 'fs223', 577)" class="i">writerSettings</span>)
+
+        <span class="k">while</span> <span onmouseout="hideTip(event, 'fs221', 578)" onmouseover="showTip(event, 'fs221', 578)" class="i">reader</span><span class="o">.</span><span class="i">Read</span>() <span class="k">do</span>
+            <span onmouseout="hideTip(event, 'fs227', 579)" onmouseover="showTip(event, 'fs227', 579)" class="i">writer</span><span class="o">.</span><span class="i">WriteNode</span>(<span onmouseout="hideTip(event, 'fs221', 580)" onmouseover="showTip(event, 'fs221', 580)" class="i">reader</span>)
+
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs228', 581)" onmouseover="showTip(event, 'fs228', 581)" class="i">result</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs227', 582)" onmouseover="showTip(event, 'fs227', 582)" class="i">writer</span><span class="o">.</span><span class="i">Result</span>
+        <span class="k">match</span> <span onmouseout="hideTip(event, 'fs224', 583)" onmouseover="showTip(event, 'fs224', 583)" class="i">connector</span> <span class="k">with</span>
+        | <span onmouseout="hideTip(event, 'fs214', 584)" onmouseover="showTip(event, 'fs214', 584)" class="p">None</span> <span class="k">-&gt;</span> ()
+        | <span onmouseout="hideTip(event, 'fs217', 585)" onmouseover="showTip(event, 'fs217', 585)" class="p">Some</span> <span onmouseout="hideTip(event, 'fs226', 586)" onmouseover="showTip(event, 'fs226', 586)" class="i">c</span> <span class="k">-&gt;</span>
+            <span class="c">// prevent access to the interface&#39;s member before the instance is fully initialized.</span>
+            <span class="k">let</span> <span onmouseout="hideTip(event, 'fs229', 587)" onmouseover="showTip(event, 'fs229', 587)" class="i">action</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs230', 588)" onmouseover="showTip(event, 'fs230', 588)" class="t">Action</span>(<span class="k">fun</span>() <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs226', 589)" onmouseover="showTip(event, 'fs226', 589)" class="i">c</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs231', 590)" onmouseover="showTip(event, 'fs231', 590)" class="f">Ready</span>())
+            <span onmouseout="hideTip(event, 'fs20', 591)" onmouseover="showTip(event, 'fs20', 591)" class="f">ignore</span> <span class="o">&lt;|</span> <span onmouseout="hideTip(event, 'fs7', 592)" onmouseover="showTip(event, 'fs7', 592)" class="i">Windows</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs59', 593)" onmouseover="showTip(event, 'fs59', 593)" class="i">Threading</span><span class="o">.</span><span class="i">Dispatcher</span><span class="o">.</span><span class="i">CurrentDispatcher</span><span class="o">.</span><span class="i">BeginInvoke</span>(<span onmouseout="hideTip(event, 'fs229', 594)" onmouseover="showTip(event, 'fs229', 594)" class="i">action</span>)
+        <span onmouseout="hideTip(event, 'fs228', 595)" onmouseover="showTip(event, 'fs228', 595)" class="i">result</span>
+
+    <span class="k">let</span> <span class="k">private</span> <span onmouseout="hideTip(event, 'fs232', 596)" onmouseover="showTip(event, 'fs232', 596)" class="f">LoadWpfInternal</span> <span onmouseout="hideTip(event, 'fs233', 597)" onmouseover="showTip(event, 'fs233', 597)" class="i">xamlContent</span> <span onmouseout="hideTip(event, 'fs234', 598)" onmouseover="showTip(event, 'fs234', 598)" class="i">rootObject</span> <span class="o">=</span>
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs235', 599)" onmouseover="showTip(event, 'fs235', 599)" class="i">stream</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs236', 600)" onmouseover="showTip(event, 'fs236', 600)" class="t">StringReader</span>(<span onmouseout="hideTip(event, 'fs233', 601)" onmouseover="showTip(event, 'fs233', 601)" class="i">xamlContent</span>)
+        <span class="k">use</span> <span onmouseout="hideTip(event, 'fs237', 602)" onmouseover="showTip(event, 'fs237', 602)" class="i">reader</span> <span class="o">=</span> <span class="k">new</span> <span class="i">XamlXmlReader</span>(<span onmouseout="hideTip(event, 'fs235', 603)" onmouseover="showTip(event, 'fs235', 603)" class="i">stream</span>, <span class="i">XamlReader</span><span class="o">.</span><span class="i">GetWpfSchemaContext</span>())
+        <span onmouseout="hideTip(event, 'fs220', 604)" onmouseover="showTip(event, 'fs220', 604)" class="f">loadStreamInternal</span>(<span onmouseout="hideTip(event, 'fs237', 605)" onmouseover="showTip(event, 'fs237', 605)" class="i">reader</span>, <span onmouseout="hideTip(event, 'fs234', 606)" onmouseover="showTip(event, 'fs234', 606)" class="i">rootObject</span>)
+
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs238', 607)" onmouseover="showTip(event, 'fs238', 607)" class="f">loadWpfFromString</span> <span onmouseout="hideTip(event, 'fs239', 608)" onmouseover="showTip(event, 'fs239', 608)" class="i">xamlBody</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs232', 609)" onmouseover="showTip(event, 'fs232', 609)" class="f">LoadWpfInternal</span> <span onmouseout="hideTip(event, 'fs239', 610)" onmouseover="showTip(event, 'fs239', 610)" class="i">xamlBody</span> (<span onmouseout="hideTip(event, 'fs208', 611)" onmouseover="showTip(event, 'fs208', 611)" class="f">getRootObject</span>(<span onmouseout="hideTip(event, 'fs239', 612)" onmouseover="showTip(event, 'fs239', 612)" class="i">xamlBody</span>))
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs240', 613)" onmouseover="showTip(event, 'fs240', 613)" class="f">LoadWpfFromFile</span> <span onmouseout="hideTip(event, 'fs241', 614)" onmouseover="showTip(event, 'fs241', 614)" class="i">xamlFilename</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs238', 615)" onmouseover="showTip(event, 'fs238', 615)" class="f">loadWpfFromString</span> <span class="o">&lt;|</span> <span onmouseout="hideTip(event, 'fs242', 616)" onmouseover="showTip(event, 'fs242', 616)" class="t">File</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs243', 617)" onmouseover="showTip(event, 'fs243', 617)" class="f">ReadAllText</span>(<span onmouseout="hideTip(event, 'fs241', 618)" onmouseover="showTip(event, 'fs241', 618)" class="i">xamlFilename</span>)
+
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs244', 619)" onmouseover="showTip(event, 'fs244', 619)" class="f">LoadWpf</span> <span onmouseout="hideTip(event, 'fs241', 620)" onmouseover="showTip(event, 'fs241', 620)" class="i">xamlFilename</span> <span onmouseout="hideTip(event, 'fs234', 621)" onmouseover="showTip(event, 'fs234', 621)" class="i">rootObject</span> <span class="o">=</span> 
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs233', 622)" onmouseover="showTip(event, 'fs233', 622)" class="i">xamlContent</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs242', 623)" onmouseover="showTip(event, 'fs242', 623)" class="t">File</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs243', 624)" onmouseover="showTip(event, 'fs243', 624)" class="f">ReadAllText</span>(<span onmouseout="hideTip(event, 'fs241', 625)" onmouseover="showTip(event, 'fs241', 625)" class="i">xamlFilename</span>)
+
+        <span onmouseout="hideTip(event, 'fs232', 626)" onmouseover="showTip(event, 'fs232', 626)" class="f">LoadWpfInternal</span> <span onmouseout="hideTip(event, 'fs233', 627)" onmouseover="showTip(event, 'fs233', 627)" class="i">xamlContent</span> <span onmouseout="hideTip(event, 'fs234', 628)" onmouseover="showTip(event, 'fs234', 628)" class="i">rootObject</span>
+
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs245', 629)" onmouseover="showTip(event, 'fs245', 629)" class="f">loadFromResource0</span> <span onmouseout="hideTip(event, 'fs50', 630)" onmouseover="showTip(event, 'fs50', 630)" class="i">resourceName</span> (<span onmouseout="hideTip(event, 'fs246', 631)" onmouseover="showTip(event, 'fs246', 631)" class="i">rootObj</span><span class="o">:</span> <span class="o">&#39;</span><span class="i">a</span> <span onmouseout="hideTip(event, 'fs247', 632)" onmouseover="showTip(event, 'fs247', 632)" class="t">option</span>) <span onmouseout="hideTip(event, 'fs203', 633)" onmouseover="showTip(event, 'fs203', 633)" class="i">asm</span> <span class="o">=</span>
+        <span class="k">match</span> <span onmouseout="hideTip(event, 'fs248', 634)" onmouseover="showTip(event, 'fs248', 634)" class="t">ResourceManager</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs249', 635)" onmouseover="showTip(event, 'fs249', 635)" class="f">findWpfResource</span> <span onmouseout="hideTip(event, 'fs50', 636)" onmouseover="showTip(event, 'fs50', 636)" class="i">resourceName</span> <span onmouseout="hideTip(event, 'fs203', 637)" onmouseover="showTip(event, 'fs203', 637)" class="i">asm</span> <span class="k">with</span>
+        | <span onmouseout="hideTip(event, 'fs214', 638)" onmouseover="showTip(event, 'fs214', 638)" class="p">None</span> <span class="k">-&gt;</span>
+            <span onmouseout="hideTip(event, 'fs215', 639)" onmouseover="showTip(event, 'fs215', 639)" class="f">failwithf</span> <span class="s">&quot;Cannot find WPF resource in </span><span class="pf">%s</span><span class="s"></span><span class="e">\n</span><span class="s">\</span>
+<span class="s">                       Available resources are:</span><span class="e">\n</span><span class="s">\</span>
+<span class="s">                       </span><span class="e">\t</span><span class="s">%s</span>
+<span class="s">                      &quot;</span> <span onmouseout="hideTip(event, 'fs203', 640)" onmouseover="showTip(event, 'fs203', 640)" class="i">asm</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs250', 641)" onmouseover="showTip(event, 'fs250', 641)" class="i">FullName</span> (<span onmouseout="hideTip(event, 'fs251', 642)" onmouseover="showTip(event, 'fs251', 642)" class="t">String</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs252', 643)" onmouseover="showTip(event, 'fs252', 643)" class="f">Join</span>(<span class="s">&quot;</span><span class="e">\n</span><span class="s"></span><span class="e">\t</span><span class="s">&quot;</span>, <span onmouseout="hideTip(event, 'fs203', 644)" onmouseover="showTip(event, 'fs203', 644)" class="i">asm</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs253', 645)" onmouseover="showTip(event, 'fs253', 645)" class="f">GetManifestResourceNames</span>()))
+        | <span onmouseout="hideTip(event, 'fs217', 646)" onmouseover="showTip(event, 'fs217', 646)" class="p">Some</span> <span onmouseout="hideTip(event, 'fs209', 647)" onmouseover="showTip(event, 'fs209', 647)" class="i">xaml</span> <span class="k">-&gt;</span> 
+            <span class="k">let</span> <span onmouseout="hideTip(event, 'fs254', 648)" onmouseover="showTip(event, 'fs254', 648)" class="i">text</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs236', 649)" onmouseover="showTip(event, 'fs236', 649)" class="t">StringReader</span>(<span onmouseout="hideTip(event, 'fs209', 650)" onmouseover="showTip(event, 'fs209', 650)" class="i">xaml</span>)
+            <span class="k">let</span> <span onmouseout="hideTip(event, 'fs255', 651)" onmouseover="showTip(event, 'fs255', 651)" class="i">finalRoot</span> <span class="o">=</span> <span class="k">if</span> <span onmouseout="hideTip(event, 'fs246', 652)" onmouseover="showTip(event, 'fs246', 652)" class="i">rootObj</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs256', 653)" onmouseover="showTip(event, 'fs256', 653)" class="i">IsNone</span> <span class="k">then</span> <span onmouseout="hideTip(event, 'fs208', 654)" onmouseover="showTip(event, 'fs208', 654)" class="f">getRootObject</span> <span onmouseout="hideTip(event, 'fs209', 655)" onmouseover="showTip(event, 'fs209', 655)" class="i">xaml</span> <span class="k">else</span> <span onmouseout="hideTip(event, 'fs246', 656)" onmouseover="showTip(event, 'fs246', 656)" class="i">rootObj</span>
+            <span class="k">use</span> <span onmouseout="hideTip(event, 'fs237', 657)" onmouseover="showTip(event, 'fs237', 657)" class="i">reader</span> <span class="o">=</span> <span class="k">new</span> <span class="i">XamlXmlReader</span>(<span onmouseout="hideTip(event, 'fs254', 658)" onmouseover="showTip(event, 'fs254', 658)" class="i">text</span>, <span class="i">XamlReader</span><span class="o">.</span><span class="i">GetWpfSchemaContext</span>())
+            <span onmouseout="hideTip(event, 'fs220', 659)" onmouseover="showTip(event, 'fs220', 659)" class="f">loadStreamInternal</span>(<span onmouseout="hideTip(event, 'fs237', 660)" onmouseover="showTip(event, 'fs237', 660)" class="i">reader</span>, <span onmouseout="hideTip(event, 'fs255', 661)" onmouseover="showTip(event, 'fs255', 661)" class="i">finalRoot</span>)
+        
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs257', 662)" onmouseover="showTip(event, 'fs257', 662)" class="f">loadFromResource</span> <span onmouseout="hideTip(event, 'fs50', 663)" onmouseover="showTip(event, 'fs50', 663)" class="i">resourceName</span> (<span onmouseout="hideTip(event, 'fs246', 664)" onmouseover="showTip(event, 'fs246', 664)" class="i">rootObj</span><span class="o">:</span> <span class="o">&#39;</span><span class="i">a</span> <span onmouseout="hideTip(event, 'fs247', 665)" onmouseover="showTip(event, 'fs247', 665)" class="t">option</span>) <span class="o">=</span>
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs203', 666)" onmouseover="showTip(event, 'fs203', 666)" class="i">asm</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs1', 667)" onmouseover="showTip(event, 'fs1', 667)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs21', 668)" onmouseover="showTip(event, 'fs21', 668)" class="i">Reflection</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs24', 669)" onmouseover="showTip(event, 'fs24', 669)" class="t">Assembly</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs258', 670)" onmouseover="showTip(event, 'fs258', 670)" class="f">GetCallingAssembly</span>()
+        <span class="k">in</span>  <span onmouseout="hideTip(event, 'fs245', 671)" onmouseover="showTip(event, 'fs245', 671)" class="f">loadFromResource0</span> <span onmouseout="hideTip(event, 'fs50', 672)" onmouseover="showTip(event, 'fs50', 672)" class="i">resourceName</span> <span onmouseout="hideTip(event, 'fs246', 673)" onmouseover="showTip(event, 'fs246', 673)" class="i">rootObj</span> <span onmouseout="hideTip(event, 'fs203', 674)" onmouseover="showTip(event, 'fs203', 674)" class="i">asm</span>
+
+<span class="c">// ------------------------- DataContext method binder ------------------------- //</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs259', 675)" onmouseover="showTip(event, 'fs259', 675)" class="t">DCMethodExtension</span>(<span onmouseout="hideTip(event, 'fs260', 676)" onmouseover="showTip(event, 'fs260', 676)" class="i">methodName</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs43', 677)" onmouseover="showTip(event, 'fs43', 677)" class="t">string</span>) <span class="o">=</span>
+    <span class="k">inherit</span> <span class="i">MarkupExtension</span>()
+
+    <span class="k">let</span> <span class="i">assignContext</span> (<span class="i">ctx</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs74', 678)" onmouseover="showTip(event, 'fs74', 678)" class="i">obj</span>) <span class="i">evtInfo</span> <span class="o">=</span> 
+        <span class="k">match</span> <span class="i">ctx</span> <span class="k">with</span>
+        | <span class="k">null</span> <span class="k">-&gt;</span> <span class="k">null</span>
+        | <span class="i">ctx</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs131', 679)" onmouseover="showTip(event, 'fs131', 679)" class="i">Delegate</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs138', 680)" onmouseover="showTip(event, 'fs138', 680)" class="i">CreateDelegate</span>(<span class="i">evtInfo</span>, <span class="i">ctx</span>, <span class="i">methodName</span>)
+
+    <span class="k">override</span> <span class="i">me</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs261', 681)" onmouseover="showTip(event, 'fs261', 681)" class="f">ProvideValue</span>(<span class="i">serviceProvider</span>) <span class="o">=</span>
+        <span class="k">let</span> <span class="i">targetService</span> <span class="o">=</span> <span class="i">serviceProvider</span><span class="o">.</span><span class="i">GetService</span>(<span onmouseout="hideTip(event, 'fs139', 682)" onmouseover="showTip(event, 'fs139', 682)" class="i">typeof</span><span class="o">&lt;</span><span class="i">IProvideValueTarget</span><span class="o">&gt;</span>) <span class="o">:?&gt;</span> <span class="i">IProvideValueTarget</span>
+        <span class="k">let</span> <span class="i">fe</span> <span class="o">=</span> <span class="i">targetService</span><span class="o">.</span><span class="i">TargetObject</span> <span class="o">:?&gt;</span> <span class="i">FrameworkElement</span>
+        <span class="k">let</span> <span class="i">event</span> <span class="o">=</span> <span class="i">targetService</span><span class="o">.</span><span class="i">TargetProperty</span> <span class="o">:?&gt;</span> <span onmouseout="hideTip(event, 'fs262', 683)" onmouseover="showTip(event, 'fs262', 683)" class="i">Reflection</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs263', 684)" onmouseover="showTip(event, 'fs263', 684)" class="i">EventInfo</span>
+        <span class="k">let</span> <span class="i">evtType</span> <span class="o">=</span> <span class="i">event</span><span class="o">.</span><span class="i">EventHandlerType</span>
+
+        <span class="k">let</span> <span class="i">lastAssignment</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs264', 685)" onmouseover="showTip(event, 'fs264', 685)" class="i">ref</span> <span class="o">&lt;|</span> <span class="i">assignContext</span> (<span class="i">fe</span><span class="o">.</span><span class="i">DataContext</span>) <span class="i">evtType</span>
+
+        <span onmouseout="hideTip(event, 'fs20', 686)" onmouseover="showTip(event, 'fs20', 686)" class="i">ignore</span> <span class="o">&lt;|</span> <span class="i">fe</span><span class="o">.</span><span class="i">DataContextChanged</span><span class="o">.</span><span class="i">Subscribe</span>(
+            <span class="k">fun</span> <span class="i">args</span> <span class="k">-&gt;</span> <span class="k">match</span> <span class="o">!</span><span class="i">lastAssignment</span> <span class="k">with</span>
+                        | <span class="k">null</span> <span class="k">-&gt;</span> ()
+                        | <span class="i">handler</span> <span class="k">-&gt;</span> <span class="i">event</span><span class="o">.</span><span class="i">RemoveEventHandler</span>(<span class="i">fe</span>, <span class="i">handler</span>)
+
+                        <span class="i">lastAssignment</span> <span class="o">:=</span> <span class="i">assignContext</span> (<span class="i">args</span><span class="o">.</span><span class="i">NewValue</span>) <span class="i">evtType</span>
+                        <span class="k">match</span> <span class="o">!</span><span class="i">lastAssignment</span> <span class="k">with</span>
+                        | <span class="k">null</span> <span class="k">-&gt;</span> ()
+                        | <span class="i">handler</span> <span class="k">-&gt;</span> <span class="i">event</span><span class="o">.</span><span class="i">AddEventHandler</span>(<span class="i">fe</span>, <span class="i">handler</span>))
+        
+        <span class="o">!</span><span class="i">lastAssignment</span> <span class="o">:&gt;</span> <span onmouseout="hideTip(event, 'fs74', 687)" onmouseover="showTip(event, 'fs74', 687)" class="i">obj</span>
+
+<span class="c">// -------------- Utilities -----------------</span>
+<span class="k">module</span> <span onmouseout="hideTip(event, 'fs265', 688)" onmouseover="showTip(event, 'fs265', 688)" class="t">RZWpf</span> <span class="o">=</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs266', 689)" onmouseover="showTip(event, 'fs266', 689)" class="i">DesignerMode</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs1', 690)" onmouseover="showTip(event, 'fs1', 690)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs78', 691)" onmouseover="showTip(event, 'fs78', 691)" class="i">ComponentModel</span><span class="o">.</span><span class="i">DesignerProperties</span><span class="o">.</span><span class="i">GetIsInDesignMode</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace System</div>
+<div class="tip" id="fs2">namespace System.Collections</div>
+<div class="tip" id="fs3">namespace System.Collections.Specialized</div>
+<div class="tip" id="fs4">namespace System.IO</div>
+<div class="tip" id="fs5">namespace System.Xml</div>
+<div class="tip" id="fs6">Multiple items<br />namespace System.Linq<br /><br />--------------------<br />namespace Microsoft.FSharp.Linq</div>
+<div class="tip" id="fs7">namespace System.Windows</div>
+<div class="tip" id="fs8">namespace System.Linq</div>
+<div class="tip" id="fs9">val memoize : f:(&#39;a -&gt; &#39;b) -&gt; (&#39;a -&gt; &#39;b)<br /><br />Full name: RZ.Wpf.Utils.memoize</div>
+<div class="tip" id="fs10">val f : (&#39;a -&gt; &#39;b)</div>
+<div class="tip" id="fs11">val dict : Collections.Concurrent.ConcurrentDictionary&lt;&#39;a,&#39;b&gt;</div>
+<div class="tip" id="fs12">namespace System.Collections.Concurrent</div>
+<div class="tip" id="fs13">Multiple items<br />type ConcurrentDictionary&lt;&#39;TKey,&#39;TValue&gt; =<br />&#160;&#160;new : unit -&gt; ConcurrentDictionary&lt;&#39;TKey, &#39;TValue&gt; + 6 overloads<br />&#160;&#160;member AddOrUpdate : key:&#39;TKey * addValueFactory:Func&lt;&#39;TKey, &#39;TValue&gt; * updateValueFactory:Func&lt;&#39;TKey, &#39;TValue, &#39;TValue&gt; -&gt; &#39;TValue + 1 overload<br />&#160;&#160;member Clear : unit -&gt; unit<br />&#160;&#160;member ContainsKey : key:&#39;TKey -&gt; bool<br />&#160;&#160;member Count : int<br />&#160;&#160;member GetEnumerator : unit -&gt; IEnumerator&lt;KeyValuePair&lt;&#39;TKey, &#39;TValue&gt;&gt;<br />&#160;&#160;member GetOrAdd : key:&#39;TKey * valueFactory:Func&lt;&#39;TKey, &#39;TValue&gt; -&gt; &#39;TValue + 1 overload<br />&#160;&#160;member IsEmpty : bool<br />&#160;&#160;member Item : &#39;TKey -&gt; &#39;TValue with get, set<br />&#160;&#160;member Keys : ICollection&lt;&#39;TKey&gt;<br />&#160;&#160;...<br /><br />Full name: System.Collections.Concurrent.ConcurrentDictionary&lt;_,_&gt;<br /><br />--------------------<br />Collections.Concurrent.ConcurrentDictionary() : unit<br />Collections.Concurrent.ConcurrentDictionary(collection: Collections.Generic.IEnumerable&lt;Collections.Generic.KeyValuePair&lt;&#39;TKey,&#39;TValue&gt;&gt;) : unit<br />Collections.Concurrent.ConcurrentDictionary(comparer: Collections.Generic.IEqualityComparer&lt;&#39;TKey&gt;) : unit<br />Collections.Concurrent.ConcurrentDictionary(concurrencyLevel: int, capacity: int) : unit<br />Collections.Concurrent.ConcurrentDictionary(collection: Collections.Generic.IEnumerable&lt;Collections.Generic.KeyValuePair&lt;&#39;TKey,&#39;TValue&gt;&gt;, comparer: Collections.Generic.IEqualityComparer&lt;&#39;TKey&gt;) : unit<br />Collections.Concurrent.ConcurrentDictionary(concurrencyLevel: int, collection: Collections.Generic.IEnumerable&lt;Collections.Generic.KeyValuePair&lt;&#39;TKey,&#39;TValue&gt;&gt;, comparer: Collections.Generic.IEqualityComparer&lt;&#39;TKey&gt;) : unit<br />Collections.Concurrent.ConcurrentDictionary(concurrencyLevel: int, capacity: int, comparer: Collections.Generic.IEqualityComparer&lt;&#39;TKey&gt;) : unit</div>
+<div class="tip" id="fs14">val memoizedFunc : (&#39;a -&gt; &#39;b)</div>
+<div class="tip" id="fs15">val input : &#39;a</div>
+<div class="tip" id="fs16">Collections.Concurrent.ConcurrentDictionary.TryGetValue(key: &#39;a, value: byref&lt;&#39;b&gt;) : bool</div>
+<div class="tip" id="fs17">val x : &#39;b</div>
+<div class="tip" id="fs18">val answer : &#39;b</div>
+<div class="tip" id="fs19">Collections.Concurrent.ConcurrentDictionary.TryAdd(key: &#39;a, value: &#39;b) : bool</div>
+<div class="tip" id="fs20">val ignore : value:&#39;T -&gt; unit<br /><br />Full name: Microsoft.FSharp.Core.Operators.ignore</div>
+<div class="tip" id="fs21">namespace System.Reflection</div>
+<div class="tip" id="fs22">val private getResourceLookup0 : asm:Assembly -&gt; Map&lt;string,string&gt;<br /><br />Full name: RZ.Wpf.ResourceManager.getResourceLookup0</div>
+<div class="tip" id="fs23">val asm : Assembly</div>
+<div class="tip" id="fs24">type Assembly =<br />&#160;&#160;member CodeBase : string<br />&#160;&#160;member CreateInstance : typeName:string -&gt; obj + 2 overloads<br />&#160;&#160;member EntryPoint : MethodInfo<br />&#160;&#160;member Equals : o:obj -&gt; bool<br />&#160;&#160;member EscapedCodeBase : string<br />&#160;&#160;member Evidence : Evidence<br />&#160;&#160;member FullName : string<br />&#160;&#160;member GetCustomAttributes : inherit:bool -&gt; obj[] + 1 overload<br />&#160;&#160;member GetCustomAttributesData : unit -&gt; IList&lt;CustomAttributeData&gt;<br />&#160;&#160;member GetExportedTypes : unit -&gt; Type[]<br />&#160;&#160;...<br /><br />Full name: System.Reflection.Assembly</div>
+<div class="tip" id="fs25">val makeXamlString : (Stream -&gt; string)</div>
+<div class="tip" id="fs26">val stream : Stream</div>
+<div class="tip" id="fs27">type Stream =<br />&#160;&#160;inherit MarshalByRefObject<br />&#160;&#160;member BeginRead : buffer:byte[] * offset:int * count:int * callback:AsyncCallback * state:obj -&gt; IAsyncResult<br />&#160;&#160;member BeginWrite : buffer:byte[] * offset:int * count:int * callback:AsyncCallback * state:obj -&gt; IAsyncResult<br />&#160;&#160;member CanRead : bool<br />&#160;&#160;member CanSeek : bool<br />&#160;&#160;member CanTimeout : bool<br />&#160;&#160;member CanWrite : bool<br />&#160;&#160;member Close : unit -&gt; unit<br />&#160;&#160;member CopyTo : destination:Stream -&gt; unit + 1 overload<br />&#160;&#160;member Dispose : unit -&gt; unit<br />&#160;&#160;member EndRead : asyncResult:IAsyncResult -&gt; int<br />&#160;&#160;...<br /><br />Full name: System.IO.Stream</div>
+<div class="tip" id="fs28">val reader : StreamReader</div>
+<div class="tip" id="fs29">Multiple items<br />type StreamReader =<br />&#160;&#160;inherit TextReader<br />&#160;&#160;new : stream:Stream -&gt; StreamReader + 9 overloads<br />&#160;&#160;member BaseStream : Stream<br />&#160;&#160;member Close : unit -&gt; unit<br />&#160;&#160;member CurrentEncoding : Encoding<br />&#160;&#160;member DiscardBufferedData : unit -&gt; unit<br />&#160;&#160;member EndOfStream : bool<br />&#160;&#160;member Peek : unit -&gt; int<br />&#160;&#160;member Read : unit -&gt; int + 1 overload<br />&#160;&#160;member ReadLine : unit -&gt; string<br />&#160;&#160;member ReadToEnd : unit -&gt; string<br />&#160;&#160;...<br /><br />Full name: System.IO.StreamReader<br /><br />--------------------<br />StreamReader(stream: Stream) : unit<br />StreamReader(path: string) : unit<br />StreamReader(stream: Stream, detectEncodingFromByteOrderMarks: bool) : unit<br />StreamReader(stream: Stream, encoding: Text.Encoding) : unit<br />StreamReader(path: string, detectEncodingFromByteOrderMarks: bool) : unit<br />StreamReader(path: string, encoding: Text.Encoding) : unit<br />StreamReader(stream: Stream, encoding: Text.Encoding, detectEncodingFromByteOrderMarks: bool) : unit<br />StreamReader(path: string, encoding: Text.Encoding, detectEncodingFromByteOrderMarks: bool) : unit<br />StreamReader(stream: Stream, encoding: Text.Encoding, detectEncodingFromByteOrderMarks: bool, bufferSize: int) : unit<br />StreamReader(path: string, encoding: Text.Encoding, detectEncodingFromByteOrderMarks: bool, bufferSize: int) : unit</div>
+<div class="tip" id="fs30">StreamReader.ReadToEnd() : string</div>
+<div class="tip" id="fs31">val readResourceStream : (Stream -&gt; Map&lt;string,string&gt;)</div>
+<div class="tip" id="fs32">val reader : Resources.ResourceReader</div>
+<div class="tip" id="fs33">namespace System.Resources</div>
+<div class="tip" id="fs34">Multiple items<br />type ResourceReader =<br />&#160;&#160;new : fileName:string -&gt; ResourceReader + 1 overload<br />&#160;&#160;member Close : unit -&gt; unit<br />&#160;&#160;member Dispose : unit -&gt; unit<br />&#160;&#160;member GetEnumerator : unit -&gt; IDictionaryEnumerator<br />&#160;&#160;member GetResourceData : resourceName:string * resourceType:string * resourceData:byte[] -&gt; unit<br /><br />Full name: System.Resources.ResourceReader<br /><br />--------------------<br />Resources.ResourceReader(fileName: string) : unit<br />Resources.ResourceReader(stream: Stream) : unit</div>
+<div class="tip" id="fs35">module Seq<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs36">val cast : source:Collections.IEnumerable -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.cast</div>
+<div class="tip" id="fs37">Multiple items<br />val seq : sequence:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Core.Operators.seq<br /><br />--------------------<br />type seq&lt;&#39;T&gt; = Collections.Generic.IEnumerable&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.seq&lt;_&gt;</div>
+<div class="tip" id="fs38">Multiple items<br />namespace System.Collections<br /><br />--------------------<br />namespace Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs39">Multiple items<br />type DictionaryEntry =<br />&#160;&#160;struct<br />&#160;&#160;&#160;&#160;new : key:obj * value:obj -&gt; DictionaryEntry<br />&#160;&#160;&#160;&#160;member Key : obj with get, set<br />&#160;&#160;&#160;&#160;member Value : obj with get, set<br />&#160;&#160;end<br /><br />Full name: System.Collections.DictionaryEntry<br /><br />--------------------<br />Collections.DictionaryEntry()<br />Collections.DictionaryEntry(key: obj, value: obj) : unit</div>
+<div class="tip" id="fs40">val map : mapping:(&#39;T -&gt; &#39;U) -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;U&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.map</div>
+<div class="tip" id="fs41">val entry : Collections.DictionaryEntry</div>
+<div class="tip" id="fs42">property Collections.DictionaryEntry.Key: obj</div>
+<div class="tip" id="fs43">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />Full name: Microsoft.FSharp.Core.Operators.string<br /><br />--------------------<br />type string = String<br /><br />Full name: Microsoft.FSharp.Core.string</div>
+<div class="tip" id="fs44">property Collections.DictionaryEntry.Value: obj</div>
+<div class="tip" id="fs45">Multiple items<br />module Map<br /><br />from Microsoft.FSharp.Collections<br /><br />--------------------<br />type Map&lt;&#39;Key,&#39;Value (requires comparison)&gt; =<br />&#160;&#160;interface IEnumerable<br />&#160;&#160;interface IComparable<br />&#160;&#160;interface IEnumerable&lt;KeyValuePair&lt;&#39;Key,&#39;Value&gt;&gt;<br />&#160;&#160;interface ICollection&lt;KeyValuePair&lt;&#39;Key,&#39;Value&gt;&gt;<br />&#160;&#160;interface IDictionary&lt;&#39;Key,&#39;Value&gt;<br />&#160;&#160;new : elements:seq&lt;&#39;Key * &#39;Value&gt; -&gt; Map&lt;&#39;Key,&#39;Value&gt;<br />&#160;&#160;member Add : key:&#39;Key * value:&#39;Value -&gt; Map&lt;&#39;Key,&#39;Value&gt;<br />&#160;&#160;member ContainsKey : key:&#39;Key -&gt; bool<br />&#160;&#160;override Equals : obj -&gt; bool<br />&#160;&#160;member Remove : key:&#39;Key -&gt; Map&lt;&#39;Key,&#39;Value&gt;<br />&#160;&#160;...<br /><br />Full name: Microsoft.FSharp.Collections.Map&lt;_,_&gt;<br /><br />--------------------<br />new : elements:seq&lt;&#39;Key * &#39;Value&gt; -&gt; Map&lt;&#39;Key,&#39;Value&gt;</div>
+<div class="tip" id="fs46">val ofSeq : elements:seq&lt;&#39;Key * &#39;T&gt; -&gt; Map&lt;&#39;Key,&#39;T&gt; (requires comparison)<br /><br />Full name: Microsoft.FSharp.Collections.Map.ofSeq</div>
+<div class="tip" id="fs47">val getWpfResourceName : (Assembly -&gt; string)</div>
+<div class="tip" id="fs48">val sprintf : format:Printf.StringFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.sprintf</div>
+<div class="tip" id="fs49">Assembly.GetName() : AssemblyName<br />Assembly.GetName(copiedName: bool) : AssemblyName</div>
+<div class="tip" id="fs50">val resourceName : string</div>
+<div class="tip" id="fs51">Assembly.GetManifestResourceStream(name: string) : Stream<br />Assembly.GetManifestResourceStream(type: Type, name: string) : Stream</div>
+<div class="tip" id="fs52">val empty&lt;&#39;Key,&#39;T (requires comparison)&gt; : Map&lt;&#39;Key,&#39;T&gt; (requires comparison)<br /><br />Full name: Microsoft.FSharp.Collections.Map.empty</div>
+<div class="tip" id="fs53">val private getResourceLookup : (Assembly -&gt; Map&lt;string,string&gt;)<br /><br />Full name: RZ.Wpf.ResourceManager.getResourceLookup</div>
+<div class="tip" id="fs54">module Utils<br /><br />from RZ.Wpf</div>
+<div class="tip" id="fs55">val findWpfResource : name:string -&gt; (Assembly -&gt; string option)<br /><br />Full name: RZ.Wpf.ResourceManager.findWpfResource</div>
+<div class="tip" id="fs56">val name : string</div>
+<div class="tip" id="fs57">val tryFind : key:&#39;Key -&gt; table:Map&lt;&#39;Key,&#39;T&gt; -&gt; &#39;T option (requires comparison)<br /><br />Full name: Microsoft.FSharp.Collections.Map.tryFind</div>
+<div class="tip" id="fs58">String.ToLower() : string<br />String.ToLower(culture: Globalization.CultureInfo) : string</div>
+<div class="tip" id="fs59">namespace System.Threading</div>
+<div class="tip" id="fs60">val create : period:&#39;a -&gt; &#39;b<br /><br />Full name: RZ.Wpf.DispatcherTimer.create</div>
+<div class="tip" id="fs61">val period : &#39;a</div>
+<div class="tip" id="fs62">val start : timer:&#39;a -&gt; &#39;b<br /><br />Full name: RZ.Wpf.DispatcherTimer.start</div>
+<div class="tip" id="fs63">val timer : &#39;a</div>
+<div class="tip" id="fs64">val startTimer : period:&#39;a -&gt; handler:(&#39;b -&gt; unit) -&gt; IDisposable<br /><br />Full name: RZ.Wpf.DispatcherTimer.startTimer</div>
+<div class="tip" id="fs65">val handler : (&#39;b -&gt; unit)</div>
+<div class="tip" id="fs66">val t : obj</div>
+<div class="tip" id="fs67">val r : IDisposable</div>
+<div class="tip" id="fs68">module Observable<br /><br />from Microsoft.FSharp.Control</div>
+<div class="tip" id="fs69">val subscribe : callback:(&#39;T -&gt; unit) -&gt; source:IObservable&lt;&#39;T&gt; -&gt; IDisposable<br /><br />Full name: Microsoft.FSharp.Control.Observable.subscribe</div>
+<div class="tip" id="fs70">type IDisposable =<br />&#160;&#160;member Dispose : unit -&gt; unit<br /><br />Full name: System.IDisposable</div>
+<div class="tip" id="fs71">val me : IDisposable</div>
+<div class="tip" id="fs72">IDisposable.Dispose() : unit</div>
+<div class="tip" id="fs73">type UIEvent = string * obj<br /><br />Full name: RZ.Wpf.UIEvent</div>
+<div class="tip" id="fs74">type obj = Object<br /><br />Full name: Microsoft.FSharp.Core.obj</div>
+<div class="tip" id="fs75">Multiple items<br />type ViewModelBase =<br />&#160;&#160;interface INotifyPropertyChanged<br />&#160;&#160;new : unit -&gt; ViewModelBase<br />&#160;&#160;member OnPropertyChanged : propertyName:string -&gt; unit<br />&#160;&#160;member OnUIEvent : data:UIEvent -&gt; unit<br />&#160;&#160;member SubscribeUIEvent : evt:string * f:(obj -&gt; unit) -&gt; unit<br />&#160;&#160;member add_UIEvent : Handler&lt;UIEvent&gt; -&gt; unit<br />&#160;&#160;member UIEvent : IEvent&lt;UIEvent&gt;<br />&#160;&#160;member remove_UIEvent : Handler&lt;UIEvent&gt; -&gt; unit<br />&#160;&#160;member setValue : field:byref&lt;&#39;a&gt; * value:&#39;a * [&lt;ParamArray&gt;] fieldNames:string [] -&gt; unit (requires equality)<br /><br />Full name: RZ.Wpf.ViewModelBase<br /><br />--------------------<br />new : unit -&gt; ViewModelBase</div>
+<div class="tip" id="fs76">val propertyChangedEvent : DelegateEvent&lt;ComponentModel.PropertyChangedEventHandler&gt;</div>
+<div class="tip" id="fs77">Multiple items<br />type DelegateEvent&lt;&#39;Delegate (requires &#39;Delegate :&gt; Delegate)&gt; =<br />&#160;&#160;new : unit -&gt; DelegateEvent&lt;&#39;Delegate&gt;<br />&#160;&#160;member Trigger : args:obj [] -&gt; unit<br />&#160;&#160;member Publish : IDelegateEvent&lt;&#39;Delegate&gt;<br /><br />Full name: Microsoft.FSharp.Control.DelegateEvent&lt;_&gt;<br /><br />--------------------<br />new : unit -&gt; DelegateEvent&lt;&#39;Delegate&gt;</div>
+<div class="tip" id="fs78">namespace System.ComponentModel</div>
+<div class="tip" id="fs79">type PropertyChangedEventHandler =<br />&#160;&#160;delegate of obj * PropertyChangedEventArgs -&gt; unit<br /><br />Full name: System.ComponentModel.PropertyChangedEventHandler</div>
+<div class="tip" id="fs80">val runEvent : Event&lt;UIEvent&gt;</div>
+<div class="tip" id="fs81">Multiple items<br />module Event<br /><br />from Microsoft.FSharp.Control<br /><br />--------------------<br />type Event&lt;&#39;T&gt; =<br />&#160;&#160;new : unit -&gt; Event&lt;&#39;T&gt;<br />&#160;&#160;member Trigger : arg:&#39;T -&gt; unit<br />&#160;&#160;member Publish : IEvent&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Control.Event&lt;_&gt;<br /><br />--------------------<br />type Event&lt;&#39;Delegate,&#39;Args (requires delegate and &#39;Delegate :&gt; Delegate)&gt; =<br />&#160;&#160;new : unit -&gt; Event&lt;&#39;Delegate,&#39;Args&gt;<br />&#160;&#160;member Trigger : sender:obj * args:&#39;Args -&gt; unit<br />&#160;&#160;member Publish : IEvent&lt;&#39;Delegate,&#39;Args&gt;<br /><br />Full name: Microsoft.FSharp.Control.Event&lt;_,_&gt;<br /><br />--------------------<br />new : unit -&gt; Event&lt;&#39;T&gt;<br /><br />--------------------<br />new : unit -&gt; Event&lt;&#39;Delegate,&#39;Args&gt;</div>
+<div class="tip" id="fs82">type INotifyPropertyChanged =<br />&#160;&#160;event PropertyChanged : PropertyChangedEventHandler<br /><br />Full name: System.ComponentModel.INotifyPropertyChanged</div>
+<div class="tip" id="fs83">Multiple items<br />type CLIEventAttribute =<br />&#160;&#160;inherit Attribute<br />&#160;&#160;new : unit -&gt; CLIEventAttribute<br /><br />Full name: Microsoft.FSharp.Core.CLIEventAttribute<br /><br />--------------------<br />new : unit -&gt; CLIEventAttribute</div>
+<div class="tip" id="fs84">val x : ViewModelBase</div>
+<div class="tip" id="fs85">override ViewModelBase.PropertyChanged : IDelegateEvent&lt;ComponentModel.PropertyChangedEventHandler&gt;<br /><br />Full name: RZ.Wpf.ViewModelBase.PropertyChanged</div>
+<div class="tip" id="fs86">property DelegateEvent.Publish: IDelegateEvent&lt;ComponentModel.PropertyChangedEventHandler&gt;</div>
+<div class="tip" id="fs87">Multiple items<br />member ViewModelBase.UIEvent : IEvent&lt;UIEvent&gt;<br /><br />Full name: RZ.Wpf.ViewModelBase.UIEvent<br /><br />--------------------<br />type UIEvent = string * obj<br /><br />Full name: RZ.Wpf.UIEvent</div>
+<div class="tip" id="fs88">property Event.Publish: IEvent&lt;UIEvent&gt;</div>
+<div class="tip" id="fs89">member ViewModelBase.OnUIEvent : data:UIEvent -&gt; unit<br /><br />Full name: RZ.Wpf.ViewModelBase.OnUIEvent</div>
+<div class="tip" id="fs90">val data : UIEvent</div>
+<div class="tip" id="fs91">member Event.Trigger : arg:&#39;T -&gt; unit</div>
+<div class="tip" id="fs92">member ViewModelBase.OnPropertyChanged : propertyName:string -&gt; unit<br /><br />Full name: RZ.Wpf.ViewModelBase.OnPropertyChanged</div>
+<div class="tip" id="fs93">val propertyName : string</div>
+<div class="tip" id="fs94">member DelegateEvent.Trigger : args:obj [] -&gt; unit</div>
+<div class="tip" id="fs95">Multiple items<br />type PropertyChangedEventArgs =<br />&#160;&#160;inherit EventArgs<br />&#160;&#160;new : propertyName:string -&gt; PropertyChangedEventArgs<br />&#160;&#160;member PropertyName : string<br /><br />Full name: System.ComponentModel.PropertyChangedEventArgs<br /><br />--------------------<br />ComponentModel.PropertyChangedEventArgs(propertyName: string) : unit</div>
+<div class="tip" id="fs96">val self : ViewModelBase</div>
+<div class="tip" id="fs97">member ViewModelBase.setValue : field:byref&lt;&#39;a&gt; * value:&#39;a * [&lt;ParamArray&gt;] fieldNames:string [] -&gt; unit (requires equality)<br /><br />Full name: RZ.Wpf.ViewModelBase.setValue</div>
+<div class="tip" id="fs98">val field : byref&lt;&#39;a&gt; (requires equality)</div>
+<div class="tip" id="fs99">type byref&lt;&#39;T&gt; = (# &quot;&lt;Common IL Type Omitted&gt;&quot; #)<br /><br />Full name: Microsoft.FSharp.Core.byref&lt;_&gt;</div>
+<div class="tip" id="fs100">val value : &#39;a (requires equality)</div>
+<div class="tip" id="fs101">Multiple items<br />type ParamArrayAttribute =<br />&#160;&#160;inherit Attribute<br />&#160;&#160;new : unit -&gt; ParamArrayAttribute<br /><br />Full name: System.ParamArrayAttribute<br /><br />--------------------<br />ParamArrayAttribute() : unit</div>
+<div class="tip" id="fs102">val fieldNames : string []</div>
+<div class="tip" id="fs103">type Array =<br />&#160;&#160;member Clone : unit -&gt; obj<br />&#160;&#160;member CopyTo : array:Array * index:int -&gt; unit + 1 overload<br />&#160;&#160;member GetEnumerator : unit -&gt; IEnumerator<br />&#160;&#160;member GetLength : dimension:int -&gt; int<br />&#160;&#160;member GetLongLength : dimension:int -&gt; int64<br />&#160;&#160;member GetLowerBound : dimension:int -&gt; int<br />&#160;&#160;member GetUpperBound : dimension:int -&gt; int<br />&#160;&#160;member GetValue : [&lt;ParamArray&gt;] indices:int[] -&gt; obj + 7 overloads<br />&#160;&#160;member Initialize : unit -&gt; unit<br />&#160;&#160;member IsFixedSize : bool<br />&#160;&#160;...<br /><br />Full name: System.Array</div>
+<div class="tip" id="fs104">val iter : action:(&#39;T -&gt; unit) -&gt; array:&#39;T [] -&gt; unit<br /><br />Full name: Microsoft.FSharp.Collections.Array.iter</div>
+<div class="tip" id="fs105">member ViewModelBase.OnPropertyChanged : propertyName:string -&gt; unit</div>
+<div class="tip" id="fs106">member ViewModelBase.SubscribeUIEvent : evt:string * f:(obj -&gt; unit) -&gt; unit<br /><br />Full name: RZ.Wpf.ViewModelBase.SubscribeUIEvent</div>
+<div class="tip" id="fs107">val evt : string</div>
+<div class="tip" id="fs108">val f : (obj -&gt; unit)</div>
+<div class="tip" id="fs109">event ViewModelBase.UIEvent: IEvent&lt;Handler&lt;UIEvent&gt;,UIEvent&gt;</div>
+<div class="tip" id="fs110">val filter : predicate:(&#39;T -&gt; bool) -&gt; source:IObservable&lt;&#39;T&gt; -&gt; IObservable&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Control.Observable.filter</div>
+<div class="tip" id="fs111">val n : string</div>
+<div class="tip" id="fs112">val data : obj</div>
+<div class="tip" id="fs113">type IObservableTracker&lt;&#39;Args&gt; =<br />&#160;&#160;interface<br />&#160;&#160;&#160;&#160;abstract member Disposed : ObserverTracker&lt;&#39;Args&gt; -&gt; unit<br />&#160;&#160;end<br /><br />Full name: RZ.Wpf.IObservableTracker&lt;_&gt;</div>
+<div class="tip" id="fs114">abstract member IObservableTracker.Disposed : ObserverTracker&lt;&#39;Args&gt; -&gt; unit<br /><br />Full name: RZ.Wpf.IObservableTracker`1.Disposed</div>
+<div class="tip" id="fs115">Multiple items<br />type ObserverTracker&lt;&#39;Args&gt; =<br />&#160;&#160;interface IDisposable<br />&#160;&#160;new : observer:IObserver&lt;&#39;Args&gt; * tracker:IObservableTracker&lt;&#39;Args&gt; -&gt; ObserverTracker&lt;&#39;Args&gt;<br />&#160;&#160;member Callback : sender:obj * args:&#39;Args -&gt; unit<br /><br />Full name: RZ.Wpf.ObserverTracker&lt;_&gt;<br /><br />--------------------<br />new : observer:IObserver&lt;&#39;Args&gt; * tracker:IObservableTracker&lt;&#39;Args&gt; -&gt; ObserverTracker&lt;&#39;Args&gt;</div>
+<div class="tip" id="fs116">type unit = Unit<br /><br />Full name: Microsoft.FSharp.Core.unit</div>
+<div class="tip" id="fs117">val observer : IObserver&lt;&#39;Args&gt;</div>
+<div class="tip" id="fs118">type IObserver&lt;&#39;T&gt; =<br />&#160;&#160;member OnCompleted : unit -&gt; unit<br />&#160;&#160;member OnError : error:Exception -&gt; unit<br />&#160;&#160;member OnNext : value:&#39;T -&gt; unit<br /><br />Full name: System.IObserver&lt;_&gt;</div>
+<div class="tip" id="fs119">val tracker : IObservableTracker&lt;&#39;Args&gt;</div>
+<div class="tip" id="fs120">val mutable disposed : bool</div>
+<div class="tip" id="fs121">val this : ObserverTracker&lt;&#39;Args&gt;</div>
+<div class="tip" id="fs122">member ObserverTracker.Callback : sender:obj * args:&#39;Args -&gt; unit<br /><br />Full name: RZ.Wpf.ObserverTracker`1.Callback</div>
+<div class="tip" id="fs123">val sender : obj</div>
+<div class="tip" id="fs124">val args : &#39;Args</div>
+<div class="tip" id="fs125">IObserver.OnNext(value: &#39;Args) : unit</div>
+<div class="tip" id="fs126">override ObserverTracker.Dispose : unit -&gt; unit<br /><br />Full name: RZ.Wpf.ObserverTracker`1.Dispose</div>
+<div class="tip" id="fs127">val not : value:bool -&gt; bool<br /><br />Full name: Microsoft.FSharp.Core.Operators.not</div>
+<div class="tip" id="fs128">IObserver.OnCompleted() : unit</div>
+<div class="tip" id="fs129">abstract member IObservableTracker.Disposed : ObserverTracker&lt;&#39;Args&gt; -&gt; unit</div>
+<div class="tip" id="fs130">Multiple items<br />type TrackableEvent&lt;&#39;Delegate,&#39;Args (requires delegate and &#39;Delegate :&gt; Delegate)&gt; =<br />&#160;&#160;interface IEvent&lt;&#39;Delegate,&#39;Args&gt;<br />&#160;&#160;interface IObservableTracker&lt;&#39;Args&gt;<br />&#160;&#160;new : unit -&gt; TrackableEvent&lt;&#39;Delegate,&#39;Args&gt;<br />&#160;&#160;val mutable del: Delegate<br />&#160;&#160;abstract member Trigger : obj * &#39;Args -&gt; unit<br />&#160;&#160;override Trigger : sender:obj * args:&#39;Args -&gt; unit<br />&#160;&#160;member Publish : IEvent&lt;&#39;Delegate,&#39;Args&gt;<br /><br />Full name: RZ.Wpf.TrackableEvent&lt;_,_&gt;<br /><br />--------------------<br />new : unit -&gt; TrackableEvent&lt;&#39;Delegate,&#39;Args&gt;</div>
+<div class="tip" id="fs131">type Delegate =<br />&#160;&#160;member Clone : unit -&gt; obj<br />&#160;&#160;member DynamicInvoke : [&lt;ParamArray&gt;] args:obj[] -&gt; obj<br />&#160;&#160;member Equals : obj:obj -&gt; bool<br />&#160;&#160;member GetHashCode : unit -&gt; int<br />&#160;&#160;member GetInvocationList : unit -&gt; Delegate[]<br />&#160;&#160;member GetObjectData : info:SerializationInfo * context:StreamingContext -&gt; unit<br />&#160;&#160;member Method : MethodInfo<br />&#160;&#160;member Target : obj<br />&#160;&#160;static member Combine : [&lt;ParamArray&gt;] delegates:Delegate[] -&gt; Delegate + 1 overload<br />&#160;&#160;static member CreateDelegate : type:Type * method:MethodInfo -&gt; Delegate + 9 overloads<br />&#160;&#160;...<br /><br />Full name: System.Delegate</div>
+<div class="tip" id="fs132">val this : TrackableEvent&lt;&#39;Delegate,&#39;Args&gt; (requires delegate and &#39;Delegate :&gt; Delegate)</div>
+<div class="tip" id="fs133">val dummy : (obj * &#39;Args -&gt; unit)</div>
+<div class="tip" id="fs134">val s : obj</div>
+<div class="tip" id="fs135">val a : &#39;Args</div>
+<div class="tip" id="fs136">Multiple items<br />type DefaultValueAttribute =<br />&#160;&#160;inherit Attribute<br />&#160;&#160;new : unit -&gt; DefaultValueAttribute<br />&#160;&#160;new : check:bool -&gt; DefaultValueAttribute<br />&#160;&#160;member Check : bool<br /><br />Full name: Microsoft.FSharp.Core.DefaultValueAttribute<br /><br />--------------------<br />new : unit -&gt; DefaultValueAttribute<br />new : check:bool -&gt; DefaultValueAttribute</div>
+<div class="tip" id="fs137">TrackableEvent.del: Delegate</div>
+<div class="tip" id="fs138">Delegate.CreateDelegate(type: Type, method: Reflection.MethodInfo) : Delegate<br />Delegate.CreateDelegate(type: Type, firstArgument: obj, method: Reflection.MethodInfo) : Delegate<br />Delegate.CreateDelegate(type: Type, method: Reflection.MethodInfo, throwOnBindFailure: bool) : Delegate<br />Delegate.CreateDelegate(type: Type, target: Type, method: string) : Delegate<br />Delegate.CreateDelegate(type: Type, target: obj, method: string) : Delegate<br />Delegate.CreateDelegate(type: Type, firstArgument: obj, method: Reflection.MethodInfo, throwOnBindFailure: bool) : Delegate<br />Delegate.CreateDelegate(type: Type, target: Type, method: string, ignoreCase: bool) : Delegate<br />Delegate.CreateDelegate(type: Type, target: obj, method: string, ignoreCase: bool) : Delegate<br />Delegate.CreateDelegate(type: Type, target: Type, method: string, ignoreCase: bool, throwOnBindFailure: bool) : Delegate<br />Delegate.CreateDelegate(type: Type, target: obj, method: string, ignoreCase: bool, throwOnBindFailure: bool) : Delegate</div>
+<div class="tip" id="fs139">val typeof&lt;&#39;T&gt; : Type<br /><br />Full name: Microsoft.FSharp.Core.Operators.typeof</div>
+<div class="tip" id="fs140">member TrackableEvent.Publish : IEvent&lt;&#39;Delegate,&#39;Args&gt;<br /><br />Full name: RZ.Wpf.TrackableEvent`2.Publish</div>
+<div class="tip" id="fs141">type IEvent&lt;&#39;T&gt; = IEvent&lt;Handler&lt;&#39;T&gt;,&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Control.IEvent&lt;_&gt;</div>
+<div class="tip" id="fs142">abstract member TrackableEvent.Trigger : obj * &#39;Args -&gt; unit<br /><br />Full name: RZ.Wpf.TrackableEvent`2.Trigger</div>
+<div class="tip" id="fs143">override TrackableEvent.Trigger : sender:obj * args:&#39;Args -&gt; unit<br /><br />Full name: RZ.Wpf.TrackableEvent`2.Trigger</div>
+<div class="tip" id="fs144">val argPack : obj []</div>
+<div class="tip" id="fs145">Delegate.GetInvocationList() : Delegate []</div>
+<div class="tip" id="fs146">val d : Delegate</div>
+<div class="tip" id="fs147">Delegate.DynamicInvoke([&lt;ParamArray&gt;] args: obj []) : obj</div>
+<div class="tip" id="fs148">override TrackableEvent.Disposed : tracked:ObserverTracker&lt;&#39;Args&gt; -&gt; unit<br /><br />Full name: RZ.Wpf.TrackableEvent`2.Disposed</div>
+<div class="tip" id="fs149">val tracked : ObserverTracker&lt;&#39;Args&gt;</div>
+<div class="tip" id="fs150">Delegate.Remove(source: Delegate, value: Delegate) : Delegate</div>
+<div class="tip" id="fs151">override TrackableEvent.Subscribe : observer:IObserver&lt;&#39;Args&gt; -&gt; IDisposable<br /><br />Full name: RZ.Wpf.TrackableEvent`2.Subscribe</div>
+<div class="tip" id="fs152">val tracker : ObserverTracker&lt;&#39;Args&gt;</div>
+<div class="tip" id="fs153">Delegate.Combine([&lt;ParamArray&gt;] delegates: Delegate []) : Delegate<br />Delegate.Combine(a: Delegate, b: Delegate) : Delegate</div>
+<div class="tip" id="fs154">override TrackableEvent.AddHandler : d:&#39;Delegate -&gt; unit<br /><br />Full name: RZ.Wpf.TrackableEvent`2.AddHandler</div>
+<div class="tip" id="fs155">val d : &#39;Delegate (requires delegate and &#39;Delegate :&gt; Delegate)</div>
+<div class="tip" id="fs156">override TrackableEvent.RemoveHandler : d:&#39;Delegate -&gt; unit<br /><br />Full name: RZ.Wpf.TrackableEvent`2.RemoveHandler</div>
+<div class="tip" id="fs157">Multiple items<br />type WpfAwareEvent&lt;&#39;Delegate,&#39;Args (requires delegate and &#39;Delegate :&gt; Delegate)&gt; =<br />&#160;&#160;inherit TrackableEvent&lt;&#39;Delegate,&#39;Args&gt;<br />&#160;&#160;new : unit -&gt; WpfAwareEvent&lt;&#39;Delegate,&#39;Args&gt;<br />&#160;&#160;override Trigger : sender:obj * args:&#39;Args -&gt; unit<br /><br />Full name: RZ.Wpf.WpfAwareEvent&lt;_,_&gt;<br /><br />--------------------<br />new : unit -&gt; WpfAwareEvent&lt;&#39;Delegate,&#39;Args&gt;</div>
+<div class="tip" id="fs158">val this : WpfAwareEvent&lt;&#39;Delegate,&#39;Args&gt; (requires delegate and &#39;Delegate :&gt; Delegate)</div>
+<div class="tip" id="fs159">override WpfAwareEvent.Trigger : sender:obj * args:&#39;Args -&gt; unit<br /><br />Full name: RZ.Wpf.WpfAwareEvent`2.Trigger</div>
+<div class="tip" id="fs160">property Delegate.Target: obj</div>
+<div class="tip" id="fs161">val wpfObj : obj</div>
+<div class="tip" id="fs162">Multiple items<br />type WpfObservableCollection&lt;&#39;T&gt; =<br />&#160;&#160;inherit Collection&lt;&#39;T&gt;<br />&#160;&#160;interface INotifyCollectionChanged<br />&#160;&#160;interface INotifyPropertyChanged<br />&#160;&#160;new : unit -&gt; WpfObservableCollection&lt;&#39;T&gt;<br />&#160;&#160;override ClearItems : unit -&gt; unit<br />&#160;&#160;override InsertItem : index:int * item:&#39;T -&gt; unit<br />&#160;&#160;override RemoveItem : index:int -&gt; unit<br />&#160;&#160;override SetItem : index:int * item:&#39;T -&gt; unit<br /><br />Full name: RZ.Wpf.WpfObservableCollection&lt;_&gt;<br /><br />--------------------<br />new : unit -&gt; WpfObservableCollection&lt;&#39;T&gt;</div>
+<div class="tip" id="fs163">val this : WpfObservableCollection&lt;&#39;T&gt;</div>
+<div class="tip" id="fs164">namespace System.Collections.ObjectModel</div>
+<div class="tip" id="fs165">Multiple items<br />type Collection&lt;&#39;T&gt; =<br />&#160;&#160;new : unit -&gt; Collection&lt;&#39;T&gt; + 1 overload<br />&#160;&#160;member Add : item:&#39;T -&gt; unit<br />&#160;&#160;member Clear : unit -&gt; unit<br />&#160;&#160;member Contains : item:&#39;T -&gt; bool<br />&#160;&#160;member CopyTo : array:&#39;T[] * index:int -&gt; unit<br />&#160;&#160;member Count : int<br />&#160;&#160;member GetEnumerator : unit -&gt; IEnumerator&lt;&#39;T&gt;<br />&#160;&#160;member IndexOf : item:&#39;T -&gt; int<br />&#160;&#160;member Insert : index:int * item:&#39;T -&gt; unit<br />&#160;&#160;member Item : int -&gt; &#39;T with get, set<br />&#160;&#160;...<br /><br />Full name: System.Collections.ObjectModel.Collection&lt;_&gt;<br /><br />--------------------<br />Collections.ObjectModel.Collection() : unit<br />Collections.ObjectModel.Collection(list: Collections.Generic.IList&lt;&#39;T&gt;) : unit</div>
+<div class="tip" id="fs166">Multiple items<br />type LiteralAttribute =<br />&#160;&#160;inherit Attribute<br />&#160;&#160;new : unit -&gt; LiteralAttribute<br /><br />Full name: Microsoft.FSharp.Core.LiteralAttribute<br /><br />--------------------<br />new : unit -&gt; LiteralAttribute</div>
+<div class="tip" id="fs167">val CountString : string</div>
+<div class="tip" id="fs168">val IndexerName : string</div>
+<div class="tip" id="fs169">val collectionChanged : WpfAwareEvent&lt;NotifyCollectionChangedEventHandler,NotifyCollectionChangedEventArgs&gt;</div>
+<div class="tip" id="fs170">type NotifyCollectionChangedEventHandler =<br />&#160;&#160;delegate of obj * NotifyCollectionChangedEventArgs -&gt; unit<br /><br />Full name: System.Collections.Specialized.NotifyCollectionChangedEventHandler</div>
+<div class="tip" id="fs171">Multiple items<br />type NotifyCollectionChangedEventArgs =<br />&#160;&#160;inherit EventArgs<br />&#160;&#160;new : action:NotifyCollectionChangedAction -&gt; NotifyCollectionChangedEventArgs + 10 overloads<br />&#160;&#160;member Action : NotifyCollectionChangedAction<br />&#160;&#160;member NewItems : IList<br />&#160;&#160;member NewStartingIndex : int<br />&#160;&#160;member OldItems : IList<br />&#160;&#160;member OldStartingIndex : int<br /><br />Full name: System.Collections.Specialized.NotifyCollectionChangedEventArgs<br /><br />--------------------<br />NotifyCollectionChangedEventArgs(action: NotifyCollectionChangedAction) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />NotifyCollectionChangedEventArgs(action: NotifyCollectionChangedAction, changedItem: obj) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />NotifyCollectionChangedEventArgs(action: NotifyCollectionChangedAction, changedItems: Collections.IList) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />NotifyCollectionChangedEventArgs(action: NotifyCollectionChangedAction, changedItem: obj, index: int) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />NotifyCollectionChangedEventArgs(action: NotifyCollectionChangedAction, changedItems: Collections.IList, startingIndex: int) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />NotifyCollectionChangedEventArgs(action: NotifyCollectionChangedAction, newItem: obj, oldItem: obj) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />NotifyCollectionChangedEventArgs(action: NotifyCollectionChangedAction, newItems: Collections.IList, oldItems: Collections.IList) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />NotifyCollectionChangedEventArgs(action: NotifyCollectionChangedAction, newItem: obj, oldItem: obj, index: int) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />NotifyCollectionChangedEventArgs(action: NotifyCollectionChangedAction, newItems: Collections.IList, oldItems: Collections.IList, startingIndex: int) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />NotifyCollectionChangedEventArgs(action: NotifyCollectionChangedAction, changedItem: obj, index: int, oldIndex: int) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em></div>
+<div class="tip" id="fs172">val onPropertyChanged : (string -&gt; unit)</div>
+<div class="tip" id="fs173">val setValue : (byref&lt;&#39;a&gt; * &#39;a * string [] -&gt; unit) (requires equality)</div>
+<div class="tip" id="fs174">override WpfObservableCollection.ClearItems : unit -&gt; unit<br /><br />Full name: RZ.Wpf.WpfObservableCollection`1.ClearItems</div>
+<div class="tip" id="fs175">val oldItems : Collections.Generic.IList&lt;&#39;T&gt;</div>
+<div class="tip" id="fs176">property Collections.ObjectModel.Collection.Items: Collections.Generic.IList&lt;&#39;T&gt;</div>
+<div class="tip" id="fs177">override WpfAwareEvent.Trigger : sender:obj * args:&#39;Args -&gt; unit</div>
+<div class="tip" id="fs178">type NotifyCollectionChangedAction =<br />&#160;&#160;| Add = 0<br />&#160;&#160;| Remove = 1<br />&#160;&#160;| Replace = 2<br />&#160;&#160;| Move = 3<br />&#160;&#160;| Reset = 4<br /><br />Full name: System.Collections.Specialized.NotifyCollectionChangedAction</div>
+<div class="tip" id="fs179">field NotifyCollectionChangedAction.Reset = 4</div>
+<div class="tip" id="fs180">override WpfObservableCollection.InsertItem : index:int * item:&#39;T -&gt; unit<br /><br />Full name: RZ.Wpf.WpfObservableCollection`1.InsertItem</div>
+<div class="tip" id="fs181">val index : int</div>
+<div class="tip" id="fs182">val item : &#39;T</div>
+<div class="tip" id="fs183">field NotifyCollectionChangedAction.Add = 0</div>
+<div class="tip" id="fs184">override WpfObservableCollection.RemoveItem : index:int -&gt; unit<br /><br />Full name: RZ.Wpf.WpfObservableCollection`1.RemoveItem</div>
+<div class="tip" id="fs185">val removedItem : &#39;T</div>
+<div class="tip" id="fs186">field NotifyCollectionChangedAction.Remove = 1</div>
+<div class="tip" id="fs187">override WpfObservableCollection.SetItem : index:int * item:&#39;T -&gt; unit<br /><br />Full name: RZ.Wpf.WpfObservableCollection`1.SetItem</div>
+<div class="tip" id="fs188">val oldItem : &#39;T</div>
+<div class="tip" id="fs189">field NotifyCollectionChangedAction.Replace = 2</div>
+<div class="tip" id="fs190">val me : WpfObservableCollection&lt;&#39;T&gt;</div>
+<div class="tip" id="fs191">override WpfObservableCollection.PropertyChanged : IDelegateEvent&lt;ComponentModel.PropertyChangedEventHandler&gt;<br /><br />Full name: RZ.Wpf.WpfObservableCollection`1.PropertyChanged</div>
+<div class="tip" id="fs192">type INotifyCollectionChanged =<br />&#160;&#160;event CollectionChanged : NotifyCollectionChangedEventHandler<br /><br />Full name: System.Collections.Specialized.INotifyCollectionChanged</div>
+<div class="tip" id="fs193">override WpfObservableCollection.CollectionChanged : IEvent&lt;NotifyCollectionChangedEventHandler,NotifyCollectionChangedEventArgs&gt;<br /><br />Full name: RZ.Wpf.WpfObservableCollection`1.CollectionChanged</div>
+<div class="tip" id="fs194">property TrackableEvent.Publish: IEvent&lt;NotifyCollectionChangedEventHandler,NotifyCollectionChangedEventArgs&gt;</div>
+<div class="tip" id="fs195">type IXamlConnector =<br />&#160;&#160;interface<br />&#160;&#160;&#160;&#160;abstract member Ready : unit -&gt; unit<br />&#160;&#160;end<br /><br />Full name: RZ.Wpf.IXamlConnector<br /><em><br /><br />&#160;&lt;summary&gt;<br />&#160;Provide ready signal when XAML is completely read.<br />&#160;&lt;/summary&gt;</em></div>
+<div class="tip" id="fs196">abstract member IXamlConnector.Ready : unit -&gt; unit<br /><br />Full name: RZ.Wpf.IXamlConnector.Ready</div>
+<div class="tip" id="fs197">Multiple items<br />type RequireQualifiedAccessAttribute =<br />&#160;&#160;inherit Attribute<br />&#160;&#160;new : unit -&gt; RequireQualifiedAccessAttribute<br /><br />Full name: Microsoft.FSharp.Core.RequireQualifiedAccessAttribute<br /><br />--------------------<br />new : unit -&gt; RequireQualifiedAccessAttribute</div>
+<div class="tip" id="fs198">val locateType : typeName:string -&gt; Type<br /><br />Full name: RZ.Wpf.XamlLoader.locateType</div>
+<div class="tip" id="fs199">val typeName : string</div>
+<div class="tip" id="fs200">type AppDomain =<br />&#160;&#160;inherit MarshalByRefObject<br />&#160;&#160;member ActivationContext : ActivationContext<br />&#160;&#160;member AppendPrivatePath : path:string -&gt; unit<br />&#160;&#160;member ApplicationIdentity : ApplicationIdentity<br />&#160;&#160;member ApplicationTrust : ApplicationTrust<br />&#160;&#160;member ApplyPolicy : assemblyName:string -&gt; string<br />&#160;&#160;member BaseDirectory : string<br />&#160;&#160;member ClearPrivatePath : unit -&gt; unit<br />&#160;&#160;member ClearShadowCopyPath : unit -&gt; unit<br />&#160;&#160;member CreateComInstanceFrom : assemblyName:string * typeName:string -&gt; ObjectHandle + 1 overload<br />&#160;&#160;member CreateInstance : assemblyName:string * typeName:string -&gt; ObjectHandle + 3 overloads<br />&#160;&#160;...<br /><br />Full name: System.AppDomain</div>
+<div class="tip" id="fs201">property AppDomain.CurrentDomain: AppDomain</div>
+<div class="tip" id="fs202">AppDomain.GetAssemblies() : Reflection.Assembly []</div>
+<div class="tip" id="fs203">val asm : Reflection.Assembly</div>
+<div class="tip" id="fs204">Object.GetType() : Type<br />Reflection.Assembly.GetType(name: string) : Type<br />Reflection.Assembly.GetType(name: string, throwOnError: bool) : Type<br />Reflection.Assembly.GetType(name: string, throwOnError: bool, ignoreCase: bool) : Type</div>
+<div class="tip" id="fs205">val filter : predicate:(&#39;T -&gt; bool) -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.filter</div>
+<div class="tip" id="fs206">val t : Type</div>
+<div class="tip" id="fs207">val head : source:seq&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Collections.Seq.head</div>
+<div class="tip" id="fs208">val private getRootObject : xaml:string -&gt; &#39;a option<br /><br />Full name: RZ.Wpf.XamlLoader.getRootObject</div>
+<div class="tip" id="fs209">val xaml : string</div>
+<div class="tip" id="fs210">val xml : obj</div>
+<div class="tip" id="fs211">val clsName : obj</div>
+<div class="tip" id="fs212">val attr : obj</div>
+<div class="tip" id="fs213">type Attribute =<br />&#160;&#160;member Equals : obj:obj -&gt; bool<br />&#160;&#160;member GetHashCode : unit -&gt; int<br />&#160;&#160;member IsDefaultAttribute : unit -&gt; bool<br />&#160;&#160;member Match : obj:obj -&gt; bool<br />&#160;&#160;member TypeId : obj<br />&#160;&#160;static member GetCustomAttribute : element:MemberInfo * attributeType:Type -&gt; Attribute + 7 overloads<br />&#160;&#160;static member GetCustomAttributes : element:MemberInfo -&gt; Attribute[] + 15 overloads<br />&#160;&#160;static member IsDefined : element:MemberInfo * attributeType:Type -&gt; bool + 7 overloads<br /><br />Full name: System.Attribute</div>
+<div class="tip" id="fs214">union case Option.None: Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs215">val failwithf : format:Printf.StringFormat&lt;&#39;T,&#39;Result&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.failwithf</div>
+<div class="tip" id="fs216">val rootType : Type</div>
+<div class="tip" id="fs217">union case Option.Some: Value: &#39;T -&gt; Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs218">type Activator =<br />&#160;&#160;static member CreateComInstanceFrom : assemblyName:string * typeName:string -&gt; ObjectHandle + 1 overload<br />&#160;&#160;static member CreateInstance&lt;&#39;T&gt; : unit -&gt; &#39;T + 15 overloads<br />&#160;&#160;static member CreateInstanceFrom : assemblyFile:string * typeName:string -&gt; ObjectHandle + 6 overloads<br />&#160;&#160;static member GetObject : type:Type * url:string -&gt; obj + 1 overload<br /><br />Full name: System.Activator</div>
+<div class="tip" id="fs219">Activator.CreateInstance&lt;&#39;T&gt;() : &#39;T<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Activator.CreateInstance(activationContext: ActivationContext) : Runtime.Remoting.ObjectHandle<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Activator.CreateInstance(type: Type) : obj<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Activator.CreateInstance(activationContext: ActivationContext, activationCustomData: string []) : Runtime.Remoting.ObjectHandle<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Activator.CreateInstance(type: Type, nonPublic: bool) : obj<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Activator.CreateInstance(assemblyName: string, typeName: string) : Runtime.Remoting.ObjectHandle<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Activator.CreateInstance(type: Type, [&lt;ParamArray&gt;] args: obj []) : obj<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Activator.CreateInstance(domain: AppDomain, assemblyName: string, typeName: string) : Runtime.Remoting.ObjectHandle<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Activator.CreateInstance(assemblyName: string, typeName: string, activationAttributes: obj []) : Runtime.Remoting.ObjectHandle<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Activator.CreateInstance(type: Type, args: obj [], activationAttributes: obj []) : obj<br />&#160;&#160;&#160;<em>(+0 other overloads)</em></div>
+<div class="tip" id="fs220">val private loadStreamInternal : reader:&#39;a * rootObject:&#39;b option -&gt; &#39;c<br /><br />Full name: RZ.Wpf.XamlLoader.loadStreamInternal</div>
+<div class="tip" id="fs221">val reader : &#39;a</div>
+<div class="tip" id="fs222">val rootObject : &#39;b option</div>
+<div class="tip" id="fs223">val writerSettings : obj</div>
+<div class="tip" id="fs224">val connector : IXamlConnector option</div>
+<div class="tip" id="fs225">val root : &#39;b</div>
+<div class="tip" id="fs226">val c : IXamlConnector</div>
+<div class="tip" id="fs227">val writer : IDisposable</div>
+<div class="tip" id="fs228">val result : &#39;c</div>
+<div class="tip" id="fs229">val action : Action</div>
+<div class="tip" id="fs230">Multiple items<br />type Action =<br />&#160;&#160;delegate of unit -&gt; unit<br /><br />Full name: System.Action<br /><br />--------------------<br />type Action&lt;&#39;T&gt; =<br />&#160;&#160;delegate of &#39;T -&gt; unit<br /><br />Full name: System.Action&lt;_&gt;<br /><br />--------------------<br />type Action&lt;&#39;T1,&#39;T2&gt; =<br />&#160;&#160;delegate of &#39;T1 * &#39;T2 -&gt; unit<br /><br />Full name: System.Action&lt;_,_&gt;<br /><br />--------------------<br />type Action&lt;&#39;T1,&#39;T2,&#39;T3&gt; =<br />&#160;&#160;delegate of &#39;T1 * &#39;T2 * &#39;T3 -&gt; unit<br /><br />Full name: System.Action&lt;_,_,_&gt;<br /><br />--------------------<br />type Action&lt;&#39;T1,&#39;T2,&#39;T3,&#39;T4&gt; =<br />&#160;&#160;delegate of &#39;T1 * &#39;T2 * &#39;T3 * &#39;T4 -&gt; unit<br /><br />Full name: System.Action&lt;_,_,_,_&gt;<br /><br />--------------------<br />type Action&lt;&#39;T1,&#39;T2,&#39;T3,&#39;T4,&#39;T5&gt; =<br />&#160;&#160;delegate of &#39;T1 * &#39;T2 * &#39;T3 * &#39;T4 * &#39;T5 -&gt; unit<br /><br />Full name: System.Action&lt;_,_,_,_,_&gt;<br /><br />--------------------<br />type Action&lt;&#39;T1,&#39;T2,&#39;T3,&#39;T4,&#39;T5,&#39;T6&gt; =<br />&#160;&#160;delegate of &#39;T1 * &#39;T2 * &#39;T3 * &#39;T4 * &#39;T5 * &#39;T6 -&gt; unit<br /><br />Full name: System.Action&lt;_,_,_,_,_,_&gt;<br /><br />--------------------<br />type Action&lt;&#39;T1,&#39;T2,&#39;T3,&#39;T4,&#39;T5,&#39;T6,&#39;T7&gt; =<br />&#160;&#160;delegate of &#39;T1 * &#39;T2 * &#39;T3 * &#39;T4 * &#39;T5 * &#39;T6 * &#39;T7 -&gt; unit<br /><br />Full name: System.Action&lt;_,_,_,_,_,_,_&gt;<br /><br />--------------------<br />type Action&lt;&#39;T1,&#39;T2,&#39;T3,&#39;T4,&#39;T5,&#39;T6,&#39;T7,&#39;T8&gt; =<br />&#160;&#160;delegate of &#39;T1 * &#39;T2 * &#39;T3 * &#39;T4 * &#39;T5 * &#39;T6 * &#39;T7 * &#39;T8 -&gt; unit<br /><br />Full name: System.Action&lt;_,_,_,_,_,_,_,_&gt;<br /><br />--------------------<br />type Action&lt;&#39;T1,&#39;T2,&#39;T3,&#39;T4,&#39;T5,&#39;T6,&#39;T7,&#39;T8,&#39;T9&gt; =<br />&#160;&#160;delegate of &#39;T1 * &#39;T2 * &#39;T3 * &#39;T4 * &#39;T5 * &#39;T6 * &#39;T7 * &#39;T8 * &#39;T9 -&gt; unit<br /><br />Full name: System.Action&lt;_,_,_,_,_,_,_,_,_&gt;<br /><br />--------------------<br />type Action&lt;&#39;T1,&#39;T2,&#39;T3,&#39;T4,&#39;T5,&#39;T6,&#39;T7,&#39;T8,&#39;T9,&#39;T10&gt; =<br />&#160;&#160;delegate of &#39;T1 * &#39;T2 * &#39;T3 * &#39;T4 * &#39;T5 * &#39;T6 * &#39;T7 * &#39;T8 * &#39;T9 * &#39;T10 -&gt; unit<br /><br />Full name: System.Action&lt;_,_,_,_,_,_,_,_,_,_&gt;<br /><br />--------------------<br />type Action&lt;&#39;T1,&#39;T2,&#39;T3,&#39;T4,&#39;T5,&#39;T6,&#39;T7,&#39;T8,&#39;T9,&#39;T10,&#39;T11&gt; =<br />&#160;&#160;delegate of &#39;T1 * &#39;T2 * &#39;T3 * &#39;T4 * &#39;T5 * &#39;T6 * &#39;T7 * &#39;T8 * &#39;T9 * &#39;T10 * &#39;T11 -&gt; unit<br /><br />Full name: System.Action&lt;_,_,_,_,_,_,_,_,_,_,_&gt;<br /><br />--------------------<br />type Action&lt;&#39;T1,&#39;T2,&#39;T3,&#39;T4,&#39;T5,&#39;T6,&#39;T7,&#39;T8,&#39;T9,&#39;T10,&#39;T11,&#39;T12&gt; =<br />&#160;&#160;delegate of &#39;T1 * &#39;T2 * &#39;T3 * &#39;T4 * &#39;T5 * &#39;T6 * &#39;T7 * &#39;T8 * &#39;T9 * &#39;T10 * &#39;T11 * &#39;T12 -&gt; unit<br /><br />Full name: System.Action&lt;_,_,_,_,_,_,_,_,_,_,_,_&gt;<br /><br />--------------------<br />type Action&lt;&#39;T1,&#39;T2,&#39;T3,&#39;T4,&#39;T5,&#39;T6,&#39;T7,&#39;T8,&#39;T9,&#39;T10,&#39;T11,&#39;T12,&#39;T13&gt; =<br />&#160;&#160;delegate of &#39;T1 * &#39;T2 * &#39;T3 * &#39;T4 * &#39;T5 * &#39;T6 * &#39;T7 * &#39;T8 * &#39;T9 * &#39;T10 * &#39;T11 * &#39;T12 * &#39;T13 -&gt; unit<br /><br />Full name: System.Action&lt;_,_,_,_,_,_,_,_,_,_,_,_,_&gt;<br /><br />--------------------<br />type Action&lt;&#39;T1,&#39;T2,&#39;T3,&#39;T4,&#39;T5,&#39;T6,&#39;T7,&#39;T8,&#39;T9,&#39;T10,&#39;T11,&#39;T12,&#39;T13,&#39;T14&gt; =<br />&#160;&#160;delegate of &#39;T1 * &#39;T2 * &#39;T3 * &#39;T4 * &#39;T5 * &#39;T6 * &#39;T7 * &#39;T8 * &#39;T9 * &#39;T10 * &#39;T11 * &#39;T12 * &#39;T13 * &#39;T14 -&gt; unit<br /><br />Full name: System.Action&lt;_,_,_,_,_,_,_,_,_,_,_,_,_,_&gt;<br /><br />--------------------<br />type Action&lt;&#39;T1,&#39;T2,&#39;T3,&#39;T4,&#39;T5,&#39;T6,&#39;T7,&#39;T8,&#39;T9,&#39;T10,&#39;T11,&#39;T12,&#39;T13,&#39;T14,&#39;T15&gt; =<br />&#160;&#160;delegate of &#39;T1 * &#39;T2 * &#39;T3 * &#39;T4 * &#39;T5 * &#39;T6 * &#39;T7 * &#39;T8 * &#39;T9 * &#39;T10 * &#39;T11 * &#39;T12 * &#39;T13 * &#39;T14 * &#39;T15 -&gt; unit<br /><br />Full name: System.Action&lt;_,_,_,_,_,_,_,_,_,_,_,_,_,_,_&gt;<br /><br />--------------------<br />type Action&lt;&#39;T1,&#39;T2,&#39;T3,&#39;T4,&#39;T5,&#39;T6,&#39;T7,&#39;T8,&#39;T9,&#39;T10,&#39;T11,&#39;T12,&#39;T13,&#39;T14,&#39;T15,&#39;T16&gt; =<br />&#160;&#160;delegate of &#39;T1 * &#39;T2 * &#39;T3 * &#39;T4 * &#39;T5 * &#39;T6 * &#39;T7 * &#39;T8 * &#39;T9 * &#39;T10 * &#39;T11 * &#39;T12 * &#39;T13 * &#39;T14 * &#39;T15 * &#39;T16 -&gt; unit<br /><br />Full name: System.Action&lt;_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_&gt;</div>
+<div class="tip" id="fs231">abstract member IXamlConnector.Ready : unit -&gt; unit</div>
+<div class="tip" id="fs232">val private LoadWpfInternal : xamlContent:string -&gt; rootObject:&#39;a option -&gt; &#39;b<br /><br />Full name: RZ.Wpf.XamlLoader.LoadWpfInternal</div>
+<div class="tip" id="fs233">val xamlContent : string</div>
+<div class="tip" id="fs234">val rootObject : &#39;a option</div>
+<div class="tip" id="fs235">val stream : StringReader</div>
+<div class="tip" id="fs236">Multiple items<br />type StringReader =<br />&#160;&#160;inherit TextReader<br />&#160;&#160;new : s:string -&gt; StringReader<br />&#160;&#160;member Close : unit -&gt; unit<br />&#160;&#160;member Peek : unit -&gt; int<br />&#160;&#160;member Read : unit -&gt; int + 1 overload<br />&#160;&#160;member ReadLine : unit -&gt; string<br />&#160;&#160;member ReadToEnd : unit -&gt; string<br /><br />Full name: System.IO.StringReader<br /><br />--------------------<br />StringReader(s: string) : unit</div>
+<div class="tip" id="fs237">val reader : IDisposable</div>
+<div class="tip" id="fs238">val loadWpfFromString : xamlBody:string -&gt; &#39;a<br /><br />Full name: RZ.Wpf.XamlLoader.loadWpfFromString</div>
+<div class="tip" id="fs239">val xamlBody : string</div>
+<div class="tip" id="fs240">val LoadWpfFromFile : xamlFilename:string -&gt; &#39;a<br /><br />Full name: RZ.Wpf.XamlLoader.LoadWpfFromFile</div>
+<div class="tip" id="fs241">val xamlFilename : string</div>
+<div class="tip" id="fs242">type File =<br />&#160;&#160;static member AppendAllLines : path:string * contents:IEnumerable&lt;string&gt; -&gt; unit + 1 overload<br />&#160;&#160;static member AppendAllText : path:string * contents:string -&gt; unit + 1 overload<br />&#160;&#160;static member AppendText : path:string -&gt; StreamWriter<br />&#160;&#160;static member Copy : sourceFileName:string * destFileName:string -&gt; unit + 1 overload<br />&#160;&#160;static member Create : path:string -&gt; FileStream + 3 overloads<br />&#160;&#160;static member CreateText : path:string -&gt; StreamWriter<br />&#160;&#160;static member Decrypt : path:string -&gt; unit<br />&#160;&#160;static member Delete : path:string -&gt; unit<br />&#160;&#160;static member Encrypt : path:string -&gt; unit<br />&#160;&#160;static member Exists : path:string -&gt; bool<br />&#160;&#160;...<br /><br />Full name: System.IO.File</div>
+<div class="tip" id="fs243">File.ReadAllText(path: string) : string<br />File.ReadAllText(path: string, encoding: Text.Encoding) : string</div>
+<div class="tip" id="fs244">val LoadWpf : xamlFilename:string -&gt; rootObject:&#39;a option -&gt; &#39;b<br /><br />Full name: RZ.Wpf.XamlLoader.LoadWpf</div>
+<div class="tip" id="fs245">val loadFromResource0 : resourceName:string -&gt; rootObj:&#39;a option -&gt; asm:Reflection.Assembly -&gt; &#39;a0<br /><br />Full name: RZ.Wpf.XamlLoader.loadFromResource0</div>
+<div class="tip" id="fs246">val rootObj : &#39;a option</div>
+<div class="tip" id="fs247">type &#39;T option = Option&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Core.option&lt;_&gt;</div>
+<div class="tip" id="fs248">module ResourceManager<br /><br />from RZ.Wpf</div>
+<div class="tip" id="fs249">val findWpfResource : name:string -&gt; (Reflection.Assembly -&gt; string option)<br /><br />Full name: RZ.Wpf.ResourceManager.findWpfResource</div>
+<div class="tip" id="fs250">property Reflection.Assembly.FullName: string</div>
+<div class="tip" id="fs251">Multiple items<br />type String =<br />&#160;&#160;new : value:char -&gt; string + 7 overloads<br />&#160;&#160;member Chars : int -&gt; char<br />&#160;&#160;member Clone : unit -&gt; obj<br />&#160;&#160;member CompareTo : value:obj -&gt; int + 1 overload<br />&#160;&#160;member Contains : value:string -&gt; bool<br />&#160;&#160;member CopyTo : sourceIndex:int * destination:char[] * destinationIndex:int * count:int -&gt; unit<br />&#160;&#160;member EndsWith : value:string -&gt; bool + 2 overloads<br />&#160;&#160;member Equals : obj:obj -&gt; bool + 2 overloads<br />&#160;&#160;member GetEnumerator : unit -&gt; CharEnumerator<br />&#160;&#160;member GetHashCode : unit -&gt; int<br />&#160;&#160;...<br /><br />Full name: System.String<br /><br />--------------------<br />String(value: nativeptr&lt;char&gt;) : unit<br />String(value: nativeptr&lt;sbyte&gt;) : unit<br />String(value: char []) : unit<br />String(c: char, count: int) : unit<br />String(value: nativeptr&lt;char&gt;, startIndex: int, length: int) : unit<br />String(value: nativeptr&lt;sbyte&gt;, startIndex: int, length: int) : unit<br />String(value: char [], startIndex: int, length: int) : unit<br />String(value: nativeptr&lt;sbyte&gt;, startIndex: int, length: int, enc: Text.Encoding) : unit</div>
+<div class="tip" id="fs252">String.Join(separator: string, values: Collections.Generic.IEnumerable&lt;string&gt;) : string<br />String.Join&lt;&#39;T&gt;(separator: string, values: Collections.Generic.IEnumerable&lt;&#39;T&gt;) : string<br />String.Join(separator: string, [&lt;ParamArray&gt;] values: obj []) : string<br />String.Join(separator: string, [&lt;ParamArray&gt;] value: string []) : string<br />String.Join(separator: string, value: string [], startIndex: int, count: int) : string</div>
+<div class="tip" id="fs253">Reflection.Assembly.GetManifestResourceNames() : string []</div>
+<div class="tip" id="fs254">val text : StringReader</div>
+<div class="tip" id="fs255">val finalRoot : &#39;a option</div>
+<div class="tip" id="fs256">property Option.IsNone: bool</div>
+<div class="tip" id="fs257">val loadFromResource : resourceName:string -&gt; rootObj:&#39;a option -&gt; &#39;a0<br /><br />Full name: RZ.Wpf.XamlLoader.loadFromResource</div>
+<div class="tip" id="fs258">Reflection.Assembly.GetCallingAssembly() : Reflection.Assembly</div>
+<div class="tip" id="fs259">Multiple items<br />type DCMethodExtension =<br />&#160;&#160;inherit obj<br />&#160;&#160;new : methodName:string -&gt; DCMethodExtension<br />&#160;&#160;override ProvideValue : serviceProvider:&#39;a -&gt; &#39;b<br /><br />Full name: RZ.Wpf.DCMethodExtension<br /><br />--------------------<br />new : methodName:string -&gt; DCMethodExtension</div>
+<div class="tip" id="fs260">val methodName : string</div>
+<div class="tip" id="fs261">override DCMethodExtension.ProvideValue : serviceProvider:&#39;a -&gt; &#39;b<br /><br />Full name: RZ.Wpf.DCMethodExtension.ProvideValue</div>
+<div class="tip" id="fs262">Multiple items<br />namespace System.Reflection<br /><br />--------------------<br />namespace Microsoft.FSharp.Reflection</div>
+<div class="tip" id="fs263">type EventInfo =<br />&#160;&#160;inherit MemberInfo<br />&#160;&#160;member AddEventHandler : target:obj * handler:Delegate -&gt; unit<br />&#160;&#160;member Attributes : EventAttributes<br />&#160;&#160;member Equals : obj:obj -&gt; bool<br />&#160;&#160;member EventHandlerType : Type<br />&#160;&#160;member GetAddMethod : unit -&gt; MethodInfo + 1 overload<br />&#160;&#160;member GetHashCode : unit -&gt; int<br />&#160;&#160;member GetOtherMethods : unit -&gt; MethodInfo[] + 1 overload<br />&#160;&#160;member GetRaiseMethod : unit -&gt; MethodInfo + 1 overload<br />&#160;&#160;member GetRemoveMethod : unit -&gt; MethodInfo + 1 overload<br />&#160;&#160;member IsMulticast : bool<br />&#160;&#160;...<br /><br />Full name: System.Reflection.EventInfo</div>
+<div class="tip" id="fs264">Multiple items<br />val ref : value:&#39;T -&gt; &#39;T ref<br /><br />Full name: Microsoft.FSharp.Core.Operators.ref<br /><br />--------------------<br />type &#39;T ref = Ref&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Core.ref&lt;_&gt;</div>
+<div class="tip" id="fs265">module RZWpf<br /><br />from RZ.Wpf</div>
+<div class="tip" id="fs266">val DesignerMode : obj<br /><br />Full name: RZ.Wpf.RZWpf.DesignerMode</div>
+

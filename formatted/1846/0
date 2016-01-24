@@ -1,0 +1,176 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+<span class="l">38: </span>
+<span class="l">39: </span>
+<span class="l">40: </span>
+<span class="l">41: </span>
+<span class="l">42: </span>
+<span class="l">43: </span>
+<span class="l">44: </span>
+<span class="l">45: </span>
+<span class="l">46: </span>
+<span class="l">47: </span>
+<span class="l">48: </span>
+<span class="l">49: </span>
+<span class="l">50: </span>
+<span class="l">51: </span>
+<span class="l">52: </span>
+<span class="l">53: </span>
+<span class="l">54: </span>
+<span class="l">55: </span>
+<span class="l">56: </span>
+<span class="l">57: </span>
+<span class="l">58: </span>
+<span class="l">59: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="prep">#r</span> <span class="s">&quot;Microsoft.SqlServer.ConnectionInfo&quot;</span> 
+<span class="prep">#r</span> <span class="s">&quot;Microsoft.SqlServer.Smo&quot;</span> 
+<span class="prep">#r</span> <span class="s">&quot;Microsoft.SqlServer.SmoExtended.dll&quot;</span>
+<span class="prep">#r</span> <span class="s">&quot;Microsoft.SqlServer.Management.Sdk.Sfc&quot;</span>
+
+<span class="c">// Based on this script shown here:</span>
+<span class="c">// https://www.mssqltips.com/sqlservertip/1910/transfer-sql-server-database-schema-objects-and-data-with-smo/</span>
+
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">System</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">Microsoft</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="i">SqlServer</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="i">Management</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="i">Smo</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs2', 6)" onmouseover="showTip(event, 'fs2', 6)" class="i">Microsoft</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 7)" onmouseover="showTip(event, 'fs3', 7)" class="i">SqlServer</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs4', 8)" onmouseover="showTip(event, 'fs4', 8)" class="i">Management</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs6', 9)" onmouseover="showTip(event, 'fs6', 9)" class="i">Common</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs7', 10)" onmouseover="showTip(event, 'fs7', 10)" class="f">serverWithConnection</span> (<span onmouseout="hideTip(event, 'fs8', 11)" onmouseover="showTip(event, 'fs8', 11)" class="i">serverName</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs9', 12)" onmouseover="showTip(event, 'fs9', 12)" class="t">string</span>) <span class="o">=</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs10', 13)" onmouseover="showTip(event, 'fs10', 13)" class="i">server</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs11', 14)" onmouseover="showTip(event, 'fs11', 14)" class="t">Server</span>(<span onmouseout="hideTip(event, 'fs8', 15)" onmouseover="showTip(event, 'fs8', 15)" class="i">serverName</span>)
+    <span onmouseout="hideTip(event, 'fs10', 16)" onmouseover="showTip(event, 'fs10', 16)" class="i">server</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs12', 17)" onmouseover="showTip(event, 'fs12', 17)" class="i">ConnectionContext</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs13', 18)" onmouseover="showTip(event, 'fs13', 18)" class="i">LoginSecure</span> <span class="o">&lt;-</span> <span class="k">true</span>
+    <span onmouseout="hideTip(event, 'fs10', 19)" onmouseover="showTip(event, 'fs10', 19)" class="i">server</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs12', 20)" onmouseover="showTip(event, 'fs12', 20)" class="i">ConnectionContext</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs14', 21)" onmouseover="showTip(event, 'fs14', 21)" class="f">Connect</span>()
+    <span onmouseout="hideTip(event, 'fs10', 22)" onmouseover="showTip(event, 'fs10', 22)" class="i">server</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs15', 23)" onmouseover="showTip(event, 'fs15', 23)" class="i">sourceServer</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs7', 24)" onmouseover="showTip(event, 'fs7', 24)" class="f">serverWithConnection</span>(<span class="s">&quot;RKNVIDW01&quot;</span>)
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs16', 25)" onmouseover="showTip(event, 'fs16', 25)" class="i">sourceDatabase</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs15', 26)" onmouseover="showTip(event, 'fs15', 26)" class="i">sourceServer</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs17', 27)" onmouseover="showTip(event, 'fs17', 27)" class="i">Databases</span><span class="o">.</span>[<span class="s">&quot;Demo&quot;</span>]
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs18', 28)" onmouseover="showTip(event, 'fs18', 28)" class="i">destServer</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs7', 29)" onmouseover="showTip(event, 'fs7', 29)" class="f">serverWithConnection</span>(<span class="s">&quot;NZ-JEREMYH-WKS&quot;</span>)
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs19', 30)" onmouseover="showTip(event, 'fs19', 30)" class="i">destDatabase</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs20', 31)" onmouseover="showTip(event, 'fs20', 31)" class="t">Database</span>(<span onmouseout="hideTip(event, 'fs18', 32)" onmouseover="showTip(event, 'fs18', 32)" class="i">destServer</span>, <span class="s">&quot;DemoCopy&quot;</span>)
+
+<span class="k">if</span> [| <span class="k">for</span> <span onmouseout="hideTip(event, 'fs21', 33)" onmouseover="showTip(event, 'fs21', 33)" class="i">database</span> <span class="k">in</span> <span onmouseout="hideTip(event, 'fs18', 34)" onmouseover="showTip(event, 'fs18', 34)" class="i">destServer</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs17', 35)" onmouseover="showTip(event, 'fs17', 35)" class="i">Databases</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs21', 36)" onmouseover="showTip(event, 'fs21', 36)" class="i">database</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs22', 37)" onmouseover="showTip(event, 'fs22', 37)" class="i">Name</span> |] 
+   <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs23', 38)" onmouseover="showTip(event, 'fs23', 38)" class="t">Array</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs24', 39)" onmouseover="showTip(event, 'fs24', 39)" class="f">exists</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs25', 40)" onmouseover="showTip(event, 'fs25', 40)" class="i">databaseName</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs25', 41)" onmouseover="showTip(event, 'fs25', 41)" class="i">databaseName</span> <span class="o">=</span> <span class="s">&quot;DemoCopy&quot;</span>) <span class="k">then</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs26', 42)" onmouseover="showTip(event, 'fs26', 42)" class="i">existingDestDatabase</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs18', 43)" onmouseover="showTip(event, 'fs18', 43)" class="i">destServer</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs17', 44)" onmouseover="showTip(event, 'fs17', 44)" class="i">Databases</span><span class="o">.</span>[<span class="s">&quot;DemoCopy&quot;</span>]
+    <span onmouseout="hideTip(event, 'fs26', 45)" onmouseover="showTip(event, 'fs26', 45)" class="i">existingDestDatabase</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs27', 46)" onmouseover="showTip(event, 'fs27', 46)" class="f">Drop</span>()
+    <span onmouseout="hideTip(event, 'fs19', 47)" onmouseover="showTip(event, 'fs19', 47)" class="i">destDatabase</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs28', 48)" onmouseover="showTip(event, 'fs28', 48)" class="f">Create</span>()
+<span class="k">else</span>
+    <span onmouseout="hideTip(event, 'fs19', 49)" onmouseover="showTip(event, 'fs19', 49)" class="i">destDatabase</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs28', 50)" onmouseover="showTip(event, 'fs28', 50)" class="f">Create</span>()
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs29', 51)" onmouseover="showTip(event, 'fs29', 51)" class="i">transferDatabase</span> <span class="o">=</span> 
+    <span onmouseout="hideTip(event, 'fs30', 52)" onmouseover="showTip(event, 'fs30', 52)" class="t">Transfer</span>(<span onmouseout="hideTip(event, 'fs16', 53)" onmouseover="showTip(event, 'fs16', 53)" class="i">sourceDatabase</span>, 
+        <span class="i">CopyAllObjects</span> <span class="o">=</span> <span class="k">true</span>, 
+        <span class="i">CopyAllSchemas</span> <span class="o">=</span> <span class="k">true</span>, 
+        <span class="i">CopyAllUserDefinedDataTypes</span> <span class="o">=</span> <span class="k">true</span>, 
+        <span class="i">CopyAllTables</span> <span class="o">=</span> <span class="k">true</span>, 
+        <span class="i">CopyData</span> <span class="o">=</span> <span class="k">true</span>, 
+        <span class="i">CopyAllStoredProcedures</span> <span class="o">=</span> <span class="k">true</span>,
+        <span class="i">DestinationServer</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs18', 54)" onmouseover="showTip(event, 'fs18', 54)" class="i">destServer</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs31', 55)" onmouseover="showTip(event, 'fs31', 55)" class="i">Name</span>,
+        <span class="i">DestinationDatabase</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs19', 56)" onmouseover="showTip(event, 'fs19', 56)" class="i">destDatabase</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs22', 57)" onmouseover="showTip(event, 'fs22', 57)" class="i">Name</span>)
+
+<span onmouseout="hideTip(event, 'fs29', 58)" onmouseover="showTip(event, 'fs29', 58)" class="i">transferDatabase</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs32', 59)" onmouseover="showTip(event, 'fs32', 59)" class="i">DataTransferEvent</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs33', 60)" onmouseover="showTip(event, 'fs33', 60)" class="f">Add</span>(<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs34', 61)" onmouseover="showTip(event, 'fs34', 61)" class="i">args</span> <span class="k">-&gt;</span>
+    <span onmouseout="hideTip(event, 'fs35', 62)" onmouseover="showTip(event, 'fs35', 62)" class="t">Console</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs36', 63)" onmouseover="showTip(event, 'fs36', 63)" class="i">ForegroundColor</span> <span class="o">&lt;-</span> <span onmouseout="hideTip(event, 'fs37', 64)" onmouseover="showTip(event, 'fs37', 64)" class="t">ConsoleColor</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs38', 65)" onmouseover="showTip(event, 'fs38', 65)" class="i">Green</span>
+    <span onmouseout="hideTip(event, 'fs35', 66)" onmouseover="showTip(event, 'fs35', 66)" class="t">Console</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs39', 67)" onmouseover="showTip(event, 'fs39', 67)" class="f">Write</span>(<span class="s">&quot;[&quot;</span> <span class="o">+</span> <span onmouseout="hideTip(event, 'fs34', 68)" onmouseover="showTip(event, 'fs34', 68)" class="i">args</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs40', 69)" onmouseover="showTip(event, 'fs40', 69)" class="i">DataTransferEventType</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs41', 70)" onmouseover="showTip(event, 'fs41', 70)" class="f">ToString</span>() <span class="o">+</span> <span class="s">&quot;] &quot;</span>)
+    <span onmouseout="hideTip(event, 'fs35', 71)" onmouseover="showTip(event, 'fs35', 71)" class="t">Console</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs42', 72)" onmouseover="showTip(event, 'fs42', 72)" class="f">ResetColor</span>()
+    <span onmouseout="hideTip(event, 'fs35', 73)" onmouseover="showTip(event, 'fs35', 73)" class="t">Console</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs43', 74)" onmouseover="showTip(event, 'fs43', 74)" class="f">WriteLine</span>(<span class="s">&quot; : &quot;</span> <span class="o">+</span> <span onmouseout="hideTip(event, 'fs34', 75)" onmouseover="showTip(event, 'fs34', 75)" class="i">args</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs44', 76)" onmouseover="showTip(event, 'fs44', 76)" class="i">Message</span>))
+
+<span onmouseout="hideTip(event, 'fs29', 77)" onmouseover="showTip(event, 'fs29', 77)" class="i">transferDatabase</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs45', 78)" onmouseover="showTip(event, 'fs45', 78)" class="i">DiscoveryProgress</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs33', 79)" onmouseover="showTip(event, 'fs33', 79)" class="f">Add</span>(<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs46', 80)" onmouseover="showTip(event, 'fs46', 80)" class="i">args</span> <span class="k">-&gt;</span>
+    <span onmouseout="hideTip(event, 'fs35', 81)" onmouseover="showTip(event, 'fs35', 81)" class="t">Console</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs43', 82)" onmouseover="showTip(event, 'fs43', 82)" class="f">WriteLine</span>(<span class="s">&quot;[&quot;</span> <span class="o">+</span> <span onmouseout="hideTip(event, 'fs46', 83)" onmouseover="showTip(event, 'fs46', 83)" class="i">args</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs47', 84)" onmouseover="showTip(event, 'fs47', 84)" class="i">Current</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs48', 85)" onmouseover="showTip(event, 'fs48', 85)" class="i">Value</span> <span class="o">+</span> <span class="s">&quot;]&quot;</span> ))
+
+<span onmouseout="hideTip(event, 'fs29', 86)" onmouseover="showTip(event, 'fs29', 86)" class="i">transferDatabase</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs49', 87)" onmouseover="showTip(event, 'fs49', 87)" class="i">ScriptingProgress</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs33', 88)" onmouseover="showTip(event, 'fs33', 88)" class="f">Add</span>(<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs46', 89)" onmouseover="showTip(event, 'fs46', 89)" class="i">args</span> <span class="k">-&gt;</span>
+    <span onmouseout="hideTip(event, 'fs35', 90)" onmouseover="showTip(event, 'fs35', 90)" class="t">Console</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs43', 91)" onmouseover="showTip(event, 'fs43', 91)" class="f">WriteLine</span>(<span class="s">&quot;[&quot;</span> <span class="o">+</span> <span onmouseout="hideTip(event, 'fs46', 92)" onmouseover="showTip(event, 'fs46', 92)" class="i">args</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs47', 93)" onmouseover="showTip(event, 'fs47', 93)" class="i">Current</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs48', 94)" onmouseover="showTip(event, 'fs48', 94)" class="i">Value</span> <span class="o">+</span> <span class="s">&quot;]&quot;</span>))
+
+<span onmouseout="hideTip(event, 'fs29', 95)" onmouseover="showTip(event, 'fs29', 95)" class="i">transferDatabase</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs50', 96)" onmouseover="showTip(event, 'fs50', 96)" class="i">ScriptingError</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs33', 97)" onmouseover="showTip(event, 'fs33', 97)" class="f">Add</span>(<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs51', 98)" onmouseover="showTip(event, 'fs51', 98)" class="i">args</span> <span class="k">-&gt;</span>
+    <span onmouseout="hideTip(event, 'fs35', 99)" onmouseover="showTip(event, 'fs35', 99)" class="t">Console</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs43', 100)" onmouseover="showTip(event, 'fs43', 100)" class="f">WriteLine</span>(<span class="s">&quot;[&quot;</span> <span class="o">+</span> <span onmouseout="hideTip(event, 'fs51', 101)" onmouseover="showTip(event, 'fs51', 101)" class="i">args</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs52', 102)" onmouseover="showTip(event, 'fs52', 102)" class="i">Current</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs48', 103)" onmouseover="showTip(event, 'fs48', 103)" class="i">Value</span> <span class="o">+</span> <span class="s">&quot;]&quot;</span>))
+
+<span onmouseout="hideTip(event, 'fs29', 104)" onmouseover="showTip(event, 'fs29', 104)" class="i">transferDatabase</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs53', 105)" onmouseover="showTip(event, 'fs53', 105)" class="f">TransferData</span>()
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace System</div>
+<div class="tip" id="fs2">namespace Microsoft</div>
+<div class="tip" id="fs3">namespace Microsoft.SqlServer</div>
+<div class="tip" id="fs4">namespace Microsoft.SqlServer.Management</div>
+<div class="tip" id="fs5">namespace Microsoft.SqlServer.Management.Smo</div>
+<div class="tip" id="fs6">namespace Microsoft.SqlServer.Management.Common</div>
+<div class="tip" id="fs7">val serverWithConnection : serverName:string -&gt; Server<br /><br />Full name: Script.serverWithConnection</div>
+<div class="tip" id="fs8">val serverName : string</div>
+<div class="tip" id="fs9">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />Full name: Microsoft.FSharp.Core.Operators.string<br /><br />--------------------<br />type string = String<br /><br />Full name: Microsoft.FSharp.Core.string</div>
+<div class="tip" id="fs10">val server : Server</div>
+<div class="tip" id="fs11">Multiple items<br />type Server =<br />&#160;&#160;inherit SqlSmoObject<br />&#160;&#160;new : unit -&gt; Server + 2 overloads<br />&#160;&#160;member ActiveDirectory : ServerActiveDirectory<br />&#160;&#160;member AffinityInfo : AffinityInfo<br />&#160;&#160;member Alter : unit -&gt; unit + 1 overload<br />&#160;&#160;member AttachDatabase : name:string * files:StringCollection -&gt; unit + 3 overloads<br />&#160;&#160;member AuditLevel : AuditLevel with get, set<br />&#160;&#160;member Audits : AuditCollection<br />&#160;&#160;member AvailabilityGroups : AvailabilityGroupCollection<br />&#160;&#160;member BackupDevices : BackupDeviceCollection<br />&#160;&#160;member BackupDirectory : string with get, set<br />&#160;&#160;...<br /><br />Full name: Microsoft.SqlServer.Management.Smo.Server<br /><br />--------------------<br />Server() : unit<br />Server(name: string) : unit<br />Server(serverConnection: ServerConnection) : unit</div>
+<div class="tip" id="fs12">property Server.ConnectionContext: ServerConnection</div>
+<div class="tip" id="fs13">property ConnectionSettings.LoginSecure: bool</div>
+<div class="tip" id="fs14">ConnectionManager.Connect() : unit</div>
+<div class="tip" id="fs15">val sourceServer : Server<br /><br />Full name: Script.sourceServer</div>
+<div class="tip" id="fs16">val sourceDatabase : Database<br /><br />Full name: Script.sourceDatabase</div>
+<div class="tip" id="fs17">property Server.Databases: DatabaseCollection</div>
+<div class="tip" id="fs18">val destServer : Server<br /><br />Full name: Script.destServer</div>
+<div class="tip" id="fs19">val destDatabase : Database<br /><br />Full name: Script.destDatabase</div>
+<div class="tip" id="fs20">Multiple items<br />type Database =<br />&#160;&#160;inherit ScriptNameObjectBase<br />&#160;&#160;new : unit -&gt; Database + 1 overload<br />&#160;&#160;member ActiveConnections : int<br />&#160;&#160;member ActiveDirectory : DatabaseActiveDirectory<br />&#160;&#160;member Alter : unit -&gt; unit + 2 overloads<br />&#160;&#160;member AnsiNullDefault : bool with get, set<br />&#160;&#160;member AnsiNullsEnabled : bool with get, set<br />&#160;&#160;member AnsiPaddingEnabled : bool with get, set<br />&#160;&#160;member AnsiWarningsEnabled : bool with get, set<br />&#160;&#160;member ApplicationRoles : ApplicationRoleCollection<br />&#160;&#160;member ArithmeticAbortEnabled : bool with get, set<br />&#160;&#160;...<br /><br />Full name: Microsoft.SqlServer.Management.Smo.Database<br /><br />--------------------<br />Database() : unit<br />Database(server: Server, name: string) : unit</div>
+<div class="tip" id="fs21">val database : Database</div>
+<div class="tip" id="fs22">property Database.Name: string</div>
+<div class="tip" id="fs23">type Array =<br />&#160;&#160;member Clone : unit -&gt; obj<br />&#160;&#160;member CopyTo : array:Array * index:int -&gt; unit + 1 overload<br />&#160;&#160;member GetEnumerator : unit -&gt; IEnumerator<br />&#160;&#160;member GetLength : dimension:int -&gt; int<br />&#160;&#160;member GetLongLength : dimension:int -&gt; int64<br />&#160;&#160;member GetLowerBound : dimension:int -&gt; int<br />&#160;&#160;member GetUpperBound : dimension:int -&gt; int<br />&#160;&#160;member GetValue : [&lt;ParamArray&gt;] indices:int[] -&gt; obj + 7 overloads<br />&#160;&#160;member Initialize : unit -&gt; unit<br />&#160;&#160;member IsFixedSize : bool<br />&#160;&#160;...<br /><br />Full name: System.Array</div>
+<div class="tip" id="fs24">val exists : predicate:(&#39;T -&gt; bool) -&gt; array:&#39;T [] -&gt; bool<br /><br />Full name: Microsoft.FSharp.Collections.Array.exists</div>
+<div class="tip" id="fs25">val databaseName : string</div>
+<div class="tip" id="fs26">val existingDestDatabase : Database</div>
+<div class="tip" id="fs27">Database.Drop() : unit</div>
+<div class="tip" id="fs28">Database.Create() : unit<br />Database.Create(forAttach: bool) : unit</div>
+<div class="tip" id="fs29">val transferDatabase : Transfer<br /><br />Full name: Script.transferDatabase</div>
+<div class="tip" id="fs30">Multiple items<br />type Transfer =<br />&#160;&#160;inherit DataTransferBase<br />&#160;&#160;new : unit -&gt; Transfer + 1 overload<br />&#160;&#160;member BatchSize : int with get, set<br />&#160;&#160;member BulkCopyTimeout : int with get, set<br />&#160;&#160;member GetTransferProvider : unit -&gt; IDataTransferProvider<br />&#160;&#160;member TemporaryPackageDirectory : string with get, set<br />&#160;&#160;member TransferData : unit -&gt; unit<br />&#160;&#160;event DataTransferEvent : DataTransferEventHandler<br /><br />Full name: Microsoft.SqlServer.Management.Smo.Transfer<br /><br />--------------------<br />Transfer() : unit<br />Transfer(database: Database) : unit</div>
+<div class="tip" id="fs31">property Server.Name: string</div>
+<div class="tip" id="fs32">event Transfer.DataTransferEvent: IEvent&lt;DataTransferEventHandler,DataTransferEventArgs&gt;</div>
+<div class="tip" id="fs33">member IObservable.Add : callback:(&#39;T -&gt; unit) -&gt; unit</div>
+<div class="tip" id="fs34">val args : DataTransferEventArgs</div>
+<div class="tip" id="fs35">type Console =<br />&#160;&#160;static member BackgroundColor : ConsoleColor with get, set<br />&#160;&#160;static member Beep : unit -&gt; unit + 1 overload<br />&#160;&#160;static member BufferHeight : int with get, set<br />&#160;&#160;static member BufferWidth : int with get, set<br />&#160;&#160;static member CapsLock : bool<br />&#160;&#160;static member Clear : unit -&gt; unit<br />&#160;&#160;static member CursorLeft : int with get, set<br />&#160;&#160;static member CursorSize : int with get, set<br />&#160;&#160;static member CursorTop : int with get, set<br />&#160;&#160;static member CursorVisible : bool with get, set<br />&#160;&#160;...<br /><br />Full name: System.Console</div>
+<div class="tip" id="fs36">property Console.ForegroundColor: ConsoleColor</div>
+<div class="tip" id="fs37">type ConsoleColor =<br />&#160;&#160;| Black = 0<br />&#160;&#160;| DarkBlue = 1<br />&#160;&#160;| DarkGreen = 2<br />&#160;&#160;| DarkCyan = 3<br />&#160;&#160;| DarkRed = 4<br />&#160;&#160;| DarkMagenta = 5<br />&#160;&#160;| DarkYellow = 6<br />&#160;&#160;| Gray = 7<br />&#160;&#160;| DarkGray = 8<br />&#160;&#160;| Blue = 9<br />&#160;&#160;...<br /><br />Full name: System.ConsoleColor</div>
+<div class="tip" id="fs38">field ConsoleColor.Green = 10</div>
+<div class="tip" id="fs39">Console.Write(value: string) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.Write(value: obj) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.Write(value: uint64) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.Write(value: int64) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.Write(value: uint32) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.Write(value: int) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.Write(value: float32) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.Write(value: decimal) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.Write(value: float) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.Write(buffer: char []) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em></div>
+<div class="tip" id="fs40">property DataTransferEventArgs.DataTransferEventType: DataTransferEventType</div>
+<div class="tip" id="fs41">Enum.ToString() : string<br />Enum.ToString(format: string) : string</div>
+<div class="tip" id="fs42">Console.ResetColor() : unit</div>
+<div class="tip" id="fs43">Console.WriteLine() : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.WriteLine(value: string) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.WriteLine(value: obj) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.WriteLine(value: uint64) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.WriteLine(value: int64) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.WriteLine(value: uint32) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.WriteLine(value: int) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.WriteLine(value: float32) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.WriteLine(value: float) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.WriteLine(value: decimal) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em></div>
+<div class="tip" id="fs44">property DataTransferEventArgs.Message: string</div>
+<div class="tip" id="fs45">event TransferBase.DiscoveryProgress: IEvent&lt;ProgressReportEventHandler,ProgressReportEventArgs&gt;</div>
+<div class="tip" id="fs46">val args : ProgressReportEventArgs</div>
+<div class="tip" id="fs47">property ProgressReportEventArgs.Current: SqlServer.Management.Sdk.Sfc.Urn</div>
+<div class="tip" id="fs48">property SqlServer.Management.Sdk.Sfc.Urn.Value: string</div>
+<div class="tip" id="fs49">event TransferBase.ScriptingProgress: IEvent&lt;ProgressReportEventHandler,ProgressReportEventArgs&gt;</div>
+<div class="tip" id="fs50">event TransferBase.ScriptingError: IEvent&lt;ScriptingErrorEventHandler,ScriptingErrorEventArgs&gt;</div>
+<div class="tip" id="fs51">val args : ScriptingErrorEventArgs</div>
+<div class="tip" id="fs52">property ScriptingErrorEventArgs.Current: SqlServer.Management.Sdk.Sfc.Urn</div>
+<div class="tip" id="fs53">Transfer.TransferData() : unit</div>
+

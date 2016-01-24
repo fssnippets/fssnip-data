@@ -1,0 +1,17 @@
+open System
+open System.Reactive
+open System.Reactive.Subjects
+
+type Async<'a> with
+    member a.ToObservable() =        
+        let subject = new AsyncSubject<'a>()
+        Async.StartWithContinuations(a,
+            (fun res -> subject.OnNext(res)
+                        subject.OnCompleted()),
+            (fun exn -> subject.OnError(exn)),
+            (fun cnl -> ()))
+        subject :> IObservable<'a>
+
+// Test 
+let c =  async { return 42}
+c.ToObservable().Subscribe(fun x-> printfn "The answer to everything %d" x) 

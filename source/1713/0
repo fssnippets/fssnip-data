@@ -1,0 +1,40 @@
+namespace RodhernF
+
+open UnityEngine
+open KSP
+
+[<KSPAddon(KSPAddon.Startup.EveryScene, true)>]
+type RodhernF () = 
+    inherit MonoBehaviour ()
+    
+    /// Write message to the KSP.log file.
+    let log s =
+        do Debug.Log ("[RodhernF] " + s)
+   
+    /// Write message on screen and to log file.
+    let msg s =
+        do log s
+        do ScreenMessages.PostScreenMessage(s, 5.f) |> ignore
+    
+    /// A handler called when a change of scene is requested.
+    let onSceneSwitchRequest =
+        let handler (actionFromTo: GameEvents.FromToAction<GameScenes,GameScenes>) =
+            do sprintf "Going from '%A' to '%A'."
+                       (actionFromTo.``from``) (actionFromTo.``to``)
+               |> msg
+        new EventData<_>.OnEvent(handler)
+    
+    /// A handler called when a vessel is selected in the launch dialog.
+    let onVesselSelect =
+        let handler (template: ShipTemplate) =
+            do sprintf "Selected '%s'."
+                       (template.shipName)
+               |> msg
+        new EventData<_>.OnEvent(handler)
+    
+    /// This is the method that KSP/Unity will invoke.
+    member public rodhernf.Start () =
+        do log "rodhernf.Start begin"
+        GameEvents.onGameSceneSwitchRequested.Add onSceneSwitchRequest
+        GameEvents.onGUILaunchScreenVesselSelected.Add onVesselSelect
+        do log "rodhernf.Start end"

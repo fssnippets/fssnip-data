@@ -1,0 +1,66 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">// generic 2-arg currying function</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="f">curry</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="f">f</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="i">x</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="i">y</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs2', 5)" onmouseover="showTip(event, 'fs2', 5)" class="f">f</span>(<span onmouseout="hideTip(event, 'fs3', 6)" onmouseover="showTip(event, 'fs3', 6)" class="i">x</span>,<span onmouseout="hideTip(event, 'fs4', 7)" onmouseover="showTip(event, 'fs4', 7)" class="i">y</span>)
+
+<span class="c">// insert given element x into the list at all possible positions</span>
+<span class="c">// returns list of lists</span>
+<span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs5', 8)" onmouseover="showTip(event, 'fs5', 8)" class="f">ins</span> <span onmouseout="hideTip(event, 'fs3', 9)" onmouseover="showTip(event, 'fs3', 9)" class="i">x</span> <span class="o">=</span> <span class="k">function</span>
+   | [] <span class="k">-&gt;</span> [[<span onmouseout="hideTip(event, 'fs3', 10)" onmouseover="showTip(event, 'fs3', 10)" class="i">x</span>]]
+   | <span onmouseout="hideTip(event, 'fs6', 11)" onmouseover="showTip(event, 'fs6', 11)" class="i">h</span><span class="o">::</span><span onmouseout="hideTip(event, 'fs7', 12)" onmouseover="showTip(event, 'fs7', 12)" class="i">t</span> <span class="k">-&gt;</span> (<span onmouseout="hideTip(event, 'fs3', 13)" onmouseover="showTip(event, 'fs3', 13)" class="i">x</span><span class="o">::</span><span onmouseout="hideTip(event, 'fs6', 14)" onmouseover="showTip(event, 'fs6', 14)" class="i">h</span><span class="o">::</span><span onmouseout="hideTip(event, 'fs7', 15)" onmouseover="showTip(event, 'fs7', 15)" class="i">t</span>)<span class="o">::</span>(<span onmouseout="hideTip(event, 'fs8', 16)" onmouseover="showTip(event, 'fs8', 16)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs9', 17)" onmouseover="showTip(event, 'fs9', 17)" class="f">map</span> (<span onmouseout="hideTip(event, 'fs1', 18)" onmouseover="showTip(event, 'fs1', 18)" class="f">curry</span> <span onmouseout="hideTip(event, 'fs8', 19)" onmouseover="showTip(event, 'fs8', 19)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs10', 20)" onmouseover="showTip(event, 'fs10', 20)" class="f">Cons</span> <span onmouseout="hideTip(event, 'fs6', 21)" onmouseover="showTip(event, 'fs6', 21)" class="i">h</span>) (<span onmouseout="hideTip(event, 'fs5', 22)" onmouseover="showTip(event, 'fs5', 22)" class="f">ins</span> <span onmouseout="hideTip(event, 'fs3', 23)" onmouseover="showTip(event, 'fs3', 23)" class="i">x</span> <span onmouseout="hideTip(event, 'fs7', 24)" onmouseover="showTip(event, 'fs7', 24)" class="i">t</span>))
+
+<span class="c">// computes all permutations of a given list of elements</span>
+<span class="c">// return list of lists</span>
+<span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs11', 25)" onmouseover="showTip(event, 'fs11', 25)" class="f">perm</span> <span class="o">=</span> <span class="k">function</span>
+  | [] <span class="k">-&gt;</span> [[]]
+  | <span onmouseout="hideTip(event, 'fs6', 26)" onmouseover="showTip(event, 'fs6', 26)" class="i">h</span><span class="o">::</span><span onmouseout="hideTip(event, 'fs7', 27)" onmouseover="showTip(event, 'fs7', 27)" class="i">t</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs8', 28)" onmouseover="showTip(event, 'fs8', 28)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs12', 29)" onmouseover="showTip(event, 'fs12', 29)" class="f">collect</span> (<span onmouseout="hideTip(event, 'fs5', 30)" onmouseover="showTip(event, 'fs5', 30)" class="f">ins</span> <span onmouseout="hideTip(event, 'fs6', 31)" onmouseover="showTip(event, 'fs6', 31)" class="i">h</span>) (<span onmouseout="hideTip(event, 'fs11', 32)" onmouseover="showTip(event, 'fs11', 32)" class="f">perm</span> <span onmouseout="hideTip(event, 'fs7', 33)" onmouseover="showTip(event, 'fs7', 33)" class="i">t</span>)
+
+<span class="c">// compute the factorian of a given number</span>
+<span class="c">// by building the list of permutations of the list </span>
+<span class="c">// of first n numbers [1..n] and taking its length</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs13', 34)" onmouseover="showTip(event, 'fs13', 34)" class="f">fact</span> <span onmouseout="hideTip(event, 'fs14', 35)" onmouseover="showTip(event, 'fs14', 35)" class="i">n</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs8', 36)" onmouseover="showTip(event, 'fs8', 36)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs15', 37)" onmouseover="showTip(event, 'fs15', 37)" class="f">length</span> (<span onmouseout="hideTip(event, 'fs11', 38)" onmouseover="showTip(event, 'fs11', 38)" class="f">perm</span> [<span class="n">1..</span><span onmouseout="hideTip(event, 'fs14', 39)" onmouseover="showTip(event, 'fs14', 39)" class="i">n</span>])
+
+<span class="c">// even better way to write the same thing</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs16', 40)" onmouseover="showTip(event, 'fs16', 40)" class="f">fact&#39;</span> <span class="o">=</span> (<span class="o">..</span>) <span class="n">1</span> <span class="o">&gt;</span><span class="o">&gt;</span> <span onmouseout="hideTip(event, 'fs8', 41)" onmouseover="showTip(event, 'fs8', 41)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs17', 42)" onmouseover="showTip(event, 'fs17', 42)" class="f">ofSeq</span> <span class="o">&gt;</span><span class="o">&gt;</span> <span onmouseout="hideTip(event, 'fs11', 43)" onmouseover="showTip(event, 'fs11', 43)" class="f">perm</span> <span class="o">&gt;</span><span class="o">&gt;</span> <span onmouseout="hideTip(event, 'fs8', 44)" onmouseover="showTip(event, 'fs8', 44)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs15', 45)" onmouseover="showTip(event, 'fs15', 45)" class="f">length</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">val curry : f:(&#39;a * &#39;b -&gt; &#39;c) -&gt; x:&#39;a -&gt; y:&#39;b -&gt; &#39;c<br /><br />Full name: Script.curry</div>
+<div class="tip" id="fs2">val f : (&#39;a * &#39;b -&gt; &#39;c)</div>
+<div class="tip" id="fs3">val x : &#39;a</div>
+<div class="tip" id="fs4">val y : &#39;b</div>
+<div class="tip" id="fs5">val ins : x:&#39;a -&gt; _arg1:&#39;a list -&gt; &#39;a list list<br /><br />Full name: Script.ins</div>
+<div class="tip" id="fs6">val h : &#39;a</div>
+<div class="tip" id="fs7">val t : &#39;a list</div>
+<div class="tip" id="fs8">Multiple items<br />module List<br /><br />from Microsoft.FSharp.Collections<br /><br />--------------------<br />type List&lt;&#39;T&gt; =<br />&#160;&#160;| ( [] )<br />&#160;&#160;| ( :: ) of Head: &#39;T * Tail: &#39;T list<br />&#160;&#160;interface IEnumerable<br />&#160;&#160;interface IEnumerable&lt;&#39;T&gt;<br />&#160;&#160;member Head : &#39;T<br />&#160;&#160;member IsEmpty : bool<br />&#160;&#160;member Item : index:int -&gt; &#39;T with get<br />&#160;&#160;member Length : int<br />&#160;&#160;member Tail : &#39;T list<br />&#160;&#160;static member Cons : head:&#39;T * tail:&#39;T list -&gt; &#39;T list<br />&#160;&#160;static member Empty : &#39;T list<br /><br />Full name: Microsoft.FSharp.Collections.List&lt;_&gt;</div>
+<div class="tip" id="fs9">val map : mapping:(&#39;T -&gt; &#39;U) -&gt; list:&#39;T list -&gt; &#39;U list<br /><br />Full name: Microsoft.FSharp.Collections.List.map</div>
+<div class="tip" id="fs10">static member List.Cons : head:&#39;T * tail:&#39;T list -&gt; &#39;T list</div>
+<div class="tip" id="fs11">val perm : _arg1:&#39;a list -&gt; &#39;a list list<br /><br />Full name: Script.perm</div>
+<div class="tip" id="fs12">val collect : mapping:(&#39;T -&gt; &#39;U list) -&gt; list:&#39;T list -&gt; &#39;U list<br /><br />Full name: Microsoft.FSharp.Collections.List.collect</div>
+<div class="tip" id="fs13">val fact : n:int -&gt; int<br /><br />Full name: Script.fact</div>
+<div class="tip" id="fs14">val n : int</div>
+<div class="tip" id="fs15">val length : list:&#39;T list -&gt; int<br /><br />Full name: Microsoft.FSharp.Collections.List.length</div>
+<div class="tip" id="fs16">val fact&#39; : (int -&gt; int)<br /><br />Full name: Script.fact&#39;</div>
+<div class="tip" id="fs17">val ofSeq : source:seq&lt;&#39;T&gt; -&gt; &#39;T list<br /><br />Full name: Microsoft.FSharp.Collections.List.ofSeq</div>
+

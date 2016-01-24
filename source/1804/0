@@ -1,0 +1,9 @@
+    let commaize s =
+        let rec insert_commas list = 
+            match List.length list with
+            | 0 -> []
+            | 1 -> list
+            | 2 -> list.Head :: " and " :: list.Tail
+            | _ -> list.Head :: ", " :: insert_commas list.Tail
+
+        String.concat "" (Seq.toList s |> insert_commas ) 

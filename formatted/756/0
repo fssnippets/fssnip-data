@@ -1,0 +1,47 @@
+<h2><a name="Show-minesweeper-board" class="anchor" href="#Show-minesweeper-board">Show minesweeper board</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">type</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="t">GameControl</span>() <span class="o">=</span>
+  <span class="k">inherit</span> <span class="i">UserControl</span>(<span class="i">Width</span> <span class="o">=</span> <span class="n">300.0</span>, <span class="i">Height</span> <span class="o">=</span> <span class="n">400.0</span>)
+  <span class="k">let</span> <span class="i">board</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">Game</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="i">view</span>
+  <span class="k">let</span> <span class="i">grid</span> <span class="o">=</span> <span class="i">Grid</span>()  
+  <span class="k">do</span>  <span class="i">board</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="i">Array</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="i">iteri</span> (<span class="k">fun</span> <span class="i">y</span> <span class="i">line</span> <span class="k">-&gt;</span>
+        <span class="i">grid</span><span class="o">.</span><span class="i">RowDefinitions</span><span class="o">.</span><span class="i">Add</span>(<span class="i">RowDefinition</span>())
+        <span class="k">if</span> <span class="i">y</span> <span class="o">=</span> <span class="n">0</span> <span class="k">then</span>
+            <span class="k">for</span> <span class="i">i</span> <span class="o">=</span> <span class="n">1</span> <span class="k">to</span> <span class="i">line</span><span class="o">.</span><span class="i">Length</span> <span class="k">do</span>
+                <span class="i">grid</span><span class="o">.</span><span class="i">ColumnDefinitions</span><span class="o">.</span><span class="i">Add</span>(<span class="i">ColumnDefinition</span>())
+        <span class="i">line</span><span class="o">.</span><span class="i">ToCharArray</span>() <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs4', 6)" onmouseover="showTip(event, 'fs4', 6)" class="i">Array</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs5', 7)" onmouseover="showTip(event, 'fs5', 7)" class="i">iteri</span> (<span class="k">fun</span> <span class="i">x</span> <span class="i">c</span> <span class="k">-&gt;</span>
+            <span class="k">let</span> <span class="i">button</span> <span class="o">=</span> <span class="i">Button</span>()
+            <span class="i">button</span><span class="o">.</span><span class="i">Content</span> <span class="o">&lt;-</span> <span class="i">c</span><span class="o">.</span><span class="i">ToString</span>()
+            <span class="i">Grid</span><span class="o">.</span><span class="i">SetColumn</span>(<span class="i">button</span>,<span class="i">x</span>)
+            <span class="i">Grid</span><span class="o">.</span><span class="i">SetRow</span>(<span class="i">button</span>,<span class="i">y</span>)
+            <span class="i">grid</span><span class="o">.</span><span class="i">Children</span><span class="o">.</span><span class="i">Add</span> <span class="i">button</span>
+        )
+      )
+  <span class="k">do</span>  <span class="k">base</span><span class="o">.</span><span class="i">Content</span> <span class="o">&lt;-</span> <span class="i">grid</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">Multiple items<br />type GameControl =<br />&#160;&#160;inherit obj<br />&#160;&#160;new : unit -&gt; GameControl<br /><br />Full name: Script.GameControl<br /><br />--------------------<br />new : unit -&gt; GameControl</div>
+<div class="tip" id="fs2">module Game<br /><br />from Script</div>
+<div class="tip" id="fs3">val view : string []<br /><br />Full name: Script.Game.view</div>
+<div class="tip" id="fs4">type Array =<br />&#160;&#160;member Clone : unit -&gt; obj<br />&#160;&#160;member CopyTo : array:Array * index:int -&gt; unit + 1 overload<br />&#160;&#160;member GetEnumerator : unit -&gt; IEnumerator<br />&#160;&#160;member GetLength : dimension:int -&gt; int<br />&#160;&#160;member GetLongLength : dimension:int -&gt; int64<br />&#160;&#160;member GetLowerBound : dimension:int -&gt; int<br />&#160;&#160;member GetUpperBound : dimension:int -&gt; int<br />&#160;&#160;member GetValue : [&lt;ParamArray&gt;] indices:int[] -&gt; obj + 7 overloads<br />&#160;&#160;member Initialize : unit -&gt; unit<br />&#160;&#160;member IsFixedSize : bool<br />&#160;&#160;...<br /><br />Full name: System.Array</div>
+<div class="tip" id="fs5">val iteri : action:(int -&gt; &#39;T -&gt; unit) -&gt; array:&#39;T [] -&gt; unit<br /><br />Full name: Microsoft.FSharp.Collections.Array.iteri</div>
+

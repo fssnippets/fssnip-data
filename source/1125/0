@@ -1,0 +1,1 @@
+type Point = { x : float; y: float; z: float; }

@@ -1,0 +1,35 @@
+open System
+open System.Net
+open System.Text
+open System.Reactive.Concurrency
+open System.Reactive.Subjects
+open System.Reactive.Linq
+open FSharp.Control.Reactive
+
+let makeObservableListener url =
+    let listener = new HttpListener()
+    listener.Prefixes.Add url
+    listener.Start()
+    let makeObservable =
+        Observable.FromAsync(listener.GetContextAsync)
+        |> Observable.repeat
+        |> Observable.retry
+        |> Observable.publish
+        |> Observable.refCount
+    (listener, makeObservable)
+
+let handleRequest obs =
+    obs
+    |> Observable.filter (fun (ctx : HttpListenerContext) -> ctx.Request.Url.AbsolutePath.EndsWith("/hello"))
+    |> Observable.subscribe (fun ctx ->
+            let b = Encoding.UTF8.GetBytes("world")
+            ctx.Response.OutputStream.Write(b, 0, b.Length)
+            ctx.Response.Close())
+
+[<EntryPoint>]
+let main argv =
+    let (lst, obs) = makeObservableListener "http://localhost:55555/"
+    handleRequest obs |> ignore
+    Console.ReadKey() |> ignore
+    lst.Close()
+    0

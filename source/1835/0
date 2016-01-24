@@ -1,0 +1,37 @@
+open System.IO
+open System.Reflection
+
+type Reference =
+    { Assembly: AssemblyName
+      ReferencedAssembly: AssemblyName }
+
+let assemblies path =
+    let d = DirectoryInfo(path)
+    [| yield! d.GetFiles("*.dll", SearchOption.AllDirectories)
+       yield! d.GetFiles("*.exe", SearchOption.AllDirectories) |]
+    |> Array.map (fun f -> Assembly.LoadFile(f.FullName))
+
+let references (assemblies: Assembly array) =
+    [| for a in assemblies do
+           for r in a.GetReferencedAssemblies() do
+               yield { Assembly = a.GetName(); ReferencedAssembly = r } |]
+
+let conflicts (references: Reference array) =
+    references
+    |> Array.groupBy (fun r -> r.ReferencedAssembly.Name)
+    |> Array.filter (fun (_,rs) -> 
+        rs 
+        |> Array.distinctBy (fun r -> r.ReferencedAssembly.FullName) 
+        |> Array.length > 1)
+
+let printConflicts path =
+    assemblies path
+    |> references
+    |> conflicts
+    |> Array.iter (fun (n,rs) ->
+        printfn "Possible conflicts for %s" n
+        rs 
+        |> Array.iter (fun r -> 
+            printfn "%s references %s"
+                (r.Assembly.Name.PadRight(25)) 
+                r.ReferencedAssembly.FullName))

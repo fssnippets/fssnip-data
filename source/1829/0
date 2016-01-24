@@ -1,0 +1,17 @@
+open FSharp.Data
+
+let [<Literal>] electionSummary =
+    "http://researchbriefings.files.parliament.uk/documents/CBP-7186/hocl-ge2015-results-summary.csv"
+
+type Election = CsvProvider<electionSummary>
+
+let election = Election.GetSample()
+let party = dict [for row in election.Rows -> row.Ons_id, row.First_party]
+
+type Petition = JsonProvider<"https://petition.parliament.uk/petitions/114003.json">
+
+let petition = Petition.GetSample().Data
+[for row in petition.Attributes.SignaturesByConstituency ->
+    row.Name, party.[row.OnsCode], row.SignatureCount]
+|> List.sortByDescending (fun (_,_,c) -> c)
+|> List.take 20

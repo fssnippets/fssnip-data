@@ -1,0 +1,45 @@
+open System
+
+let getPerson () =
+    Console.Write("Name: ")
+    let name = Console.ReadLine()
+    Console.Write("Age: ")
+    let ok, age = Int32.TryParse(Console.ReadLine())
+    (ok, name, age)
+
+
+let classify n =
+    if n >= 20
+    then "no longer a teenager"
+    elif n >= 13
+    then "a teenager"
+    else "a child"
+
+let rec reportAge n =
+    if n = 0
+    then ()
+    else
+        let ok, name, age = getPerson()
+        if ok
+        then Console.WriteLine("{0} is {1}", name, classify age)
+             reportAge (n - 1)
+        else Console.WriteLine("Age invalid: '{0}'. Try again!", age)
+             reportAge n
+
+
+[<EntryPoint>]
+let main argv =
+    let count' =
+        if argv.Length = 0
+        then
+            Console.Write("Number of people: ")
+            Console.ReadLine()
+        else
+            argv.[0]
+    let ok, count = Int32.TryParse(count')
+    if ok
+    then reportAge count
+    else Console.WriteLine("Cannot parse people count '{0}'", argv.[0])
+    Console.Write("Press key to finish...")
+    ignore (Console.ReadLine())
+    0

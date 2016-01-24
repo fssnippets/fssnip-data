@@ -1,0 +1,28 @@
+(* Project Euler Problem 47: Distinct primes factors
+
+The first two consecutive numbers to have two distinct prime factors are:
+
+14 = 2 × 7
+15 = 3 × 5
+
+The first three consecutive numbers to have three distinct prime factors
+are:
+
+644 = 2² × 7 × 23
+645 = 3 × 5 × 43
+646 = 2 × 17 × 19.
+
+Find the first four consecutive integers to have four distinct prime
+factors. What is the first of these numbers? *)
+
+let isprime n = (n=2) || not (List.exists (fun d -> n%d=0) ([2]@[3..2..(int(sqrt(float n)))]))
+
+let primes = [|for n in 2..2999 do if (isprime n) then yield n|]
+
+let pfs x = Array.length (Array.filter (fun d -> x%d=0) (Array.takeWhile (fun p -> p < x/2) primes))
+
+let pfsxyz x = ((pfs (x) = 4) && (pfs (x+1) = 4) && (pfs (x+2) = 4) && (pfs (x+3) = 4))
+
+let consecutives upto = [for n in 1..upto do if (pfsxyz n) then yield n]
+
+printfn "%O" (consecutives 150000)

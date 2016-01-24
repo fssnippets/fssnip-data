@@ -1,0 +1,9 @@
+//Fast version for http://www.fssnip.net/sB
+//Check on 1000000 elements array
+
+let FastSlice chunk arr=
+  let len=arr|>Array.length
+  let res=Array.init (len/chunk) (fun x->arr.[(x*chunk)..((x+1)*chunk-1)])
+  len%chunk|>function
+     |0->res
+     |x->[|arr.[len-x..]|]|>Array.append res

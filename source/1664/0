@@ -1,0 +1,1 @@
+let inline palindrome l = List.rev l = l

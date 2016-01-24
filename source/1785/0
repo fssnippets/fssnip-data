@@ -1,0 +1,16 @@
+open System
+let doesNotWorkRead<'a> str : 'a option =
+    match typeof<'a> with
+    | t when t = typeof<int> ->
+        Int32.Parse str |> Some
+    | t when t = typeof<string> ->
+        Some str
+    | _ -> None
+
+let read<'a> str : 'a =
+    match typeof<'a> with
+    | t when t = typeof<int> ->
+        Int32.Parse str |> box |> unbox<'a>
+    | t when t = typeof<string> ->
+        str |> box |> unbox<'a>
+    | _ -> failwith "The programmers proof engine failed"

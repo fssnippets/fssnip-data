@@ -1,0 +1,89 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">module</span> <span class="t">LazyString</span> <span class="o">=</span> 
+    <span class="k">type</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="t">LazyString</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="t">char</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="t">seq</span> 
+
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="f">fromString</span> (<span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="i">s</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="t">string</span>) <span class="o">:</span> <span onmouseout="hideTip(event, 'fs1', 7)" onmouseover="showTip(event, 'fs1', 7)" class="t">LazyString</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs3', 8)" onmouseover="showTip(event, 'fs3', 8)" class="i">seq</span> { <span class="k">for</span> <span onmouseout="hideTip(event, 'fs7', 9)" onmouseover="showTip(event, 'fs7', 9)" class="i">i</span> <span class="k">in</span> <span onmouseout="hideTip(event, 'fs5', 10)" onmouseover="showTip(event, 'fs5', 10)" class="i">s</span> <span class="k">do</span> <span class="k">yield</span> <span onmouseout="hideTip(event, 'fs7', 11)" onmouseover="showTip(event, 'fs7', 11)" class="i">i</span> }
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs8', 12)" onmouseover="showTip(event, 'fs8', 12)" class="f">toString</span> (<span onmouseout="hideTip(event, 'fs9', 13)" onmouseover="showTip(event, 'fs9', 13)" class="i">l</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs1', 14)" onmouseover="showTip(event, 'fs1', 14)" class="t">LazyString</span>) <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs6', 15)" onmouseover="showTip(event, 'fs6', 15)" class="t">string</span>(<span onmouseout="hideTip(event, 'fs10', 16)" onmouseover="showTip(event, 'fs10', 16)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs11', 17)" onmouseover="showTip(event, 'fs11', 17)" class="f">toArray</span> <span onmouseout="hideTip(event, 'fs9', 18)" onmouseover="showTip(event, 'fs9', 18)" class="i">l</span>)
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs12', 19)" onmouseover="showTip(event, 'fs12', 19)" class="f">concat</span> (<span onmouseout="hideTip(event, 'fs13', 20)" onmouseover="showTip(event, 'fs13', 20)" class="i">a</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs1', 21)" onmouseover="showTip(event, 'fs1', 21)" class="t">LazyString</span>) (<span onmouseout="hideTip(event, 'fs14', 22)" onmouseover="showTip(event, 'fs14', 22)" class="i">b</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs1', 23)" onmouseover="showTip(event, 'fs1', 23)" class="t">LazyString</span>) <span class="o">:</span> <span onmouseout="hideTip(event, 'fs1', 24)" onmouseover="showTip(event, 'fs1', 24)" class="t">LazyString</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs10', 25)" onmouseover="showTip(event, 'fs10', 25)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs15', 26)" onmouseover="showTip(event, 'fs15', 26)" class="f">concat</span> [<span onmouseout="hideTip(event, 'fs14', 27)" onmouseover="showTip(event, 'fs14', 27)" class="i">b</span>;<span onmouseout="hideTip(event, 'fs13', 28)" onmouseover="showTip(event, 'fs13', 28)" class="i">a</span>]
+    
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs16', 29)" onmouseover="showTip(event, 'fs16', 29)" class="f">replace</span> (<span onmouseout="hideTip(event, 'fs17', 30)" onmouseover="showTip(event, 'fs17', 30)" class="i">what</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs1', 31)" onmouseover="showTip(event, 'fs1', 31)" class="t">LazyString</span>) (<span onmouseout="hideTip(event, 'fs18', 32)" onmouseover="showTip(event, 'fs18', 32)" class="i">from</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs1', 33)" onmouseover="showTip(event, 'fs1', 33)" class="t">LazyString</span>) (<span onmouseout="hideTip(event, 'fs19', 34)" onmouseover="showTip(event, 'fs19', 34)" class="i">src</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs1', 35)" onmouseover="showTip(event, 'fs1', 35)" class="t">LazyString</span>) <span class="o">:</span> <span onmouseout="hideTip(event, 'fs1', 36)" onmouseover="showTip(event, 'fs1', 36)" class="t">LazyString</span> <span class="o">=</span> 
+        <span onmouseout="hideTip(event, 'fs3', 37)" onmouseover="showTip(event, 'fs3', 37)" class="i">seq</span> {
+            <span class="k">for</span> <span onmouseout="hideTip(event, 'fs7', 38)" onmouseover="showTip(event, 'fs7', 38)" class="i">i</span> <span class="k">in</span> (<span onmouseout="hideTip(event, 'fs19', 39)" onmouseover="showTip(event, 'fs19', 39)" class="i">src</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs8', 40)" onmouseover="showTip(event, 'fs8', 40)" class="f">toString</span>)<span class="o">.</span><span class="f">Replace</span>(<span onmouseout="hideTip(event, 'fs17', 41)" onmouseover="showTip(event, 'fs17', 41)" class="i">what</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs8', 42)" onmouseover="showTip(event, 'fs8', 42)" class="f">toString</span>, <span onmouseout="hideTip(event, 'fs18', 43)" onmouseover="showTip(event, 'fs18', 43)" class="i">from</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs8', 44)" onmouseover="showTip(event, 'fs8', 44)" class="f">toString</span>) <span class="k">do</span>
+                <span class="k">yield</span> <span onmouseout="hideTip(event, 'fs7', 45)" onmouseover="showTip(event, 'fs7', 45)" class="i">i</span>
+        }
+    
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs20', 46)" onmouseover="showTip(event, 'fs20', 46)" class="f">substr</span> (<span onmouseout="hideTip(event, 'fs21', 47)" onmouseover="showTip(event, 'fs21', 47)" class="i">startIndex</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs22', 48)" onmouseover="showTip(event, 'fs22', 48)" class="t">int</span>) (<span onmouseout="hideTip(event, 'fs19', 49)" onmouseover="showTip(event, 'fs19', 49)" class="i">src</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs1', 50)" onmouseover="showTip(event, 'fs1', 50)" class="t">LazyString</span>) <span class="o">:</span> <span onmouseout="hideTip(event, 'fs1', 51)" onmouseover="showTip(event, 'fs1', 51)" class="t">LazyString</span> <span class="o">=</span> 
+        <span onmouseout="hideTip(event, 'fs19', 52)" onmouseover="showTip(event, 'fs19', 52)" class="i">src</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs10', 53)" onmouseover="showTip(event, 'fs10', 53)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs23', 54)" onmouseover="showTip(event, 'fs23', 54)" class="f">skip</span> (<span onmouseout="hideTip(event, 'fs21', 55)" onmouseover="showTip(event, 'fs21', 55)" class="i">startIndex</span><span class="o">+</span><span class="n">1</span>)
+
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs24', 56)" onmouseover="showTip(event, 'fs24', 56)" class="f">substring</span> (<span onmouseout="hideTip(event, 'fs21', 57)" onmouseover="showTip(event, 'fs21', 57)" class="i">startIndex</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs22', 58)" onmouseover="showTip(event, 'fs22', 58)" class="t">int</span>) (<span onmouseout="hideTip(event, 'fs25', 59)" onmouseover="showTip(event, 'fs25', 59)" class="i">count</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs22', 60)" onmouseover="showTip(event, 'fs22', 60)" class="t">int</span>) (<span onmouseout="hideTip(event, 'fs19', 61)" onmouseover="showTip(event, 'fs19', 61)" class="i">src</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs1', 62)" onmouseover="showTip(event, 'fs1', 62)" class="t">LazyString</span>) <span class="o">:</span> <span onmouseout="hideTip(event, 'fs1', 63)" onmouseover="showTip(event, 'fs1', 63)" class="t">LazyString</span> <span class="o">=</span> 
+        <span onmouseout="hideTip(event, 'fs19', 64)" onmouseover="showTip(event, 'fs19', 64)" class="i">src</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs10', 65)" onmouseover="showTip(event, 'fs10', 65)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs23', 66)" onmouseover="showTip(event, 'fs23', 66)" class="f">skip</span> (<span onmouseout="hideTip(event, 'fs21', 67)" onmouseover="showTip(event, 'fs21', 67)" class="i">startIndex</span><span class="o">+</span><span class="n">1</span>) <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs10', 68)" onmouseover="showTip(event, 'fs10', 68)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs26', 69)" onmouseover="showTip(event, 'fs26', 69)" class="f">take</span> <span onmouseout="hideTip(event, 'fs25', 70)" onmouseover="showTip(event, 'fs25', 70)" class="i">count</span>
+
+    <span class="c">//TODO: Implement other standard string operations</span>
+
+<span onmouseout="hideTip(event, 'fs27', 71)" onmouseover="showTip(event, 'fs27', 71)" class="t">LazyString</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs28', 72)" onmouseover="showTip(event, 'fs28', 72)" class="f">fromString</span> <span class="s">&quot;Hello &quot;</span>
+<span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs27', 73)" onmouseover="showTip(event, 'fs27', 73)" class="t">LazyString</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs29', 74)" onmouseover="showTip(event, 'fs29', 74)" class="f">concat</span> (<span onmouseout="hideTip(event, 'fs27', 75)" onmouseover="showTip(event, 'fs27', 75)" class="t">LazyString</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs28', 76)" onmouseover="showTip(event, 'fs28', 76)" class="f">fromString</span> <span class="s">&quot;C# world&quot;</span>)
+<span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs27', 77)" onmouseover="showTip(event, 'fs27', 77)" class="t">LazyString</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs30', 78)" onmouseover="showTip(event, 'fs30', 78)" class="f">replace</span> (<span onmouseout="hideTip(event, 'fs27', 79)" onmouseover="showTip(event, 'fs27', 79)" class="t">LazyString</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs28', 80)" onmouseover="showTip(event, 'fs28', 80)" class="f">fromString</span> <span class="s">&quot;C#&quot;</span>) (<span onmouseout="hideTip(event, 'fs27', 81)" onmouseover="showTip(event, 'fs27', 81)" class="t">LazyString</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs28', 82)" onmouseover="showTip(event, 'fs28', 82)" class="f">fromString</span> <span class="s">&quot;F#&quot;</span>)
+<span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs27', 83)" onmouseover="showTip(event, 'fs27', 83)" class="t">LazyString</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs31', 84)" onmouseover="showTip(event, 'fs31', 84)" class="f">toString</span>
+<span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs32', 85)" onmouseover="showTip(event, 'fs32', 85)" class="f">printfn</span> <span class="s">&quot;</span><span class="pf">%s</span><span class="s">&quot;</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">type LazyString = seq&lt;char&gt;<br /><br />Full name: Script.LazyString.LazyString</div>
+<div class="tip" id="fs2">Multiple items<br />val char : value:&#39;T -&gt; char (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.char<br /><br />--------------------<br />type char = System.Char<br /><br />Full name: Microsoft.FSharp.Core.char</div>
+<div class="tip" id="fs3">Multiple items<br />val seq : sequence:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Core.Operators.seq<br /><br />--------------------<br />type seq&lt;&#39;T&gt; = System.Collections.Generic.IEnumerable&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.seq&lt;_&gt;</div>
+<div class="tip" id="fs4">val fromString : s:string -&gt; LazyString<br /><br />Full name: Script.LazyString.fromString</div>
+<div class="tip" id="fs5">val s : string</div>
+<div class="tip" id="fs6">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />Full name: Microsoft.FSharp.Core.Operators.string<br /><br />--------------------<br />type string = System.String<br /><br />Full name: Microsoft.FSharp.Core.string</div>
+<div class="tip" id="fs7">val i : char</div>
+<div class="tip" id="fs8">val toString : l:LazyString -&gt; string<br /><br />Full name: Script.LazyString.toString</div>
+<div class="tip" id="fs9">val l : LazyString</div>
+<div class="tip" id="fs10">module Seq<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs11">val toArray : source:seq&lt;&#39;T&gt; -&gt; &#39;T []<br /><br />Full name: Microsoft.FSharp.Collections.Seq.toArray</div>
+<div class="tip" id="fs12">val concat : a:LazyString -&gt; b:LazyString -&gt; LazyString<br /><br />Full name: Script.LazyString.concat</div>
+<div class="tip" id="fs13">val a : LazyString</div>
+<div class="tip" id="fs14">val b : LazyString</div>
+<div class="tip" id="fs15">val concat : sources:seq&lt;#seq&lt;&#39;T&gt;&gt; -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.concat</div>
+<div class="tip" id="fs16">val replace : what:LazyString -&gt; from:LazyString -&gt; src:LazyString -&gt; LazyString<br /><br />Full name: Script.LazyString.replace</div>
+<div class="tip" id="fs17">val what : LazyString</div>
+<div class="tip" id="fs18">val from : LazyString</div>
+<div class="tip" id="fs19">val src : LazyString</div>
+<div class="tip" id="fs20">val substr : startIndex:int -&gt; src:LazyString -&gt; LazyString<br /><br />Full name: Script.LazyString.substr</div>
+<div class="tip" id="fs21">val startIndex : int</div>
+<div class="tip" id="fs22">Multiple items<br />val int : value:&#39;T -&gt; int (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.int<br /><br />--------------------<br />type int = int32<br /><br />Full name: Microsoft.FSharp.Core.int<br /><br />--------------------<br />type int&lt;&#39;Measure&gt; = int<br /><br />Full name: Microsoft.FSharp.Core.int&lt;_&gt;</div>
+<div class="tip" id="fs23">val skip : count:int -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.skip</div>
+<div class="tip" id="fs24">val substring : startIndex:int -&gt; count:int -&gt; src:LazyString -&gt; LazyString<br /><br />Full name: Script.LazyString.substring</div>
+<div class="tip" id="fs25">val count : int</div>
+<div class="tip" id="fs26">val take : count:int -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.take</div>
+<div class="tip" id="fs27">module LazyString<br /><br />from Script</div>
+<div class="tip" id="fs28">val fromString : s:string -&gt; LazyString.LazyString<br /><br />Full name: Script.LazyString.fromString</div>
+<div class="tip" id="fs29">val concat : a:LazyString.LazyString -&gt; b:LazyString.LazyString -&gt; LazyString.LazyString<br /><br />Full name: Script.LazyString.concat</div>
+<div class="tip" id="fs30">val replace : what:LazyString.LazyString -&gt; from:LazyString.LazyString -&gt; src:LazyString.LazyString -&gt; LazyString.LazyString<br /><br />Full name: Script.LazyString.replace</div>
+<div class="tip" id="fs31">val toString : l:LazyString.LazyString -&gt; string<br /><br />Full name: Script.LazyString.toString</div>
+<div class="tip" id="fs32">val printfn : format:Printf.TextWriterFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.printfn</div>
+

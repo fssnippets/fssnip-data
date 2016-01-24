@@ -1,0 +1,30 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">// compose a list of functions fs into a single function</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="f">compose</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">fs</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="f">reduce</span> (<span class="o">&gt;</span><span class="o">&gt;</span>) <span onmouseout="hideTip(event, 'fs2', 5)" onmouseover="showTip(event, 'fs2', 5)" class="i">fs</span>
+
+<span class="c">// apply list of functions to an initial arg</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs5', 6)" onmouseover="showTip(event, 'fs5', 6)" class="i">fs</span> <span class="o">=</span> [<span class="o">(*)</span> <span class="n">2</span>; (<span class="o">+</span>) <span class="n">7</span>; <span class="o">(*)</span> <span class="n">3</span>; (<span class="o">+</span>) <span class="n">3</span>]
+<span onmouseout="hideTip(event, 'fs1', 7)" onmouseover="showTip(event, 'fs1', 7)" class="f">compose</span> <span onmouseout="hideTip(event, 'fs5', 8)" onmouseover="showTip(event, 'fs5', 8)" class="i">fs</span> <span class="n">3</span>
+<span class="c">// = 3 |&gt; ((*)2 &gt;&gt; (+)7 &gt;&gt; (*)3 &gt;&gt; (+) 3)</span>
+<span class="c">// = 3 |&gt; (*)2 |&gt; (+)7 |&gt; (*)3 |&gt; (+) 3</span>
+<span class="c">// = (((3 * 2) + 7) * 3) + 3</span>
+<span class="c">// = 42</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">val compose : fs:(&#39;a -&gt; &#39;a) list -&gt; (&#39;a -&gt; &#39;a)<br /><br />Full name: Script.compose</div>
+<div class="tip" id="fs2">val fs : (&#39;a -&gt; &#39;a) list</div>
+<div class="tip" id="fs3">Multiple items<br />module List<br /><br />from Microsoft.FSharp.Collections<br /><br />--------------------<br />type List&lt;&#39;T&gt; =<br />&#160;&#160;| ( [] )<br />&#160;&#160;| ( :: ) of Head: &#39;T * Tail: &#39;T list<br />&#160;&#160;interface IEnumerable<br />&#160;&#160;interface IEnumerable&lt;&#39;T&gt;<br />&#160;&#160;member Head : &#39;T<br />&#160;&#160;member IsEmpty : bool<br />&#160;&#160;member Item : index:int -&gt; &#39;T with get<br />&#160;&#160;member Length : int<br />&#160;&#160;member Tail : &#39;T list<br />&#160;&#160;static member Cons : head:&#39;T * tail:&#39;T list -&gt; &#39;T list<br />&#160;&#160;static member Empty : &#39;T list<br /><br />Full name: Microsoft.FSharp.Collections.List&lt;_&gt;</div>
+<div class="tip" id="fs4">val reduce : reduction:(&#39;T -&gt; &#39;T -&gt; &#39;T) -&gt; list:&#39;T list -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Collections.List.reduce</div>
+<div class="tip" id="fs5">val fs : (int -&gt; int) list<br /><br />Full name: Script.fs</div>
+

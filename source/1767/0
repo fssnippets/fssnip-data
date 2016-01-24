@@ -1,0 +1,105 @@
+// An approach to MonadFix in ML?
+// ------------------------------
+//
+// A colleague recently mentioned the problem of not having MonadFix in
+// a strict language.  Here is my 2 hour potential approach to
+// implementing it in ML.
+
+//////////////////////////////////////////////////////////////////////
+
+// First we need a way to tie knots.  This is a partial translation of
+// the approach I developed while programming in Standard ML:
+//
+//  http://mlton.org/Fixpoints
+//
+// The point of this is to allow tying knots over arbitrary abstract
+// products.
+
+type Proxy<'x> = {proxy: 'x; tie: 'x -> unit}
+type Fix<'x> = {fix: unit -> Proxy<'x>}
+
+module Fix =
+  let fix xF x2x =
+    let {proxy=x; tie=xT} = xF.fix ()
+    xT (x2x x)
+    x
+  let (<&>) xF yF =
+    {fix = fun () ->
+       let {proxy=x; tie=xT} = xF.fix ()
+       let {proxy=y; tie=yT} = yF.fix ()
+       {proxy = (x, y)
+        tie = fun (x', y') -> xT x' ; yT y'}}
+
+//////////////////////////////////////////////////////////////////////
+
+// Here is a minimalistic lazy type.  This is absolutely not a
+// production quality implementation as, for simplicity, this does not
+// handle issues such as exceptions in any way.
+
+type Lazy<'x> = {mutable delay: Choice<unit -> 'x, 'x>}
+
+module Lazy =
+  let delay u2x = {delay = Choice1Of2 u2x}
+  let force d =
+    match d.delay with
+     | Choice2Of2 x -> x
+     | Choice1Of2 u2x ->
+       let x = u2x ()
+       d.delay <- Choice2Of2 x
+       x
+  let bind x2yD xD =
+    delay <| fun () -> force xD |> x2yD |> force
+  let Y =
+    {fix = fun () ->
+       let xD = {delay = Choice1Of2 (fun _ -> failwith "Lazy.Y")}
+       {proxy = xD
+        tie = fun xD' -> xD.delay <- xD'.delay}}
+
+//////////////////////////////////////////////////////////////////////
+
+// Here is a fixpoint tier for sequences.
+
+module Seq =
+  let Y =
+    {fix = fun () ->
+       let xsR = ref (Seq.delay (fun _ -> failwith "Seq.Y"))
+       let xs = Seq.delay (fun () -> !xsR)
+       {proxy = xs
+        tie = fun xs' -> xsR := xs'}}
+
+//////////////////////////////////////////////////////////////////////
+
+// Here is a lazyish Maybe type and a monad including mfix.  As you
+// can see, mfix takes a witness that the parameter type can be tied.
+
+type Maybe<'x> = Lazy<option<'x>>
+
+module Maybe =
+  let result x = Lazy.delay <| fun () -> Some x
+  let bind x2yM xM =
+    xM
+    |> Lazy.bind (fun xO ->
+       Lazy.delay <| fun () ->
+       xO
+       |> Option.bind (x2yM >> Lazy.force))
+  let mfix (xF: Fix<'x>) (x2xM: 'x -> Maybe<'x>) : Maybe<'x> =
+    Lazy.delay <| fun () ->
+      let {proxy=x; tie=xT} = xF.fix ()
+      let xM = x2xM x
+      match Lazy.force xM with
+       | None -> None
+       | Some x' -> xT x' ; Some x'
+
+//////////////////////////////////////////////////////////////////////
+
+// Finally here is a simple example.
+
+let someMinusOnes =
+  Maybe.mfix Seq.Y (fun xs -> Maybe.result (Seq.append (Seq.singleton 1) xs))
+  |> Maybe.bind (fun xs ->
+     Maybe.result (Seq.map (~-) xs))
+  |> Lazy.force
+
+do printfn "%A" someMinusOnes
+
+// Let me know if I got something totally wrong!

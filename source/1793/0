@@ -1,0 +1,30 @@
+open System
+
+let goldenRatio = (1.0 + Math.Sqrt(5.0)) / 2.0
+
+let rec getNumber input =
+    match Int32.TryParse(input) with
+    | (false, _) -> 
+        Console.WriteLine("Sorry, could not parse your input, please enter a number")
+        Console.WriteLine("Hint: It is supposed to be an int")
+        getNumber(Console.ReadLine())
+    | (true, n) -> n
+
+let rec readInput list = 
+    Console.WriteLine("Please enter a number")
+    let input = getNumber(Console.ReadLine())
+    Console.WriteLine("Do you want to add another number? y/n")
+    match Console.ReadKey().Key with
+    | ConsoleKey.Y -> readInput(input::list)
+    | _ -> input::list
+
+
+let goldenRatioed x =
+    (x, float x * goldenRatio)
+
+[<EntryPoint>]
+let main argv = 
+    readInput([]) |> List.rev |> List.map goldenRatioed |> List.iter (fun x -> Console.WriteLine(x))
+    printfn "\nPress any key to exit..."
+    Console.ReadKey() |> ignore
+    0

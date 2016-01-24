@@ -1,0 +1,2 @@
+let c,d,e="bottles","bottle"," of beer on the wall"
+for b=99 downto 1 do[d,"Go to the store and buy some more, ",99;c,"Take one down and pass it around, ",b-1].[sign(b-1)]|>fun(x,y,z)->printfn"%i %s%s, %i %s of beer.\n%s%i %s%s.\n"b x e b x y z [d;c].[sign(z-1)]e

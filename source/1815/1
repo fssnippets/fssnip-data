@@ -1,0 +1,163 @@
+module NetworkShare
+
+open System
+open System.ComponentModel
+open System.IO
+open System.Net
+open System.Runtime.InteropServices
+
+type ResourceScope =
+| Connected = 1
+| GlobalNetwork = 2
+| Remembered = 3
+| Recent = 4
+type ResourceType =
+| Any = 0
+| Disk = 1
+| Print = 2
+| Reserved = 8
+type ResourceDisplayType =
+| Generic = 0x0
+| Domain = 0x01
+| Server = 0x02
+| Share = 0x03
+| File = 0x04
+| Group = 0x05
+| Network = 0x06
+| Root = 0x07
+| Shareadmin = 0x08
+| Directory = 0x09
+| Tree = 0x0a
+| Ndscontainer = 0x0b
+
+//Uses of this construct may result in the generation of unverifiable .NET IL code.
+#nowarn "9"
+[<StructLayout(LayoutKind.Sequential)>]
+type NetResource =
+  struct
+    val mutable Scope : ResourceScope
+    val mutable ResourceType : ResourceType
+    val mutable DisplayType : ResourceDisplayType
+    val mutable Usage : int
+    val mutable LocalName : string
+    val mutable RemoteName : string
+    val mutable Comment : string
+    val mutable Provider : string
+    new(name) = {
+      // lets preset needed fields
+      NetResource.Scope = ResourceScope.GlobalNetwork
+      ResourceType = ResourceType.Disk
+      DisplayType = ResourceDisplayType.Share
+      Usage = 0
+      LocalName = null
+      RemoteName = name
+      Comment = null
+      Provider = null
+    }
+  end
+
+type WNetConnection(networkName : string, credential : NetworkCredential) =
+  [<Literal>]
+  static let Mpr = "mpr.dll"
+  [<DllImport(Mpr, EntryPoint = "WNetAddConnection2")>]
+  static extern int connect(NetResource netResource, string password, string username, int flags)
+  [<DllImport(Mpr, EntryPoint = "WNetCancelConnection2")>]
+  static extern int disconnect(string name, int flags, bool force)
+
+  let mutable disposed = false;
+
+  do
+    let userName = if String.IsNullOrWhiteSpace credential.Domain
+                   then credential.UserName
+                   else credential.Domain + "\\" + credential.UserName
+    let resource = new NetResource(networkName)
+
+    let result = connect(resource, credential.Password, userName, 0)
+
+    if result <> 0 then
+      let msg = "Error connecting to remote share " + networkName
+      new Win32Exception(result, msg)
+      |> raise
+
+  let cleanup(disposing:bool) =
+    if not disposed then
+      disposed <- true
+      if disposing then () // TODO dispose managed resources here
+      disconnect(networkName, 0, true) |> ignore
+
+  interface IDisposable with
+    member __.Dispose() =
+      disconnect(networkName, 0, true) |> ignore
+      GC.SuppressFinalize(__)
+
+  override __.Finalize() = cleanup(false)
+
+type CopyPath =
+  | RemotePath of string * NetworkCredential
+  | LocalPath of string
+
+let createDisposable() =
+  {
+    new IDisposable with
+      member __.Dispose() = ()
+  }
+
+let copyFile overwrite destPath srcPath : unit =
+  use _srcConn =
+    match srcPath with
+    | RemotePath(path, credential) -> new WNetConnection(path, credential) :> IDisposable
+    | LocalPath(_) -> createDisposable()
+  use _destConn =
+    match destPath with
+    | RemotePath(path, credential) -> new WNetConnection(path, credential) :> IDisposable
+    | LocalPath(_) -> createDisposable()
+  match srcPath, destPath with
+  | RemotePath(src, _), RemotePath(dest, _)
+  | LocalPath(src), RemotePath(dest, _)
+  | RemotePath(src, _), LocalPath(dest)
+  | LocalPath(src), LocalPath(dest) ->
+    if FileInfo(src).Exists |> not then
+      failwith ("Source file not found: " + src)
+    let destFilePath =
+      if DirectoryInfo(dest).Exists then Path.Combine(dest, Path.GetFileName src)
+      else dest
+    File.Copy(src, destFilePath, overwrite)
+
+let rec copyDir copySubDirs filePattern destPath srcPath =
+  use _srcConn =
+    match srcPath with
+    | RemotePath(path, credential) -> new WNetConnection(path, credential) :> IDisposable
+    | LocalPath(_) -> createDisposable()
+  use _destConn =
+    match destPath with
+    | RemotePath(path, credential) -> new WNetConnection(path, credential) :> IDisposable
+    | LocalPath(_) -> createDisposable()
+  match srcPath, destPath with
+  | RemotePath(src, _), RemotePath(dest, _)
+  | LocalPath(src), RemotePath(dest, _)
+  | RemotePath(src, _), LocalPath(dest)
+  | LocalPath(src), LocalPath(dest) ->
+    let dir = DirectoryInfo(src)
+    if dir.Exists |> not then
+      failwith ("Source directory not found: " + src)
+
+    let dirs = dir.GetDirectories()
+    if Directory.Exists(dest) |> not then
+      Directory.CreateDirectory(dest) |> ignore
+
+    let files = dir.GetFiles(filePattern)
+    for file in files do
+      let tempPath = Path.Combine(dest, file.Name)
+      file.CopyTo(tempPath, false) |> ignore
+
+    if copySubDirs then
+      for subdir in dirs do
+        let subdirSrc =
+          match srcPath with
+          | RemotePath(_, credential) -> RemotePath(Path.Combine(dest, subdir.Name), credential)
+          | LocalPath(_) -> LocalPath(Path.Combine(dest, subdir.Name))
+        let subdirDest =
+          match destPath with
+          | RemotePath(_, credential) -> RemotePath(subdir.FullName, credential)
+          | LocalPath(_) -> LocalPath(subdir.FullName)
+        copyDir copySubDirs filePattern subdirDest subdirSrc

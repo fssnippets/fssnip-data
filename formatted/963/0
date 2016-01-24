@@ -1,0 +1,88 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">module</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="t">Suppress</span>
+
+<span class="c">// Returns a sequence which consists of the items from &#39;values&#39; for which</span>
+<span class="c">// no item in &#39;unwanted&#39; returns true when calling function (f valueItem unwanteItem).</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="f">suppressBy</span> (<span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="f">f</span> <span class="o">:</span> <span class="o">&#39;</span><span class="i">T</span> <span class="k">-&gt;</span> <span class="o">&#39;</span><span class="i">U</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="t">bool</span>) (<span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="i">values</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="t">seq</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span>) (<span onmouseout="hideTip(event, 'fs7', 7)" onmouseover="showTip(event, 'fs7', 7)" class="i">unwanted</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs6', 8)" onmouseover="showTip(event, 'fs6', 8)" class="t">seq</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">U</span><span class="o">&gt;</span>) <span class="o">=</span>
+    <span onmouseout="hideTip(event, 'fs5', 9)" onmouseover="showTip(event, 'fs5', 9)" class="i">values</span>
+    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs8', 10)" onmouseover="showTip(event, 'fs8', 10)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs9', 11)" onmouseover="showTip(event, 'fs9', 11)" class="f">filter</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs10', 12)" onmouseover="showTip(event, 'fs10', 12)" class="i">v</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs7', 13)" onmouseover="showTip(event, 'fs7', 13)" class="i">unwanted</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs8', 14)" onmouseover="showTip(event, 'fs8', 14)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs11', 15)" onmouseover="showTip(event, 'fs11', 15)" class="f">exists</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs12', 16)" onmouseover="showTip(event, 'fs12', 16)" class="i">u</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs3', 17)" onmouseover="showTip(event, 'fs3', 17)" class="f">f</span> <span onmouseout="hideTip(event, 'fs10', 18)" onmouseover="showTip(event, 'fs10', 18)" class="i">v</span> <span onmouseout="hideTip(event, 'fs12', 19)" onmouseover="showTip(event, 'fs12', 19)" class="i">u</span>) <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs13', 20)" onmouseover="showTip(event, 'fs13', 20)" class="f">not</span>)
+
+<span class="c">// [0; 1; 2; 5; 6; 7; 8; 9]</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs14', 21)" onmouseover="showTip(event, 'fs14', 21)" class="i">example</span> <span class="o">=</span>
+    <span onmouseout="hideTip(event, 'fs2', 22)" onmouseover="showTip(event, 'fs2', 22)" class="f">suppressBy</span> (<span class="o">=</span>) [<span class="n">0..</span><span class="n">9</span>] [<span class="n">3</span>; <span class="n">4</span>] <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs15', 23)" onmouseover="showTip(event, 'fs15', 23)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs16', 24)" onmouseover="showTip(event, 'fs16', 24)" class="f">ofSeq</span>
+
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs17', 25)" onmouseover="showTip(event, 'fs17', 25)" class="t">Prospect</span> <span class="o">=</span> { <span onmouseout="hideTip(event, 'fs18', 26)" onmouseover="showTip(event, 'fs18', 26)" class="i">name</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs19', 27)" onmouseover="showTip(event, 'fs19', 27)" class="t">string</span>; <span onmouseout="hideTip(event, 'fs20', 28)" onmouseover="showTip(event, 'fs20', 28)" class="i">phoneNumber</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs19', 29)" onmouseover="showTip(event, 'fs19', 29)" class="t">string</span> }
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs21', 30)" onmouseover="showTip(event, 'fs21', 30)" class="t">TPSRecord</span> <span class="o">=</span> { <span onmouseout="hideTip(event, 'fs22', 31)" onmouseover="showTip(event, 'fs22', 31)" class="i">phoneNumber</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs19', 32)" onmouseover="showTip(event, 'fs19', 32)" class="t">string</span> }
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs23', 33)" onmouseover="showTip(event, 'fs23', 33)" class="i">prospects</span> <span class="o">=</span> [ {<span class="i">name</span> <span class="o">=</span> <span class="s">&quot;A Smith&quot;</span>; <span class="i">phoneNumber</span> <span class="o">=</span> <span class="s">&quot;01234 56789&quot;</span>}
+                  {<span class="i">name</span> <span class="o">=</span> <span class="s">&quot;B Smith&quot;</span>; <span class="i">phoneNumber</span> <span class="o">=</span> <span class="s">&quot;01234 56710&quot;</span>}
+                  {<span class="i">name</span> <span class="o">=</span> <span class="s">&quot;C Smith&quot;</span>; <span class="i">phoneNumber</span> <span class="o">=</span> <span class="s">&quot;01234 56711&quot;</span>} ]
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs24', 34)" onmouseover="showTip(event, 'fs24', 34)" class="i">tpsData</span> <span class="o">=</span> [ {<span class="i">phoneNumber</span> <span class="o">=</span> <span class="s">&quot;01234 56710&quot;</span>}
+                {<span class="i">phoneNumber</span> <span class="o">=</span> <span class="s">&quot;01234 56712&quot;</span>} ]
+
+<span class="c">// [{name = &quot;A Smith&quot;; phoneNumber = &quot;01234 56789&quot;;}</span>
+<span class="c">//  {name = &quot;C Smith&quot;; phoneNumber = &quot;01234 56711&quot;;}]</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs25', 35)" onmouseover="showTip(event, 'fs25', 35)" class="i">doTpsSuppression</span> <span class="o">=</span>
+    <span onmouseout="hideTip(event, 'fs23', 36)" onmouseover="showTip(event, 'fs23', 36)" class="i">prospects</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs2', 37)" onmouseover="showTip(event, 'fs2', 37)" class="f">suppressBy</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs26', 38)" onmouseover="showTip(event, 'fs26', 38)" class="i">p</span> <span onmouseout="hideTip(event, 'fs27', 39)" onmouseover="showTip(event, 'fs27', 39)" class="i">s</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs26', 40)" onmouseover="showTip(event, 'fs26', 40)" class="i">p</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs22', 41)" onmouseover="showTip(event, 'fs22', 41)" class="i">phoneNumber</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs27', 42)" onmouseover="showTip(event, 'fs27', 42)" class="i">s</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs20', 43)" onmouseover="showTip(event, 'fs20', 43)" class="i">phoneNumber</span>) <span onmouseout="hideTip(event, 'fs24', 44)" onmouseover="showTip(event, 'fs24', 44)" class="i">tpsData</span>
+    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs15', 45)" onmouseover="showTip(event, 'fs15', 45)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs16', 46)" onmouseover="showTip(event, 'fs16', 46)" class="f">ofSeq</span>
+        
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">module Suppress</div>
+<div class="tip" id="fs2">val suppressBy : f:(&#39;T -&gt; &#39;U -&gt; bool) -&gt; values:seq&lt;&#39;T&gt; -&gt; unwanted:seq&lt;&#39;U&gt; -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Suppress.suppressBy</div>
+<div class="tip" id="fs3">val f : (&#39;T -&gt; &#39;U -&gt; bool)</div>
+<div class="tip" id="fs4">type bool = System.Boolean<br /><br />Full name: Microsoft.FSharp.Core.bool</div>
+<div class="tip" id="fs5">val values : seq&lt;&#39;T&gt;</div>
+<div class="tip" id="fs6">Multiple items<br />val seq : sequence:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Core.Operators.seq<br /><br />--------------------<br />type seq&lt;&#39;T&gt; = System.Collections.Generic.IEnumerable&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.seq&lt;_&gt;</div>
+<div class="tip" id="fs7">val unwanted : seq&lt;&#39;U&gt;</div>
+<div class="tip" id="fs8">module Seq<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs9">val filter : predicate:(&#39;T -&gt; bool) -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.filter</div>
+<div class="tip" id="fs10">val v : &#39;T</div>
+<div class="tip" id="fs11">val exists : predicate:(&#39;T -&gt; bool) -&gt; source:seq&lt;&#39;T&gt; -&gt; bool<br /><br />Full name: Microsoft.FSharp.Collections.Seq.exists</div>
+<div class="tip" id="fs12">val u : &#39;U</div>
+<div class="tip" id="fs13">val not : value:bool -&gt; bool<br /><br />Full name: Microsoft.FSharp.Core.Operators.not</div>
+<div class="tip" id="fs14">val example : int list<br /><br />Full name: Suppress.example</div>
+<div class="tip" id="fs15">Multiple items<br />module List<br /><br />from Microsoft.FSharp.Collections<br /><br />--------------------<br />type List&lt;&#39;T&gt; =<br />&#160;&#160;| ( [] )<br />&#160;&#160;| ( :: ) of Head: &#39;T * Tail: &#39;T list<br />&#160;&#160;interface IEnumerable<br />&#160;&#160;interface IEnumerable&lt;&#39;T&gt;<br />&#160;&#160;member Head : &#39;T<br />&#160;&#160;member IsEmpty : bool<br />&#160;&#160;member Item : index:int -&gt; &#39;T with get<br />&#160;&#160;member Length : int<br />&#160;&#160;member Tail : &#39;T list<br />&#160;&#160;static member Cons : head:&#39;T * tail:&#39;T list -&gt; &#39;T list<br />&#160;&#160;static member Empty : &#39;T list<br /><br />Full name: Microsoft.FSharp.Collections.List&lt;_&gt;</div>
+<div class="tip" id="fs16">val ofSeq : source:seq&lt;&#39;T&gt; -&gt; &#39;T list<br /><br />Full name: Microsoft.FSharp.Collections.List.ofSeq</div>
+<div class="tip" id="fs17">type Prospect =<br />&#160;&#160;{name: string;<br />&#160;&#160;&#160;phoneNumber: string;}<br /><br />Full name: Suppress.Prospect</div>
+<div class="tip" id="fs18">Prospect.name: string</div>
+<div class="tip" id="fs19">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />Full name: Microsoft.FSharp.Core.Operators.string<br /><br />--------------------<br />type string = System.String<br /><br />Full name: Microsoft.FSharp.Core.string</div>
+<div class="tip" id="fs20">Prospect.phoneNumber: string</div>
+<div class="tip" id="fs21">type TPSRecord =<br />&#160;&#160;{phoneNumber: string;}<br /><br />Full name: Suppress.TPSRecord</div>
+<div class="tip" id="fs22">TPSRecord.phoneNumber: string</div>
+<div class="tip" id="fs23">val prospects : Prospect list<br /><br />Full name: Suppress.prospects</div>
+<div class="tip" id="fs24">val tpsData : TPSRecord list<br /><br />Full name: Suppress.tpsData</div>
+<div class="tip" id="fs25">val doTpsSuppression : TPSRecord list<br /><br />Full name: Suppress.doTpsSuppression</div>
+<div class="tip" id="fs26">val p : TPSRecord</div>
+<div class="tip" id="fs27">val s : Prospect</div>
+

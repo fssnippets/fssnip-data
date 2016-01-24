@@ -1,0 +1,13 @@
+let waitFor f sleepInterval maxTime =
+    let rec waitForInner f totalTime = 
+        if f() then true
+        else
+            if totalTime >= (maxTime * 1000.0) then false
+            else
+                Thread.Sleep((int)sleepInterval * 1000)
+                waitForInner f (totalTime + (sleepInterval * 1000.0))
+    waitForInner f 0.0
+
+let waitFor f = waitFor f 0.5 30.0
+
+printfn "waitFor = %b" (waitFor someMethod 0.1 3.0)

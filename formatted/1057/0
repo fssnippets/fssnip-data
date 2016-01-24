@@ -1,0 +1,190 @@
+<h2><a name="Erlang-style-message-passing-Agent-that-can-upgrade-its-functionality-on-the-fly" class="anchor" href="#Erlang-style-message-passing-Agent-that-can-upgrade-its-functionality-on-the-fly">Erlang-style message-passing: Agent that can upgrade its functionality on the fly.</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">// Note: static typing, this agent can&#39;t upgrade its state data type (so better to use obj or custom interface)...</span>
+<span class="c">// Also this runs only in localhost...</span>
+<span class="c">// So this is more a technical demo than something useful</span>
+<span class="c">// See slide 37: http://www.infoq.com/presentations/Message-Passing-Concurrency</span>
+
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">System</span>
+
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="t">Methods</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">state</span>, <span class="o">&#39;</span><span class="i">x</span>, <span class="o">&#39;</span><span class="i">reply</span><span class="o">&gt;</span> <span class="o">=</span> 
+| <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="p">Upgrade</span> <span class="k">of</span> 
+    (<span class="o">&#39;</span><span class="i">x</span><span class="o">*</span><span class="o">&#39;</span><span class="i">state</span> <span class="k">-&gt;</span> <span class="o">&#39;</span><span class="i">x</span><span class="o">*</span><span class="o">&#39;</span><span class="i">state</span>) <span class="c">// function what to do</span>
+    <span class="o">*</span>(<span class="o">&#39;</span><span class="i">state</span> <span class="k">-&gt;</span> <span class="o">&#39;</span><span class="i">state</span>) <span class="c">// just for state conversion</span>
+| <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="p">From</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="t">AsyncReplyChannel</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">reply</span><span class="o">&gt;</span> <span class="o">*</span> <span class="o">&#39;</span><span class="i">x</span>
+
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="t">UpgradableAgent</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">state</span>, <span class="o">&#39;</span><span class="i">x</span><span class="o">&gt;</span>() <span class="o">=</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs7', 7)" onmouseover="showTip(event, 'fs7', 7)" class="i">gen_server</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs8', 8)" onmouseover="showTip(event, 'fs8', 8)" class="t">MailboxProcessor</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs9', 9)" onmouseover="showTip(event, 'fs9', 9)" class="f">Start</span>(<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs10', 10)" onmouseover="showTip(event, 'fs10', 10)" class="i">msg</span> <span class="k">-&gt;</span>
+        <span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs11', 11)" onmouseover="showTip(event, 'fs11', 11)" class="f">loop</span> (<span onmouseout="hideTip(event, 'fs12', 12)" onmouseover="showTip(event, 'fs12', 12)" class="i">state</span>, <span onmouseout="hideTip(event, 'fs13', 13)" onmouseover="showTip(event, 'fs13', 13)" class="f">f</span>) <span class="o">=</span>
+            <span onmouseout="hideTip(event, 'fs14', 14)" onmouseover="showTip(event, 'fs14', 14)" class="i">async</span> { 
+                <span class="k">let!</span> <span onmouseout="hideTip(event, 'fs15', 15)" onmouseover="showTip(event, 'fs15', 15)" class="i">receive</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs10', 16)" onmouseover="showTip(event, 'fs10', 16)" class="i">msg</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs16', 17)" onmouseover="showTip(event, 'fs16', 17)" class="f">Receive</span>()
+                <span class="k">match</span> <span onmouseout="hideTip(event, 'fs15', 18)" onmouseover="showTip(event, 'fs15', 18)" class="i">receive</span> <span class="k">with</span>
+                | <span onmouseout="hideTip(event, 'fs3', 19)" onmouseover="showTip(event, 'fs3', 19)" class="p">Upgrade</span>(<span onmouseout="hideTip(event, 'fs17', 20)" onmouseover="showTip(event, 'fs17', 20)" class="f">f1</span>,<span onmouseout="hideTip(event, 'fs18', 21)" onmouseover="showTip(event, 'fs18', 21)" class="f">f2</span>) <span class="k">-&gt;</span>
+                    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs19', 22)" onmouseover="showTip(event, 'fs19', 22)" class="i">state1</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs18', 23)" onmouseover="showTip(event, 'fs18', 23)" class="f">f2</span>(<span onmouseout="hideTip(event, 'fs12', 24)" onmouseover="showTip(event, 'fs12', 24)" class="i">state</span>)
+                    <span class="k">return!</span> <span onmouseout="hideTip(event, 'fs11', 25)" onmouseover="showTip(event, 'fs11', 25)" class="f">loop</span>(<span onmouseout="hideTip(event, 'fs19', 26)" onmouseover="showTip(event, 'fs19', 26)" class="i">state1</span>, <span onmouseout="hideTip(event, 'fs17', 27)" onmouseover="showTip(event, 'fs17', 27)" class="f">f1</span>)
+                | <span onmouseout="hideTip(event, 'fs4', 28)" onmouseover="showTip(event, 'fs4', 28)" class="p">From</span>(<span onmouseout="hideTip(event, 'fs20', 29)" onmouseover="showTip(event, 'fs20', 29)" class="i">from</span>, <span onmouseout="hideTip(event, 'fs21', 30)" onmouseover="showTip(event, 'fs21', 30)" class="i">x</span>) <span class="k">-&gt;</span>
+                    <span class="k">let</span> (<span onmouseout="hideTip(event, 'fs22', 31)" onmouseover="showTip(event, 'fs22', 31)" class="i">reply</span>, <span onmouseout="hideTip(event, 'fs19', 32)" onmouseover="showTip(event, 'fs19', 32)" class="i">state1</span>) <span class="o">=</span> <span onmouseout="hideTip(event, 'fs13', 33)" onmouseover="showTip(event, 'fs13', 33)" class="f">f</span>(<span onmouseout="hideTip(event, 'fs21', 34)" onmouseover="showTip(event, 'fs21', 34)" class="i">x</span>,<span onmouseout="hideTip(event, 'fs12', 35)" onmouseover="showTip(event, 'fs12', 35)" class="i">state</span>)
+                    <span onmouseout="hideTip(event, 'fs20', 36)" onmouseover="showTip(event, 'fs20', 36)" class="i">from</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs23', 37)" onmouseover="showTip(event, 'fs23', 37)" class="f">Reply</span>(<span onmouseout="hideTip(event, 'fs22', 38)" onmouseover="showTip(event, 'fs22', 38)" class="i">reply</span>)
+                    <span class="k">return!</span> <span onmouseout="hideTip(event, 'fs11', 39)" onmouseover="showTip(event, 'fs11', 39)" class="f">loop</span>(<span onmouseout="hideTip(event, 'fs19', 40)" onmouseover="showTip(event, 'fs19', 40)" class="i">state1</span>, <span onmouseout="hideTip(event, 'fs13', 41)" onmouseover="showTip(event, 'fs13', 41)" class="f">f</span>)
+            }
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs24', 42)" onmouseover="showTip(event, 'fs24', 42)" class="f">initDoit</span> (<span onmouseout="hideTip(event, 'fs25', 43)" onmouseover="showTip(event, 'fs25', 43)" class="i">x</span>,<span onmouseout="hideTip(event, 'fs26', 44)" onmouseover="showTip(event, 'fs26', 44)" class="i">state</span>) <span class="o">=</span> (<span onmouseout="hideTip(event, 'fs25', 45)" onmouseover="showTip(event, 'fs25', 45)" class="i">x</span>, <span onmouseout="hideTip(event, 'fs26', 46)" onmouseover="showTip(event, 'fs26', 46)" class="i">state</span>)
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs27', 47)" onmouseover="showTip(event, 'fs27', 47)" class="i">initState</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs28', 48)" onmouseover="showTip(event, 'fs28', 48)" class="t">Unchecked</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs29', 49)" onmouseover="showTip(event, 'fs29', 49)" class="i">defaultof</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">state</span><span class="o">&gt;</span> <span class="c">//None</span>
+        <span onmouseout="hideTip(event, 'fs11', 50)" onmouseover="showTip(event, 'fs11', 50)" class="f">loop</span>(<span onmouseout="hideTip(event, 'fs27', 51)" onmouseover="showTip(event, 'fs27', 51)" class="i">initState</span>, <span onmouseout="hideTip(event, 'fs24', 52)" onmouseover="showTip(event, 'fs24', 52)" class="f">initDoit</span>))
+       
+    <span class="k">member</span> <span onmouseout="hideTip(event, 'fs30', 53)" onmouseover="showTip(event, 'fs30', 53)" class="i">this</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs31', 54)" onmouseover="showTip(event, 'fs31', 54)" class="f">DoIt</span> (<span onmouseout="hideTip(event, 'fs32', 55)" onmouseover="showTip(event, 'fs32', 55)" class="i">item</span><span class="o">:</span><span class="o">&#39;</span><span class="i">x</span>) <span class="o">=</span>  
+        <span class="c">// could use also PostAndAsyncReply</span>
+        <span onmouseout="hideTip(event, 'fs7', 56)" onmouseover="showTip(event, 'fs7', 56)" class="i">gen_server</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs33', 57)" onmouseover="showTip(event, 'fs33', 57)" class="f">PostAndReply</span>(<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs34', 58)" onmouseover="showTip(event, 'fs34', 58)" class="i">rep</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs4', 59)" onmouseover="showTip(event, 'fs4', 59)" class="p">From</span>(<span onmouseout="hideTip(event, 'fs34', 60)" onmouseover="showTip(event, 'fs34', 60)" class="i">rep</span>, <span onmouseout="hideTip(event, 'fs32', 61)" onmouseover="showTip(event, 'fs32', 61)" class="i">item</span>))
+
+    <span class="k">member</span> <span onmouseout="hideTip(event, 'fs30', 62)" onmouseover="showTip(event, 'fs30', 62)" class="i">this</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs35', 63)" onmouseover="showTip(event, 'fs35', 63)" class="f">Upgrade</span> <span onmouseout="hideTip(event, 'fs36', 64)" onmouseover="showTip(event, 'fs36', 64)" class="i">functionality</span> <span class="o">=</span>  
+        <span onmouseout="hideTip(event, 'fs36', 65)" onmouseover="showTip(event, 'fs36', 65)" class="i">functionality</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs3', 66)" onmouseover="showTip(event, 'fs3', 66)" class="p">Upgrade</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs7', 67)" onmouseover="showTip(event, 'fs7', 67)" class="i">gen_server</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs37', 68)" onmouseover="showTip(event, 'fs37', 68)" class="f">Post</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Some-tests" class="anchor" href="#Some-tests">Some tests</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">let</span> <span onmouseout="hideTip(event, 'fs38', 69)" onmouseover="showTip(event, 'fs38', 69)" class="i">test1</span> <span class="o">=</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs39', 70)" onmouseover="showTip(event, 'fs39', 70)" class="i">server</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs6', 71)" onmouseover="showTip(event, 'fs6', 71)" class="t">UpgradableAgent</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs40', 72)" onmouseover="showTip(event, 'fs40', 72)" class="t">int</span>, <span onmouseout="hideTip(event, 'fs40', 73)" onmouseover="showTip(event, 'fs40', 73)" class="t">int</span><span class="o">&gt;</span>()
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs41', 74)" onmouseover="showTip(event, 'fs41', 74)" class="f">myfunc</span> <span class="o">=</span> <span class="k">fun</span> (<span onmouseout="hideTip(event, 'fs42', 75)" onmouseover="showTip(event, 'fs42', 75)" class="i">x</span>,<span onmouseout="hideTip(event, 'fs43', 76)" onmouseover="showTip(event, 'fs43', 76)" class="i">state</span>) <span class="k">-&gt;</span> (<span onmouseout="hideTip(event, 'fs42', 77)" onmouseover="showTip(event, 'fs42', 77)" class="i">x</span><span class="o">+</span><span onmouseout="hideTip(event, 'fs43', 78)" onmouseover="showTip(event, 'fs43', 78)" class="i">state</span>, <span onmouseout="hideTip(event, 'fs43', 79)" onmouseover="showTip(event, 'fs43', 79)" class="i">state</span>) 
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs44', 80)" onmouseover="showTip(event, 'fs44', 80)" class="f">myStateConvert</span> <span class="o">=</span> <span class="k">fun</span> <span onmouseout="hideTip(event, 'fs45', 81)" onmouseover="showTip(event, 'fs45', 81)" class="i">initstate</span> <span class="k">-&gt;</span> <span class="n">5</span>
+    <span onmouseout="hideTip(event, 'fs39', 82)" onmouseover="showTip(event, 'fs39', 82)" class="i">server</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs46', 83)" onmouseover="showTip(event, 'fs46', 83)" class="f">Upgrade</span>(<span onmouseout="hideTip(event, 'fs41', 84)" onmouseover="showTip(event, 'fs41', 84)" class="f">myfunc</span>, <span onmouseout="hideTip(event, 'fs44', 85)" onmouseover="showTip(event, 'fs44', 85)" class="f">myStateConvert</span>)
+    <span onmouseout="hideTip(event, 'fs47', 86)" onmouseover="showTip(event, 'fs47', 86)" class="t">Console</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs48', 87)" onmouseover="showTip(event, 'fs48', 87)" class="f">WriteLine</span>(<span onmouseout="hideTip(event, 'fs39', 88)" onmouseover="showTip(event, 'fs39', 88)" class="i">server</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs49', 89)" onmouseover="showTip(event, 'fs49', 89)" class="f">DoIt</span>(<span class="n">7</span>)); <span class="c">// 12</span>
+    <span onmouseout="hideTip(event, 'fs47', 90)" onmouseover="showTip(event, 'fs47', 90)" class="t">Console</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs48', 91)" onmouseover="showTip(event, 'fs48', 91)" class="f">WriteLine</span>(<span onmouseout="hideTip(event, 'fs39', 92)" onmouseover="showTip(event, 'fs39', 92)" class="i">server</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs49', 93)" onmouseover="showTip(event, 'fs49', 93)" class="f">DoIt</span>(<span class="n">7</span>)); <span class="c">// 12</span>
+
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs50', 94)" onmouseover="showTip(event, 'fs50', 94)" class="f">myfunc2</span> <span class="o">=</span> <span class="k">fun</span> (<span onmouseout="hideTip(event, 'fs42', 95)" onmouseover="showTip(event, 'fs42', 95)" class="i">x</span>,<span onmouseout="hideTip(event, 'fs43', 96)" onmouseover="showTip(event, 'fs43', 96)" class="i">state</span>) <span class="k">-&gt;</span> (<span onmouseout="hideTip(event, 'fs42', 97)" onmouseover="showTip(event, 'fs42', 97)" class="i">x</span><span class="o">+</span><span onmouseout="hideTip(event, 'fs43', 98)" onmouseover="showTip(event, 'fs43', 98)" class="i">state</span>, <span onmouseout="hideTip(event, 'fs42', 99)" onmouseover="showTip(event, 'fs42', 99)" class="i">x</span><span class="o">+</span><span onmouseout="hideTip(event, 'fs43', 100)" onmouseover="showTip(event, 'fs43', 100)" class="i">state</span>) 
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs51', 101)" onmouseover="showTip(event, 'fs51', 101)" class="f">myStateConvert2</span> <span class="o">=</span> <span class="k">fun</span> <span onmouseout="hideTip(event, 'fs45', 102)" onmouseover="showTip(event, 'fs45', 102)" class="i">initstate</span> <span class="k">-&gt;</span> <span class="n">5</span>
+    <span onmouseout="hideTip(event, 'fs39', 103)" onmouseover="showTip(event, 'fs39', 103)" class="i">server</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs46', 104)" onmouseover="showTip(event, 'fs46', 104)" class="f">Upgrade</span>(<span onmouseout="hideTip(event, 'fs50', 105)" onmouseover="showTip(event, 'fs50', 105)" class="f">myfunc2</span>, <span onmouseout="hideTip(event, 'fs51', 106)" onmouseover="showTip(event, 'fs51', 106)" class="f">myStateConvert2</span>)
+    <span onmouseout="hideTip(event, 'fs47', 107)" onmouseover="showTip(event, 'fs47', 107)" class="t">Console</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs48', 108)" onmouseover="showTip(event, 'fs48', 108)" class="f">WriteLine</span>(<span onmouseout="hideTip(event, 'fs39', 109)" onmouseover="showTip(event, 'fs39', 109)" class="i">server</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs49', 110)" onmouseover="showTip(event, 'fs49', 110)" class="f">DoIt</span>(<span class="n">7</span>)); <span class="c">// 12</span>
+    <span onmouseout="hideTip(event, 'fs47', 111)" onmouseover="showTip(event, 'fs47', 111)" class="t">Console</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs48', 112)" onmouseover="showTip(event, 'fs48', 112)" class="f">WriteLine</span>(<span onmouseout="hideTip(event, 'fs39', 113)" onmouseover="showTip(event, 'fs39', 113)" class="i">server</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs49', 114)" onmouseover="showTip(event, 'fs49', 114)" class="f">DoIt</span>(<span class="n">7</span>)); <span class="c">// 19</span>
+    <span onmouseout="hideTip(event, 'fs47', 115)" onmouseover="showTip(event, 'fs47', 115)" class="t">Console</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs48', 116)" onmouseover="showTip(event, 'fs48', 116)" class="f">WriteLine</span>(<span onmouseout="hideTip(event, 'fs39', 117)" onmouseover="showTip(event, 'fs39', 117)" class="i">server</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs49', 118)" onmouseover="showTip(event, 'fs49', 118)" class="f">DoIt</span>(<span class="n">7</span>)); <span class="c">// 26</span>
+    
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs52', 119)" onmouseover="showTip(event, 'fs52', 119)" class="i">test3</span> <span class="o">=</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs53', 120)" onmouseover="showTip(event, 'fs53', 120)" class="i">server3</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs6', 121)" onmouseover="showTip(event, 'fs6', 121)" class="t">UpgradableAgent</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs54', 122)" onmouseover="showTip(event, 'fs54', 122)" class="t">obj</span>, <span onmouseout="hideTip(event, 'fs55', 123)" onmouseover="showTip(event, 'fs55', 123)" class="t">string</span><span class="o">&gt;</span>()
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs56', 124)" onmouseover="showTip(event, 'fs56', 124)" class="f">myfunc3</span> ((<span onmouseout="hideTip(event, 'fs57', 125)" onmouseover="showTip(event, 'fs57', 125)" class="i">x</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs55', 126)" onmouseover="showTip(event, 'fs55', 126)" class="t">string</span>), (<span onmouseout="hideTip(event, 'fs58', 127)" onmouseover="showTip(event, 'fs58', 127)" class="i">state</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs54', 128)" onmouseover="showTip(event, 'fs54', 128)" class="t">obj</span>)) <span class="o">=</span> (<span onmouseout="hideTip(event, 'fs57', 129)" onmouseover="showTip(event, 'fs57', 129)" class="i">x</span><span class="o">+</span><span onmouseout="hideTip(event, 'fs59', 130)" onmouseover="showTip(event, 'fs59', 130)" class="f">unbox</span>(<span onmouseout="hideTip(event, 'fs58', 131)" onmouseover="showTip(event, 'fs58', 131)" class="i">state</span>), <span onmouseout="hideTip(event, 'fs60', 132)" onmouseover="showTip(event, 'fs60', 132)" class="f">box</span>(<span onmouseout="hideTip(event, 'fs57', 133)" onmouseover="showTip(event, 'fs57', 133)" class="i">x</span><span class="o">+</span><span onmouseout="hideTip(event, 'fs59', 134)" onmouseover="showTip(event, 'fs59', 134)" class="f">unbox</span>(<span onmouseout="hideTip(event, 'fs58', 135)" onmouseover="showTip(event, 'fs58', 135)" class="i">state</span>))) 
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs61', 136)" onmouseover="showTip(event, 'fs61', 136)" class="f">myStateConvert3</span> <span class="o">=</span> <span class="k">fun</span> <span onmouseout="hideTip(event, 'fs45', 137)" onmouseover="showTip(event, 'fs45', 137)" class="i">initstate</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs60', 138)" onmouseover="showTip(event, 'fs60', 138)" class="f">box</span>(<span class="s">&quot; world!&quot;</span>)
+    <span onmouseout="hideTip(event, 'fs53', 139)" onmouseover="showTip(event, 'fs53', 139)" class="i">server3</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs46', 140)" onmouseover="showTip(event, 'fs46', 140)" class="f">Upgrade</span>(<span onmouseout="hideTip(event, 'fs56', 141)" onmouseover="showTip(event, 'fs56', 141)" class="f">myfunc3</span>, <span onmouseout="hideTip(event, 'fs61', 142)" onmouseover="showTip(event, 'fs61', 142)" class="f">myStateConvert3</span>)
+    <span onmouseout="hideTip(event, 'fs47', 143)" onmouseover="showTip(event, 'fs47', 143)" class="t">Console</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs48', 144)" onmouseover="showTip(event, 'fs48', 144)" class="f">WriteLine</span>(<span onmouseout="hideTip(event, 'fs53', 145)" onmouseover="showTip(event, 'fs53', 145)" class="i">server3</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs49', 146)" onmouseover="showTip(event, 'fs49', 146)" class="f">DoIt</span>(<span class="s">&quot;hello&quot;</span>)); <span class="c">// &quot;hello world!&quot;</span>
+    <span onmouseout="hideTip(event, 'fs47', 147)" onmouseover="showTip(event, 'fs47', 147)" class="t">Console</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs48', 148)" onmouseover="showTip(event, 'fs48', 148)" class="f">WriteLine</span>(<span onmouseout="hideTip(event, 'fs53', 149)" onmouseover="showTip(event, 'fs53', 149)" class="i">server3</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs49', 150)" onmouseover="showTip(event, 'fs49', 150)" class="f">DoIt</span>(<span class="s">&quot;hello &quot;</span>)); <span class="c">// &quot;hello hello world!&quot;</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace System</div>
+<div class="tip" id="fs2">type Methods&lt;&#39;state,&#39;x,&#39;reply&gt; =<br />&#160;&#160;| Upgrade of (&#39;x * &#39;state -&gt; &#39;x * &#39;state) * (&#39;state -&gt; &#39;state)<br />&#160;&#160;| From of AsyncReplyChannel&lt;&#39;reply&gt; * &#39;x<br /><br />Full name: Script.Methods&lt;_,_,_&gt;</div>
+<div class="tip" id="fs3">union case Methods.Upgrade: (&#39;x * &#39;state -&gt; &#39;x * &#39;state) * (&#39;state -&gt; &#39;state) -&gt; Methods&lt;&#39;state,&#39;x,&#39;reply&gt;</div>
+<div class="tip" id="fs4">union case Methods.From: AsyncReplyChannel&lt;&#39;reply&gt; * &#39;x -&gt; Methods&lt;&#39;state,&#39;x,&#39;reply&gt;</div>
+<div class="tip" id="fs5">type AsyncReplyChannel&lt;&#39;Reply&gt;<br />member Reply : value:&#39;Reply -&gt; unit<br /><br />Full name: Microsoft.FSharp.Control.AsyncReplyChannel&lt;_&gt;</div>
+<div class="tip" id="fs6">Multiple items<br />type UpgradableAgent&lt;&#39;state,&#39;x&gt; =<br />&#160;&#160;new : unit -&gt; UpgradableAgent&lt;&#39;state,&#39;x&gt;<br />&#160;&#160;member DoIt : item:&#39;x -&gt; &#39;x<br />&#160;&#160;member Upgrade : functionality:((&#39;x * &#39;state -&gt; &#39;x * &#39;state) * (&#39;state -&gt; &#39;state)) -&gt; unit<br /><br />Full name: Script.UpgradableAgent&lt;_,_&gt;<br /><br />--------------------<br />new : unit -&gt; UpgradableAgent&lt;&#39;state,&#39;x&gt;</div>
+<div class="tip" id="fs7">val gen_server : MailboxProcessor&lt;Methods&lt;&#39;state,&#39;x,&#39;x&gt;&gt;</div>
+<div class="tip" id="fs8">Multiple items<br />type MailboxProcessor&lt;&#39;Msg&gt; =<br />&#160;&#160;interface IDisposable<br />&#160;&#160;new : body:(MailboxProcessor&lt;&#39;Msg&gt; -&gt; Async&lt;unit&gt;) * ?cancellationToken:CancellationToken -&gt; MailboxProcessor&lt;&#39;Msg&gt;<br />&#160;&#160;member Post : message:&#39;Msg -&gt; unit<br />&#160;&#160;member PostAndAsyncReply : buildMessage:(AsyncReplyChannel&lt;&#39;Reply&gt; -&gt; &#39;Msg) * ?timeout:int -&gt; Async&lt;&#39;Reply&gt;<br />&#160;&#160;member PostAndReply : buildMessage:(AsyncReplyChannel&lt;&#39;Reply&gt; -&gt; &#39;Msg) * ?timeout:int -&gt; &#39;Reply<br />&#160;&#160;member PostAndTryAsyncReply : buildMessage:(AsyncReplyChannel&lt;&#39;Reply&gt; -&gt; &#39;Msg) * ?timeout:int -&gt; Async&lt;&#39;Reply option&gt;<br />&#160;&#160;member Receive : ?timeout:int -&gt; Async&lt;&#39;Msg&gt;<br />&#160;&#160;member Scan : scanner:(&#39;Msg -&gt; Async&lt;&#39;T&gt; option) * ?timeout:int -&gt; Async&lt;&#39;T&gt;<br />&#160;&#160;member Start : unit -&gt; unit<br />&#160;&#160;member TryPostAndReply : buildMessage:(AsyncReplyChannel&lt;&#39;Reply&gt; -&gt; &#39;Msg) * ?timeout:int -&gt; &#39;Reply option<br />&#160;&#160;...<br /><br />Full name: Microsoft.FSharp.Control.MailboxProcessor&lt;_&gt;<br /><br />--------------------<br />new : body:(MailboxProcessor&lt;&#39;Msg&gt; -&gt; Async&lt;unit&gt;) * ?cancellationToken:Threading.CancellationToken -&gt; MailboxProcessor&lt;&#39;Msg&gt;</div>
+<div class="tip" id="fs9">static member MailboxProcessor.Start : body:(MailboxProcessor&lt;&#39;Msg&gt; -&gt; Async&lt;unit&gt;) * ?cancellationToken:Threading.CancellationToken -&gt; MailboxProcessor&lt;&#39;Msg&gt;</div>
+<div class="tip" id="fs10">val msg : MailboxProcessor&lt;Methods&lt;&#39;state,&#39;x,&#39;x&gt;&gt;</div>
+<div class="tip" id="fs11">val loop : (&#39;state * (&#39;x * &#39;state -&gt; &#39;x * &#39;state) -&gt; Async&lt;&#39;a&gt;)</div>
+<div class="tip" id="fs12">val state : &#39;state</div>
+<div class="tip" id="fs13">val f : (&#39;x * &#39;state -&gt; &#39;x * &#39;state)</div>
+<div class="tip" id="fs14">val async : AsyncBuilder<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.async</div>
+<div class="tip" id="fs15">val receive : Methods&lt;&#39;state,&#39;x,&#39;x&gt;</div>
+<div class="tip" id="fs16">member MailboxProcessor.Receive : ?timeout:int -&gt; Async&lt;&#39;Msg&gt;</div>
+<div class="tip" id="fs17">val f1 : (&#39;x * &#39;state -&gt; &#39;x * &#39;state)</div>
+<div class="tip" id="fs18">val f2 : (&#39;state -&gt; &#39;state)</div>
+<div class="tip" id="fs19">val state1 : &#39;state</div>
+<div class="tip" id="fs20">val from : AsyncReplyChannel&lt;&#39;x&gt;</div>
+<div class="tip" id="fs21">val x : &#39;x</div>
+<div class="tip" id="fs22">val reply : &#39;x</div>
+<div class="tip" id="fs23">member AsyncReplyChannel.Reply : value:&#39;Reply -&gt; unit</div>
+<div class="tip" id="fs24">val initDoit : (&#39;a * &#39;b -&gt; &#39;a * &#39;b)</div>
+<div class="tip" id="fs25">val x : &#39;a</div>
+<div class="tip" id="fs26">val state : &#39;b</div>
+<div class="tip" id="fs27">val initState : &#39;state</div>
+<div class="tip" id="fs28">module Unchecked<br /><br />from Microsoft.FSharp.Core.Operators</div>
+<div class="tip" id="fs29">val defaultof&lt;&#39;T&gt; : &#39;T<br /><br />Full name: Microsoft.FSharp.Core.Operators.Unchecked.defaultof</div>
+<div class="tip" id="fs30">val this : UpgradableAgent&lt;&#39;state,&#39;x&gt;</div>
+<div class="tip" id="fs31">member UpgradableAgent.DoIt : item:&#39;x -&gt; &#39;x<br /><br />Full name: Script.UpgradableAgent`2.DoIt</div>
+<div class="tip" id="fs32">val item : &#39;x</div>
+<div class="tip" id="fs33">member MailboxProcessor.PostAndReply : buildMessage:(AsyncReplyChannel&lt;&#39;Reply&gt; -&gt; &#39;Msg) * ?timeout:int -&gt; &#39;Reply</div>
+<div class="tip" id="fs34">val rep : AsyncReplyChannel&lt;&#39;x&gt;</div>
+<div class="tip" id="fs35">member UpgradableAgent.Upgrade : functionality:((&#39;x * &#39;state -&gt; &#39;x * &#39;state) * (&#39;state -&gt; &#39;state)) -&gt; unit<br /><br />Full name: Script.UpgradableAgent`2.Upgrade</div>
+<div class="tip" id="fs36">val functionality : (&#39;x * &#39;state -&gt; &#39;x * &#39;state) * (&#39;state -&gt; &#39;state)</div>
+<div class="tip" id="fs37">member MailboxProcessor.Post : message:&#39;Msg -&gt; unit</div>
+<div class="tip" id="fs38">val test1 : unit<br /><br />Full name: Script.test1</div>
+<div class="tip" id="fs39">val server : UpgradableAgent&lt;int,int&gt;</div>
+<div class="tip" id="fs40">Multiple items<br />val int : value:&#39;T -&gt; int (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.int<br /><br />--------------------<br />type int = int32<br /><br />Full name: Microsoft.FSharp.Core.int<br /><br />--------------------<br />type int&lt;&#39;Measure&gt; = int<br /><br />Full name: Microsoft.FSharp.Core.int&lt;_&gt;</div>
+<div class="tip" id="fs41">val myfunc : (int * int -&gt; int * int)</div>
+<div class="tip" id="fs42">val x : int</div>
+<div class="tip" id="fs43">val state : int</div>
+<div class="tip" id="fs44">val myStateConvert : (&#39;a -&gt; int)</div>
+<div class="tip" id="fs45">val initstate : &#39;a</div>
+<div class="tip" id="fs46">member UpgradableAgent.Upgrade : functionality:((&#39;x * &#39;state -&gt; &#39;x * &#39;state) * (&#39;state -&gt; &#39;state)) -&gt; unit</div>
+<div class="tip" id="fs47">type Console =<br />&#160;&#160;static member BackgroundColor : ConsoleColor with get, set<br />&#160;&#160;static member Beep : unit -&gt; unit + 1 overload<br />&#160;&#160;static member BufferHeight : int with get, set<br />&#160;&#160;static member BufferWidth : int with get, set<br />&#160;&#160;static member CapsLock : bool<br />&#160;&#160;static member Clear : unit -&gt; unit<br />&#160;&#160;static member CursorLeft : int with get, set<br />&#160;&#160;static member CursorSize : int with get, set<br />&#160;&#160;static member CursorTop : int with get, set<br />&#160;&#160;static member CursorVisible : bool with get, set<br />&#160;&#160;...<br /><br />Full name: System.Console</div>
+<div class="tip" id="fs48">Console.WriteLine() : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.WriteLine(value: string) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.WriteLine(value: obj) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.WriteLine(value: uint64) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.WriteLine(value: int64) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.WriteLine(value: uint32) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.WriteLine(value: int) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.WriteLine(value: float32) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.WriteLine(value: float) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.WriteLine(value: decimal) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em></div>
+<div class="tip" id="fs49">member UpgradableAgent.DoIt : item:&#39;x -&gt; &#39;x</div>
+<div class="tip" id="fs50">val myfunc2 : (int * int -&gt; int * int)</div>
+<div class="tip" id="fs51">val myStateConvert2 : (&#39;a -&gt; int)</div>
+<div class="tip" id="fs52">val test3 : unit<br /><br />Full name: Script.test3</div>
+<div class="tip" id="fs53">val server3 : UpgradableAgent&lt;obj,string&gt;</div>
+<div class="tip" id="fs54">type obj = Object<br /><br />Full name: Microsoft.FSharp.Core.obj</div>
+<div class="tip" id="fs55">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />Full name: Microsoft.FSharp.Core.Operators.string<br /><br />--------------------<br />type string = String<br /><br />Full name: Microsoft.FSharp.Core.string</div>
+<div class="tip" id="fs56">val myfunc3 : (string * obj -&gt; string * obj)</div>
+<div class="tip" id="fs57">val x : string</div>
+<div class="tip" id="fs58">val state : obj</div>
+<div class="tip" id="fs59">val unbox : value:obj -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.Operators.unbox</div>
+<div class="tip" id="fs60">val box : value:&#39;T -&gt; obj<br /><br />Full name: Microsoft.FSharp.Core.Operators.box</div>
+<div class="tip" id="fs61">val myStateConvert3 : (&#39;a -&gt; obj)</div>
+

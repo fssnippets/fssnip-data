@@ -1,0 +1,68 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">let</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="f">countingBitsOn</span> (<span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">dword</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="t">int32</span>) <span class="o">:</span> <span onmouseout="hideTip(event, 'fs3', 4)" onmouseover="showTip(event, 'fs3', 4)" class="t">int32</span> <span class="o">=</span>
+  <span class="c">//Counting 1-bits using &#39;divide and conquer&#39; strategy </span>
+  <span class="c">//from Hacker&#39;s Delight, Henry S. Warren, Jr.</span>
+  <span class="k">let</span> <span class="k">mutable</span> <span onmouseout="hideTip(event, 'fs4', 5)" onmouseover="showTip(event, 'fs4', 5)" class="v">x</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs2', 6)" onmouseover="showTip(event, 'fs2', 6)" class="i">dword</span>
+  <span onmouseout="hideTip(event, 'fs4', 7)" onmouseover="showTip(event, 'fs4', 7)" class="v">x</span> <span class="o">&lt;-</span> <span onmouseout="hideTip(event, 'fs4', 8)" onmouseover="showTip(event, 'fs4', 8)" class="v">x</span> <span class="o">-</span> ((<span onmouseout="hideTip(event, 'fs4', 9)" onmouseover="showTip(event, 'fs4', 9)" class="v">x</span> <span class="o">&gt;</span><span class="o">&gt;</span><span class="o">&gt;</span> <span class="n">1</span>) <span class="o">&amp;&amp;&amp;</span> <span class="n">0x55555555</span>)
+  <span onmouseout="hideTip(event, 'fs4', 10)" onmouseover="showTip(event, 'fs4', 10)" class="v">x</span> <span class="o">&lt;-</span> (<span onmouseout="hideTip(event, 'fs4', 11)" onmouseover="showTip(event, 'fs4', 11)" class="v">x</span> <span class="o">&amp;&amp;&amp;</span> <span class="n">0x33333333</span>) <span class="o">+</span> ((<span onmouseout="hideTip(event, 'fs4', 12)" onmouseover="showTip(event, 'fs4', 12)" class="v">x</span> <span class="o">&gt;</span><span class="o">&gt;</span><span class="o">&gt;</span> <span class="n">0x2</span>) <span class="o">&amp;&amp;&amp;</span> <span class="n">0x33333333</span>); 
+  <span onmouseout="hideTip(event, 'fs4', 13)" onmouseover="showTip(event, 'fs4', 13)" class="v">x</span> <span class="o">&lt;-</span> (<span onmouseout="hideTip(event, 'fs4', 14)" onmouseover="showTip(event, 'fs4', 14)" class="v">x</span> <span class="o">+</span> (<span onmouseout="hideTip(event, 'fs4', 15)" onmouseover="showTip(event, 'fs4', 15)" class="v">x</span> <span class="o">&gt;</span><span class="o">&gt;</span><span class="o">&gt;</span> <span class="n">0x4</span>)) <span class="o">&amp;&amp;&amp;</span> <span class="n">0x0F0F0F0F</span>
+  <span onmouseout="hideTip(event, 'fs4', 16)" onmouseover="showTip(event, 'fs4', 16)" class="v">x</span> <span class="o">&lt;-</span> <span onmouseout="hideTip(event, 'fs4', 17)" onmouseover="showTip(event, 'fs4', 17)" class="v">x</span> <span class="o">+</span> (<span onmouseout="hideTip(event, 'fs4', 18)" onmouseover="showTip(event, 'fs4', 18)" class="v">x</span> <span class="o">&gt;</span><span class="o">&gt;</span><span class="o">&gt;</span> <span class="n">0x8</span>);
+  <span onmouseout="hideTip(event, 'fs4', 19)" onmouseover="showTip(event, 'fs4', 19)" class="v">x</span> <span class="o">&lt;-</span> <span onmouseout="hideTip(event, 'fs4', 20)" onmouseover="showTip(event, 'fs4', 20)" class="v">x</span> <span class="o">+</span> (<span onmouseout="hideTip(event, 'fs4', 21)" onmouseover="showTip(event, 'fs4', 21)" class="v">x</span> <span class="o">&gt;</span><span class="o">&gt;</span><span class="o">&gt;</span> <span class="n">0x10</span>);
+  <span onmouseout="hideTip(event, 'fs4', 22)" onmouseover="showTip(event, 'fs4', 22)" class="v">x</span> <span class="o">&amp;&amp;&amp;</span> <span class="n">0x0000003F</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs5', 23)" onmouseover="showTip(event, 'fs5', 23)" class="f">countingBitsOff</span> (<span onmouseout="hideTip(event, 'fs2', 24)" onmouseover="showTip(event, 'fs2', 24)" class="i">dword</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs3', 25)" onmouseover="showTip(event, 'fs3', 25)" class="t">int32</span>) <span class="o">:</span> <span onmouseout="hideTip(event, 'fs3', 26)" onmouseover="showTip(event, 'fs3', 26)" class="t">int32</span> <span class="o">=</span> <span class="n">32</span> <span class="o">-</span> <span onmouseout="hideTip(event, 'fs1', 27)" onmouseover="showTip(event, 'fs1', 27)" class="f">countingBitsOn</span> <span onmouseout="hideTip(event, 'fs2', 28)" onmouseover="showTip(event, 'fs2', 28)" class="i">dword</span>
+
+<span class="k">for</span> <span onmouseout="hideTip(event, 'fs6', 29)" onmouseover="showTip(event, 'fs6', 29)" class="i">x</span> <span class="k">in</span> [<span class="n">0xA</span>; <span class="n">0xFF</span>; <span class="n">0x100</span>; <span class="n">0x400</span>; <span onmouseout="hideTip(event, 'fs7', 30)" onmouseover="showTip(event, 'fs7', 30)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs8', 31)" onmouseover="showTip(event, 'fs8', 31)" class="t">Int32</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs9', 32)" onmouseover="showTip(event, 'fs9', 32)" class="i">MinValue</span>; <span onmouseout="hideTip(event, 'fs7', 33)" onmouseover="showTip(event, 'fs7', 33)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs8', 34)" onmouseover="showTip(event, 'fs8', 34)" class="t">Int32</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs10', 35)" onmouseover="showTip(event, 'fs10', 35)" class="i">MaxValue</span>] <span class="k">do</span>
+    <span onmouseout="hideTip(event, 'fs11', 36)" onmouseover="showTip(event, 'fs11', 36)" class="f">printfn</span> <span class="s">&quot;</span><span class="pf">%11d</span><span class="s"> #bits on = </span><span class="pf">%2d</span><span class="s"> #bits off = </span><span class="pf">%2d</span><span class="s">&quot;</span> <span onmouseout="hideTip(event, 'fs6', 37)" onmouseover="showTip(event, 'fs6', 37)" class="i">x</span> (<span onmouseout="hideTip(event, 'fs1', 38)" onmouseover="showTip(event, 'fs1', 38)" class="f">countingBitsOn</span> <span onmouseout="hideTip(event, 'fs6', 39)" onmouseover="showTip(event, 'fs6', 39)" class="i">x</span>) (<span onmouseout="hideTip(event, 'fs5', 40)" onmouseover="showTip(event, 'fs5', 40)" class="f">countingBitsOff</span> <span onmouseout="hideTip(event, 'fs6', 41)" onmouseover="showTip(event, 'fs6', 41)" class="i">x</span>)
+
+<span class="c">(*    </span>
+
+<span class="c">         10 #bits on =  2 #bits off = 30</span>
+<span class="c">        255 #bits on =  8 #bits off = 24</span>
+<span class="c">        256 #bits on =  1 #bits off = 31</span>
+<span class="c">       1024 #bits on =  1 #bits off = 31</span>
+<span class="c">-2147483648 #bits on =  1 #bits off = 31</span>
+<span class="c"> 2147483647 #bits on = 31 #bits off =  1</span>
+
+<span class="c">*)</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">val countingBitsOn : dword:int32 -&gt; int32<br /><br />Full name: Script.countingBitsOn</div>
+<div class="tip" id="fs2">val dword : int32</div>
+<div class="tip" id="fs3">Multiple items<br />val int32 : value:&#39;T -&gt; int32 (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.int32<br /><br />--------------------<br />type int32 = System.Int32<br /><br />Full name: Microsoft.FSharp.Core.int32</div>
+<div class="tip" id="fs4">val mutable x : int32</div>
+<div class="tip" id="fs5">val countingBitsOff : dword:int32 -&gt; int32<br /><br />Full name: Script.countingBitsOff</div>
+<div class="tip" id="fs6">val x : int</div>
+<div class="tip" id="fs7">namespace System</div>
+<div class="tip" id="fs8">type Int32 =<br />&#160;&#160;struct<br />&#160;&#160;&#160;&#160;member CompareTo : value:obj -&gt; int + 1 overload<br />&#160;&#160;&#160;&#160;member Equals : obj:obj -&gt; bool + 1 overload<br />&#160;&#160;&#160;&#160;member GetHashCode : unit -&gt; int<br />&#160;&#160;&#160;&#160;member GetTypeCode : unit -&gt; TypeCode<br />&#160;&#160;&#160;&#160;member ToString : unit -&gt; string + 3 overloads<br />&#160;&#160;&#160;&#160;static val MaxValue : int<br />&#160;&#160;&#160;&#160;static val MinValue : int<br />&#160;&#160;&#160;&#160;static member Parse : s:string -&gt; int + 3 overloads<br />&#160;&#160;&#160;&#160;static member TryParse : s:string * result:int -&gt; bool + 1 overload<br />&#160;&#160;end<br /><br />Full name: System.Int32</div>
+<div class="tip" id="fs9">field int.MinValue = -2147483648</div>
+<div class="tip" id="fs10">field int.MaxValue = 2147483647</div>
+<div class="tip" id="fs11">val printfn : format:Printf.TextWriterFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.printfn</div>
+

@@ -1,0 +1,141 @@
+<h2><a name="Primitive-Pythagorean-triples-generator" class="anchor" href="#Primitive-Pythagorean-triples-generator">Primitive Pythagorean triples generator</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="prep">#r</span> <span class="s">&quot;FSharp.PowerPack.dll&quot;</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">Microsoft</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">FSharp</span><span class="o">.</span><span class="i">Math</span>
+
+<span class="c">// Pythagorean triples : http://en.wikipedia.org/wiki/Pythagorean_triple</span>
+<span class="c">// Algorithm: http://mathworld.wolfram.com/PythagoreanTriple.html Equations(2 .. 9)</span>
+
+<span class="c">// Primitive Pythagorean triples generator</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="f">primitives</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="f">take</span> <span class="o">=</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="i">org</span> <span class="o">=</span> <span class="i">rowvec</span> [ <span class="n">3.</span>; <span class="n">4.</span>; <span class="n">5.</span> ]
+    
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="i">U</span> <span class="o">=</span> <span class="i">matrix</span> [[  <span class="n">1.</span>; <span class="n">2.</span>; <span class="n">2.</span> ];
+                    [ <span class="o">-</span><span class="n">2.</span>;<span class="o">-</span><span class="n">1.</span>;<span class="o">-</span><span class="n">2.</span> ];
+                    [  <span class="n">2.</span>; <span class="n">2.</span>; <span class="n">3.</span> ];]
+
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs7', 7)" onmouseover="showTip(event, 'fs7', 7)" class="i">A</span> <span class="o">=</span> <span class="i">matrix</span> [[  <span class="n">1.</span>; <span class="n">2.</span>; <span class="n">2.</span> ];
+                    [  <span class="n">2.</span>; <span class="n">1.</span>; <span class="n">2.</span> ];
+                    [  <span class="n">2.</span>; <span class="n">2.</span>; <span class="n">3.</span> ];]
+
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs8', 8)" onmouseover="showTip(event, 'fs8', 8)" class="i">D</span> <span class="o">=</span> <span class="i">matrix</span> [[ <span class="o">-</span><span class="n">1.</span>;<span class="o">-</span><span class="n">2.</span>;<span class="o">-</span><span class="n">2.</span> ];
+                    [  <span class="n">2.</span>; <span class="n">1.</span>; <span class="n">2.</span> ];
+                    [  <span class="n">2.</span>; <span class="n">2.</span>; <span class="n">3.</span> ];]
+
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs9', 9)" onmouseover="showTip(event, 'fs9', 9)" class="f">triplets</span> (<span onmouseout="hideTip(event, 'fs10', 10)" onmouseover="showTip(event, 'fs10', 10)" class="i">p</span><span class="o">:</span><span class="i">RowVector</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs11', 11)" onmouseover="showTip(event, 'fs11', 11)" class="i">float</span><span class="o">&gt;</span>) <span class="o">=</span> (<span onmouseout="hideTip(event, 'fs10', 12)" onmouseover="showTip(event, 'fs10', 12)" class="i">p</span><span class="o">*</span><span onmouseout="hideTip(event, 'fs6', 13)" onmouseover="showTip(event, 'fs6', 13)" class="i">U</span>,<span onmouseout="hideTip(event, 'fs10', 14)" onmouseover="showTip(event, 'fs10', 14)" class="i">p</span><span class="o">*</span><span onmouseout="hideTip(event, 'fs7', 15)" onmouseover="showTip(event, 'fs7', 15)" class="i">A</span>,<span onmouseout="hideTip(event, 'fs10', 16)" onmouseover="showTip(event, 'fs10', 16)" class="i">p</span><span class="o">*</span><span onmouseout="hideTip(event, 'fs8', 17)" onmouseover="showTip(event, 'fs8', 17)" class="i">D</span>)
+    
+    <span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs12', 18)" onmouseover="showTip(event, 'fs12', 18)" class="f">primitives&#39;</span> <span onmouseout="hideTip(event, 'fs13', 19)" onmouseover="showTip(event, 'fs13', 19)" class="i">next</span> <span onmouseout="hideTip(event, 'fs14', 20)" onmouseover="showTip(event, 'fs14', 20)" class="f">cont</span> <span onmouseout="hideTip(event, 'fs15', 21)" onmouseover="showTip(event, 'fs15', 21)" class="i">acc</span> <span class="o">=</span> 
+        <span class="k">if</span> <span onmouseout="hideTip(event, 'fs4', 22)" onmouseover="showTip(event, 'fs4', 22)" class="f">take</span> <span onmouseout="hideTip(event, 'fs13', 23)" onmouseover="showTip(event, 'fs13', 23)" class="i">next</span> <span class="k">then</span>
+            <span class="k">let</span> <span onmouseout="hideTip(event, 'fs16', 24)" onmouseover="showTip(event, 'fs16', 24)" class="i">u</span>,<span onmouseout="hideTip(event, 'fs17', 25)" onmouseover="showTip(event, 'fs17', 25)" class="i">a</span>,<span onmouseout="hideTip(event, 'fs18', 26)" onmouseover="showTip(event, 'fs18', 26)" class="i">d</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs9', 27)" onmouseover="showTip(event, 'fs9', 27)" class="f">triplets</span> <span onmouseout="hideTip(event, 'fs13', 28)" onmouseover="showTip(event, 'fs13', 28)" class="i">next</span>
+            <span onmouseout="hideTip(event, 'fs13', 29)" onmouseover="showTip(event, 'fs13', 29)" class="i">next</span><span class="o">::</span><span onmouseout="hideTip(event, 'fs15', 30)" onmouseover="showTip(event, 'fs15', 30)" class="i">acc</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs12', 31)" onmouseover="showTip(event, 'fs12', 31)" class="f">primitives&#39;</span> <span onmouseout="hideTip(event, 'fs16', 32)" onmouseover="showTip(event, 'fs16', 32)" class="i">u</span> (<span onmouseout="hideTip(event, 'fs12', 33)" onmouseover="showTip(event, 'fs12', 33)" class="f">primitives&#39;</span> <span onmouseout="hideTip(event, 'fs17', 34)" onmouseover="showTip(event, 'fs17', 34)" class="i">a</span> (<span onmouseout="hideTip(event, 'fs12', 35)" onmouseover="showTip(event, 'fs12', 35)" class="f">primitives&#39;</span> <span onmouseout="hideTip(event, 'fs18', 36)" onmouseover="showTip(event, 'fs18', 36)" class="i">d</span> <span onmouseout="hideTip(event, 'fs14', 37)" onmouseover="showTip(event, 'fs14', 37)" class="f">cont</span>))
+        <span class="k">else</span>
+            <span onmouseout="hideTip(event, 'fs14', 38)" onmouseover="showTip(event, 'fs14', 38)" class="f">cont</span> <span onmouseout="hideTip(event, 'fs15', 39)" onmouseover="showTip(event, 'fs15', 39)" class="i">acc</span>
+    
+    <span onmouseout="hideTip(event, 'fs12', 40)" onmouseover="showTip(event, 'fs12', 40)" class="f">primitives&#39;</span> <span onmouseout="hideTip(event, 'fs5', 41)" onmouseover="showTip(event, 'fs5', 41)" class="i">org</span> <span onmouseout="hideTip(event, 'fs19', 42)" onmouseover="showTip(event, 'fs19', 42)" class="f">id</span> []
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Example-Project-Euler-75" class="anchor" href="#Example-Project-Euler-75">Example: Project Euler 75</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">// http://projecteuler.net/index.php?section=problems&amp;id=75</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs20', 43)" onmouseover="showTip(event, 'fs20', 43)" class="i">limit</span> <span class="o">=</span> <span class="n">1500000.</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs21', 44)" onmouseover="showTip(event, 'fs21', 44)" class="f">perimeter</span> (<span onmouseout="hideTip(event, 'fs22', 45)" onmouseover="showTip(event, 'fs22', 45)" class="i">t</span> <span class="o">:</span><span class="i">RowVector</span><span class="o">&lt;</span>_<span class="o">&gt;</span>) <span class="o">=</span> <span onmouseout="hideTip(event, 'fs22', 46)" onmouseover="showTip(event, 'fs22', 46)" class="i">t</span><span class="o">.</span>[<span class="n">0</span>] <span class="o">+</span> <span onmouseout="hideTip(event, 'fs22', 47)" onmouseover="showTip(event, 'fs22', 47)" class="i">t</span><span class="o">.</span>[<span class="n">1</span>] <span class="o">+</span> <span onmouseout="hideTip(event, 'fs22', 48)" onmouseover="showTip(event, 'fs22', 48)" class="i">t</span><span class="o">.</span>[<span class="n">2</span>]
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs23', 49)" onmouseover="showTip(event, 'fs23', 49)" class="f">perimeterUnder1500000</span> <span onmouseout="hideTip(event, 'fs22', 50)" onmouseover="showTip(event, 'fs22', 50)" class="i">t</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs21', 51)" onmouseover="showTip(event, 'fs21', 51)" class="f">perimeter</span> <span onmouseout="hideTip(event, 'fs22', 52)" onmouseover="showTip(event, 'fs22', 52)" class="i">t</span> <span class="o">&lt;=</span> <span onmouseout="hideTip(event, 'fs20', 53)" onmouseover="showTip(event, 'fs20', 53)" class="i">limit</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs24', 54)" onmouseover="showTip(event, 'fs24', 54)" class="i">solution</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs3', 55)" onmouseover="showTip(event, 'fs3', 55)" class="f">primitives</span> <span onmouseout="hideTip(event, 'fs23', 56)" onmouseover="showTip(event, 'fs23', 56)" class="f">perimeterUnder1500000</span>
+               <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs25', 57)" onmouseover="showTip(event, 'fs25', 57)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs26', 58)" onmouseover="showTip(event, 'fs26', 58)" class="f">map</span> <span onmouseout="hideTip(event, 'fs21', 59)" onmouseover="showTip(event, 'fs21', 59)" class="f">perimeter</span>
+               <span class="c">// include the perimeter of the primitive and all the multiples</span>
+               <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs25', 60)" onmouseover="showTip(event, 'fs25', 60)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs26', 61)" onmouseover="showTip(event, 'fs26', 61)" class="f">map</span>(<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs27', 62)" onmouseover="showTip(event, 'fs27', 62)" class="i">p</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs28', 63)" onmouseover="showTip(event, 'fs28', 63)" class="i">seq</span> { <span onmouseout="hideTip(event, 'fs27', 64)" onmouseover="showTip(event, 'fs27', 64)" class="i">p</span> <span class="o">..</span> <span onmouseout="hideTip(event, 'fs27', 65)" onmouseover="showTip(event, 'fs27', 65)" class="i">p</span> <span class="o">..</span> <span onmouseout="hideTip(event, 'fs20', 66)" onmouseover="showTip(event, 'fs20', 66)" class="i">limit</span> })
+               <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs25', 67)" onmouseover="showTip(event, 'fs25', 67)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs29', 68)" onmouseover="showTip(event, 'fs29', 68)" class="f">concat</span>
+               <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs25', 69)" onmouseover="showTip(event, 'fs25', 69)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs30', 70)" onmouseover="showTip(event, 'fs30', 70)" class="f">countBy</span> <span onmouseout="hideTip(event, 'fs19', 71)" onmouseover="showTip(event, 'fs19', 71)" class="f">id</span>
+               <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs25', 72)" onmouseover="showTip(event, 'fs25', 72)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs31', 73)" onmouseover="showTip(event, 'fs31', 73)" class="f">filter</span>(<span onmouseout="hideTip(event, 'fs32', 74)" onmouseover="showTip(event, 'fs32', 74)" class="f">snd</span> <span class="o">&gt;</span><span class="o">&gt;</span> (<span class="o">=</span>) <span class="n">1</span>)
+               <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs25', 75)" onmouseover="showTip(event, 'fs25', 75)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs33', 76)" onmouseover="showTip(event, 'fs33', 76)" class="f">length</span>
+<span onmouseout="hideTip(event, 'fs24', 77)" onmouseover="showTip(event, 'fs24', 77)" class="i">solution</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs34', 78)" onmouseover="showTip(event, 'fs34', 78)" class="f">printfn</span> <span class="s">&quot;solution: </span><span class="pf">%d</span><span class="s">&quot;</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace Microsoft</div>
+<div class="tip" id="fs2">namespace Microsoft.FSharp</div>
+<div class="tip" id="fs3">val primitives : take:(&#39;a -&gt; bool) -&gt; &#39;a list<br /><br />Full name: Script.primitives</div>
+<div class="tip" id="fs4">val take : (&#39;a -&gt; bool)</div>
+<div class="tip" id="fs5">val org : &#39;a</div>
+<div class="tip" id="fs6">val U : obj</div>
+<div class="tip" id="fs7">val A : obj</div>
+<div class="tip" id="fs8">val D : obj</div>
+<div class="tip" id="fs9">val triplets : (&#39;a -&gt; &#39;a * &#39;a * &#39;a)</div>
+<div class="tip" id="fs10">val p : &#39;a</div>
+<div class="tip" id="fs11">Multiple items<br />val float : value:&#39;T -&gt; float (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.float<br /><br />--------------------<br />type float = System.Double<br /><br />Full name: Microsoft.FSharp.Core.float<br /><br />--------------------<br />type float&lt;&#39;Measure&gt; = float<br /><br />Full name: Microsoft.FSharp.Core.float&lt;_&gt;</div>
+<div class="tip" id="fs12">val primitives&#39; : (&#39;a -&gt; (&#39;a list -&gt; &#39;b) -&gt; &#39;a list -&gt; &#39;b)</div>
+<div class="tip" id="fs13">val next : &#39;a</div>
+<div class="tip" id="fs14">val cont : (&#39;a list -&gt; &#39;b)</div>
+<div class="tip" id="fs15">val acc : &#39;a list</div>
+<div class="tip" id="fs16">val u : &#39;a</div>
+<div class="tip" id="fs17">val a : &#39;a</div>
+<div class="tip" id="fs18">val d : &#39;a</div>
+<div class="tip" id="fs19">val id : x:&#39;T -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.Operators.id</div>
+<div class="tip" id="fs20">val limit : float<br /><br />Full name: Script.limit</div>
+<div class="tip" id="fs21">val perimeter : t:&#39;a -&gt; float<br /><br />Full name: Script.perimeter</div>
+<div class="tip" id="fs22">val t : &#39;a</div>
+<div class="tip" id="fs23">val perimeterUnder1500000 : t:&#39;a -&gt; bool<br /><br />Full name: Script.perimeterUnder1500000</div>
+<div class="tip" id="fs24">val solution : int<br /><br />Full name: Script.solution</div>
+<div class="tip" id="fs25">module Seq<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs26">val map : mapping:(&#39;T -&gt; &#39;U) -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;U&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.map</div>
+<div class="tip" id="fs27">val p : float</div>
+<div class="tip" id="fs28">Multiple items<br />val seq : sequence:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Core.Operators.seq<br /><br />--------------------<br />type seq&lt;&#39;T&gt; = System.Collections.Generic.IEnumerable&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.seq&lt;_&gt;</div>
+<div class="tip" id="fs29">val concat : sources:seq&lt;#seq&lt;&#39;T&gt;&gt; -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.concat</div>
+<div class="tip" id="fs30">val countBy : projection:(&#39;T -&gt; &#39;Key) -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;Key * int&gt; (requires equality)<br /><br />Full name: Microsoft.FSharp.Collections.Seq.countBy</div>
+<div class="tip" id="fs31">val filter : predicate:(&#39;T -&gt; bool) -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.filter</div>
+<div class="tip" id="fs32">val snd : tuple:(&#39;T1 * &#39;T2) -&gt; &#39;T2<br /><br />Full name: Microsoft.FSharp.Core.Operators.snd</div>
+<div class="tip" id="fs33">val length : source:seq&lt;&#39;T&gt; -&gt; int<br /><br />Full name: Microsoft.FSharp.Collections.Seq.length</div>
+<div class="tip" id="fs34">val printfn : format:Printf.TextWriterFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.printfn</div>
+

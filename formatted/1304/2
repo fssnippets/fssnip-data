@@ -1,0 +1,133 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+<span class="l">38: </span>
+<span class="l">39: </span>
+<span class="l">40: </span>
+<span class="l">41: </span>
+<span class="l">42: </span>
+<span class="l">43: </span>
+<span class="l">44: </span>
+<span class="l">45: </span>
+<span class="l">46: </span>
+<span class="l">47: </span>
+<span class="l">48: </span>
+<span class="l">49: </span>
+<span class="l">50: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">IO</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 3)" onmouseover="showTip(event, 'fs1', 3)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 4)" onmouseover="showTip(event, 'fs3', 4)" class="i">Diagnostics</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs4', 5)" onmouseover="showTip(event, 'fs4', 5)" class="f">RunNodeJS</span> <span onmouseout="hideTip(event, 'fs5', 6)" onmouseover="showTip(event, 'fs5', 6)" class="i">nodePath</span> <span onmouseout="hideTip(event, 'fs6', 7)" onmouseover="showTip(event, 'fs6', 7)" class="i">initial</span> (<span onmouseout="hideTip(event, 'fs7', 8)" onmouseover="showTip(event, 'fs7', 8)" class="i">script</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs8', 9)" onmouseover="showTip(event, 'fs8', 9)" class="t">string</span>) <span class="o">=</span>
+   <span class="k">let</span> <span onmouseout="hideTip(event, 'fs9', 10)" onmouseover="showTip(event, 'fs9', 10)" class="i">info</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs10', 11)" onmouseover="showTip(event, 'fs10', 11)" class="t">ProcessStartInfo</span>(
+               <span class="i">fileName</span> <span class="o">=</span> <span class="s">&quot;node.exe&quot;</span>,
+               <span class="i">Arguments</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs11', 12)" onmouseover="showTip(event, 'fs11', 12)" class="f">sprintf</span> <span class="s">&quot;-e </span><span class="e">\&quot;</span><span class="s"></span><span class="pf">%s</span><span class="s"></span><span class="e">\&quot;</span><span class="s">&quot;</span> <span onmouseout="hideTip(event, 'fs6', 13)" onmouseover="showTip(event, 'fs6', 13)" class="i">initial</span>,
+               <span class="i">RedirectStandardError</span>  <span class="o">=</span> <span class="k">true</span>,
+               <span class="i">RedirectStandardOutput</span> <span class="o">=</span> <span class="k">true</span>,
+               <span class="i">RedirectStandardInput</span>  <span class="o">=</span> <span class="k">true</span>,
+               <span class="i">UseShellExecute</span>        <span class="o">=</span> <span class="k">false</span>,
+               <span class="i">CreateNoWindow</span>         <span class="o">=</span> <span class="k">true</span>,
+               <span class="i">WorkingDirectory</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs5', 14)" onmouseover="showTip(event, 'fs5', 14)" class="i">nodePath</span>)
+   <span class="k">use</span> <span onmouseout="hideTip(event, 'fs12', 15)" onmouseover="showTip(event, 'fs12', 15)" class="i">proc</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs13', 16)" onmouseover="showTip(event, 'fs13', 16)" class="t">Process</span>(<span class="i">StartInfo</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs9', 17)" onmouseover="showTip(event, 'fs9', 17)" class="i">info</span>)
+   <span onmouseout="hideTip(event, 'fs12', 18)" onmouseover="showTip(event, 'fs12', 18)" class="i">proc</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs14', 19)" onmouseover="showTip(event, 'fs14', 19)" class="f">Start</span>() <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs15', 20)" onmouseover="showTip(event, 'fs15', 20)" class="f">ignore</span> 
+   <span onmouseout="hideTip(event, 'fs12', 21)" onmouseover="showTip(event, 'fs12', 21)" class="i">proc</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs16', 22)" onmouseover="showTip(event, 'fs16', 22)" class="i">StandardInput</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs17', 23)" onmouseover="showTip(event, 'fs17', 23)" class="f">Write</span> <span onmouseout="hideTip(event, 'fs7', 24)" onmouseover="showTip(event, 'fs7', 24)" class="i">script</span>
+   <span onmouseout="hideTip(event, 'fs12', 25)" onmouseover="showTip(event, 'fs12', 25)" class="i">proc</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs16', 26)" onmouseover="showTip(event, 'fs16', 26)" class="i">StandardInput</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs18', 27)" onmouseover="showTip(event, 'fs18', 27)" class="f">Flush</span>()
+   <span onmouseout="hideTip(event, 'fs12', 28)" onmouseover="showTip(event, 'fs12', 28)" class="i">proc</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs16', 29)" onmouseover="showTip(event, 'fs16', 29)" class="i">StandardInput</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs19', 30)" onmouseover="showTip(event, 'fs19', 30)" class="f">Close</span>()
+   <span class="k">let</span> <span onmouseout="hideTip(event, 'fs20', 31)" onmouseover="showTip(event, 'fs20', 31)" class="i">output</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs12', 32)" onmouseover="showTip(event, 'fs12', 32)" class="i">proc</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs21', 33)" onmouseover="showTip(event, 'fs21', 33)" class="i">StandardOutput</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs22', 34)" onmouseover="showTip(event, 'fs22', 34)" class="f">ReadToEnd</span>()
+   <span onmouseout="hideTip(event, 'fs12', 35)" onmouseover="showTip(event, 'fs12', 35)" class="i">proc</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs23', 36)" onmouseover="showTip(event, 'fs23', 36)" class="f">WaitForExit</span>()
+   <span class="k">if</span> <span onmouseout="hideTip(event, 'fs12', 37)" onmouseover="showTip(event, 'fs12', 37)" class="i">proc</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs24', 38)" onmouseover="showTip(event, 'fs24', 38)" class="i">ExitCode</span> <span class="o">&lt;&gt;</span> <span class="n">0</span> <span class="k">then</span>
+      <span onmouseout="hideTip(event, 'fs25', 39)" onmouseover="showTip(event, 'fs25', 39)" class="f">failwith</span> (<span class="s">&quot;The execution of the command failed: </span><span class="e">\r</span><span class="s"></span><span class="e">\n</span><span class="s">&quot;</span> <span class="o">+</span> <span onmouseout="hideTip(event, 'fs12', 40)" onmouseover="showTip(event, 'fs12', 40)" class="i">proc</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs26', 41)" onmouseover="showTip(event, 'fs26', 41)" class="i">StandardError</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs22', 42)" onmouseover="showTip(event, 'fs22', 42)" class="f">ReadToEnd</span>())
+   <span onmouseout="hideTip(event, 'fs20', 43)" onmouseover="showTip(event, 'fs20', 43)" class="i">output</span>
+
+<span class="c">// usage example: stylus, css preprocessor</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs27', 44)" onmouseover="showTip(event, 'fs27', 44)" class="f">RunStylus</span> <span class="o">=</span> 
+   <span onmouseout="hideTip(event, 'fs4', 45)" onmouseover="showTip(event, 'fs4', 45)" class="f">RunNodeJS</span> <span class="s">@&quot;C:\Program Files\nodejs\node_modules\npm\&quot;</span> 
+        <span class="s">&quot;var stylus = require(&#39;stylus&#39;);</span>
+<span class="s">         var stdin = process.openStdin();</span>
+<span class="s">         stdin.setEncoding(&#39;utf8&#39;);</span>
+<span class="s">         var acc = &#39;&#39;;</span>
+<span class="s">         stdin.on(&#39;data&#39;, function (chunk) {</span>
+<span class="s">            acc = acc + chunk;</span>
+<span class="s">         });</span>
+<span class="s">         stdin.on(&#39;end&#39;, function () {</span>
+<span class="s">            stylus(acc, {}).render(function (err, res) {</span>
+<span class="s">               if (err) throw err;</span>
+<span class="s">               console.log(res);</span>
+<span class="s">            });</span>
+<span class="s">         });&quot;</span>
+
+<span onmouseout="hideTip(event, 'fs27', 46)" onmouseover="showTip(event, 'fs27', 46)" class="f">RunStylus</span> <span class="s">&quot;</span>
+<span class="s">#prompt</span>
+<span class="s">   position absolute</span>
+<span class="s">   top 150px</span>
+<span class="s">   left 50%</span>
+<span class="s">   width 200px</span>
+<span class="s">   margin-left -(@width / 2)&quot;</span>
+<span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs28', 47)" onmouseover="showTip(event, 'fs28', 47)" class="f">printf</span> <span class="s">&quot;</span><span class="pf">%s</span><span class="s">&quot;</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace System</div>
+<div class="tip" id="fs2">namespace System.IO</div>
+<div class="tip" id="fs3">namespace System.Diagnostics</div>
+<div class="tip" id="fs4">val RunNodeJS : nodePath:string -&gt; initial:string -&gt; script:string -&gt; string<br /><br />Full name: Script.RunNodeJS</div>
+<div class="tip" id="fs5">val nodePath : string</div>
+<div class="tip" id="fs6">val initial : string</div>
+<div class="tip" id="fs7">val script : string</div>
+<div class="tip" id="fs8">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />Full name: Microsoft.FSharp.Core.Operators.string<br /><br />--------------------<br />type string = System.String<br /><br />Full name: Microsoft.FSharp.Core.string</div>
+<div class="tip" id="fs9">val info : ProcessStartInfo</div>
+<div class="tip" id="fs10">Multiple items<br />type ProcessStartInfo =<br />&#160;&#160;new : unit -&gt; ProcessStartInfo + 2 overloads<br />&#160;&#160;member Arguments : string with get, set<br />&#160;&#160;member CreateNoWindow : bool with get, set<br />&#160;&#160;member Domain : string with get, set<br />&#160;&#160;member EnvironmentVariables : StringDictionary<br />&#160;&#160;member ErrorDialog : bool with get, set<br />&#160;&#160;member ErrorDialogParentHandle : nativeint with get, set<br />&#160;&#160;member FileName : string with get, set<br />&#160;&#160;member LoadUserProfile : bool with get, set<br />&#160;&#160;member Password : SecureString with get, set<br />&#160;&#160;...<br /><br />Full name: System.Diagnostics.ProcessStartInfo<br /><br />--------------------<br />ProcessStartInfo() : unit<br />ProcessStartInfo(fileName: string) : unit<br />ProcessStartInfo(fileName: string, arguments: string) : unit</div>
+<div class="tip" id="fs11">val sprintf : format:Printf.StringFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.sprintf</div>
+<div class="tip" id="fs12">val proc : Process</div>
+<div class="tip" id="fs13">Multiple items<br />type Process =<br />&#160;&#160;inherit Component<br />&#160;&#160;new : unit -&gt; Process<br />&#160;&#160;member BasePriority : int<br />&#160;&#160;member BeginErrorReadLine : unit -&gt; unit<br />&#160;&#160;member BeginOutputReadLine : unit -&gt; unit<br />&#160;&#160;member CancelErrorRead : unit -&gt; unit<br />&#160;&#160;member CancelOutputRead : unit -&gt; unit<br />&#160;&#160;member Close : unit -&gt; unit<br />&#160;&#160;member CloseMainWindow : unit -&gt; bool<br />&#160;&#160;member EnableRaisingEvents : bool with get, set<br />&#160;&#160;member ExitCode : int<br />&#160;&#160;...<br /><br />Full name: System.Diagnostics.Process<br /><br />--------------------<br />Process() : unit</div>
+<div class="tip" id="fs14">Process.Start() : bool</div>
+<div class="tip" id="fs15">val ignore : value:&#39;T -&gt; unit<br /><br />Full name: Microsoft.FSharp.Core.Operators.ignore</div>
+<div class="tip" id="fs16">property Process.StandardInput: StreamWriter</div>
+<div class="tip" id="fs17">TextWriter.Write(value: obj) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />TextWriter.Write(value: decimal) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />TextWriter.Write(value: float) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />TextWriter.Write(value: float32) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />TextWriter.Write(value: uint64) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />TextWriter.Write(value: int64) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />TextWriter.Write(value: uint32) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />TextWriter.Write(value: int) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />TextWriter.Write(value: bool) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />StreamWriter.Write(value: string) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em></div>
+<div class="tip" id="fs18">StreamWriter.Flush() : unit</div>
+<div class="tip" id="fs19">StreamWriter.Close() : unit</div>
+<div class="tip" id="fs20">val output : string</div>
+<div class="tip" id="fs21">property Process.StandardOutput: StreamReader</div>
+<div class="tip" id="fs22">StreamReader.ReadToEnd() : string</div>
+<div class="tip" id="fs23">Process.WaitForExit() : unit<br />Process.WaitForExit(milliseconds: int) : bool</div>
+<div class="tip" id="fs24">property Process.ExitCode: int</div>
+<div class="tip" id="fs25">val failwith : message:string -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.Operators.failwith</div>
+<div class="tip" id="fs26">property Process.StandardError: StreamReader</div>
+<div class="tip" id="fs27">val RunStylus : (string -&gt; string)<br /><br />Full name: Script.RunStylus</div>
+<div class="tip" id="fs28">val printf : format:Printf.TextWriterFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.printf</div>
+

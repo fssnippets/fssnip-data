@@ -1,0 +1,26 @@
+
+open Microsoft.Office.Interop.Excel
+open System.Runtime.InteropServices
+open System
+
+type LastCell = 
+    {
+        mutable LastRow : int
+        mutable LastCol : int
+    }
+
+// [snippet:iterating through sheets in a workbook]
+
+    let sheetsColl = workbook.Sheets    
+    let lastCells = seq {for sheet in sheetsColl do yield FindWorksheetLastCell (sheet :?> Worksheet)}
+    let maxRow = 
+        lastCells
+            |> Seq.sortByDescending(fun lr -> lr.LastRow)
+            |> Seq.head
+    let maxCol = 
+        lastCells            
+            |> Seq.sortByDescending(fun lc -> lc.LastCol)
+            |> Seq.head
+    if(not(obj.ReferenceEquals(sheetsColl, null)) && Marshal.IsComObject(sheetsColl)) then printfn "Remaining RCW references to thisSheet %i" (Marshal.ReleaseComObject(sheetsColl))
+   
+// [/snippet]

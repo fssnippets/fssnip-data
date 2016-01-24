@@ -1,0 +1,93 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">Text</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 3)" onmouseover="showTip(event, 'fs1', 3)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 4)" onmouseover="showTip(event, 'fs3', 4)" class="i">IO</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 5)" onmouseover="showTip(event, 'fs1', 5)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs4', 6)" onmouseover="showTip(event, 'fs4', 6)" class="i">Net</span>
+
+<span class="c">// URL of a simple page that takes two HTTP POST parameters. See the</span>
+<span class="c">// form that submits there: http://www.snee.com/xml/crud/posttest.html</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs5', 7)" onmouseover="showTip(event, 'fs5', 7)" class="i">url</span> <span class="o">=</span> <span class="s">&quot;http://www.snee.com/xml/crud/posttest.cgi&quot;</span>
+
+<span class="c">// Create &amp; configure HTTP web request</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs6', 8)" onmouseover="showTip(event, 'fs6', 8)" class="i">req</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs7', 9)" onmouseover="showTip(event, 'fs7', 9)" class="t">HttpWebRequest</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs8', 10)" onmouseover="showTip(event, 'fs8', 10)" class="f">Create</span>(<span onmouseout="hideTip(event, 'fs5', 11)" onmouseover="showTip(event, 'fs5', 11)" class="i">url</span>) <span class="o">:?&gt;</span> <span onmouseout="hideTip(event, 'fs7', 12)" onmouseover="showTip(event, 'fs7', 12)" class="t">HttpWebRequest</span> 
+<span onmouseout="hideTip(event, 'fs6', 13)" onmouseover="showTip(event, 'fs6', 13)" class="i">req</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs9', 14)" onmouseover="showTip(event, 'fs9', 14)" class="i">ProtocolVersion</span> <span class="o">&lt;-</span> <span onmouseout="hideTip(event, 'fs10', 15)" onmouseover="showTip(event, 'fs10', 15)" class="t">HttpVersion</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs11', 16)" onmouseover="showTip(event, 'fs11', 16)" class="i">Version10</span>
+<span onmouseout="hideTip(event, 'fs6', 17)" onmouseover="showTip(event, 'fs6', 17)" class="i">req</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs12', 18)" onmouseover="showTip(event, 'fs12', 18)" class="i">Method</span> <span class="o">&lt;-</span> <span class="s">&quot;POST&quot;</span>
+
+<span class="c">// Encode body with POST data as array of bytes</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs13', 19)" onmouseover="showTip(event, 'fs13', 19)" class="i">postBytes</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs14', 20)" onmouseover="showTip(event, 'fs14', 20)" class="t">Encoding</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs15', 21)" onmouseover="showTip(event, 'fs15', 21)" class="i">ASCII</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs16', 22)" onmouseover="showTip(event, 'fs16', 22)" class="f">GetBytes</span>(<span class="s">&quot;fname=Tomas&amp;lname=Petricek&quot;</span>)
+<span onmouseout="hideTip(event, 'fs6', 23)" onmouseover="showTip(event, 'fs6', 23)" class="i">req</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs17', 24)" onmouseover="showTip(event, 'fs17', 24)" class="i">ContentType</span> <span class="o">&lt;-</span> <span class="s">&quot;application/x-www-form-urlencoded&quot;</span>;
+<span onmouseout="hideTip(event, 'fs6', 25)" onmouseover="showTip(event, 'fs6', 25)" class="i">req</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs18', 26)" onmouseover="showTip(event, 'fs18', 26)" class="i">ContentLength</span> <span class="o">&lt;-</span> <span onmouseout="hideTip(event, 'fs19', 27)" onmouseover="showTip(event, 'fs19', 27)" class="f">int64</span> <span onmouseout="hideTip(event, 'fs13', 28)" onmouseover="showTip(event, 'fs13', 28)" class="i">postBytes</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs20', 29)" onmouseover="showTip(event, 'fs20', 29)" class="i">Length</span>
+<span class="c">// Write data to the request</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs21', 30)" onmouseover="showTip(event, 'fs21', 30)" class="i">reqStream</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs6', 31)" onmouseover="showTip(event, 'fs6', 31)" class="i">req</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs22', 32)" onmouseover="showTip(event, 'fs22', 32)" class="f">GetRequestStream</span>() 
+<span onmouseout="hideTip(event, 'fs21', 33)" onmouseover="showTip(event, 'fs21', 33)" class="i">reqStream</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs23', 34)" onmouseover="showTip(event, 'fs23', 34)" class="f">Write</span>(<span onmouseout="hideTip(event, 'fs13', 35)" onmouseover="showTip(event, 'fs13', 35)" class="i">postBytes</span>, <span class="n">0</span>, <span onmouseout="hideTip(event, 'fs13', 36)" onmouseover="showTip(event, 'fs13', 36)" class="i">postBytes</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs20', 37)" onmouseover="showTip(event, 'fs20', 37)" class="i">Length</span>);
+<span onmouseout="hideTip(event, 'fs21', 38)" onmouseover="showTip(event, 'fs21', 38)" class="i">reqStream</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs24', 39)" onmouseover="showTip(event, 'fs24', 39)" class="f">Close</span>()
+
+<span class="c">// Obtain response and download the resulting page </span>
+<span class="c">// (The sample contains the first &amp; last name from POST data)</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs25', 40)" onmouseover="showTip(event, 'fs25', 40)" class="i">resp</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs6', 41)" onmouseover="showTip(event, 'fs6', 41)" class="i">req</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs26', 42)" onmouseover="showTip(event, 'fs26', 42)" class="f">GetResponse</span>() 
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs27', 43)" onmouseover="showTip(event, 'fs27', 43)" class="i">stream</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs25', 44)" onmouseover="showTip(event, 'fs25', 44)" class="i">resp</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs28', 45)" onmouseover="showTip(event, 'fs28', 45)" class="f">GetResponseStream</span>() 
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs29', 46)" onmouseover="showTip(event, 'fs29', 46)" class="i">reader</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs30', 47)" onmouseover="showTip(event, 'fs30', 47)" class="t">StreamReader</span>(<span onmouseout="hideTip(event, 'fs27', 48)" onmouseover="showTip(event, 'fs27', 48)" class="i">stream</span>) 
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs31', 49)" onmouseover="showTip(event, 'fs31', 49)" class="i">html</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs29', 50)" onmouseover="showTip(event, 'fs29', 50)" class="i">reader</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs32', 51)" onmouseover="showTip(event, 'fs32', 51)" class="f">ReadToEnd</span>()
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace System</div>
+<div class="tip" id="fs2">namespace System.Text</div>
+<div class="tip" id="fs3">namespace System.IO</div>
+<div class="tip" id="fs4">namespace System.Net</div>
+<div class="tip" id="fs5">val url : string<br /><br />Full name: Script.url</div>
+<div class="tip" id="fs6">val req : HttpWebRequest<br /><br />Full name: Script.req</div>
+<div class="tip" id="fs7">type HttpWebRequest =<br />&#160;&#160;inherit WebRequest<br />&#160;&#160;member Abort : unit -&gt; unit<br />&#160;&#160;member Accept : string with get, set<br />&#160;&#160;member AddRange : range:int -&gt; unit + 7 overloads<br />&#160;&#160;member Address : Uri<br />&#160;&#160;member AllowAutoRedirect : bool with get, set<br />&#160;&#160;member AllowWriteStreamBuffering : bool with get, set<br />&#160;&#160;member AutomaticDecompression : DecompressionMethods with get, set<br />&#160;&#160;member BeginGetRequestStream : callback:AsyncCallback * state:obj -&gt; IAsyncResult<br />&#160;&#160;member BeginGetResponse : callback:AsyncCallback * state:obj -&gt; IAsyncResult<br />&#160;&#160;member ClientCertificates : X509CertificateCollection with get, set<br />&#160;&#160;...<br /><br />Full name: System.Net.HttpWebRequest</div>
+<div class="tip" id="fs8">WebRequest.Create(requestUri: System.Uri) : WebRequest<br />WebRequest.Create(requestUriString: string) : WebRequest</div>
+<div class="tip" id="fs9">property HttpWebRequest.ProtocolVersion: System.Version</div>
+<div class="tip" id="fs10">Multiple items<br />type HttpVersion =<br />&#160;&#160;new : unit -&gt; HttpVersion<br />&#160;&#160;static val Version10 : Version<br />&#160;&#160;static val Version11 : Version<br /><br />Full name: System.Net.HttpVersion<br /><br />--------------------<br />HttpVersion() : unit</div>
+<div class="tip" id="fs11">field HttpVersion.Version10</div>
+<div class="tip" id="fs12">property HttpWebRequest.Method: string</div>
+<div class="tip" id="fs13">val postBytes : byte []<br /><br />Full name: Script.postBytes</div>
+<div class="tip" id="fs14">type Encoding =<br />&#160;&#160;member BodyName : string<br />&#160;&#160;member Clone : unit -&gt; obj<br />&#160;&#160;member CodePage : int<br />&#160;&#160;member DecoderFallback : DecoderFallback with get, set<br />&#160;&#160;member EncoderFallback : EncoderFallback with get, set<br />&#160;&#160;member EncodingName : string<br />&#160;&#160;member Equals : value:obj -&gt; bool<br />&#160;&#160;member GetByteCount : chars:char[] -&gt; int + 3 overloads<br />&#160;&#160;member GetBytes : chars:char[] -&gt; byte[] + 5 overloads<br />&#160;&#160;member GetCharCount : bytes:byte[] -&gt; int + 2 overloads<br />&#160;&#160;...<br /><br />Full name: System.Text.Encoding</div>
+<div class="tip" id="fs15">property Encoding.ASCII: Encoding</div>
+<div class="tip" id="fs16">Encoding.GetBytes(s: string) : byte []<br />Encoding.GetBytes(chars: char []) : byte []<br />Encoding.GetBytes(chars: char [], index: int, count: int) : byte []<br />Encoding.GetBytes(chars: nativeptr&lt;char&gt;, charCount: int, bytes: nativeptr&lt;byte&gt;, byteCount: int) : int<br />Encoding.GetBytes(s: string, charIndex: int, charCount: int, bytes: byte [], byteIndex: int) : int<br />Encoding.GetBytes(chars: char [], charIndex: int, charCount: int, bytes: byte [], byteIndex: int) : int</div>
+<div class="tip" id="fs17">property HttpWebRequest.ContentType: string</div>
+<div class="tip" id="fs18">property HttpWebRequest.ContentLength: int64</div>
+<div class="tip" id="fs19">Multiple items<br />val int64 : value:&#39;T -&gt; int64 (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.int64<br /><br />--------------------<br />type int64 = System.Int64<br /><br />Full name: Microsoft.FSharp.Core.int64<br /><br />--------------------<br />type int64&lt;&#39;Measure&gt; = int64<br /><br />Full name: Microsoft.FSharp.Core.int64&lt;_&gt;</div>
+<div class="tip" id="fs20">property System.Array.Length: int</div>
+<div class="tip" id="fs21">val reqStream : Stream<br /><br />Full name: Script.reqStream</div>
+<div class="tip" id="fs22">HttpWebRequest.GetRequestStream() : Stream<br />HttpWebRequest.GetRequestStream(context: byref&lt;TransportContext&gt;) : Stream</div>
+<div class="tip" id="fs23">Stream.Write(buffer: byte [], offset: int, count: int) : unit</div>
+<div class="tip" id="fs24">Stream.Close() : unit</div>
+<div class="tip" id="fs25">val resp : WebResponse<br /><br />Full name: Script.resp</div>
+<div class="tip" id="fs26">HttpWebRequest.GetResponse() : WebResponse</div>
+<div class="tip" id="fs27">val stream : Stream<br /><br />Full name: Script.stream</div>
+<div class="tip" id="fs28">WebResponse.GetResponseStream() : Stream</div>
+<div class="tip" id="fs29">val reader : StreamReader<br /><br />Full name: Script.reader</div>
+<div class="tip" id="fs30">Multiple items<br />type StreamReader =<br />&#160;&#160;inherit TextReader<br />&#160;&#160;new : stream:Stream -&gt; StreamReader + 9 overloads<br />&#160;&#160;member BaseStream : Stream<br />&#160;&#160;member Close : unit -&gt; unit<br />&#160;&#160;member CurrentEncoding : Encoding<br />&#160;&#160;member DiscardBufferedData : unit -&gt; unit<br />&#160;&#160;member EndOfStream : bool<br />&#160;&#160;member Peek : unit -&gt; int<br />&#160;&#160;member Read : unit -&gt; int + 1 overload<br />&#160;&#160;member ReadLine : unit -&gt; string<br />&#160;&#160;member ReadToEnd : unit -&gt; string<br />&#160;&#160;...<br /><br />Full name: System.IO.StreamReader<br /><br />--------------------<br />StreamReader(stream: Stream) : unit<br />StreamReader(path: string) : unit<br />StreamReader(stream: Stream, detectEncodingFromByteOrderMarks: bool) : unit<br />StreamReader(stream: Stream, encoding: Encoding) : unit<br />StreamReader(path: string, detectEncodingFromByteOrderMarks: bool) : unit<br />StreamReader(path: string, encoding: Encoding) : unit<br />StreamReader(stream: Stream, encoding: Encoding, detectEncodingFromByteOrderMarks: bool) : unit<br />StreamReader(path: string, encoding: Encoding, detectEncodingFromByteOrderMarks: bool) : unit<br />StreamReader(stream: Stream, encoding: Encoding, detectEncodingFromByteOrderMarks: bool, bufferSize: int) : unit<br />StreamReader(path: string, encoding: Encoding, detectEncodingFromByteOrderMarks: bool, bufferSize: int) : unit</div>
+<div class="tip" id="fs31">val html : string<br /><br />Full name: Script.html</div>
+<div class="tip" id="fs32">StreamReader.ReadToEnd() : string</div>
+

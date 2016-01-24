@@ -1,0 +1,47 @@
+// Trying to make an SQLite version of 
+// https://github.com/theimowski/SuaveMusicStore/blob/master/Db.fs
+
+
+module SreyasMusicStore.Db
+
+open FSharp.Data.Sql
+
+
+// create a type alias with the connection string and database vendor settings
+type mSql = SqlDataProvider< 
+              ConnectionString = @"Data Source=C:\Users\labuser\Documents\Projects\SreyasMusicStore\MySMS.db ;Version=3",
+              DatabaseVendor = Common.DatabaseProviderTypes.SQLITE,
+              ResolutionPath = @"C:\Users\labuser\Documents\Projects\SreyasMusicStore\packages\SQLProvider.0.0.9-alpha\docs\sqlite",  // @"F:\sqlite\3",
+              IndividualsAmount = 1000,
+              UseOptionTypes = true 
+            >
+
+type DbContext = mSql.dataContext
+type Album = DbContext.``[main].[Albums]Entity`` // .``[dbo].[Albums]Entity``
+type Genre = DbContext.``[main].[Genres]Entity``
+//type AlbumDetails = DbContext.``[main]. // [AlbumDetails]Entity``
+
+let getContext() = mSql.GetDataContext()
+
+let firstOrNone s = s |> Seq.tryFind (fun _ -> true)
+
+let getAlbums (ctx : DbContext) : Album list =
+    ctx.``[main].[Albums]`` |> Seq.toList
+
+
+let getGenres (ctx : DbContext) : Genre list =
+    ctx.``[main].[Genres]`` |> Seq.toList
+
+let getAlbumsForGenre genreName (ctx : DbContext) : Album list =
+    query {
+        for album in ctx.``[main].[Albums]`` do
+            join genre in ctx.``[main].[Genres]``  on ( album.GenreId = genre.GenreId )
+                where ( genre.Name = genreName )
+                select album
+    }
+    |> Seq.toList
+
+
+// C:\Users\labuser\Documents\Projects\SreyasMusicStore\Db.fs(13,13): Error FS3097: Incorrect syntax for 'join'. Usage: join var in collection on (outerKey = innerKey). Note that parentheses are required after 'on'. (FS3097) (SreyasMusicStore)
+
+// C:\Users\labuser\Documents\Projects\SreyasMusicStore\Db.fs(13,13): Error FS3098: 'join' must come after a 'for' selection clause and be followed by the rest of the query. Syntax: ... join var in collection on (outerKey = innerKey). Note that parentheses are required after 'on' ... (FS3098) (SreyasMusicStore)

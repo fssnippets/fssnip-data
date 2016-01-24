@@ -1,0 +1,101 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">type</span> <span class="t">loop</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">a</span>,<span class="o">&#39;</span><span class="i">b</span><span class="o">&gt;</span> <span class="o">=</span>
+    | <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="p">Return</span> <span class="k">of</span> <span class="o">&#39;</span><span class="i">a</span>
+    | <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="p">Loop</span> <span class="k">of</span> <span class="o">&#39;</span><span class="i">b</span>
+ 
+<span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="f">loop</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="i">vars</span> <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="f">f</span> <span class="o">=</span>
+    <span class="k">match</span> <span onmouseout="hideTip(event, 'fs5', 6)" onmouseover="showTip(event, 'fs5', 6)" class="f">f</span> <span onmouseout="hideTip(event, 'fs4', 7)" onmouseover="showTip(event, 'fs4', 7)" class="i">vars</span> <span class="k">with</span>
+    | <span onmouseout="hideTip(event, 'fs1', 8)" onmouseover="showTip(event, 'fs1', 8)" class="p">Return</span> <span onmouseout="hideTip(event, 'fs6', 9)" onmouseover="showTip(event, 'fs6', 9)" class="i">result</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs6', 10)" onmouseover="showTip(event, 'fs6', 10)" class="i">result</span>
+    | <span onmouseout="hideTip(event, 'fs2', 11)" onmouseover="showTip(event, 'fs2', 11)" class="p">Loop</span> <span onmouseout="hideTip(event, 'fs4', 12)" onmouseover="showTip(event, 'fs4', 12)" class="i">vars</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs3', 13)" onmouseover="showTip(event, 'fs3', 13)" class="f">loop</span> <span onmouseout="hideTip(event, 'fs4', 14)" onmouseover="showTip(event, 'fs4', 14)" class="i">vars</span> <span onmouseout="hideTip(event, 'fs5', 15)" onmouseover="showTip(event, 'fs5', 15)" class="f">f</span>
+ 
+<span class="c">//Examples:</span>
+ 
+<span class="c">//input lists</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs7', 16)" onmouseover="showTip(event, 'fs7', 16)" class="i">xl</span>, <span onmouseout="hideTip(event, 'fs8', 17)" onmouseover="showTip(event, 'fs8', 17)" class="i">yl</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs9', 18)" onmouseover="showTip(event, 'fs9', 18)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs10', 19)" onmouseover="showTip(event, 'fs10', 19)" class="f">init</span> (<span class="n">2000000</span>) <span onmouseout="hideTip(event, 'fs11', 20)" onmouseover="showTip(event, 'fs11', 20)" class="f">id</span>, <span onmouseout="hideTip(event, 'fs9', 21)" onmouseover="showTip(event, 'fs9', 21)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs10', 22)" onmouseover="showTip(event, 'fs10', 22)" class="f">init</span> (<span class="n">2000000</span>) (<span class="o">~-</span>)
+ 
+<span class="c">//merge xl and yl using loop abstraction</span>
+<span class="c">//fastest run: Real: 00:00:00.921, CPU: 00:00:00.921, GC gen0: 21, gen1: 12, gen2: 0</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs12', 23)" onmouseover="showTip(event, 'fs12', 23)" class="i">merge</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs3', 24)" onmouseover="showTip(event, 'fs3', 24)" class="f">loop</span> (<span onmouseout="hideTip(event, 'fs7', 25)" onmouseover="showTip(event, 'fs7', 25)" class="i">xl</span>, <span onmouseout="hideTip(event, 'fs8', 26)" onmouseover="showTip(event, 'fs8', 26)" class="i">yl</span>, []) (<span class="k">fun</span> (<span onmouseout="hideTip(event, 'fs13', 27)" onmouseover="showTip(event, 'fs13', 27)" class="i">xl</span>,<span onmouseout="hideTip(event, 'fs14', 28)" onmouseover="showTip(event, 'fs14', 28)" class="i">yl</span>,<span onmouseout="hideTip(event, 'fs15', 29)" onmouseover="showTip(event, 'fs15', 29)" class="i">acc</span>) <span class="k">-&gt;</span>
+    <span class="k">match</span> <span onmouseout="hideTip(event, 'fs13', 30)" onmouseover="showTip(event, 'fs13', 30)" class="i">xl</span>, <span onmouseout="hideTip(event, 'fs14', 31)" onmouseover="showTip(event, 'fs14', 31)" class="i">yl</span> <span class="k">with</span>
+    | [], _ | _, [] <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs1', 32)" onmouseover="showTip(event, 'fs1', 32)" class="p">Return</span> <span onmouseout="hideTip(event, 'fs15', 33)" onmouseover="showTip(event, 'fs15', 33)" class="i">acc</span> <span class="c">//ommitting reversal of acc to keep time stats pure</span>
+    | <span onmouseout="hideTip(event, 'fs16', 34)" onmouseover="showTip(event, 'fs16', 34)" class="i">x</span><span class="o">::</span><span onmouseout="hideTip(event, 'fs13', 35)" onmouseover="showTip(event, 'fs13', 35)" class="i">xl</span>, <span onmouseout="hideTip(event, 'fs17', 36)" onmouseover="showTip(event, 'fs17', 36)" class="i">y</span><span class="o">::</span><span onmouseout="hideTip(event, 'fs14', 37)" onmouseover="showTip(event, 'fs14', 37)" class="i">yl</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs2', 38)" onmouseover="showTip(event, 'fs2', 38)" class="p">Loop</span>(<span onmouseout="hideTip(event, 'fs13', 39)" onmouseover="showTip(event, 'fs13', 39)" class="i">xl</span>,<span onmouseout="hideTip(event, 'fs14', 40)" onmouseover="showTip(event, 'fs14', 40)" class="i">yl</span>,(<span onmouseout="hideTip(event, 'fs16', 41)" onmouseover="showTip(event, 'fs16', 41)" class="i">x</span>,<span onmouseout="hideTip(event, 'fs17', 42)" onmouseover="showTip(event, 'fs17', 42)" class="i">y</span>)<span class="o">::</span><span onmouseout="hideTip(event, 'fs15', 43)" onmouseover="showTip(event, 'fs15', 43)" class="i">acc</span>))
+ 
+<span class="c">//merge xl and yl using traditional pattern.</span>
+<span class="c">//fastest run: Real: 00:00:00.434, CPU: 00:00:00.437, GC gen0: 11, gen1: 7, gen2: 0</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs18', 44)" onmouseover="showTip(event, 'fs18', 44)" class="i">merge_traditional</span> <span class="o">=</span>
+    <span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs19', 45)" onmouseover="showTip(event, 'fs19', 45)" class="f">loop</span> <span onmouseout="hideTip(event, 'fs20', 46)" onmouseover="showTip(event, 'fs20', 46)" class="i">xl</span> <span onmouseout="hideTip(event, 'fs21', 47)" onmouseover="showTip(event, 'fs21', 47)" class="i">yl</span> <span onmouseout="hideTip(event, 'fs22', 48)" onmouseover="showTip(event, 'fs22', 48)" class="i">acc</span> <span class="o">=</span>
+        <span class="k">match</span> <span onmouseout="hideTip(event, 'fs20', 49)" onmouseover="showTip(event, 'fs20', 49)" class="i">xl</span>, <span onmouseout="hideTip(event, 'fs21', 50)" onmouseover="showTip(event, 'fs21', 50)" class="i">yl</span> <span class="k">with</span>
+        | [], _ | _, [] <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs22', 51)" onmouseover="showTip(event, 'fs22', 51)" class="i">acc</span> <span class="c">//ommitting reversal of acc to keep time stats pure</span>
+        | <span onmouseout="hideTip(event, 'fs23', 52)" onmouseover="showTip(event, 'fs23', 52)" class="i">x</span><span class="o">::</span><span onmouseout="hideTip(event, 'fs20', 53)" onmouseover="showTip(event, 'fs20', 53)" class="i">xl</span>, <span onmouseout="hideTip(event, 'fs24', 54)" onmouseover="showTip(event, 'fs24', 54)" class="i">y</span><span class="o">::</span><span onmouseout="hideTip(event, 'fs21', 55)" onmouseover="showTip(event, 'fs21', 55)" class="i">yl</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs19', 56)" onmouseover="showTip(event, 'fs19', 56)" class="f">loop</span> <span onmouseout="hideTip(event, 'fs20', 57)" onmouseover="showTip(event, 'fs20', 57)" class="i">xl</span> <span onmouseout="hideTip(event, 'fs21', 58)" onmouseover="showTip(event, 'fs21', 58)" class="i">yl</span> ((<span onmouseout="hideTip(event, 'fs23', 59)" onmouseover="showTip(event, 'fs23', 59)" class="i">x</span>,<span onmouseout="hideTip(event, 'fs24', 60)" onmouseover="showTip(event, 'fs24', 60)" class="i">y</span>)<span class="o">::</span><span onmouseout="hideTip(event, 'fs22', 61)" onmouseover="showTip(event, 'fs22', 61)" class="i">acc</span>)
+    <span onmouseout="hideTip(event, 'fs19', 62)" onmouseover="showTip(event, 'fs19', 62)" class="f">loop</span> <span onmouseout="hideTip(event, 'fs20', 63)" onmouseover="showTip(event, 'fs20', 63)" class="i">xl</span> <span onmouseout="hideTip(event, 'fs8', 64)" onmouseover="showTip(event, 'fs8', 64)" class="i">yl</span> []
+
+<span class="c">//merge using a possible built-in language feature:</span>
+<span class="c">//let merge = </span>
+<span class="c">//    loop xl=xl yl=yl acc=[] with</span>
+<span class="c">//        match xl, yl with</span>
+<span class="c">//        | [], _ | _, [] -&gt; acc</span>
+<span class="c">//        | x::xl, y::yl -&gt; loop xl yl ((x,y)::acc)</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">union case loop.Return: &#39;a -&gt; loop&lt;&#39;a,&#39;b&gt;</div>
+<div class="tip" id="fs2">union case loop.Loop: &#39;b -&gt; loop&lt;&#39;a,&#39;b&gt;</div>
+<div class="tip" id="fs3">Multiple items<br />val loop : vars:&#39;a -&gt; f:(&#39;a -&gt; loop&lt;&#39;b,&#39;a&gt;) -&gt; &#39;b<br /><br />Full name: Script.loop<br /><br />--------------------<br />type loop&lt;&#39;a,&#39;b&gt; =<br />&#160;&#160;| Return of &#39;a<br />&#160;&#160;| Loop of &#39;b<br /><br />Full name: Script.loop&lt;_,_&gt;</div>
+<div class="tip" id="fs4">val vars : &#39;a</div>
+<div class="tip" id="fs5">val f : (&#39;a -&gt; loop&lt;&#39;b,&#39;a&gt;)</div>
+<div class="tip" id="fs6">val result : &#39;b</div>
+<div class="tip" id="fs7">val xl : int list<br /><br />Full name: Script.xl</div>
+<div class="tip" id="fs8">val yl : int list<br /><br />Full name: Script.yl</div>
+<div class="tip" id="fs9">Multiple items<br />module List<br /><br />from Microsoft.FSharp.Collections<br /><br />--------------------<br />type List&lt;&#39;T&gt; =<br />&#160;&#160;| ( [] )<br />&#160;&#160;| ( :: ) of Head: &#39;T * Tail: &#39;T list<br />&#160;&#160;interface IEnumerable<br />&#160;&#160;interface IEnumerable&lt;&#39;T&gt;<br />&#160;&#160;member Head : &#39;T<br />&#160;&#160;member IsEmpty : bool<br />&#160;&#160;member Item : index:int -&gt; &#39;T with get<br />&#160;&#160;member Length : int<br />&#160;&#160;member Tail : &#39;T list<br />&#160;&#160;static member Cons : head:&#39;T * tail:&#39;T list -&gt; &#39;T list<br />&#160;&#160;static member Empty : &#39;T list<br /><br />Full name: Microsoft.FSharp.Collections.List&lt;_&gt;</div>
+<div class="tip" id="fs10">val init : length:int -&gt; initializer:(int -&gt; &#39;T) -&gt; &#39;T list<br /><br />Full name: Microsoft.FSharp.Collections.List.init</div>
+<div class="tip" id="fs11">val id : x:&#39;T -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.Operators.id</div>
+<div class="tip" id="fs12">val merge : (int * int) list<br /><br />Full name: Script.merge</div>
+<div class="tip" id="fs13">val xl : int list</div>
+<div class="tip" id="fs14">val yl : int list</div>
+<div class="tip" id="fs15">val acc : (int * int) list</div>
+<div class="tip" id="fs16">val x : int</div>
+<div class="tip" id="fs17">val y : int</div>
+<div class="tip" id="fs18">val merge_traditional : (int * int) list<br /><br />Full name: Script.merge_traditional</div>
+<div class="tip" id="fs19">Multiple items<br />val loop : (&#39;a list -&gt; &#39;b list -&gt; (&#39;a * &#39;b) list -&gt; (&#39;a * &#39;b) list)<br /><br />--------------------<br />type loop&lt;&#39;a,&#39;b&gt; =<br />&#160;&#160;| Return of &#39;a<br />&#160;&#160;| Loop of &#39;b<br /><br />Full name: Script.loop&lt;_,_&gt;</div>
+<div class="tip" id="fs20">val xl : &#39;a list</div>
+<div class="tip" id="fs21">val yl : &#39;b list</div>
+<div class="tip" id="fs22">val acc : (&#39;a * &#39;b) list</div>
+<div class="tip" id="fs23">val x : &#39;a</div>
+<div class="tip" id="fs24">val y : &#39;b</div>
+

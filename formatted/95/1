@@ -1,0 +1,120 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+<span class="l">38: </span>
+<span class="l">39: </span>
+<span class="l">40: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">Threading</span>
+
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="t">Atom</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">a</span> <span class="k">when</span> <span class="o">&#39;</span><span class="i">a</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="i">not</span> <span class="k">struct</span><span class="o">&gt;</span>(<span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="i">value</span> <span class="o">:</span> <span class="o">&#39;</span><span class="i">a</span>) <span class="o">=</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="v">refCell</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs7', 7)" onmouseover="showTip(event, 'fs7', 7)" class="f">ref</span> <span onmouseout="hideTip(event, 'fs5', 8)" onmouseover="showTip(event, 'fs5', 8)" class="i">value</span>
+    
+    <span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs8', 9)" onmouseover="showTip(event, 'fs8', 9)" class="f">swap</span> <span onmouseout="hideTip(event, 'fs9', 10)" onmouseover="showTip(event, 'fs9', 10)" class="f">f</span> <span class="o">=</span> 
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs10', 11)" onmouseover="showTip(event, 'fs10', 11)" class="i">currentValue</span> <span class="o">=</span> <span class="o">!</span><span onmouseout="hideTip(event, 'fs6', 12)" onmouseover="showTip(event, 'fs6', 12)" class="v">refCell</span>
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs11', 13)" onmouseover="showTip(event, 'fs11', 13)" class="i">result</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs12', 14)" onmouseover="showTip(event, 'fs12', 14)" class="t">Interlocked</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs13', 15)" onmouseover="showTip(event, 'fs13', 15)" class="f">CompareExchange</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">a</span><span class="o">&gt;</span>(<span onmouseout="hideTip(event, 'fs6', 16)" onmouseover="showTip(event, 'fs6', 16)" class="v">refCell</span>, <span onmouseout="hideTip(event, 'fs9', 17)" onmouseover="showTip(event, 'fs9', 17)" class="f">f</span> <span onmouseout="hideTip(event, 'fs10', 18)" onmouseover="showTip(event, 'fs10', 18)" class="i">currentValue</span>, <span onmouseout="hideTip(event, 'fs10', 19)" onmouseover="showTip(event, 'fs10', 19)" class="i">currentValue</span>)
+        <span class="k">if</span> <span onmouseout="hideTip(event, 'fs14', 20)" onmouseover="showTip(event, 'fs14', 20)" class="t">obj</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs15', 21)" onmouseover="showTip(event, 'fs15', 21)" class="f">ReferenceEquals</span>(<span onmouseout="hideTip(event, 'fs11', 22)" onmouseover="showTip(event, 'fs11', 22)" class="i">result</span>, <span onmouseout="hideTip(event, 'fs10', 23)" onmouseover="showTip(event, 'fs10', 23)" class="i">currentValue</span>) <span class="k">then</span> ()
+        <span class="k">else</span> <span onmouseout="hideTip(event, 'fs16', 24)" onmouseover="showTip(event, 'fs16', 24)" class="t">Thread</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs17', 25)" onmouseover="showTip(event, 'fs17', 25)" class="f">SpinWait</span> <span class="n">20</span>; <span onmouseout="hideTip(event, 'fs8', 26)" onmouseover="showTip(event, 'fs8', 26)" class="f">swap</span> <span onmouseout="hideTip(event, 'fs9', 27)" onmouseover="showTip(event, 'fs9', 27)" class="f">f</span>
+        
+    <span class="k">member</span> <span onmouseout="hideTip(event, 'fs18', 28)" onmouseover="showTip(event, 'fs18', 28)" class="i">self</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs19', 29)" onmouseover="showTip(event, 'fs19', 29)" class="i">Value</span> <span class="k">with</span> <span class="i">get</span>() <span class="o">=</span> <span class="o">!</span><span onmouseout="hideTip(event, 'fs6', 30)" onmouseover="showTip(event, 'fs6', 30)" class="v">refCell</span>
+    <span class="k">member</span> <span onmouseout="hideTip(event, 'fs18', 31)" onmouseover="showTip(event, 'fs18', 31)" class="i">self</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs20', 32)" onmouseover="showTip(event, 'fs20', 32)" class="f">Swap</span> (<span onmouseout="hideTip(event, 'fs9', 33)" onmouseover="showTip(event, 'fs9', 33)" class="f">f</span> <span class="o">:</span> <span class="o">&#39;</span><span class="i">a</span> <span class="k">-&gt;</span> <span class="o">&#39;</span><span class="i">a</span>) <span class="o">=</span> <span onmouseout="hideTip(event, 'fs8', 34)" onmouseover="showTip(event, 'fs8', 34)" class="f">swap</span> <span onmouseout="hideTip(event, 'fs9', 35)" onmouseover="showTip(event, 'fs9', 35)" class="f">f</span>
+        
+    
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs21', 36)" onmouseover="showTip(event, 'fs21', 36)" class="f">atom</span> <span onmouseout="hideTip(event, 'fs5', 37)" onmouseover="showTip(event, 'fs5', 37)" class="i">value</span> <span class="o">=</span> 
+    <span class="k">new</span> <span onmouseout="hideTip(event, 'fs3', 38)" onmouseover="showTip(event, 'fs3', 38)" class="t">Atom</span><span class="o">&lt;</span>_<span class="o">&gt;</span>(<span onmouseout="hideTip(event, 'fs5', 39)" onmouseover="showTip(event, 'fs5', 39)" class="i">value</span>)
+    
+<span class="k">let</span> (<span class="o">!</span>) (<span onmouseout="hideTip(event, 'fs22', 40)" onmouseover="showTip(event, 'fs22', 40)" class="i">atom</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs3', 41)" onmouseover="showTip(event, 'fs3', 41)" class="t">Atom</span><span class="o">&lt;</span>_<span class="o">&gt;</span>) <span class="o">=</span>  
+    <span onmouseout="hideTip(event, 'fs22', 42)" onmouseover="showTip(event, 'fs22', 42)" class="i">atom</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs23', 43)" onmouseover="showTip(event, 'fs23', 43)" class="i">Value</span>
+    
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs24', 44)" onmouseover="showTip(event, 'fs24', 44)" class="f">swap</span> (<span onmouseout="hideTip(event, 'fs22', 45)" onmouseover="showTip(event, 'fs22', 45)" class="i">atom</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs3', 46)" onmouseover="showTip(event, 'fs3', 46)" class="t">Atom</span><span class="o">&lt;</span>_<span class="o">&gt;</span>) (<span onmouseout="hideTip(event, 'fs9', 47)" onmouseover="showTip(event, 'fs9', 47)" class="f">f</span> <span class="o">:</span> _ <span class="k">-&gt;</span> _) <span class="o">=</span>
+    <span onmouseout="hideTip(event, 'fs22', 48)" onmouseover="showTip(event, 'fs22', 48)" class="i">atom</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs25', 49)" onmouseover="showTip(event, 'fs25', 49)" class="f">Swap</span> <span onmouseout="hideTip(event, 'fs9', 50)" onmouseover="showTip(event, 'fs9', 50)" class="f">f</span>
+
+<span class="c">// example</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs26', 51)" onmouseover="showTip(event, 'fs26', 51)" class="i">counter</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs21', 52)" onmouseover="showTip(event, 'fs21', 52)" class="f">atom</span> (<span class="k">fun</span> () <span class="k">-&gt;</span> <span class="n">0</span>)
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs27', 53)" onmouseover="showTip(event, 'fs27', 53)" class="i">listOfIncrementAsync</span> <span class="o">=</span> 
+  [ <span class="k">for</span> _ <span class="k">in</span> [<span class="n">1..</span><span class="n">1000000</span>] <span class="k">do</span>
+      <span class="k">yield</span> <span onmouseout="hideTip(event, 'fs28', 54)" onmouseover="showTip(event, 'fs28', 54)" class="i">async</span> { 
+             <span onmouseout="hideTip(event, 'fs24', 55)" onmouseover="showTip(event, 'fs24', 55)" class="f">swap</span> <span onmouseout="hideTip(event, 'fs26', 56)" onmouseover="showTip(event, 'fs26', 56)" class="i">counter</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs29', 57)" onmouseover="showTip(event, 'fs29', 57)" class="f">f</span> <span class="k">-&gt;</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs30', 58)" onmouseover="showTip(event, 'fs30', 58)" class="i">result</span> () <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs30', 59)" onmouseover="showTip(event, 'fs30', 59)" class="i">result</span> <span class="o">+</span> <span class="n">1</span>) <span class="o">&lt;|</span> <span onmouseout="hideTip(event, 'fs29', 60)" onmouseover="showTip(event, 'fs29', 60)" class="f">f</span>()) 
+      } ]
+
+<span onmouseout="hideTip(event, 'fs27', 61)" onmouseover="showTip(event, 'fs27', 61)" class="i">listOfIncrementAsync</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs31', 62)" onmouseover="showTip(event, 'fs31', 62)" class="t">Async</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs32', 63)" onmouseover="showTip(event, 'fs32', 63)" class="f">Parallel</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs31', 64)" onmouseover="showTip(event, 'fs31', 64)" class="t">Async</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs33', 65)" onmouseover="showTip(event, 'fs33', 65)" class="f">RunSynchronously</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs34', 66)" onmouseover="showTip(event, 'fs34', 66)" class="i">value</span> <span class="o">=</span> (<span class="o">!</span><span onmouseout="hideTip(event, 'fs26', 67)" onmouseover="showTip(event, 'fs26', 67)" class="i">counter</span>)() <span class="c">// returns 1000000</span>
+
+<span onmouseout="hideTip(event, 'fs35', 68)" onmouseover="showTip(event, 'fs35', 68)" class="f">printfn</span> <span class="s">&quot;</span><span class="pf">%d</span><span class="s">&quot;</span> <span onmouseout="hideTip(event, 'fs34', 69)" onmouseover="showTip(event, 'fs34', 69)" class="i">value</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace System</div>
+<div class="tip" id="fs2">namespace System.Threading</div>
+<div class="tip" id="fs3">Multiple items<br />type Atom&lt;&#39;a (requires reference type)&gt; =<br />&#160;&#160;new : value:&#39;a -&gt; Atom&lt;&#39;a&gt;<br />&#160;&#160;member Swap : f:(&#39;a -&gt; &#39;a) -&gt; unit<br />&#160;&#160;member Value : &#39;a<br /><br />Full name: Script.Atom&lt;_&gt;<br /><br />--------------------<br />new : value:&#39;a -&gt; Atom&lt;&#39;a&gt;</div>
+<div class="tip" id="fs4">val not : value:bool -&gt; bool<br /><br />Full name: Microsoft.FSharp.Core.Operators.not</div>
+<div class="tip" id="fs5">val value : &#39;a (requires reference type)</div>
+<div class="tip" id="fs6">val refCell : &#39;a ref (requires reference type)</div>
+<div class="tip" id="fs7">Multiple items<br />val ref : value:&#39;T -&gt; &#39;T ref<br /><br />Full name: Microsoft.FSharp.Core.Operators.ref<br /><br />--------------------<br />type &#39;T ref = Ref&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Core.ref&lt;_&gt;</div>
+<div class="tip" id="fs8">val swap : ((&#39;a -&gt; &#39;a) -&gt; unit) (requires reference type)</div>
+<div class="tip" id="fs9">val f : (&#39;a -&gt; &#39;a) (requires reference type)</div>
+<div class="tip" id="fs10">val currentValue : &#39;a (requires reference type)</div>
+<div class="tip" id="fs11">val result : &#39;a (requires reference type)</div>
+<div class="tip" id="fs12">type Interlocked =<br />&#160;&#160;static member Add : location1:int * value:int -&gt; int + 1 overload<br />&#160;&#160;static member CompareExchange : location1:int * value:int * comparand:int -&gt; int + 6 overloads<br />&#160;&#160;static member Decrement : location:int -&gt; int + 1 overload<br />&#160;&#160;static member Exchange : location1:int * value:int -&gt; int + 6 overloads<br />&#160;&#160;static member Increment : location:int -&gt; int + 1 overload<br />&#160;&#160;static member Read : location:int64 -&gt; int64<br /><br />Full name: System.Threading.Interlocked</div>
+<div class="tip" id="fs13">Interlocked.CompareExchange&lt;&#39;T (requires reference type)&gt;(location1: byref&lt;&#39;T&gt;, value: &#39;T, comparand: &#39;T) : &#39;T<br />Interlocked.CompareExchange(location1: byref&lt;nativeint&gt;, value: nativeint, comparand: nativeint) : nativeint<br />Interlocked.CompareExchange(location1: byref&lt;obj&gt;, value: obj, comparand: obj) : obj<br />Interlocked.CompareExchange(location1: byref&lt;float&gt;, value: float, comparand: float) : float<br />Interlocked.CompareExchange(location1: byref&lt;float32&gt;, value: float32, comparand: float32) : float32<br />Interlocked.CompareExchange(location1: byref&lt;int64&gt;, value: int64, comparand: int64) : int64<br />Interlocked.CompareExchange(location1: byref&lt;int&gt;, value: int, comparand: int) : int</div>
+<div class="tip" id="fs14">type obj = System.Object<br /><br />Full name: Microsoft.FSharp.Core.obj</div>
+<div class="tip" id="fs15">System.Object.ReferenceEquals(objA: obj, objB: obj) : bool</div>
+<div class="tip" id="fs16">Multiple items<br />type Thread =<br />&#160;&#160;inherit CriticalFinalizerObject<br />&#160;&#160;new : start:ThreadStart -&gt; Thread + 3 overloads<br />&#160;&#160;member Abort : unit -&gt; unit + 1 overload<br />&#160;&#160;member ApartmentState : ApartmentState with get, set<br />&#160;&#160;member CurrentCulture : CultureInfo with get, set<br />&#160;&#160;member CurrentUICulture : CultureInfo with get, set<br />&#160;&#160;member DisableComObjectEagerCleanup : unit -&gt; unit<br />&#160;&#160;member ExecutionContext : ExecutionContext<br />&#160;&#160;member GetApartmentState : unit -&gt; ApartmentState<br />&#160;&#160;member GetCompressedStack : unit -&gt; CompressedStack<br />&#160;&#160;member GetHashCode : unit -&gt; int<br />&#160;&#160;...<br /><br />Full name: System.Threading.Thread<br /><br />--------------------<br />Thread(start: ThreadStart) : unit<br />Thread(start: ParameterizedThreadStart) : unit<br />Thread(start: ThreadStart, maxStackSize: int) : unit<br />Thread(start: ParameterizedThreadStart, maxStackSize: int) : unit</div>
+<div class="tip" id="fs17">Thread.SpinWait(iterations: int) : unit</div>
+<div class="tip" id="fs18">val self : Atom&lt;&#39;a&gt; (requires reference type)</div>
+<div class="tip" id="fs19">member Atom.Value : &#39;a<br /><br />Full name: Script.Atom`1.Value</div>
+<div class="tip" id="fs20">member Atom.Swap : f:(&#39;a -&gt; &#39;a) -&gt; unit<br /><br />Full name: Script.Atom`1.Swap</div>
+<div class="tip" id="fs21">val atom : value:&#39;a -&gt; Atom&lt;&#39;a&gt; (requires reference type)<br /><br />Full name: Script.atom</div>
+<div class="tip" id="fs22">val atom : Atom&lt;&#39;a&gt; (requires reference type)</div>
+<div class="tip" id="fs23">property Atom.Value: &#39;a</div>
+<div class="tip" id="fs24">val swap : atom:Atom&lt;&#39;a&gt; -&gt; f:(&#39;a -&gt; &#39;a) -&gt; unit (requires reference type)<br /><br />Full name: Script.swap</div>
+<div class="tip" id="fs25">member Atom.Swap : f:(&#39;a -&gt; &#39;a) -&gt; unit</div>
+<div class="tip" id="fs26">val counter : Atom&lt;(unit -&gt; int)&gt;<br /><br />Full name: Script.counter</div>
+<div class="tip" id="fs27">val listOfIncrementAsync : Async&lt;unit&gt; list<br /><br />Full name: Script.listOfIncrementAsync</div>
+<div class="tip" id="fs28">val async : AsyncBuilder<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.async</div>
+<div class="tip" id="fs29">val f : (unit -&gt; int)</div>
+<div class="tip" id="fs30">val result : int</div>
+<div class="tip" id="fs31">Multiple items<br />type Async<br />static member AsBeginEnd : computation:(&#39;Arg -&gt; Async&lt;&#39;T&gt;) -&gt; (&#39;Arg * AsyncCallback * obj -&gt; IAsyncResult) * (IAsyncResult -&gt; &#39;T) * (IAsyncResult -&gt; unit)<br />static member AwaitEvent : event:IEvent&lt;&#39;Del,&#39;T&gt; * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt; (requires delegate and &#39;Del :&gt; Delegate)<br />static member AwaitIAsyncResult : iar:IAsyncResult * ?millisecondsTimeout:int -&gt; Async&lt;bool&gt;<br />static member AwaitTask : task:Task&lt;&#39;T&gt; -&gt; Async&lt;&#39;T&gt;<br />static member AwaitWaitHandle : waitHandle:WaitHandle * ?millisecondsTimeout:int -&gt; Async&lt;bool&gt;<br />static member CancelDefaultToken : unit -&gt; unit<br />static member Catch : computation:Async&lt;&#39;T&gt; -&gt; Async&lt;Choice&lt;&#39;T,exn&gt;&gt;<br />static member FromBeginEnd : beginAction:(AsyncCallback * obj -&gt; IAsyncResult) * endAction:(IAsyncResult -&gt; &#39;T) * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member FromBeginEnd : arg:&#39;Arg1 * beginAction:(&#39;Arg1 * AsyncCallback * obj -&gt; IAsyncResult) * endAction:(IAsyncResult -&gt; &#39;T) * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member FromBeginEnd : arg1:&#39;Arg1 * arg2:&#39;Arg2 * beginAction:(&#39;Arg1 * &#39;Arg2 * AsyncCallback * obj -&gt; IAsyncResult) * endAction:(IAsyncResult -&gt; &#39;T) * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member FromBeginEnd : arg1:&#39;Arg1 * arg2:&#39;Arg2 * arg3:&#39;Arg3 * beginAction:(&#39;Arg1 * &#39;Arg2 * &#39;Arg3 * AsyncCallback * obj -&gt; IAsyncResult) * endAction:(IAsyncResult -&gt; &#39;T) * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member FromContinuations : callback:((&#39;T -&gt; unit) * (exn -&gt; unit) * (OperationCanceledException -&gt; unit) -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member Ignore : computation:Async&lt;&#39;T&gt; -&gt; Async&lt;unit&gt;<br />static member OnCancel : interruption:(unit -&gt; unit) -&gt; Async&lt;IDisposable&gt;<br />static member Parallel : computations:seq&lt;Async&lt;&#39;T&gt;&gt; -&gt; Async&lt;&#39;T []&gt;<br />static member RunSynchronously : computation:Async&lt;&#39;T&gt; * ?timeout:int * ?cancellationToken:CancellationToken -&gt; &#39;T<br />static member Sleep : millisecondsDueTime:int -&gt; Async&lt;unit&gt;<br />static member Start : computation:Async&lt;unit&gt; * ?cancellationToken:CancellationToken -&gt; unit<br />static member StartAsTask : computation:Async&lt;&#39;T&gt; * ?taskCreationOptions:TaskCreationOptions * ?cancellationToken:CancellationToken -&gt; Task&lt;&#39;T&gt;<br />static member StartChild : computation:Async&lt;&#39;T&gt; * ?millisecondsTimeout:int -&gt; Async&lt;Async&lt;&#39;T&gt;&gt;<br />static member StartChildAsTask : computation:Async&lt;&#39;T&gt; * ?taskCreationOptions:TaskCreationOptions -&gt; Async&lt;Task&lt;&#39;T&gt;&gt;<br />static member StartImmediate : computation:Async&lt;unit&gt; * ?cancellationToken:CancellationToken -&gt; unit<br />static member StartWithContinuations : computation:Async&lt;&#39;T&gt; * continuation:(&#39;T -&gt; unit) * exceptionContinuation:(exn -&gt; unit) * cancellationContinuation:(OperationCanceledException -&gt; unit) * ?cancellationToken:CancellationToken -&gt; unit<br />static member SwitchToContext : syncContext:SynchronizationContext -&gt; Async&lt;unit&gt;<br />static member SwitchToNewThread : unit -&gt; Async&lt;unit&gt;<br />static member SwitchToThreadPool : unit -&gt; Async&lt;unit&gt;<br />static member TryCancelled : computation:Async&lt;&#39;T&gt; * compensation:(OperationCanceledException -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member CancellationToken : Async&lt;CancellationToken&gt;<br />static member DefaultCancellationToken : CancellationToken<br /><br />Full name: Microsoft.FSharp.Control.Async<br /><br />--------------------<br />type Async&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Control.Async&lt;_&gt;</div>
+<div class="tip" id="fs32">static member Async.Parallel : computations:seq&lt;Async&lt;&#39;T&gt;&gt; -&gt; Async&lt;&#39;T []&gt;</div>
+<div class="tip" id="fs33">static member Async.RunSynchronously : computation:Async&lt;&#39;T&gt; * ?timeout:int * ?cancellationToken:CancellationToken -&gt; &#39;T</div>
+<div class="tip" id="fs34">val value : int<br /><br />Full name: Script.value</div>
+<div class="tip" id="fs35">val printfn : format:Printf.TextWriterFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.printfn</div>
+

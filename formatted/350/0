@@ -1,0 +1,85 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp">      <span class="c">//Given any of this kind (record)</span>
+      <span class="k">type</span> <span class="t">product</span> <span class="o">=</span> 
+        {<span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">ProductId</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="t">int</span>;
+         <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="i">ProductName</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="t">string</span>;
+         <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="i">SupplierID</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs2', 6)" onmouseover="showTip(event, 'fs2', 6)" class="t">int</span>;
+         <span onmouseout="hideTip(event, 'fs6', 7)" onmouseover="showTip(event, 'fs6', 7)" class="i">CategoryID</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs2', 8)" onmouseover="showTip(event, 'fs2', 8)" class="t">int</span>;
+         <span onmouseout="hideTip(event, 'fs7', 9)" onmouseover="showTip(event, 'fs7', 9)" class="i">QuantityPerUnit</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs4', 10)" onmouseover="showTip(event, 'fs4', 10)" class="t">string</span>;
+         <span onmouseout="hideTip(event, 'fs8', 11)" onmouseover="showTip(event, 'fs8', 11)" class="i">UnitPrice</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs9', 12)" onmouseover="showTip(event, 'fs9', 12)" class="t">decimal</span>;
+         <span onmouseout="hideTip(event, 'fs10', 13)" onmouseover="showTip(event, 'fs10', 13)" class="i">UnitsInStock</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs2', 14)" onmouseover="showTip(event, 'fs2', 14)" class="t">int</span>;
+         <span onmouseout="hideTip(event, 'fs11', 15)" onmouseover="showTip(event, 'fs11', 15)" class="i">UnitsOnOrder</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs2', 16)" onmouseover="showTip(event, 'fs2', 16)" class="t">int</span>;
+         <span onmouseout="hideTip(event, 'fs12', 17)" onmouseover="showTip(event, 'fs12', 17)" class="i">ReorderLevel</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs2', 18)" onmouseover="showTip(event, 'fs2', 18)" class="t">int</span>;
+         <span onmouseout="hideTip(event, 'fs13', 19)" onmouseover="showTip(event, 'fs13', 19)" class="i">Discontinued</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs14', 20)" onmouseover="showTip(event, 'fs14', 20)" class="t">bool</span>}
+         
+      
+      <span class="c">//Read all records from a table an give an IEnumerable collection as output</span>
+      <span class="k">let</span> <span onmouseout="hideTip(event, 'fs15', 21)" onmouseover="showTip(event, 'fs15', 21)" class="f">getAllRecords</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">a</span><span class="o">&gt;</span>(<span onmouseout="hideTip(event, 'fs16', 22)" onmouseover="showTip(event, 'fs16', 22)" class="i">tableName</span>) (<span onmouseout="hideTip(event, 'fs17', 23)" onmouseover="showTip(event, 'fs17', 23)" class="i">conn</span>) <span class="o">=</span>
+            <span class="k">use</span> <span onmouseout="hideTip(event, 'fs18', 24)" onmouseover="showTip(event, 'fs18', 24)" class="i">cmd</span> <span class="o">=</span> <span class="k">new</span> <span class="i">SqlCommand</span>((<span class="s">&quot;Select * from &quot;</span> <span class="o">+</span> <span onmouseout="hideTip(event, 'fs16', 25)" onmouseover="showTip(event, 'fs16', 25)" class="i">tableName</span>), <span onmouseout="hideTip(event, 'fs17', 26)" onmouseover="showTip(event, 'fs17', 26)" class="i">conn</span>)
+            <span class="k">use</span> <span onmouseout="hideTip(event, 'fs19', 27)" onmouseover="showTip(event, 'fs19', 27)" class="i">reader</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs18', 28)" onmouseover="showTip(event, 'fs18', 28)" class="i">cmd</span><span class="o">.</span><span class="i">ExecuteReader</span>()
+            <span class="k">let</span> <span onmouseout="hideTip(event, 'fs20', 29)" onmouseover="showTip(event, 'fs20', 29)" class="i">recFields</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs21', 30)" onmouseover="showTip(event, 'fs21', 30)" class="i">typeof</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">a</span><span class="o">&gt;</span><span class="o">.</span><span class="f">GetMembers</span>() <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs22', 31)" onmouseover="showTip(event, 'fs22', 31)" class="t">Array</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs23', 32)" onmouseover="showTip(event, 'fs23', 32)" class="f">filter</span> (<span class="k">fun</span> (<span onmouseout="hideTip(event, 'fs24', 33)" onmouseover="showTip(event, 'fs24', 33)" class="i">f</span><span class="o">:</span><span class="i">MemberInfo</span>) <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs24', 34)" onmouseover="showTip(event, 'fs24', 34)" class="i">f</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs25', 35)" onmouseover="showTip(event, 'fs25', 35)" class="i">MemberType</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs26', 36)" onmouseover="showTip(event, 'fs26', 36)" class="f">ToString</span>() <span class="o">=</span> <span class="s">&quot;Property&quot;</span>)
+            [<span class="k">while</span> <span onmouseout="hideTip(event, 'fs19', 37)" onmouseover="showTip(event, 'fs19', 37)" class="i">reader</span><span class="o">.</span><span class="i">Read</span>() <span class="k">do</span> <span class="k">yield</span> (<span onmouseout="hideTip(event, 'fs20', 38)" onmouseover="showTip(event, 'fs20', 38)" class="i">recFields</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs22', 39)" onmouseover="showTip(event, 'fs22', 39)" class="t">Array</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs27', 40)" onmouseover="showTip(event, 'fs27', 40)" class="f">map</span> (<span class="k">fun</span> (<span onmouseout="hideTip(event, 'fs24', 41)" onmouseover="showTip(event, 'fs24', 41)" class="i">f</span><span class="o">:</span><span class="i">MemberInfo</span>) <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs28', 42)" onmouseover="showTip(event, 'fs28', 42)" class="f">unbox</span> (<span onmouseout="hideTip(event, 'fs19', 43)" onmouseover="showTip(event, 'fs19', 43)" class="i">reader</span><span class="o">.</span>[<span onmouseout="hideTip(event, 'fs24', 44)" onmouseover="showTip(event, 'fs24', 44)" class="i">f</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs29', 45)" onmouseover="showTip(event, 'fs29', 45)" class="i">Name</span>])))] 
+            <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs30', 46)" onmouseover="showTip(event, 'fs30', 46)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs31', 47)" onmouseover="showTip(event, 'fs31', 47)" class="f">map</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs32', 48)" onmouseover="showTip(event, 'fs32', 48)" class="i">oArray</span> <span class="k">-&gt;</span> <span class="i">Activator</span><span class="o">.</span><span class="i">CreateInstance</span>(<span onmouseout="hideTip(event, 'fs21', 49)" onmouseover="showTip(event, 'fs21', 49)" class="i">typeof</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">a</span><span class="o">&gt;</span>, <span onmouseout="hideTip(event, 'fs32', 50)" onmouseover="showTip(event, 'fs32', 50)" class="i">oArray</span>))
+            <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs33', 51)" onmouseover="showTip(event, 'fs33', 51)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs34', 52)" onmouseover="showTip(event, 'fs34', 52)" class="f">ofList</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs33', 53)" onmouseover="showTip(event, 'fs33', 53)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs35', 54)" onmouseover="showTip(event, 'fs35', 54)" class="f">map</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs36', 55)" onmouseover="showTip(event, 'fs36', 55)" class="i">o</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs36', 56)" onmouseover="showTip(event, 'fs36', 56)" class="i">o</span> <span class="o">:?&gt;</span> <span class="o">&#39;</span><span class="i">a</span>)        
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">product.ProductId: int</div>
+<div class="tip" id="fs2">Multiple items<br />val int : value:&#39;T -&gt; int (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.int<br /><br />--------------------<br />type int = int32<br /><br />Full name: Microsoft.FSharp.Core.int<br /><br />--------------------<br />type int&lt;&#39;Measure&gt; = int<br /><br />Full name: Microsoft.FSharp.Core.int&lt;_&gt;</div>
+<div class="tip" id="fs3">product.ProductName: string</div>
+<div class="tip" id="fs4">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />Full name: Microsoft.FSharp.Core.Operators.string<br /><br />--------------------<br />type string = System.String<br /><br />Full name: Microsoft.FSharp.Core.string</div>
+<div class="tip" id="fs5">product.SupplierID: int</div>
+<div class="tip" id="fs6">product.CategoryID: int</div>
+<div class="tip" id="fs7">product.QuantityPerUnit: string</div>
+<div class="tip" id="fs8">product.UnitPrice: decimal</div>
+<div class="tip" id="fs9">Multiple items<br />val decimal : value:&#39;T -&gt; decimal (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.decimal<br /><br />--------------------<br />type decimal = System.Decimal<br /><br />Full name: Microsoft.FSharp.Core.decimal<br /><br />--------------------<br />type decimal&lt;&#39;Measure&gt; = decimal<br /><br />Full name: Microsoft.FSharp.Core.decimal&lt;_&gt;</div>
+<div class="tip" id="fs10">product.UnitsInStock: int</div>
+<div class="tip" id="fs11">product.UnitsOnOrder: int</div>
+<div class="tip" id="fs12">product.ReorderLevel: int</div>
+<div class="tip" id="fs13">product.Discontinued: bool</div>
+<div class="tip" id="fs14">type bool = System.Boolean<br /><br />Full name: Microsoft.FSharp.Core.bool</div>
+<div class="tip" id="fs15">val getAllRecords : tableName:obj -&gt; conn:obj -&gt; seq&lt;&#39;a&gt;<br /><br />Full name: Script.getAllRecords</div>
+<div class="tip" id="fs16">val tableName : obj</div>
+<div class="tip" id="fs17">val conn : obj</div>
+<div class="tip" id="fs18">val cmd : System.IDisposable</div>
+<div class="tip" id="fs19">val reader : System.IDisposable</div>
+<div class="tip" id="fs20">val recFields : System.Reflection.MemberInfo []</div>
+<div class="tip" id="fs21">val typeof&lt;&#39;T&gt; : System.Type<br /><br />Full name: Microsoft.FSharp.Core.Operators.typeof</div>
+<div class="tip" id="fs22">module Array<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs23">val filter : predicate:(&#39;T -&gt; bool) -&gt; array:&#39;T [] -&gt; &#39;T []<br /><br />Full name: Microsoft.FSharp.Collections.Array.filter</div>
+<div class="tip" id="fs24">val f : System.Reflection.MemberInfo</div>
+<div class="tip" id="fs25">property System.Reflection.MemberInfo.MemberType: System.Reflection.MemberTypes</div>
+<div class="tip" id="fs26">System.Enum.ToString() : string<br />System.Enum.ToString(format: string) : string</div>
+<div class="tip" id="fs27">val map : mapping:(&#39;T -&gt; &#39;U) -&gt; array:&#39;T [] -&gt; &#39;U []<br /><br />Full name: Microsoft.FSharp.Collections.Array.map</div>
+<div class="tip" id="fs28">val unbox : value:obj -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.Operators.unbox</div>
+<div class="tip" id="fs29">property System.Reflection.MemberInfo.Name: string</div>
+<div class="tip" id="fs30">Multiple items<br />module List<br /><br />from Microsoft.FSharp.Collections<br /><br />--------------------<br />type List&lt;&#39;T&gt; =<br />&#160;&#160;| ( [] )<br />&#160;&#160;| ( :: ) of Head: &#39;T * Tail: &#39;T list<br />&#160;&#160;interface IEnumerable<br />&#160;&#160;interface IEnumerable&lt;&#39;T&gt;<br />&#160;&#160;member Head : &#39;T<br />&#160;&#160;member IsEmpty : bool<br />&#160;&#160;member Item : index:int -&gt; &#39;T with get<br />&#160;&#160;member Length : int<br />&#160;&#160;member Tail : &#39;T list<br />&#160;&#160;static member Cons : head:&#39;T * tail:&#39;T list -&gt; &#39;T list<br />&#160;&#160;static member Empty : &#39;T list<br /><br />Full name: Microsoft.FSharp.Collections.List&lt;_&gt;</div>
+<div class="tip" id="fs31">val map : mapping:(&#39;T -&gt; &#39;U) -&gt; list:&#39;T list -&gt; &#39;U list<br /><br />Full name: Microsoft.FSharp.Collections.List.map</div>
+<div class="tip" id="fs32">val oArray : obj []</div>
+<div class="tip" id="fs33">module Seq<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs34">val ofList : source:&#39;T list -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.ofList</div>
+<div class="tip" id="fs35">val map : mapping:(&#39;T -&gt; &#39;U) -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;U&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.map</div>
+<div class="tip" id="fs36">val o : obj</div>
+

@@ -1,0 +1,179 @@
+// [snippet:Symbolic Stacktraces]
+open System
+
+/// An exception with appended symbolic stacktrace entries
+type SymbolicException =
+    {
+        Source : Exception
+        Stacktrace : string list
+    }
+
+[<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
+module SymbolicException =
+
+    // See also http://fssnip.net/k1
+
+    open System.Reflection
+
+    /// clones an exception to avoid mutation issues related to the stacktrace
+    let private clone (e : #exn) =
+        let bf = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter()
+        use m = new System.IO.MemoryStream()
+        bf.Serialize(m, e)
+        m.Position <- 0L
+        bf.Deserialize m :?> exn
+
+    let private remoteStackTraceField =
+        let getField name = typeof<System.Exception>.GetField(name, BindingFlags.Instance ||| BindingFlags.NonPublic)
+        match getField "remote_stack_trace" with
+        | null -> getField "_remoteStackTraceString"
+        | f -> f
+
+    /// Captures an exception into a SymbolicException instance
+    let capture (e : exn) = { Source = clone e ; Stacktrace = [] }
+
+    /// appens a line to the symbolic stacktrace
+    let append (line : string) (se : SymbolicException) = 
+        { se with Stacktrace = line :: se.Stacktrace }
+
+    /// Raises exception with its appended symboic stacktrace
+    let raise (se : SymbolicException) =
+        let e' = clone se.Source
+        let stacktrace = 
+            seq { yield e'.StackTrace ; yield! List.rev se.Stacktrace } 
+            |> String.concat Environment.NewLine
+
+        remoteStackTraceField.SetValue(e', stacktrace + Environment.NewLine)
+        raise e'
+
+// [/snippet]
+// [snippet:Monad Implementation]
+type Cont<'T> = 
+    {
+        /// Workflow body
+        Body : ('T -> unit) -> (SymbolicException -> unit) -> unit
+        /// Workflow definition type, if applicable
+        Definition : Type option
+    }
+
+type ContBuilder() =
+    let protect f x = try Choice1Of2 (f x) with e -> Choice2Of2 e
+    let mkCont def bd = { Body = bd ; Definition = def }
+
+    member __.Return t = mkCont None (fun sc _ -> sc t)
+    member __.Zero() = __.Return()
+
+    member __.Delay(f : unit -> Cont<'T>) : Cont<'T> =
+        let def = f.GetType()
+        mkCont (Some def) (fun sc ec ->
+            let sc' t =
+                match protect f () with
+                | Choice1Of2 g -> g.Body sc ec
+                | Choice2Of2 e -> ec (SymbolicException.capture e)
+
+            __.Zero().Body sc' ec)
+
+    member __.Bind(f : Cont<'T>, g : 'T -> Cont<'S>) : Cont<'S> =
+        mkCont None (fun sc ec ->
+            let sc' (t : 'T) =
+                match protect g t with
+                | Choice1Of2 g -> g.Body sc ec
+                | Choice2Of2 e -> ec (SymbolicException.capture e)
+
+            let ec' (se : SymbolicException) =
+                match f.Definition with
+                | None -> ec se
+                | Some def ->
+                    let callSite = g.GetType()
+                    let stackMsg = sprintf "   at %O in %O" def callSite
+                    ec (SymbolicException.append stackMsg se)
+
+            f.Body sc' ec')
+
+    member __.ReturnFrom (f : Cont<'T>) = 
+        match f.Definition with
+        | None -> f
+        | Some df ->
+            { f with Body = fun sc ec ->
+                    let ec' (se : SymbolicException) =
+                        let stackMsg = sprintf "   at %O" df
+                        ec (SymbolicException.append stackMsg se)
+
+                    f.Body sc ec' }
+
+module Cont =
+    let run (cont : Cont<'T>) =
+        let result = ref Unchecked.defaultof<'T>
+        let sc (t : 'T) = result := t
+        let ec se =
+            match cont.Definition with
+            | None -> SymbolicException.raise se
+            | Some def ->
+                let stackMsg = sprintf "   at %O in Cont.run" def
+                se |> SymbolicException.append stackMsg |> SymbolicException.raise
+
+        cont.Body sc ec
+        !result
+
+let cont = new ContBuilder()
+
+// [/snippet]
+// [snippet:Example A]
+
+let rec factorial n = cont {
+    if n = 0 then return failwith "bug!"
+    else
+        let! pd = factorial (n - 1)
+        return n * pd
+}
+
+Cont.run (factorial 5)
+
+///// Stacktace:
+//System.Exception: bug!
+//   at FSI_0009.factorial@132.Invoke(Unit unitVar) in C:\Users\eirik\Desktop\meta2.fsx:line 132
+//   at FSI_0002.ContBuilder.protect[a,b](FSharpFunc`2 f, a x) in C:\Users\eirik\Desktop\meta2.fsx:line 54
+//   at FSI_0009+factorial@132 in FSI_0009+factorial@135-1
+//   at FSI_0009+factorial@132 in FSI_0009+factorial@135-1
+//   at FSI_0009+factorial@132 in FSI_0009+factorial@135-1
+//   at FSI_0009+factorial@132 in FSI_0009+factorial@135-1
+//   at FSI_0009+factorial@132 in FSI_0009+factorial@135-1
+//   at FSI_0009+factorial@132 in Cont.run
+//   at FSI_0002.SymbolicExceptionModule.raise[a](SymbolicException se) in C:\Users\eirik\Desktop\meta2.fsx:line 40
+//   at FSI_0002.Cont.run[T](Cont`1 cont) in C:\Users\eirik\Desktop\meta2.fsx:line 111
+//   at <StartupCode$FSI_0010>.$FSI_0010.main@()
+
+// [/snippet]
+// [snippet:Example B]
+
+let rec odd (n : int) = 
+    cont {
+        if n = 0 then return false
+        else
+            return! even (n - 1)
+    }
+
+and even (n : int) =
+    cont {
+        if n = 0 then return failwith "bug!"
+        else
+            return! odd (n - 1)
+    }
+
+odd 5 |> Cont.run
+
+///// Stacktrace:
+//System.Exception: bug!
+//   at FSI_0011.even@149-3.Invoke(Unit unitVar) in C:\Users\eirik\Desktop\meta2.fsx:line 149
+//   at FSI_0002.ContBuilder.protect[a,b](FSharpFunc`2 f, a x) in C:\Users\eirik\Desktop\meta2.fsx:line 54
+//   at FSI_0011+even@149-3
+//   at FSI_0011+odd@142-3
+//   at FSI_0011+even@149-3
+//   at FSI_0011+odd@142-3
+//   at FSI_0011+even@149-3
+//   at FSI_0011+odd@142-3 in Cont.run
+//   at FSI_0002.SymbolicExceptionModule.raise[a](SymbolicException se) in C:\Users\eirik\Desktop\meta2.fsx:line 40
+//   at FSI_0002.Cont.run[T](Cont`1 cont) in C:\Users\eirik\Desktop\meta2.fsx:line 111
+//   at <StartupCode$FSI_0011>.$FSI_0011.main@()
+//Stopped due to error
+// [/snippet]

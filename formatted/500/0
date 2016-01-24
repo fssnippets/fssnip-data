@@ -1,0 +1,47 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">IO</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="f">FindFilesBiggerThan</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="i">minimumSize</span> <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="i">root</span> <span class="o">=</span>
+  <span class="k">let</span> <span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="i">files</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs7', 7)" onmouseover="showTip(event, 'fs7', 7)" class="t">Directory</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs8', 8)" onmouseover="showTip(event, 'fs8', 8)" class="f">EnumerateFiles</span>(<span onmouseout="hideTip(event, 'fs5', 9)" onmouseover="showTip(event, 'fs5', 9)" class="i">root</span>, <span class="s">&quot;*.*&quot;</span>, <span onmouseout="hideTip(event, 'fs9', 10)" onmouseover="showTip(event, 'fs9', 10)" class="t">SearchOption</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs10', 11)" onmouseover="showTip(event, 'fs10', 11)" class="i">AllDirectories</span>)
+  <span onmouseout="hideTip(event, 'fs11', 12)" onmouseover="showTip(event, 'fs11', 12)" class="i">seq</span> { 
+    <span class="k">for</span> <span onmouseout="hideTip(event, 'fs12', 13)" onmouseover="showTip(event, 'fs12', 13)" class="i">filename</span> <span class="k">in</span> <span onmouseout="hideTip(event, 'fs6', 14)" onmouseover="showTip(event, 'fs6', 14)" class="i">files</span> <span class="k">do</span>
+      <span class="k">let</span> <span onmouseout="hideTip(event, 'fs13', 15)" onmouseover="showTip(event, 'fs13', 15)" class="i">info</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs1', 16)" onmouseover="showTip(event, 'fs1', 16)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 17)" onmouseover="showTip(event, 'fs2', 17)" class="i">IO</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs14', 18)" onmouseover="showTip(event, 'fs14', 18)" class="t">FileInfo</span>(<span onmouseout="hideTip(event, 'fs12', 19)" onmouseover="showTip(event, 'fs12', 19)" class="i">filename</span>)
+      <span class="k">if</span> <span onmouseout="hideTip(event, 'fs13', 20)" onmouseover="showTip(event, 'fs13', 20)" class="i">info</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs15', 21)" onmouseover="showTip(event, 'fs15', 21)" class="i">Length</span> <span class="o">&gt;</span><span class="o">=</span> <span onmouseout="hideTip(event, 'fs4', 22)" onmouseover="showTip(event, 'fs4', 22)" class="i">minimumSize</span> <span class="k">then</span>
+        <span class="k">yield</span> <span onmouseout="hideTip(event, 'fs12', 23)" onmouseover="showTip(event, 'fs12', 23)" class="i">filename</span>
+  }
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs16', 24)" onmouseover="showTip(event, 'fs16', 24)" class="f">GetBigFiles</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs3', 25)" onmouseover="showTip(event, 'fs3', 25)" class="f">FindFilesBiggerThan</span> <span class="n">1000000L</span>
+<span onmouseout="hideTip(event, 'fs16', 26)" onmouseover="showTip(event, 'fs16', 26)" class="f">GetBigFiles</span>(<span class="s">@&quot;C:\Projects&quot;</span>)
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace System</div>
+<div class="tip" id="fs2">namespace System.IO</div>
+<div class="tip" id="fs3">val FindFilesBiggerThan : minimumSize:int64 -&gt; root:string -&gt; seq&lt;string&gt;<br /><br />Full name: Script.FindFilesBiggerThan</div>
+<div class="tip" id="fs4">val minimumSize : int64</div>
+<div class="tip" id="fs5">val root : string</div>
+<div class="tip" id="fs6">val files : System.Collections.Generic.IEnumerable&lt;string&gt;</div>
+<div class="tip" id="fs7">type Directory =<br />&#160;&#160;static member CreateDirectory : path:string -&gt; DirectoryInfo + 1 overload<br />&#160;&#160;static member Delete : path:string -&gt; unit + 1 overload<br />&#160;&#160;static member EnumerateDirectories : path:string -&gt; IEnumerable&lt;string&gt; + 2 overloads<br />&#160;&#160;static member EnumerateFileSystemEntries : path:string -&gt; IEnumerable&lt;string&gt; + 2 overloads<br />&#160;&#160;static member EnumerateFiles : path:string -&gt; IEnumerable&lt;string&gt; + 2 overloads<br />&#160;&#160;static member Exists : path:string -&gt; bool<br />&#160;&#160;static member GetAccessControl : path:string -&gt; DirectorySecurity + 1 overload<br />&#160;&#160;static member GetCreationTime : path:string -&gt; DateTime<br />&#160;&#160;static member GetCreationTimeUtc : path:string -&gt; DateTime<br />&#160;&#160;static member GetCurrentDirectory : unit -&gt; string<br />&#160;&#160;...<br /><br />Full name: System.IO.Directory</div>
+<div class="tip" id="fs8">Directory.EnumerateFiles(path: string) : System.Collections.Generic.IEnumerable&lt;string&gt;<br />Directory.EnumerateFiles(path: string, searchPattern: string) : System.Collections.Generic.IEnumerable&lt;string&gt;<br />Directory.EnumerateFiles(path: string, searchPattern: string, searchOption: SearchOption) : System.Collections.Generic.IEnumerable&lt;string&gt;</div>
+<div class="tip" id="fs9">type SearchOption =<br />&#160;&#160;| TopDirectoryOnly = 0<br />&#160;&#160;| AllDirectories = 1<br /><br />Full name: System.IO.SearchOption</div>
+<div class="tip" id="fs10">field SearchOption.AllDirectories = 1</div>
+<div class="tip" id="fs11">Multiple items<br />val seq : sequence:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Core.Operators.seq<br /><br />--------------------<br />type seq&lt;&#39;T&gt; = System.Collections.Generic.IEnumerable&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.seq&lt;_&gt;</div>
+<div class="tip" id="fs12">val filename : string</div>
+<div class="tip" id="fs13">val info : FileInfo</div>
+<div class="tip" id="fs14">Multiple items<br />type FileInfo =<br />&#160;&#160;inherit FileSystemInfo<br />&#160;&#160;new : fileName:string -&gt; FileInfo<br />&#160;&#160;member AppendText : unit -&gt; StreamWriter<br />&#160;&#160;member CopyTo : destFileName:string -&gt; FileInfo + 1 overload<br />&#160;&#160;member Create : unit -&gt; FileStream<br />&#160;&#160;member CreateText : unit -&gt; StreamWriter<br />&#160;&#160;member Decrypt : unit -&gt; unit<br />&#160;&#160;member Delete : unit -&gt; unit<br />&#160;&#160;member Directory : DirectoryInfo<br />&#160;&#160;member DirectoryName : string<br />&#160;&#160;member Encrypt : unit -&gt; unit<br />&#160;&#160;...<br /><br />Full name: System.IO.FileInfo<br /><br />--------------------<br />FileInfo(fileName: string) : unit</div>
+<div class="tip" id="fs15">property FileInfo.Length: int64</div>
+<div class="tip" id="fs16">val GetBigFiles : (string -&gt; seq&lt;string&gt;)<br /><br />Full name: Script.GetBigFiles</div>
+

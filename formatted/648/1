@@ -1,0 +1,588 @@
+<h2><a name="Ninety-Nine-F-Problems-Problems-54-60-Binary-trees" class="anchor" href="#Ninety-Nine-F-Problems-Problems-54-60-Binary-trees">Ninety-Nine F# Problems - Problems 54 - 60 - Binary trees</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+<span class="l">38: </span>
+<span class="l">39: </span>
+<span class="l">40: </span>
+<span class="l">41: </span>
+<span class="l">42: </span>
+<span class="l">43: </span>
+<span class="l">44: </span>
+<span class="l">45: </span>
+<span class="l">46: </span>
+<span class="l">47: </span>
+<span class="l">48: </span>
+<span class="l">49: </span>
+<span class="l">50: </span>
+<span class="l">51: </span>
+<span class="l">52: </span>
+<span class="l">53: </span>
+<span class="l">54: </span>
+<span class="l">55: </span>
+<span class="l">56: </span>
+<span class="l">57: </span>
+<span class="l">58: </span>
+<span class="l">59: </span>
+<span class="l">60: </span>
+<span class="l">61: </span>
+<span class="l">62: </span>
+<span class="l">63: </span>
+<span class="l">64: </span>
+<span class="l">65: </span>
+<span class="l">66: </span>
+<span class="l">67: </span>
+<span class="l">68: </span>
+<span class="l">69: </span>
+<span class="l">70: </span>
+<span class="l">71: </span>
+<span class="l">72: </span>
+<span class="l">73: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// These are F# solutions of Ninety-Nine Haskell Problems </span>
+<span class="c">/// (http://www.haskell.org/haskellwiki/H-99:_Ninety-Nine_Haskell_Problems), </span>
+<span class="c">/// which are themselves translations of Ninety-Nine Lisp Problems</span>
+<span class="c">/// (http://www.ic.unicamp.br/~meidanis/courses/mc336/2006s2/funcional/L-99_Ninety-Nine_Lisp_Problems.html)</span>
+<span class="c">/// and Ninety-Nine Prolog Problems</span>
+<span class="c">/// (https://sites.google.com/site/prologsite/prolog-problems).</span>
+<span class="c">///</span>
+<span class="c">/// If you would like to contribute a solution or fix any bugs, send </span>
+<span class="c">/// an email to paks at kitiara dot org with the subject &quot;99 F# problems&quot;. </span>
+<span class="c">/// I&#39;ll try to update the problem as soon as possible.</span>
+<span class="c">///</span>
+<span class="c">/// The problems have different levels of difficulty. Those marked with a single asterisk (*) </span>
+<span class="c">/// are easy. If you have successfully solved the preceeding problems you should be able to </span>
+<span class="c">/// solve them within a few (say 15) minutes. Problems marked with two asterisks (**) are of </span>
+<span class="c">/// intermediate difficulty. If you are a skilled F# programmer it shouldn&#39;t take you more than </span>
+<span class="c">/// 30-90 minutes to solve them. Problems marked with three asterisks (***) are more difficult. </span>
+<span class="c">/// You may need more time (i.e. a few hours or more) to find a good solution</span>
+<span class="c">///</span>
+<span class="c">/// Though the problems number from 1 to 99, there are some gaps and some additions marked with </span>
+<span class="c">/// letters. There are actually only 88 problems.</span>
+<span class="c">///</span>
+<span class="c">///  </span>
+<span class="c">/// </span>
+<span class="c">/// A binary tree is either empty or it is composed of a root element and two successors, </span>
+<span class="c">/// which are binary trees themselves.</span>
+<span class="c">/// </span>
+<span class="c">///                              (a)</span>
+<span class="c">///                             /   \</span>
+<span class="c">///                            (b)  (c)</span>
+<span class="c">///                           /  \    \</span>
+<span class="c">///                         (d)  (e)  (f)</span>
+<span class="c">///</span>
+<span class="c">/// In F#, we can characterize binary trees with a type definition: </span>
+<span class="c">/// </span>
+
+<span class="k">type</span> <span class="o">&#39;</span><span class="i">a</span> <span class="t">Tree</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="p">Empty</span> | <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="p">Branch</span> <span class="k">of</span> <span class="o">&#39;</span><span class="i">a</span> <span class="o">*</span> <span class="o">&#39;</span><span class="i">a</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="t">Tree</span> <span class="o">*</span> <span class="o">&#39;</span><span class="i">a</span> <span onmouseout="hideTip(event, 'fs3', 4)" onmouseover="showTip(event, 'fs3', 4)" class="t">Tree</span>
+
+<span class="c">///</span>
+<span class="c">/// This says that a Tree of type a consists of either an Empty node, or a Branch containing one </span>
+<span class="c">/// value of type a with exactly two subtrees of type a.</span>
+<span class="c">///  </span>
+<span class="c">/// Given this definition, the tree in the diagram above would be represented as: </span>
+<span class="c">/// </span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs4', 5)" onmouseover="showTip(event, 'fs4', 5)" class="i">tree1</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs2', 6)" onmouseover="showTip(event, 'fs2', 6)" class="p">Branch</span> (<span class="s">&#39;a&#39;</span>, <span onmouseout="hideTip(event, 'fs2', 7)" onmouseover="showTip(event, 'fs2', 7)" class="p">Branch</span> (<span class="s">&#39;b&#39;</span>, <span onmouseout="hideTip(event, 'fs2', 8)" onmouseover="showTip(event, 'fs2', 8)" class="p">Branch</span> (<span class="s">&#39;d&#39;</span>, <span onmouseout="hideTip(event, 'fs1', 9)" onmouseover="showTip(event, 'fs1', 9)" class="p">Empty</span>, <span onmouseout="hideTip(event, 'fs1', 10)" onmouseover="showTip(event, 'fs1', 10)" class="p">Empty</span>),
+                               <span onmouseout="hideTip(event, 'fs2', 11)" onmouseover="showTip(event, 'fs2', 11)" class="p">Branch</span> (<span class="s">&#39;e&#39;</span>, <span onmouseout="hideTip(event, 'fs1', 12)" onmouseover="showTip(event, 'fs1', 12)" class="p">Empty</span>, <span onmouseout="hideTip(event, 'fs1', 13)" onmouseover="showTip(event, 'fs1', 13)" class="p">Empty</span>)),
+                         <span onmouseout="hideTip(event, 'fs2', 14)" onmouseover="showTip(event, 'fs2', 14)" class="p">Branch</span> (<span class="s">&#39;c&#39;</span>, <span onmouseout="hideTip(event, 'fs1', 15)" onmouseover="showTip(event, 'fs1', 15)" class="p">Empty</span>,
+                               <span onmouseout="hideTip(event, 'fs2', 16)" onmouseover="showTip(event, 'fs2', 16)" class="p">Branch</span> (<span class="s">&#39;f&#39;</span>, <span onmouseout="hideTip(event, 'fs2', 17)" onmouseover="showTip(event, 'fs2', 17)" class="p">Branch</span> (<span class="s">&#39;g&#39;</span>, <span onmouseout="hideTip(event, 'fs1', 18)" onmouseover="showTip(event, 'fs1', 18)" class="p">Empty</span>, <span onmouseout="hideTip(event, 'fs1', 19)" onmouseover="showTip(event, 'fs1', 19)" class="p">Empty</span>),
+                                           <span onmouseout="hideTip(event, 'fs1', 20)" onmouseover="showTip(event, 'fs1', 20)" class="p">Empty</span>))) 
+
+<span class="c">/// Since a &quot;leaf&quot; node is a branch with two empty subtrees, it can be useful to define a </span>
+<span class="c">/// shorthand function:</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs5', 21)" onmouseover="showTip(event, 'fs5', 21)" class="f">leaf</span> <span onmouseout="hideTip(event, 'fs6', 22)" onmouseover="showTip(event, 'fs6', 22)" class="i">x</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs2', 23)" onmouseover="showTip(event, 'fs2', 23)" class="p">Branch</span> (<span onmouseout="hideTip(event, 'fs6', 24)" onmouseover="showTip(event, 'fs6', 24)" class="i">x</span>, <span onmouseout="hideTip(event, 'fs1', 25)" onmouseover="showTip(event, 'fs1', 25)" class="p">Empty</span>, <span onmouseout="hideTip(event, 'fs1', 26)" onmouseover="showTip(event, 'fs1', 26)" class="p">Empty</span>) 
+
+<span class="c">/// Then the tree diagram above could be expressed more simply as: </span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs7', 27)" onmouseover="showTip(event, 'fs7', 27)" class="i">tree1&#39;</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs2', 28)" onmouseover="showTip(event, 'fs2', 28)" class="p">Branch</span> (<span class="s">&#39;a&#39;</span>, <span onmouseout="hideTip(event, 'fs2', 29)" onmouseover="showTip(event, 'fs2', 29)" class="p">Branch</span> (<span class="s">&#39;b&#39;</span>, <span onmouseout="hideTip(event, 'fs5', 30)" onmouseover="showTip(event, 'fs5', 30)" class="f">leaf</span> <span class="s">&#39;d&#39;</span>,
+                               <span onmouseout="hideTip(event, 'fs5', 31)" onmouseover="showTip(event, 'fs5', 31)" class="f">leaf</span> <span class="s">&#39;e&#39;</span>),
+                          <span onmouseout="hideTip(event, 'fs2', 32)" onmouseover="showTip(event, 'fs2', 32)" class="p">Branch</span> (<span class="s">&#39;c&#39;</span>, <span onmouseout="hideTip(event, 'fs1', 33)" onmouseover="showTip(event, 'fs1', 33)" class="p">Empty</span>,
+                               <span onmouseout="hideTip(event, 'fs2', 34)" onmouseover="showTip(event, 'fs2', 34)" class="p">Branch</span> (<span class="s">&#39;f&#39;</span>, <span onmouseout="hideTip(event, 'fs5', 35)" onmouseover="showTip(event, 'fs5', 35)" class="f">leaf</span> <span class="s">&#39;g&#39;</span>,
+                                           <span onmouseout="hideTip(event, 'fs1', 36)" onmouseover="showTip(event, 'fs1', 36)" class="p">Empty</span>)))
+<span class="c">/// Other examples of binary trees: </span>
+<span class="c">/// </span>
+<span class="c">/// -- A binary tree consisting of a root node only</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs8', 37)" onmouseover="showTip(event, 'fs8', 37)" class="i">tree2</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs2', 38)" onmouseover="showTip(event, 'fs2', 38)" class="p">Branch</span> (<span class="s">&#39;a&#39;</span>, <span onmouseout="hideTip(event, 'fs1', 39)" onmouseover="showTip(event, 'fs1', 39)" class="p">Empty</span>, <span onmouseout="hideTip(event, 'fs1', 40)" onmouseover="showTip(event, 'fs1', 40)" class="p">Empty</span>)
+<span class="c">///  </span>
+<span class="c">/// -- An empty binary tree</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs9', 41)" onmouseover="showTip(event, 'fs9', 41)" class="i">tree3</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs1', 42)" onmouseover="showTip(event, 'fs1', 42)" class="p">Empty</span>
+<span class="c">///  </span>
+<span class="c">/// -- A tree of integers</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs10', 43)" onmouseover="showTip(event, 'fs10', 43)" class="i">tree4</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs2', 44)" onmouseover="showTip(event, 'fs2', 44)" class="p">Branch</span> (<span class="n">1</span>, <span onmouseout="hideTip(event, 'fs2', 45)" onmouseover="showTip(event, 'fs2', 45)" class="p">Branch</span> (<span class="n">2</span>, <span onmouseout="hideTip(event, 'fs1', 46)" onmouseover="showTip(event, 'fs1', 46)" class="p">Empty</span>, <span onmouseout="hideTip(event, 'fs2', 47)" onmouseover="showTip(event, 'fs2', 47)" class="p">Branch</span> (<span class="n">4</span>, <span onmouseout="hideTip(event, 'fs1', 48)" onmouseover="showTip(event, 'fs1', 48)" class="p">Empty</span>, <span onmouseout="hideTip(event, 'fs1', 49)" onmouseover="showTip(event, 'fs1', 49)" class="p">Empty</span>)),
+                       <span onmouseout="hideTip(event, 'fs2', 50)" onmouseover="showTip(event, 'fs2', 50)" class="p">Branch</span> (<span class="n">2</span>, <span onmouseout="hideTip(event, 'fs1', 51)" onmouseover="showTip(event, 'fs1', 51)" class="p">Empty</span>, <span onmouseout="hideTip(event, 'fs1', 52)" onmouseover="showTip(event, 'fs1', 52)" class="p">Empty</span>))
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Problem-54A-Check-whether-a-given-term-represents-a-binary-tree" class="anchor" href="#Problem-54A-Check-whether-a-given-term-represents-a-binary-tree">(*) Problem 54A : Check whether a given term represents a binary tree.</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// In Prolog or Lisp, one writes a predicate to do this. </span>
+<span class="c">/// </span>
+<span class="c">/// Example in Lisp: </span>
+<span class="c">/// * (istree (a (b nil nil) nil))</span>
+<span class="c">/// T</span>
+<span class="c">/// * (istree (a (b nil nil)))</span>
+<span class="c">/// NIL</span>
+<span class="c">///  </span>
+<span class="c">/// Non-solution: </span>
+<span class="c">/// F#&#39;s type system ensures that all terms of type &#39;a Tree are binary trees: it is just not </span>
+<span class="c">//  possible to construct an invalid tree with this type. Hence, it is redundant to introduce </span>
+<span class="c">/// a predicate to check this property: it would always return True</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Problem-55-Construct-completely-balanced-binary-trees" class="anchor" href="#Problem-55-Construct-completely-balanced-binary-trees">(<em></em>) Problem 55 : Construct completely balanced binary trees</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+<span class="l">38: </span>
+<span class="l">39: </span>
+<span class="l">40: </span>
+<span class="l">41: </span>
+<span class="l">42: </span>
+<span class="l">43: </span>
+<span class="l">44: </span>
+<span class="l">45: </span>
+<span class="l">46: </span>
+<span class="l">47: </span>
+<span class="l">48: </span>
+<span class="l">49: </span>
+<span class="l">50: </span>
+<span class="l">51: </span>
+<span class="l">52: </span>
+<span class="l">53: </span>
+<span class="l">54: </span>
+<span class="l">55: </span>
+<span class="l">56: </span>
+<span class="l">57: </span>
+<span class="l">58: </span>
+<span class="l">59: </span>
+<span class="l">60: </span>
+<span class="l">61: </span>
+<span class="l">62: </span>
+<span class="l">63: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// In a completely balanced binary tree, the following property holds for every node: </span>
+<span class="c">/// The number of nodes in its left subtree and the number of nodes in its right subtree </span>
+<span class="c">/// are almost equal, which means their difference is not greater than one.</span>
+<span class="c">///  </span>
+<span class="c">/// Write a function cbal-tree to construct completely balanced binary trees for a given </span>
+<span class="c">/// number of nodes. The predicate should generate all solutions via backtracking. Put </span>
+<span class="c">/// the letter &#39;x&#39; as information into all nodes of the tree.</span>
+<span class="c">///  </span>
+<span class="c">/// Example: </span>
+<span class="c">/// * cbal-tree(4,T).</span>
+<span class="c">/// T = t(x, t(x, nil, nil), t(x, nil, t(x, nil, nil))) ;</span>
+<span class="c">/// T = t(x, t(x, nil, nil), t(x, t(x, nil, nil), nil)) ;</span>
+<span class="c">/// etc......No</span>
+<span class="c">///  </span>
+<span class="c">/// Example in F#, whitespace and &quot;comment diagrams&quot; added for clarity and exposition:</span>
+<span class="c">///  </span>
+<span class="c">/// &gt; cbalTree 4;;</span>
+<span class="c">/// val trees : char Tree list =</span>
+<span class="c">/// [</span>
+<span class="c">///    permutation 1</span>
+<span class="c">///        x</span>
+<span class="c">///       / \</span>
+<span class="c">///      x   x</span>
+<span class="c">///           \</span>
+<span class="c">///            x</span>
+<span class="c">/// Branch (&#39;x&#39;, Branch (&#39;x&#39;, Empty, Empty),</span>
+<span class="c">///              Branch (&#39;x&#39;, Empty,</span>
+<span class="c">///                        Branch (&#39;x&#39;, Empty, Empty)));</span>
+<span class="c">///  </span>
+<span class="c">///    permutation 2</span>
+<span class="c">///        x</span>
+<span class="c">///       / \</span>
+<span class="c">///      x   x</span>
+<span class="c">///         /</span>
+<span class="c">///        x</span>
+<span class="c">/// Branch (&#39;x&#39;, Branch (&#39;x&#39;, Empty, Empty),</span>
+<span class="c">///              Branch (&#39;x&#39;, Branch (&#39;x&#39;, Empty, Empty),</span>
+<span class="c">///                        Empty));</span>
+<span class="c">///  </span>
+<span class="c">///    permutation 3</span>
+<span class="c">///        x</span>
+<span class="c">///       / \</span>
+<span class="c">///      x   x</span>
+<span class="c">///       \</span>
+<span class="c">///        x</span>
+<span class="c">/// Branch (&#39;x&#39;, Branch (&#39;x&#39;, Empty, </span>
+<span class="c">///                           Branch (&#39;x&#39;, Empty, Empty)),</span>
+<span class="c">///              Branch (&#39;x&#39;, Empty, Empty));</span>
+<span class="c">///  </span>
+<span class="c">///    permutation 4</span>
+<span class="c">///        x</span>
+<span class="c">///       / \</span>
+<span class="c">///      x   x</span>
+<span class="c">///     /</span>
+<span class="c">///    x</span>
+<span class="c">/// Branch (&#39;x&#39;, Branch (&#39;x&#39;, Branch (&#39;x&#39;, Empty, Empty),</span>
+<span class="c">///                        Empty), </span>
+<span class="c">///              Branch (&#39;x&#39;, Empty, Empty))</span>
+<span class="c">/// ]</span>
+
+<span id="fst11" onmouseout="hideTip(event, 'fs11', 53)" onmouseover="showTip(event, 'fs11', 53, document.getElementById('fst11'))" class="omitted">(Solution 1)</span>
+
+<span id="fst12" onmouseout="hideTip(event, 'fs12', 54)" onmouseover="showTip(event, 'fs12', 54, document.getElementById('fst12'))" class="omitted">(Solution 2)</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Problem-56-Symmetric-binary-trees" class="anchor" href="#Problem-56-Symmetric-binary-trees">(<em></em>) Problem 56 : Symmetric binary trees</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// Let us call a binary tree symmetric if you can draw a vertical line through the root </span>
+<span class="c">/// node and then the right subtree is the mirror image of the left subtree. Write a </span>
+<span class="c">/// predicate symmetric/1 to check whether a given binary tree is symmetric. Hint: Write </span>
+<span class="c">/// a predicate mirror/2 first to check whether one tree is the mirror image of another. </span>
+<span class="c">/// We are only interested in the structure, not in the contents of the nodes.</span>
+<span class="c">///  </span>
+<span class="c">/// Example in F#: </span>
+<span class="c">/// </span>
+<span class="c">/// &gt; symmetric &lt;| Branch (&#39;x&#39;, Branch (&#39;x&#39;, Empty, Empty), Empty);;</span>
+<span class="c">/// val it : bool = false</span>
+<span class="c">/// &gt; symmetric &lt;| Branch (&#39;x&#39;, Branch (&#39;x&#39;, Empty, Empty), Branch (&#39;x&#39;, Empty, Empty))</span>
+<span class="c">/// val it : bool = true</span>
+
+<span id="fst13" onmouseout="hideTip(event, 'fs13', 55)" onmouseover="showTip(event, 'fs13', 55, document.getElementById('fst13'))" class="omitted">(Solution)</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Problem-57-Binary-search-trees-dictionaries" class="anchor" href="#Problem-57-Binary-search-trees-dictionaries">(<em></em>) Problem 57 : Binary search trees (dictionaries)</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// Use the predicate add/3, developed in chapter 4 of the course, to write a predicate </span>
+<span class="c">/// to construct a binary search tree from a list of integer numbers.</span>
+<span class="c">///  </span>
+<span class="c">/// Example: </span>
+<span class="c">/// * construct([3,2,5,7,1],T).</span>
+<span class="c">/// T = t(3, t(2, t(1, nil, nil), nil), t(5, nil, t(7, nil, nil)))</span>
+<span class="c">///  </span>
+<span class="c">/// Then use this predicate to test the solution of the problem P56. </span>
+<span class="c">/// </span>
+<span class="c">/// Example: </span>
+<span class="c">/// * test-symmetric([5,3,18,1,4,12,21]).</span>
+<span class="c">/// Yes</span>
+<span class="c">/// * test-symmetric([3,2,5,7,4]).</span>
+<span class="c">/// No</span>
+<span class="c">///  </span>
+<span class="c">/// Example in F#: </span>
+<span class="c">/// </span>
+<span class="c">/// &gt; construct [3; 2; 5; 7; 1]</span>
+<span class="c">/// val it : int Tree =</span>
+<span class="c">///   Branch (3,Branch (2,Branch (1,Empty,Empty),Empty),</span>
+<span class="c">///             Branch (5,Empty,Branch (7,Empty,Empty)))</span>
+<span class="c">/// &gt; [5; 3; 18; 1; 4; 12; 21] |&gt; construct |&gt; symmetric;;</span>
+<span class="c">/// val it : bool = true</span>
+<span class="c">/// &gt; [3; 2; 5; 7; 1] |&gt; construct |&gt; symmetric;;</span>
+<span class="c">/// val it : bool = true</span>
+
+<span id="fst14" onmouseout="hideTip(event, 'fs14', 56)" onmouseover="showTip(event, 'fs14', 56, document.getElementById('fst14'))" class="omitted">(Solution)</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Problem-58-Generate-and-test-paradigm" class="anchor" href="#Problem-58-Generate-and-test-paradigm">(<em></em>) Problem 58 : Generate-and-test paradigm</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// Apply the generate-and-test paradigm to construct all symmetric, completely balanced </span>
+<span class="c">/// binary trees with a given number of nodes.</span>
+<span class="c">///  </span>
+<span class="c">/// Example: </span>
+<span class="c">/// * sym-cbal-trees(5,Ts).</span>
+<span class="c">/// Ts = [t(x, t(x, nil, t(x, nil, nil)), t(x, t(x, nil, nil), nil)), </span>
+<span class="c">///       t(x, t(x, t(x, nil, nil), nil), t(x, nil, t(x, nil, nil)))] </span>
+<span class="c">///  </span>
+<span class="c">/// Example in F#: </span>
+<span class="c">/// </span>
+<span class="c">/// &gt; symCbalTrees 5;;</span>
+<span class="c">/// val it : char Tree list =</span>
+<span class="c">///   [Branch</span>
+<span class="c">///      (&#39;x&#39;,Branch (&#39;x&#39;,Empty,Branch (&#39;x&#39;,Empty,Empty)),</span>
+<span class="c">///       Branch (&#39;x&#39;,Branch (&#39;x&#39;,Empty,Empty),Empty));</span>
+<span class="c">///    Branch</span>
+<span class="c">///      (&#39;x&#39;,Branch (&#39;x&#39;,Branch (&#39;x&#39;,Empty,Empty),Empty),</span>
+<span class="c">///       Branch (&#39;x&#39;,Empty,Branch (&#39;x&#39;,Empty,Empty)))]</span>
+
+<span id="fst15" onmouseout="hideTip(event, 'fs15', 57)" onmouseover="showTip(event, 'fs15', 57, document.getElementById('fst15'))" class="omitted">(Solution)</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Problem-59-Construct-height-balanced-binary-trees" class="anchor" href="#Problem-59-Construct-height-balanced-binary-trees">(<em></em>) Problem 59 : Construct height-balanced binary trees</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// In a height-balanced binary tree, the following property holds for every node: The </span>
+<span class="c">/// height of its left subtree and the height of its right subtree are almost equal, </span>
+<span class="c">/// which means their difference is not greater than one.</span>
+<span class="c">///  </span>
+<span class="c">/// Example: </span>
+<span class="c">/// ?- hbal_tree(3,T).</span>
+<span class="c">/// T = t(x, t(x, t(x, nil, nil), t(x, nil, nil)), t(x, t(x, nil, nil), t(x, nil, nil))) ;</span>
+<span class="c">/// T = t(x, t(x, t(x, nil, nil), t(x, nil, nil)), t(x, t(x, nil, nil), nil)) ;</span>
+<span class="c">/// etc......No</span>
+<span class="c">///  </span>
+<span class="c">/// Example in F#: </span>
+<span class="c">/// </span>
+<span class="c">/// &gt; hbalTree &#39;x&#39; 3 |&gt; Seq.take 4;;</span>
+<span class="c">/// val it : seq&lt;char Tree&gt; =</span>
+<span class="c">///   seq</span>
+<span class="c">///     [Branch</span>
+<span class="c">///        (&#39;x&#39;,Branch (&#39;x&#39;,Branch (&#39;x&#39;,Empty,Empty),Branch (&#39;x&#39;,Empty,Empty)),</span>
+<span class="c">///         Branch (&#39;x&#39;,Branch (&#39;x&#39;,Empty,Empty),Branch (&#39;x&#39;,Empty,Empty)));</span>
+<span class="c">///      Branch</span>
+<span class="c">///        (&#39;x&#39;,Branch (&#39;x&#39;,Branch (&#39;x&#39;,Empty,Empty),Branch (&#39;x&#39;,Empty,Empty)),</span>
+<span class="c">///         Branch (&#39;x&#39;,Branch (&#39;x&#39;,Empty,Empty),Empty));</span>
+<span class="c">///      Branch</span>
+<span class="c">///        (&#39;x&#39;,Branch (&#39;x&#39;,Branch (&#39;x&#39;,Empty,Empty),Branch (&#39;x&#39;,Empty,Empty)),</span>
+<span class="c">///         Branch (&#39;x&#39;,Empty,Branch (&#39;x&#39;,Empty,Empty)));</span>
+<span class="c">///      Branch</span>
+<span class="c">///        (&#39;x&#39;,Branch (&#39;x&#39;,Branch (&#39;x&#39;,Empty,Empty),Branch (&#39;x&#39;,Empty,Empty)),</span>
+<span class="c">///         Branch (&#39;x&#39;,Empty,Empty))]</span>
+
+<span id="fst16" onmouseout="hideTip(event, 'fs16', 58)" onmouseover="showTip(event, 'fs16', 58, document.getElementById('fst16'))" class="omitted">(Solution)</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Problem-60-Construct-height-balanced-binary-trees-with-a-given-number-of-nodes" class="anchor" href="#Problem-60-Construct-height-balanced-binary-trees-with-a-given-number-of-nodes">(<em></em>) Problem 60 : Construct height-balanced binary trees with a given number of nodes</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// Consider a height-balanced binary tree of height H. What is the maximum number of nodes </span>
+<span class="c">/// it can contain?</span>
+<span class="c">/// Clearly, MaxN = 2**H - 1. However, what is the minimum number MinN? This question is more </span>
+<span class="c">/// difficult. Try to find a recursive statement and turn it into a function minNodes that </span>
+<span class="c">/// returns the minimum number of nodes in a height-balanced binary tree of height H. On the </span>
+<span class="c">/// other hand, we might ask: what is the maximum height H a height-balanced binary tree with </span>
+<span class="c">/// N nodes can have? Write a function maxHeight that computes this. </span>
+<span class="c">///</span>
+<span class="c">/// Now, we can attack the main problem: construct all the height-balanced binary trees with a </span>
+<span class="c">/// given nuber of nodes. Find out how many height-balanced trees exist for N = 15.</span>
+<span class="c">///  </span>
+<span class="c">/// Example in Prolog: </span>
+<span class="c">/// ?- count_hbal_trees(15,C).</span>
+<span class="c">/// C = 1553</span>
+<span class="c">///  </span>
+<span class="c">/// Example in F#: </span>
+<span class="c">/// </span>
+<span class="c">/// &gt; hbalTreeNodes &#39;x&#39; 15 |&gt; List.length;;</span>
+<span class="c">/// val it : int = 1553</span>
+<span class="c">/// &gt; [0 .. 3] |&gt; List.map (hbalTreeNodes &#39;x&#39;);;</span>
+<span class="c">/// val it : char Tree list list =</span>
+<span class="c">///   [[Empty]; [Branch (&#39;x&#39;,Empty,Empty)];</span>
+<span class="c">///    [Branch (&#39;x&#39;,Branch (&#39;x&#39;,Empty,Empty),Empty);</span>
+<span class="c">///     Branch (&#39;x&#39;,Empty,Branch (&#39;x&#39;,Empty,Empty))];</span>
+<span class="c">///    [Branch (&#39;x&#39;,Branch (&#39;x&#39;,Empty,Empty),Branch (&#39;x&#39;,Empty,Empty))]]</span>
+
+<span id="fst17" onmouseout="hideTip(event, 'fs17', 59)" onmouseover="showTip(event, 'fs17', 59, document.getElementById('fst17'))" class="omitted">(Solution)</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">union case Tree.Empty: &#39;a Tree</div>
+<div class="tip" id="fs2">union case Tree.Branch: &#39;a * &#39;a Tree * &#39;a Tree -&gt; &#39;a Tree</div>
+<div class="tip" id="fs3">type &#39;a Tree =<br />&#160;&#160;| Empty<br />&#160;&#160;| Branch of &#39;a * &#39;a Tree * &#39;a Tree<br /><br />Full name: Script.Tree&lt;_&gt;<br /><em><br /><br />&#160;These are F# solutions of Ninety-Nine Haskell Problems <br />&#160;(http://www.haskell.org/haskellwiki/H-99:_Ninety-Nine_Haskell_Problems), <br />&#160;which are themselves translations of Ninety-Nine Lisp Problems<br />&#160;(http://www.ic.unicamp.br/~meidanis/courses/mc336/2006s2/funcional/L-99_Ninety-Nine_Lisp_Problems.html)<br />&#160;and Ninety-Nine Prolog Problems<br />&#160;(https://sites.google.com/site/prologsite/prolog-problems).<br /><br />&#160;If you would like to contribute a solution or fix any bugs, send <br />&#160;an email to paks at kitiara dot org with the subject &quot;99 F# problems&quot;. <br />&#160;I&#39;ll try to update the problem as soon as possible.<br /><br />&#160;The problems have different levels of difficulty. Those marked with a single asterisk (*) <br />&#160;are easy. If you have successfully solved the preceeding problems you should be able to <br />&#160;solve them within a few (say 15) minutes. Problems marked with two asterisks (**) are of <br />&#160;intermediate difficulty. If you are a skilled F# programmer it shouldn&#39;t take you more than <br />&#160;30-90 minutes to solve them. Problems marked with three asterisks (***) are more difficult. <br />&#160;You may need more time (i.e. a few hours or more) to find a good solution<br /><br />&#160;Though the problems number from 1 to 99, there are some gaps and some additions marked with <br />&#160;letters. There are actually only 88 problems.<br /><br />&#160;&#160;<br />&#160;<br />&#160;A binary tree is either empty or it is composed of a root element and two successors, <br />&#160;which are binary trees themselves.<br />&#160;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;(a)<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;/   \<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;(b)  (c)<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;/  \    \<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;(d)  (e)  (f)<br /><br />&#160;In F#, we can characterize binary trees with a type definition: <br />&#160;</em></div>
+<div class="tip" id="fs4">val tree1 : char Tree<br /><br />Full name: Script.tree1<br /><em><br /><br /><br />&#160;This says that a Tree of type a consists of either an Empty node, or a Branch containing one <br />&#160;value of type a with exactly two subtrees of type a.<br />&#160;&#160;<br />&#160;Given this definition, the tree in the diagram above would be represented as: <br />&#160;</em></div>
+<div class="tip" id="fs5">val leaf : x:&#39;a -&gt; &#39;a Tree<br /><br />Full name: Script.leaf<br /><em><br /><br />&#160;Since a &quot;leaf&quot; node is a branch with two empty subtrees, it can be useful to define a <br />&#160;shorthand function:</em></div>
+<div class="tip" id="fs6">val x : &#39;a</div>
+<div class="tip" id="fs7">val tree1&#39; : char Tree<br /><br />Full name: Script.tree1&#39;<br /><em><br /><br />&#160;Then the tree diagram above could be expressed more simply as: </em></div>
+<div class="tip" id="fs8">val tree2 : char Tree<br /><br />Full name: Script.tree2<br /><em><br /><br />&#160;Other examples of binary trees: <br />&#160;<br />&#160;-- A binary tree consisting of a root node only</em></div>
+<div class="tip" id="fs9">val tree3 : &#39;a Tree<br /><br />Full name: Script.tree3<br /><em><br /><br />&#160;&#160;<br />&#160;-- An empty binary tree</em></div>
+<div class="tip" id="fs10">val tree4 : int Tree<br /><br />Full name: Script.tree4<br /><em><br /><br />&#160;&#160;<br />&#160;-- A tree of integers</em></div>
+<div class="tip" id="fs11">let rec cbalTree n =<br />&#160;&#160;&#160;&#160;match n with<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| 0 -&gt; [Empty]<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| n -&gt; let q,r = let x = n - 1 in x / 2, x % 2 <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;[ for i=q to q + r do<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;for lt in cbalTree i do<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;for rt in cbalTree (n - 1 - i) do<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;yield Branch(&#39;x&#39;, lt, rt) ]</div>
+<div class="tip" id="fs12">let nodes t = <br />&#160;&#160;&#160;&#160;let rec nodes&#39; t cont = <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;match t with<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| Empty -&gt; cont 0<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| Branch(_, lt, rt) -&gt; <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;nodes&#39; lt (fun nlt -&gt; nodes&#39; rt (fun nrt -&gt; cont (1 + nlt + nrt)))<br />&#160;&#160;&#160;&#160;nodes&#39; t id<br /><br />let rec allTrees n =<br />&#160;&#160;&#160;&#160;match n with<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| 0 -&gt; [Empty]<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| n -&gt;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;[ for i=0 to n - 1 do<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;for lt in cbalTree i do<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;for rt in cbalTree (n - 1 - i) do<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;yield Branch(&#39;x&#39;, lt, rt) ]<br /><br />let cbalTree&#39; n = allTrees n |&gt; List.filter(fun t -&gt; <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;match t with<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| Empty -&gt; true<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| Branch(_, lt, rt) -&gt; abs (nodes lt - nodes rt) &lt;= 1 )</div>
+<div class="tip" id="fs13">let symmetric tree =<br />&#160;&#160;&#160;&#160;let rec mirror t1 t2 cont =<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;match t1,t2 with<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| Empty,Empty -&gt; cont true<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| Empty, Branch _ -&gt; cont false<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| Branch _, Empty -&gt; cont false<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| Branch (_, lt1, rt1), Branch (_, lt2, rt2) -&gt; <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;mirror lt1 rt2 (fun isMirrorLeft -&gt; mirror rt1 lt2 (fun isMirrorRight -&gt; cont (isMirrorLeft &amp;&amp; isMirrorRight)))<br />&#160;&#160;&#160;&#160;match tree with<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| Empty -&gt; true<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| Branch (_,lt, rt) -&gt; mirror lt rt id</div>
+<div class="tip" id="fs14">let insert x tree = <br />&#160;&#160;&#160;&#160;let rec insert&#39; t cont =<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;match t with<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| Empty -&gt; cont &lt;| Branch(x, Empty, Empty)<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| Branch(y, lt, rt) as t -&gt;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;if x &lt; y then<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;insert&#39; lt &lt;| fun lt&#39; -&gt; cont &lt;| Branch(y, lt&#39;, rt)<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;elif x &gt; y then<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;insert&#39; rt &lt;| fun rt&#39; -&gt; cont &lt;| Branch(y, lt, rt&#39;)<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;else<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;t<br />&#160;&#160;&#160;&#160;insert&#39; tree id<br /><br />let construct xs = xs |&gt; List.fold(fun tree x -&gt; insert x tree) Empty</div>
+<div class="tip" id="fs15">let symCbalTrees = cbalTree &gt;&gt; List.filter symmetric</div>
+<div class="tip" id="fs16">let hbalTree a height =<br />&#160;&#160;&#160;&#160;let rec loop h cont = <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;match h with<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| 0 -&gt; cont [Empty, 0]<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| 1 -&gt; cont [Branch (a, Empty, Empty), 1]<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| _ -&gt; loop (h-1) (fun lts -&gt;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;loop (h-2) (fun rts -&gt; <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;cont &lt;| [let t = lts @ rts <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;for (t1,h1) in t do<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;for (t2,h2) in t do<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;let ht = 1 + max h1 h2 <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;if ht = h then<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;yield Branch (a, t1, t2), ht] ))<br />&#160;&#160;&#160;&#160;loop height id |&gt; List.map fst</div>
+<div class="tip" id="fs17">let minNodes height = <br />&#160;&#160;&#160;&#160;let rec minNodes&#39; h cont =<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;match h with<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| 0 -&gt; cont 0<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| 1 -&gt; cont 1<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| _ -&gt; minNodes&#39; (h - 1) &lt;| fun h1 -&gt; minNodes&#39; (h - 2) &lt;| fun h2 -&gt; cont &lt;| 1 + h1 + h2<br />&#160;&#160;&#160;&#160;minNodes&#39; height id<br /><br />let maxHeight nodes = <br />&#160;&#160;&#160;&#160;let rec loop n acc =<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;match n with<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| 0 -&gt; acc<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| _ -&gt; loop (n &gt;&gt;&gt; 1) (acc + 1)<br />&#160;&#160;&#160;&#160;let fullHeight = loop nodes 0 // this is the height of a tree with full nodes<br />&#160;&#160;&#160;&#160;let minNodesH1 = minNodes (fullHeight + 1)<br />&#160;&#160;&#160;&#160;if nodes &lt; minNodesH1 then<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;fullHeight<br />&#160;&#160;&#160;&#160;else<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;fullHeight + 1<br /><br />let numNodes tree = <br />&#160;&#160;&#160;&#160;let rec numNodes&#39; tree cont =<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;match tree with<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| Empty -&gt; cont 0<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| Branch(_, lt , rt) -&gt;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;numNodes&#39; lt &lt;| fun ln -&gt; numNodes&#39; rt &lt;| fun rn -&gt; cont &lt;| 1 + ln + rn<br />&#160;&#160;&#160;&#160;numNodes&#39; tree id<br /><br />let hbalTreeNodes x nodes = <br />&#160;&#160;&#160;&#160;let maxH = maxHeight nodes<br />&#160;&#160;&#160;&#160;let minH = if maxH = 0 then 0 else maxH - 1<br />&#160;&#160;&#160;&#160;[minH .. maxH] |&gt; List.collect(fun n -&gt; hbalTree x n) |&gt; List.filter(fun t -&gt; nodes = numNodes t)</div>
+

@@ -1,0 +1,62 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">let</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="f">normalDistRandom</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">mean</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="i">stdDev</span> <span class="o">=</span> 
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="i">rand</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="t">Random</span>()
+    <span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs7', 7)" onmouseover="showTip(event, 'fs7', 7)" class="f">polarBoxMullerDist</span> () <span class="o">=</span> <span onmouseout="hideTip(event, 'fs8', 8)" onmouseover="showTip(event, 'fs8', 8)" class="i">seq</span> {
+            <span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs9', 9)" onmouseover="showTip(event, 'fs9', 9)" class="f">getRands</span> () <span class="o">=</span>
+                <span class="k">let</span> <span onmouseout="hideTip(event, 'fs10', 10)" onmouseover="showTip(event, 'fs10', 10)" class="i">u</span> <span class="o">=</span> (<span class="n">2.0</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs4', 11)" onmouseover="showTip(event, 'fs4', 11)" class="i">rand</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs11', 12)" onmouseover="showTip(event, 'fs11', 12)" class="f">NextDouble</span>()) <span class="o">-</span> <span class="n">1.0</span>
+                <span class="k">let</span> <span onmouseout="hideTip(event, 'fs12', 13)" onmouseover="showTip(event, 'fs12', 13)" class="i">v</span> <span class="o">=</span> (<span class="n">2.0</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs4', 14)" onmouseover="showTip(event, 'fs4', 14)" class="i">rand</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs11', 15)" onmouseover="showTip(event, 'fs11', 15)" class="f">NextDouble</span>()) <span class="o">-</span> <span class="n">1.0</span>
+                <span class="k">let</span> <span onmouseout="hideTip(event, 'fs13', 16)" onmouseover="showTip(event, 'fs13', 16)" class="i">w</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs10', 17)" onmouseover="showTip(event, 'fs10', 17)" class="i">u</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs10', 18)" onmouseover="showTip(event, 'fs10', 18)" class="i">u</span> <span class="o">+</span> <span onmouseout="hideTip(event, 'fs12', 19)" onmouseover="showTip(event, 'fs12', 19)" class="i">v</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs12', 20)" onmouseover="showTip(event, 'fs12', 20)" class="i">v</span>
+                <span class="k">if</span> <span onmouseout="hideTip(event, 'fs13', 21)" onmouseover="showTip(event, 'fs13', 21)" class="i">w</span> <span class="o">&gt;</span><span class="o">=</span> <span class="n">1.0</span> <span class="k">then</span>
+                    <span onmouseout="hideTip(event, 'fs9', 22)" onmouseover="showTip(event, 'fs9', 22)" class="f">getRands</span>()
+                <span class="k">else</span>
+                    <span onmouseout="hideTip(event, 'fs10', 23)" onmouseover="showTip(event, 'fs10', 23)" class="i">u</span>, <span onmouseout="hideTip(event, 'fs12', 24)" onmouseover="showTip(event, 'fs12', 24)" class="i">v</span>, <span onmouseout="hideTip(event, 'fs13', 25)" onmouseover="showTip(event, 'fs13', 25)" class="i">w</span>
+            <span class="k">let</span> <span onmouseout="hideTip(event, 'fs10', 26)" onmouseover="showTip(event, 'fs10', 26)" class="i">u</span>, <span onmouseout="hideTip(event, 'fs12', 27)" onmouseover="showTip(event, 'fs12', 27)" class="i">v</span>, <span onmouseout="hideTip(event, 'fs13', 28)" onmouseover="showTip(event, 'fs13', 28)" class="i">w</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs9', 29)" onmouseover="showTip(event, 'fs9', 29)" class="f">getRands</span>()
+            
+            <span class="k">let</span> <span onmouseout="hideTip(event, 'fs14', 30)" onmouseover="showTip(event, 'fs14', 30)" class="i">scale</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs5', 31)" onmouseover="showTip(event, 'fs5', 31)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs15', 32)" onmouseover="showTip(event, 'fs15', 32)" class="t">Math</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs16', 33)" onmouseover="showTip(event, 'fs16', 33)" class="f">Sqrt</span>(<span class="o">-</span><span class="n">2.0</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs5', 34)" onmouseover="showTip(event, 'fs5', 34)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs15', 35)" onmouseover="showTip(event, 'fs15', 35)" class="t">Math</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs17', 36)" onmouseover="showTip(event, 'fs17', 36)" class="f">Log</span>(<span onmouseout="hideTip(event, 'fs13', 37)" onmouseover="showTip(event, 'fs13', 37)" class="i">w</span>) <span class="o">/</span> <span onmouseout="hideTip(event, 'fs13', 38)" onmouseover="showTip(event, 'fs13', 38)" class="i">w</span>)
+            <span class="k">let</span> <span onmouseout="hideTip(event, 'fs18', 39)" onmouseover="showTip(event, 'fs18', 39)" class="i">x</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs14', 40)" onmouseover="showTip(event, 'fs14', 40)" class="i">scale</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs10', 41)" onmouseover="showTip(event, 'fs10', 41)" class="i">u</span>
+            <span class="k">let</span> <span onmouseout="hideTip(event, 'fs19', 42)" onmouseover="showTip(event, 'fs19', 42)" class="i">y</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs14', 43)" onmouseover="showTip(event, 'fs14', 43)" class="i">scale</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs12', 44)" onmouseover="showTip(event, 'fs12', 44)" class="i">v</span>
+            <span class="k">yield</span> <span onmouseout="hideTip(event, 'fs2', 45)" onmouseover="showTip(event, 'fs2', 45)" class="i">mean</span> <span class="o">+</span> (<span onmouseout="hideTip(event, 'fs18', 46)" onmouseover="showTip(event, 'fs18', 46)" class="i">x</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs3', 47)" onmouseover="showTip(event, 'fs3', 47)" class="i">stdDev</span>); <span class="k">yield</span> <span onmouseout="hideTip(event, 'fs2', 48)" onmouseover="showTip(event, 'fs2', 48)" class="i">mean</span> <span class="o">+</span> (<span onmouseout="hideTip(event, 'fs19', 49)" onmouseover="showTip(event, 'fs19', 49)" class="i">y</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs3', 50)" onmouseover="showTip(event, 'fs3', 50)" class="i">stdDev</span>); <span class="k">yield!</span> <span onmouseout="hideTip(event, 'fs7', 51)" onmouseover="showTip(event, 'fs7', 51)" class="f">polarBoxMullerDist</span> ()
+        }
+    <span onmouseout="hideTip(event, 'fs7', 52)" onmouseover="showTip(event, 'fs7', 52)" class="f">polarBoxMullerDist</span> ()
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">val normalDistRandom : mean:float -&gt; stdDev:float -&gt; seq&lt;float&gt;<br /><br />Full name: Script.normalDistRandom</div>
+<div class="tip" id="fs2">val mean : float</div>
+<div class="tip" id="fs3">val stdDev : float</div>
+<div class="tip" id="fs4">val rand : System.Random</div>
+<div class="tip" id="fs5">namespace System</div>
+<div class="tip" id="fs6">Multiple items<br />type Random =<br />&#160;&#160;new : unit -&gt; Random + 1 overload<br />&#160;&#160;member Next : unit -&gt; int + 2 overloads<br />&#160;&#160;member NextBytes : buffer:byte[] -&gt; unit<br />&#160;&#160;member NextDouble : unit -&gt; float<br /><br />Full name: System.Random<br /><br />--------------------<br />System.Random() : unit<br />System.Random(Seed: int) : unit</div>
+<div class="tip" id="fs7">val polarBoxMullerDist : (unit -&gt; seq&lt;float&gt;)</div>
+<div class="tip" id="fs8">Multiple items<br />val seq : sequence:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Core.Operators.seq<br /><br />--------------------<br />type seq&lt;&#39;T&gt; = System.Collections.Generic.IEnumerable&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.seq&lt;_&gt;</div>
+<div class="tip" id="fs9">val getRands : (unit -&gt; float * float * float)</div>
+<div class="tip" id="fs10">val u : float</div>
+<div class="tip" id="fs11">System.Random.NextDouble() : float</div>
+<div class="tip" id="fs12">val v : float</div>
+<div class="tip" id="fs13">val w : float</div>
+<div class="tip" id="fs14">val scale : float</div>
+<div class="tip" id="fs15">type Math =<br />&#160;&#160;static val PI : float<br />&#160;&#160;static val E : float<br />&#160;&#160;static member Abs : value:sbyte -&gt; sbyte + 6 overloads<br />&#160;&#160;static member Acos : d:float -&gt; float<br />&#160;&#160;static member Asin : d:float -&gt; float<br />&#160;&#160;static member Atan : d:float -&gt; float<br />&#160;&#160;static member Atan2 : y:float * x:float -&gt; float<br />&#160;&#160;static member BigMul : a:int * b:int -&gt; int64<br />&#160;&#160;static member Ceiling : d:decimal -&gt; decimal + 1 overload<br />&#160;&#160;static member Cos : d:float -&gt; float<br />&#160;&#160;...<br /><br />Full name: System.Math</div>
+<div class="tip" id="fs16">System.Math.Sqrt(d: float) : float</div>
+<div class="tip" id="fs17">System.Math.Log(d: float) : float<br />System.Math.Log(a: float, newBase: float) : float</div>
+<div class="tip" id="fs18">val x : float</div>
+<div class="tip" id="fs19">val y : float</div>
+

@@ -1,0 +1,66 @@
+
+[<Measure>] type 時間
+[<Measure>] type 日
+[<Measure>] type 円
+
+type Estimate = {
+    名称 : string
+    時間 : int<時間>
+    単価 : int<円/時間>
+}
+with
+    override this.ToString() =
+        [ sprintf "[ %s ]" <| this.名称
+          sprintf "時間 : %d時間" <| int this.時間
+          sprintf "単価 : %d円" <| int this.単価 ]
+        |> String.concat "\n"
+
+
+let estimate (h:int<時間/日>) (y:int<円/時間>) (d:int<日>) title = {
+    名称 = title
+    時間 = h * d
+    単価 = y
+}
+
+let estimate' = estimate 3<時間/日> 4500<円/時間> // 1日の作業時間と時給を固定
+
+// 費用計算関数
+let calc (x:Estimate) = x.時間 * x.単価
+
+// 見積書の表示関数
+let showQuotation estimates =
+    let drawLine = String.replicate 30 >> printfn "%s"
+     
+    let show (x:Estimate) =
+        let result = calc x
+        string x   |> printfn "%s"
+        int result |> printfn "小計 : %d円"
+        drawLine "-"
+        result
+
+    drawLine "="
+    estimates |> List.map show |> List.sum |> int |> printfn "=> 合計 : %d円"
+    drawLine "="
+
+//
+// 見積書
+//
+
+// 見積書(講演資料代を除く)
+let quotation = [
+    "1月分" |> estimate' 18<日>
+    "2月分" |> estimate' 20<日>
+    "3月分" |> estimate' 22<日>
+]
+
+// 講演資料分
+let lectureFee = 20<時間>
+// 時間数を上乗せ
+let plus (x:Estimate) = {x with 時間 = x.時間 + lectureFee / 2}
+
+// 見積書(講演資料代を含む)
+let quotation' = [
+    "1月分" |> estimate' 18<日> |> plus
+    "2月分" |> estimate' 20<日> |> plus
+    "3月分" |> estimate' 22<日>
+]

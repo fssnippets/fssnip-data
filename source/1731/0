@@ -1,0 +1,39 @@
+#r "System.Data.DataSetExtensions"
+#r "System.Data"
+
+open System
+open System.Data
+
+let dt = new DataTable()
+dt.Columns.Add("shop")
+dt.Columns.Add("name")
+dt.Columns.Add("value",typeof<int>)
+
+dt.Rows.Add("shop1", "name1", 10)
+dt.Rows.Add("shop2", "name1", 6)
+dt.Rows.Add("shop3", "name1", 3)
+dt.Rows.Add("shop1", "name2", 12)
+dt.Rows.Add("shop2", "name2", 5)
+dt.Rows.Add("shop3", "name2", 7)
+dt.Rows.Add("shop1", "name3", 8)
+dt.Rows.Add("shop2", "name3", 4)
+dt.Rows.Add("shop3", "name3", 2)
+      
+let dt2 = new DataTable()
+dt2.Columns.Add("value")
+dt2.Columns.Add("shop1")
+dt2.Columns.Add("shop2")
+dt2.Columns.Add("shop3")
+
+dt.AsEnumerable()
+|> Seq.groupBy(fun x -> x.Field<string>("name"))
+|> Seq.iter(fun x -> let dr = dt2.NewRow()
+                     dr.SetField ("value", fst x)
+                     snd x 
+                     |> Seq.iteri(fun i y -> let name = "shop" + (i+1).ToString()
+                                             dr.SetField<int>(name, y.Field<int>("value")))
+                     dt2.Rows.Add(dr))
+
+
+dt2.AsEnumerable()
+|> Seq.iter(fun x -> printfn "%s" (String.Join(" ", x.ItemArray)))

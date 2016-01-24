@@ -1,0 +1,97 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">// Declare our shape type, we&#39;ll test out matches a bit by exposing a draw function that dislikes points.</span>
+<span class="k">type</span> <span class="t">Shape</span> <span class="o">=</span>
+| <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="p">Circle</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="t">int</span>
+| <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="p">Rectangle</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs2', 4)" onmouseover="showTip(event, 'fs2', 4)" class="t">int</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs2', 5)" onmouseover="showTip(event, 'fs2', 5)" class="t">int</span>
+| <span onmouseout="hideTip(event, 'fs4', 6)" onmouseover="showTip(event, 'fs4', 6)" class="p">Polygon</span> <span class="k">of</span> (<span onmouseout="hideTip(event, 'fs2', 7)" onmouseover="showTip(event, 'fs2', 7)" class="t">int</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs2', 8)" onmouseover="showTip(event, 'fs2', 8)" class="t">int</span>) <span onmouseout="hideTip(event, 'fs5', 9)" onmouseover="showTip(event, 'fs5', 9)" class="t">list</span>
+| <span onmouseout="hideTip(event, 'fs6', 10)" onmouseover="showTip(event, 'fs6', 10)" class="p">Point</span> <span class="k">of</span> (<span onmouseout="hideTip(event, 'fs2', 11)" onmouseover="showTip(event, 'fs2', 11)" class="t">int</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs2', 12)" onmouseover="showTip(event, 'fs2', 12)" class="t">int</span>)
+
+
+<span class="c">// Draw shape function, no points or other geometries allowed, what a strange language, but this is interesting stuff!</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs7', 13)" onmouseover="showTip(event, 'fs7', 13)" class="f">draw</span> <span onmouseout="hideTip(event, 'fs8', 14)" onmouseover="showTip(event, 'fs8', 14)" class="i">shape</span> <span class="o">=</span> 
+    <span class="k">match</span> <span onmouseout="hideTip(event, 'fs8', 15)" onmouseover="showTip(event, 'fs8', 15)" class="i">shape</span> <span class="k">with</span>
+    | <span onmouseout="hideTip(event, 'fs1', 16)" onmouseover="showTip(event, 'fs1', 16)" class="p">Circle</span> <span onmouseout="hideTip(event, 'fs9', 17)" onmouseover="showTip(event, 'fs9', 17)" class="i">radius</span> <span class="k">-&gt;</span>
+        <span onmouseout="hideTip(event, 'fs10', 18)" onmouseover="showTip(event, 'fs10', 18)" class="f">printfn</span> <span class="s">&quot;Rendering circle of radius: </span><span class="pf">%i</span><span class="s">&quot;</span> <span onmouseout="hideTip(event, 'fs9', 19)" onmouseover="showTip(event, 'fs9', 19)" class="i">radius</span>
+    | <span onmouseout="hideTip(event, 'fs3', 20)" onmouseover="showTip(event, 'fs3', 20)" class="p">Rectangle</span> (<span onmouseout="hideTip(event, 'fs11', 21)" onmouseover="showTip(event, 'fs11', 21)" class="i">width</span>, <span onmouseout="hideTip(event, 'fs12', 22)" onmouseover="showTip(event, 'fs12', 22)" class="i">height</span>) <span class="k">-&gt;</span>
+        <span onmouseout="hideTip(event, 'fs10', 23)" onmouseover="showTip(event, 'fs10', 23)" class="f">printfn</span> <span class="s">&quot;Rendering a rectangle of w: </span><span class="pf">%i</span><span class="s">, h: </span><span class="pf">%i</span><span class="s">&quot;</span> <span onmouseout="hideTip(event, 'fs11', 24)" onmouseover="showTip(event, 'fs11', 24)" class="i">width</span> <span onmouseout="hideTip(event, 'fs12', 25)" onmouseover="showTip(event, 'fs12', 25)" class="i">height</span>
+    | <span onmouseout="hideTip(event, 'fs4', 26)" onmouseover="showTip(event, 'fs4', 26)" class="p">Polygon</span> <span onmouseout="hideTip(event, 'fs13', 27)" onmouseover="showTip(event, 'fs13', 27)" class="i">points</span> <span class="k">-&gt;</span>
+        <span onmouseout="hideTip(event, 'fs10', 28)" onmouseover="showTip(event, 'fs10', 28)" class="f">printfn</span> <span class="s">&quot;The polygon is made of the following points: </span><span class="pf">%A</span><span class="s">&quot;</span> <span onmouseout="hideTip(event, 'fs13', 29)" onmouseover="showTip(event, 'fs13', 29)" class="i">points</span>
+    | _ <span class="k">-&gt;</span>
+        <span onmouseout="hideTip(event, 'fs10', 30)" onmouseover="showTip(event, 'fs10', 30)" class="f">printfn</span> <span class="s">&quot;An unknown geometry type has been passed into the basic draw function&quot;</span>
+
+<span class="c">(*</span>
+<span class="c">Multiline comment, but there is a bug in Xamarin Studio that if I start writing one, </span>
+<span class="c">my code below starts being highlighted in it as well lol, or if it touches this comment from here on and I undo it.</span>
+<span class="c">*)</span>
+
+[&lt;<span onmouseout="hideTip(event, 'fs14', 31)" onmouseover="showTip(event, 'fs14', 31)" class="t">EntryPoint</span>&gt;]
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs15', 32)" onmouseover="showTip(event, 'fs15', 32)" class="f">main</span> <span onmouseout="hideTip(event, 'fs16', 33)" onmouseover="showTip(event, 'fs16', 33)" class="i">argv</span> <span class="o">=</span> 
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs17', 34)" onmouseover="showTip(event, 'fs17', 34)" class="i">a</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs1', 35)" onmouseover="showTip(event, 'fs1', 35)" class="p">Circle</span>(<span class="n">10</span>)
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs18', 36)" onmouseover="showTip(event, 'fs18', 36)" class="i">b</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs3', 37)" onmouseover="showTip(event, 'fs3', 37)" class="p">Rectangle</span>(<span class="n">20</span>, <span class="n">20</span>)
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs19', 38)" onmouseover="showTip(event, 'fs19', 38)" class="i">c</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs4', 39)" onmouseover="showTip(event, 'fs4', 39)" class="p">Polygon</span>([(<span class="n">0</span>, <span class="n">0</span>); (<span class="n">20</span>, <span class="n">0</span>); (<span class="n">20</span>, <span class="n">20</span>); (<span class="n">0</span>, <span class="n">20</span>)])
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs20', 40)" onmouseover="showTip(event, 'fs20', 40)" class="i">d</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs6', 41)" onmouseover="showTip(event, 'fs6', 41)" class="p">Point</span>(<span class="n">20</span>, <span class="n">0</span>)
+
+    <span class="c">// Pipe the output of the list iterator function to the draw function.</span>
+    [<span onmouseout="hideTip(event, 'fs17', 42)" onmouseover="showTip(event, 'fs17', 42)" class="i">a</span>; <span onmouseout="hideTip(event, 'fs18', 43)" onmouseover="showTip(event, 'fs18', 43)" class="i">b</span>; <span onmouseout="hideTip(event, 'fs19', 44)" onmouseover="showTip(event, 'fs19', 44)" class="i">c</span>; <span onmouseout="hideTip(event, 'fs20', 45)" onmouseover="showTip(event, 'fs20', 45)" class="i">d</span>] <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs21', 46)" onmouseover="showTip(event, 'fs21', 46)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs22', 47)" onmouseover="showTip(event, 'fs22', 47)" class="f">iter</span> <span onmouseout="hideTip(event, 'fs7', 48)" onmouseover="showTip(event, 'fs7', 48)" class="f">draw</span>
+    <span class="n">0</span> <span class="c">// return.</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">union case Shape.Circle: int -&gt; Shape</div>
+<div class="tip" id="fs2">Multiple items<br />val int : value:&#39;T -&gt; int (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.int<br /><br />--------------------<br />type int = int32<br /><br />Full name: Microsoft.FSharp.Core.int<br /><br />--------------------<br />type int&lt;&#39;Measure&gt; = int<br /><br />Full name: Microsoft.FSharp.Core.int&lt;_&gt;</div>
+<div class="tip" id="fs3">union case Shape.Rectangle: int * int -&gt; Shape</div>
+<div class="tip" id="fs4">union case Shape.Polygon: (int * int) list -&gt; Shape</div>
+<div class="tip" id="fs5">type &#39;T list = List&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.list&lt;_&gt;</div>
+<div class="tip" id="fs6">union case Shape.Point: (int * int) -&gt; Shape</div>
+<div class="tip" id="fs7">val draw : shape:Shape -&gt; unit<br /><br />Full name: Script.draw</div>
+<div class="tip" id="fs8">val shape : Shape</div>
+<div class="tip" id="fs9">val radius : int</div>
+<div class="tip" id="fs10">val printfn : format:Printf.TextWriterFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.printfn</div>
+<div class="tip" id="fs11">val width : int</div>
+<div class="tip" id="fs12">val height : int</div>
+<div class="tip" id="fs13">val points : (int * int) list</div>
+<div class="tip" id="fs14">Multiple items<br />type EntryPointAttribute =<br />&#160;&#160;inherit Attribute<br />&#160;&#160;new : unit -&gt; EntryPointAttribute<br /><br />Full name: Microsoft.FSharp.Core.EntryPointAttribute<br /><br />--------------------<br />new : unit -&gt; EntryPointAttribute</div>
+<div class="tip" id="fs15">val main : argv:string [] -&gt; int<br /><br />Full name: Script.main</div>
+<div class="tip" id="fs16">val argv : string []</div>
+<div class="tip" id="fs17">val a : Shape</div>
+<div class="tip" id="fs18">val b : Shape</div>
+<div class="tip" id="fs19">val c : Shape</div>
+<div class="tip" id="fs20">val d : Shape</div>
+<div class="tip" id="fs21">Multiple items<br />module List<br /><br />from Microsoft.FSharp.Collections<br /><br />--------------------<br />type List&lt;&#39;T&gt; =<br />&#160;&#160;| ( [] )<br />&#160;&#160;| ( :: ) of Head: &#39;T * Tail: &#39;T list<br />&#160;&#160;interface IEnumerable<br />&#160;&#160;interface IEnumerable&lt;&#39;T&gt;<br />&#160;&#160;member Head : &#39;T<br />&#160;&#160;member IsEmpty : bool<br />&#160;&#160;member Item : index:int -&gt; &#39;T with get<br />&#160;&#160;member Length : int<br />&#160;&#160;member Tail : &#39;T list<br />&#160;&#160;static member Cons : head:&#39;T * tail:&#39;T list -&gt; &#39;T list<br />&#160;&#160;static member Empty : &#39;T list<br /><br />Full name: Microsoft.FSharp.Collections.List&lt;_&gt;</div>
+<div class="tip" id="fs22">val iter : action:(&#39;T -&gt; unit) -&gt; list:&#39;T list -&gt; unit<br /><br />Full name: Microsoft.FSharp.Collections.List.iter</div>
+

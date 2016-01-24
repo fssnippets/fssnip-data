@@ -1,0 +1,19 @@
+type Tree<'a> =
+  | Node of Tree<'a> * 'a * Tree<'a>
+  | Leaf
+
+let rec fold (f : 'b -> Tree<'a> -> 'b) (m  : 'b) (t : Tree<'a>) : 'b =
+  let m' = f m t
+  match t with
+    | Node(tl, _, tr) -> fold f (fold f m' tl) tr
+    | Leav -> m'
+
+let sum t =
+  let folder m t' : int =
+    match t' with
+      | Node(_, v, _) -> m + v
+      | Leaf -> m
+  fold folder 0 t
+
+let testTree =
+  Node(Node(Node(Leaf, 9, Leaf), 2, Node(Leaf, 21, Leaf)), 12, Leaf)

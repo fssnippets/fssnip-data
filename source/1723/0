@@ -1,0 +1,231 @@
+type Format =
+  | PDF
+  | Epub
+  | Mobi
+with 
+  member this.toString =
+    match this with
+      | PDF -> "PDF"
+      | Epub -> "Epub"
+      | Mobi -> "Mobi"
+
+// Metadata uniquely identifies a particular "Book"
+type Metadata =
+ {
+  Title : string
+  Author : string option
+  Publisher : string option
+  PublicationYear : int option
+  Edition : int option
+ }
+
+// books are split up into BookParts (separate files)
+type BookPart =
+  {
+  Metadata : Metadata
+  Filename : string
+  Format : Format option
+  }
+
+type Book = 
+  {
+  Metadata : Metadata
+  Formats : Map<Format,BookPart list>
+  }
+
+// Function signatures
+type FGetUniqueStr = Metadata -> string
+type FCreateBookMap = seq<BookPart> -> Map<string,Map<Format,Set<BookPart>>>
+type FCreateBook = Map<Format,Set<BookPart>> -> Book
+type FCreateBooks = seq<BookPart> -> seq<Book>
+type FCreateFormatMap = seq<Book> -> Map<Format,seq<Book>>
+type FGetNoPDFs = seq<Book> -> seq<Book>
+
+type FDumpBook = string -> Book -> unit
+type FDumpFormats = seq<Book> -> unit
+
+// Implementations
+let getUniqueStr : FGetUniqueStr = 
+  (fun metadata -> 
+    sprintf "%s:%s:%s:%s:%s" 
+      metadata.Title 
+      (defaultArg metadata.Author "")
+      (defaultArg metadata.Publisher "")
+      (defaultArg (metadata.PublicationYear |> Option.map string) "")
+      (defaultArg (metadata.Edition |> Option.map string) "")
+  )
+
+let createBookMap : FCreateBookMap =
+  (fun bookParts ->
+    Seq.fold (fun bookMap (bp:BookPart) ->
+      let bookStr = getUniqueStr bp.Metadata
+      let formats = defaultArg (Map.tryFind bookStr bookMap) Map.empty
+      bp.Format 
+        |> Option.map (fun format -> 
+          let bpSet = defaultArg (Map.tryFind format formats) Set.empty
+          if Set.contains bp bpSet then formats
+          else Map.add format (Set.add bp bpSet) formats
+          )
+        |> Option.fold (fun state formats -> Map.add bookStr formats state) bookMap 
+      ) Map.empty bookParts
+  )
+
+let createBooks : FCreateBooks =
+  let createBook : FCreateBook =
+    (fun formatMap ->
+      // convert Set<Bookparts> to sorted Bookparts list
+      let formatSeq =
+        formatMap
+        |> Map.toSeq 
+        |> Seq.map (fun (format, bps) -> 
+          let bpl = bps |> Set.toList |> List.sortBy (fun bp -> bp.Filename)
+          (format, bpl)) 
+      let bp = formatSeq |> Seq.head |> snd |> Seq.head
+      let formats = formatSeq |> Map.ofSeq
+
+      { Metadata = bp.Metadata
+        Book.Formats = formats
+      }
+    )
+  (fun bookParts ->
+   createBookMap bookParts
+   |> Map.toSeq
+   |> Seq.map (fun (_, formatMap) -> createBook formatMap)
+  )
+
+let createFormatMap : FCreateFormatMap =
+  let getFormats books =
+    seq { for book in books do
+            for kvp in book.Formats do
+              yield (kvp.Key, book) }
+  (fun books ->
+    getFormats books
+    |> Seq.groupBy fst
+    |> Seq.map (fun (format, formats) -> 
+      format, formats |> Seq.map snd
+      )
+    |> Map.ofSeq
+  )
+
+let getNoPDFs : FGetNoPDFs =
+  (fun books ->
+    books
+    |> Seq.filter (fun book ->
+      not (book.Formats |> Map.containsKey PDF)
+      )
+  )
+
+let dumpBook : FDumpBook =
+  (fun padding book ->
+    let author = defaultArg book.Metadata.Author ""
+    let publisher = defaultArg book.Metadata.Publisher ""
+    let year =  defaultArg (book.Metadata.PublicationYear |> Option.map string) ""
+    let edition = defaultArg (book.Metadata.Edition |> Option.map (fun e -> string e + "e")) " "
+    printfn "%s%-5s %4s %2s %-10s %s" padding publisher year edition author book.Metadata.Title
+    book.Formats 
+    |> Map.iter (fun format bpl ->
+      printf "%s%s%-4s [" (String.replicate 6 " ") padding format.toString
+      bpl
+      |> List.iteri (fun i bookpart -> 
+        printf "%s" bookpart.Filename
+        if i < bpl.Length - 1 then printf ", " else printfn "]"
+        )
+      )
+    printfn ""
+  )
+
+let dumpFormats : FDumpFormats =
+  (fun books ->
+    createFormatMap books
+    |> Map.iter (fun format books ->
+      printfn "%s (%d):" format.toString (books |> Seq.length)
+      books |> Seq.iter (dumpBook " ")
+    )
+  ) 
+
+// no two Bookparts with different Metadata/Format should have same filename
+// No BookPart should appear more than once in a list of Books
+let sampleBookPartList =
+  [
+  // Book 1
+  { Metadata = {Title = "Title1"; Author=Some "Author1"; Publisher=Some "Pub1"; PublicationYear=Some 2015; Edition=None};
+    Filename = "Filename1"; Format=Some PDF};
+  { Metadata = {Title = "Title1"; Author=Some "Author1"; Publisher=Some "Pub1"; PublicationYear=Some 2015; Edition=None};
+    Filename = "Filename2"; Format=Some PDF};
+  { Metadata = {Title = "Title1"; Author=Some "Author1"; Publisher=Some "Pub1"; PublicationYear=Some 2015; Edition=None};
+    Filename = "Filename3"; Format=Some PDF};
+
+  { Metadata = {Title = "Title1"; Author=Some "Author1"; Publisher=Some "Pub1"; PublicationYear=Some 2015; Edition=None};
+    Filename = "Filename4"; Format=Some Epub};
+  { Metadata = {Title = "Title1"; Author=Some "Author1"; Publisher=Some "Pub1"; PublicationYear=Some 2015; Edition=None};
+    Filename = "Filename5"; Format=Some Epub};
+
+  // Book 2
+  { Metadata = {Title = "Title2"; Author=Some "Author2"; Publisher=Some "Pub2"; PublicationYear=Some 2015; Edition=Some 2};
+    Filename = "Filename6"; Format=Some PDF};
+  { Metadata = {Title = "Title2"; Author=Some "Author2"; Publisher=Some "Pub2"; PublicationYear=Some 2015; Edition=Some 2};
+    Filename = "Filename7"; Format=Some PDF};
+  { Metadata = {Title = "Title2"; Author=Some "Author2"; Publisher=Some "Pub2"; PublicationYear=Some 2015; Edition=Some 2};
+    Filename = "Filename8"; Format=Some PDF};
+
+  { Metadata = {Title = "Title2"; Author=Some "Author2"; Publisher=Some "Pub2"; PublicationYear=Some 2015; Edition=Some 2};
+    Filename = "Filename9"; Format=Some Mobi};
+
+  // Book 3 (no PDf)
+  { Metadata = {Title = "Title3"; Author=Some "Author3"; Publisher=Some "Pub3"; PublicationYear=None; Edition=None};
+    Filename = "Filename10"; Format=Some Epub};
+  { Metadata = {Title = "Title3"; Author=Some "Author3"; Publisher=Some "Pub3"; PublicationYear=None; Edition=None};
+    Filename = "Filename11"; Format=Some Epub};
+
+  // Book 4 (ignore no Format)
+  { Metadata = {Title = "Title4"; Author=Some "Author4"; Publisher=None; PublicationYear=Some 2016; Edition=None};
+    Filename = "Filename12"; Format=None};
+  { Metadata = {Title = "Title4"; Author=Some "Author4"; Publisher=None; PublicationYear=Some 2016; Edition=None};
+    Filename = "Filename13"; Format=None};
+  { Metadata = {Title = "Title4"; Author=Some "Author4"; Publisher=None; PublicationYear=Some 2016; Edition=None};
+    Filename = "Filename14"; Format=None};
+  ]
+
+let books = createBooks sampleBookPartList
+books |> Seq.iter (dumpBook "")
+books |> dumpFormats
+books |> getNoPDFs |> Seq.iter (dumpBook "")
+
+// books:
+//Pub1  2015    Author1    Title1
+//      PDF  [Filename1, Filename2, Filename3]
+//      Epub [Filename4, Filename5]
+//
+//Pub2  2015 2e Author2    Title2
+//      PDF  [Filename6, Filename7, Filename8]
+//      Mobi [Filename9]
+//
+//Pub3          Author3    Title3
+//      Epub [Filename10, Filename11]
+
+// dumpFormats:
+//PDF (2):
+// Pub1  2015    Author1    Title1
+//       PDF  [Filename1, Filename2, Filename3]
+//       Epub [Filename4, Filename5]
+//
+// Pub2  2015 2e Author2    Title2
+//       PDF  [Filename6, Filename7, Filename8]
+//       Mobi [Filename9]
+//
+//Epub (2):
+// Pub1  2015    Author1    Title1
+//       PDF  [Filename1, Filename2, Filename3]
+//       Epub [Filename4, Filename5]
+//
+// Pub3          Author3    Title3
+//       Epub [Filename10, Filename11]
+//
+//Mobi (1):
+// Pub2  2015 2e Author2    Title2
+//       PDF  [Filename6, Filename7, Filename8]
+//       Mobi [Filename9]
+
+// getNoPDFs:
+//Pub3          Author3    Title3
+//      Epub [Filename10, Filename11]

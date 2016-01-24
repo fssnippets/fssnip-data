@@ -1,0 +1,113 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">Microsoft</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 2)" onmouseover="showTip(event, 'fs1', 2)" class="i">Microsoft</span><span class="o">.</span><span class="i">Exchange</span><span class="o">.</span><span class="i">WebServices</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 3)" onmouseover="showTip(event, 'fs2', 3)" class="i">Data</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs3', 4)" onmouseover="showTip(event, 'fs3', 4)" class="i">System</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs3', 5)" onmouseover="showTip(event, 'fs3', 5)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs4', 6)" onmouseover="showTip(event, 'fs4', 6)" class="i">Net</span>
+
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs5', 7)" onmouseover="showTip(event, 'fs5', 7)" class="t">PgzExchangeService</span>(<span onmouseout="hideTip(event, 'fs6', 8)" onmouseover="showTip(event, 'fs6', 8)" class="i">url</span>,<span onmouseout="hideTip(event, 'fs7', 9)" onmouseover="showTip(event, 'fs7', 9)" class="i">user</span>,<span onmouseout="hideTip(event, 'fs8', 10)" onmouseover="showTip(event, 'fs8', 10)" class="i">password</span>) <span class="o">=</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs9', 11)" onmouseover="showTip(event, 'fs9', 11)" class="i">service</span> <span class="o">=</span> <span class="k">new</span> <span class="i">ExchangeService</span>(<span class="i">ExchangeVersion</span><span class="o">.</span><span class="i">Exchange2007_SP1</span>)
+    <span class="k">do</span>        
+       <span onmouseout="hideTip(event, 'fs10', 12)" onmouseover="showTip(event, 'fs10', 12)" class="t">ServicePointManager</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs11', 13)" onmouseover="showTip(event, 'fs11', 13)" class="i">ServerCertificateValidationCallback</span> <span class="o">&lt;-</span> ( <span class="k">fun</span> _ _ _ _ <span class="k">-&gt;</span> <span class="k">true</span> )
+       <span onmouseout="hideTip(event, 'fs9', 14)" onmouseover="showTip(event, 'fs9', 14)" class="i">service</span><span class="o">.</span><span class="i">Url</span> <span class="o">&lt;-</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs12', 15)" onmouseover="showTip(event, 'fs12', 15)" class="i">Uri</span>(<span onmouseout="hideTip(event, 'fs6', 16)" onmouseover="showTip(event, 'fs6', 16)" class="i">url</span>)
+       <span onmouseout="hideTip(event, 'fs9', 17)" onmouseover="showTip(event, 'fs9', 17)" class="i">service</span><span class="o">.</span><span class="i">Credentials</span> <span class="o">&lt;-</span> <span class="k">new</span> <span class="i">WebCredentials</span>(<span onmouseout="hideTip(event, 'fs7', 18)" onmouseover="showTip(event, 'fs7', 18)" class="i">user</span>, <span onmouseout="hideTip(event, 'fs8', 19)" onmouseover="showTip(event, 'fs8', 19)" class="i">password</span>, <span class="s">&quot;pgz&quot;</span>)
+
+    <span class="k">member</span> <span onmouseout="hideTip(event, 'fs13', 20)" onmouseover="showTip(event, 'fs13', 20)" class="i">this</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs14', 21)" onmouseover="showTip(event, 'fs14', 21)" class="i">Service</span> <span class="k">with</span> <span class="i">get</span>() <span class="o">=</span> <span onmouseout="hideTip(event, 'fs9', 22)" onmouseover="showTip(event, 'fs9', 22)" class="i">service</span>
+    <span class="k">member</span> <span onmouseout="hideTip(event, 'fs13', 23)" onmouseover="showTip(event, 'fs13', 23)" class="i">this</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs15', 24)" onmouseover="showTip(event, 'fs15', 24)" class="i">InboxItems</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs13', 25)" onmouseover="showTip(event, 'fs13', 25)" class="i">this</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs16', 26)" onmouseover="showTip(event, 'fs16', 26)" class="i">Service</span><span class="o">.</span><span class="i">FindItems</span>(<span class="i">WellKnownFolderName</span><span class="o">.</span><span class="i">Inbox</span>, <span class="k">new</span> <span class="i">ItemView</span>(<span class="n">10</span>))
+    <span class="k">member</span> <span onmouseout="hideTip(event, 'fs13', 27)" onmouseover="showTip(event, 'fs13', 27)" class="i">this</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs17', 28)" onmouseover="showTip(event, 'fs17', 28)" class="f">GetFileAttachments</span> ( <span onmouseout="hideTip(event, 'fs18', 29)" onmouseover="showTip(event, 'fs18', 29)" class="i">item</span> <span class="o">:</span> <span class="i">Item</span> ) <span class="o">=</span>        
+           <span class="k">let</span> <span onmouseout="hideTip(event, 'fs19', 30)" onmouseover="showTip(event, 'fs19', 30)" class="i">emailMessage</span> <span class="o">=</span> 
+               <span class="i">EmailMessage</span><span class="o">.</span><span class="i">Bind</span>( <span onmouseout="hideTip(event, 'fs13', 31)" onmouseover="showTip(event, 'fs13', 31)" class="i">this</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs16', 32)" onmouseover="showTip(event, 'fs16', 32)" class="i">Service</span>, 
+                                  <span onmouseout="hideTip(event, 'fs18', 33)" onmouseover="showTip(event, 'fs18', 33)" class="i">item</span><span class="o">.</span><span class="i">Id</span>, 
+                                  <span class="k">new</span> <span class="i">PropertySet</span>(<span class="i">BasePropertySet</span><span class="o">.</span><span class="i">IdOnly</span>, <span class="i">ItemSchema</span><span class="o">.</span><span class="i">Attachments</span>))
+           <span onmouseout="hideTip(event, 'fs18', 34)" onmouseover="showTip(event, 'fs18', 34)" class="i">item</span>, <span onmouseout="hideTip(event, 'fs19', 35)" onmouseover="showTip(event, 'fs19', 35)" class="i">emailMessage</span><span class="o">.</span><span class="i">Attachments</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs20', 36)" onmouseover="showTip(event, 'fs20', 36)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs21', 37)" onmouseover="showTip(event, 'fs21', 37)" class="f">choose</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs22', 38)" onmouseover="showTip(event, 'fs22', 38)" class="i">attachment</span> <span class="k">-&gt;</span> <span class="k">match</span> <span onmouseout="hideTip(event, 'fs23', 39)" onmouseover="showTip(event, 'fs23', 39)" class="f">box</span> <span onmouseout="hideTip(event, 'fs22', 40)" onmouseover="showTip(event, 'fs22', 40)" class="i">attachment</span> <span class="k">with</span>  
+                                                                           | <span class="o">:?</span> <span class="i">FileAttachment</span> <span class="k">as</span> <span onmouseout="hideTip(event, 'fs24', 41)" onmouseover="showTip(event, 'fs24', 41)" class="i">x</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs25', 42)" onmouseover="showTip(event, 'fs25', 42)" class="p">Some</span>(<span onmouseout="hideTip(event, 'fs24', 43)" onmouseover="showTip(event, 'fs24', 43)" class="i">x</span>) | _ <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs26', 44)" onmouseover="showTip(event, 'fs26', 44)" class="p">None</span>)   
+                  
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs27', 45)" onmouseover="showTip(event, 'fs27', 45)" class="i">mailAtdomain</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs5', 46)" onmouseover="showTip(event, 'fs5', 46)" class="t">PgzExchangeService</span>(<span class="s">&quot;https://ip/EWS/Exchange.asmx&quot;</span>, <span class="s">&quot;user&quot;</span>, <span class="s">&quot;password&quot;</span>)
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs28', 47)" onmouseover="showTip(event, 'fs28', 47)" class="f">printsave</span> (<span onmouseout="hideTip(event, 'fs18', 48)" onmouseover="showTip(event, 'fs18', 48)" class="i">item</span> <span class="o">:</span> <span class="i">Item</span> ,<span onmouseout="hideTip(event, 'fs29', 49)" onmouseover="showTip(event, 'fs29', 49)" class="i">att</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs30', 50)" onmouseover="showTip(event, 'fs30', 50)" class="t">seq</span><span class="o">&lt;</span><span class="i">FileAttachment</span><span class="o">&gt;</span>) <span class="o">=</span>
+    <span class="k">if</span> (<span onmouseout="hideTip(event, 'fs20', 51)" onmouseover="showTip(event, 'fs20', 51)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs31', 52)" onmouseover="showTip(event, 'fs31', 52)" class="f">length</span> <span onmouseout="hideTip(event, 'fs29', 53)" onmouseover="showTip(event, 'fs29', 53)" class="i">att</span>) <span class="o">&gt;</span> <span class="n">0</span> <span class="k">then</span>
+        <span onmouseout="hideTip(event, 'fs32', 54)" onmouseover="showTip(event, 'fs32', 54)" class="f">printfn</span> <span class="s">&quot;</span><span class="pf">%A</span><span class="s"> - saving </span><span class="pf">%i</span><span class="s"> attachments&quot;</span> <span onmouseout="hideTip(event, 'fs18', 55)" onmouseover="showTip(event, 'fs18', 55)" class="i">item</span><span class="o">.</span><span class="i">Subject</span> (<span onmouseout="hideTip(event, 'fs20', 56)" onmouseover="showTip(event, 'fs20', 56)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs31', 57)" onmouseover="showTip(event, 'fs31', 57)" class="f">length</span> <span onmouseout="hideTip(event, 'fs29', 58)" onmouseover="showTip(event, 'fs29', 58)" class="i">att</span>)        
+        <span onmouseout="hideTip(event, 'fs29', 59)" onmouseover="showTip(event, 'fs29', 59)" class="i">att</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs20', 60)" onmouseover="showTip(event, 'fs20', 60)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs33', 61)" onmouseover="showTip(event, 'fs33', 61)" class="f">iter</span> ( <span class="k">fun</span> <span onmouseout="hideTip(event, 'fs34', 62)" onmouseover="showTip(event, 'fs34', 62)" class="i">attachment</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs32', 63)" onmouseover="showTip(event, 'fs32', 63)" class="f">printfn</span> <span class="s">&quot;</span><span class="pf">%A</span><span class="s">&quot;</span> <span onmouseout="hideTip(event, 'fs34', 64)" onmouseover="showTip(event, 'fs34', 64)" class="i">attachment</span><span class="o">.</span><span class="i">Name</span> 
+                                            <span onmouseout="hideTip(event, 'fs34', 65)" onmouseover="showTip(event, 'fs34', 65)" class="i">attachment</span><span class="o">.</span><span class="i">Load</span>(<span class="s">@&quot;c:\temp\fsharp\&quot;</span> <span class="o">+</span> <span onmouseout="hideTip(event, 'fs34', 66)" onmouseover="showTip(event, 'fs34', 66)" class="i">attachment</span><span class="o">.</span><span class="i">Name</span> ) )   
+
+<span class="c">// filter so we only have items with attachements and ...</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs35', 67)" onmouseover="showTip(event, 'fs35', 67)" class="i">itemsWithAttachments</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs27', 68)" onmouseover="showTip(event, 'fs27', 68)" class="i">mailAtdomain</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs36', 69)" onmouseover="showTip(event, 'fs36', 69)" class="i">InboxItems</span>                            
+                           <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs20', 70)" onmouseover="showTip(event, 'fs20', 70)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs37', 71)" onmouseover="showTip(event, 'fs37', 71)" class="f">map</span> <span onmouseout="hideTip(event, 'fs27', 72)" onmouseover="showTip(event, 'fs27', 72)" class="i">mailAtdomain</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs38', 73)" onmouseover="showTip(event, 'fs38', 73)" class="f">GetFileAttachments</span> 
+                           <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs20', 74)" onmouseover="showTip(event, 'fs20', 74)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs33', 75)" onmouseover="showTip(event, 'fs33', 75)" class="f">iter</span> <span onmouseout="hideTip(event, 'fs28', 76)" onmouseover="showTip(event, 'fs28', 76)" class="f">printsave</span>
+                           
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace Microsoft</div>
+<div class="tip" id="fs2">namespace Microsoft.FSharp.Data</div>
+<div class="tip" id="fs3">namespace System</div>
+<div class="tip" id="fs4">namespace System.Net</div>
+<div class="tip" id="fs5">Multiple items<br />type PgzExchangeService =<br />&#160;&#160;new : url:string * user:string * password:string -&gt; PgzExchangeService<br />&#160;&#160;member GetFileAttachments : item:&#39;a -&gt; &#39;a * seq&lt;&#39;b&gt;<br />&#160;&#160;member InboxItems : seq&lt;obj&gt;<br />&#160;&#160;member Service : obj<br /><br />Full name: Script.PgzExchangeService<br /><br />--------------------<br />new : url:string * user:string * password:string -&gt; PgzExchangeService</div>
+<div class="tip" id="fs6">val url : string</div>
+<div class="tip" id="fs7">val user : string</div>
+<div class="tip" id="fs8">val password : string</div>
+<div class="tip" id="fs9">val service : obj</div>
+<div class="tip" id="fs10">type ServicePointManager =<br />&#160;&#160;static val DefaultNonPersistentConnectionLimit : int<br />&#160;&#160;static val DefaultPersistentConnectionLimit : int<br />&#160;&#160;static member CertificatePolicy : ICertificatePolicy with get, set<br />&#160;&#160;static member CheckCertificateRevocationList : bool with get, set<br />&#160;&#160;static member DefaultConnectionLimit : int with get, set<br />&#160;&#160;static member DnsRefreshTimeout : int with get, set<br />&#160;&#160;static member EnableDnsRoundRobin : bool with get, set<br />&#160;&#160;static member EncryptionPolicy : EncryptionPolicy<br />&#160;&#160;static member Expect100Continue : bool with get, set<br />&#160;&#160;static member FindServicePoint : address:Uri -&gt; ServicePoint + 2 overloads<br />&#160;&#160;...<br /><br />Full name: System.Net.ServicePointManager</div>
+<div class="tip" id="fs11">property ServicePointManager.ServerCertificateValidationCallback: Security.RemoteCertificateValidationCallback</div>
+<div class="tip" id="fs12">Multiple items<br />type Uri =<br />&#160;&#160;new : uriString:string -&gt; Uri + 5 overloads<br />&#160;&#160;member AbsolutePath : string<br />&#160;&#160;member AbsoluteUri : string<br />&#160;&#160;member Authority : string<br />&#160;&#160;member DnsSafeHost : string<br />&#160;&#160;member Equals : comparand:obj -&gt; bool<br />&#160;&#160;member Fragment : string<br />&#160;&#160;member GetComponents : components:UriComponents * format:UriFormat -&gt; string<br />&#160;&#160;member GetHashCode : unit -&gt; int<br />&#160;&#160;member GetLeftPart : part:UriPartial -&gt; string<br />&#160;&#160;...<br /><br />Full name: System.Uri<br /><br />--------------------<br />Uri(uriString: string) : unit<br />Uri(uriString: string, uriKind: UriKind) : unit<br />Uri(baseUri: Uri, relativeUri: string) : unit<br />Uri(baseUri: Uri, relativeUri: Uri) : unit</div>
+<div class="tip" id="fs13">val this : PgzExchangeService</div>
+<div class="tip" id="fs14">member PgzExchangeService.Service : obj<br /><br />Full name: Script.PgzExchangeService.Service</div>
+<div class="tip" id="fs15">member PgzExchangeService.InboxItems : seq&lt;obj&gt;<br /><br />Full name: Script.PgzExchangeService.InboxItems</div>
+<div class="tip" id="fs16">property PgzExchangeService.Service: obj</div>
+<div class="tip" id="fs17">member PgzExchangeService.GetFileAttachments : item:&#39;a -&gt; &#39;a * seq&lt;&#39;b&gt;<br /><br />Full name: Script.PgzExchangeService.GetFileAttachments</div>
+<div class="tip" id="fs18">val item : &#39;a</div>
+<div class="tip" id="fs19">val emailMessage : obj</div>
+<div class="tip" id="fs20">module Seq<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs21">val choose : chooser:(&#39;T -&gt; &#39;U option) -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;U&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.choose</div>
+<div class="tip" id="fs22">val attachment : obj</div>
+<div class="tip" id="fs23">val box : value:&#39;T -&gt; obj<br /><br />Full name: Microsoft.FSharp.Core.Operators.box</div>
+<div class="tip" id="fs24">val x : &#39;b</div>
+<div class="tip" id="fs25">union case Option.Some: Value: &#39;T -&gt; Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs26">union case Option.None: Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs27">val mailAtdomain : PgzExchangeService<br /><br />Full name: Script.mailAtdomain</div>
+<div class="tip" id="fs28">val printsave : item:&#39;a * att:seq&lt;&#39;b&gt; -&gt; unit<br /><br />Full name: Script.printsave</div>
+<div class="tip" id="fs29">val att : seq&lt;&#39;b&gt;</div>
+<div class="tip" id="fs30">Multiple items<br />val seq : sequence:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Core.Operators.seq<br /><br />--------------------<br />type seq&lt;&#39;T&gt; = Collections.Generic.IEnumerable&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.seq&lt;_&gt;</div>
+<div class="tip" id="fs31">val length : source:seq&lt;&#39;T&gt; -&gt; int<br /><br />Full name: Microsoft.FSharp.Collections.Seq.length</div>
+<div class="tip" id="fs32">val printfn : format:Printf.TextWriterFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.printfn</div>
+<div class="tip" id="fs33">val iter : action:(&#39;T -&gt; unit) -&gt; source:seq&lt;&#39;T&gt; -&gt; unit<br /><br />Full name: Microsoft.FSharp.Collections.Seq.iter</div>
+<div class="tip" id="fs34">val attachment : &#39;b</div>
+<div class="tip" id="fs35">val itemsWithAttachments : unit<br /><br />Full name: Script.itemsWithAttachments</div>
+<div class="tip" id="fs36">property PgzExchangeService.InboxItems: seq&lt;obj&gt;</div>
+<div class="tip" id="fs37">val map : mapping:(&#39;T -&gt; &#39;U) -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;U&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.map</div>
+<div class="tip" id="fs38">member PgzExchangeService.GetFileAttachments : item:&#39;a -&gt; &#39;a * seq&lt;&#39;b&gt;</div>
+

@@ -1,0 +1,102 @@
+<h2><a name="Setup" class="anchor" href="#Setup">Setup</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">// Install FSharp.Charting package from NuGet</span>
+<span class="c">// and then reference the charting library for</span>
+<span class="c">// easy visualization from F# Interactive</span>
+<span class="prep">#load</span> <span class="s">@&quot;packages\FSharp.Charting.0.90.5\FSharp.Charting.fsx&quot;</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">FSharp</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">Charting</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Infinite-sums" class="anchor" href="#Infinite-sums">Infinite sums</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// Generates partial sums of the reciprocal series</span>
+<span class="c">/// First generate series, then use scan for partial sums</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="i">eulerSums</span> <span class="o">=</span>
+  <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="f">initInfinite</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="i">i</span> <span class="k">-&gt;</span> <span class="n">1.0</span> <span class="o">/</span> <span onmouseout="hideTip(event, 'fs7', 7)" onmouseover="showTip(event, 'fs7', 7)" class="f">float</span> (<span onmouseout="hideTip(event, 'fs6', 8)" onmouseover="showTip(event, 'fs6', 8)" class="i">i</span> <span class="o">+</span> <span class="n">1</span>) <span class="o">**</span> <span class="n">2.0</span>) 
+  <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs4', 9)" onmouseover="showTip(event, 'fs4', 9)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs8', 10)" onmouseover="showTip(event, 'fs8', 10)" class="f">scan</span> (<span class="o">+</span>) <span class="n">0.0</span>
+
+<span class="c">/// Generate partial sums of grandi series (even easier!)</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs9', 11)" onmouseover="showTip(event, 'fs9', 11)" class="i">grandiSums</span> <span class="o">=</span> 
+  <span onmouseout="hideTip(event, 'fs4', 12)" onmouseover="showTip(event, 'fs4', 12)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs5', 13)" onmouseover="showTip(event, 'fs5', 13)" class="f">initInfinite</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs6', 14)" onmouseover="showTip(event, 'fs6', 14)" class="i">i</span> <span class="k">-&gt;</span> <span class="o">-</span><span class="n">1.0</span> <span class="o">**</span> <span onmouseout="hideTip(event, 'fs7', 15)" onmouseover="showTip(event, 'fs7', 15)" class="f">float</span> <span onmouseout="hideTip(event, 'fs6', 16)" onmouseover="showTip(event, 'fs6', 16)" class="i">i</span>)
+  <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs4', 17)" onmouseover="showTip(event, 'fs4', 17)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs8', 18)" onmouseover="showTip(event, 'fs8', 18)" class="f">scan</span> (<span class="o">+</span>) <span class="n">0.0</span>
+
+<span class="c">/// Generate partial sums of the grandiSums series</span>
+<span class="c">/// using the cesaro summation (simply take the sums</span>
+<span class="c">/// and divide by the element index in mapi)</span>
+<span class="c">/// (We skip the initial zero elements produced by scan) </span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs10', 19)" onmouseover="showTip(event, 'fs10', 19)" class="i">grandiCesaro</span> <span class="o">=</span> 
+  <span onmouseout="hideTip(event, 'fs9', 20)" onmouseover="showTip(event, 'fs9', 20)" class="i">grandiSums</span>
+  <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs4', 21)" onmouseover="showTip(event, 'fs4', 21)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs11', 22)" onmouseover="showTip(event, 'fs11', 22)" class="f">skip</span> <span class="n">1</span>
+  <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs4', 23)" onmouseover="showTip(event, 'fs4', 23)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs8', 24)" onmouseover="showTip(event, 'fs8', 24)" class="f">scan</span> (<span class="o">+</span>) <span class="n">0.0</span>
+  <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs4', 25)" onmouseover="showTip(event, 'fs4', 25)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs12', 26)" onmouseover="showTip(event, 'fs12', 26)" class="f">mapi</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs6', 27)" onmouseover="showTip(event, 'fs6', 27)" class="i">i</span> <span onmouseout="hideTip(event, 'fs13', 28)" onmouseover="showTip(event, 'fs13', 28)" class="i">partial</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs13', 29)" onmouseover="showTip(event, 'fs13', 29)" class="i">partial</span> <span class="o">/</span> <span onmouseout="hideTip(event, 'fs7', 30)" onmouseover="showTip(event, 'fs7', 30)" class="f">float</span> <span onmouseout="hideTip(event, 'fs6', 31)" onmouseover="showTip(event, 'fs6', 31)" class="i">i</span> )
+  <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs4', 32)" onmouseover="showTip(event, 'fs4', 32)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs11', 33)" onmouseover="showTip(event, 'fs11', 33)" class="f">skip</span> <span class="n">1</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Visualization" class="anchor" href="#Visualization">Visualization</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+<span class="l">6: </span>
+<span class="l">7: </span>
+<span class="l">8: </span>
+<span class="l">9: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">// Take 100 (or whatever number of elements)</span>
+<span class="c">// and pass the series to Chart.Line to see a chart  </span>
+<span onmouseout="hideTip(event, 'fs3', 34)" onmouseover="showTip(event, 'fs3', 34)" class="i">eulerSums</span>
+<span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs4', 35)" onmouseover="showTip(event, 'fs4', 35)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs14', 36)" onmouseover="showTip(event, 'fs14', 36)" class="f">take</span> <span class="n">100</span>
+<span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs15', 37)" onmouseover="showTip(event, 'fs15', 37)" class="t">Chart</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs16', 38)" onmouseover="showTip(event, 'fs16', 38)" class="f">Line</span>
+
+<span class="c">// Same for the other visualizations!</span>
+<span onmouseout="hideTip(event, 'fs9', 39)" onmouseover="showTip(event, 'fs9', 39)" class="i">grandiSums</span>   <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs4', 40)" onmouseover="showTip(event, 'fs4', 40)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs14', 41)" onmouseover="showTip(event, 'fs14', 41)" class="f">take</span> <span class="n">100</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs15', 42)" onmouseover="showTip(event, 'fs15', 42)" class="t">Chart</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs16', 43)" onmouseover="showTip(event, 'fs16', 43)" class="f">Line</span>
+<span onmouseout="hideTip(event, 'fs10', 44)" onmouseover="showTip(event, 'fs10', 44)" class="i">grandiCesaro</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs4', 45)" onmouseover="showTip(event, 'fs4', 45)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs14', 46)" onmouseover="showTip(event, 'fs14', 46)" class="f">take</span> <span class="n">100</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs15', 47)" onmouseover="showTip(event, 'fs15', 47)" class="t">Chart</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs16', 48)" onmouseover="showTip(event, 'fs16', 48)" class="f">Line</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">Multiple items<br />namespace FSharp<br /><br />--------------------<br />namespace Microsoft.FSharp</div>
+<div class="tip" id="fs2">namespace FSharp.Charting</div>
+<div class="tip" id="fs3">val eulerSums : seq&lt;float&gt;<br /><br />Full name: Script.eulerSums<br /><em><br /><br />&#160;Generates partial sums of the reciprocal series<br />&#160;First generate series, then use scan for partial sums</em></div>
+<div class="tip" id="fs4">module Seq<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs5">val initInfinite : initializer:(int -&gt; &#39;T) -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.initInfinite</div>
+<div class="tip" id="fs6">val i : int</div>
+<div class="tip" id="fs7">Multiple items<br />val float : value:&#39;T -&gt; float (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.float<br /><br />--------------------<br />type float = System.Double<br /><br />Full name: Microsoft.FSharp.Core.float<br /><br />--------------------<br />type float&lt;&#39;Measure&gt; = float<br /><br />Full name: Microsoft.FSharp.Core.float&lt;_&gt;</div>
+<div class="tip" id="fs8">val scan : folder:(&#39;State -&gt; &#39;T -&gt; &#39;State) -&gt; state:&#39;State -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;State&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.scan</div>
+<div class="tip" id="fs9">val grandiSums : seq&lt;float&gt;<br /><br />Full name: Script.grandiSums<br /><em><br /><br />&#160;Generate partial sums of grandi series (even easier!)</em></div>
+<div class="tip" id="fs10">val grandiCesaro : seq&lt;float&gt;<br /><br />Full name: Script.grandiCesaro<br /><em><br /><br />&#160;Generate partial sums of the grandiSums series<br />&#160;using the cesaro summation (simply take the sums<br />&#160;and divide by the element index in mapi)<br />&#160;(We skip the initial zero elements produced by scan) </em></div>
+<div class="tip" id="fs11">val skip : count:int -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.skip</div>
+<div class="tip" id="fs12">val mapi : mapping:(int -&gt; &#39;T -&gt; &#39;U) -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;U&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.mapi</div>
+<div class="tip" id="fs13">val partial : float</div>
+<div class="tip" id="fs14">val take : count:int -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.take</div>
+<div class="tip" id="fs15">type Chart =<br />&#160;&#160;static member Area : data:seq&lt;#value&gt; * ?Name:string * ?Title:string * ?Labels:#seq&lt;string&gt; * ?Color:Color * ?XTitle:string * ?YTitle:string -&gt; GenericChart<br />&#160;&#160;static member Area : data:seq&lt;#key * #value&gt; * ?Name:string * ?Title:string * ?Labels:#seq&lt;string&gt; * ?Color:Color * ?XTitle:string * ?YTitle:string -&gt; GenericChart<br />&#160;&#160;static member Bar : data:seq&lt;#value&gt; * ?Name:string * ?Title:string * ?Labels:#seq&lt;string&gt; * ?Color:Color * ?XTitle:string * ?YTitle:string -&gt; GenericChart<br />&#160;&#160;static member Bar : data:seq&lt;#key * #value&gt; * ?Name:string * ?Title:string * ?Labels:#seq&lt;string&gt; * ?Color:Color * ?XTitle:string * ?YTitle:string -&gt; GenericChart<br />&#160;&#160;static member BoxPlotFromData : data:seq&lt;#key * #seq&lt;&#39;a2&gt;&gt; * ?Name:string * ?Title:string * ?Color:Color * ?XTitle:string * ?YTitle:string * ?Percentile:int * ?ShowAverage:bool * ?ShowMedian:bool * ?ShowUnusualValues:bool * ?WhiskerPercentile:int -&gt; GenericChart (requires &#39;a2 :&gt; value)<br />&#160;&#160;static member BoxPlotFromStatistics : data:seq&lt;#key * #value * #value * #value * #value * #value * #value&gt; * ?Name:string * ?Title:string * ?Labels:#seq&lt;string&gt; * ?Color:Color * ?XTitle:string * ?YTitle:string * ?Percentile:int * ?ShowAverage:bool * ?ShowMedian:bool * ?ShowUnusualValues:bool * ?WhiskerPercentile:int -&gt; GenericChart<br />&#160;&#160;static member Bubble : data:seq&lt;#value * #value&gt; * ?Name:string * ?Title:string * ?Labels:#seq&lt;string&gt; * ?Color:Color * ?XTitle:string * ?YTitle:string * ?BubbleMaxSize:int * ?BubbleMinSize:int * ?BubbleScaleMax:float * ?BubbleScaleMin:float * ?UseSizeForLabel:bool -&gt; GenericChart<br />&#160;&#160;static member Bubble : data:seq&lt;#key * #value * #value&gt; * ?Name:string * ?Title:string * ?Labels:#seq&lt;string&gt; * ?Color:Color * ?XTitle:string * ?YTitle:string * ?BubbleMaxSize:int * ?BubbleMinSize:int * ?BubbleScaleMax:float * ?BubbleScaleMin:float * ?UseSizeForLabel:bool -&gt; GenericChart<br />&#160;&#160;static member Candlestick : data:seq&lt;#value * #value * #value * #value&gt; * ?Name:string * ?Title:string * ?Labels:#seq&lt;string&gt; * ?Color:Color * ?XTitle:string * ?YTitle:string -&gt; CandlestickChart<br />&#160;&#160;static member Candlestick : data:seq&lt;#key * #value * #value * #value * #value&gt; * ?Name:string * ?Title:string * ?Labels:#seq&lt;string&gt; * ?Color:Color * ?XTitle:string * ?YTitle:string -&gt; CandlestickChart<br />&#160;&#160;...<br /><br />Full name: FSharp.Charting.Chart</div>
+<div class="tip" id="fs16">static member Chart.Line : data:seq&lt;#value&gt; * ?Name:string * ?Title:string * ?Labels:#seq&lt;string&gt; * ?Color:System.Drawing.Color * ?XTitle:string * ?YTitle:string -&gt; ChartTypes.GenericChart<br />static member Chart.Line : data:seq&lt;#key * #value&gt; * ?Name:string * ?Title:string * ?Labels:#seq&lt;string&gt; * ?Color:System.Drawing.Color * ?XTitle:string * ?YTitle:string -&gt; ChartTypes.GenericChart</div>
+

@@ -1,0 +1,65 @@
+<h2><a name="Printing-None-results-in-amp-lt-null-amp-gt" class="anchor" href="#Printing-None-results-in-amp-lt-null-amp-gt">Printing None results in &amp;lt;null&amp;gt;</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="p">None</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="f">printfn</span> <span class="s">&quot;Value: </span><span class="pf">%A</span><span class="s">&quot;</span>
+<span class="c">// Value: &lt;null&gt;</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Custom-implementation-of-Option-amp-lt-T-amp-gt-Printing-None-results-in-None" class="anchor" href="#Custom-implementation-of-Option-amp-lt-T-amp-gt-Printing-None-results-in-None">Custom implementation of Option&amp;lt;'T&amp;gt; - Printing None results in None</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+<span class="l">6: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">type</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="t">MyOption</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span> <span class="o">=</span>
+| <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="p">Some</span> <span class="k">of</span> <span class="o">&#39;</span><span class="i">T</span>
+| <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="p">None</span>
+
+<span onmouseout="hideTip(event, 'fs3', 6)" onmouseover="showTip(event, 'fs3', 6)" class="t">MyOption</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs5', 7)" onmouseover="showTip(event, 'fs5', 7)" class="p">None</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs2', 8)" onmouseover="showTip(event, 'fs2', 8)" class="f">printfn</span> <span class="s">&quot;Value: </span><span class="pf">%A</span><span class="s">&quot;</span>
+<span class="c">// Value: None</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Revised-MyOption-amp-lt-T-amp-gt-Printing-None-results-in-amp-lt-null-amp-gt" class="anchor" href="#Revised-MyOption-amp-lt-T-amp-gt-Printing-None-results-in-amp-lt-null-amp-gt">Revised MyOption&amp;lt;'T&amp;gt; - Printing None results in &amp;lt;null&amp;gt;</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">// Here, MyOption2&lt;&#39;T&gt; is decorated with CompilationRepresentationAttribute and</span>
+<span class="c">// the UseNullAsTrueValue flag is set just like it is for Option&lt;&#39;T&gt; in the F#</span>
+<span class="c">// library. This is how None is represented in the compiled code.</span>
+<span class="c">// See http://bit.ly/1cA0QfS for more info about CompilationRepresentation</span>
+[&lt;<span onmouseout="hideTip(event, 'fs6', 9)" onmouseover="showTip(event, 'fs6', 9)" class="t">CompilationRepresentation</span>(<span onmouseout="hideTip(event, 'fs7', 10)" onmouseover="showTip(event, 'fs7', 10)" class="t">CompilationRepresentationFlags</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs8', 11)" onmouseover="showTip(event, 'fs8', 11)" class="i">UseNullAsTrueValue</span>)&gt;]
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs9', 12)" onmouseover="showTip(event, 'fs9', 12)" class="t">MyOption2</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span> <span class="o">=</span>
+| <span onmouseout="hideTip(event, 'fs10', 13)" onmouseover="showTip(event, 'fs10', 13)" class="p">Some</span> <span class="k">of</span> <span class="o">&#39;</span><span class="i">T</span>
+| <span onmouseout="hideTip(event, 'fs11', 14)" onmouseover="showTip(event, 'fs11', 14)" class="p">None</span>
+
+<span onmouseout="hideTip(event, 'fs9', 15)" onmouseover="showTip(event, 'fs9', 15)" class="t">MyOption2</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs11', 16)" onmouseover="showTip(event, 'fs11', 16)" class="p">None</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs2', 17)" onmouseover="showTip(event, 'fs2', 17)" class="f">printfn</span> <span class="s">&quot;Value: </span><span class="pf">%A</span><span class="s">&quot;</span>
+<span class="c">// Value: &lt;null&gt;</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">union case Option.None: Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs2">val printfn : format:Printf.TextWriterFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.printfn</div>
+<div class="tip" id="fs3">type MyOption&lt;&#39;T&gt; =<br />&#160;&#160;| Some of &#39;T<br />&#160;&#160;| None<br /><br />Full name: Script.MyOption&lt;_&gt;</div>
+<div class="tip" id="fs4">union case MyOption.Some: &#39;T -&gt; MyOption&lt;&#39;T&gt;</div>
+<div class="tip" id="fs5">union case MyOption.None: MyOption&lt;&#39;T&gt;</div>
+<div class="tip" id="fs6">Multiple items<br />type CompilationRepresentationAttribute =<br />&#160;&#160;inherit Attribute<br />&#160;&#160;new : flags:CompilationRepresentationFlags -&gt; CompilationRepresentationAttribute<br />&#160;&#160;member Flags : CompilationRepresentationFlags<br /><br />Full name: Microsoft.FSharp.Core.CompilationRepresentationAttribute<br /><br />--------------------<br />new : flags:CompilationRepresentationFlags -&gt; CompilationRepresentationAttribute</div>
+<div class="tip" id="fs7">type CompilationRepresentationFlags =<br />&#160;&#160;|  None  =  0<br />&#160;&#160;|  Static  =  1<br />&#160;&#160;|  Instance  =  2<br />&#160;&#160;|  ModuleSuffix  =  4<br />&#160;&#160;|  UseNullAsTrueValue  =  8<br />&#160;&#160;|  Event  =  16<br /><br />Full name: Microsoft.FSharp.Core.CompilationRepresentationFlags</div>
+<div class="tip" id="fs8">CompilationRepresentationFlags.UseNullAsTrueValue: CompilationRepresentationFlags = 8</div>
+<div class="tip" id="fs9">type MyOption2&lt;&#39;T&gt; =<br />&#160;&#160;| Some of &#39;T<br />&#160;&#160;| None<br /><br />Full name: Script.MyOption2&lt;_&gt;</div>
+<div class="tip" id="fs10">union case MyOption2.Some: &#39;T -&gt; MyOption2&lt;&#39;T&gt;</div>
+<div class="tip" id="fs11">union case MyOption2.None: MyOption2&lt;&#39;T&gt;</div>
+

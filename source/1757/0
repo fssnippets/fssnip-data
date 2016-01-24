@@ -1,0 +1,23 @@
+open System
+open System.Threading
+open System.Threading.Tasks
+
+type Async with
+
+    static member RunSynchronously2(workflow : Async<'T>, ?timeout : int, ?cancellationToken : CancellationToken) =
+        let tcs = new TaskCompletionSource<'T>()
+        match timeout with
+        | Some 0 -> raise <| new TimeoutException()
+        | Some t when t < 0 -> invalidArg "timeout" "must be positive."
+        | Some t -> let timer = new Timer((fun _ -> ignore <| tcs.TrySetException(new TimeoutException())), null, t, Timeout.Infinite) in ()
+        | None -> ()
+
+        let start _ = Async.StartWithContinuations(workflow, 
+                                                    ignore << tcs.TrySetResult,
+                                                    ignore << tcs.TrySetException,
+                                                    (fun _ -> ignore <| tcs.TrySetCanceled ()),
+                                                    ?cancellationToken = cancellationToken)
+
+        if not <| ThreadPool.QueueUserWorkItem(new WaitCallback(start)) then invalidOp "Could not queue to thread pool." 
+        try tcs.Task.Result 
+        with :? AggregateException as e when e.InnerExceptions.Count = 1 -> raise e.InnerExceptions.[0]

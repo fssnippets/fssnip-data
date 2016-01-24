@@ -1,0 +1,9 @@
+let getCsvHeaders (csvHeaders : string [] option) =
+    match csvHeaders with
+    | Some headers -> Set.ofArray headers
+    | None -> Set.empty
+    
+let processCsv (csvPath : string) =
+    let csv = CsvFile.Load(csvPath)
+    let csvHeaders = getCsvHeaders csv.Headers
+    csvHeaders.Contains("SomeHeader")

@@ -1,0 +1,103 @@
+module SMTP
+
+open System.Net.Sockets
+open System.Net
+open System.IO
+
+type private Agent<'T> = MailboxProcessor<'T>
+
+type EMail = { Body:string list; Subject:string; From:string; To:string; }
+
+let private emptyEmail = { Body=[];Subject="";From="";To=""; }
+
+type private CheckInbox = 
+    | Get of AsyncReplyChannel<EMail list>
+    | Add of EMail
+
+let private (|From|To|Subject|Body|) (input:string) =
+    let regexes = ["From: ";"To: ";"Subject: "]
+    let matches = regexes |> List.map(fun r -> (input.StartsWith(r),r))
+    let trimStart (start:string) = input.TrimStart(start.ToCharArray())
+    match matches with
+    | [(true,r);_;_] -> From (trimStart r)
+    | [_;(true,r);_] -> To (trimStart r)
+    | [_;_;(true,r)] -> Subject (trimStart r)
+    | _ -> Body input
+
+let private receiveEmail() = async {
+    let endPoint = new IPEndPoint(IPAddress.Any, 25)
+    let listener = new TcpListener(endPoint)
+    listener.Start()
+
+    use! client = listener.AcceptTcpClientAsync() |> Async.AwaitTask
+            
+    let stream = client.GetStream()
+    use sr = new StreamReader(stream)
+    use wr = new StreamWriter(stream)
+    wr.NewLine <- "\r\n"
+    wr.AutoFlush <- true
+
+    wr.WriteLine("220 localhost -- Fake proxy server")
+   
+    let rec readlines email =
+        let line = sr.ReadLine()
+                
+        match line with
+        | "DATA" -> 
+            wr.WriteLine("354 Start input, end data with <CRLF>.<CRLF>")
+            let rec readdata email =
+                let line = sr.ReadLine()
+                if line = null || line = "." 
+                then email
+                else 
+                    let email =
+                        match line with
+                        | From l -> {email with From=l}
+                        | To l -> {email with To=l}
+                        | Subject l -> {email with Subject=l}
+                        | Body l when l <> "" -> {email with Body=l::email.Body}
+                        | _ -> email
+                    readdata email
+
+            let newlines = readdata email
+            wr.WriteLine("250 OK")
+            readlines newlines
+        | "QUIT" -> 
+            wr.WriteLine("250 OK")
+            email
+        | _ -> 
+            wr.WriteLine("250 OK")
+            readlines email 
+                
+    let newMessage = readlines emptyEmail
+
+    client.Close()
+    listener.Stop()
+    return newMessage }
+
+let private smtpAgent (cachingAgent: Agent<CheckInbox>) = 
+    Agent<unit>.Start(fun _ -> 
+        let rec loop() = async {
+            let! newMessage = receiveEmail()
+            cachingAgent.Post (Add newMessage)
+            return! loop() }
+
+        loop())
+
+let private cachingAgent() =
+    Agent.Start(fun inbox -> 
+        let rec loop messages = async {
+            let! newMessage = inbox.Receive()
+            match newMessage with
+            | Get channel -> 
+                channel.Reply(messages)
+                return! loop messages
+            | Add message -> 
+                return! loop (message::messages) }
+        loop [])
+
+type SmtpServer() =
+    let cache = cachingAgent()
+    let server = smtpAgent cache
+    
+    member this.GetEmails() = cache.PostAndReply Get

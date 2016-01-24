@@ -1,0 +1,40 @@
+open System
+open System.Collections.Generic
+
+type person = { name: string; age: int }
+
+let rec getAge input =
+    if fst (Int32.TryParse(input)) then
+       int input
+    else 
+       Console.WriteLine("Sorry, could not parse your input, please enter an age")
+       Console.WriteLine("Hint: It is supposed to be an int")
+       getAge(Console.ReadLine())
+
+let rec readPerson list = 
+    Console.WriteLine("Please enter a name")
+    let name = Console.ReadLine()
+    Console.WriteLine("Please enter an age")
+    let age = getAge(Console.ReadLine())
+    Console.WriteLine("Do you want to add another person? y/n")
+    let answer = Console.ReadKey()
+    if (answer.Key = ConsoleKey.Y) then
+        readPerson({age = age; name = name}::list)
+    else 
+        {age = age; name = name}::list
+
+let classifyAge person = 
+    if person.age >= 20 then
+        (person.name, "adult")
+    elif person.age > 13 then
+        (person.name, "teenager")
+    else 
+        (person.name, "child")
+
+[<EntryPoint>]
+let main argv = 
+    let persons = readPerson([])
+    let classifiedPersons = persons |> List.map classifyAge
+    for person in classifiedPersons do
+        Console.WriteLine(person)
+    0

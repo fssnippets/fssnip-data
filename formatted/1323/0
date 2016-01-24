@@ -1,0 +1,45 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">//Initialize charting libraries</span>
+
+<span class="k">open</span> <span class="i">Samples</span><span class="o">.</span><span class="i">Charting</span><span class="o">.</span><span class="i">DojoChart</span>
+
+<span class="c">//Load World Bank Type Provider</span>
+<span class="prep">#r</span> <span class="s">&quot;Samples.WorldBank.dll&quot;</span>
+
+<span class="c">//Get data context</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">data</span> <span class="o">=</span> <span class="i">Samples</span><span class="o">.</span><span class="i">WorldBank</span><span class="o">.</span><span class="i">GetDataContext</span>()
+<span class="c">//Set up list of countries</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">countries</span> <span class="o">=</span> 
+  [ <span onmouseout="hideTip(event, 'fs1', 3)" onmouseover="showTip(event, 'fs1', 3)" class="i">data</span><span class="o">.</span><span class="i">Countries</span><span class="o">.</span><span class="i">``Pakistan``</span>; 
+    <span onmouseout="hideTip(event, 'fs1', 4)" onmouseover="showTip(event, 'fs1', 4)" class="i">data</span><span class="o">.</span><span class="i">Countries</span><span class="o">.</span><span class="i">China</span>;
+    <span onmouseout="hideTip(event, 'fs1', 5)" onmouseover="showTip(event, 'fs1', 5)" class="i">data</span><span class="o">.</span><span class="i">Countries</span><span class="o">.</span><span class="i">India</span>; 
+    <span onmouseout="hideTip(event, 'fs1', 6)" onmouseover="showTip(event, 'fs1', 6)" class="i">data</span><span class="o">.</span><span class="i">Countries</span><span class="o">.</span><span class="i">``United States``</span> ]
+
+<span class="c">//Plot total population of selected countries</span>
+<span class="i">Chart</span><span class="o">.</span><span class="i">Combine</span>([ <span class="k">for</span> <span class="i">c</span> <span class="k">in</span> <span onmouseout="hideTip(event, 'fs2', 7)" onmouseover="showTip(event, 'fs2', 7)" class="i">countries</span> <span class="k">-&gt;</span> <span class="i">Chart</span><span class="o">.</span><span class="i">Line</span> (<span class="i">c</span><span class="o">.</span><span class="i">Indicators</span><span class="o">.</span><span class="i">``Population, total``</span>, <span class="i">Name</span><span class="o">=</span><span class="i">c</span><span class="o">.</span><span class="i">Name</span>) ])
+     <span class="o">.</span><span class="i">AndTitle</span>(<span class="s">&quot;Population, 1960-2012&quot;</span>)
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">val data : obj<br /><br />Full name: Script.data</div>
+<div class="tip" id="fs2">val countries : obj list<br /><br />Full name: Script.countries</div>
+

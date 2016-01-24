@@ -1,0 +1,110 @@
+<h2><a name="Coroutine" class="anchor" href="#Coroutine">Coroutine</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">module</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="t">Coroutine</span>
+
+<span class="c">// requires the monad library</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">FSharp</span><span class="o">.</span><span class="i">Monad</span><span class="o">.</span><span class="i">Continuation</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="i">Collections</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="i">Generic</span>
+
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="t">Coroutine</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span>() <span class="o">=</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs7', 7)" onmouseover="showTip(event, 'fs7', 7)" class="i">tasks</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs8', 8)" onmouseover="showTip(event, 'fs8', 8)" class="t">Queue</span><span class="o">&lt;</span><span class="i">Cont</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span>,<span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span><span class="o">&gt;</span>()
+                
+    <span class="k">member</span> <span onmouseout="hideTip(event, 'fs9', 9)" onmouseover="showTip(event, 'fs9', 9)" class="i">this</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs10', 10)" onmouseover="showTip(event, 'fs10', 10)" class="f">Put</span>(<span onmouseout="hideTip(event, 'fs11', 11)" onmouseover="showTip(event, 'fs11', 11)" class="f">task</span>) <span class="o">=</span>
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs12', 12)" onmouseover="showTip(event, 'fs12', 12)" class="i">withYield</span> <span class="o">=</span> 
+            <span class="i">callCC</span> <span class="o">&lt;|</span> <span class="k">fun</span> <span onmouseout="hideTip(event, 'fs13', 13)" onmouseover="showTip(event, 'fs13', 13)" class="f">exit</span> <span class="k">-&gt;</span>
+                <span onmouseout="hideTip(event, 'fs11', 14)" onmouseover="showTip(event, 'fs11', 14)" class="f">task</span> <span class="o">&lt;|</span> <span class="k">fun</span> <span onmouseout="hideTip(event, 'fs14', 15)" onmouseover="showTip(event, 'fs14', 15)" class="i">value</span> <span class="k">-&gt;</span> 
+                    <span class="i">callCC</span> <span class="o">&lt;|</span> <span class="k">fun</span> <span onmouseout="hideTip(event, 'fs15', 16)" onmouseover="showTip(event, 'fs15', 16)" class="i">c</span> <span class="k">-&gt;</span> 
+                        <span onmouseout="hideTip(event, 'fs7', 17)" onmouseover="showTip(event, 'fs7', 17)" class="i">tasks</span><span class="o">.</span><span class="i">Enqueue</span>(<span onmouseout="hideTip(event, 'fs15', 18)" onmouseover="showTip(event, 'fs15', 18)" class="i">c</span>())
+                        <span onmouseout="hideTip(event, 'fs13', 19)" onmouseover="showTip(event, 'fs13', 19)" class="f">exit</span>(<span onmouseout="hideTip(event, 'fs14', 20)" onmouseover="showTip(event, 'fs14', 20)" class="i">value</span>)
+        <span onmouseout="hideTip(event, 'fs7', 21)" onmouseover="showTip(event, 'fs7', 21)" class="i">tasks</span><span class="o">.</span><span class="i">Enqueue</span>(<span onmouseout="hideTip(event, 'fs12', 22)" onmouseover="showTip(event, 'fs12', 22)" class="i">withYield</span>)
+
+    <span class="k">member</span> <span onmouseout="hideTip(event, 'fs9', 23)" onmouseover="showTip(event, 'fs9', 23)" class="i">this</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs16', 24)" onmouseover="showTip(event, 'fs16', 24)" class="f">Run</span>() <span class="o">=</span>
+        <span class="i">runCont</span> (<span onmouseout="hideTip(event, 'fs7', 25)" onmouseover="showTip(event, 'fs7', 25)" class="i">tasks</span><span class="o">.</span><span class="i">Dequeue</span>()) <span onmouseout="hideTip(event, 'fs17', 26)" onmouseover="showTip(event, 'fs17', 26)" class="i">id</span> <span onmouseout="hideTip(event, 'fs18', 27)" onmouseover="showTip(event, 'fs18', 27)" class="i">raise</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Example" class="anchor" href="#Example">Example</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">let</span> <span onmouseout="hideTip(event, 'fs19', 28)" onmouseover="showTip(event, 'fs19', 28)" class="i">coroutine</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs6', 29)" onmouseover="showTip(event, 'fs6', 29)" class="t">Coroutine</span>()
+
+<span onmouseout="hideTip(event, 'fs19', 30)" onmouseover="showTip(event, 'fs19', 30)" class="i">coroutine</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs20', 31)" onmouseover="showTip(event, 'fs20', 31)" class="f">Put</span>(<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs21', 32)" onmouseover="showTip(event, 'fs21', 32)" class="f">yield&#39;</span> <span class="k">-&gt;</span> <span class="i">cont</span> {
+    <span class="k">do!</span> <span onmouseout="hideTip(event, 'fs21', 33)" onmouseover="showTip(event, 'fs21', 33)" class="i">yield&#39;</span>(<span class="n">1</span>)
+    <span class="k">do!</span> <span onmouseout="hideTip(event, 'fs21', 34)" onmouseover="showTip(event, 'fs21', 34)" class="i">yield&#39;</span>(<span class="n">2</span>)
+    <span class="k">return</span> <span class="n">3</span>
+})
+
+<span onmouseout="hideTip(event, 'fs19', 35)" onmouseover="showTip(event, 'fs19', 35)" class="i">coroutine</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs20', 36)" onmouseover="showTip(event, 'fs20', 36)" class="f">Put</span>(<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs21', 37)" onmouseover="showTip(event, 'fs21', 37)" class="f">yield&#39;</span> <span class="k">-&gt;</span> <span class="i">cont</span> {
+    <span class="k">do!</span> <span onmouseout="hideTip(event, 'fs21', 38)" onmouseover="showTip(event, 'fs21', 38)" class="i">yield&#39;</span>(<span class="n">10</span>)
+    <span class="k">return</span> <span class="n">20</span>
+})
+
+<span onmouseout="hideTip(event, 'fs19', 39)" onmouseover="showTip(event, 'fs19', 39)" class="i">coroutine</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs22', 40)" onmouseover="showTip(event, 'fs22', 40)" class="f">Run</span>() <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs23', 41)" onmouseover="showTip(event, 'fs23', 41)" class="f">printfn</span> <span class="s">&quot;</span><span class="pf">%A</span><span class="s">&quot;</span>
+<span onmouseout="hideTip(event, 'fs19', 42)" onmouseover="showTip(event, 'fs19', 42)" class="i">coroutine</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs22', 43)" onmouseover="showTip(event, 'fs22', 43)" class="f">Run</span>() <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs23', 44)" onmouseover="showTip(event, 'fs23', 44)" class="f">printfn</span> <span class="s">&quot;</span><span class="pf">%A</span><span class="s">&quot;</span>
+<span onmouseout="hideTip(event, 'fs19', 45)" onmouseover="showTip(event, 'fs19', 45)" class="i">coroutine</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs22', 46)" onmouseover="showTip(event, 'fs22', 46)" class="f">Run</span>() <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs23', 47)" onmouseover="showTip(event, 'fs23', 47)" class="f">printfn</span> <span class="s">&quot;</span><span class="pf">%A</span><span class="s">&quot;</span>
+<span onmouseout="hideTip(event, 'fs19', 48)" onmouseover="showTip(event, 'fs19', 48)" class="i">coroutine</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs22', 49)" onmouseover="showTip(event, 'fs22', 49)" class="f">Run</span>() <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs23', 50)" onmouseover="showTip(event, 'fs23', 50)" class="f">printfn</span> <span class="s">&quot;</span><span class="pf">%A</span><span class="s">&quot;</span>
+<span onmouseout="hideTip(event, 'fs19', 51)" onmouseover="showTip(event, 'fs19', 51)" class="i">coroutine</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs22', 52)" onmouseover="showTip(event, 'fs22', 52)" class="f">Run</span>() <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs23', 53)" onmouseover="showTip(event, 'fs23', 53)" class="f">printfn</span> <span class="s">&quot;</span><span class="pf">%A</span><span class="s">&quot;</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">module Coroutine</div>
+<div class="tip" id="fs2">namespace Microsoft.FSharp</div>
+<div class="tip" id="fs3">namespace System</div>
+<div class="tip" id="fs4">namespace System.Collections</div>
+<div class="tip" id="fs5">namespace System.Collections.Generic</div>
+<div class="tip" id="fs6">Multiple items<br />type Coroutine&lt;&#39;T&gt; =<br />&#160;&#160;new : unit -&gt; Coroutine&lt;&#39;T&gt;<br />&#160;&#160;member Put : task:((&#39;a -&gt; &#39;b) -&gt; &#39;c) -&gt; &#39;d<br />&#160;&#160;member Run : unit -&gt; &#39;a<br /><br />Full name: Coroutine.Coroutine&lt;_&gt;<br /><br />--------------------<br />new : unit -&gt; Coroutine&lt;&#39;T&gt;</div>
+<div class="tip" id="fs7">val tasks : obj</div>
+<div class="tip" id="fs8">Multiple items<br />type Queue&lt;&#39;T&gt; =<br />&#160;&#160;new : unit -&gt; Queue&lt;&#39;T&gt; + 2 overloads<br />&#160;&#160;member Clear : unit -&gt; unit<br />&#160;&#160;member Contains : item:&#39;T -&gt; bool<br />&#160;&#160;member CopyTo : array:&#39;T[] * arrayIndex:int -&gt; unit<br />&#160;&#160;member Count : int<br />&#160;&#160;member Dequeue : unit -&gt; &#39;T<br />&#160;&#160;member Enqueue : item:&#39;T -&gt; unit<br />&#160;&#160;member GetEnumerator : unit -&gt; Enumerator&lt;&#39;T&gt;<br />&#160;&#160;member Peek : unit -&gt; &#39;T<br />&#160;&#160;member ToArray : unit -&gt; &#39;T[]<br />&#160;&#160;...<br />&#160;&#160;nested type Enumerator<br /><br />Full name: System.Collections.Generic.Queue&lt;_&gt;<br /><br />--------------------<br />Queue() : unit<br />Queue(capacity: int) : unit<br />Queue(collection: IEnumerable&lt;&#39;T&gt;) : unit</div>
+<div class="tip" id="fs9">val this : Coroutine&lt;&#39;T&gt;</div>
+<div class="tip" id="fs10">member Coroutine.Put : task:((&#39;a -&gt; &#39;b) -&gt; &#39;c) -&gt; &#39;d<br /><br />Full name: Coroutine.Coroutine`1.Put</div>
+<div class="tip" id="fs11">val task : ((&#39;a -&gt; &#39;b) -&gt; &#39;c)</div>
+<div class="tip" id="fs12">val withYield : obj</div>
+<div class="tip" id="fs13">val exit : (&#39;a -&gt; obj)</div>
+<div class="tip" id="fs14">val value : &#39;a</div>
+<div class="tip" id="fs15">val c : obj</div>
+<div class="tip" id="fs16">member Coroutine.Run : unit -&gt; &#39;a<br /><br />Full name: Coroutine.Coroutine`1.Run</div>
+<div class="tip" id="fs17">val id : x:&#39;T -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.Operators.id</div>
+<div class="tip" id="fs18">val raise : exn:System.Exception -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.Operators.raise</div>
+<div class="tip" id="fs19">val coroutine : Coroutine&lt;obj&gt;<br /><br />Full name: Coroutine.coroutine</div>
+<div class="tip" id="fs20">member Coroutine.Put : task:((&#39;a -&gt; &#39;b) -&gt; &#39;c) -&gt; &#39;d</div>
+<div class="tip" id="fs21">val yield&#39; : (obj -&gt; obj)</div>
+<div class="tip" id="fs22">member Coroutine.Run : unit -&gt; &#39;a</div>
+<div class="tip" id="fs23">val printfn : format:Printf.TextWriterFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.printfn</div>
+

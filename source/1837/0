@@ -1,0 +1,16 @@
+let rnd = System.Random()
+
+let vowels = "aeiou"
+let consonants = set ['a'..'z'] - set vowels
+
+let from xs = xs |> Seq.nth (rnd.Next(Seq.length xs))
+
+let vowel () = from vowels |> string
+let consonant () = from consonants |> string
+let cv () = consonant() + vowel()
+let cvc () = cv() + consonant()
+let syllable () = (from [vowel; cv; cvc])()
+
+let pseudoword() = String.concat "" [for x in 0..rnd.Next(1,3) -> syllable ()]
+
+pseudoword()

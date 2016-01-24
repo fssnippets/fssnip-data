@@ -1,0 +1,72 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">let</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="f">findWindowBeginnings</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="f">predicate</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="i">minWindowSize</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="i">data</span> <span class="o">=</span>
+    <span class="k">if</span> <span onmouseout="hideTip(event, 'fs3', 5)" onmouseover="showTip(event, 'fs3', 5)" class="i">minWindowSize</span> <span class="o">&lt;</span> <span class="n">2</span> <span class="k">then</span> <span onmouseout="hideTip(event, 'fs5', 6)" onmouseover="showTip(event, 'fs5', 6)" class="f">invalidArg</span> <span class="s">&quot;minWindowSize&quot;</span> <span class="s">&quot;minWindowSize must be greater than 1&quot;</span>
+    ((<span onmouseout="hideTip(event, 'fs6', 7)" onmouseover="showTip(event, 'fs6', 7)" class="p">None</span>, []), <span onmouseout="hideTip(event, 'fs4', 8)" onmouseover="showTip(event, 'fs4', 8)" class="i">data</span>)
+    <span class="o">||&gt;</span> <span onmouseout="hideTip(event, 'fs7', 9)" onmouseover="showTip(event, 'fs7', 9)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs8', 10)" onmouseover="showTip(event, 'fs8', 10)" class="f">fold</span> (<span class="k">fun</span> (<span onmouseout="hideTip(event, 'fs9', 11)" onmouseover="showTip(event, 'fs9', 11)" class="i">window</span>, <span onmouseout="hideTip(event, 'fs10', 12)" onmouseover="showTip(event, 'fs10', 12)" class="i">acc</span>) <span onmouseout="hideTip(event, 'fs11', 13)" onmouseover="showTip(event, 'fs11', 13)" class="i">x</span> <span class="k">-&gt;</span>
+        <span class="k">if</span> <span onmouseout="hideTip(event, 'fs2', 14)" onmouseover="showTip(event, 'fs2', 14)" class="f">predicate</span> <span onmouseout="hideTip(event, 'fs11', 15)" onmouseover="showTip(event, 'fs11', 15)" class="i">x</span> <span class="k">then</span>
+            <span class="k">match</span> <span onmouseout="hideTip(event, 'fs9', 16)" onmouseover="showTip(event, 'fs9', 16)" class="i">window</span> <span class="k">with</span>
+            | <span onmouseout="hideTip(event, 'fs12', 17)" onmouseover="showTip(event, 'fs12', 17)" class="p">Some</span> (<span onmouseout="hideTip(event, 'fs13', 18)" onmouseover="showTip(event, 'fs13', 18)" class="i">start</span>, <span onmouseout="hideTip(event, 'fs14', 19)" onmouseover="showTip(event, 'fs14', 19)" class="i">size</span>) <span class="k">-&gt;</span> <span class="k">let</span> <span onmouseout="hideTip(event, 'fs15', 20)" onmouseover="showTip(event, 'fs15', 20)" class="i">size&#39;</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs14', 21)" onmouseover="showTip(event, 'fs14', 21)" class="i">size</span> <span class="o">+</span> <span class="n">1</span>
+                                    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs16', 22)" onmouseover="showTip(event, 'fs16', 22)" class="i">acc&#39;</span> <span class="o">=</span> <span class="k">if</span> <span onmouseout="hideTip(event, 'fs15', 23)" onmouseover="showTip(event, 'fs15', 23)" class="i">size&#39;</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs3', 24)" onmouseover="showTip(event, 'fs3', 24)" class="i">minWindowSize</span> <span class="k">then</span> <span onmouseout="hideTip(event, 'fs13', 25)" onmouseover="showTip(event, 'fs13', 25)" class="i">start</span><span class="o">::</span><span onmouseout="hideTip(event, 'fs10', 26)" onmouseover="showTip(event, 'fs10', 26)" class="i">acc</span> <span class="k">else</span> <span onmouseout="hideTip(event, 'fs10', 27)" onmouseover="showTip(event, 'fs10', 27)" class="i">acc</span>
+                                    <span onmouseout="hideTip(event, 'fs12', 28)" onmouseover="showTip(event, 'fs12', 28)" class="p">Some</span> (<span onmouseout="hideTip(event, 'fs13', 29)" onmouseover="showTip(event, 'fs13', 29)" class="i">start</span>, <span onmouseout="hideTip(event, 'fs15', 30)" onmouseover="showTip(event, 'fs15', 30)" class="i">size&#39;</span>), <span onmouseout="hideTip(event, 'fs16', 31)" onmouseover="showTip(event, 'fs16', 31)" class="i">acc&#39;</span>
+            | _                  <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs12', 32)" onmouseover="showTip(event, 'fs12', 32)" class="p">Some</span> (<span onmouseout="hideTip(event, 'fs11', 33)" onmouseover="showTip(event, 'fs11', 33)" class="i">x</span>, <span class="n">1</span>), <span onmouseout="hideTip(event, 'fs10', 34)" onmouseover="showTip(event, 'fs10', 34)" class="i">acc</span>
+        <span class="k">else</span> <span onmouseout="hideTip(event, 'fs6', 35)" onmouseover="showTip(event, 'fs6', 35)" class="p">None</span>, <span onmouseout="hideTip(event, 'fs10', 36)" onmouseover="showTip(event, 'fs10', 36)" class="i">acc</span>)
+    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs17', 37)" onmouseover="showTip(event, 'fs17', 37)" class="f">snd</span>
+    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs18', 38)" onmouseover="showTip(event, 'fs18', 38)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs19', 39)" onmouseover="showTip(event, 'fs19', 39)" class="f">rev</span>
+
+<span class="c">// example usage, implementing described use case:</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs20', 40)" onmouseover="showTip(event, 'fs20', 40)" class="f">findHeatwaveBeginnings</span> <span onmouseout="hideTip(event, 'fs21', 41)" onmouseover="showTip(event, 'fs21', 41)" class="i">tempThreshold</span> <span onmouseout="hideTip(event, 'fs22', 42)" onmouseover="showTip(event, 'fs22', 42)" class="i">consecutiveDays</span> <span onmouseout="hideTip(event, 'fs23', 43)" onmouseover="showTip(event, 'fs23', 43)" class="i">data</span> <span class="o">=</span>
+    (<span onmouseout="hideTip(event, 'fs22', 44)" onmouseover="showTip(event, 'fs22', 44)" class="i">consecutiveDays</span>, <span onmouseout="hideTip(event, 'fs23', 45)" onmouseover="showTip(event, 'fs23', 45)" class="i">data</span>)
+    <span class="o">||&gt;</span> <span onmouseout="hideTip(event, 'fs1', 46)" onmouseover="showTip(event, 'fs1', 46)" class="f">findWindowBeginnings</span> (<span onmouseout="hideTip(event, 'fs17', 47)" onmouseover="showTip(event, 'fs17', 47)" class="f">snd</span> <span class="o">&gt;</span><span class="o">&gt;</span> (<span class="o">&lt;</span>) <span onmouseout="hideTip(event, 'fs21', 48)" onmouseover="showTip(event, 'fs21', 48)" class="i">tempThreshold</span>)
+    <span class="c">// alternatively, if one isn&#39;t a fan of point-free style code:</span>
+    <span class="c">//  findWindowBeginnings (fun (_, maxTemp) -&gt; maxTemp &gt; tempThreshold)</span>
+    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs18', 49)" onmouseover="showTip(event, 'fs18', 49)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs24', 50)" onmouseover="showTip(event, 'fs24', 50)" class="f">map</span> <span onmouseout="hideTip(event, 'fs25', 51)" onmouseover="showTip(event, 'fs25', 51)" class="f">fst</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">val findWindowBeginnings : predicate:(&#39;a -&gt; bool) -&gt; minWindowSize:int -&gt; data:seq&lt;&#39;a&gt; -&gt; &#39;a list<br /><br />Full name: Script.findWindowBeginnings</div>
+<div class="tip" id="fs2">val predicate : (&#39;a -&gt; bool)</div>
+<div class="tip" id="fs3">val minWindowSize : int</div>
+<div class="tip" id="fs4">val data : seq&lt;&#39;a&gt;</div>
+<div class="tip" id="fs5">val invalidArg : argumentName:string -&gt; message:string -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.Operators.invalidArg</div>
+<div class="tip" id="fs6">union case Option.None: Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs7">module Seq<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs8">val fold : folder:(&#39;State -&gt; &#39;T -&gt; &#39;State) -&gt; state:&#39;State -&gt; source:seq&lt;&#39;T&gt; -&gt; &#39;State<br /><br />Full name: Microsoft.FSharp.Collections.Seq.fold</div>
+<div class="tip" id="fs9">val window : (&#39;a * int) option</div>
+<div class="tip" id="fs10">val acc : &#39;a list</div>
+<div class="tip" id="fs11">val x : &#39;a</div>
+<div class="tip" id="fs12">union case Option.Some: Value: &#39;T -&gt; Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs13">val start : &#39;a</div>
+<div class="tip" id="fs14">val size : int</div>
+<div class="tip" id="fs15">val size&#39; : int</div>
+<div class="tip" id="fs16">val acc&#39; : &#39;a list</div>
+<div class="tip" id="fs17">val snd : tuple:(&#39;T1 * &#39;T2) -&gt; &#39;T2<br /><br />Full name: Microsoft.FSharp.Core.Operators.snd</div>
+<div class="tip" id="fs18">Multiple items<br />module List<br /><br />from Microsoft.FSharp.Collections<br /><br />--------------------<br />type List&lt;&#39;T&gt; =<br />&#160;&#160;| ( [] )<br />&#160;&#160;| ( :: ) of Head: &#39;T * Tail: &#39;T list<br />&#160;&#160;interface IEnumerable<br />&#160;&#160;interface IEnumerable&lt;&#39;T&gt;<br />&#160;&#160;member Head : &#39;T<br />&#160;&#160;member IsEmpty : bool<br />&#160;&#160;member Item : index:int -&gt; &#39;T with get<br />&#160;&#160;member Length : int<br />&#160;&#160;member Tail : &#39;T list<br />&#160;&#160;static member Cons : head:&#39;T * tail:&#39;T list -&gt; &#39;T list<br />&#160;&#160;static member Empty : &#39;T list<br /><br />Full name: Microsoft.FSharp.Collections.List&lt;_&gt;</div>
+<div class="tip" id="fs19">val rev : list:&#39;T list -&gt; &#39;T list<br /><br />Full name: Microsoft.FSharp.Collections.List.rev</div>
+<div class="tip" id="fs20">val findHeatwaveBeginnings : tempThreshold:&#39;a -&gt; consecutiveDays:int -&gt; data:seq&lt;&#39;b * &#39;a&gt; -&gt; &#39;b list (requires comparison)<br /><br />Full name: Script.findHeatwaveBeginnings</div>
+<div class="tip" id="fs21">val tempThreshold : &#39;a (requires comparison)</div>
+<div class="tip" id="fs22">val consecutiveDays : int</div>
+<div class="tip" id="fs23">val data : seq&lt;&#39;b * &#39;a&gt; (requires comparison)</div>
+<div class="tip" id="fs24">val map : mapping:(&#39;T -&gt; &#39;U) -&gt; list:&#39;T list -&gt; &#39;U list<br /><br />Full name: Microsoft.FSharp.Collections.List.map</div>
+<div class="tip" id="fs25">val fst : tuple:(&#39;T1 * &#39;T2) -&gt; &#39;T1<br /><br />Full name: Microsoft.FSharp.Core.Operators.fst</div>
+

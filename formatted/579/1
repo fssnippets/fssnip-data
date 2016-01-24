@@ -1,0 +1,85 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">Microsoft</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">FSharp</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="i">Reflection</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="f">toString</span> (<span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="i">x</span><span class="o">:</span><span class="o">&#39;</span><span class="i">a</span>) <span class="o">=</span> 
+    <span class="k">match</span> <span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="t">FSharpValue</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs7', 7)" onmouseover="showTip(event, 'fs7', 7)" class="f">GetUnionFields</span>(<span onmouseout="hideTip(event, 'fs5', 8)" onmouseover="showTip(event, 'fs5', 8)" class="i">x</span>, <span onmouseout="hideTip(event, 'fs8', 9)" onmouseover="showTip(event, 'fs8', 9)" class="i">typeof</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">a</span><span class="o">&gt;</span>) <span class="k">with</span>
+    | <span onmouseout="hideTip(event, 'fs9', 10)" onmouseover="showTip(event, 'fs9', 10)" class="i">case</span>, _ <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs9', 11)" onmouseover="showTip(event, 'fs9', 11)" class="i">case</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs10', 12)" onmouseover="showTip(event, 'fs10', 12)" class="i">Name</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs11', 13)" onmouseover="showTip(event, 'fs11', 13)" class="f">fromString</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">a</span><span class="o">&gt;</span> (<span onmouseout="hideTip(event, 'fs12', 14)" onmouseover="showTip(event, 'fs12', 14)" class="i">s</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs13', 15)" onmouseover="showTip(event, 'fs13', 15)" class="t">string</span>) <span class="o">=</span>
+    <span class="k">match</span> <span onmouseout="hideTip(event, 'fs14', 16)" onmouseover="showTip(event, 'fs14', 16)" class="t">FSharpType</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs15', 17)" onmouseover="showTip(event, 'fs15', 17)" class="f">GetUnionCases</span> <span onmouseout="hideTip(event, 'fs8', 18)" onmouseover="showTip(event, 'fs8', 18)" class="i">typeof</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">a</span><span class="o">&gt;</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs16', 19)" onmouseover="showTip(event, 'fs16', 19)" class="t">Array</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs17', 20)" onmouseover="showTip(event, 'fs17', 20)" class="f">filter</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs9', 21)" onmouseover="showTip(event, 'fs9', 21)" class="i">case</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs9', 22)" onmouseover="showTip(event, 'fs9', 22)" class="i">case</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs10', 23)" onmouseover="showTip(event, 'fs10', 23)" class="i">Name</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs12', 24)" onmouseover="showTip(event, 'fs12', 24)" class="i">s</span>) <span class="k">with</span>
+    |[|<span onmouseout="hideTip(event, 'fs9', 25)" onmouseover="showTip(event, 'fs9', 25)" class="i">case</span>|] <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs18', 26)" onmouseover="showTip(event, 'fs18', 26)" class="p">Some</span>(<span onmouseout="hideTip(event, 'fs6', 27)" onmouseover="showTip(event, 'fs6', 27)" class="t">FSharpValue</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs19', 28)" onmouseover="showTip(event, 'fs19', 28)" class="f">MakeUnion</span>(<span onmouseout="hideTip(event, 'fs9', 29)" onmouseover="showTip(event, 'fs9', 29)" class="i">case</span>,[||]) <span class="o">:?&gt;</span> <span class="o">&#39;</span><span class="i">a</span>)
+    |_ <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs20', 30)" onmouseover="showTip(event, 'fs20', 30)" class="p">None</span>
+
+<span class="c">// Usage:</span>
+<span class="c">// type A = X|Y|Z with</span>
+<span class="c">//     member this.toString = toString this</span>
+<span class="c">//     static member fromString s = fromString&lt;A&gt; s</span>
+
+<span class="c">// &gt; X.toString;;</span>
+<span class="c">// val it : string = &quot;X&quot;</span>
+
+<span class="c">// &gt; A.fromString &quot;X&quot;;;</span>
+<span class="c">// val it : A option = Some X</span>
+
+<span class="c">// &gt; A.fromString &quot;W&quot;;;</span>
+<span class="c">// val it : A option = None</span>
+
+<span class="c">// &gt; toString X;;</span>
+<span class="c">// val it : string = &quot;X&quot;</span>
+
+<span class="c">// &gt; fromString&lt;A&gt; &quot;X&quot;;;</span>
+<span class="c">// val it : A option = Some X</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace Microsoft</div>
+<div class="tip" id="fs2">namespace Microsoft.FSharp</div>
+<div class="tip" id="fs3">namespace Microsoft.FSharp.Reflection</div>
+<div class="tip" id="fs4">val toString : x:&#39;a -&gt; string<br /><br />Full name: Script.toString</div>
+<div class="tip" id="fs5">val x : &#39;a</div>
+<div class="tip" id="fs6">type FSharpValue =<br />&#160;&#160;static member GetExceptionFields : exn:obj * ?bindingFlags:BindingFlags -&gt; obj []<br />&#160;&#160;static member GetRecordField : record:obj * info:PropertyInfo -&gt; obj<br />&#160;&#160;static member GetRecordFields : record:obj * ?bindingFlags:BindingFlags -&gt; obj []<br />&#160;&#160;static member GetTupleField : tuple:obj * index:int -&gt; obj<br />&#160;&#160;static member GetTupleFields : tuple:obj -&gt; obj []<br />&#160;&#160;static member GetUnionFields : value:obj * unionType:Type * ?bindingFlags:BindingFlags -&gt; UnionCaseInfo * obj []<br />&#160;&#160;static member MakeFunction : functionType:Type * implementation:(obj -&gt; obj) -&gt; obj<br />&#160;&#160;static member MakeRecord : recordType:Type * values:obj [] * ?bindingFlags:BindingFlags -&gt; obj<br />&#160;&#160;static member MakeTuple : tupleElements:obj [] * tupleType:Type -&gt; obj<br />&#160;&#160;static member MakeUnion : unionCase:UnionCaseInfo * args:obj [] * ?bindingFlags:BindingFlags -&gt; obj<br />&#160;&#160;...<br /><br />Full name: Microsoft.FSharp.Reflection.FSharpValue</div>
+<div class="tip" id="fs7">static member FSharpValue.GetUnionFields : value:obj * unionType:System.Type * ?allowAccessToPrivateRepresentation:bool -&gt; UnionCaseInfo * obj []<br />static member FSharpValue.GetUnionFields : value:obj * unionType:System.Type * ?bindingFlags:System.Reflection.BindingFlags -&gt; UnionCaseInfo * obj []</div>
+<div class="tip" id="fs8">val typeof&lt;&#39;T&gt; : System.Type<br /><br />Full name: Microsoft.FSharp.Core.Operators.typeof</div>
+<div class="tip" id="fs9">val case : UnionCaseInfo</div>
+<div class="tip" id="fs10">property UnionCaseInfo.Name: string</div>
+<div class="tip" id="fs11">val fromString : s:string -&gt; &#39;a option<br /><br />Full name: Script.fromString</div>
+<div class="tip" id="fs12">val s : string</div>
+<div class="tip" id="fs13">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />Full name: Microsoft.FSharp.Core.Operators.string<br /><br />--------------------<br />type string = System.String<br /><br />Full name: Microsoft.FSharp.Core.string</div>
+<div class="tip" id="fs14">type FSharpType =<br />&#160;&#160;static member GetExceptionFields : exceptionType:Type * ?bindingFlags:BindingFlags -&gt; PropertyInfo []<br />&#160;&#160;static member GetFunctionElements : functionType:Type -&gt; Type * Type<br />&#160;&#160;static member GetRecordFields : recordType:Type * ?bindingFlags:BindingFlags -&gt; PropertyInfo []<br />&#160;&#160;static member GetTupleElements : tupleType:Type -&gt; Type []<br />&#160;&#160;static member GetUnionCases : unionType:Type * ?bindingFlags:BindingFlags -&gt; UnionCaseInfo []<br />&#160;&#160;static member IsExceptionRepresentation : exceptionType:Type * ?bindingFlags:BindingFlags -&gt; bool<br />&#160;&#160;static member IsFunction : typ:Type -&gt; bool<br />&#160;&#160;static member IsModule : typ:Type -&gt; bool<br />&#160;&#160;static member IsRecord : typ:Type * ?bindingFlags:BindingFlags -&gt; bool<br />&#160;&#160;static member IsTuple : typ:Type -&gt; bool<br />&#160;&#160;...<br /><br />Full name: Microsoft.FSharp.Reflection.FSharpType</div>
+<div class="tip" id="fs15">static member FSharpType.GetUnionCases : unionType:System.Type * ?allowAccessToPrivateRepresentation:bool -&gt; UnionCaseInfo []<br />static member FSharpType.GetUnionCases : unionType:System.Type * ?bindingFlags:System.Reflection.BindingFlags -&gt; UnionCaseInfo []</div>
+<div class="tip" id="fs16">module Array<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs17">val filter : predicate:(&#39;T -&gt; bool) -&gt; array:&#39;T [] -&gt; &#39;T []<br /><br />Full name: Microsoft.FSharp.Collections.Array.filter</div>
+<div class="tip" id="fs18">union case Option.Some: Value: &#39;T -&gt; Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs19">static member FSharpValue.MakeUnion : unionCase:UnionCaseInfo * args:obj [] * ?allowAccessToPrivateRepresentation:bool -&gt; obj<br />static member FSharpValue.MakeUnion : unionCase:UnionCaseInfo * args:obj [] * ?bindingFlags:System.Reflection.BindingFlags -&gt; obj</div>
+<div class="tip" id="fs20">union case Option.None: Option&lt;&#39;T&gt;</div>
+

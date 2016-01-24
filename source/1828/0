@@ -1,0 +1,59 @@
+/// A reader monad is a computation that takes a state 'S and produces a value 'T  
+///
+/// In the usual reader monad, we would have `unit : T -> Reader<S, T>` and
+/// `bind : (T1 -> Reader<S, T2>) -> Reader<S, T1> -> Reader<S, T2>` but
+/// we're going to do things a bit differently here and the state we read
+/// is going to be composed as a tuple of things that are read by the individual
+/// computations composed by bind.
+type Reader<'S, 'T> = Reader of ('S -> 'T)
+
+/// The unit operation does not read any state and so it produces `Reader<unit, T>`
+let unit v = Reader(fun () -> v)
+
+/// The bind operation takes `Reader<S1, T1>` and a function that reads another
+/// part of the state `T1 -> Reader<S2, T2>` and produces a reader that reads 
+/// both state values (in a tuple) so that's `Reader<S1*S2, T2>`
+let bind f (Reader(g)) = Reader(fun (a, b) ->
+  let v = g a
+  let (Reader h) = f v
+  h b)
+
+/// Defines the computation builder - add `Delay` so that we can delay things!
+type ReaderBuilder() = 
+  member x.Return(v) = unit v
+  member x.Bind(v, f) = bind f v
+  member x.Delay(f) = Reader (fun s -> 
+    let (Reader h) = f ()
+    h s )
+
+let reader = ReaderBuilder()
+
+/// A function that takes a computation written as `Reader<S, T>`. It builds a new
+/// computation of type `Reader<option<T>*S, T>` that attempts to read a cached result
+/// of type T from the state - if it is there, we just return it, otherwise we run
+/// the computation provided as an argument to actually compute the value.
+let cache (Reader(f)) = (Reader(fun (v1, v2) ->
+  match v1 with
+  | None -> f v2
+  | Some v -> v))
+
+/// Returns `n` and prints string to log what's happening
+let read s n = reader {
+  printfn "Reading: %s" s 
+  return n }
+
+let m = reader { 
+  // The following two are only run if the value is not already available
+  let! a = cache <| read "A" 1
+  let! b = cache <| read "B" 2
+  // The following read is done always (not accesses the state)
+  let! c = read "C" 3
+  return a + b + c
+}
+
+let (Reader f) = m 
+f ((None, ()), ((None, ()), ((), ())))
+f ((Some 1, ()), ((None, ()), ((), ())))
+f ((None, ()), ((Some 2, ()), ((), ())))
+f ((Some 1, ()), ((Some 2, ()), ((), ())))
+

@@ -1,0 +1,20 @@
+open FSharp.Data
+open XPlot.GoogleCharts
+open Deedle
+
+type N=HtmlProvider<"https://www.nuget.org/packages/FSharp.Data">
+
+let packages = ["FSharp.Data"]
+[ for pkg in packages ->
+  let data = N.Load("https://www.nuget.org/packages/" + pkg)
+  [for r in data.Tables.``Version History``.Rows -> r.``Last updated``, r.Downloads]
+  |> Seq.groupBy fst
+  |> Seq.map (fun (k, v) -> k, float(Seq.sumBy snd v))
+  |> series
+  |> Series.sortByKey
+  |> Stats.expandingSum ]
+|> Chart.Line
+|> Chart.WithLabels packages
+|> Chart.WithOptions(Options(trendlines=[| 
+     Trendline(``type``="polynomial",lineWidth=4,opacity=0.3) |]))
+|> Chart.WithTitle "F# Data downloads (aggregated)"

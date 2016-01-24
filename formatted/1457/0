@@ -1,0 +1,67 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">System</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 2)" onmouseover="showTip(event, 'fs1', 2)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 3)" onmouseover="showTip(event, 'fs2', 3)" class="i">IO</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs3', 4)" onmouseover="showTip(event, 'fs3', 4)" class="f">readValue</span> (<span onmouseout="hideTip(event, 'fs4', 5)" onmouseover="showTip(event, 'fs4', 5)" class="i">reader</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs5', 6)" onmouseover="showTip(event, 'fs5', 6)" class="t">BinaryReader</span>) <span onmouseout="hideTip(event, 'fs6', 7)" onmouseover="showTip(event, 'fs6', 7)" class="i">cellIndex</span> <span class="o">=</span> 
+    <span class="c">// set stream to correct location</span>
+    <span onmouseout="hideTip(event, 'fs4', 8)" onmouseover="showTip(event, 'fs4', 8)" class="i">reader</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs7', 9)" onmouseover="showTip(event, 'fs7', 9)" class="i">BaseStream</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs8', 10)" onmouseover="showTip(event, 'fs8', 10)" class="f">Seek</span>(<span onmouseout="hideTip(event, 'fs9', 11)" onmouseover="showTip(event, 'fs9', 11)" class="f">int64</span> (<span onmouseout="hideTip(event, 'fs6', 12)" onmouseover="showTip(event, 'fs6', 12)" class="i">cellIndex</span><span class="o">*</span><span class="n">4</span>), <span onmouseout="hideTip(event, 'fs10', 13)" onmouseover="showTip(event, 'fs10', 13)" class="t">SeekOrigin</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs11', 14)" onmouseover="showTip(event, 'fs11', 14)" class="i">Begin</span>) <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs12', 15)" onmouseover="showTip(event, 'fs12', 15)" class="f">ignore</span>
+    <span class="k">match</span> <span onmouseout="hideTip(event, 'fs4', 16)" onmouseover="showTip(event, 'fs4', 16)" class="i">reader</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs13', 17)" onmouseover="showTip(event, 'fs13', 17)" class="f">ReadInt32</span>() <span class="k">with</span>
+    | <span onmouseout="hideTip(event, 'fs14', 18)" onmouseover="showTip(event, 'fs14', 18)" class="t">Int32</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs15', 19)" onmouseover="showTip(event, 'fs15', 19)" class="i">MinValue</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs16', 20)" onmouseover="showTip(event, 'fs16', 20)" class="p">None</span>
+    | <span onmouseout="hideTip(event, 'fs17', 21)" onmouseover="showTip(event, 'fs17', 21)" class="i">v</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs18', 22)" onmouseover="showTip(event, 'fs18', 22)" class="p">Some</span>(<span onmouseout="hideTip(event, 'fs17', 23)" onmouseover="showTip(event, 'fs17', 23)" class="i">v</span>)
+        
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs19', 24)" onmouseover="showTip(event, 'fs19', 24)" class="f">readValues</span> <span onmouseout="hideTip(event, 'fs20', 25)" onmouseover="showTip(event, 'fs20', 25)" class="i">indices</span> <span onmouseout="hideTip(event, 'fs21', 26)" onmouseover="showTip(event, 'fs21', 26)" class="i">fileName</span> <span class="o">=</span> 
+    <span class="k">use</span> <span onmouseout="hideTip(event, 'fs4', 27)" onmouseover="showTip(event, 'fs4', 27)" class="i">reader</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs5', 28)" onmouseover="showTip(event, 'fs5', 28)" class="t">BinaryReader</span>(<span onmouseout="hideTip(event, 'fs22', 29)" onmouseover="showTip(event, 'fs22', 29)" class="t">File</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs23', 30)" onmouseover="showTip(event, 'fs23', 30)" class="f">Open</span>(<span onmouseout="hideTip(event, 'fs21', 31)" onmouseover="showTip(event, 'fs21', 31)" class="i">fileName</span>, <span onmouseout="hideTip(event, 'fs24', 32)" onmouseover="showTip(event, 'fs24', 32)" class="t">FileMode</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs25', 33)" onmouseover="showTip(event, 'fs25', 33)" class="i">Open</span>, <span onmouseout="hideTip(event, 'fs26', 34)" onmouseover="showTip(event, 'fs26', 34)" class="t">FileAccess</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs27', 35)" onmouseover="showTip(event, 'fs27', 35)" class="i">Read</span>, <span onmouseout="hideTip(event, 'fs28', 36)" onmouseover="showTip(event, 'fs28', 36)" class="t">FileShare</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs29', 37)" onmouseover="showTip(event, 'fs29', 37)" class="i">Read</span>))
+    <span class="c">// Use list or array to force creation of values (otherwise reader gets disposed before the values are read)</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs30', 38)" onmouseover="showTip(event, 'fs30', 38)" class="i">values</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs31', 39)" onmouseover="showTip(event, 'fs31', 39)" class="t">Array</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs32', 40)" onmouseover="showTip(event, 'fs32', 40)" class="f">map</span> (<span onmouseout="hideTip(event, 'fs3', 41)" onmouseover="showTip(event, 'fs3', 41)" class="f">readValue</span> <span onmouseout="hideTip(event, 'fs4', 42)" onmouseover="showTip(event, 'fs4', 42)" class="i">reader</span>) <span onmouseout="hideTip(event, 'fs20', 43)" onmouseover="showTip(event, 'fs20', 43)" class="i">indices</span>
+    <span onmouseout="hideTip(event, 'fs30', 44)" onmouseover="showTip(event, 'fs30', 44)" class="i">values</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace System</div>
+<div class="tip" id="fs2">namespace System.IO</div>
+<div class="tip" id="fs3">val readValue : reader:BinaryReader -&gt; cellIndex:int -&gt; int option<br /><br />Full name: Script.readValue</div>
+<div class="tip" id="fs4">val reader : BinaryReader</div>
+<div class="tip" id="fs5">Multiple items<br />type BinaryReader =<br />&#160;&#160;new : input:Stream -&gt; BinaryReader + 1 overload<br />&#160;&#160;member BaseStream : Stream<br />&#160;&#160;member Close : unit -&gt; unit<br />&#160;&#160;member Dispose : unit -&gt; unit<br />&#160;&#160;member PeekChar : unit -&gt; int<br />&#160;&#160;member Read : unit -&gt; int + 2 overloads<br />&#160;&#160;member ReadBoolean : unit -&gt; bool<br />&#160;&#160;member ReadByte : unit -&gt; byte<br />&#160;&#160;member ReadBytes : count:int -&gt; byte[]<br />&#160;&#160;member ReadChar : unit -&gt; char<br />&#160;&#160;...<br /><br />Full name: System.IO.BinaryReader<br /><br />--------------------<br />BinaryReader(input: Stream) : unit<br />BinaryReader(input: Stream, encoding: Text.Encoding) : unit</div>
+<div class="tip" id="fs6">val cellIndex : int</div>
+<div class="tip" id="fs7">property BinaryReader.BaseStream: Stream</div>
+<div class="tip" id="fs8">Stream.Seek(offset: int64, origin: SeekOrigin) : int64</div>
+<div class="tip" id="fs9">Multiple items<br />val int64 : value:&#39;T -&gt; int64 (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.int64<br /><br />--------------------<br />type int64 = Int64<br /><br />Full name: Microsoft.FSharp.Core.int64<br /><br />--------------------<br />type int64&lt;&#39;Measure&gt; = int64<br /><br />Full name: Microsoft.FSharp.Core.int64&lt;_&gt;</div>
+<div class="tip" id="fs10">type SeekOrigin =<br />&#160;&#160;| Begin = 0<br />&#160;&#160;| Current = 1<br />&#160;&#160;| End = 2<br /><br />Full name: System.IO.SeekOrigin</div>
+<div class="tip" id="fs11">field SeekOrigin.Begin = 0</div>
+<div class="tip" id="fs12">val ignore : value:&#39;T -&gt; unit<br /><br />Full name: Microsoft.FSharp.Core.Operators.ignore</div>
+<div class="tip" id="fs13">BinaryReader.ReadInt32() : int</div>
+<div class="tip" id="fs14">type Int32 =<br />&#160;&#160;struct<br />&#160;&#160;&#160;&#160;member CompareTo : value:obj -&gt; int + 1 overload<br />&#160;&#160;&#160;&#160;member Equals : obj:obj -&gt; bool + 1 overload<br />&#160;&#160;&#160;&#160;member GetHashCode : unit -&gt; int<br />&#160;&#160;&#160;&#160;member GetTypeCode : unit -&gt; TypeCode<br />&#160;&#160;&#160;&#160;member ToString : unit -&gt; string + 3 overloads<br />&#160;&#160;&#160;&#160;static val MaxValue : int<br />&#160;&#160;&#160;&#160;static val MinValue : int<br />&#160;&#160;&#160;&#160;static member Parse : s:string -&gt; int + 3 overloads<br />&#160;&#160;&#160;&#160;static member TryParse : s:string * result:int -&gt; bool + 1 overload<br />&#160;&#160;end<br /><br />Full name: System.Int32</div>
+<div class="tip" id="fs15">field int.MinValue = -2147483648</div>
+<div class="tip" id="fs16">union case Option.None: Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs17">val v : int</div>
+<div class="tip" id="fs18">union case Option.Some: Value: &#39;T -&gt; Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs19">val readValues : indices:int [] -&gt; fileName:string -&gt; int option []<br /><br />Full name: Script.readValues</div>
+<div class="tip" id="fs20">val indices : int []</div>
+<div class="tip" id="fs21">val fileName : string</div>
+<div class="tip" id="fs22">type File =<br />&#160;&#160;static member AppendAllLines : path:string * contents:IEnumerable&lt;string&gt; -&gt; unit + 1 overload<br />&#160;&#160;static member AppendAllText : path:string * contents:string -&gt; unit + 1 overload<br />&#160;&#160;static member AppendText : path:string -&gt; StreamWriter<br />&#160;&#160;static member Copy : sourceFileName:string * destFileName:string -&gt; unit + 1 overload<br />&#160;&#160;static member Create : path:string -&gt; FileStream + 3 overloads<br />&#160;&#160;static member CreateText : path:string -&gt; StreamWriter<br />&#160;&#160;static member Decrypt : path:string -&gt; unit<br />&#160;&#160;static member Delete : path:string -&gt; unit<br />&#160;&#160;static member Encrypt : path:string -&gt; unit<br />&#160;&#160;static member Exists : path:string -&gt; bool<br />&#160;&#160;...<br /><br />Full name: System.IO.File</div>
+<div class="tip" id="fs23">File.Open(path: string, mode: FileMode) : FileStream<br />File.Open(path: string, mode: FileMode, access: FileAccess) : FileStream<br />File.Open(path: string, mode: FileMode, access: FileAccess, share: FileShare) : FileStream</div>
+<div class="tip" id="fs24">type FileMode =<br />&#160;&#160;| CreateNew = 1<br />&#160;&#160;| Create = 2<br />&#160;&#160;| Open = 3<br />&#160;&#160;| OpenOrCreate = 4<br />&#160;&#160;| Truncate = 5<br />&#160;&#160;| Append = 6<br /><br />Full name: System.IO.FileMode</div>
+<div class="tip" id="fs25">field FileMode.Open = 3</div>
+<div class="tip" id="fs26">type FileAccess =<br />&#160;&#160;| Read = 1<br />&#160;&#160;| Write = 2<br />&#160;&#160;| ReadWrite = 3<br /><br />Full name: System.IO.FileAccess</div>
+<div class="tip" id="fs27">field FileAccess.Read = 1</div>
+<div class="tip" id="fs28">type FileShare =<br />&#160;&#160;| None = 0<br />&#160;&#160;| Read = 1<br />&#160;&#160;| Write = 2<br />&#160;&#160;| ReadWrite = 3<br />&#160;&#160;| Delete = 4<br />&#160;&#160;| Inheritable = 16<br /><br />Full name: System.IO.FileShare</div>
+<div class="tip" id="fs29">field FileShare.Read = 1</div>
+<div class="tip" id="fs30">val values : int option []</div>
+<div class="tip" id="fs31">type Array =<br />&#160;&#160;member Clone : unit -&gt; obj<br />&#160;&#160;member CopyTo : array:Array * index:int -&gt; unit + 1 overload<br />&#160;&#160;member GetEnumerator : unit -&gt; IEnumerator<br />&#160;&#160;member GetLength : dimension:int -&gt; int<br />&#160;&#160;member GetLongLength : dimension:int -&gt; int64<br />&#160;&#160;member GetLowerBound : dimension:int -&gt; int<br />&#160;&#160;member GetUpperBound : dimension:int -&gt; int<br />&#160;&#160;member GetValue : [&lt;ParamArray&gt;] indices:int[] -&gt; obj + 7 overloads<br />&#160;&#160;member Initialize : unit -&gt; unit<br />&#160;&#160;member IsFixedSize : bool<br />&#160;&#160;...<br /><br />Full name: System.Array</div>
+<div class="tip" id="fs32">val map : mapping:(&#39;T -&gt; &#39;U) -&gt; array:&#39;T [] -&gt; &#39;U []<br /><br />Full name: Microsoft.FSharp.Collections.Array.map</div>
+

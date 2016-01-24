@@ -1,0 +1,68 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">Microsoft</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">FSharp</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="i">Reflection</span>
+
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="t">TagUnionCase</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">TTag</span><span class="o">&gt;</span> <span class="o">=</span>  
+  { <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="i">CaseInfo</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="t">UnionCaseInfo</span>
+  ; <span onmouseout="hideTip(event, 'fs7', 7)" onmouseover="showTip(event, 'fs7', 7)" class="i">Value</span><span class="o">:</span> <span class="o">&#39;</span><span class="i">TTag</span>
+  }
+
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs8', 8)" onmouseover="showTip(event, 'fs8', 8)" class="t">TagUnionCaseReflection</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">TTag</span><span class="o">&gt;</span> <span class="o">=</span>
+    
+    <span class="k">static</span> <span class="k">member</span> <span onmouseout="hideTip(event, 'fs9', 9)" onmouseover="showTip(event, 'fs9', 9)" class="f">construct</span> <span onmouseout="hideTip(event, 'fs10', 10)" onmouseover="showTip(event, 'fs10', 10)" class="i">caseInfo</span> <span class="o">=</span>
+      <span onmouseout="hideTip(event, 'fs11', 11)" onmouseover="showTip(event, 'fs11', 11)" class="t">FSharpValue</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs12', 12)" onmouseover="showTip(event, 'fs12', 12)" class="f">MakeUnion</span>(<span onmouseout="hideTip(event, 'fs10', 13)" onmouseover="showTip(event, 'fs10', 13)" class="i">caseInfo</span>, [||]) <span class="o">:?&gt;</span> <span class="o">&#39;</span><span class="i">TTag</span>
+
+    <span class="k">static</span> <span class="k">member</span> <span onmouseout="hideTip(event, 'fs13', 14)" onmouseover="showTip(event, 'fs13', 14)" class="f">GetAll</span>() <span class="o">=</span> 
+     
+      <span onmouseout="hideTip(event, 'fs14', 15)" onmouseover="showTip(event, 'fs14', 15)" class="t">FSharpType</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs15', 16)" onmouseover="showTip(event, 'fs15', 16)" class="f">GetUnionCases</span>(<span onmouseout="hideTip(event, 'fs16', 17)" onmouseover="showTip(event, 'fs16', 17)" class="i">typeof</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">TagUnionType</span><span class="o">&gt;</span>)
+      <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs17', 18)" onmouseover="showTip(event, 'fs17', 18)" class="t">Array</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs18', 19)" onmouseover="showTip(event, 'fs18', 19)" class="f">map</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs19', 20)" onmouseover="showTip(event, 'fs19', 20)" class="i">c</span> <span class="k">-&gt;</span> { <span class="i">CaseInfo</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs19', 21)" onmouseover="showTip(event, 'fs19', 21)" class="i">c</span>; <span class="i">Value</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs8', 22)" onmouseover="showTip(event, 'fs8', 22)" class="t">TagUnionCaseReflection</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">TTag</span><span class="o">&gt;</span><span class="o">.</span><span class="f">construct</span> <span onmouseout="hideTip(event, 'fs19', 23)" onmouseover="showTip(event, 'fs19', 23)" class="i">c</span>})
+
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs20', 24)" onmouseover="showTip(event, 'fs20', 24)" class="t">Foos</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs21', 25)" onmouseover="showTip(event, 'fs21', 25)" class="p">Foo</span> | <span onmouseout="hideTip(event, 'fs22', 26)" onmouseover="showTip(event, 'fs22', 26)" class="p">Bar</span> | <span onmouseout="hideTip(event, 'fs23', 27)" onmouseover="showTip(event, 'fs23', 27)" class="p">Baz</span>
+
+<span onmouseout="hideTip(event, 'fs8', 28)" onmouseover="showTip(event, 'fs8', 28)" class="t">TagUnionCaseReflection</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs20', 29)" onmouseover="showTip(event, 'fs20', 29)" class="t">Foos</span><span class="o">&gt;</span><span class="o">.</span><span class="f">GetAll</span>()
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace Microsoft</div>
+<div class="tip" id="fs2">namespace Microsoft.FSharp</div>
+<div class="tip" id="fs3">namespace Microsoft.FSharp.Reflection</div>
+<div class="tip" id="fs4">type TagUnionCase&lt;&#39;TTag&gt; =<br />&#160;&#160;{CaseInfo: UnionCaseInfo;<br />&#160;&#160;&#160;Value: &#39;TTag;}<br /><br />Full name: Script.TagUnionCase&lt;_&gt;</div>
+<div class="tip" id="fs5">TagUnionCase.CaseInfo: UnionCaseInfo</div>
+<div class="tip" id="fs6">type UnionCaseInfo<br />member GetCustomAttributes : unit -&gt; obj []<br />member GetCustomAttributes : attributeType:Type -&gt; obj []<br />member GetCustomAttributesData : unit -&gt; IList&lt;CustomAttributeData&gt;<br />member GetFields : unit -&gt; PropertyInfo []<br />member DeclaringType : Type<br />member Name : string<br />member Tag : int<br /><br />Full name: Microsoft.FSharp.Reflection.UnionCaseInfo</div>
+<div class="tip" id="fs7">TagUnionCase.Value: &#39;TTag</div>
+<div class="tip" id="fs8">type TagUnionCaseReflection&lt;&#39;TTag&gt; =<br />&#160;&#160;static member GetAll : unit -&gt; TagUnionCase&lt;&#39;TTag&gt; []<br />&#160;&#160;static member construct : caseInfo:UnionCaseInfo -&gt; &#39;TTag<br /><br />Full name: Script.TagUnionCaseReflection&lt;_&gt;</div>
+<div class="tip" id="fs9">static member TagUnionCaseReflection.construct : caseInfo:UnionCaseInfo -&gt; &#39;TTag<br /><br />Full name: Script.TagUnionCaseReflection`1.construct</div>
+<div class="tip" id="fs10">val caseInfo : UnionCaseInfo</div>
+<div class="tip" id="fs11">type FSharpValue =<br />&#160;&#160;static member GetExceptionFields : exn:obj * ?bindingFlags:BindingFlags -&gt; obj []<br />&#160;&#160;static member GetRecordField : record:obj * info:PropertyInfo -&gt; obj<br />&#160;&#160;static member GetRecordFields : record:obj * ?bindingFlags:BindingFlags -&gt; obj []<br />&#160;&#160;static member GetTupleField : tuple:obj * index:int -&gt; obj<br />&#160;&#160;static member GetTupleFields : tuple:obj -&gt; obj []<br />&#160;&#160;static member GetUnionFields : value:obj * unionType:Type * ?bindingFlags:BindingFlags -&gt; UnionCaseInfo * obj []<br />&#160;&#160;static member MakeFunction : functionType:Type * implementation:(obj -&gt; obj) -&gt; obj<br />&#160;&#160;static member MakeRecord : recordType:Type * values:obj [] * ?bindingFlags:BindingFlags -&gt; obj<br />&#160;&#160;static member MakeTuple : tupleElements:obj [] * tupleType:Type -&gt; obj<br />&#160;&#160;static member MakeUnion : unionCase:UnionCaseInfo * args:obj [] * ?bindingFlags:BindingFlags -&gt; obj<br />&#160;&#160;...<br /><br />Full name: Microsoft.FSharp.Reflection.FSharpValue</div>
+<div class="tip" id="fs12">static member FSharpValue.MakeUnion : unionCase:UnionCaseInfo * args:obj [] * ?allowAccessToPrivateRepresentation:bool -&gt; obj<br />static member FSharpValue.MakeUnion : unionCase:UnionCaseInfo * args:obj [] * ?bindingFlags:System.Reflection.BindingFlags -&gt; obj</div>
+<div class="tip" id="fs13">static member TagUnionCaseReflection.GetAll : unit -&gt; TagUnionCase&lt;&#39;TTag&gt; []<br /><br />Full name: Script.TagUnionCaseReflection`1.GetAll</div>
+<div class="tip" id="fs14">type FSharpType =<br />&#160;&#160;static member GetExceptionFields : exceptionType:Type * ?bindingFlags:BindingFlags -&gt; PropertyInfo []<br />&#160;&#160;static member GetFunctionElements : functionType:Type -&gt; Type * Type<br />&#160;&#160;static member GetRecordFields : recordType:Type * ?bindingFlags:BindingFlags -&gt; PropertyInfo []<br />&#160;&#160;static member GetTupleElements : tupleType:Type -&gt; Type []<br />&#160;&#160;static member GetUnionCases : unionType:Type * ?bindingFlags:BindingFlags -&gt; UnionCaseInfo []<br />&#160;&#160;static member IsExceptionRepresentation : exceptionType:Type * ?bindingFlags:BindingFlags -&gt; bool<br />&#160;&#160;static member IsFunction : typ:Type -&gt; bool<br />&#160;&#160;static member IsModule : typ:Type -&gt; bool<br />&#160;&#160;static member IsRecord : typ:Type * ?bindingFlags:BindingFlags -&gt; bool<br />&#160;&#160;static member IsTuple : typ:Type -&gt; bool<br />&#160;&#160;...<br /><br />Full name: Microsoft.FSharp.Reflection.FSharpType</div>
+<div class="tip" id="fs15">static member FSharpType.GetUnionCases : unionType:System.Type * ?allowAccessToPrivateRepresentation:bool -&gt; UnionCaseInfo []<br />static member FSharpType.GetUnionCases : unionType:System.Type * ?bindingFlags:System.Reflection.BindingFlags -&gt; UnionCaseInfo []</div>
+<div class="tip" id="fs16">val typeof&lt;&#39;T&gt; : System.Type<br /><br />Full name: Microsoft.FSharp.Core.Operators.typeof</div>
+<div class="tip" id="fs17">module Array<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs18">val map : mapping:(&#39;T -&gt; &#39;U) -&gt; array:&#39;T [] -&gt; &#39;U []<br /><br />Full name: Microsoft.FSharp.Collections.Array.map</div>
+<div class="tip" id="fs19">val c : UnionCaseInfo</div>
+<div class="tip" id="fs20">type Foos =<br />&#160;&#160;| Foo<br />&#160;&#160;| Bar<br />&#160;&#160;| Baz<br /><br />Full name: Script.Foos</div>
+<div class="tip" id="fs21">union case Foos.Foo: Foos</div>
+<div class="tip" id="fs22">union case Foos.Bar: Foos</div>
+<div class="tip" id="fs23">union case Foos.Baz: Foos</div>
+

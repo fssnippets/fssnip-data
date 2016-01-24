@@ -1,0 +1,10 @@
+open Microsoft.FSharp.Core.Operators;
+let φ = 1.0 + (sqrt 5.0) / 2.0
+[<EntryPoint>]
+let main argv =
+    let argvList = Array.toList argv
+    List.map (fun x -> (float)x) argvList
+    |> List.map (fun x -> φ * x)
+    |> List.map2 (fun x a -> (x, a) ) argvList
+    |> printfn "%A"
+    0

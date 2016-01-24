@@ -1,0 +1,84 @@
+open Deedle
+open NetOffice
+open NetOffice.ExcelApi
+open NetOffice.OfficeApi
+
+// Starts new excel app. The DisplayAlerts <- false makes sure that we don't get popups asking us if we want to save when we exit.
+let app = new Application()
+app.DisplayAlerts <- false
+app.Visible <- true
+
+// When Excel is started it's empty, so we add a new workbook with a worksheet
+let wb = app.Workbooks.Add()
+let ws = wb.ActiveSheet :?> Worksheet
+
+// You could also open an existing sheet instead
+//app.Workbooks.Open(@".\deedleTest.xlsx")
+//let wb = app.ActiveWorkbook
+//let ws = wb.ActiveSheet :?> Worksheet
+
+// Takes a Deedle.OptionalValue and converts it to a string, which is then boxed
+// At the call site for this function we are also given the Type of the object, so this could be used to do something more sophisticated
+let getExcelValue obj =
+    match obj with
+    | Deedle.OptionalValue.Present obj -> box (obj.ToString()) 
+    | _ -> box ""
+
+// Takes the values from a Deedle.Frame and converts them to a 2d array for insertion into a sheet
+let frameValuesToArray (data : FrameData) =
+    let transpose (array:'T[,]) =
+      Array2D.init (array.GetLength(1)) (array.GetLength(0)) (fun i j -> array.[j, i])
+
+    data.Columns
+    |> Seq.map (fun (ty, vec) -> vec.ObjectSequence |> Seq.map getExcelValue |> Array.ofSeq) // Here the ty variable could be used by getExcelValue
+    |> array2D
+    |> transpose
+
+/// Inserts a given 2d array at the specified cell
+let insertArrayAt (cell : Range) (array : 'a[,]) =
+    let cell2 = cell.Offset.[Array2D.length1 array, Array2D.length2 array]
+    let range = cell.Worksheet.Range(cell, cell2)
+
+    range.Value2 <- array
+
+/// Inserts a given Deedle.Frame at the specified cell
+let insertFrameAt (cell : Range) (frame : Frame<_,_>) =
+    let frameData = frame.GetFrameData()
+    let ws = cell.Worksheet
+    
+    // Converts the row/col keys to an array of strings
+    // This only supports single dimensional row/col keys
+    let keysToArray (keys : obj[] seq) = keys |> Seq.map (fun arr -> if arr.Length > 0 then arr.[0].ToString() else "") |> Array.ofSeq
+
+    let cols = 
+        let arr = frameData.ColumnKeys |> keysToArray
+        Array2D.init 1 arr.Length (fun i j -> arr.[j])
+
+    let rows =
+        let arr = frameData.RowKeys |> keysToArray
+        Array2D.init arr.Length 1 (fun i j -> arr.[i])
+
+    let valsArray = frameValuesToArray frameData
+
+    // Offsets are 1-indexed, so for example right and down is 2,2
+    valsArray |> insertArrayAt cell.Offset.[2,2]
+    cols |> insertArrayAt cell.Offset.[1,2]
+    rows |> insertArrayAt cell.Offset.[2,1]
+
+// Create an example dataframe
+let data =
+    [ for x in 1 .. 10 do
+        for y in 1 .. 20 do
+            yield (x,y,x+y) ]
+    |> Frame.ofValues
+
+// Inserting the frame
+data |> insertFrameAt (ws.Range("A1"))
+// Or to a named cell
+// data |> insertFrameAt ws ws.Cells.["NamedCell1"]
+// Or
+// data |> insertFrameAt ws ws.Cells.[1,1]
+
+// It's important to also call the dispose method to fully close Excel
+app.Quit()
+app.Dispose()

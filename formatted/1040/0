@@ -1,0 +1,116 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">System</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 2)" onmouseover="showTip(event, 'fs1', 2)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 3)" onmouseover="showTip(event, 'fs2', 3)" class="i">Reflection</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 4)" onmouseover="showTip(event, 'fs1', 4)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 5)" onmouseover="showTip(event, 'fs3', 5)" class="i">Runtime</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs4', 6)" onmouseover="showTip(event, 'fs4', 6)" class="i">Serialization</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs5', 7)" onmouseover="showTip(event, 'fs5', 7)" class="f">gatherObjs</span> (<span onmouseout="hideTip(event, 'fs6', 8)" onmouseover="showTip(event, 'fs6', 8)" class="i">o</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs7', 9)" onmouseover="showTip(event, 'fs7', 9)" class="t">obj</span>) <span class="o">=</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs8', 10)" onmouseover="showTip(event, 'fs8', 10)" class="i">gen</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs9', 11)" onmouseover="showTip(event, 'fs9', 11)" class="t">ObjectIDGenerator</span>()
+
+    <span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs10', 12)" onmouseover="showTip(event, 'fs10', 12)" class="f">traverse</span> (<span onmouseout="hideTip(event, 'fs11', 13)" onmouseover="showTip(event, 'fs11', 13)" class="i">gathered</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs7', 14)" onmouseover="showTip(event, 'fs7', 14)" class="t">obj</span> <span onmouseout="hideTip(event, 'fs12', 15)" onmouseover="showTip(event, 'fs12', 15)" class="t">list</span>) <span class="o">:</span> <span onmouseout="hideTip(event, 'fs7', 16)" onmouseover="showTip(event, 'fs7', 16)" class="t">obj</span> <span onmouseout="hideTip(event, 'fs12', 17)" onmouseover="showTip(event, 'fs12', 17)" class="t">list</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs7', 18)" onmouseover="showTip(event, 'fs7', 18)" class="t">obj</span> <span onmouseout="hideTip(event, 'fs12', 19)" onmouseover="showTip(event, 'fs12', 19)" class="t">list</span> <span class="o">=</span>
+        <span class="k">function</span>
+        | [] <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs11', 20)" onmouseover="showTip(event, 'fs11', 20)" class="i">gathered</span>
+        | <span onmouseout="hideTip(event, 'fs6', 21)" onmouseover="showTip(event, 'fs6', 21)" class="i">o</span> <span class="o">::</span> <span onmouseout="hideTip(event, 'fs13', 22)" onmouseover="showTip(event, 'fs13', 22)" class="i">rest</span> <span class="k">when</span> <span onmouseout="hideTip(event, 'fs6', 23)" onmouseover="showTip(event, 'fs6', 23)" class="i">o</span> <span class="o">=</span> <span class="k">null</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs10', 24)" onmouseover="showTip(event, 'fs10', 24)" class="f">traverse</span> <span onmouseout="hideTip(event, 'fs11', 25)" onmouseover="showTip(event, 'fs11', 25)" class="i">gathered</span> <span onmouseout="hideTip(event, 'fs13', 26)" onmouseover="showTip(event, 'fs13', 26)" class="i">rest</span>
+        | <span onmouseout="hideTip(event, 'fs6', 27)" onmouseover="showTip(event, 'fs6', 27)" class="i">o</span> <span class="o">::</span> <span onmouseout="hideTip(event, 'fs13', 28)" onmouseover="showTip(event, 'fs13', 28)" class="i">rest</span> <span class="k">-&gt;</span>
+            <span class="k">let</span> <span onmouseout="hideTip(event, 'fs14', 29)" onmouseover="showTip(event, 'fs14', 29)" class="v">firstTime</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs15', 30)" onmouseover="showTip(event, 'fs15', 30)" class="f">ref</span> <span class="k">false</span>
+            <span onmouseout="hideTip(event, 'fs8', 31)" onmouseover="showTip(event, 'fs8', 31)" class="i">gen</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs16', 32)" onmouseover="showTip(event, 'fs16', 32)" class="f">GetId</span>(<span onmouseout="hideTip(event, 'fs6', 33)" onmouseover="showTip(event, 'fs6', 33)" class="i">o</span>, <span onmouseout="hideTip(event, 'fs14', 34)" onmouseover="showTip(event, 'fs14', 34)" class="v">firstTime</span>) <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs17', 35)" onmouseover="showTip(event, 'fs17', 35)" class="f">ignore</span>
+            <span class="k">if</span> <span onmouseout="hideTip(event, 'fs14', 36)" onmouseover="showTip(event, 'fs14', 36)" class="v">firstTime</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs18', 37)" onmouseover="showTip(event, 'fs18', 37)" class="i">Value</span> <span class="k">then</span>
+                <span class="k">let</span> <span onmouseout="hideTip(event, 'fs19', 38)" onmouseover="showTip(event, 'fs19', 38)" class="i">t</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs6', 39)" onmouseover="showTip(event, 'fs6', 39)" class="i">o</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs20', 40)" onmouseover="showTip(event, 'fs20', 40)" class="f">GetType</span>()
+                <span class="k">let</span> <span onmouseout="hideTip(event, 'fs21', 41)" onmouseover="showTip(event, 'fs21', 41)" class="i">nested</span> <span class="o">=</span>
+                    <span class="k">if</span> <span onmouseout="hideTip(event, 'fs19', 42)" onmouseover="showTip(event, 'fs19', 42)" class="i">t</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs22', 43)" onmouseover="showTip(event, 'fs22', 43)" class="i">IsValueType</span> <span class="k">then</span> []
+                    <span class="k">elif</span> <span onmouseout="hideTip(event, 'fs19', 44)" onmouseover="showTip(event, 'fs19', 44)" class="i">t</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs23', 45)" onmouseover="showTip(event, 'fs23', 45)" class="i">IsArray</span> <span class="k">then</span>
+                        [ <span class="k">for</span> <span onmouseout="hideTip(event, 'fs24', 46)" onmouseover="showTip(event, 'fs24', 46)" class="i">e</span> <span class="k">in</span> (<span onmouseout="hideTip(event, 'fs6', 47)" onmouseover="showTip(event, 'fs6', 47)" class="i">o</span> <span class="o">:?&gt;</span> <span onmouseout="hideTip(event, 'fs25', 48)" onmouseover="showTip(event, 'fs25', 48)" class="t">Array</span>) <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs24', 49)" onmouseover="showTip(event, 'fs24', 49)" class="i">e</span> ]
+                    <span class="k">else</span>
+                        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs26', 50)" onmouseover="showTip(event, 'fs26', 50)" class="i">fields</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs19', 51)" onmouseover="showTip(event, 'fs19', 51)" class="i">t</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs27', 52)" onmouseover="showTip(event, 'fs27', 52)" class="f">GetFields</span>(<span onmouseout="hideTip(event, 'fs28', 53)" onmouseover="showTip(event, 'fs28', 53)" class="t">BindingFlags</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs29', 54)" onmouseover="showTip(event, 'fs29', 54)" class="i">Instance</span> <span class="o">|||</span> <span onmouseout="hideTip(event, 'fs28', 55)" onmouseover="showTip(event, 'fs28', 55)" class="t">BindingFlags</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs30', 56)" onmouseover="showTip(event, 'fs30', 56)" class="i">Public</span> <span class="o">|||</span> <span onmouseout="hideTip(event, 'fs28', 57)" onmouseover="showTip(event, 'fs28', 57)" class="t">BindingFlags</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs31', 58)" onmouseover="showTip(event, 'fs31', 58)" class="i">NonPublic</span>)
+                        [ <span class="k">for</span> <span onmouseout="hideTip(event, 'fs32', 59)" onmouseover="showTip(event, 'fs32', 59)" class="i">fInfo</span> <span class="k">in</span> <span onmouseout="hideTip(event, 'fs26', 60)" onmouseover="showTip(event, 'fs26', 60)" class="i">fields</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs32', 61)" onmouseover="showTip(event, 'fs32', 61)" class="i">fInfo</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs33', 62)" onmouseover="showTip(event, 'fs33', 62)" class="f">GetValue</span> <span onmouseout="hideTip(event, 'fs6', 63)" onmouseover="showTip(event, 'fs6', 63)" class="i">o</span> ]
+
+                <span onmouseout="hideTip(event, 'fs10', 64)" onmouseover="showTip(event, 'fs10', 64)" class="f">traverse</span> (<span onmouseout="hideTip(event, 'fs6', 65)" onmouseover="showTip(event, 'fs6', 65)" class="i">o</span> <span class="o">::</span> <span onmouseout="hideTip(event, 'fs11', 66)" onmouseover="showTip(event, 'fs11', 66)" class="i">gathered</span>) (<span onmouseout="hideTip(event, 'fs21', 67)" onmouseover="showTip(event, 'fs21', 67)" class="i">nested</span> <span class="o">@</span> <span onmouseout="hideTip(event, 'fs13', 68)" onmouseover="showTip(event, 'fs13', 68)" class="i">rest</span>)
+
+            <span class="k">else</span> <span onmouseout="hideTip(event, 'fs10', 69)" onmouseover="showTip(event, 'fs10', 69)" class="f">traverse</span> <span onmouseout="hideTip(event, 'fs11', 70)" onmouseover="showTip(event, 'fs11', 70)" class="i">gathered</span> <span onmouseout="hideTip(event, 'fs13', 71)" onmouseover="showTip(event, 'fs13', 71)" class="i">rest</span>
+
+    <span onmouseout="hideTip(event, 'fs10', 72)" onmouseover="showTip(event, 'fs10', 72)" class="f">traverse</span> [] [<span onmouseout="hideTip(event, 'fs6', 73)" onmouseover="showTip(event, 'fs6', 73)" class="i">o</span>]
+
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs34', 74)" onmouseover="showTip(event, 'fs34', 74)" class="f">gatherTypes</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs7', 75)" onmouseover="showTip(event, 'fs7', 75)" class="t">obj</span> <span class="k">-&gt;</span> _ <span class="o">=</span>
+    <span onmouseout="hideTip(event, 'fs5', 76)" onmouseover="showTip(event, 'fs5', 76)" class="f">gatherObjs</span>
+    <span class="o">&gt;</span><span class="o">&gt;</span> <span onmouseout="hideTip(event, 'fs35', 77)" onmouseover="showTip(event, 'fs35', 77)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs36', 78)" onmouseover="showTip(event, 'fs36', 78)" class="f">map</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs6', 79)" onmouseover="showTip(event, 'fs6', 79)" class="i">o</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs6', 80)" onmouseover="showTip(event, 'fs6', 80)" class="i">o</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs20', 81)" onmouseover="showTip(event, 'fs20', 81)" class="f">GetType</span>())
+    <span class="o">&gt;</span><span class="o">&gt;</span> <span onmouseout="hideTip(event, 'fs35', 82)" onmouseover="showTip(event, 'fs35', 82)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs37', 83)" onmouseover="showTip(event, 'fs37', 83)" class="f">distinctBy</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs19', 84)" onmouseover="showTip(event, 'fs19', 84)" class="i">t</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs19', 85)" onmouseover="showTip(event, 'fs19', 85)" class="i">t</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs38', 86)" onmouseover="showTip(event, 'fs38', 86)" class="i">AssemblyQualifiedName</span>)
+    <span class="o">&gt;</span><span class="o">&gt;</span> <span onmouseout="hideTip(event, 'fs35', 87)" onmouseover="showTip(event, 'fs35', 87)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs39', 88)" onmouseover="showTip(event, 'fs39', 88)" class="f">toList</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace System</div>
+<div class="tip" id="fs2">namespace System.Reflection</div>
+<div class="tip" id="fs3">namespace System.Runtime</div>
+<div class="tip" id="fs4">namespace System.Runtime.Serialization</div>
+<div class="tip" id="fs5">val gatherObjs : o:obj -&gt; obj list<br /><br />Full name: Script.gatherObjs</div>
+<div class="tip" id="fs6">val o : obj</div>
+<div class="tip" id="fs7">type obj = Object<br /><br />Full name: Microsoft.FSharp.Core.obj</div>
+<div class="tip" id="fs8">val gen : ObjectIDGenerator</div>
+<div class="tip" id="fs9">Multiple items<br />type ObjectIDGenerator =<br />&#160;&#160;new : unit -&gt; ObjectIDGenerator<br />&#160;&#160;member GetId : obj:obj * firstTime:bool -&gt; int64<br />&#160;&#160;member HasId : obj:obj * firstTime:bool -&gt; int64<br /><br />Full name: System.Runtime.Serialization.ObjectIDGenerator<br /><br />--------------------<br />ObjectIDGenerator() : unit</div>
+<div class="tip" id="fs10">val traverse : (obj list -&gt; obj list -&gt; obj list)</div>
+<div class="tip" id="fs11">val gathered : obj list</div>
+<div class="tip" id="fs12">type &#39;T list = List&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.list&lt;_&gt;</div>
+<div class="tip" id="fs13">val rest : obj list</div>
+<div class="tip" id="fs14">val firstTime : bool ref</div>
+<div class="tip" id="fs15">Multiple items<br />val ref : value:&#39;T -&gt; &#39;T ref<br /><br />Full name: Microsoft.FSharp.Core.Operators.ref<br /><br />--------------------<br />type &#39;T ref = Ref&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Core.ref&lt;_&gt;</div>
+<div class="tip" id="fs16">ObjectIDGenerator.GetId(obj: obj, firstTime: byref&lt;bool&gt;) : int64</div>
+<div class="tip" id="fs17">val ignore : value:&#39;T -&gt; unit<br /><br />Full name: Microsoft.FSharp.Core.Operators.ignore</div>
+<div class="tip" id="fs18">property Ref.Value: bool</div>
+<div class="tip" id="fs19">val t : Type</div>
+<div class="tip" id="fs20">Object.GetType() : Type</div>
+<div class="tip" id="fs21">val nested : obj list</div>
+<div class="tip" id="fs22">property Type.IsValueType: bool</div>
+<div class="tip" id="fs23">property Type.IsArray: bool</div>
+<div class="tip" id="fs24">val e : obj</div>
+<div class="tip" id="fs25">type Array =<br />&#160;&#160;member Clone : unit -&gt; obj<br />&#160;&#160;member CopyTo : array:Array * index:int -&gt; unit + 1 overload<br />&#160;&#160;member GetEnumerator : unit -&gt; IEnumerator<br />&#160;&#160;member GetLength : dimension:int -&gt; int<br />&#160;&#160;member GetLongLength : dimension:int -&gt; int64<br />&#160;&#160;member GetLowerBound : dimension:int -&gt; int<br />&#160;&#160;member GetUpperBound : dimension:int -&gt; int<br />&#160;&#160;member GetValue : [&lt;ParamArray&gt;] indices:int[] -&gt; obj + 7 overloads<br />&#160;&#160;member Initialize : unit -&gt; unit<br />&#160;&#160;member IsFixedSize : bool<br />&#160;&#160;...<br /><br />Full name: System.Array</div>
+<div class="tip" id="fs26">val fields : FieldInfo []</div>
+<div class="tip" id="fs27">Type.GetFields() : FieldInfo []<br />Type.GetFields(bindingAttr: BindingFlags) : FieldInfo []</div>
+<div class="tip" id="fs28">type BindingFlags =<br />&#160;&#160;| Default = 0<br />&#160;&#160;| IgnoreCase = 1<br />&#160;&#160;| DeclaredOnly = 2<br />&#160;&#160;| Instance = 4<br />&#160;&#160;| Static = 8<br />&#160;&#160;| Public = 16<br />&#160;&#160;| NonPublic = 32<br />&#160;&#160;| FlattenHierarchy = 64<br />&#160;&#160;| InvokeMethod = 256<br />&#160;&#160;| CreateInstance = 512<br />&#160;&#160;...<br /><br />Full name: System.Reflection.BindingFlags</div>
+<div class="tip" id="fs29">field BindingFlags.Instance = 4</div>
+<div class="tip" id="fs30">field BindingFlags.Public = 16</div>
+<div class="tip" id="fs31">field BindingFlags.NonPublic = 32</div>
+<div class="tip" id="fs32">val fInfo : FieldInfo</div>
+<div class="tip" id="fs33">FieldInfo.GetValue(obj: obj) : obj</div>
+<div class="tip" id="fs34">val gatherTypes : (obj -&gt; Type list)<br /><br />Full name: Script.gatherTypes</div>
+<div class="tip" id="fs35">module Seq<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs36">val map : mapping:(&#39;T -&gt; &#39;U) -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;U&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.map</div>
+<div class="tip" id="fs37">val distinctBy : projection:(&#39;T -&gt; &#39;Key) -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt; (requires equality)<br /><br />Full name: Microsoft.FSharp.Collections.Seq.distinctBy</div>
+<div class="tip" id="fs38">property Type.AssemblyQualifiedName: string</div>
+<div class="tip" id="fs39">val toList : source:seq&lt;&#39;T&gt; -&gt; &#39;T list<br /><br />Full name: Microsoft.FSharp.Collections.Seq.toList</div>
+

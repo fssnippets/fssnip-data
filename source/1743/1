@@ -1,0 +1,174 @@
+(*[omit:(Standard flappy bird setup)]*)
+#if INTERACTIVE
+#r "PresentationCore.dll"
+#r "PresentationFramework.dll"
+#r "System.Xaml.dll"
+#r "UIAutomationTypes.dll"
+#r "WindowsBase.dll"
+#endif
+
+open System
+open System.IO
+open System.Windows
+open System.Windows.Controls
+open System.Windows.Input
+open System.Windows.Media
+open System.Windows.Media.Imaging
+
+/// Bird type
+type Bird = { X:float; Y:float; VY:float; IsAlive:bool }
+/// Respond to flap command
+let flap (bird:Bird) = { bird with VY = - System.Math.PI }
+/// Applies gravity to bird
+let gravity (bird:Bird) = { bird with VY = bird.VY + 0.1 }
+/// Applies physics to bird
+let physics (bird:Bird) = { bird with Y = bird.Y + bird.VY }
+/// Updates bird with gravity & physics
+let update = gravity >> physics
+ 
+/// Generates the level's tube positions
+let generateLevel n =
+   let rand = System.Random()
+   [for i in 1..n -> 50+(i*150), 32+rand.Next(160)]
+
+let level = generateLevel 10
+
+/// Converts specified bitmap to an image
+let toImage (bitmap:#BitmapSource) =
+   let w, h = float bitmap.PixelWidth, float bitmap.PixelHeight  
+   Image(Source=bitmap,Stretch=Stretch.Fill,Width=w,Height=h) 
+/// Loads image from file if it exists or the url otherwise
+let load file url =
+   let path = Path.Combine(__SOURCE_DIRECTORY__, file)
+   let uri = 
+      if File.Exists(path) 
+      then Uri(path, UriKind.Relative)
+      else Uri(url, UriKind.Absolute)
+   BitmapImage(uri)
+
+let bg = 
+   load "bg.png" "http://flappycreator.com/default/bg.png"
+   |> toImage
+let ground = 
+   load "ground.png" "http://flappycreator.com/default/ground.png"
+   |> toImage
+let tube1 = load "tube1.png" "http://flappycreator.com/default/tube1.png"
+let tube2 = load "tube2.png" "http://flappycreator.com/default/tube2.png"
+let bird_sing = 
+   load "bird_sing.png" "http://flappycreator.com/default/bird_sing.png"
+   |> toImage
+
+let canvas = Canvas()
+let move image (x,y) =
+   Canvas.SetLeft(image, x)
+   Canvas.SetTop(image, y)
+let add image (x,y) = 
+   canvas.Children.Add(image) |> ignore
+   move image (float x, float y)
+
+add bg (0,0)
+add bird_sing (30,150)
+// Level's tubes
+let tubes =
+   [for (x,y) in level ->
+      let tube1 = toImage tube1
+      let tube2 = toImage tube2
+      add tube1 (x,y-320)
+      add tube2 (x,y+100)
+      (x,y), tube1, tube2]
+add ground (0,360)
+(*[/omit]*)
+
+/// A flappy bird computation is either a function that does
+/// one step of the computation or it is completed. There is
+/// also a trick with 'Update' - here, the computation produced
+/// a flappy bird state 'Bird' that can be updated by the external
+/// world (the world changes the bird when you press a key)
+type FlappyComputation = 
+  | Op of (unit -> FlappyComputation)
+  | End 
+  | Update of Bird * (Bird -> FlappyComputation)
+
+type FlappyBuilder() = 
+  member x.Yield(()) = End
+  member x.Bind(c:Bird, f:Bird -> _) = Update(c, f)
+  member x.Delay(f) = f 
+  member x.For(s:seq<_>, f) = 
+    let e = s.GetEnumerator()
+    let rec loop () = 
+      if e.MoveNext() then 
+        x.Combine(f e.Current, loop)
+      else End
+    loop ()
+  member x.Zero() = End
+  member x.YieldFrom(e) = e
+  member x.Combine(c:FlappyComputation, f:unit -> FlappyComputation) : FlappyComputation = 
+    let rec combine = function
+      | Op g -> Op (fun () -> combine (g()))
+      | Update(b, g) -> Update(b, fun b -> combine (g b))
+      | End -> f()
+    Op (fun () -> combine c)
+  member x.Run(f) = f()
+
+let flappy = FlappyBuilder()
+
+// Now we can implement flappy bird without mutation! 
+// The 'flappy' computation can use 'yield' when you do not
+// want to do anything, so this is used for sleeping in the
+// starting state.
+
+let rec starting () = flappy {
+  for i in 0 .. 1000 do yield ()
+  let flappy = { X = 30.0; Y = 150.0; VY = 0.0; IsAlive=true }
+  yield! running (0, flappy) }
+
+and running (scroll, bird) = flappy {
+  move bird_sing (bird.X, bird.Y)
+  for ((x,y),tube1,tube2) in tubes do
+    let scrollX = float (x + scroll)
+    if scrollX > bird.X - 10.0 && scrollX < bird.X + 10.0 then
+      if (bird.Y + bird_sing.Height > float y + 100.0) ||
+         (bird.Y < float y - 320.0 + tube1.Height) then 
+        yield! dead() 
+    move tube1 (float (x + scroll),float (y-320))
+    move tube2 (float (x + scroll),float (y+100))
+  // Let the outside world change our flappy bird!
+  let! bird = update bird
+  yield! running (scroll - 1, bird) }
+
+and dead () = flappy {
+  // Just loop forever in the dead state
+  yield ()
+  yield! dead () }  
+
+let next t = function  
+  | Op f -> f() 
+  | End -> End
+  | Update(b, f) -> f (t b)
+
+// The user interaction - this is where we still have a bit of mutation
+// When you click, we store a function to update the flappy bird that
+// is then called by the runner below (exactly once)
+
+let flapop : ref<Bird -> Bird> = ref id
+let flapme () = flapop := (fun flappy -> if flappy.IsAlive then flap flappy else flappy)
+
+let window = Window(Title="Flap me",Width=288.0,Height=440.0)
+window.Content <- canvas
+window.MouseDown.Add(fun _ -> flapme())
+window.KeyDown.Add(fun args -> if args.Key = Key.Space then flapme())
+window.Show()
+
+
+let steps = ref (starting())
+CompositionTarget.Rendering.Add(fun _ ->
+  let next = next (fun b -> 
+    let res = !flapop b
+    flapop := id
+    res )
+  // There is a lot of 'Combine's in the computation expression,
+  // so we just advance the computation by a large number of steps here
+  steps := 
+    !steps |> next |> next |> next |> next |> next |> next |> next 
+    |> next |> next |> next |> next |> next |> next |> next |> next 
+)

@@ -1,0 +1,300 @@
+<h2><a name="Ninety-Nine-F-Problems-Problems-46-50-Logic-and-Codes" class="anchor" href="#Ninety-Nine-F-Problems-Problems-46-50-Logic-and-Codes">Ninety-Nine F# Problems - Problems 46 - 50 - Logic and Codes</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// These are F# solutions of Ninety-Nine Haskell Problems </span>
+<span class="c">/// (http://www.haskell.org/haskellwiki/H-99:_Ninety-Nine_Haskell_Problems), </span>
+<span class="c">/// which are themselves translations of Ninety-Nine Lisp Problems</span>
+<span class="c">/// (http://www.ic.unicamp.br/~meidanis/courses/mc336/2006s2/funcional/L-99_Ninety-Nine_Lisp_Problems.html)</span>
+<span class="c">/// and Ninety-Nine Prolog Problems</span>
+<span class="c">/// (https://sites.google.com/site/prologsite/prolog-problems).</span>
+<span class="c">///</span>
+<span class="c">/// If you would like to contribute a solution or fix any bugs, send </span>
+<span class="c">/// an email to paks at kitiara dot org with the subject &quot;99 F# problems&quot;. </span>
+<span class="c">/// I&#39;ll try to update the problem as soon as possible.</span>
+<span class="c">///</span>
+<span class="c">/// The problems have different levels of difficulty. Those marked with a single asterisk (*) </span>
+<span class="c">/// are easy. If you have successfully solved the preceeding problems you should be able to </span>
+<span class="c">/// solve them within a few (say 15) minutes. Problems marked with two asterisks (**) are of </span>
+<span class="c">/// intermediate difficulty. If you are a skilled F# programmer it shouldn&#39;t take you more than </span>
+<span class="c">/// 30-90 minutes to solve them. Problems marked with three asterisks (***) are more difficult. </span>
+<span class="c">/// You may need more time (i.e. a few hours or more) to find a good solution</span>
+<span class="c">///</span>
+<span class="c">/// Though the problems number from 1 to 99, there are some gaps and some additions marked with </span>
+<span class="c">/// letters. There are actually only 88 problems.</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Problem-46-Define-Logical-predicates" class="anchor" href="#Problem-46-Define-Logical-predicates">(<em></em>) Problem 46 : Define Logical predicates</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// Define predicates and/2, or/2, nand/2, nor/2, xor/2, impl/2 and equ/2 (for logical </span>
+<span class="c">/// equivalence) which succeed or fail according to the result of their respective </span>
+<span class="c">/// operations; e.g. and(A,B) will succeed, if and only if both A and B succeed.</span>
+<span class="c">///  </span>
+<span class="c">/// A logical expression in two variables can then be written as in the following example: </span>
+<span class="c">/// and(or(A,B),nand(A,B)).</span>
+<span class="c">///  </span>
+<span class="c">/// Now, write a predicate table/3 which prints the truth table of a given logical </span>
+<span class="c">/// expression in two variables.</span>
+<span class="c">///  </span>
+<span class="c">/// Example: </span>
+<span class="c">/// (table A B (and A (or A B)))</span>
+<span class="c">/// true true true</span>
+<span class="c">/// true fail true</span>
+<span class="c">/// fail true fail</span>
+<span class="c">/// fail fail fail</span>
+<span class="c">///  </span>
+<span class="c">/// Example in F#: </span>
+<span class="c">/// </span>
+<span class="c">/// &gt; table (fun a b -&gt; (and&#39; a (or&#39; a b)));;</span>
+<span class="c">/// true true true</span>
+<span class="c">/// true false true</span>
+<span class="c">/// false true false</span>
+<span class="c">/// false false false</span>
+<span class="c">/// val it : unit = ()</span>
+
+<span id="fst1" onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1, document.getElementById('fst1'))" class="omitted">(Solution)</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Problem-47-Truth-tables-for-logical-expressions-2" class="anchor" href="#Problem-47-Truth-tables-for-logical-expressions-2">(*) Problem 47 : Truth tables for logical expressions (2).</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// Continue problem P46 by defining and/2, or/2, etc as being operators. This allows to write </span>
+<span class="c">/// the logical expression in the more natural way, as in the example: A and (A or not B). </span>
+<span class="c">/// Define operator precedence as usual; i.e. as in Java.</span>
+<span class="c">///  </span>
+<span class="c">/// Example: </span>
+<span class="c">/// * (table A B (A and (A or not B)))</span>
+<span class="c">/// true true true</span>
+<span class="c">/// true fail true</span>
+<span class="c">/// fail true fail</span>
+<span class="c">/// fail fail fail</span>
+<span class="c">///  </span>
+<span class="c">/// Example in F#: </span>
+<span class="c">/// </span>
+<span class="c">/// &gt; table2 (fun a b -&gt; a &amp;&amp; (a || not b));;</span>
+<span class="c">/// true true true</span>
+<span class="c">/// true false true</span>
+<span class="c">/// false true false</span>
+<span class="c">/// false false false</span>
+<span class="c">/// val it : unit = ()</span>
+
+<span id="fst2" onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2, document.getElementById('fst2'))" class="omitted">(Solution)</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Problem-48-Truth-tables-for-logical-expressions-3" class="anchor" href="#Problem-48-Truth-tables-for-logical-expressions-3">(<em></em>) Problem 48 : Truth tables for logical expressions (3).</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// Generalize problem P47 in such a way that the logical expression may contain any </span>
+<span class="c">/// number of logical variables. Define table/2 in a way that table(List,Expr) prints the </span>
+<span class="c">/// truth table for the expression Expr, which contains the logical variables enumerated </span>
+<span class="c">/// in List.</span>
+<span class="c">///  </span>
+<span class="c">/// Example: </span>
+<span class="c">/// * (table (A,B,C) (A and (B or C) equ A and B or A and C))</span>
+<span class="c">/// true true true true</span>
+<span class="c">/// true true fail true</span>
+<span class="c">/// true fail true true</span>
+<span class="c">/// true fail fail true</span>
+<span class="c">/// fail true true true</span>
+<span class="c">/// fail true fail true</span>
+<span class="c">/// fail fail true true</span>
+<span class="c">/// fail fail fail true</span>
+<span class="c">///  </span>
+<span class="c">/// Example in F#: </span>
+<span class="c">/// </span>
+<span class="c">/// &gt; tablen 3 (fun [a;b;c] -&gt; a &amp;&amp; (b || c) = a &amp;&amp; b || a &amp;&amp; c)</span>
+<span class="c">/// warning FS0025: Incomplete pattern matches on this expression. ...</span>
+<span class="c">/// True True True true</span>
+<span class="c">/// False True True false</span>
+<span class="c">/// True False True true</span>
+<span class="c">/// False False True false</span>
+<span class="c">/// True True False true</span>
+<span class="c">/// False True False false</span>
+<span class="c">/// True False False false</span>
+<span class="c">/// False False False false</span>
+<span class="c">/// val it : unit = ()</span>
+
+<span id="fst3" onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3, document.getElementById('fst3'))" class="omitted">(Solution)</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Problem-49-Gray-codes" class="anchor" href="#Problem-49-Gray-codes">(<em></em>) Problem 49 : Gray codes.</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// An n-bit Gray code is a sequence of n-bit strings constructed according to certain rules. For example,</span>
+<span class="c">/// n = 1: C(1) = [&#39;0&#39;,&#39;1&#39;].</span>
+<span class="c">/// n = 2: C(2) = [&#39;00&#39;,&#39;01&#39;,&#39;11&#39;,&#39;10&#39;].</span>
+<span class="c">/// n = 3: C(3) = [&#39;000&#39;,&#39;001&#39;,&#39;011&#39;,&#39;010&#39;,&#180;110&#180;,&#180;111&#180;,&#180;101&#180;,&#180;100&#180;].</span>
+<span class="c">///  </span>
+<span class="c">/// Find out the construction rules and write a predicate with the following specification:</span>
+<span class="c">///  % gray(N,C) :- C is the N-bit Gray code</span>
+<span class="c">///  </span>
+<span class="c">/// Can you apply the method of &quot;result caching&quot; in order to make the predicate more efficient, when it is to be used repeatedly?</span>
+<span class="c">///  </span>
+<span class="c">/// Example in F#: </span>
+<span class="c">/// </span>
+<span class="c">/// P49&gt; gray 3</span>
+<span class="c">/// [&quot;000&quot;,&quot;001&quot;,&quot;011&quot;,&quot;010&quot;,&quot;110&quot;,&quot;111&quot;,&quot;101&quot;,&quot;100&quot;]</span>
+
+<span id="fst4" onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4, document.getElementById('fst4'))" class="omitted">(Solution)</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Problem-50-Huffman-codes" class="anchor" href="#Problem-50-Huffman-codes">(<em></em>*) Problem 50 : Huffman codes.</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// We suppose a set of symbols with their frequencies, given as a list of fr(S,F) terms. </span>
+<span class="c">/// Example: [fr(a,45),fr(b,13),fr(c,12),fr(d,16),fr(e,9),fr(f,5)]. Our objective is to construct </span>
+<span class="c">/// a list hc(S,C) terms, where C is the Huffman code word for the symbol S. In our </span>
+<span class="c">/// example, the result could be Hs = [hc(a,&#39;0&#39;), hc(b,&#39;101&#39;), hc(c,&#39;100&#39;), hc(d,&#39;111&#39;), </span>
+<span class="c">/// hc(e,&#39;1101&#39;), hc(f,&#39;1100&#39;)] [hc(a,&#39;01&#39;),...etc.]. The task shall be performed by the </span>
+<span class="c">/// predicate huffman/2 defined as follows:</span>
+<span class="c">/// </span>
+<span class="c">///  % huffman(Fs,Hs) :- Hs is the Huffman code table for the frequency table Fs</span>
+<span class="c">///  </span>
+<span class="c">/// Example in F#: </span>
+<span class="c">/// </span>
+<span class="c">/// &gt; huffman [(&#39;a&#39;,45);(&#39;b&#39;,13);(&#39;c&#39;,12);(&#39;d&#39;,16);(&#39;e&#39;,9);(&#39;f&#39;,5)];;</span>
+<span class="c">/// val it : (char * string) list =</span>
+<span class="c">///   [(&#39;a&#39;, &quot;0&quot;); (&#39;b&#39;, &quot;101&quot;); (&#39;c&#39;, &quot;100&quot;); (&#39;d&#39;, &quot;111&quot;); (&#39;e&#39;, &quot;1101&quot;);</span>
+<span class="c">///    (&#39;f&#39;, &quot;1100&quot;)]</span>
+
+<span id="fst5" onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5, document.getElementById('fst5'))" class="omitted">(Solution)</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">let and&#39; = (&amp;&amp;)<br /><br />let or&#39;  = (||)<br /><br />let nand a b = not &lt;| and&#39; a b<br /><br />let nor a b = not &lt;| or&#39; a b<br /><br />let xor a b = if a &lt;&gt; b then true else false<br /><br />let impl a b = compare a b |&gt; (&lt;&gt;) 1<br /><br />let eq = (=)<br /><br />let table expr = <br />&#160;&#160;&#160;&#160;let inputs = [ (true, true); (true, false); (false, true); (false, false) ]<br />&#160;&#160;&#160;&#160;inputs |&gt; Seq.iter (fun (a,b) -&gt; printfn &quot;%b %b %b&quot; a b (expr a b))</div>
+<div class="tip" id="fs2">// let&#39;s use the F# built-in operateros plus:<br /><br />// xor<br />let (&amp;|) a b = if a &lt;&gt; b then true else false<br /><br />// nand<br />let (^&amp;&amp;) a b = not &lt;| a &amp;&amp; b<br /><br />// nor<br />let (^||) a b = not &lt;| a || b<br /><br />// impl<br />let (|-&gt;) a b = compare a b |&gt; (&lt;&gt;) 1<br /><br />// same as problem 46<br />let table2 expr = <br />&#160;&#160;&#160;&#160;let inputs = [ (true, true); (true, false); (false, true); (false, false) ]<br />&#160;&#160;&#160;&#160;inputs |&gt; Seq.iter (fun (a,b) -&gt; printfn &quot;%b %b %b&quot; a b (expr a b))</div>
+<div class="tip" id="fs3">let tablen n expr =<br />&#160;&#160;&#160;&#160;let replicate n xs = <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;let rec repl acc n =<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;match n with<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| 0 -&gt; acc<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| n -&gt; <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;let acc&#39; = acc |&gt; List.collect(fun ys -&gt; xs |&gt; List.map(fun x -&gt; x::ys))<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;repl acc&#39; (n-1)<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;repl [[]] n <br />&#160;<br />&#160;&#160;&#160;&#160;let values = replicate n [true; false]<br />&#160;&#160;&#160;&#160;let toString bs = System.String.Join(&quot; &quot;, Array.ofList (bs |&gt; List.map string))<br />&#160;&#160;&#160;&#160;values |&gt; Seq.iter(fun bs -&gt; printfn &quot;%s %b&quot; (bs |&gt; toString) (expr bs))</div>
+<div class="tip" id="fs4">// The rules to contruct gray codes can be found here : http://en.wikipedia.org/wiki/Gray_code<br />let rec gray = function<br />&#160;&#160;&#160;&#160;| 0 -&gt; [&quot;&quot;]<br />&#160;&#160;&#160;&#160;| n -&gt; <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;let prev = gray (n - 1)<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;(prev |&gt; List.map ((+) &quot;0&quot;)) @ (prev |&gt; List.rev |&gt; List.map((+) &quot;1&quot;))</div>
+<div class="tip" id="fs5">// First we create a representation of the Huffman tree<br />type &#39;a HuffmanTree = Node of int (*frecuency*) * &#39;a (* left *) HuffmanTree * &#39;a (* right *) HuffmanTree | Leaf of int * &#39;a (* term *)<br /><br />// Auxiliary function to get the frecuency<br />let frecuency = function<br />&#160;&#160;&#160;&#160;| Leaf (frec, _) -&gt; frec<br />&#160;&#160;&#160;&#160;| Node(frec, _, _) -&gt; frec<br /><br />// Once we have build the Huffman tree, we can use this function to assing the codes<br />// nodes to the left get a &#39;0&#39;. Nodes to the right get a &#39;1&#39;.<br />let encode tree =<br />&#160;&#160;&#160;&#160;let rec enc code tree cont =<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;match tree with<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| Leaf (_, a) -&gt; cont [(a, code)]<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| Node(_, lt, rt) -&gt;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;enc (code + &quot;0&quot;) lt &lt;| fun ltacc -&gt; enc (code + &quot;1&quot;) rt &lt;| fun rtacc -&gt; cont (ltacc @ rtacc)<br />&#160;&#160;&#160;&#160;enc &quot;&quot; tree id<br /><br />// The algorithm is explained here: http://en.wikipedia.org/wiki/Huffman_coding<br />// The implementation below uses lists. For better performance use a priority queue.<br />// This is how it works. First we transform the list of terms and frecuencies into a list of Leafs (6).<br />// Then, before anything happpens, we sort the list to place the terms with the lowest frecuency<br />// at the head of the List (1) (this is where a priority queue would shine). <br />// Otherwise, we combine the first two elements into a Node with the combined frecuency of the two nodes (4). <br />// We add the node to the list and try again (5). Eventualy the list is reduced to <br />// one term and we&#39;re done constructing the tree (2). Once we have the tree, we just need to encode it (7).<br />let huffman symbols =<br />&#160;&#160;&#160;&#160;let rec createTree tree = <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;let xs = tree |&gt; List.sortBy frecuency (* 1 *)<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;match xs with<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| [] -&gt; failwith &quot;Empty list&quot;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| [x] -&gt; x (* 2 *)<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| x::y::xs -&gt; (* 3 *)<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;let ht = Node(frecuency x + frecuency y, x , y) (* 4 *)<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;createTree (ht::xs) (* 5 *)<br />&#160;&#160;&#160;&#160;let ht = symbols <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;|&gt; List.map(fun (a,f) -&gt; Leaf (f,a)) (* 6 *)<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;|&gt; createTree<br />&#160;&#160;&#160;&#160;encode ht |&gt; List.sortBy(fst) (* 7 *)</div>
+

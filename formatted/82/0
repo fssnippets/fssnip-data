@@ -1,0 +1,135 @@
+<h2><a name="Declaration-of-asynchronous-sequence" class="anchor" href="#Declaration-of-asynchronous-sequence">Declaration of asynchronous sequence</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+<span class="l">6: </span>
+<span class="l">7: </span>
+<span class="l">8: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">IO</span>
+
+<span class="c">/// Represents a sequence of values &#39;T where items </span>
+<span class="c">/// are generated asynchronously on-demand</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="t">AsyncSeq</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="t">Async</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="t">AsyncSeqInner</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span><span class="o">&gt;</span> 
+<span class="k">and</span> <span onmouseout="hideTip(event, 'fs5', 6)" onmouseover="showTip(event, 'fs5', 6)" class="t">AsyncSeqInner</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span> <span class="o">=</span>
+  | <span onmouseout="hideTip(event, 'fs6', 7)" onmouseover="showTip(event, 'fs6', 7)" class="p">Ended</span>
+  | <span onmouseout="hideTip(event, 'fs7', 8)" onmouseover="showTip(event, 'fs7', 8)" class="p">Item</span> <span class="k">of</span> <span class="o">&#39;</span><span class="i">T</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs3', 9)" onmouseover="showTip(event, 'fs3', 9)" class="t">AsyncSeq</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Using-asynchronous-sequences" class="anchor" href="#Using-asynchronous-sequences">Using asynchronous sequences</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// Read file &#39;fn&#39; in blocks of size &#39;size&#39;</span>
+<span class="c">/// (returns on-demand asynchronous sequence)</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs8', 10)" onmouseover="showTip(event, 'fs8', 10)" class="f">readInBlocks</span> <span onmouseout="hideTip(event, 'fs9', 11)" onmouseover="showTip(event, 'fs9', 11)" class="i">fn</span> <span onmouseout="hideTip(event, 'fs10', 12)" onmouseover="showTip(event, 'fs10', 12)" class="i">size</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs11', 13)" onmouseover="showTip(event, 'fs11', 13)" class="i">async</span> {
+  <span class="k">let</span> <span onmouseout="hideTip(event, 'fs12', 14)" onmouseover="showTip(event, 'fs12', 14)" class="i">stream</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs13', 15)" onmouseover="showTip(event, 'fs13', 15)" class="t">File</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs14', 16)" onmouseover="showTip(event, 'fs14', 16)" class="f">OpenRead</span>(<span onmouseout="hideTip(event, 'fs9', 17)" onmouseover="showTip(event, 'fs9', 17)" class="i">fn</span>)
+  <span class="k">let</span> <span onmouseout="hideTip(event, 'fs15', 18)" onmouseover="showTip(event, 'fs15', 18)" class="i">buffer</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs16', 19)" onmouseover="showTip(event, 'fs16', 19)" class="t">Array</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs17', 20)" onmouseover="showTip(event, 'fs17', 20)" class="f">zeroCreate</span> <span onmouseout="hideTip(event, 'fs10', 21)" onmouseover="showTip(event, 'fs10', 21)" class="i">size</span>
+  
+  <span class="c">/// Returns next block as &#39;Item&#39; of async seq</span>
+  <span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs18', 22)" onmouseover="showTip(event, 'fs18', 22)" class="f">nextBlock</span>() <span class="o">=</span> <span onmouseout="hideTip(event, 'fs11', 23)" onmouseover="showTip(event, 'fs11', 23)" class="i">async</span> {
+    <span class="k">let!</span> <span onmouseout="hideTip(event, 'fs19', 24)" onmouseover="showTip(event, 'fs19', 24)" class="i">count</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs12', 25)" onmouseover="showTip(event, 'fs12', 25)" class="i">stream</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs20', 26)" onmouseover="showTip(event, 'fs20', 26)" class="f">AsyncRead</span>(<span onmouseout="hideTip(event, 'fs15', 27)" onmouseover="showTip(event, 'fs15', 27)" class="i">buffer</span>, <span class="n">0</span>, <span onmouseout="hideTip(event, 'fs10', 28)" onmouseover="showTip(event, 'fs10', 28)" class="i">size</span>)
+    <span class="k">if</span> <span onmouseout="hideTip(event, 'fs19', 29)" onmouseover="showTip(event, 'fs19', 29)" class="i">count</span> <span class="o">&gt;</span> <span class="n">0</span> <span class="k">then</span> <span class="k">return</span> <span onmouseout="hideTip(event, 'fs6', 30)" onmouseover="showTip(event, 'fs6', 30)" class="p">Ended</span>
+    <span class="k">else</span> 
+      <span class="c">// Create buffer with the right size</span>
+      <span class="k">let</span> <span onmouseout="hideTip(event, 'fs21', 31)" onmouseover="showTip(event, 'fs21', 31)" class="i">res</span> <span class="o">=</span> 
+        <span class="k">if</span> <span onmouseout="hideTip(event, 'fs19', 32)" onmouseover="showTip(event, 'fs19', 32)" class="i">count</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs10', 33)" onmouseover="showTip(event, 'fs10', 33)" class="i">size</span> <span class="k">then</span> <span onmouseout="hideTip(event, 'fs15', 34)" onmouseover="showTip(event, 'fs15', 34)" class="i">buffer</span>
+        <span class="k">else</span> <span onmouseout="hideTip(event, 'fs15', 35)" onmouseover="showTip(event, 'fs15', 35)" class="i">buffer</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs22', 36)" onmouseover="showTip(event, 'fs22', 36)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs23', 37)" onmouseover="showTip(event, 'fs23', 37)" class="f">take</span> <span onmouseout="hideTip(event, 'fs19', 38)" onmouseover="showTip(event, 'fs19', 38)" class="i">count</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs16', 39)" onmouseover="showTip(event, 'fs16', 39)" class="t">Array</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs24', 40)" onmouseover="showTip(event, 'fs24', 40)" class="f">ofSeq</span>
+      <span class="k">return</span> <span onmouseout="hideTip(event, 'fs7', 41)" onmouseover="showTip(event, 'fs7', 41)" class="p">Item</span>(<span onmouseout="hideTip(event, 'fs21', 42)" onmouseover="showTip(event, 'fs21', 42)" class="i">res</span>, <span onmouseout="hideTip(event, 'fs18', 43)" onmouseover="showTip(event, 'fs18', 43)" class="f">nextBlock</span>()) }
+
+  <span class="k">return!</span> <span onmouseout="hideTip(event, 'fs18', 44)" onmouseover="showTip(event, 'fs18', 44)" class="f">nextBlock</span>() }
+
+<span class="c">/// Asynchronous function that compares two asynchronous sequences</span>
+<span class="c">/// item by item. If an item doesn&#39;t match, &#39;false&#39; is returned</span>
+<span class="c">/// immediately without generating the rest of the sequence. If the</span>
+<span class="c">/// lengths don&#39;t match, exception is thrown.</span>
+<span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs25', 45)" onmouseover="showTip(event, 'fs25', 45)" class="f">compareAsyncSeqs</span> <span onmouseout="hideTip(event, 'fs26', 46)" onmouseover="showTip(event, 'fs26', 46)" class="i">seq1</span> <span onmouseout="hideTip(event, 'fs27', 47)" onmouseover="showTip(event, 'fs27', 47)" class="i">seq2</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs11', 48)" onmouseover="showTip(event, 'fs11', 48)" class="i">async</span> {
+  <span class="k">let!</span> <span onmouseout="hideTip(event, 'fs28', 49)" onmouseover="showTip(event, 'fs28', 49)" class="i">item1</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs26', 50)" onmouseover="showTip(event, 'fs26', 50)" class="i">seq1</span>
+  <span class="k">let!</span> <span onmouseout="hideTip(event, 'fs29', 51)" onmouseover="showTip(event, 'fs29', 51)" class="i">item2</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs26', 52)" onmouseover="showTip(event, 'fs26', 52)" class="i">seq1</span>
+  <span class="k">match</span> <span onmouseout="hideTip(event, 'fs28', 53)" onmouseover="showTip(event, 'fs28', 53)" class="i">item1</span>, <span onmouseout="hideTip(event, 'fs29', 54)" onmouseover="showTip(event, 'fs29', 54)" class="i">item2</span> <span class="k">with</span> 
+  | <span onmouseout="hideTip(event, 'fs7', 55)" onmouseover="showTip(event, 'fs7', 55)" class="p">Item</span>(<span onmouseout="hideTip(event, 'fs30', 56)" onmouseover="showTip(event, 'fs30', 56)" class="i">b1</span>, <span onmouseout="hideTip(event, 'fs31', 57)" onmouseover="showTip(event, 'fs31', 57)" class="i">ns1</span>), <span onmouseout="hideTip(event, 'fs7', 58)" onmouseover="showTip(event, 'fs7', 58)" class="p">Item</span>(<span onmouseout="hideTip(event, 'fs32', 59)" onmouseover="showTip(event, 'fs32', 59)" class="i">b2</span>, <span onmouseout="hideTip(event, 'fs33', 60)" onmouseover="showTip(event, 'fs33', 60)" class="i">ns2</span>) <span class="k">when</span> <span onmouseout="hideTip(event, 'fs30', 61)" onmouseover="showTip(event, 'fs30', 61)" class="i">b1</span> <span class="o">&lt;&gt;</span> <span onmouseout="hideTip(event, 'fs32', 62)" onmouseover="showTip(event, 'fs32', 62)" class="i">b2</span> <span class="k">-&gt;</span> <span class="k">return</span> <span class="k">false</span>
+  | <span onmouseout="hideTip(event, 'fs7', 63)" onmouseover="showTip(event, 'fs7', 63)" class="p">Item</span>(<span onmouseout="hideTip(event, 'fs30', 64)" onmouseover="showTip(event, 'fs30', 64)" class="i">b1</span>, <span onmouseout="hideTip(event, 'fs31', 65)" onmouseover="showTip(event, 'fs31', 65)" class="i">ns1</span>), <span onmouseout="hideTip(event, 'fs7', 66)" onmouseover="showTip(event, 'fs7', 66)" class="p">Item</span>(<span onmouseout="hideTip(event, 'fs32', 67)" onmouseover="showTip(event, 'fs32', 67)" class="i">b2</span>, <span onmouseout="hideTip(event, 'fs33', 68)" onmouseover="showTip(event, 'fs33', 68)" class="i">ns2</span>) <span class="k">-&gt;</span> <span class="k">return!</span> <span onmouseout="hideTip(event, 'fs25', 69)" onmouseover="showTip(event, 'fs25', 69)" class="f">compareAsyncSeqs</span> <span onmouseout="hideTip(event, 'fs31', 70)" onmouseover="showTip(event, 'fs31', 70)" class="i">ns1</span> <span onmouseout="hideTip(event, 'fs33', 71)" onmouseover="showTip(event, 'fs33', 71)" class="i">ns2</span>
+  | <span onmouseout="hideTip(event, 'fs6', 72)" onmouseover="showTip(event, 'fs6', 72)" class="p">Ended</span>, <span onmouseout="hideTip(event, 'fs6', 73)" onmouseover="showTip(event, 'fs6', 73)" class="p">Ended</span> <span class="k">-&gt;</span> <span class="k">return</span> <span class="k">true</span>
+  | _ <span class="k">-&gt;</span> <span class="k">return</span> <span onmouseout="hideTip(event, 'fs34', 74)" onmouseover="showTip(event, 'fs34', 74)" class="f">failwith</span> <span class="s">&quot;Size doesn&#39;t match&quot;</span> }
+
+<span class="c">/// Compare two files using 1k blocks</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs35', 75)" onmouseover="showTip(event, 'fs35', 75)" class="i">s1</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs8', 76)" onmouseover="showTip(event, 'fs8', 76)" class="f">readInBlocks</span> <span class="s">&quot;f1&quot;</span> <span class="n">1000</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs36', 77)" onmouseover="showTip(event, 'fs36', 77)" class="i">s2</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs8', 78)" onmouseover="showTip(event, 'fs8', 78)" class="f">readInBlocks</span> <span class="s">&quot;f2&quot;</span> <span class="n">1000</span>
+<span onmouseout="hideTip(event, 'fs25', 79)" onmouseover="showTip(event, 'fs25', 79)" class="f">compareAsyncSeqs</span> <span onmouseout="hideTip(event, 'fs35', 80)" onmouseover="showTip(event, 'fs35', 80)" class="i">s1</span> <span onmouseout="hideTip(event, 'fs36', 81)" onmouseover="showTip(event, 'fs36', 81)" class="i">s2</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace System</div>
+<div class="tip" id="fs2">namespace System.IO</div>
+<div class="tip" id="fs3">type AsyncSeq&lt;&#39;T&gt; = Async&lt;AsyncSeqInner&lt;&#39;T&gt;&gt;<br /><br />Full name: Script.AsyncSeq&lt;_&gt;<br /><em><br /><br />&#160;Represents a sequence of values &#39;T where items <br />&#160;are generated asynchronously on-demand</em></div>
+<div class="tip" id="fs4">Multiple items<br />type Async<br />static member AsBeginEnd : computation:(&#39;Arg -&gt; Async&lt;&#39;T&gt;) -&gt; (&#39;Arg * AsyncCallback * obj -&gt; IAsyncResult) * (IAsyncResult -&gt; &#39;T) * (IAsyncResult -&gt; unit)<br />static member AwaitEvent : event:IEvent&lt;&#39;Del,&#39;T&gt; * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt; (requires delegate and &#39;Del :&gt; Delegate)<br />static member AwaitIAsyncResult : iar:IAsyncResult * ?millisecondsTimeout:int -&gt; Async&lt;bool&gt;<br />static member AwaitTask : task:Task&lt;&#39;T&gt; -&gt; Async&lt;&#39;T&gt;<br />static member AwaitWaitHandle : waitHandle:WaitHandle * ?millisecondsTimeout:int -&gt; Async&lt;bool&gt;<br />static member CancelDefaultToken : unit -&gt; unit<br />static member Catch : computation:Async&lt;&#39;T&gt; -&gt; Async&lt;Choice&lt;&#39;T,exn&gt;&gt;<br />static member FromBeginEnd : beginAction:(AsyncCallback * obj -&gt; IAsyncResult) * endAction:(IAsyncResult -&gt; &#39;T) * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member FromBeginEnd : arg:&#39;Arg1 * beginAction:(&#39;Arg1 * AsyncCallback * obj -&gt; IAsyncResult) * endAction:(IAsyncResult -&gt; &#39;T) * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member FromBeginEnd : arg1:&#39;Arg1 * arg2:&#39;Arg2 * beginAction:(&#39;Arg1 * &#39;Arg2 * AsyncCallback * obj -&gt; IAsyncResult) * endAction:(IAsyncResult -&gt; &#39;T) * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member FromBeginEnd : arg1:&#39;Arg1 * arg2:&#39;Arg2 * arg3:&#39;Arg3 * beginAction:(&#39;Arg1 * &#39;Arg2 * &#39;Arg3 * AsyncCallback * obj -&gt; IAsyncResult) * endAction:(IAsyncResult -&gt; &#39;T) * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member FromContinuations : callback:((&#39;T -&gt; unit) * (exn -&gt; unit) * (OperationCanceledException -&gt; unit) -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member Ignore : computation:Async&lt;&#39;T&gt; -&gt; Async&lt;unit&gt;<br />static member OnCancel : interruption:(unit -&gt; unit) -&gt; Async&lt;IDisposable&gt;<br />static member Parallel : computations:seq&lt;Async&lt;&#39;T&gt;&gt; -&gt; Async&lt;&#39;T []&gt;<br />static member RunSynchronously : computation:Async&lt;&#39;T&gt; * ?timeout:int * ?cancellationToken:CancellationToken -&gt; &#39;T<br />static member Sleep : millisecondsDueTime:int -&gt; Async&lt;unit&gt;<br />static member Start : computation:Async&lt;unit&gt; * ?cancellationToken:CancellationToken -&gt; unit<br />static member StartAsTask : computation:Async&lt;&#39;T&gt; * ?taskCreationOptions:TaskCreationOptions * ?cancellationToken:CancellationToken -&gt; Task&lt;&#39;T&gt;<br />static member StartChild : computation:Async&lt;&#39;T&gt; * ?millisecondsTimeout:int -&gt; Async&lt;Async&lt;&#39;T&gt;&gt;<br />static member StartChildAsTask : computation:Async&lt;&#39;T&gt; * ?taskCreationOptions:TaskCreationOptions -&gt; Async&lt;Task&lt;&#39;T&gt;&gt;<br />static member StartImmediate : computation:Async&lt;unit&gt; * ?cancellationToken:CancellationToken -&gt; unit<br />static member StartWithContinuations : computation:Async&lt;&#39;T&gt; * continuation:(&#39;T -&gt; unit) * exceptionContinuation:(exn -&gt; unit) * cancellationContinuation:(OperationCanceledException -&gt; unit) * ?cancellationToken:CancellationToken -&gt; unit<br />static member SwitchToContext : syncContext:SynchronizationContext -&gt; Async&lt;unit&gt;<br />static member SwitchToNewThread : unit -&gt; Async&lt;unit&gt;<br />static member SwitchToThreadPool : unit -&gt; Async&lt;unit&gt;<br />static member TryCancelled : computation:Async&lt;&#39;T&gt; * compensation:(OperationCanceledException -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member CancellationToken : Async&lt;CancellationToken&gt;<br />static member DefaultCancellationToken : CancellationToken<br /><br />Full name: Microsoft.FSharp.Control.Async<br /><br />--------------------<br />type Async&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Control.Async&lt;_&gt;</div>
+<div class="tip" id="fs5">type AsyncSeqInner&lt;&#39;T&gt; =<br />&#160;&#160;| Ended<br />&#160;&#160;| Item of &#39;T * AsyncSeq&lt;&#39;T&gt;<br /><br />Full name: Script.AsyncSeqInner&lt;_&gt;</div>
+<div class="tip" id="fs6">union case AsyncSeqInner.Ended: AsyncSeqInner&lt;&#39;T&gt;</div>
+<div class="tip" id="fs7">union case AsyncSeqInner.Item: &#39;T * AsyncSeq&lt;&#39;T&gt; -&gt; AsyncSeqInner&lt;&#39;T&gt;</div>
+<div class="tip" id="fs8">val readInBlocks : fn:string -&gt; size:int -&gt; Async&lt;AsyncSeqInner&lt;byte []&gt;&gt;<br /><br />Full name: Script.readInBlocks<br /><em><br /><br />&#160;Read file &#39;fn&#39; in blocks of size &#39;size&#39;<br />&#160;(returns on-demand asynchronous sequence)</em></div>
+<div class="tip" id="fs9">val fn : string</div>
+<div class="tip" id="fs10">val size : int</div>
+<div class="tip" id="fs11">val async : AsyncBuilder<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.async</div>
+<div class="tip" id="fs12">val stream : FileStream</div>
+<div class="tip" id="fs13">type File =<br />&#160;&#160;static member AppendAllLines : path:string * contents:IEnumerable&lt;string&gt; -&gt; unit + 1 overload<br />&#160;&#160;static member AppendAllText : path:string * contents:string -&gt; unit + 1 overload<br />&#160;&#160;static member AppendText : path:string -&gt; StreamWriter<br />&#160;&#160;static member Copy : sourceFileName:string * destFileName:string -&gt; unit + 1 overload<br />&#160;&#160;static member Create : path:string -&gt; FileStream + 3 overloads<br />&#160;&#160;static member CreateText : path:string -&gt; StreamWriter<br />&#160;&#160;static member Decrypt : path:string -&gt; unit<br />&#160;&#160;static member Delete : path:string -&gt; unit<br />&#160;&#160;static member Encrypt : path:string -&gt; unit<br />&#160;&#160;static member Exists : path:string -&gt; bool<br />&#160;&#160;...<br /><br />Full name: System.IO.File</div>
+<div class="tip" id="fs14">File.OpenRead(path: string) : FileStream</div>
+<div class="tip" id="fs15">val buffer : byte []</div>
+<div class="tip" id="fs16">module Array<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs17">val zeroCreate : count:int -&gt; &#39;T []<br /><br />Full name: Microsoft.FSharp.Collections.Array.zeroCreate</div>
+<div class="tip" id="fs18">val nextBlock : (unit -&gt; Async&lt;AsyncSeqInner&lt;byte []&gt;&gt;)<br /><em><br /><br />&#160;Returns next block as &#39;Item&#39; of async seq</em></div>
+<div class="tip" id="fs19">val count : int</div>
+<div class="tip" id="fs20">member Stream.AsyncRead : count:int -&gt; Async&lt;byte []&gt;<br />member Stream.AsyncRead : buffer:byte [] * ?offset:int * ?count:int -&gt; Async&lt;int&gt;</div>
+<div class="tip" id="fs21">val res : byte []</div>
+<div class="tip" id="fs22">module Seq<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs23">val take : count:int -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.take</div>
+<div class="tip" id="fs24">val ofSeq : source:seq&lt;&#39;T&gt; -&gt; &#39;T []<br /><br />Full name: Microsoft.FSharp.Collections.Array.ofSeq</div>
+<div class="tip" id="fs25">val compareAsyncSeqs : seq1:Async&lt;AsyncSeqInner&lt;&#39;a&gt;&gt; -&gt; seq2:AsyncSeq&lt;&#39;a&gt; -&gt; Async&lt;bool&gt; (requires equality)<br /><br />Full name: Script.compareAsyncSeqs<br /><em><br /><br />&#160;Asynchronous function that compares two asynchronous sequences<br />&#160;item by item. If an item doesn&#39;t match, &#39;false&#39; is returned<br />&#160;immediately without generating the rest of the sequence. If the<br />&#160;lengths don&#39;t match, exception is thrown.</em></div>
+<div class="tip" id="fs26">val seq1 : Async&lt;AsyncSeqInner&lt;&#39;a&gt;&gt; (requires equality)</div>
+<div class="tip" id="fs27">val seq2 : AsyncSeq&lt;&#39;a&gt; (requires equality)</div>
+<div class="tip" id="fs28">val item1 : AsyncSeqInner&lt;&#39;a&gt; (requires equality)</div>
+<div class="tip" id="fs29">val item2 : AsyncSeqInner&lt;&#39;a&gt; (requires equality)</div>
+<div class="tip" id="fs30">val b1 : &#39;a (requires equality)</div>
+<div class="tip" id="fs31">val ns1 : AsyncSeq&lt;&#39;a&gt; (requires equality)</div>
+<div class="tip" id="fs32">val b2 : &#39;a (requires equality)</div>
+<div class="tip" id="fs33">val ns2 : AsyncSeq&lt;&#39;a&gt; (requires equality)</div>
+<div class="tip" id="fs34">val failwith : message:string -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.Operators.failwith</div>
+<div class="tip" id="fs35">val s1 : Async&lt;AsyncSeqInner&lt;byte []&gt;&gt;<br /><br />Full name: Script.s1<br /><em><br /><br />&#160;Compare two files using 1k blocks</em></div>
+<div class="tip" id="fs36">val s2 : Async&lt;AsyncSeqInner&lt;byte []&gt;&gt;<br /><br />Full name: Script.s2</div>
+

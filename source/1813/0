@@ -1,0 +1,10 @@
+open System
+
+// Given a function of str -> str -> str
+let concat a b = a + b
+// Given a function of str -> int
+let parse str = Int32.Parse(str)
+// I want to call a function that takes a function of string -> string -> int
+let doSomething (f: string -> string -> int) = f "1" "2"
+// is there a better way to call this? the linter says it could be replaced with function composition
+let result = doSomething (fun s1 s2 -> concat s1 s2 |> parse)

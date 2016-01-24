@@ -1,0 +1,390 @@
+<h2><a name="Ninety-Nine-F-Problems-Problems-21-28-Lists-again" class="anchor" href="#Ninety-Nine-F-Problems-Problems-21-28-Lists-again">Ninety-Nine F# Problems - Problems 21 - 28 - Lists again</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// These are F# solutions of Ninety-Nine Haskell Problems </span>
+<span class="c">/// (http://www.haskell.org/haskellwiki/H-99:_Ninety-Nine_Haskell_Problems), </span>
+<span class="c">/// which are themselves translations of Ninety-Nine Lisp Problems</span>
+<span class="c">/// (http://www.ic.unicamp.br/~meidanis/courses/mc336/2006s2/funcional/L-99_Ninety-Nine_Lisp_Problems.html)</span>
+<span class="c">/// and Ninety-Nine Prolog Problems</span>
+<span class="c">/// (https://sites.google.com/site/prologsite/prolog-problems).</span>
+<span class="c">///</span>
+<span class="c">/// If you would like to contribute a solution or fix any bugs, send </span>
+<span class="c">/// an email to paks at kitiara dot org with the subject &quot;99 F# problems&quot;. </span>
+<span class="c">/// I&#39;ll try to update the problem as soon as possible.</span>
+<span class="c">///</span>
+<span class="c">/// The problems have different levels of difficulty. Those marked with a single asterisk (*) </span>
+<span class="c">/// are easy. If you have successfully solved the preceeding problems you should be able to </span>
+<span class="c">/// solve them within a few (say 15) minutes. Problems marked with two asterisks (**) are of </span>
+<span class="c">/// intermediate difficulty. If you are a skilled F# programmer it shouldn&#39;t take you more than </span>
+<span class="c">/// 30-90 minutes to solve them. Problems marked with three asterisks (***) are more difficult. </span>
+<span class="c">/// You may need more time (i.e. a few hours or more) to find a good solution</span>
+<span class="c">///</span>
+<span class="c">/// Though the problems number from 1 to 99, there are some gaps and some additions marked with </span>
+<span class="c">/// letters. There are actually only 88 problems.</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Problem-21-Insert-an-element-at-a-given-position-into-a-list" class="anchor" href="#Problem-21-Insert-an-element-at-a-given-position-into-a-list">(*) Problem 21 : Insert an element at a given position into a list.</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// Example: </span>
+<span class="c">/// * (insert-at &#39;alfa &#39;(a b c d) 2)</span>
+<span class="c">/// (A ALFA B C D)</span>
+<span class="c">///  </span>
+<span class="c">/// Example in F#: </span>
+<span class="c">/// </span>
+<span class="c">/// &gt; insertAt &#39;X&#39; (List.ofSeq &quot;abcd&quot;) 2;;</span>
+<span class="c">/// val it : char list = [&#39;a&#39;; &#39;X&#39;; &#39;b&#39;; &#39;c&#39;; &#39;d&#39;]</span>
+
+<span id="fst1" onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1, document.getElementById('fst1'))" class="omitted">(Solution 1)</span>
+
+<span id="fst2" onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2, document.getElementById('fst2'))" class="omitted">(Solution 2)</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Problem-22-Create-a-list-containing-all-integers-within-a-given-range" class="anchor" href="#Problem-22-Create-a-list-containing-all-integers-within-a-given-range">(*) Problem 22 : Create a list containing all integers within a given range.</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// Example: </span>
+<span class="c">/// * (range 4 9)</span>
+<span class="c">/// (4 5 6 7 8 9)</span>
+<span class="c">///  </span>
+<span class="c">/// Example in F#: </span>
+<span class="c">/// </span>
+<span class="c">/// &gt; range 4 9;;</span>
+<span class="c">/// val it : int list = [4; 5; 6; 7; 8; 9]</span>
+
+<span id="fst3" onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3, document.getElementById('fst3'))" class="omitted">(Solution)</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Problem-23-Extract-a-given-number-of-randomly-selected-elements-from-a-list" class="anchor" href="#Problem-23-Extract-a-given-number-of-randomly-selected-elements-from-a-list">(<em></em>) Problem 23 : Extract a given number of randomly selected elements from a list.</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// Example: </span>
+<span class="c">/// * (rnd-select &#39;(a b c d e f g h) 3)</span>
+<span class="c">/// (E D A)</span>
+<span class="c">///  </span>
+<span class="c">/// Example in F#: </span>
+<span class="c">/// </span>
+<span class="c">/// &gt; rnd_select &quot;abcdefgh&quot; 3;;</span>
+<span class="c">/// val it : seq&lt;char&gt; = seq [&#39;e&#39;; &#39;a&#39;; &#39;h&#39;]</span>
+
+<span id="fst4" onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4, document.getElementById('fst4'))" class="omitted">(Solution)</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Problem-24-Lotto-Draw-N-different-random-numbers-from-the-set-1-M" class="anchor" href="#Problem-24-Lotto-Draw-N-different-random-numbers-from-the-set-1-M">(*) Problem 24 : Lotto: Draw N different random numbers from the set 1..M.</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// Example: </span>
+<span class="c">/// * (rnd-select 6 49)</span>
+<span class="c">/// (23 1 17 33 21 37)</span>
+<span class="c">///  </span>
+<span class="c">/// Example in F#: </span>
+<span class="c">/// </span>
+<span class="c">/// &gt; diff_select 6 49;;</span>
+<span class="c">/// val it : int list = [27; 20; 22; 9; 15; 29]</span>
+
+<span class="c">// using problem 23</span>
+<span id="fst5" onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5, document.getElementById('fst5'))" class="omitted">(Solution)</span>
+
+<span id="fst6" onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6, document.getElementById('fst6'))" class="omitted">(Solution)</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Problem-25-Generate-a-random-permutation-of-the-elements-of-a-list" class="anchor" href="#Problem-25-Generate-a-random-permutation-of-the-elements-of-a-list">(*) Problem 25 : Generate a random permutation of the elements of a list.</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// Example: </span>
+<span class="c">/// * (rnd-permu &#39;(a b c d e f))</span>
+<span class="c">/// (B A D C E F)</span>
+<span class="c">///  </span>
+<span class="c">/// Example in F#: </span>
+<span class="c">/// </span>
+<span class="c">/// &gt; rnd_permu &lt;| List.ofSeq &quot;abcdef&quot;;;</span>
+<span class="c">/// val it : char list = [&#39;b&#39;; &#39;c&#39;; &#39;d&#39;; &#39;f&#39;; &#39;e&#39;; &#39;a&#39;]</span>
+
+<span id="fst7" onmouseout="hideTip(event, 'fs7', 7)" onmouseover="showTip(event, 'fs7', 7, document.getElementById('fst7'))" class="omitted">(Solution 1)</span>
+
+<span id="fst8" onmouseout="hideTip(event, 'fs8', 8)" onmouseover="showTip(event, 'fs8', 8, document.getElementById('fst8'))" class="omitted">(Solution 2)</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Problem-26-Generate-the-combinations-of-K-distinct-objects-chosen-from-the-N-elements-of-a-list" class="anchor" href="#Problem-26-Generate-the-combinations-of-K-distinct-objects-chosen-from-the-N-elements-of-a-list">(<em></em>) Problem 26 : Generate the combinations of K distinct objects chosen from the N elements of a list.</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// In how many ways can a committee of 3 be chosen from a group of 12 people? We all know that </span>
+<span class="c">/// there are C(12,3) = 220 possibilities (C(N,K) denotes the well-known binomial coefficients). For </span>
+<span class="c">/// pure mathematicians, this result may be great. But we want to really generate all the </span>
+<span class="c">/// possibilities in a list.</span>
+<span class="c">///  </span>
+<span class="c">/// Example: </span>
+<span class="c">/// * (combinations 3 &#39;(a b c d e f))</span>
+<span class="c">/// ((A B C) (A B D) (A B E) ... )</span>
+<span class="c">///  </span>
+<span class="c">/// Example in F#: </span>
+<span class="c">/// </span>
+<span class="c">/// &gt; combinations 3 [&#39;a&#39; .. &#39;f&#39;];;</span>
+<span class="c">/// val it : char list list =</span>
+<span class="c">///   [[&#39;a&#39;; &#39;b&#39;; &#39;c&#39;]; [&#39;a&#39;; &#39;b&#39;; &#39;d&#39;]; [&#39;a&#39;; &#39;b&#39;; &#39;e&#39;]; [&#39;a&#39;; &#39;b&#39;; &#39;f&#39;];</span>
+<span class="c">///    [&#39;a&#39;; &#39;c&#39;; &#39;d&#39;]; [&#39;a&#39;; &#39;c&#39;; &#39;e&#39;]; [&#39;a&#39;; &#39;c&#39;; &#39;f&#39;]; [&#39;a&#39;; &#39;d&#39;; &#39;e&#39;];</span>
+<span class="c">///    [&#39;a&#39;; &#39;d&#39;; &#39;f&#39;]; [&#39;a&#39;; &#39;e&#39;; &#39;f&#39;]; [&#39;b&#39;; &#39;c&#39;; &#39;d&#39;]; [&#39;b&#39;; &#39;c&#39;; &#39;e&#39;];</span>
+<span class="c">///    [&#39;b&#39;; &#39;c&#39;; &#39;f&#39;]; [&#39;b&#39;; &#39;d&#39;; &#39;e&#39;]; [&#39;b&#39;; &#39;d&#39;; &#39;f&#39;]; [&#39;b&#39;; &#39;e&#39;; &#39;f&#39;];</span>
+<span class="c">///    [&#39;c&#39;; &#39;d&#39;; &#39;e&#39;]; [&#39;c&#39;; &#39;d&#39;; &#39;f&#39;]; [&#39;c&#39;; &#39;e&#39;; &#39;f&#39;]; [&#39;d&#39;; &#39;e&#39;; &#39;f&#39;]] </span>
+
+<span id="fst9" onmouseout="hideTip(event, 'fs9', 9)" onmouseover="showTip(event, 'fs9', 9, document.getElementById('fst9'))" class="omitted">(Solution 1)</span>
+
+<span id="fst10" onmouseout="hideTip(event, 'fs10', 10)" onmouseover="showTip(event, 'fs10', 10, document.getElementById('fst10'))" class="omitted">(Solution 2)</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Problem-27-Group-the-elements-of-a-set-into-disjoint-subsets" class="anchor" href="#Problem-27-Group-the-elements-of-a-set-into-disjoint-subsets">(<em></em>) Problem 27 : Group the elements of a set into disjoint subsets.</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+<span class="l">38: </span>
+<span class="l">39: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// a) In how many ways can a group of 9 people work in 3 disjoint subgroups of 2, 3 </span>
+<span class="c">/// and 4 persons? Write a function that generates all the possibilities and returns them </span>
+<span class="c">/// in a list.</span>
+<span class="c">///  </span>
+<span class="c">/// Example: </span>
+<span class="c">/// * (group3 &#39;(aldo beat carla david evi flip gary hugo ida))</span>
+<span class="c">/// ( ( (ALDO BEAT) (CARLA DAVID EVI) (FLIP GARY HUGO IDA) )</span>
+<span class="c">/// ... )</span>
+<span class="c">///  </span>
+<span class="c">/// b) Generalize the above predicate in a way that we can specify a list of group sizes </span>
+<span class="c">/// and the predicate will return a list of groups.</span>
+<span class="c">///  </span>
+<span class="c">/// Example: </span>
+<span class="c">/// * (group &#39;(aldo beat carla david evi flip gary hugo ida) &#39;(2 2 5))</span>
+<span class="c">/// ( ( (ALDO BEAT) (CARLA DAVID) (EVI FLIP GARY HUGO IDA) )</span>
+<span class="c">/// ... )</span>
+<span class="c">///  </span>
+<span class="c">/// Note that we do not want permutations of the group members; i.e. ((ALDO BEAT) ...) </span>
+<span class="c">/// is the same solution as ((BEAT ALDO) ...). However, we make a difference between </span>
+<span class="c">/// ((ALDO BEAT) (CARLA DAVID) ...) and ((CARLA DAVID) (ALDO BEAT) ...).</span>
+<span class="c">///  </span>
+<span class="c">/// You may find more about this combinatorial problem in a good book on discrete </span>
+<span class="c">/// mathematics under the term &quot;multinomial coefficients&quot;.</span>
+<span class="c">///  </span>
+<span class="c">/// Example in F#: </span>
+<span class="c">/// </span>
+<span class="c">/// &gt; group [2;3;4] [&quot;aldo&quot;;&quot;beat&quot;;&quot;carla&quot;;&quot;david&quot;;&quot;evi&quot;;&quot;flip&quot;;&quot;gary&quot;;&quot;hugo&quot;;&quot;ida&quot;];;</span>
+<span class="c">/// val it : string list list list =</span>
+<span class="c">///   [[[&quot;aldo&quot;; &quot;beat&quot;]; [&quot;carla&quot;; &quot;david&quot;; &quot;evi&quot;];</span>
+<span class="c">///     [&quot;flip&quot;; &quot;gary&quot;; &quot;hugo&quot;; &quot;ida&quot;]];...]</span>
+<span class="c">/// (altogether 1260 solutions)</span>
+<span class="c">///  </span>
+<span class="c">/// &gt; group [2;2;5] [&quot;aldo&quot;;&quot;beat&quot;;&quot;carla&quot;;&quot;david&quot;;&quot;evi&quot;;&quot;flip&quot;;&quot;gary&quot;;&quot;hugo&quot;;&quot;ida&quot;];;</span>
+<span class="c">/// val it : string list list list =</span>
+<span class="c">///   [[[&quot;aldo&quot;; &quot;beat&quot;]; [&quot;carla&quot;; &quot;david&quot;];</span>
+<span class="c">///     [&quot;evi&quot;; &quot;flip&quot;; &quot;gary&quot;; &quot;hugo&quot;; &quot;ida&quot;]];...]</span>
+<span class="c">/// (altogether 756 solutions)</span>
+
+<span id="fst11" onmouseout="hideTip(event, 'fs11', 11)" onmouseover="showTip(event, 'fs11', 11, document.getElementById('fst11'))" class="omitted">(Solution)</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Problem-28-Sorting-a-list-of-lists-according-to-length-of-sublists" class="anchor" href="#Problem-28-Sorting-a-list-of-lists-according-to-length-of-sublists">(<em></em>) Problem 28 : Sorting a list of lists according to length of sublists</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// a) We suppose that a list contains elements that are lists themselves. The objective </span>
+<span class="c">/// is to sort the elements of this list according to their length. E.g. short lists first,</span>
+<span class="c">/// longer lists later, or vice versa.</span>
+<span class="c">///  </span>
+<span class="c">/// Example: </span>
+<span class="c">/// * (lsort &#39;((a b c) (d e) (f g h) (d e) (i j k l) (m n) (o)))</span>
+<span class="c">/// ((O) (D E) (D E) (M N) (A B C) (F G H) (I J K L))</span>
+<span class="c">///  </span>
+<span class="c">/// Example in F#: </span>
+<span class="c">/// </span>
+<span class="c">/// &gt; lsort [&quot;abc&quot;;&quot;de&quot;;&quot;fgh&quot;;&quot;de&quot;;&quot;ijkl&quot;;&quot;mn&quot;;&quot;o&quot;];;</span>
+<span class="c">/// val it : string list = [&quot;o&quot;; &quot;de&quot;; &quot;de&quot;; &quot;mn&quot;; &quot;abc&quot;; &quot;fgh&quot;; &quot;ijkl&quot;]</span>
+<span class="c">///</span>
+<span class="c">/// b) Again; we suppose that a list contains elements that are lists themselves. But this </span>
+<span class="c">/// time the objective is to sort the elements of this list according to their length </span>
+<span class="c">/// frequency; i.e.; in the default; where sorting is done ascendingly; lists with rare </span>
+<span class="c">/// lengths are placed first; others with a more frequent length come later.</span>
+<span class="c">///  </span>
+<span class="c">/// Example: </span>
+<span class="c">/// * (lfsort &#39;((a b c) (d e) (f g h) (d e) (i j k l) (m n) (o)))</span>
+<span class="c">/// ((i j k l) (o) (a b c) (f g h) (d e) (d e) (m n))</span>
+<span class="c">///  </span>
+<span class="c">/// Example in F#: </span>
+<span class="c">/// </span>
+<span class="c">/// &gt; lfsort [&quot;abc&quot;; &quot;de&quot;; &quot;fgh&quot;; &quot;de&quot;; &quot;ijkl&quot;; &quot;mn&quot;; &quot;o&quot;];;</span>
+<span class="c">/// val it : string list = [&quot;ijkl&quot;; &quot;o&quot;; &quot;abc&quot;; &quot;fgh&quot;; &quot;de&quot;; &quot;de&quot;; &quot;mn&quot;]</span>
+
+<span id="fst12" onmouseout="hideTip(event, 'fs12', 12)" onmouseover="showTip(event, 'fs12', 12, document.getElementById('fst12'))" class="omitted">(Solution)</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">let insertAt x xs n =<br />&#160;&#160;&#160;&#160;let rec insAt acc xs n =<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;match xs, n with<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| [], 1 -&gt; List.rev (x::acc)<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| [], _ -&gt; failwith &quot;Empty list you fool!&quot;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| xs, 1 -&gt; List.rev (x::acc) @ xs<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| x::xs, n -&gt; insAt (x::acc) xs (n - 1)<br />&#160;&#160;&#160;&#160;insAt [] xs n</div>
+<div class="tip" id="fs2">let rec insertAt&#39; x xs n =<br />&#160;&#160;&#160;&#160;match xs, n with<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| [], 1 -&gt; [x]<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| [], _ -&gt; failwith &quot;Empty list you fool!&quot;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| _, 1 -&gt; x::xs<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| y::ys, n -&gt; y::insertAt&#39; x ys (n - 1)</div>
+<div class="tip" id="fs3">let range a b = [a..b]</div>
+<div class="tip" id="fs4">let rnd_select xs n = <br />&#160;&#160;&#160;&#160;let rndSeq = let r = new System.Random() in seq { while true do yield r.Next() }<br />&#160;&#160;&#160;&#160;xs |&gt; Seq.zip rndSeq |&gt; Seq.sortBy fst |&gt; Seq.map snd |&gt; Seq.take n</div>
+<div class="tip" id="fs5">let diff_select n m = rnd_select (seq { 1 .. m }) n |&gt; List.ofSeq</div>
+<div class="tip" id="fs6">let diff_select&#39; n m = <br />&#160;&#160;&#160;&#160;let rndSeq = let r = new System.Random() in Seq.initInfinite(ignore &gt;&gt; r.Next ) <br />&#160;&#160;&#160;&#160;seq { 1 .. m } |&gt; Seq.zip rndSeq |&gt; Seq.sortBy fst |&gt; Seq.map snd |&gt; Seq.take n |&gt; List.ofSeq</div>
+<div class="tip" id="fs7">// using problem 23<br />let rnd_permu xs = List.length xs |&gt; rnd_select xs</div>
+<div class="tip" id="fs8">let rnd_permu&#39; xs = <br />&#160;&#160;&#160;&#160;let rec rndSeq = <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;let r = new System.Random()<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;seq { while true do yield r.Next() }<br />&#160;&#160;&#160;&#160;xs |&gt; Seq.zip rndSeq |&gt; Seq.sortBy fst |&gt; Seq.map snd |&gt; List.ofSeq</div>
+<div class="tip" id="fs9">// as a bonus you get the powerset of xs with combinations 0 xs<br />let rec combinations n xs =<br />&#160;&#160;&#160;&#160;match xs, n with<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| [],_ -&gt; [[]]<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| xs, 1 -&gt; [for x in xs do yield [x]]<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| x::xs, n -&gt; <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;[for ys in combinations (n-1) xs do<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;yield x::ys<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;if List.length xs &gt; n then<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;yield! combinations n xs<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;else<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;yield xs]</div>
+<div class="tip" id="fs10">let rec combinations&#39; n xs =<br />&#160;&#160;&#160;&#160;let rec tails = function<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| [] -&gt; [[]]<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| _::ys as xs -&gt; xs::tails ys<br />&#160;&#160;&#160;&#160;match xs, n with<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| _, 0 -&gt; [[]]<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| xs, n -&gt;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;[ for tail in tails xs do<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;match tail with<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| [] -&gt; ()<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| y::xs&#39; -&gt;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;for ys in combinations&#39; (n - 1) xs&#39; do<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;yield y::ys ]</div>
+<div class="tip" id="fs11">let rec group ns xs = <br />&#160;&#160;&#160;&#160;let rec combination n xs = <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;match n,xs with<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| 0, xs -&gt; [([], xs)]<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| _, [] -&gt; []<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| n, x::xs -&gt; <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;let ts = [ for ys, zs in combination (n-1) xs do yield (x::ys, zs)]<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;let ds = [ for ys, zs in combination n xs do yield (ys, x::zs)]<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;ts @ ds<br />&#160;&#160;&#160;&#160;match ns,xs with<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| [], _ -&gt; [[]]<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| n::ns, xs -&gt;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;[ for g, rs in combination n xs do<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;for gs in group ns rs do<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;yield g::gs ]</div>
+<div class="tip" id="fs12">let lsort xss = xss |&gt; List.sortBy Seq.length<br /><br />let lfsort xss = xss |&gt; Seq.groupBy (Seq.length) |&gt; Seq.sortBy (snd &gt;&gt; Seq.length) |&gt; Seq.collect snd |&gt; List.ofSeq</div>
+

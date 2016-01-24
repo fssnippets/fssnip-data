@@ -1,0 +1,12 @@
+open Microsoft.FSharp.Linq.RuntimeHelpers
+open System
+open System.Linq.Expressions
+
+module Lambda =
+    let toExpression (``f# lambda`` : Quotations.Expr<'a>) =
+        ``f# lambda``
+        |> LeafExpressionConverter.QuotationToExpression 
+        |> unbox<Expression<'a>>
+
+let test = 
+    <@ Func<int, int>(fun i -> i + 5) @> |> Lambda.toExpression

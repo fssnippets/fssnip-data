@@ -1,0 +1,124 @@
+(* It is 100+ lines, I tried to made it as readable as possible.
+ * Please use following link for solution with indentation preserved
+ >     http://fssnip.net/t3
+ *)
+
+open System
+open System.IO
+
+let gravity = 9.81
+
+
+//////////////////////////////////////////////////////////////////////////////////
+//  Shot record - representing input line
+//////////////////////////////////////////////////////////////////////////////////
+type Point = {
+    X :float
+    Y :float
+}
+
+type Shot = { 
+    Target :Point
+    Speed :float
+    Distance :float
+    Name :string
+}
+
+
+//////////////////////////////////////////////////////////////////////////////////
+//  Trace record - result of fired shot, applying all calculations to Shot
+//////////////////////////////////////////////////////////////////////////////////
+type Trace = {
+    Distance :float
+    Accurate :bool 
+    ExpectedAngle :float
+    Name :string
+}
+
+let calculateAngle (s :Point) =
+    Math.Atan (s.Y / s.X)
+let calculateDistance (s :Shot) =
+    Math.Pow(s.Speed, 2.) * Math.Sin( 2. * calculateAngle s.Target) / gravity
+let calculateExpectedAngle (s :Shot) =
+    0.5 * Math.Asin( gravity * s.Distance / Math.Pow(s.Speed, 2.) )
+
+// transfom Shot record into Trace record, calculating angles and hit distance
+let fireAShot (shot :Shot) :Trace =
+    let precision = 0.001
+    let hitDistance = calculateDistance shot
+    { 
+        Distance = hitDistance
+        Accurate = Math.Abs (shot.Distance - hitDistance) < precision
+        ExpectedAngle = calculateExpectedAngle shot
+        Name = shot.Name 
+    }
+
+
+//////////////////////////////////////////////////////////////////////////////////
+//  Parsing an input file
+//////////////////////////////////////////////////////////////////////////////////
+let getFile () =
+    Console.Write("Enter the full path to the name of the input file: ")
+    Console.ReadLine()
+
+ 
+let parseInputFile (input :StreamReader) :seq<Shot> =
+    [while not input.EndOfStream do 
+        let line = input.ReadLine()
+        let vals = line.Split(',')
+        yield { 
+            Target = { 
+                X = float vals.[0]
+                Y = float vals.[1] 
+            }
+            Speed = float vals.[2] 
+            Distance = float vals.[3] 
+            Name = vals.[4] 
+        }
+    ] |> List.toSeq
+
+
+//////////////////////////////////////////////////////////////////////////////////
+//  Output an information about Shot result
+//////////////////////////////////////////////////////////////////////////////////
+let displatInfo (h :Trace) =
+    let (|Mis|Hit|Impossible|) (t :Trace) = 
+        if t.Accurate then Hit
+        elif Double.IsNaN(t.ExpectedAngle) then Impossible
+        else Mis
+
+    match h with
+    | Hit -> sprintf "Gun %s fired and hit the target! Well done." h.Name
+    | Mis -> sprintf "Gun %s fired and misses the target, should be pointing at %f angle" h.Name h.ExpectedAngle
+    | Impossible -> sprintf "Gun %s was impossible to hit its target under that conditions" h.Name
+
+
+//////////////////////////////////////////////////////////////////////////////////
+//  Main method
+//////////////////////////////////////////////////////////////////////////////////
+[<EntryPoint>]
+let main argv = 
+    
+    try
+        use input = 
+            new StreamReader(match argv.Length with
+                                | 0 -> getFile ()
+                                | _ -> argv.[0])
+        
+        parseInputFile input
+        |> Seq.map fireAShot
+        |> Seq.map displatInfo
+        |> Seq.iter (printfn "%s")
+
+        Console.Write("\nPress any key to exit")
+        Console.ReadKey() |> ignore
+        0
+    with
+    | :? System.IO.FileNotFoundException ->
+        Console.Write("File Not Found. Press a key to exit")
+        Console.ReadKey() |> ignore
+        -1
+    | _ ->
+        Console.Write("Something else happened")
+        Console.ReadKey() |> ignore
+        -1 

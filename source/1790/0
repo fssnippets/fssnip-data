@@ -1,0 +1,34 @@
+// No idea if I got this right...but I use some of the data types we learned in module 3...
+module mainModule
+    open System
+
+    type numberAndItsGoldenRatio =
+        {   number : int
+            goldenRatio : float }
+
+    let GetGoldenRatio number =
+        number * Math.Sqrt(5.0) / 2.0
+    
+    let GetNumberAndItsGoldenRatio number =
+        {   number = number
+            goldenRatio = GetGoldenRatio(float number) }
+
+    [<EntryPoint>]    
+    let main argv =
+
+        Console.WriteLine("Please enter some numbers. I will calculate the golden ratio for you")
+
+        let numbersAndTheirGoldenRatio =
+            [ let mutable run = true
+              while run do
+                  Console.WriteLine("Do you want to add more numbers (y/n)? ")
+                  if Console.ReadLine().ToLower() = "y" then
+                      Console.WriteLine("Enter a number: ")
+                      let number = Console.ReadLine()
+                      yield GetNumberAndItsGoldenRatio (int number)
+                  else run <- false ]
+
+        for x in numbersAndTheirGoldenRatio do
+            printfn "Number: %A, GR: %A" x.number x.goldenRatio
+        Console.ReadKey()
+        0

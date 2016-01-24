@@ -1,0 +1,420 @@
+<h2><a name="Mock-fluent-interface" class="anchor" href="#Mock-fluent-interface">Mock fluent interface</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+<span class="l">38: </span>
+<span class="l">39: </span>
+<span class="l">40: </span>
+<span class="l">41: </span>
+<span class="l">42: </span>
+<span class="l">43: </span>
+<span class="l">44: </span>
+<span class="l">45: </span>
+<span class="l">46: </span>
+<span class="l">47: </span>
+<span class="l">48: </span>
+<span class="l">49: </span>
+<span class="l">50: </span>
+<span class="l">51: </span>
+<span class="l">52: </span>
+<span class="l">53: </span>
+<span class="l">54: </span>
+<span class="l">55: </span>
+<span class="l">56: </span>
+<span class="l">57: </span>
+<span class="l">58: </span>
+<span class="l">59: </span>
+<span class="l">60: </span>
+<span class="l">61: </span>
+<span class="l">62: </span>
+<span class="l">63: </span>
+<span class="l">64: </span>
+<span class="l">65: </span>
+<span class="l">66: </span>
+<span class="l">67: </span>
+<span class="l">68: </span>
+<span class="l">69: </span>
+<span class="l">70: </span>
+<span class="l">71: </span>
+<span class="l">72: </span>
+<span class="l">73: </span>
+<span class="l">74: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// Generic mock type over abstract types and interfaces</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="t">Mock</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">TAbstract</span> <span class="k">when</span> <span class="o">&#39;</span><span class="i">TAbstract</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">not</span> <span class="k">struct</span><span class="o">&gt;</span> <span class="k">internal</span> (<span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="i">calls</span>) <span class="o">=</span>
+    <span class="c">/// Abstract type</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="i">abstractType</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="i">typeof</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">TAbstract</span><span class="o">&gt;</span>
+    <span class="c">/// Converts argument expressions to Arg array</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="f">toArgs</span> <span onmouseout="hideTip(event, 'fs7', 7)" onmouseover="showTip(event, 'fs7', 7)" class="i">args</span> <span class="o">=</span>
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs8', 8)" onmouseover="showTip(event, 'fs8', 8)" class="f">hasAttribute</span> <span onmouseout="hideTip(event, 'fs9', 9)" onmouseover="showTip(event, 'fs9', 9)" class="i">a</span> (<span onmouseout="hideTip(event, 'fs10', 10)" onmouseover="showTip(event, 'fs10', 10)" class="i">mi</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs11', 11)" onmouseover="showTip(event, 'fs11', 11)" class="t">MethodInfo</span>) <span class="o">=</span> <span onmouseout="hideTip(event, 'fs10', 12)" onmouseover="showTip(event, 'fs10', 12)" class="i">mi</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs12', 13)" onmouseover="showTip(event, 'fs12', 13)" class="f">GetCustomAttributes</span>(<span onmouseout="hideTip(event, 'fs9', 14)" onmouseover="showTip(event, 'fs9', 14)" class="i">a</span>, <span class="k">true</span>)<span class="o">.</span><span class="i">Length</span> <span class="o">&gt;</span> <span class="n">0</span>
+        [|<span class="k">for</span> <span onmouseout="hideTip(event, 'fs13', 15)" onmouseover="showTip(event, 'fs13', 15)" class="i">arg</span> <span class="k">in</span> <span onmouseout="hideTip(event, 'fs7', 16)" onmouseover="showTip(event, 'fs7', 16)" class="i">args</span> <span class="k">-&gt;</span>
+            <span class="k">match</span> <span onmouseout="hideTip(event, 'fs13', 17)" onmouseover="showTip(event, 'fs13', 17)" class="i">arg</span> <span class="k">with</span>
+            | <span onmouseout="hideTip(event, 'fs14', 18)" onmouseover="showTip(event, 'fs14', 18)" class="p">Value</span>(<span onmouseout="hideTip(event, 'fs15', 19)" onmouseover="showTip(event, 'fs15', 19)" class="i">v</span>,<span onmouseout="hideTip(event, 'fs16', 20)" onmouseover="showTip(event, 'fs16', 20)" class="i">t</span>) | <span onmouseout="hideTip(event, 'fs17', 21)" onmouseover="showTip(event, 'fs17', 21)" class="p">Coerce</span>(<span onmouseout="hideTip(event, 'fs14', 22)" onmouseover="showTip(event, 'fs14', 22)" class="p">Value</span>(<span onmouseout="hideTip(event, 'fs15', 23)" onmouseover="showTip(event, 'fs15', 23)" class="i">v</span>,<span onmouseout="hideTip(event, 'fs16', 24)" onmouseover="showTip(event, 'fs16', 24)" class="i">t</span>),_) <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs18', 25)" onmouseover="showTip(event, 'fs18', 25)" class="p">Arg</span>(<span onmouseout="hideTip(event, 'fs15', 26)" onmouseover="showTip(event, 'fs15', 26)" class="i">v</span>)
+            | <span onmouseout="hideTip(event, 'fs19', 27)" onmouseover="showTip(event, 'fs19', 27)" class="p">PropertyGet</span>(<span onmouseout="hideTip(event, 'fs20', 28)" onmouseover="showTip(event, 'fs20', 28)" class="p">None</span>, <span onmouseout="hideTip(event, 'fs21', 29)" onmouseover="showTip(event, 'fs21', 29)" class="i">pi</span>, []) <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs21', 30)" onmouseover="showTip(event, 'fs21', 30)" class="i">pi</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs22', 31)" onmouseover="showTip(event, 'fs22', 31)" class="f">GetValue</span>(<span class="k">null</span>, [||]) <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs18', 32)" onmouseover="showTip(event, 'fs18', 32)" class="p">Arg</span>
+            | <span onmouseout="hideTip(event, 'fs23', 33)" onmouseover="showTip(event, 'fs23', 33)" class="p">Call</span>(_, <span onmouseout="hideTip(event, 'fs10', 34)" onmouseover="showTip(event, 'fs10', 34)" class="i">mi</span>, _) <span class="k">when</span> <span onmouseout="hideTip(event, 'fs8', 35)" onmouseover="showTip(event, 'fs8', 35)" class="f">hasAttribute</span> <span onmouseout="hideTip(event, 'fs5', 36)" onmouseover="showTip(event, 'fs5', 36)" class="i">typeof</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs24', 37)" onmouseover="showTip(event, 'fs24', 37)" class="t">WildcardAttribute</span><span class="o">&gt;</span> <span onmouseout="hideTip(event, 'fs10', 38)" onmouseover="showTip(event, 'fs10', 38)" class="i">mi</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs25', 39)" onmouseover="showTip(event, 'fs25', 39)" class="p">Any</span>
+            | _ <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs26', 40)" onmouseover="showTip(event, 'fs26', 40)" class="f">raise</span> <span class="o">&lt;|</span> <span onmouseout="hideTip(event, 'fs27', 41)" onmouseover="showTip(event, 'fs27', 41)" class="t">NotSupportedException</span>(<span onmouseout="hideTip(event, 'fs13', 42)" onmouseover="showTip(event, 'fs13', 42)" class="i">arg</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs28', 43)" onmouseover="showTip(event, 'fs28', 43)" class="f">ToString</span>()) |]
+    <span class="c">/// Converts expression to a tuple of MethodInfo and Arg array</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs29', 44)" onmouseover="showTip(event, 'fs29', 44)" class="f">toCall</span> <span class="o">=</span> <span class="k">function</span>
+        | <span onmouseout="hideTip(event, 'fs23', 45)" onmouseover="showTip(event, 'fs23', 45)" class="p">Call</span>(<span onmouseout="hideTip(event, 'fs30', 46)" onmouseover="showTip(event, 'fs30', 46)" class="p">Some</span>(<span onmouseout="hideTip(event, 'fs31', 47)" onmouseover="showTip(event, 'fs31', 47)" class="i">x</span>), <span onmouseout="hideTip(event, 'fs10', 48)" onmouseover="showTip(event, 'fs10', 48)" class="i">mi</span>, <span onmouseout="hideTip(event, 'fs32', 49)" onmouseover="showTip(event, 'fs32', 49)" class="i">args</span>) <span class="k">when</span> <span onmouseout="hideTip(event, 'fs31', 50)" onmouseover="showTip(event, 'fs31', 50)" class="i">x</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs33', 51)" onmouseover="showTip(event, 'fs33', 51)" class="i">Type</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs4', 52)" onmouseover="showTip(event, 'fs4', 52)" class="i">abstractType</span> <span class="k">-&gt;</span> 
+            <span onmouseout="hideTip(event, 'fs10', 53)" onmouseover="showTip(event, 'fs10', 53)" class="i">mi</span>, <span onmouseout="hideTip(event, 'fs6', 54)" onmouseover="showTip(event, 'fs6', 54)" class="f">toArgs</span> <span onmouseout="hideTip(event, 'fs32', 55)" onmouseover="showTip(event, 'fs32', 55)" class="i">args</span>
+        | <span onmouseout="hideTip(event, 'fs19', 56)" onmouseover="showTip(event, 'fs19', 56)" class="p">PropertyGet</span>(<span onmouseout="hideTip(event, 'fs30', 57)" onmouseover="showTip(event, 'fs30', 57)" class="p">Some</span>(<span onmouseout="hideTip(event, 'fs31', 58)" onmouseover="showTip(event, 'fs31', 58)" class="i">x</span>), <span onmouseout="hideTip(event, 'fs21', 59)" onmouseover="showTip(event, 'fs21', 59)" class="i">pi</span>, <span onmouseout="hideTip(event, 'fs32', 60)" onmouseover="showTip(event, 'fs32', 60)" class="i">args</span>) <span class="k">when</span> <span onmouseout="hideTip(event, 'fs31', 61)" onmouseover="showTip(event, 'fs31', 61)" class="i">x</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs33', 62)" onmouseover="showTip(event, 'fs33', 62)" class="i">Type</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs4', 63)" onmouseover="showTip(event, 'fs4', 63)" class="i">abstractType</span> <span class="k">-&gt;</span> 
+            <span onmouseout="hideTip(event, 'fs21', 64)" onmouseover="showTip(event, 'fs21', 64)" class="i">pi</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs34', 65)" onmouseover="showTip(event, 'fs34', 65)" class="f">GetGetMethod</span>(), <span onmouseout="hideTip(event, 'fs6', 66)" onmouseover="showTip(event, 'fs6', 66)" class="f">toArgs</span> <span onmouseout="hideTip(event, 'fs32', 67)" onmouseover="showTip(event, 'fs32', 67)" class="i">args</span>
+        | <span onmouseout="hideTip(event, 'fs35', 68)" onmouseover="showTip(event, 'fs35', 68)" class="p">PropertySet</span>(<span onmouseout="hideTip(event, 'fs30', 69)" onmouseover="showTip(event, 'fs30', 69)" class="p">Some</span>(<span onmouseout="hideTip(event, 'fs31', 70)" onmouseover="showTip(event, 'fs31', 70)" class="i">x</span>), <span onmouseout="hideTip(event, 'fs21', 71)" onmouseover="showTip(event, 'fs21', 71)" class="i">pi</span>, <span onmouseout="hideTip(event, 'fs32', 72)" onmouseover="showTip(event, 'fs32', 72)" class="i">args</span>, <span onmouseout="hideTip(event, 'fs36', 73)" onmouseover="showTip(event, 'fs36', 73)" class="i">value</span>) <span class="k">when</span> <span onmouseout="hideTip(event, 'fs31', 74)" onmouseover="showTip(event, 'fs31', 74)" class="i">x</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs33', 75)" onmouseover="showTip(event, 'fs33', 75)" class="i">Type</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs4', 76)" onmouseover="showTip(event, 'fs4', 76)" class="i">abstractType</span> <span class="k">-&gt;</span> 
+            <span onmouseout="hideTip(event, 'fs21', 77)" onmouseover="showTip(event, 'fs21', 77)" class="i">pi</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs37', 78)" onmouseover="showTip(event, 'fs37', 78)" class="f">GetSetMethod</span>(), <span onmouseout="hideTip(event, 'fs6', 79)" onmouseover="showTip(event, 'fs6', 79)" class="f">toArgs</span> <span onmouseout="hideTip(event, 'fs32', 80)" onmouseover="showTip(event, 'fs32', 80)" class="i">args</span>
+        | <span onmouseout="hideTip(event, 'fs38', 81)" onmouseover="showTip(event, 'fs38', 81)" class="i">expr</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs26', 82)" onmouseover="showTip(event, 'fs26', 82)" class="f">raise</span> <span class="o">&lt;|</span> <span onmouseout="hideTip(event, 'fs27', 83)" onmouseover="showTip(event, 'fs27', 83)" class="t">NotSupportedException</span>(<span onmouseout="hideTip(event, 'fs38', 84)" onmouseover="showTip(event, 'fs38', 84)" class="i">expr</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs28', 85)" onmouseover="showTip(event, 'fs28', 85)" class="f">ToString</span>())
+    <span class="c">/// Converts expression to corresponding event Add and Remove handlers</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs39', 86)" onmouseover="showTip(event, 'fs39', 86)" class="f">toHandlers</span> <span class="o">=</span> <span class="k">function</span>
+        | <span onmouseout="hideTip(event, 'fs23', 87)" onmouseover="showTip(event, 'fs23', 87)" class="p">Call</span>(<span onmouseout="hideTip(event, 'fs20', 88)" onmouseover="showTip(event, 'fs20', 88)" class="p">None</span>, <span onmouseout="hideTip(event, 'fs10', 89)" onmouseover="showTip(event, 'fs10', 89)" class="i">mi</span>, [<span onmouseout="hideTip(event, 'fs40', 90)" onmouseover="showTip(event, 'fs40', 90)" class="p">Lambda</span>(_,<span onmouseout="hideTip(event, 'fs23', 91)" onmouseover="showTip(event, 'fs23', 91)" class="p">Call</span>(<span onmouseout="hideTip(event, 'fs30', 92)" onmouseover="showTip(event, 'fs30', 92)" class="p">Some</span>(<span onmouseout="hideTip(event, 'fs31', 93)" onmouseover="showTip(event, 'fs31', 93)" class="i">x</span>),<span onmouseout="hideTip(event, 'fs41', 94)" onmouseover="showTip(event, 'fs41', 94)" class="i">addHandler</span>,_));
+                          <span onmouseout="hideTip(event, 'fs40', 95)" onmouseover="showTip(event, 'fs40', 95)" class="p">Lambda</span>(_,<span onmouseout="hideTip(event, 'fs23', 96)" onmouseover="showTip(event, 'fs23', 96)" class="p">Call</span>(<span onmouseout="hideTip(event, 'fs30', 97)" onmouseover="showTip(event, 'fs30', 97)" class="p">Some</span>(_),<span onmouseout="hideTip(event, 'fs42', 98)" onmouseover="showTip(event, 'fs42', 98)" class="i">removeHandler</span>,_));_]) 
+                          <span class="k">when</span> <span onmouseout="hideTip(event, 'fs31', 99)" onmouseover="showTip(event, 'fs31', 99)" class="i">x</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs33', 100)" onmouseover="showTip(event, 'fs33', 100)" class="i">Type</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs4', 101)" onmouseover="showTip(event, 'fs4', 101)" class="i">abstractType</span> <span class="k">-&gt;</span> 
+            <span onmouseout="hideTip(event, 'fs41', 102)" onmouseover="showTip(event, 'fs41', 102)" class="i">addHandler</span>, <span onmouseout="hideTip(event, 'fs42', 103)" onmouseover="showTip(event, 'fs42', 103)" class="i">removeHandler</span>
+        | <span onmouseout="hideTip(event, 'fs38', 104)" onmouseover="showTip(event, 'fs38', 104)" class="i">expr</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs26', 105)" onmouseover="showTip(event, 'fs26', 105)" class="f">raise</span> <span class="o">&lt;|</span> <span onmouseout="hideTip(event, 'fs27', 106)" onmouseover="showTip(event, 'fs27', 106)" class="t">NotSupportedException</span>(<span onmouseout="hideTip(event, 'fs38', 107)" onmouseover="showTip(event, 'fs38', 107)" class="i">expr</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs28', 108)" onmouseover="showTip(event, 'fs28', 108)" class="f">ToString</span>())
+    <span class="c">/// Constructs mock builder</span>
+    <span class="k">new</span> () <span class="o">=</span> <span onmouseout="hideTip(event, 'fs1', 109)" onmouseover="showTip(event, 'fs1', 109)" class="t">Mock</span>([])
+    <span class="c">/// Specifies a method or property of the abstract type as a quotation</span>
+    <span class="k">member</span> <span onmouseout="hideTip(event, 'fs43', 110)" onmouseover="showTip(event, 'fs43', 110)" class="i">this</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs44', 111)" onmouseover="showTip(event, 'fs44', 111)" class="f">Setup</span>(<span onmouseout="hideTip(event, 'fs45', 112)" onmouseover="showTip(event, 'fs45', 112)" class="f">f</span><span class="o">:</span><span class="o">&#39;</span><span class="i">TAbstract</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs46', 113)" onmouseover="showTip(event, 'fs46', 113)" class="t">Expr</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">TReturnValue</span><span class="o">&gt;</span>) <span class="o">=</span>
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs47', 114)" onmouseover="showTip(event, 'fs47', 114)" class="i">default&#39;</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs48', 115)" onmouseover="showTip(event, 'fs48', 115)" class="t">Unchecked</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs49', 116)" onmouseover="showTip(event, 'fs49', 116)" class="i">defaultof</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">TAbstract</span><span class="o">&gt;</span>
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs50', 117)" onmouseover="showTip(event, 'fs50', 117)" class="i">call</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs29', 118)" onmouseover="showTip(event, 'fs29', 118)" class="f">toCall</span> (<span onmouseout="hideTip(event, 'fs45', 119)" onmouseover="showTip(event, 'fs45', 119)" class="f">f</span> <span onmouseout="hideTip(event, 'fs47', 120)" onmouseover="showTip(event, 'fs47', 120)" class="i">default&#39;</span>)
+        <span onmouseout="hideTip(event, 'fs51', 121)" onmouseover="showTip(event, 'fs51', 121)" class="t">ResultBuilder</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">TAbstract</span>,<span class="o">&#39;</span><span class="i">TReturnValue</span><span class="o">&gt;</span>(<span onmouseout="hideTip(event, 'fs50', 122)" onmouseover="showTip(event, 'fs50', 122)" class="i">call</span>,<span onmouseout="hideTip(event, 'fs3', 123)" onmouseover="showTip(event, 'fs3', 123)" class="i">calls</span>)
+    <span class="c">/// Specifies an event of the abstract type as a quotation</span>
+    <span class="k">member</span> <span onmouseout="hideTip(event, 'fs43', 124)" onmouseover="showTip(event, 'fs43', 124)" class="i">this</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs52', 125)" onmouseover="showTip(event, 'fs52', 125)" class="f">SetupEvent</span>(<span onmouseout="hideTip(event, 'fs53', 126)" onmouseover="showTip(event, 'fs53', 126)" class="f">f</span><span class="o">:</span><span class="o">&#39;</span><span class="i">TAbstract</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs46', 127)" onmouseover="showTip(event, 'fs46', 127)" class="t">Expr</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">TEvent</span><span class="o">&gt;</span>) <span class="o">=</span>
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs47', 128)" onmouseover="showTip(event, 'fs47', 128)" class="i">default&#39;</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs48', 129)" onmouseover="showTip(event, 'fs48', 129)" class="t">Unchecked</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs49', 130)" onmouseover="showTip(event, 'fs49', 130)" class="i">defaultof</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">TAbstract</span><span class="o">&gt;</span>
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs54', 131)" onmouseover="showTip(event, 'fs54', 131)" class="i">handlers</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs39', 132)" onmouseover="showTip(event, 'fs39', 132)" class="f">toHandlers</span> (<span onmouseout="hideTip(event, 'fs53', 133)" onmouseover="showTip(event, 'fs53', 133)" class="f">f</span> <span onmouseout="hideTip(event, 'fs47', 134)" onmouseover="showTip(event, 'fs47', 134)" class="i">default&#39;</span>)
+        <span onmouseout="hideTip(event, 'fs55', 135)" onmouseover="showTip(event, 'fs55', 135)" class="t">EventBuilder</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">TAbstract</span>,<span class="o">&#39;</span><span class="i">TEvent</span><span class="o">&gt;</span>(<span onmouseout="hideTip(event, 'fs54', 136)" onmouseover="showTip(event, 'fs54', 136)" class="i">handlers</span>,<span onmouseout="hideTip(event, 'fs3', 137)" onmouseover="showTip(event, 'fs3', 137)" class="i">calls</span>)
+    <span class="c">/// Creates an instance of the abstract type</span>
+    <span class="k">member</span> <span onmouseout="hideTip(event, 'fs43', 138)" onmouseover="showTip(event, 'fs43', 138)" class="i">this</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs56', 139)" onmouseover="showTip(event, 'fs56', 139)" class="f">Create</span>() <span class="o">=</span> <span onmouseout="hideTip(event, 'fs57', 140)" onmouseover="showTip(event, 'fs57', 140)" class="f">mock</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">TAbstract</span><span class="o">&gt;</span>(<span onmouseout="hideTip(event, 'fs3', 141)" onmouseover="showTip(event, 'fs3', 141)" class="i">calls</span>)
+<span class="c">/// Generic builder for specifying method or property results</span>
+<span class="k">and</span> <span onmouseout="hideTip(event, 'fs51', 142)" onmouseover="showTip(event, 'fs51', 142)" class="t">ResultBuilder</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">TAbstract</span>,<span class="o">&#39;</span><span class="i">TReturnValue</span> <span class="k">when</span> <span class="o">&#39;</span><span class="i">TAbstract</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs2', 143)" onmouseover="showTip(event, 'fs2', 143)" class="i">not</span> <span class="k">struct</span><span class="o">&gt;</span> 
+    <span class="k">internal</span> (<span onmouseout="hideTip(event, 'fs50', 144)" onmouseover="showTip(event, 'fs50', 144)" class="i">call</span>, <span onmouseout="hideTip(event, 'fs3', 145)" onmouseover="showTip(event, 'fs3', 145)" class="i">calls</span>) <span class="o">=</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs10', 146)" onmouseover="showTip(event, 'fs10', 146)" class="i">mi</span>, <span onmouseout="hideTip(event, 'fs58', 147)" onmouseover="showTip(event, 'fs58', 147)" class="i">args</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs50', 148)" onmouseover="showTip(event, 'fs50', 148)" class="i">call</span>
+    <span class="c">/// Specifies the return value of a method or property</span>
+    <span class="k">member</span> <span onmouseout="hideTip(event, 'fs59', 149)" onmouseover="showTip(event, 'fs59', 149)" class="i">this</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs60', 150)" onmouseover="showTip(event, 'fs60', 150)" class="f">Returns</span>(<span onmouseout="hideTip(event, 'fs61', 151)" onmouseover="showTip(event, 'fs61', 151)" class="i">value</span><span class="o">:</span><span class="o">&#39;</span><span class="i">TReturnValue</span>) <span class="o">=</span>
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs62', 152)" onmouseover="showTip(event, 'fs62', 152)" class="i">result</span> <span class="o">=</span> 
+            <span class="k">if</span> <span onmouseout="hideTip(event, 'fs5', 153)" onmouseover="showTip(event, 'fs5', 153)" class="i">typeof</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">TReturnValue</span><span class="o">&gt;</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs5', 154)" onmouseover="showTip(event, 'fs5', 154)" class="i">typeof</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs63', 155)" onmouseover="showTip(event, 'fs63', 155)" class="t">unit</span><span class="o">&gt;</span> <span class="k">then</span> <span onmouseout="hideTip(event, 'fs64', 156)" onmouseover="showTip(event, 'fs64', 156)" class="p">Unit</span> 
+            <span class="k">else</span> <span onmouseout="hideTip(event, 'fs65', 157)" onmouseover="showTip(event, 'fs65', 157)" class="p">ReturnValue</span>(<span onmouseout="hideTip(event, 'fs61', 158)" onmouseover="showTip(event, 'fs61', 158)" class="i">value</span>)
+        <span onmouseout="hideTip(event, 'fs1', 159)" onmouseover="showTip(event, 'fs1', 159)" class="t">Mock</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">TAbstract</span><span class="o">&gt;</span>((<span onmouseout="hideTip(event, 'fs10', 160)" onmouseover="showTip(event, 'fs10', 160)" class="i">mi</span>, (<span onmouseout="hideTip(event, 'fs58', 161)" onmouseover="showTip(event, 'fs58', 161)" class="i">args</span>, <span onmouseout="hideTip(event, 'fs62', 162)" onmouseover="showTip(event, 'fs62', 162)" class="i">result</span>))<span class="o">::</span><span onmouseout="hideTip(event, 'fs3', 163)" onmouseover="showTip(event, 'fs3', 163)" class="i">calls</span>)
+    <span class="c">/// Specifies a computed return value of a method or property</span>
+    <span class="k">member</span> <span onmouseout="hideTip(event, 'fs59', 164)" onmouseover="showTip(event, 'fs59', 164)" class="i">this</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs66', 165)" onmouseover="showTip(event, 'fs66', 165)" class="f">Returns</span>(<span onmouseout="hideTip(event, 'fs67', 166)" onmouseover="showTip(event, 'fs67', 166)" class="f">f</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs63', 167)" onmouseover="showTip(event, 'fs63', 167)" class="t">unit</span> <span class="k">-&gt;</span> <span class="o">&#39;</span><span class="i">TReturnVaue</span>) <span class="o">=</span>
+        <span onmouseout="hideTip(event, 'fs1', 168)" onmouseover="showTip(event, 'fs1', 168)" class="t">Mock</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">TAbstract</span><span class="o">&gt;</span>((<span onmouseout="hideTip(event, 'fs10', 169)" onmouseover="showTip(event, 'fs10', 169)" class="i">mi</span>, (<span onmouseout="hideTip(event, 'fs58', 170)" onmouseover="showTip(event, 'fs58', 170)" class="i">args</span>, <span onmouseout="hideTip(event, 'fs68', 171)" onmouseover="showTip(event, 'fs68', 171)" class="p">ReturnFunc</span>(<span onmouseout="hideTip(event, 'fs67', 172)" onmouseover="showTip(event, 'fs67', 172)" class="f">f</span>)))<span class="o">::</span><span onmouseout="hideTip(event, 'fs3', 173)" onmouseover="showTip(event, 'fs3', 173)" class="i">calls</span>)
+    <span class="c">/// Calls the specified function to compute the return value</span>
+    [&lt;<span onmouseout="hideTip(event, 'fs69', 174)" onmouseover="showTip(event, 'fs69', 174)" class="t">RequiresExplicitTypeArguments</span>&gt;]
+    <span class="k">member</span> <span onmouseout="hideTip(event, 'fs59', 175)" onmouseover="showTip(event, 'fs59', 175)" class="i">this</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs70', 176)" onmouseover="showTip(event, 'fs70', 176)" class="f">Calls</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">TArgs</span><span class="o">&gt;</span>(<span onmouseout="hideTip(event, 'fs71', 177)" onmouseover="showTip(event, 'fs71', 177)" class="f">f</span><span class="o">:</span><span class="o">&#39;</span><span class="i">TArgs</span> <span class="k">-&gt;</span> <span class="o">&#39;</span><span class="i">TReturnValue</span>) <span class="o">=</span>
+        <span onmouseout="hideTip(event, 'fs1', 178)" onmouseover="showTip(event, 'fs1', 178)" class="t">Mock</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">TAbstract</span><span class="o">&gt;</span>((<span onmouseout="hideTip(event, 'fs10', 179)" onmouseover="showTip(event, 'fs10', 179)" class="i">mi</span>, (<span onmouseout="hideTip(event, 'fs58', 180)" onmouseover="showTip(event, 'fs58', 180)" class="i">args</span>, <span onmouseout="hideTip(event, 'fs23', 181)" onmouseover="showTip(event, 'fs23', 181)" class="p">Call</span>(<span onmouseout="hideTip(event, 'fs71', 182)" onmouseover="showTip(event, 'fs71', 182)" class="f">f</span>)))<span class="o">::</span><span onmouseout="hideTip(event, 'fs3', 183)" onmouseover="showTip(event, 'fs3', 183)" class="i">calls</span>)
+    <span class="c">/// Specifies the exception a method raises</span>
+    [&lt;<span onmouseout="hideTip(event, 'fs69', 184)" onmouseover="showTip(event, 'fs69', 184)" class="t">RequiresExplicitTypeArguments</span>&gt;]
+    <span class="k">member</span> <span onmouseout="hideTip(event, 'fs59', 185)" onmouseover="showTip(event, 'fs59', 185)" class="i">this</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs72', 186)" onmouseover="showTip(event, 'fs72', 186)" class="f">Raises</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">TException</span> <span class="k">when</span> <span class="o">&#39;</span><span class="i">TException</span> <span class="o">:</span> (<span class="k">new</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs63', 187)" onmouseover="showTip(event, 'fs63', 187)" class="t">unit</span> <span class="k">-&gt;</span> <span class="o">&#39;</span><span class="i">TException</span>) 
+                                   <span class="k">and</span>  <span class="o">&#39;</span><span class="i">TException</span> <span class="o">:&gt;</span> <span onmouseout="hideTip(event, 'fs73', 188)" onmouseover="showTip(event, 'fs73', 188)" class="t">exn</span><span class="o">&gt;</span>() <span class="o">=</span>
+        <span onmouseout="hideTip(event, 'fs1', 189)" onmouseover="showTip(event, 'fs1', 189)" class="t">Mock</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">TAbstract</span><span class="o">&gt;</span>((<span onmouseout="hideTip(event, 'fs10', 190)" onmouseover="showTip(event, 'fs10', 190)" class="i">mi</span>, (<span onmouseout="hideTip(event, 'fs58', 191)" onmouseover="showTip(event, 'fs58', 191)" class="i">args</span>, <span onmouseout="hideTip(event, 'fs74', 192)" onmouseover="showTip(event, 'fs74', 192)" class="p">Raise</span>(<span onmouseout="hideTip(event, 'fs5', 193)" onmouseover="showTip(event, 'fs5', 193)" class="i">typeof</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">TException</span><span class="o">&gt;</span>)))<span class="o">::</span><span onmouseout="hideTip(event, 'fs3', 194)" onmouseover="showTip(event, 'fs3', 194)" class="i">calls</span>)
+<span class="c">/// Generic builder for specifying event values</span>
+<span class="k">and</span> <span onmouseout="hideTip(event, 'fs55', 195)" onmouseover="showTip(event, 'fs55', 195)" class="t">EventBuilder</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">TAbstract</span>,<span class="o">&#39;</span><span class="i">TEvent</span> <span class="k">when</span> <span class="o">&#39;</span><span class="i">TAbstract</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs2', 196)" onmouseover="showTip(event, 'fs2', 196)" class="i">not</span> <span class="k">struct</span><span class="o">&gt;</span> 
+    <span class="k">internal</span> (<span onmouseout="hideTip(event, 'fs54', 197)" onmouseover="showTip(event, 'fs54', 197)" class="i">handlers</span>, <span onmouseout="hideTip(event, 'fs3', 198)" onmouseover="showTip(event, 'fs3', 198)" class="i">calls</span>) <span class="o">=</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs75', 199)" onmouseover="showTip(event, 'fs75', 199)" class="i">add</span>, <span onmouseout="hideTip(event, 'fs76', 200)" onmouseover="showTip(event, 'fs76', 200)" class="i">remove</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs54', 201)" onmouseover="showTip(event, 'fs54', 201)" class="i">handlers</span>
+    <span class="c">/// Specifies the published event value</span>
+    <span class="k">member</span> <span onmouseout="hideTip(event, 'fs77', 202)" onmouseover="showTip(event, 'fs77', 202)" class="i">this</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs78', 203)" onmouseover="showTip(event, 'fs78', 203)" class="f">Publishes</span>(<span onmouseout="hideTip(event, 'fs79', 204)" onmouseover="showTip(event, 'fs79', 204)" class="i">value</span><span class="o">:</span><span class="o">&#39;</span><span class="i">TEvent</span>) <span class="o">=</span>
+        <span onmouseout="hideTip(event, 'fs1', 205)" onmouseover="showTip(event, 'fs1', 205)" class="t">Mock</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">TAbstract</span><span class="o">&gt;</span>((<span onmouseout="hideTip(event, 'fs75', 206)" onmouseover="showTip(event, 'fs75', 206)" class="i">add</span>, ([|<span onmouseout="hideTip(event, 'fs25', 207)" onmouseover="showTip(event, 'fs25', 207)" class="p">Any</span>|], <span onmouseout="hideTip(event, 'fs80', 208)" onmouseover="showTip(event, 'fs80', 208)" class="p">Handler</span>(<span class="s">&quot;AddHandler&quot;</span>,<span onmouseout="hideTip(event, 'fs79', 209)" onmouseover="showTip(event, 'fs79', 209)" class="i">value</span>)))<span class="o">::</span>
+                         (<span onmouseout="hideTip(event, 'fs76', 210)" onmouseover="showTip(event, 'fs76', 210)" class="i">remove</span>, ([|<span onmouseout="hideTip(event, 'fs25', 211)" onmouseover="showTip(event, 'fs25', 211)" class="p">Any</span>|], <span onmouseout="hideTip(event, 'fs80', 212)" onmouseover="showTip(event, 'fs80', 212)" class="p">Handler</span>(<span class="s">&quot;RemoveHandler&quot;</span>,<span onmouseout="hideTip(event, 'fs79', 213)" onmouseover="showTip(event, 'fs79', 213)" class="i">value</span>)))<span class="o">::</span>
+                         <span onmouseout="hideTip(event, 'fs3', 214)" onmouseover="showTip(event, 'fs3', 214)" class="i">calls</span>)
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="It-IsAny-argument" class="anchor" href="#It-IsAny-argument">It.IsAny argument</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+<span class="l">6: </span>
+<span class="l">7: </span>
+<span class="l">8: </span>
+<span class="l">9: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp">[&lt;<span onmouseout="hideTip(event, 'fs81', 215)" onmouseover="showTip(event, 'fs81', 215)" class="t">Sealed</span>&gt;]
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs82', 216)" onmouseover="showTip(event, 'fs82', 216)" class="t">It</span> <span class="k">private</span> () <span class="o">=</span>
+    <span class="c">/// Marks argument as matching any value</span>
+    [&lt;<span onmouseout="hideTip(event, 'fs24', 217)" onmouseover="showTip(event, 'fs24', 217)" class="t">Wildcard</span>&gt;] <span class="k">static</span> <span class="k">member</span> <span onmouseout="hideTip(event, 'fs83', 218)" onmouseover="showTip(event, 'fs83', 218)" class="f">IsAny</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">TArg</span><span class="o">&gt;</span>() <span class="o">=</span> <span onmouseout="hideTip(event, 'fs48', 219)" onmouseover="showTip(event, 'fs48', 219)" class="t">Unchecked</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs49', 220)" onmouseover="showTip(event, 'fs49', 220)" class="i">defaultof</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">TArg</span><span class="o">&gt;</span>
+
+[&lt;<span onmouseout="hideTip(event, 'fs84', 221)" onmouseover="showTip(event, 'fs84', 221)" class="t">AutoOpen</span>;<span onmouseout="hideTip(event, 'fs85', 222)" onmouseover="showTip(event, 'fs85', 222)" class="t">CompilationRepresentation</span>(<span onmouseout="hideTip(event, 'fs86', 223)" onmouseover="showTip(event, 'fs86', 223)" class="t">CompilationRepresentationFlags</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs87', 224)" onmouseover="showTip(event, 'fs87', 224)" class="i">ModuleSuffix</span>)&gt;]
+<span class="k">module</span> <span onmouseout="hideTip(event, 'fs82', 225)" onmouseover="showTip(event, 'fs82', 225)" class="t">It</span> <span class="o">=</span>
+    <span class="c">/// Marks argument as matching any value</span>
+    <span class="k">let</span> [&lt;<span onmouseout="hideTip(event, 'fs24', 226)" onmouseover="showTip(event, 'fs24', 226)" class="t">Wildcard</span>&gt;] <span class="k">inline</span> <span onmouseout="hideTip(event, 'fs88', 227)" onmouseover="showTip(event, 'fs88', 227)" class="f">any</span> () <span class="o">:</span> <span class="o">&#39;</span><span class="i">TArg</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs89', 228)" onmouseover="showTip(event, 'fs89', 228)" class="t">It</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs90', 229)" onmouseover="showTip(event, 'fs90', 229)" class="f">IsAny</span>()
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Method-Example" class="anchor" href="#Method-Example">Method Example</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp">    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs91', 230)" onmouseover="showTip(event, 'fs91', 230)" class="i">mock</span> <span class="o">=</span>
+        <span onmouseout="hideTip(event, 'fs1', 231)" onmouseover="showTip(event, 'fs1', 231)" class="t">Mock</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs92', 232)" onmouseover="showTip(event, 'fs92', 232)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs93', 233)" onmouseover="showTip(event, 'fs93', 233)" class="i">Collections</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs94', 234)" onmouseover="showTip(event, 'fs94', 234)" class="t">IList</span><span class="o">&gt;</span>()
+            <span class="o">.</span><span class="f">Setup</span>(<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs95', 235)" onmouseover="showTip(event, 'fs95', 235)" class="i">x</span> <span class="k">-&gt;</span> &lt;@ <span onmouseout="hideTip(event, 'fs95', 236)" onmouseover="showTip(event, 'fs95', 236)" class="i">x</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs96', 237)" onmouseover="showTip(event, 'fs96', 237)" class="f">Contains</span>(<span onmouseout="hideTip(event, 'fs88', 238)" onmouseover="showTip(event, 'fs88', 238)" class="f">any</span>()) @&gt;)<span class="o">.</span><span class="f">Returns</span>(<span class="k">true</span>)
+            <span class="o">.</span><span class="f">Create</span>()
+    <span onmouseout="hideTip(event, 'fs91', 239)" onmouseover="showTip(event, 'fs91', 239)" class="i">mock</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs96', 240)" onmouseover="showTip(event, 'fs96', 240)" class="f">Contains</span>(<span class="s">&quot;Anything&quot;</span>)
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Property-Example" class="anchor" href="#Property-Example">Property Example</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp">    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs97', 241)" onmouseover="showTip(event, 'fs97', 241)" class="i">mock</span> <span class="o">=</span>
+        <span onmouseout="hideTip(event, 'fs1', 242)" onmouseover="showTip(event, 'fs1', 242)" class="t">Mock</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs92', 243)" onmouseover="showTip(event, 'fs92', 243)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs93', 244)" onmouseover="showTip(event, 'fs93', 244)" class="i">Collections</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs94', 245)" onmouseover="showTip(event, 'fs94', 245)" class="t">IList</span><span class="o">&gt;</span>()
+            <span class="o">.</span><span class="f">Setup</span>(<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs95', 246)" onmouseover="showTip(event, 'fs95', 246)" class="i">x</span> <span class="k">-&gt;</span> &lt;@ <span onmouseout="hideTip(event, 'fs95', 247)" onmouseover="showTip(event, 'fs95', 247)" class="i">x</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs98', 248)" onmouseover="showTip(event, 'fs98', 248)" class="i">Count</span> @&gt;)<span class="o">.</span><span class="f">Returns</span>(<span class="n">1</span>)
+            <span class="o">.</span><span class="f">Create</span>()
+    <span onmouseout="hideTip(event, 'fs97', 249)" onmouseover="showTip(event, 'fs97', 249)" class="i">mock</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs98', 250)" onmouseover="showTip(event, 'fs98', 250)" class="i">Count</span> <span class="o">=</span> <span class="n">1</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Computed-Property-Example" class="anchor" href="#Computed-Property-Example">Computed Property Example</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+<span class="l">6: </span>
+<span class="l">7: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp">    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs99', 251)" onmouseover="showTip(event, 'fs99', 251)" class="v">counter</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs100', 252)" onmouseover="showTip(event, 'fs100', 252)" class="f">ref</span> <span class="n">0</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs101', 253)" onmouseover="showTip(event, 'fs101', 253)" class="i">mock</span> <span class="o">=</span>
+        <span onmouseout="hideTip(event, 'fs1', 254)" onmouseover="showTip(event, 'fs1', 254)" class="t">Mock</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs92', 255)" onmouseover="showTip(event, 'fs92', 255)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs93', 256)" onmouseover="showTip(event, 'fs93', 256)" class="i">Collections</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs94', 257)" onmouseover="showTip(event, 'fs94', 257)" class="t">IList</span><span class="o">&gt;</span>()
+            <span class="o">.</span><span class="f">Setup</span>(<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs95', 258)" onmouseover="showTip(event, 'fs95', 258)" class="i">x</span> <span class="k">-&gt;</span> &lt;@ <span onmouseout="hideTip(event, 'fs95', 259)" onmouseover="showTip(event, 'fs95', 259)" class="i">x</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs98', 260)" onmouseover="showTip(event, 'fs98', 260)" class="i">Count</span> @&gt;)<span class="o">.</span><span class="f">Returns</span>(<span class="k">fun</span> () <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs102', 261)" onmouseover="showTip(event, 'fs102', 261)" class="f">incr</span> <span onmouseout="hideTip(event, 'fs99', 262)" onmouseover="showTip(event, 'fs99', 262)" class="v">counter</span>; <span class="o">!</span><span onmouseout="hideTip(event, 'fs99', 263)" onmouseover="showTip(event, 'fs99', 263)" class="v">counter</span>)
+            <span class="o">.</span><span class="f">Create</span>()
+    <span onmouseout="hideTip(event, 'fs101', 264)" onmouseover="showTip(event, 'fs101', 264)" class="i">mock</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs98', 265)" onmouseover="showTip(event, 'fs98', 265)" class="i">Count</span> <span class="o">=</span> <span class="n">1</span>
+    <span onmouseout="hideTip(event, 'fs101', 266)" onmouseover="showTip(event, 'fs101', 266)" class="i">mock</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs98', 267)" onmouseover="showTip(event, 'fs98', 267)" class="i">Count</span> <span class="o">=</span> <span class="n">2</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Item-Get-Example" class="anchor" href="#Item-Get-Example">Item Get Example</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+<span class="l">6: </span>
+<span class="l">7: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp">    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs103', 268)" onmouseover="showTip(event, 'fs103', 268)" class="i">mock</span> <span class="o">=</span>
+        <span onmouseout="hideTip(event, 'fs1', 269)" onmouseover="showTip(event, 'fs1', 269)" class="t">Mock</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs92', 270)" onmouseover="showTip(event, 'fs92', 270)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs93', 271)" onmouseover="showTip(event, 'fs93', 271)" class="i">Collections</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs104', 272)" onmouseover="showTip(event, 'fs104', 272)" class="i">Generic</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs105', 273)" onmouseover="showTip(event, 'fs105', 273)" class="t">IList</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs106', 274)" onmouseover="showTip(event, 'fs106', 274)" class="t">double</span><span class="o">&gt;</span><span class="o">&gt;</span>()
+            <span class="o">.</span><span class="f">Setup</span>(<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs107', 275)" onmouseover="showTip(event, 'fs107', 275)" class="i">x</span> <span class="k">-&gt;</span> &lt;@ <span onmouseout="hideTip(event, 'fs107', 276)" onmouseover="showTip(event, 'fs107', 276)" class="i">x</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs108', 277)" onmouseover="showTip(event, 'fs108', 277)" class="i">Item</span>( <span class="o">-</span><span class="n">1</span>  ) @&gt;)<span class="o">.</span><span class="f">Raises</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs109', 278)" onmouseover="showTip(event, 'fs109', 278)" class="t">IndexOutOfRangeException</span><span class="o">&gt;</span>()
+            <span class="o">.</span><span class="f">Setup</span>(<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs107', 279)" onmouseover="showTip(event, 'fs107', 279)" class="i">x</span> <span class="k">-&gt;</span> &lt;@ <span onmouseout="hideTip(event, 'fs107', 280)" onmouseover="showTip(event, 'fs107', 280)" class="i">x</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs108', 281)" onmouseover="showTip(event, 'fs108', 281)" class="i">Item</span>(<span onmouseout="hideTip(event, 'fs88', 282)" onmouseover="showTip(event, 'fs88', 282)" class="f">any</span>()) @&gt;)<span class="o">.</span><span class="f">Returns</span>(<span class="o">-</span><span class="n">1.0</span>)
+            <span class="o">.</span><span class="f">Create</span>()
+    <span onmouseout="hideTip(event, 'fs103', 283)" onmouseover="showTip(event, 'fs103', 283)" class="i">mock</span><span class="o">.</span>[<span class="n">0</span>] <span class="o">=</span>  <span class="n">0.0</span>
+    <span onmouseout="hideTip(event, 'fs103', 284)" onmouseover="showTip(event, 'fs103', 284)" class="i">mock</span><span class="o">.</span>[<span class="n">1</span>] <span class="o">=</span> <span class="o">-</span><span class="n">1.0</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Called-Example" class="anchor" href="#Called-Example">Called Example</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+<span class="l">6: </span>
+<span class="l">7: </span>
+<span class="l">8: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp">    <span class="k">let</span> <span class="k">mutable</span> <span onmouseout="hideTip(event, 'fs110', 285)" onmouseover="showTip(event, 'fs110', 285)" class="v">called</span> <span class="o">=</span> <span class="k">false</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs111', 286)" onmouseover="showTip(event, 'fs111', 286)" class="i">instance</span> <span class="o">=</span>
+        <span onmouseout="hideTip(event, 'fs1', 287)" onmouseover="showTip(event, 'fs1', 287)" class="t">Mock</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs92', 288)" onmouseover="showTip(event, 'fs92', 288)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs93', 289)" onmouseover="showTip(event, 'fs93', 289)" class="i">Collections</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs104', 290)" onmouseover="showTip(event, 'fs104', 290)" class="i">Generic</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs105', 291)" onmouseover="showTip(event, 'fs105', 291)" class="t">IList</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs112', 292)" onmouseover="showTip(event, 'fs112', 292)" class="t">string</span><span class="o">&gt;</span><span class="o">&gt;</span>()
+            <span class="o">.</span><span class="f">Setup</span>(<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs113', 293)" onmouseover="showTip(event, 'fs113', 293)" class="i">x</span> <span class="k">-&gt;</span> &lt;@ <span onmouseout="hideTip(event, 'fs113', 294)" onmouseover="showTip(event, 'fs113', 294)" class="i">x</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs114', 295)" onmouseover="showTip(event, 'fs114', 295)" class="f">Insert</span>(<span onmouseout="hideTip(event, 'fs88', 296)" onmouseover="showTip(event, 'fs88', 296)" class="f">any</span>(), <span onmouseout="hideTip(event, 'fs88', 297)" onmouseover="showTip(event, 'fs88', 297)" class="f">any</span>()) @&gt;)
+                <span class="o">.</span><span class="f">Calls</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs115', 298)" onmouseover="showTip(event, 'fs115', 298)" class="t">int</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs112', 299)" onmouseover="showTip(event, 'fs112', 299)" class="t">string</span><span class="o">&gt;</span>(<span class="k">fun</span> (<span onmouseout="hideTip(event, 'fs116', 300)" onmouseover="showTip(event, 'fs116', 300)" class="i">index</span>,<span onmouseout="hideTip(event, 'fs117', 301)" onmouseover="showTip(event, 'fs117', 301)" class="i">item</span>) <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs110', 302)" onmouseover="showTip(event, 'fs110', 302)" class="v">called</span> <span class="o">&lt;-</span> <span class="k">true</span>)
+            <span class="o">.</span><span class="f">Create</span>()
+    <span onmouseout="hideTip(event, 'fs111', 303)" onmouseover="showTip(event, 'fs111', 303)" class="i">instance</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs114', 304)" onmouseover="showTip(event, 'fs114', 304)" class="f">Insert</span>(<span class="n">6</span>, <span class="s">&quot;Six&quot;</span>)
+    <span onmouseout="hideTip(event, 'fs110', 305)" onmouseover="showTip(event, 'fs110', 305)" class="v">called</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Event-Example" class="anchor" href="#Event-Example">Event Example</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+<span class="l">6: </span>
+<span class="l">7: </span>
+<span class="l">8: </span>
+<span class="l">9: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp">    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs118', 306)" onmouseover="showTip(event, 'fs118', 306)" class="i">event</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs119', 307)" onmouseover="showTip(event, 'fs119', 307)" class="t">Event</span><span class="o">&lt;</span>_,_<span class="o">&gt;</span>()
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs120', 308)" onmouseover="showTip(event, 'fs120', 308)" class="i">mock</span> <span class="o">=</span>
+        <span onmouseout="hideTip(event, 'fs1', 309)" onmouseover="showTip(event, 'fs1', 309)" class="t">Mock</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs92', 310)" onmouseover="showTip(event, 'fs92', 310)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs121', 311)" onmouseover="showTip(event, 'fs121', 311)" class="i">ComponentModel</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs122', 312)" onmouseover="showTip(event, 'fs122', 312)" class="t">INotifyPropertyChanged</span><span class="o">&gt;</span>()
+            <span class="o">.</span><span class="f">SetupEvent</span>(<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs123', 313)" onmouseover="showTip(event, 'fs123', 313)" class="i">x</span> <span class="k">-&gt;</span> &lt;@ <span onmouseout="hideTip(event, 'fs123', 314)" onmouseover="showTip(event, 'fs123', 314)" class="i">x</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs124', 315)" onmouseover="showTip(event, 'fs124', 315)" class="i">PropertyChanged</span> @&gt;)<span class="o">.</span><span class="f">Publishes</span>(<span onmouseout="hideTip(event, 'fs118', 316)" onmouseover="showTip(event, 'fs118', 316)" class="i">event</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs125', 317)" onmouseover="showTip(event, 'fs125', 317)" class="i">Publish</span>)
+            <span class="o">.</span><span class="f">Create</span>()
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs126', 318)" onmouseover="showTip(event, 'fs126', 318)" class="v">triggered</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs100', 319)" onmouseover="showTip(event, 'fs100', 319)" class="f">ref</span> <span class="k">false</span>
+    <span onmouseout="hideTip(event, 'fs120', 320)" onmouseover="showTip(event, 'fs120', 320)" class="i">mock</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs124', 321)" onmouseover="showTip(event, 'fs124', 321)" class="i">PropertyChanged</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs127', 322)" onmouseover="showTip(event, 'fs127', 322)" class="f">Add</span>(<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs128', 323)" onmouseover="showTip(event, 'fs128', 323)" class="i">x</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs126', 324)" onmouseover="showTip(event, 'fs126', 324)" class="v">triggered</span> <span class="o">:=</span> <span class="k">true</span>)
+    <span onmouseout="hideTip(event, 'fs118', 325)" onmouseover="showTip(event, 'fs118', 325)" class="i">event</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs129', 326)" onmouseover="showTip(event, 'fs129', 326)" class="f">Trigger</span>(<span onmouseout="hideTip(event, 'fs120', 327)" onmouseover="showTip(event, 'fs120', 327)" class="i">mock</span>, <span onmouseout="hideTip(event, 'fs92', 328)" onmouseover="showTip(event, 'fs92', 328)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs121', 329)" onmouseover="showTip(event, 'fs121', 329)" class="i">ComponentModel</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs130', 330)" onmouseover="showTip(event, 'fs130', 330)" class="t">PropertyChangedEventArgs</span>(<span class="s">&quot;PropertyName&quot;</span>))
+    <span onmouseout="hideTip(event, 'fs126', 331)" onmouseover="showTip(event, 'fs126', 331)" class="v">triggered</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs131', 332)" onmouseover="showTip(event, 'fs131', 332)" class="i">Value</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">Multiple items<br />type Mock&lt;&#39;TAbstract (requires reference type)&gt; =<br />&#160;&#160;new : unit -&gt; Mock&lt;&#39;TAbstract&gt;<br />&#160;&#160;internal new : calls:(MethodInfo * (Arg [] * Result)) list -&gt; Mock&lt;&#39;TAbstract&gt;<br />&#160;&#160;member Create : unit -&gt; &#39;TAbstract<br />&#160;&#160;member Setup : f:(&#39;TAbstract -&gt; Expr&lt;&#39;TReturnValue&gt;) -&gt; ResultBuilder&lt;&#39;TAbstract,&#39;TReturnValue&gt;<br />&#160;&#160;member SetupEvent : f:(&#39;TAbstract -&gt; Expr&lt;&#39;TEvent&gt;) -&gt; EventBuilder&lt;&#39;TAbstract,&#39;TEvent&gt;<br /><br />Full name: Script.Mock&lt;_&gt;<br /><em><br /><br />&#160;Generic mock type over abstract types and interfaces</em><br /><br />--------------------<br />new : unit -&gt; Mock&lt;&#39;TAbstract&gt;<br /><em><br /><br />&#160;Constructs mock builder</em><br />internal new : calls:(MethodInfo * (Arg [] * Result)) list -&gt; Mock&lt;&#39;TAbstract&gt;</div>
+<div class="tip" id="fs2">val not : value:bool -&gt; bool<br /><br />Full name: Microsoft.FSharp.Core.Operators.not</div>
+<div class="tip" id="fs3">val calls : (MethodInfo * (Arg [] * Result)) list</div>
+<div class="tip" id="fs4">val abstractType : Type<br /><em><br /><br />&#160;Abstract type</em></div>
+<div class="tip" id="fs5">val typeof&lt;&#39;T&gt; : Type<br /><br />Full name: Microsoft.FSharp.Core.Operators.typeof</div>
+<div class="tip" id="fs6">val toArgs : (seq&lt;#Expr&gt; -&gt; Arg [])<br /><em><br /><br />&#160;Converts argument expressions to Arg array</em></div>
+<div class="tip" id="fs7">val args : seq&lt;#Expr&gt;</div>
+<div class="tip" id="fs8">val hasAttribute : (Type -&gt; MethodInfo -&gt; bool)</div>
+<div class="tip" id="fs9">val a : Type</div>
+<div class="tip" id="fs10">val mi : MethodInfo</div>
+<div class="tip" id="fs11">type MethodInfo =<br />&#160;&#160;inherit MethodBase<br />&#160;&#160;member Equals : obj:obj -&gt; bool<br />&#160;&#160;member GetBaseDefinition : unit -&gt; MethodInfo<br />&#160;&#160;member GetGenericArguments : unit -&gt; Type[]<br />&#160;&#160;member GetGenericMethodDefinition : unit -&gt; MethodInfo<br />&#160;&#160;member GetHashCode : unit -&gt; int<br />&#160;&#160;member MakeGenericMethod : [&lt;ParamArray&gt;] typeArguments:Type[] -&gt; MethodInfo<br />&#160;&#160;member MemberType : MemberTypes<br />&#160;&#160;member ReturnParameter : ParameterInfo<br />&#160;&#160;member ReturnType : Type<br />&#160;&#160;member ReturnTypeCustomAttributes : ICustomAttributeProvider<br /><br />Full name: System.Reflection.MethodInfo</div>
+<div class="tip" id="fs12">MemberInfo.GetCustomAttributes(inherit: bool) : obj []<br />MemberInfo.GetCustomAttributes(attributeType: Type, inherit: bool) : obj []</div>
+<div class="tip" id="fs13">val arg : #Expr</div>
+<div class="tip" id="fs14">Multiple items<br />active recognizer Value: Expr -&gt; (obj * Type) option<br /><br />Full name: Microsoft.FSharp.Quotations.Patterns.( |Value|_| )<br /><br />--------------------<br />type internal Value = obj<br /><br />Full name: Script.CodeEmit.Value<br /><em><br /><br />&#160;Boxed value</em></div>
+<div class="tip" id="fs15">val v : obj</div>
+<div class="tip" id="fs16">val t : Type</div>
+<div class="tip" id="fs17">active recognizer Coerce: Expr -&gt; (Expr * Type) option<br /><br />Full name: Microsoft.FSharp.Quotations.Patterns.( |Coerce|_| )</div>
+<div class="tip" id="fs18">Multiple items<br />union case Arg.Arg: Value -&gt; Arg<br /><br />--------------------<br />type internal Arg =<br />&#160;&#160;| Any<br />&#160;&#160;| Arg of Value<br /><br />Full name: Script.CodeEmit.Arg<br /><em><br /><br />&#160;Method argument type</em></div>
+<div class="tip" id="fs19">active recognizer PropertyGet: Expr -&gt; (Expr option * PropertyInfo * Expr list) option<br /><br />Full name: Microsoft.FSharp.Quotations.Patterns.( |PropertyGet|_| )</div>
+<div class="tip" id="fs20">union case Option.None: Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs21">val pi : PropertyInfo</div>
+<div class="tip" id="fs22">PropertyInfo.GetValue(obj: obj, index: obj []) : obj<br />PropertyInfo.GetValue(obj: obj, invokeAttr: BindingFlags, binder: Binder, index: obj [], culture: Globalization.CultureInfo) : obj</div>
+<div class="tip" id="fs23">Multiple items<br />union case Result.Call: Func -&gt; Result<br /><br />--------------------<br />active recognizer Call: Expr -&gt; (Expr option * MethodInfo * Expr list) option<br /><br />Full name: Microsoft.FSharp.Quotations.Patterns.( |Call|_| )</div>
+<div class="tip" id="fs24">Multiple items<br />type WildcardAttribute =<br />&#160;&#160;inherit Attribute<br />&#160;&#160;new : unit -&gt; WildcardAttribute<br /><br />Full name: Script.WildcardAttribute<br /><em><br /><br />&#160;Wildcard attribute</em><br /><br />--------------------<br />new : unit -&gt; WildcardAttribute</div>
+<div class="tip" id="fs25">union case Arg.Any: Arg</div>
+<div class="tip" id="fs26">val raise : exn:Exception -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.Operators.raise</div>
+<div class="tip" id="fs27">Multiple items<br />type NotSupportedException =<br />&#160;&#160;inherit SystemException<br />&#160;&#160;new : unit -&gt; NotSupportedException + 2 overloads<br /><br />Full name: System.NotSupportedException<br /><br />--------------------<br />NotSupportedException() : unit<br />NotSupportedException(message: string) : unit<br />NotSupportedException(message: string, innerException: exn) : unit</div>
+<div class="tip" id="fs28">Object.ToString() : string<br />member Expr.ToString : full:bool -&gt; string</div>
+<div class="tip" id="fs29">val toCall : (Expr -&gt; MethodInfo * Arg [])<br /><em><br /><br />&#160;Converts expression to a tuple of MethodInfo and Arg array</em></div>
+<div class="tip" id="fs30">union case Option.Some: Value: &#39;T -&gt; Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs31">val x : Expr</div>
+<div class="tip" id="fs32">val args : Expr list</div>
+<div class="tip" id="fs33">property Expr.Type: Type</div>
+<div class="tip" id="fs34">PropertyInfo.GetGetMethod() : MethodInfo<br />PropertyInfo.GetGetMethod(nonPublic: bool) : MethodInfo</div>
+<div class="tip" id="fs35">active recognizer PropertySet: Expr -&gt; (Expr option * PropertyInfo * Expr list * Expr) option<br /><br />Full name: Microsoft.FSharp.Quotations.Patterns.( |PropertySet|_| )</div>
+<div class="tip" id="fs36">val value : Expr</div>
+<div class="tip" id="fs37">PropertyInfo.GetSetMethod() : MethodInfo<br />PropertyInfo.GetSetMethod(nonPublic: bool) : MethodInfo</div>
+<div class="tip" id="fs38">val expr : Expr</div>
+<div class="tip" id="fs39">val toHandlers : (Expr -&gt; MethodInfo * MethodInfo)<br /><em><br /><br />&#160;Converts expression to corresponding event Add and Remove handlers</em></div>
+<div class="tip" id="fs40">active recognizer Lambda: Expr -&gt; (Var * Expr) option<br /><br />Full name: Microsoft.FSharp.Quotations.Patterns.( |Lambda|_| )</div>
+<div class="tip" id="fs41">val addHandler : MethodInfo</div>
+<div class="tip" id="fs42">val removeHandler : MethodInfo</div>
+<div class="tip" id="fs43">val this : Mock&lt;&#39;TAbstract&gt; (requires reference type)</div>
+<div class="tip" id="fs44">member Mock.Setup : f:(&#39;TAbstract -&gt; Expr&lt;&#39;TReturnValue&gt;) -&gt; ResultBuilder&lt;&#39;TAbstract,&#39;TReturnValue&gt;<br /><br />Full name: Script.Mock`1.Setup<br /><em><br /><br />&#160;Specifies a method or property of the abstract type as a quotation</em></div>
+<div class="tip" id="fs45">val f : (&#39;TAbstract -&gt; Expr&lt;&#39;TReturnValue&gt;) (requires reference type)</div>
+<div class="tip" id="fs46">Multiple items<br />type Expr =<br />&#160;&#160;override Equals : obj:obj -&gt; bool<br />&#160;&#160;member GetFreeVars : unit -&gt; seq&lt;Var&gt;<br />&#160;&#160;member Substitute : substitution:(Var -&gt; Expr option) -&gt; Expr<br />&#160;&#160;member ToString : full:bool -&gt; string<br />&#160;&#160;member CustomAttributes : Expr list<br />&#160;&#160;member Type : Type<br />&#160;&#160;static member AddressOf : target:Expr -&gt; Expr<br />&#160;&#160;static member AddressSet : target:Expr * value:Expr -&gt; Expr<br />&#160;&#160;static member Application : functionExpr:Expr * argument:Expr -&gt; Expr<br />&#160;&#160;static member Applications : functionExpr:Expr * arguments:Expr list list -&gt; Expr<br />&#160;&#160;...<br /><br />Full name: Microsoft.FSharp.Quotations.Expr<br /><br />--------------------<br />type Expr&lt;&#39;T&gt; =<br />&#160;&#160;inherit Expr<br />&#160;&#160;member Raw : Expr<br /><br />Full name: Microsoft.FSharp.Quotations.Expr&lt;_&gt;</div>
+<div class="tip" id="fs47">val default&#39; : &#39;TAbstract (requires reference type)</div>
+<div class="tip" id="fs48">module Unchecked<br /><br />from Microsoft.FSharp.Core.Operators</div>
+<div class="tip" id="fs49">val defaultof&lt;&#39;T&gt; : &#39;T<br /><br />Full name: Microsoft.FSharp.Core.Operators.Unchecked.defaultof</div>
+<div class="tip" id="fs50">val call : MethodInfo * Arg []</div>
+<div class="tip" id="fs51">Multiple items<br />type ResultBuilder&lt;&#39;TAbstract,&#39;TReturnValue (requires reference type)&gt; =<br />&#160;&#160;internal new : call:(MethodInfo * Arg []) * calls:(MethodInfo * (Arg [] * Result)) list -&gt; ResultBuilder&lt;&#39;TAbstract,&#39;TReturnValue&gt;<br />&#160;&#160;member Calls : f:(&#39;TArgs -&gt; &#39;TReturnValue) -&gt; Mock&lt;&#39;TAbstract&gt;<br />&#160;&#160;member Raises : unit -&gt; Mock&lt;&#39;TAbstract&gt;<br />&#160;&#160;member Returns : value:&#39;TReturnValue -&gt; Mock&lt;&#39;TAbstract&gt;<br />&#160;&#160;member Returns : f:(unit -&gt; &#39;TReturnVaue) -&gt; Mock&lt;&#39;TAbstract&gt;<br /><br />Full name: Script.ResultBuilder&lt;_,_&gt;<br /><em><br /><br />&#160;Generic builder for specifying method or property results</em><br /><br />--------------------<br />internal new : call:(MethodInfo * Arg []) * calls:(MethodInfo * (Arg [] * Result)) list -&gt; ResultBuilder&lt;&#39;TAbstract,&#39;TReturnValue&gt;</div>
+<div class="tip" id="fs52">member Mock.SetupEvent : f:(&#39;TAbstract -&gt; Expr&lt;&#39;TEvent&gt;) -&gt; EventBuilder&lt;&#39;TAbstract,&#39;TEvent&gt;<br /><br />Full name: Script.Mock`1.SetupEvent<br /><em><br /><br />&#160;Specifies an event of the abstract type as a quotation</em></div>
+<div class="tip" id="fs53">val f : (&#39;TAbstract -&gt; Expr&lt;&#39;TEvent&gt;) (requires reference type)</div>
+<div class="tip" id="fs54">val handlers : MethodInfo * MethodInfo</div>
+<div class="tip" id="fs55">Multiple items<br />type EventBuilder&lt;&#39;TAbstract,&#39;TEvent (requires reference type)&gt; =<br />&#160;&#160;internal new : handlers:(MethodInfo * MethodInfo) * calls:(MethodInfo * (Arg [] * Result)) list -&gt; EventBuilder&lt;&#39;TAbstract,&#39;TEvent&gt;<br />&#160;&#160;member Publishes : value:&#39;TEvent -&gt; Mock&lt;&#39;TAbstract&gt;<br /><br />Full name: Script.EventBuilder&lt;_,_&gt;<br /><em><br /><br />&#160;Generic builder for specifying event values</em><br /><br />--------------------<br />internal new : handlers:(MethodInfo * MethodInfo) * calls:(MethodInfo * (Arg [] * Result)) list -&gt; EventBuilder&lt;&#39;TAbstract,&#39;TEvent&gt;</div>
+<div class="tip" id="fs56">member Mock.Create : unit -&gt; &#39;TAbstract<br /><br />Full name: Script.Mock`1.Create<br /><em><br /><br />&#160;Creates an instance of the abstract type</em></div>
+<div class="tip" id="fs57">val internal mock : calls:(MethodInfo * (Arg [] * Result)) list -&gt; &#39;TAbstract (requires reference type)<br /><br />Full name: Script.CodeEmit.mock<br /><em><br /><br />&#160;Builds a mock from the specified calls</em></div>
+<div class="tip" id="fs58">val args : Arg []</div>
+<div class="tip" id="fs59">val this : ResultBuilder&lt;&#39;TAbstract,&#39;TReturnValue&gt; (requires reference type)</div>
+<div class="tip" id="fs60">member ResultBuilder.Returns : value:&#39;TReturnValue -&gt; Mock&lt;&#39;TAbstract&gt;<br /><br />Full name: Script.ResultBuilder`2.Returns<br /><em><br /><br />&#160;Specifies the return value of a method or property</em></div>
+<div class="tip" id="fs61">val value : &#39;TReturnValue</div>
+<div class="tip" id="fs62">val result : Result</div>
+<div class="tip" id="fs63">type unit = Unit<br /><br />Full name: Microsoft.FSharp.Core.unit</div>
+<div class="tip" id="fs64">union case Result.Unit: Result</div>
+<div class="tip" id="fs65">union case Result.ReturnValue: Value -&gt; Result</div>
+<div class="tip" id="fs66">member ResultBuilder.Returns : f:(unit -&gt; &#39;TReturnVaue) -&gt; Mock&lt;&#39;TAbstract&gt;<br /><br />Full name: Script.ResultBuilder`2.Returns<br /><em><br /><br />&#160;Specifies a computed return value of a method or property</em></div>
+<div class="tip" id="fs67">val f : (unit -&gt; &#39;TReturnVaue)</div>
+<div class="tip" id="fs68">union case Result.ReturnFunc: Func -&gt; Result</div>
+<div class="tip" id="fs69">Multiple items<br />type RequiresExplicitTypeArgumentsAttribute =<br />&#160;&#160;inherit Attribute<br />&#160;&#160;new : unit -&gt; RequiresExplicitTypeArgumentsAttribute<br /><br />Full name: Microsoft.FSharp.Core.RequiresExplicitTypeArgumentsAttribute<br /><br />--------------------<br />new : unit -&gt; RequiresExplicitTypeArgumentsAttribute</div>
+<div class="tip" id="fs70">member ResultBuilder.Calls : f:(&#39;TArgs -&gt; &#39;TReturnValue) -&gt; Mock&lt;&#39;TAbstract&gt;<br /><br />Full name: Script.ResultBuilder`2.Calls<br /><em><br /><br />&#160;Calls the specified function to compute the return value</em></div>
+<div class="tip" id="fs71">val f : (&#39;TArgs -&gt; &#39;TReturnValue)</div>
+<div class="tip" id="fs72">member ResultBuilder.Raises : unit -&gt; Mock&lt;&#39;TAbstract&gt;<br /><br />Full name: Script.ResultBuilder`2.Raises</div>
+<div class="tip" id="fs73">type exn = Exception<br /><br />Full name: Microsoft.FSharp.Core.exn</div>
+<div class="tip" id="fs74">union case Result.Raise: Type -&gt; Result</div>
+<div class="tip" id="fs75">val add : MethodInfo</div>
+<div class="tip" id="fs76">val remove : MethodInfo</div>
+<div class="tip" id="fs77">val this : EventBuilder&lt;&#39;TAbstract,&#39;TEvent&gt; (requires reference type)</div>
+<div class="tip" id="fs78">member EventBuilder.Publishes : value:&#39;TEvent -&gt; Mock&lt;&#39;TAbstract&gt;<br /><br />Full name: Script.EventBuilder`2.Publishes<br /><em><br /><br />&#160;Specifies the published event value</em></div>
+<div class="tip" id="fs79">val value : &#39;TEvent</div>
+<div class="tip" id="fs80">Multiple items<br />union case Result.Handler: string * PublishedEvent -&gt; Result<br /><br />--------------------<br />type Handler&lt;&#39;T&gt; =<br />&#160;&#160;delegate of obj * &#39;T -&gt; unit<br /><br />Full name: Microsoft.FSharp.Control.Handler&lt;_&gt;</div>
+<div class="tip" id="fs81">Multiple items<br />type SealedAttribute =<br />&#160;&#160;inherit Attribute<br />&#160;&#160;new : unit -&gt; SealedAttribute<br />&#160;&#160;new : value:bool -&gt; SealedAttribute<br />&#160;&#160;member Value : bool<br /><br />Full name: Microsoft.FSharp.Core.SealedAttribute<br /><br />--------------------<br />new : unit -&gt; SealedAttribute<br />new : value:bool -&gt; SealedAttribute</div>
+<div class="tip" id="fs82">Multiple items<br />type It =<br />&#160;&#160;private new : unit -&gt; It<br />&#160;&#160;static member IsAny : unit -&gt; &#39;TArg<br /><br />Full name: Script.It<br /><br />--------------------<br />private new : unit -&gt; It</div>
+<div class="tip" id="fs83">static member It.IsAny : unit -&gt; &#39;TArg<br /><br />Full name: Script.It.IsAny<br /><em><br /><br />&#160;Marks argument as matching any value</em></div>
+<div class="tip" id="fs84">Multiple items<br />type AutoOpenAttribute =<br />&#160;&#160;inherit Attribute<br />&#160;&#160;new : unit -&gt; AutoOpenAttribute<br />&#160;&#160;new : path:string -&gt; AutoOpenAttribute<br />&#160;&#160;member Path : string<br /><br />Full name: Microsoft.FSharp.Core.AutoOpenAttribute<br /><br />--------------------<br />new : unit -&gt; AutoOpenAttribute<br />new : path:string -&gt; AutoOpenAttribute</div>
+<div class="tip" id="fs85">Multiple items<br />type CompilationRepresentationAttribute =<br />&#160;&#160;inherit Attribute<br />&#160;&#160;new : flags:CompilationRepresentationFlags -&gt; CompilationRepresentationAttribute<br />&#160;&#160;member Flags : CompilationRepresentationFlags<br /><br />Full name: Microsoft.FSharp.Core.CompilationRepresentationAttribute<br /><br />--------------------<br />new : flags:CompilationRepresentationFlags -&gt; CompilationRepresentationAttribute</div>
+<div class="tip" id="fs86">type CompilationRepresentationFlags =<br />&#160;&#160;|  None  =  0<br />&#160;&#160;|  Static  =  1<br />&#160;&#160;|  Instance  =  2<br />&#160;&#160;|  ModuleSuffix  =  4<br />&#160;&#160;|  UseNullAsTrueValue  =  8<br />&#160;&#160;|  Event  =  16<br /><br />Full name: Microsoft.FSharp.Core.CompilationRepresentationFlags</div>
+<div class="tip" id="fs87">CompilationRepresentationFlags.ModuleSuffix: CompilationRepresentationFlags = 4</div>
+<div class="tip" id="fs88">val any : unit -&gt; &#39;TArg<br /><br />Full name: Script.ItModule.any<br /><em><br /><br />&#160;Marks argument as matching any value</em></div>
+<div class="tip" id="fs89">type It =<br />&#160;&#160;private new : unit -&gt; It<br />&#160;&#160;static member IsAny : unit -&gt; &#39;TArg<br /><br />Full name: Script.It</div>
+<div class="tip" id="fs90">static member It.IsAny : unit -&gt; &#39;TArg<br /><em><br /><br />&#160;Marks argument as matching any value</em></div>
+<div class="tip" id="fs91">val mock : Collections.IList<br /><br />Full name: Script.Method Example.mock</div>
+<div class="tip" id="fs92">namespace System</div>
+<div class="tip" id="fs93">namespace System.Collections</div>
+<div class="tip" id="fs94">type IList =<br />&#160;&#160;member Add : value:obj -&gt; int<br />&#160;&#160;member Clear : unit -&gt; unit<br />&#160;&#160;member Contains : value:obj -&gt; bool<br />&#160;&#160;member IndexOf : value:obj -&gt; int<br />&#160;&#160;member Insert : index:int * value:obj -&gt; unit<br />&#160;&#160;member IsFixedSize : bool<br />&#160;&#160;member IsReadOnly : bool<br />&#160;&#160;member Item : int -&gt; obj with get, set<br />&#160;&#160;member Remove : value:obj -&gt; unit<br />&#160;&#160;member RemoveAt : index:int -&gt; unit<br /><br />Full name: System.Collections.IList</div>
+<div class="tip" id="fs95">val x : Collections.IList</div>
+<div class="tip" id="fs96">Collections.IList.Contains(value: obj) : bool</div>
+<div class="tip" id="fs97">val mock : Collections.IList<br /><br />Full name: Script.Property Example.mock</div>
+<div class="tip" id="fs98">property Collections.ICollection.Count: int</div>
+<div class="tip" id="fs99">val counter : int ref<br /><br />Full name: Script.Computed Property Example.counter</div>
+<div class="tip" id="fs100">Multiple items<br />val ref : value:&#39;T -&gt; &#39;T ref<br /><br />Full name: Microsoft.FSharp.Core.Operators.ref<br /><br />--------------------<br />type &#39;T ref = Ref&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Core.ref&lt;_&gt;</div>
+<div class="tip" id="fs101">val mock : Collections.IList<br /><br />Full name: Script.Computed Property Example.mock</div>
+<div class="tip" id="fs102">val incr : cell:int ref -&gt; unit<br /><br />Full name: Microsoft.FSharp.Core.Operators.incr</div>
+<div class="tip" id="fs103">val mock : Collections.Generic.IList&lt;double&gt;<br /><br />Full name: Script.Item Get Example.mock</div>
+<div class="tip" id="fs104">namespace System.Collections.Generic</div>
+<div class="tip" id="fs105">type IList&lt;&#39;T&gt; =<br />&#160;&#160;member IndexOf : item:&#39;T -&gt; int<br />&#160;&#160;member Insert : index:int * item:&#39;T -&gt; unit<br />&#160;&#160;member Item : int -&gt; &#39;T with get, set<br />&#160;&#160;member RemoveAt : index:int -&gt; unit<br /><br />Full name: System.Collections.Generic.IList&lt;_&gt;</div>
+<div class="tip" id="fs106">Multiple items<br />val double : value:&#39;T -&gt; float (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.double<br /><br />--------------------<br />type double = Double<br /><br />Full name: Microsoft.FSharp.Core.double</div>
+<div class="tip" id="fs107">val x : Collections.Generic.IList&lt;double&gt;</div>
+<div class="tip" id="fs108">property Collections.Generic.IList.Item: int -&gt; double</div>
+<div class="tip" id="fs109">Multiple items<br />type IndexOutOfRangeException =<br />&#160;&#160;inherit SystemException<br />&#160;&#160;new : unit -&gt; IndexOutOfRangeException + 2 overloads<br /><br />Full name: System.IndexOutOfRangeException<br /><br />--------------------<br />IndexOutOfRangeException() : unit<br />IndexOutOfRangeException(message: string) : unit<br />IndexOutOfRangeException(message: string, innerException: exn) : unit</div>
+<div class="tip" id="fs110">val mutable called : bool<br /><br />Full name: Script.Called Example.called</div>
+<div class="tip" id="fs111">val instance : Collections.Generic.IList&lt;string&gt;<br /><br />Full name: Script.Called Example.instance</div>
+<div class="tip" id="fs112">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />Full name: Microsoft.FSharp.Core.Operators.string<br /><br />--------------------<br />type string = String<br /><br />Full name: Microsoft.FSharp.Core.string</div>
+<div class="tip" id="fs113">val x : Collections.Generic.IList&lt;string&gt;</div>
+<div class="tip" id="fs114">Collections.Generic.IList.Insert(index: int, item: string) : unit</div>
+<div class="tip" id="fs115">Multiple items<br />val int : value:&#39;T -&gt; int (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.int<br /><br />--------------------<br />type int = int32<br /><br />Full name: Microsoft.FSharp.Core.int<br /><br />--------------------<br />type int&lt;&#39;Measure&gt; = int<br /><br />Full name: Microsoft.FSharp.Core.int&lt;_&gt;</div>
+<div class="tip" id="fs116">val index : int</div>
+<div class="tip" id="fs117">val item : string</div>
+<div class="tip" id="fs118">val event : Event&lt;ComponentModel.PropertyChangedEventHandler,ComponentModel.PropertyChangedEventArgs&gt;<br /><br />Full name: Script.Event Example.event</div>
+<div class="tip" id="fs119">Multiple items<br />module Event<br /><br />from Microsoft.FSharp.Control<br /><br />--------------------<br />type Event&lt;&#39;T&gt; =<br />&#160;&#160;new : unit -&gt; Event&lt;&#39;T&gt;<br />&#160;&#160;member Trigger : arg:&#39;T -&gt; unit<br />&#160;&#160;member Publish : IEvent&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Control.Event&lt;_&gt;<br /><br />--------------------<br />type Event&lt;&#39;Delegate,&#39;Args (requires delegate and &#39;Delegate :&gt; Delegate)&gt; =<br />&#160;&#160;new : unit -&gt; Event&lt;&#39;Delegate,&#39;Args&gt;<br />&#160;&#160;member Trigger : sender:obj * args:&#39;Args -&gt; unit<br />&#160;&#160;member Publish : IEvent&lt;&#39;Delegate,&#39;Args&gt;<br /><br />Full name: Microsoft.FSharp.Control.Event&lt;_,_&gt;<br /><br />--------------------<br />new : unit -&gt; Event&lt;&#39;T&gt;<br /><br />--------------------<br />new : unit -&gt; Event&lt;&#39;Delegate,&#39;Args&gt;</div>
+<div class="tip" id="fs120">val mock : ComponentModel.INotifyPropertyChanged<br /><br />Full name: Script.Event Example.mock</div>
+<div class="tip" id="fs121">namespace System.ComponentModel</div>
+<div class="tip" id="fs122">type INotifyPropertyChanged =<br />&#160;&#160;event PropertyChanged : PropertyChangedEventHandler<br /><br />Full name: System.ComponentModel.INotifyPropertyChanged</div>
+<div class="tip" id="fs123">val x : ComponentModel.INotifyPropertyChanged</div>
+<div class="tip" id="fs124">event ComponentModel.INotifyPropertyChanged.PropertyChanged: IEvent&lt;ComponentModel.PropertyChangedEventHandler,ComponentModel.PropertyChangedEventArgs&gt;</div>
+<div class="tip" id="fs125">property Event.Publish: IEvent&lt;ComponentModel.PropertyChangedEventHandler,ComponentModel.PropertyChangedEventArgs&gt;</div>
+<div class="tip" id="fs126">val triggered : bool ref<br /><br />Full name: Script.Event Example.triggered</div>
+<div class="tip" id="fs127">member IObservable.Add : callback:(&#39;T -&gt; unit) -&gt; unit</div>
+<div class="tip" id="fs128">val x : ComponentModel.PropertyChangedEventArgs</div>
+<div class="tip" id="fs129">member Event.Trigger : sender:obj * args:&#39;Args -&gt; unit</div>
+<div class="tip" id="fs130">Multiple items<br />type PropertyChangedEventArgs =<br />&#160;&#160;inherit EventArgs<br />&#160;&#160;new : propertyName:string -&gt; PropertyChangedEventArgs<br />&#160;&#160;member PropertyName : string<br /><br />Full name: System.ComponentModel.PropertyChangedEventArgs<br /><br />--------------------<br />ComponentModel.PropertyChangedEventArgs(propertyName: string) : unit</div>
+<div class="tip" id="fs131">property Ref.Value: bool</div>
+

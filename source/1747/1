@@ -1,0 +1,36 @@
+type Turn = Left | Right | Straight
+
+/// <summary>Perform the graham scan algorithm to search for the convex hull
+/// of a given set of 2D points</summary>
+/// <param name="points">list of pair of floats representing 2D points
+/// </param>
+/// <returns>list of pairs of floats representing the set of 2D points
+/// that forms the convex hull of the input points</returns>
+let grahamScan points=
+
+    let findTurn (x1, y1) (x2, y2) (x3, y3) =
+        let x = (x2 - x1)*(y3 - y1) - (y2 - y1)*(x3 - x1)
+        match sign(x) with
+        | (-1) -> Right
+        | 0 -> Straight
+        | 1 -> Left
+        | _ -> failwith "Funny result from sign()"
+
+    let rec scan acc points =
+      match points with
+      | [] -> List.rev acc  // points pushed into accumulator in rev order
+      | p1::ps ->
+          match acc with
+          | h1::h2::hs ->   // if accumulator has two or more elements in it
+              let t = findTurn h2 h1 p1 // acc has elements in rev order
+              match t with
+              | Right -> scan (h2::hs) (p1::ps) // get rid of mid point h1
+              | _ -> scan (p1::h1::h2::hs) ps   // push p1 into acc
+          | _ -> scan (p1::acc) ps  // push into acc if it has <2 points
+
+    let translate ((ox:float), (oy:float)) (x, y) = (x-ox, y-oy)
+    let atan2' ((x:double), y) = atan2 y x
+    let origin = List.minBy (fun (x, y) -> (y, x)) points
+    points
+    |> List.sortBy(translate(origin) >> atan2')
+    |> scan []

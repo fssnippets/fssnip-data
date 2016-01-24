@@ -1,0 +1,123 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+<span class="l">38: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="prep">#if</span> <span class="i">INTERACTIVE</span>
+<span class="inactive">#r</span><span class="inactive"> </span><span class="inactive">&quot;System.Xml&quot;</span>
+<span class="inactive">#r</span><span class="inactive"> </span><span class="inactive">&quot;System.Xml.Linq&quot;</span>
+<span class="prep">#endif</span>
+
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">System</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 2)" onmouseover="showTip(event, 'fs1', 2)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 3)" onmouseover="showTip(event, 'fs2', 3)" class="i">IO</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 4)" onmouseover="showTip(event, 'fs1', 4)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 5)" onmouseover="showTip(event, 'fs3', 5)" class="i">Xml</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs4', 6)" onmouseover="showTip(event, 'fs4', 6)" class="i">Linq</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 7)" onmouseover="showTip(event, 'fs1', 7)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs5', 8)" onmouseover="showTip(event, 'fs5', 8)" class="i">Text</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs6', 9)" onmouseover="showTip(event, 'fs6', 9)" class="i">RegularExpressions</span>
+
+<span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs7', 10)" onmouseover="showTip(event, 'fs7', 10)" class="f">findsolutiondir</span> (<span onmouseout="hideTip(event, 'fs8', 11)" onmouseover="showTip(event, 'fs8', 11)" class="i">p</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs9', 12)" onmouseover="showTip(event, 'fs9', 12)" class="t">DirectoryInfo</span>) <span class="o">=</span> 
+      <span class="k">if</span> (<span onmouseout="hideTip(event, 'fs8', 13)" onmouseover="showTip(event, 'fs8', 13)" class="i">p</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs10', 14)" onmouseover="showTip(event, 'fs10', 14)" class="f">GetFiles</span>(<span class="s">&quot;*.sln&quot;</span>) <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs11', 15)" onmouseover="showTip(event, 'fs11', 15)" class="t">Array</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs12', 16)" onmouseover="showTip(event, 'fs12', 16)" class="f">length</span> <span class="o">&gt;</span> <span class="n">0</span>) 
+      <span class="k">then</span> <span onmouseout="hideTip(event, 'fs8', 17)" onmouseover="showTip(event, 'fs8', 17)" class="i">p</span>
+      <span class="k">else</span> <span onmouseout="hideTip(event, 'fs7', 18)" onmouseover="showTip(event, 'fs7', 18)" class="f">findsolutiondir</span> <span onmouseout="hideTip(event, 'fs8', 19)" onmouseover="showTip(event, 'fs8', 19)" class="i">p</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs13', 20)" onmouseover="showTip(event, 'fs13', 20)" class="i">Parent</span>
+
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs14', 21)" onmouseover="showTip(event, 'fs14', 21)" class="i">root</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs7', 22)" onmouseover="showTip(event, 'fs7', 22)" class="f">findsolutiondir</span> (<span onmouseout="hideTip(event, 'fs9', 23)" onmouseover="showTip(event, 'fs9', 23)" class="t">DirectoryInfo</span>(<span class="k">__SOURCE_DIRECTORY__</span>))
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs15', 24)" onmouseover="showTip(event, 'fs15', 24)" class="f">getprojectsdir</span> (<span onmouseout="hideTip(event, 'fs16', 25)" onmouseover="showTip(event, 'fs16', 25)" class="i">root</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs9', 26)" onmouseover="showTip(event, 'fs9', 26)" class="t">DirectoryInfo</span>) <span class="o">=</span> 
+   <span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs17', 27)" onmouseover="showTip(event, 'fs17', 27)" class="f">getdirs</span> (<span onmouseout="hideTip(event, 'fs16', 28)" onmouseover="showTip(event, 'fs16', 28)" class="i">root</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs9', 29)" onmouseover="showTip(event, 'fs9', 29)" class="t">DirectoryInfo</span>) <span class="o">=</span> <span onmouseout="hideTip(event, 'fs18', 30)" onmouseover="showTip(event, 'fs18', 30)" class="i">seq</span> {
+      <span class="k">yield!</span> <span onmouseout="hideTip(event, 'fs16', 31)" onmouseover="showTip(event, 'fs16', 31)" class="i">root</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs19', 32)" onmouseover="showTip(event, 'fs19', 32)" class="f">GetDirectories</span>() <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs11', 33)" onmouseover="showTip(event, 'fs11', 33)" class="t">Array</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs20', 34)" onmouseover="showTip(event, 'fs20', 34)" class="f">filter</span>(<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs21', 35)" onmouseover="showTip(event, 'fs21', 35)" class="i">f</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs21', 36)" onmouseover="showTip(event, 'fs21', 36)" class="i">f</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs10', 37)" onmouseover="showTip(event, 'fs10', 37)" class="f">GetFiles</span>(<span class="s">&quot;*.fsproj&quot;</span>) <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs11', 38)" onmouseover="showTip(event, 'fs11', 38)" class="t">Array</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs12', 39)" onmouseover="showTip(event, 'fs12', 39)" class="f">length</span> <span class="o">&gt;</span> <span class="n">0</span> ) 
+      <span class="k">yield!</span> <span onmouseout="hideTip(event, 'fs16', 40)" onmouseover="showTip(event, 'fs16', 40)" class="i">root</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs19', 41)" onmouseover="showTip(event, 'fs19', 41)" class="f">GetDirectories</span>() <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs11', 42)" onmouseover="showTip(event, 'fs11', 42)" class="t">Array</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs22', 43)" onmouseover="showTip(event, 'fs22', 43)" class="f">map</span>(<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs23', 44)" onmouseover="showTip(event, 'fs23', 44)" class="i">d</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs17', 45)" onmouseover="showTip(event, 'fs17', 45)" class="f">getdirs</span> <span onmouseout="hideTip(event, 'fs23', 46)" onmouseover="showTip(event, 'fs23', 46)" class="i">d</span>) <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs24', 47)" onmouseover="showTip(event, 'fs24', 47)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs25', 48)" onmouseover="showTip(event, 'fs25', 48)" class="f">concat</span>}
+   <span onmouseout="hideTip(event, 'fs17', 49)" onmouseover="showTip(event, 'fs17', 49)" class="f">getdirs</span> <span onmouseout="hideTip(event, 'fs16', 50)" onmouseover="showTip(event, 'fs16', 50)" class="i">root</span>   
+
+
+   
+<span onmouseout="hideTip(event, 'fs15', 51)" onmouseover="showTip(event, 'fs15', 51)" class="f">getprojectsdir</span> <span onmouseout="hideTip(event, 'fs14', 52)" onmouseover="showTip(event, 'fs14', 52)" class="i">root</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs24', 53)" onmouseover="showTip(event, 'fs24', 53)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs26', 54)" onmouseover="showTip(event, 'fs26', 54)" class="f">iter</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs23', 55)" onmouseover="showTip(event, 'fs23', 55)" class="i">d</span> <span class="k">-&gt;</span>    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs27', 56)" onmouseover="showTip(event, 'fs27', 56)" class="i">p</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs1', 57)" onmouseover="showTip(event, 'fs1', 57)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs28', 58)" onmouseover="showTip(event, 'fs28', 58)" class="i">Diagnostics</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs29', 59)" onmouseover="showTip(event, 'fs29', 59)" class="t">Process</span>();
+                                             <span onmouseout="hideTip(event, 'fs30', 60)" onmouseover="showTip(event, 'fs30', 60)" class="f">printfn</span> <span class="s">&quot;installing </span><span class="pf">%A</span><span class="s">&quot;</span><span onmouseout="hideTip(event, 'fs23', 61)" onmouseover="showTip(event, 'fs23', 61)" class="i">d</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs31', 62)" onmouseover="showTip(event, 'fs31', 62)" class="i">Name</span>
+                                             <span onmouseout="hideTip(event, 'fs27', 63)" onmouseover="showTip(event, 'fs27', 63)" class="i">p</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs32', 64)" onmouseover="showTip(event, 'fs32', 64)" class="i">StartInfo</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs33', 65)" onmouseover="showTip(event, 'fs33', 65)" class="i">WorkingDirectory</span> <span class="o">&lt;-</span> <span onmouseout="hideTip(event, 'fs14', 66)" onmouseover="showTip(event, 'fs14', 66)" class="i">root</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs34', 67)" onmouseover="showTip(event, 'fs34', 67)" class="i">FullName</span>
+                                             <span onmouseout="hideTip(event, 'fs27', 68)" onmouseover="showTip(event, 'fs27', 68)" class="i">p</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs32', 69)" onmouseover="showTip(event, 'fs32', 69)" class="i">StartInfo</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs35', 70)" onmouseover="showTip(event, 'fs35', 70)" class="i">FileName</span> <span class="o">&lt;-</span> <span class="s">&quot;powershell.exe&quot;</span>;
+                                             <span onmouseout="hideTip(event, 'fs27', 71)" onmouseover="showTip(event, 'fs27', 71)" class="i">p</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs32', 72)" onmouseover="showTip(event, 'fs32', 72)" class="i">StartInfo</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs36', 73)" onmouseover="showTip(event, 'fs36', 73)" class="i">Arguments</span> <span class="o">&lt;-</span> (<span class="s">&quot;/c nuget i &quot;</span> <span class="o">+</span> <span onmouseout="hideTip(event, 'fs23', 74)" onmouseover="showTip(event, 'fs23', 74)" class="i">d</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs31', 75)" onmouseover="showTip(event, 'fs31', 75)" class="i">Name</span> <span class="o">+</span> <span class="s">&quot;</span><span class="e">\\</span><span class="s">packages.config -o Packages&quot;</span>)
+                                             <span onmouseout="hideTip(event, 'fs27', 76)" onmouseover="showTip(event, 'fs27', 76)" class="i">p</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs32', 77)" onmouseover="showTip(event, 'fs32', 77)" class="i">StartInfo</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs37', 78)" onmouseover="showTip(event, 'fs37', 78)" class="i">RedirectStandardOutput</span> <span class="o">&lt;-</span> <span class="k">true</span>
+                                             <span onmouseout="hideTip(event, 'fs27', 79)" onmouseover="showTip(event, 'fs27', 79)" class="i">p</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs32', 80)" onmouseover="showTip(event, 'fs32', 80)" class="i">StartInfo</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs38', 81)" onmouseover="showTip(event, 'fs38', 81)" class="i">UseShellExecute</span> <span class="o">&lt;-</span> <span class="k">false</span>
+                                             <span onmouseout="hideTip(event, 'fs27', 82)" onmouseover="showTip(event, 'fs27', 82)" class="i">p</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs39', 83)" onmouseover="showTip(event, 'fs39', 83)" class="f">Start</span>() <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs40', 84)" onmouseover="showTip(event, 'fs40', 84)" class="f">ignore</span>
+                                             <span onmouseout="hideTip(event, 'fs30', 85)" onmouseover="showTip(event, 'fs30', 85)" class="f">printfn</span> <span class="s">&quot;result ?&quot;</span>
+                                             <span onmouseout="hideTip(event, 'fs30', 86)" onmouseover="showTip(event, 'fs30', 86)" class="f">printfn</span> <span class="s">&quot;result </span><span class="pf">%A</span><span class="s">&quot;</span> (<span onmouseout="hideTip(event, 'fs27', 87)" onmouseover="showTip(event, 'fs27', 87)" class="i">p</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs41', 88)" onmouseover="showTip(event, 'fs41', 88)" class="i">StandardOutput</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs42', 89)" onmouseover="showTip(event, 'fs42', 89)" class="f">ReadToEnd</span>())
+                                             <span onmouseout="hideTip(event, 'fs30', 90)" onmouseover="showTip(event, 'fs30', 90)" class="f">printfn</span> <span class="s">&quot;done&quot;</span>
+                                 )
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace System</div>
+<div class="tip" id="fs2">namespace System.IO</div>
+<div class="tip" id="fs3">namespace System.Xml</div>
+<div class="tip" id="fs4">namespace System.Xml.Linq</div>
+<div class="tip" id="fs5">namespace System.Text</div>
+<div class="tip" id="fs6">namespace System.Text.RegularExpressions</div>
+<div class="tip" id="fs7">val findsolutiondir : p:DirectoryInfo -&gt; DirectoryInfo<br /><br />Full name: Script.findsolutiondir</div>
+<div class="tip" id="fs8">val p : DirectoryInfo</div>
+<div class="tip" id="fs9">Multiple items<br />type DirectoryInfo =<br />&#160;&#160;inherit FileSystemInfo<br />&#160;&#160;new : path:string -&gt; DirectoryInfo<br />&#160;&#160;member Create : unit -&gt; unit + 1 overload<br />&#160;&#160;member CreateSubdirectory : path:string -&gt; DirectoryInfo + 1 overload<br />&#160;&#160;member Delete : unit -&gt; unit + 1 overload<br />&#160;&#160;member EnumerateDirectories : unit -&gt; IEnumerable&lt;DirectoryInfo&gt; + 2 overloads<br />&#160;&#160;member EnumerateFileSystemInfos : unit -&gt; IEnumerable&lt;FileSystemInfo&gt; + 2 overloads<br />&#160;&#160;member EnumerateFiles : unit -&gt; IEnumerable&lt;FileInfo&gt; + 2 overloads<br />&#160;&#160;member Exists : bool<br />&#160;&#160;member GetAccessControl : unit -&gt; DirectorySecurity + 1 overload<br />&#160;&#160;member GetDirectories : unit -&gt; DirectoryInfo[] + 2 overloads<br />&#160;&#160;...<br /><br />Full name: System.IO.DirectoryInfo<br /><br />--------------------<br />DirectoryInfo(path: string) : unit</div>
+<div class="tip" id="fs10">DirectoryInfo.GetFiles() : FileInfo []<br />DirectoryInfo.GetFiles(searchPattern: string) : FileInfo []<br />DirectoryInfo.GetFiles(searchPattern: string, searchOption: SearchOption) : FileInfo []</div>
+<div class="tip" id="fs11">type Array =<br />&#160;&#160;member Clone : unit -&gt; obj<br />&#160;&#160;member CopyTo : array:Array * index:int -&gt; unit + 1 overload<br />&#160;&#160;member GetEnumerator : unit -&gt; IEnumerator<br />&#160;&#160;member GetLength : dimension:int -&gt; int<br />&#160;&#160;member GetLongLength : dimension:int -&gt; int64<br />&#160;&#160;member GetLowerBound : dimension:int -&gt; int<br />&#160;&#160;member GetUpperBound : dimension:int -&gt; int<br />&#160;&#160;member GetValue : [&lt;ParamArray&gt;] indices:int[] -&gt; obj + 7 overloads<br />&#160;&#160;member Initialize : unit -&gt; unit<br />&#160;&#160;member IsFixedSize : bool<br />&#160;&#160;...<br /><br />Full name: System.Array</div>
+<div class="tip" id="fs12">val length : array:&#39;T [] -&gt; int<br /><br />Full name: Microsoft.FSharp.Collections.Array.length</div>
+<div class="tip" id="fs13">property DirectoryInfo.Parent: DirectoryInfo</div>
+<div class="tip" id="fs14">val root : DirectoryInfo<br /><br />Full name: Script.root</div>
+<div class="tip" id="fs15">val getprojectsdir : root:DirectoryInfo -&gt; seq&lt;DirectoryInfo&gt;<br /><br />Full name: Script.getprojectsdir</div>
+<div class="tip" id="fs16">val root : DirectoryInfo</div>
+<div class="tip" id="fs17">val getdirs : (DirectoryInfo -&gt; seq&lt;DirectoryInfo&gt;)</div>
+<div class="tip" id="fs18">Multiple items<br />val seq : sequence:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Core.Operators.seq<br /><br />--------------------<br />type seq&lt;&#39;T&gt; = Collections.Generic.IEnumerable&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.seq&lt;_&gt;</div>
+<div class="tip" id="fs19">DirectoryInfo.GetDirectories() : DirectoryInfo []<br />DirectoryInfo.GetDirectories(searchPattern: string) : DirectoryInfo []<br />DirectoryInfo.GetDirectories(searchPattern: string, searchOption: SearchOption) : DirectoryInfo []</div>
+<div class="tip" id="fs20">val filter : predicate:(&#39;T -&gt; bool) -&gt; array:&#39;T [] -&gt; &#39;T []<br /><br />Full name: Microsoft.FSharp.Collections.Array.filter</div>
+<div class="tip" id="fs21">val f : DirectoryInfo</div>
+<div class="tip" id="fs22">val map : mapping:(&#39;T -&gt; &#39;U) -&gt; array:&#39;T [] -&gt; &#39;U []<br /><br />Full name: Microsoft.FSharp.Collections.Array.map</div>
+<div class="tip" id="fs23">val d : DirectoryInfo</div>
+<div class="tip" id="fs24">module Seq<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs25">val concat : sources:seq&lt;#seq&lt;&#39;T&gt;&gt; -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.concat</div>
+<div class="tip" id="fs26">val iter : action:(&#39;T -&gt; unit) -&gt; source:seq&lt;&#39;T&gt; -&gt; unit<br /><br />Full name: Microsoft.FSharp.Collections.Seq.iter</div>
+<div class="tip" id="fs27">val p : Diagnostics.Process</div>
+<div class="tip" id="fs28">namespace System.Diagnostics</div>
+<div class="tip" id="fs29">Multiple items<br />type Process =<br />&#160;&#160;inherit Component<br />&#160;&#160;new : unit -&gt; Process<br />&#160;&#160;member BasePriority : int<br />&#160;&#160;member BeginErrorReadLine : unit -&gt; unit<br />&#160;&#160;member BeginOutputReadLine : unit -&gt; unit<br />&#160;&#160;member CancelErrorRead : unit -&gt; unit<br />&#160;&#160;member CancelOutputRead : unit -&gt; unit<br />&#160;&#160;member Close : unit -&gt; unit<br />&#160;&#160;member CloseMainWindow : unit -&gt; bool<br />&#160;&#160;member EnableRaisingEvents : bool with get, set<br />&#160;&#160;member ExitCode : int<br />&#160;&#160;...<br /><br />Full name: System.Diagnostics.Process<br /><br />--------------------<br />Diagnostics.Process() : unit</div>
+<div class="tip" id="fs30">val printfn : format:Printf.TextWriterFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.printfn</div>
+<div class="tip" id="fs31">property DirectoryInfo.Name: string</div>
+<div class="tip" id="fs32">property Diagnostics.Process.StartInfo: Diagnostics.ProcessStartInfo</div>
+<div class="tip" id="fs33">property Diagnostics.ProcessStartInfo.WorkingDirectory: string</div>
+<div class="tip" id="fs34">property FileSystemInfo.FullName: string</div>
+<div class="tip" id="fs35">property Diagnostics.ProcessStartInfo.FileName: string</div>
+<div class="tip" id="fs36">property Diagnostics.ProcessStartInfo.Arguments: string</div>
+<div class="tip" id="fs37">property Diagnostics.ProcessStartInfo.RedirectStandardOutput: bool</div>
+<div class="tip" id="fs38">property Diagnostics.ProcessStartInfo.UseShellExecute: bool</div>
+<div class="tip" id="fs39">Diagnostics.Process.Start() : bool</div>
+<div class="tip" id="fs40">val ignore : value:&#39;T -&gt; unit<br /><br />Full name: Microsoft.FSharp.Core.Operators.ignore</div>
+<div class="tip" id="fs41">property Diagnostics.Process.StandardOutput: StreamReader</div>
+<div class="tip" id="fs42">StreamReader.ReadToEnd() : string</div>
+

@@ -1,0 +1,209 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+<span class="l">38: </span>
+<span class="l">39: </span>
+<span class="l">40: </span>
+<span class="l">41: </span>
+<span class="l">42: </span>
+<span class="l">43: </span>
+<span class="l">44: </span>
+<span class="l">45: </span>
+<span class="l">46: </span>
+<span class="l">47: </span>
+<span class="l">48: </span>
+<span class="l">49: </span>
+<span class="l">50: </span>
+<span class="l">51: </span>
+<span class="l">52: </span>
+<span class="l">53: </span>
+<span class="l">54: </span>
+<span class="l">55: </span>
+<span class="l">56: </span>
+<span class="l">57: </span>
+<span class="l">58: </span>
+<span class="l">59: </span>
+<span class="l">60: </span>
+<span class="l">61: </span>
+<span class="l">62: </span>
+<span class="l">63: </span>
+<span class="l">64: </span>
+<span class="l">65: </span>
+<span class="l">66: </span>
+<span class="l">67: </span>
+<span class="l">68: </span>
+<span class="l">69: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">module</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="t">StackOverflowCrawler</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">System</span>      <span class="c">// Menn&#228;&#228;n .NET-perus-st&#228;kill&#228;.</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs2', 3)" onmouseover="showTip(event, 'fs2', 3)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 4)" onmouseover="showTip(event, 'fs3', 4)" class="i">Net</span>  <span class="c">// async-webrequest-versio helppo tehd&#228; t&#228;ll&#228;: http://fsharppowerpack.codeplex.com/</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs2', 5)" onmouseover="showTip(event, 'fs2', 5)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs4', 6)" onmouseover="showTip(event, 'fs4', 6)" class="i">IO</span>   <span class="c">// string-parsinta kannattaisi tehd&#228; t&#228;ll&#228;: http://htmlagilitypack.codeplex.com/ </span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs2', 7)" onmouseover="showTip(event, 'fs2', 7)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs5', 8)" onmouseover="showTip(event, 'fs5', 8)" class="i">Web</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs6', 9)" onmouseover="showTip(event, 'fs6', 9)" class="f">fetch</span> (<span onmouseout="hideTip(event, 'fs7', 10)" onmouseover="showTip(event, 'fs7', 10)" class="i">url</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs8', 11)" onmouseover="showTip(event, 'fs8', 11)" class="t">Uri</span>) <span class="o">=</span> 
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs9', 12)" onmouseover="showTip(event, 'fs9', 12)" class="i">req</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs10', 13)" onmouseover="showTip(event, 'fs10', 13)" class="t">WebRequest</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs11', 14)" onmouseover="showTip(event, 'fs11', 14)" class="f">Create</span> (<span onmouseout="hideTip(event, 'fs7', 15)" onmouseover="showTip(event, 'fs7', 15)" class="i">url</span>) <span class="o">:?&gt;</span> <span onmouseout="hideTip(event, 'fs12', 16)" onmouseover="showTip(event, 'fs12', 16)" class="t">HttpWebRequest</span>    
+    <span class="k">use</span> <span onmouseout="hideTip(event, 'fs13', 17)" onmouseover="showTip(event, 'fs13', 17)" class="i">stream</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs9', 18)" onmouseover="showTip(event, 'fs9', 18)" class="i">req</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs14', 19)" onmouseover="showTip(event, 'fs14', 19)" class="f">GetResponse</span>()<span class="o">.</span><span class="f">GetResponseStream</span>()
+    <span class="k">use</span> <span onmouseout="hideTip(event, 'fs15', 20)" onmouseover="showTip(event, 'fs15', 20)" class="i">reader</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs16', 21)" onmouseover="showTip(event, 'fs16', 21)" class="t">StreamReader</span>(<span onmouseout="hideTip(event, 'fs13', 22)" onmouseover="showTip(event, 'fs13', 22)" class="i">stream</span>)
+    <span onmouseout="hideTip(event, 'fs15', 23)" onmouseover="showTip(event, 'fs15', 23)" class="i">reader</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs17', 24)" onmouseover="showTip(event, 'fs17', 24)" class="f">ReadToEnd</span>()
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs18', 25)" onmouseover="showTip(event, 'fs18', 25)" class="f">makeUrl</span> <span onmouseout="hideTip(event, 'fs19', 26)" onmouseover="showTip(event, 'fs19', 26)" class="i">pagetype</span> (<span onmouseout="hideTip(event, 'fs20', 27)" onmouseover="showTip(event, 'fs20', 27)" class="i">tags</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs21', 28)" onmouseover="showTip(event, 'fs21', 28)" class="t">string</span>) <span class="o">=</span> 
+    <span class="k">new</span> <span onmouseout="hideTip(event, 'fs8', 29)" onmouseover="showTip(event, 'fs8', 29)" class="t">Uri</span>(<span class="s">&quot;http://stackoverflow.com/&quot;</span> <span class="o">+</span> <span onmouseout="hideTip(event, 'fs19', 30)" onmouseover="showTip(event, 'fs19', 30)" class="i">pagetype</span> <span class="o">+</span> <span class="s">&quot;/tagged/&quot;</span> <span class="o">+</span> <span onmouseout="hideTip(event, 'fs22', 31)" onmouseover="showTip(event, 'fs22', 31)" class="t">HttpUtility</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs23', 32)" onmouseover="showTip(event, 'fs23', 32)" class="f">UrlEncode</span>(<span onmouseout="hideTip(event, 'fs20', 33)" onmouseover="showTip(event, 'fs20', 33)" class="i">tags</span>))
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs24', 34)" onmouseover="showTip(event, 'fs24', 34)" class="f">questions</span>, <span onmouseout="hideTip(event, 'fs25', 35)" onmouseover="showTip(event, 'fs25', 35)" class="f">unanswered</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs18', 36)" onmouseover="showTip(event, 'fs18', 36)" class="f">makeUrl</span> <span class="s">&quot;questions&quot;</span>, <span onmouseout="hideTip(event, 'fs18', 37)" onmouseover="showTip(event, 'fs18', 37)" class="f">makeUrl</span> <span class="s">&quot;unanswered&quot;</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs26', 38)" onmouseover="showTip(event, 'fs26', 38)" class="f">sumcount</span> (<span onmouseout="hideTip(event, 'fs27', 39)" onmouseover="showTip(event, 'fs27', 39)" class="i">fetched</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs21', 40)" onmouseover="showTip(event, 'fs21', 40)" class="t">string</span>) <span class="o">=</span> 
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs28', 41)" onmouseover="showTip(event, 'fs28', 41)" class="i">startpos</span> <span class="o">=</span> (<span onmouseout="hideTip(event, 'fs27', 42)" onmouseover="showTip(event, 'fs27', 42)" class="i">fetched</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs29', 43)" onmouseover="showTip(event, 'fs29', 43)" class="f">IndexOf</span> <span class="s">&quot;&lt;div class=</span><span class="e">\&quot;</span><span class="s">summarycount al</span><span class="e">\&quot;</span><span class="s">&gt;&quot;</span>)<span class="o">+</span><span class="n">29</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs30', 44)" onmouseover="showTip(event, 'fs30', 44)" class="i">endpos</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs27', 45)" onmouseover="showTip(event, 'fs27', 45)" class="i">fetched</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs29', 46)" onmouseover="showTip(event, 'fs29', 46)" class="f">IndexOf</span>(<span class="s">&quot;&lt;/div&gt;&quot;</span>,<span onmouseout="hideTip(event, 'fs28', 47)" onmouseover="showTip(event, 'fs28', 47)" class="i">startpos</span>)
+    <span onmouseout="hideTip(event, 'fs27', 48)" onmouseover="showTip(event, 'fs27', 48)" class="i">fetched</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs31', 49)" onmouseover="showTip(event, 'fs31', 49)" class="f">Substring</span>(<span onmouseout="hideTip(event, 'fs28', 50)" onmouseover="showTip(event, 'fs28', 50)" class="i">startpos</span>,<span onmouseout="hideTip(event, 'fs30', 51)" onmouseover="showTip(event, 'fs30', 51)" class="i">endpos</span><span class="o">-</span><span onmouseout="hideTip(event, 'fs28', 52)" onmouseover="showTip(event, 'fs28', 52)" class="i">startpos</span>)<span class="o">.</span><span class="f">Replace</span>(<span class="s">&quot;,&quot;</span>,<span class="s">&quot;&quot;</span>) <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs32', 53)" onmouseover="showTip(event, 'fs32', 53)" class="t">Double</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs33', 54)" onmouseover="showTip(event, 'fs33', 54)" class="f">Parse</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs34', 55)" onmouseover="showTip(event, 'fs34', 55)" class="f">relatedtags</span> (<span onmouseout="hideTip(event, 'fs35', 56)" onmouseover="showTip(event, 'fs35', 56)" class="i">basetag</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs21', 57)" onmouseover="showTip(event, 'fs21', 57)" class="t">string</span>) (<span onmouseout="hideTip(event, 'fs27', 58)" onmouseover="showTip(event, 'fs27', 58)" class="i">fetched</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs21', 59)" onmouseover="showTip(event, 'fs21', 59)" class="t">string</span>) <span class="o">=</span> <span class="c">//lis&#228;&#228; parsintaa...</span>
+    <span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs36', 60)" onmouseover="showTip(event, 'fs36', 60)" class="f">relativepositions</span> (<span onmouseout="hideTip(event, 'fs37', 61)" onmouseover="showTip(event, 'fs37', 61)" class="i">links</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs21', 62)" onmouseover="showTip(event, 'fs21', 62)" class="t">string</span>) (<span onmouseout="hideTip(event, 'fs38', 63)" onmouseover="showTip(event, 'fs38', 63)" class="i">found</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs21', 64)" onmouseover="showTip(event, 'fs21', 64)" class="t">string</span> <span onmouseout="hideTip(event, 'fs39', 65)" onmouseover="showTip(event, 'fs39', 65)" class="t">list</span>) <span class="o">=</span> 
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs28', 66)" onmouseover="showTip(event, 'fs28', 66)" class="i">startpos</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs37', 67)" onmouseover="showTip(event, 'fs37', 67)" class="i">links</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs29', 68)" onmouseover="showTip(event, 'fs29', 68)" class="f">IndexOf</span>(<span class="s">&quot;/questions/tagged/&quot;</span> <span class="o">+</span> <span onmouseout="hideTip(event, 'fs35', 69)" onmouseover="showTip(event, 'fs35', 69)" class="i">basetag</span> <span class="o">+</span> <span class="s">&quot;+&quot;</span>)
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs40', 70)" onmouseover="showTip(event, 'fs40', 70)" class="i">realpos</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs28', 71)" onmouseover="showTip(event, 'fs28', 71)" class="i">startpos</span> <span class="o">+</span> <span class="n">19</span> <span class="o">+</span> <span onmouseout="hideTip(event, 'fs35', 72)" onmouseover="showTip(event, 'fs35', 72)" class="i">basetag</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs41', 73)" onmouseover="showTip(event, 'fs41', 73)" class="i">Length</span>
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs30', 74)" onmouseover="showTip(event, 'fs30', 74)" class="i">endpos</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs37', 75)" onmouseover="showTip(event, 'fs37', 75)" class="i">links</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs29', 76)" onmouseover="showTip(event, 'fs29', 76)" class="f">IndexOf</span>(<span class="s">&quot;</span><span class="e">\&quot;</span><span class="s">&quot;</span>, <span onmouseout="hideTip(event, 'fs40', 77)" onmouseover="showTip(event, 'fs40', 77)" class="i">realpos</span>)
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs42', 78)" onmouseover="showTip(event, 'fs42', 78)" class="i">tag</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs37', 79)" onmouseover="showTip(event, 'fs37', 79)" class="i">links</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs31', 80)" onmouseover="showTip(event, 'fs31', 80)" class="f">Substring</span>(<span onmouseout="hideTip(event, 'fs40', 81)" onmouseover="showTip(event, 'fs40', 81)" class="i">realpos</span>,<span onmouseout="hideTip(event, 'fs30', 82)" onmouseover="showTip(event, 'fs30', 82)" class="i">endpos</span><span class="o">-</span><span onmouseout="hideTip(event, 'fs40', 83)" onmouseover="showTip(event, 'fs40', 83)" class="i">realpos</span>)
+        <span class="k">match</span> <span onmouseout="hideTip(event, 'fs28', 84)" onmouseover="showTip(event, 'fs28', 84)" class="i">startpos</span> <span class="k">with</span> <span class="o">-</span><span class="n">1</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs38', 85)" onmouseover="showTip(event, 'fs38', 85)" class="i">found</span> | _ <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs42', 86)" onmouseover="showTip(event, 'fs42', 86)" class="i">tag</span> <span class="o">::</span> <span onmouseout="hideTip(event, 'fs36', 87)" onmouseover="showTip(event, 'fs36', 87)" class="f">relativepositions</span> (<span onmouseout="hideTip(event, 'fs37', 88)" onmouseover="showTip(event, 'fs37', 88)" class="i">links</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs31', 89)" onmouseover="showTip(event, 'fs31', 89)" class="f">Substring</span> <span onmouseout="hideTip(event, 'fs40', 90)" onmouseover="showTip(event, 'fs40', 90)" class="i">realpos</span>) <span onmouseout="hideTip(event, 'fs38', 91)" onmouseover="showTip(event, 'fs38', 91)" class="i">found</span>    
+    <span onmouseout="hideTip(event, 'fs36', 92)" onmouseover="showTip(event, 'fs36', 92)" class="f">relativepositions</span> <span onmouseout="hideTip(event, 'fs27', 93)" onmouseover="showTip(event, 'fs27', 93)" class="i">fetched</span> [] 
+
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs43', 94)" onmouseover="showTip(event, 'fs43', 94)" class="t">surfmode</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs44', 95)" onmouseover="showTip(event, 'fs44', 95)" class="p">Inclusive</span> | <span onmouseout="hideTip(event, 'fs45', 96)" onmouseover="showTip(event, 'fs45', 96)" class="p">Exclusive</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs46', 97)" onmouseover="showTip(event, 'fs46', 97)" class="f">checktag</span> <span onmouseout="hideTip(event, 'fs35', 98)" onmouseover="showTip(event, 'fs35', 98)" class="i">basetag</span> (<span onmouseout="hideTip(event, 'fs47', 99)" onmouseover="showTip(event, 'fs47', 99)" class="i">sm</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs43', 100)" onmouseover="showTip(event, 'fs43', 100)" class="t">surfmode</span>) <span class="o">=</span> 
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs48', 101)" onmouseover="showTip(event, 'fs48', 101)" class="i">acceptRate</span>, <span onmouseout="hideTip(event, 'fs49', 102)" onmouseover="showTip(event, 'fs49', 102)" class="i">minCount</span> <span class="o">=</span> <span class="n">0.02</span>, <span class="n">1000.0</span>;
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs50', 103)" onmouseover="showTip(event, 'fs50', 103)" class="i">add</span> <span class="o">=</span> <span class="k">match</span> <span onmouseout="hideTip(event, 'fs47', 104)" onmouseover="showTip(event, 'fs47', 104)" class="i">sm</span> <span class="k">with</span> <span onmouseout="hideTip(event, 'fs44', 105)" onmouseover="showTip(event, 'fs44', 105)" class="p">Inclusive</span> <span class="k">-&gt;</span> <span class="s">&quot;+&quot;</span> | <span onmouseout="hideTip(event, 'fs45', 106)" onmouseover="showTip(event, 'fs45', 106)" class="p">Exclusive</span> <span class="k">-&gt;</span> <span class="s">&quot;+-&quot;</span>
+    <span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs51', 107)" onmouseover="showTip(event, 'fs51', 107)" class="f">surf</span> (<span onmouseout="hideTip(event, 'fs20', 108)" onmouseover="showTip(event, 'fs20', 108)" class="i">tags</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs21', 109)" onmouseover="showTip(event, 'fs21', 109)" class="t">string</span>) (<span onmouseout="hideTip(event, 'fs52', 110)" onmouseover="showTip(event, 'fs52', 110)" class="i">tagsToSurf</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs21', 111)" onmouseover="showTip(event, 'fs21', 111)" class="t">string</span> <span onmouseout="hideTip(event, 'fs39', 112)" onmouseover="showTip(event, 'fs39', 112)" class="t">list</span>) <span class="o">=</span>
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs53', 113)" onmouseover="showTip(event, 'fs53', 113)" class="i">fetchTotalPage</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs20', 114)" onmouseover="showTip(event, 'fs20', 114)" class="i">tags</span> <span class="o">|&gt;</span> (<span onmouseout="hideTip(event, 'fs24', 115)" onmouseover="showTip(event, 'fs24', 115)" class="f">questions</span> <span class="o">&gt;</span><span class="o">&gt;</span> <span onmouseout="hideTip(event, 'fs6', 116)" onmouseover="showTip(event, 'fs6', 116)" class="f">fetch</span>) 
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs54', 117)" onmouseover="showTip(event, 'fs54', 117)" class="i">taggedQuestions</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs53', 118)" onmouseover="showTip(event, 'fs53', 118)" class="i">fetchTotalPage</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs26', 119)" onmouseover="showTip(event, 'fs26', 119)" class="f">sumcount</span>
+        <span class="k">if</span> <span onmouseout="hideTip(event, 'fs54', 120)" onmouseover="showTip(event, 'fs54', 120)" class="i">taggedQuestions</span> <span class="o">&gt;</span><span class="o">=</span> <span onmouseout="hideTip(event, 'fs49', 121)" onmouseover="showTip(event, 'fs49', 121)" class="i">minCount</span> <span class="k">then</span>
+            <span class="k">let</span> <span onmouseout="hideTip(event, 'fs55', 122)" onmouseover="showTip(event, 'fs55', 122)" class="f">unasweredWithTag</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs25', 123)" onmouseover="showTip(event, 'fs25', 123)" class="f">unanswered</span> <span class="o">&gt;</span><span class="o">&gt;</span> <span onmouseout="hideTip(event, 'fs6', 124)" onmouseover="showTip(event, 'fs6', 124)" class="f">fetch</span> <span class="o">&gt;</span><span class="o">&gt;</span> <span onmouseout="hideTip(event, 'fs26', 125)" onmouseover="showTip(event, 'fs26', 125)" class="f">sumcount</span>
+            <span class="k">let</span> <span onmouseout="hideTip(event, 'fs56', 126)" onmouseover="showTip(event, 'fs56', 126)" class="i">ratio</span> <span class="o">=</span> (<span onmouseout="hideTip(event, 'fs55', 127)" onmouseover="showTip(event, 'fs55', 127)" class="f">unasweredWithTag</span> <span onmouseout="hideTip(event, 'fs20', 128)" onmouseover="showTip(event, 'fs20', 128)" class="i">tags</span>) <span class="o">/</span> <span onmouseout="hideTip(event, 'fs54', 129)" onmouseover="showTip(event, 'fs54', 129)" class="i">taggedQuestions</span>
+            <span class="k">let</span> <span onmouseout="hideTip(event, 'fs57', 130)" onmouseover="showTip(event, 'fs57', 130)" class="i">surfTheRestOfTree</span> <span class="o">=</span> 
+                <span class="k">let</span> <span onmouseout="hideTip(event, 'fs58', 131)" onmouseover="showTip(event, 'fs58', 131)" class="f">test</span> <span onmouseout="hideTip(event, 'fs42', 132)" onmouseover="showTip(event, 'fs42', 132)" class="i">tag</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs51', 133)" onmouseover="showTip(event, 'fs51', 133)" class="f">surf</span> (<span onmouseout="hideTip(event, 'fs20', 134)" onmouseover="showTip(event, 'fs20', 134)" class="i">tags</span> <span class="o">+</span> <span onmouseout="hideTip(event, 'fs50', 135)" onmouseover="showTip(event, 'fs50', 135)" class="i">add</span> <span class="o">+</span> <span onmouseout="hideTip(event, 'fs42', 136)" onmouseover="showTip(event, 'fs42', 136)" class="i">tag</span>) []
+                <span onmouseout="hideTip(event, 'fs59', 137)" onmouseover="showTip(event, 'fs59', 137)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs60', 138)" onmouseover="showTip(event, 'fs60', 138)" class="f">iter</span> <span onmouseout="hideTip(event, 'fs58', 139)" onmouseover="showTip(event, 'fs58', 139)" class="f">test</span> <span onmouseout="hideTip(event, 'fs52', 140)" onmouseover="showTip(event, 'fs52', 140)" class="i">tagsToSurf</span>
+            <span class="k">do</span> <span onmouseout="hideTip(event, 'fs61', 141)" onmouseover="showTip(event, 'fs61', 141)" class="f">printfn</span> <span class="s">&quot;Ratio </span><span class="pf">%f</span><span class="s"> and count </span><span class="pf">%g</span><span class="s"> with tags </span><span class="pf">%s</span><span class="s">&quot;</span> <span onmouseout="hideTip(event, 'fs56', 142)" onmouseover="showTip(event, 'fs56', 142)" class="i">ratio</span> <span onmouseout="hideTip(event, 'fs54', 143)" onmouseover="showTip(event, 'fs54', 143)" class="i">taggedQuestions</span> <span onmouseout="hideTip(event, 'fs20', 144)" onmouseover="showTip(event, 'fs20', 144)" class="i">tags</span>
+            <span class="k">match</span> <span onmouseout="hideTip(event, 'fs56', 145)" onmouseover="showTip(event, 'fs56', 145)" class="i">ratio</span> <span class="k">with</span>
+            | <span onmouseout="hideTip(event, 'fs62', 146)" onmouseover="showTip(event, 'fs62', 146)" class="i">r</span> <span class="k">when</span> <span onmouseout="hideTip(event, 'fs62', 147)" onmouseover="showTip(event, 'fs62', 147)" class="i">r</span> <span class="o">&lt;=</span> <span onmouseout="hideTip(event, 'fs48', 148)" onmouseover="showTip(event, 'fs48', 148)" class="i">acceptRate</span> <span class="k">-&gt;</span> <span class="k">do</span> <span onmouseout="hideTip(event, 'fs61', 149)" onmouseover="showTip(event, 'fs61', 149)" class="f">printfn</span> <span class="s">&quot;--- Accepted: </span><span class="pf">%s</span><span class="s"> ---&quot;</span> <span onmouseout="hideTip(event, 'fs35', 150)" onmouseover="showTip(event, 'fs35', 150)" class="i">basetag</span>
+            | _ <span class="k">-&gt;</span> 
+                <span class="k">match</span> <span onmouseout="hideTip(event, 'fs34', 151)" onmouseover="showTip(event, 'fs34', 151)" class="f">relatedtags</span> <span onmouseout="hideTip(event, 'fs20', 152)" onmouseover="showTip(event, 'fs20', 152)" class="i">tags</span> <span onmouseout="hideTip(event, 'fs53', 153)" onmouseover="showTip(event, 'fs53', 153)" class="i">fetchTotalPage</span> <span class="k">with</span>
+                | <span onmouseout="hideTip(event, 'fs63', 154)" onmouseover="showTip(event, 'fs63', 154)" class="i">first</span><span class="o">::</span><span onmouseout="hideTip(event, 'fs64', 155)" onmouseover="showTip(event, 'fs64', 155)" class="i">rest</span> <span class="k">-&gt;</span> 
+                    <span class="k">do</span> <span onmouseout="hideTip(event, 'fs61', 156)" onmouseover="showTip(event, 'fs61', 156)" class="f">printfn</span> <span class="s">&quot;Failed. Trying </span><span class="pf">%d</span><span class="s"> related...&quot;</span> <span onmouseout="hideTip(event, 'fs64', 157)" onmouseover="showTip(event, 'fs64', 157)" class="i">rest</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs65', 158)" onmouseover="showTip(event, 'fs65', 158)" class="i">Length</span>
+                    <span onmouseout="hideTip(event, 'fs51', 159)" onmouseover="showTip(event, 'fs51', 159)" class="f">surf</span> (<span onmouseout="hideTip(event, 'fs20', 160)" onmouseover="showTip(event, 'fs20', 160)" class="i">tags</span> <span class="o">+</span> <span onmouseout="hideTip(event, 'fs50', 161)" onmouseover="showTip(event, 'fs50', 161)" class="i">add</span> <span class="o">+</span> <span class="i">first</span>) <span onmouseout="hideTip(event, 'fs64', 162)" onmouseover="showTip(event, 'fs64', 162)" class="i">rest</span>
+                    <span onmouseout="hideTip(event, 'fs57', 163)" onmouseover="showTip(event, 'fs57', 163)" class="i">surfTheRestOfTree</span>
+                | _ <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs57', 164)" onmouseover="showTip(event, 'fs57', 164)" class="i">surfTheRestOfTree</span>
+
+    <span onmouseout="hideTip(event, 'fs51', 165)" onmouseover="showTip(event, 'fs51', 165)" class="f">surf</span> (<span onmouseout="hideTip(event, 'fs35', 166)" onmouseover="showTip(event, 'fs35', 166)" class="i">basetag</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs66', 167)" onmouseover="showTip(event, 'fs66', 167)" class="f">ToLower</span>()) []
+    <span class="k">do</span> <span onmouseout="hideTip(event, 'fs61', 168)" onmouseover="showTip(event, 'fs61', 168)" class="f">printfn</span> <span class="s">&quot;Everything checked.&quot;</span>
+
+<span class="c">//Interactive tests:</span>
+<span class="c">//questions &quot;java&quot;</span>
+<span class="c">//questions &quot;F#&quot;</span>
+<span class="c">//unanswered &quot;java&quot;</span>
+<span class="c">//let fetched = questions &quot;java&quot; |&gt; fetch</span>
+<span class="c">//fetched |&gt; sumcount</span>
+<span class="c">//fetched |&gt; relatedtags &quot;java&quot;</span>
+<span class="c">//checktag &quot;F#&quot; surfmode.Exclusive</span>
+<span class="c">//checktag &quot;flash+flex&quot; surfmode.Inclusive</span>
+<span class="c">//checktag &quot;flash+flex&quot; surfmode.Exclusive</span>
+<span class="c">//checktag &quot;java&quot; surfmode.Exclusive //jauhaa ikuisuuden eik&#228; l&#246;yd&#228; mit&#228;&#228;n?</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">module StackOverflowCrawler</div>
+<div class="tip" id="fs2">namespace System</div>
+<div class="tip" id="fs3">namespace System.Net</div>
+<div class="tip" id="fs4">namespace System.IO</div>
+<div class="tip" id="fs5">namespace System.Web</div>
+<div class="tip" id="fs6">val fetch : url:Uri -&gt; string<br /><br />Full name: StackOverflowCrawler.fetch</div>
+<div class="tip" id="fs7">val url : Uri</div>
+<div class="tip" id="fs8">Multiple items<br />type Uri =<br />&#160;&#160;new : uriString:string -&gt; Uri + 5 overloads<br />&#160;&#160;member AbsolutePath : string<br />&#160;&#160;member AbsoluteUri : string<br />&#160;&#160;member Authority : string<br />&#160;&#160;member DnsSafeHost : string<br />&#160;&#160;member Equals : comparand:obj -&gt; bool<br />&#160;&#160;member Fragment : string<br />&#160;&#160;member GetComponents : components:UriComponents * format:UriFormat -&gt; string<br />&#160;&#160;member GetHashCode : unit -&gt; int<br />&#160;&#160;member GetLeftPart : part:UriPartial -&gt; string<br />&#160;&#160;...<br /><br />Full name: System.Uri<br /><br />--------------------<br />Uri(uriString: string) : unit<br />Uri(uriString: string, uriKind: UriKind) : unit<br />Uri(baseUri: Uri, relativeUri: string) : unit<br />Uri(baseUri: Uri, relativeUri: Uri) : unit</div>
+<div class="tip" id="fs9">val req : HttpWebRequest</div>
+<div class="tip" id="fs10">type WebRequest =<br />&#160;&#160;inherit MarshalByRefObject<br />&#160;&#160;member Abort : unit -&gt; unit<br />&#160;&#160;member AuthenticationLevel : AuthenticationLevel with get, set<br />&#160;&#160;member BeginGetRequestStream : callback:AsyncCallback * state:obj -&gt; IAsyncResult<br />&#160;&#160;member BeginGetResponse : callback:AsyncCallback * state:obj -&gt; IAsyncResult<br />&#160;&#160;member CachePolicy : RequestCachePolicy with get, set<br />&#160;&#160;member ConnectionGroupName : string with get, set<br />&#160;&#160;member ContentLength : int64 with get, set<br />&#160;&#160;member ContentType : string with get, set<br />&#160;&#160;member Credentials : ICredentials with get, set<br />&#160;&#160;member EndGetRequestStream : asyncResult:IAsyncResult -&gt; Stream<br />&#160;&#160;...<br /><br />Full name: System.Net.WebRequest</div>
+<div class="tip" id="fs11">WebRequest.Create(requestUri: Uri) : WebRequest<br />WebRequest.Create(requestUriString: string) : WebRequest</div>
+<div class="tip" id="fs12">type HttpWebRequest =<br />&#160;&#160;inherit WebRequest<br />&#160;&#160;member Abort : unit -&gt; unit<br />&#160;&#160;member Accept : string with get, set<br />&#160;&#160;member AddRange : range:int -&gt; unit + 7 overloads<br />&#160;&#160;member Address : Uri<br />&#160;&#160;member AllowAutoRedirect : bool with get, set<br />&#160;&#160;member AllowWriteStreamBuffering : bool with get, set<br />&#160;&#160;member AutomaticDecompression : DecompressionMethods with get, set<br />&#160;&#160;member BeginGetRequestStream : callback:AsyncCallback * state:obj -&gt; IAsyncResult<br />&#160;&#160;member BeginGetResponse : callback:AsyncCallback * state:obj -&gt; IAsyncResult<br />&#160;&#160;member ClientCertificates : X509CertificateCollection with get, set<br />&#160;&#160;...<br /><br />Full name: System.Net.HttpWebRequest</div>
+<div class="tip" id="fs13">val stream : Stream</div>
+<div class="tip" id="fs14">HttpWebRequest.GetResponse() : WebResponse</div>
+<div class="tip" id="fs15">val reader : StreamReader</div>
+<div class="tip" id="fs16">Multiple items<br />type StreamReader =<br />&#160;&#160;inherit TextReader<br />&#160;&#160;new : stream:Stream -&gt; StreamReader + 9 overloads<br />&#160;&#160;member BaseStream : Stream<br />&#160;&#160;member Close : unit -&gt; unit<br />&#160;&#160;member CurrentEncoding : Encoding<br />&#160;&#160;member DiscardBufferedData : unit -&gt; unit<br />&#160;&#160;member EndOfStream : bool<br />&#160;&#160;member Peek : unit -&gt; int<br />&#160;&#160;member Read : unit -&gt; int + 1 overload<br />&#160;&#160;member ReadLine : unit -&gt; string<br />&#160;&#160;member ReadToEnd : unit -&gt; string<br />&#160;&#160;...<br /><br />Full name: System.IO.StreamReader<br /><br />--------------------<br />StreamReader(stream: Stream) : unit<br />StreamReader(path: string) : unit<br />StreamReader(stream: Stream, detectEncodingFromByteOrderMarks: bool) : unit<br />StreamReader(stream: Stream, encoding: Text.Encoding) : unit<br />StreamReader(path: string, detectEncodingFromByteOrderMarks: bool) : unit<br />StreamReader(path: string, encoding: Text.Encoding) : unit<br />StreamReader(stream: Stream, encoding: Text.Encoding, detectEncodingFromByteOrderMarks: bool) : unit<br />StreamReader(path: string, encoding: Text.Encoding, detectEncodingFromByteOrderMarks: bool) : unit<br />StreamReader(stream: Stream, encoding: Text.Encoding, detectEncodingFromByteOrderMarks: bool, bufferSize: int) : unit<br />StreamReader(path: string, encoding: Text.Encoding, detectEncodingFromByteOrderMarks: bool, bufferSize: int) : unit</div>
+<div class="tip" id="fs17">StreamReader.ReadToEnd() : string</div>
+<div class="tip" id="fs18">val makeUrl : pagetype:string -&gt; tags:string -&gt; Uri<br /><br />Full name: StackOverflowCrawler.makeUrl</div>
+<div class="tip" id="fs19">val pagetype : string</div>
+<div class="tip" id="fs20">val tags : string</div>
+<div class="tip" id="fs21">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />Full name: Microsoft.FSharp.Core.Operators.string<br /><br />--------------------<br />type string = String<br /><br />Full name: Microsoft.FSharp.Core.string</div>
+<div class="tip" id="fs22">Multiple items<br />type HttpUtility =<br />&#160;&#160;new : unit -&gt; HttpUtility<br />&#160;&#160;static member HtmlAttributeEncode : s:string -&gt; string + 1 overload<br />&#160;&#160;static member HtmlDecode : s:string -&gt; string + 1 overload<br />&#160;&#160;static member HtmlEncode : s:string -&gt; string + 2 overloads<br />&#160;&#160;static member JavaScriptStringEncode : value:string -&gt; string + 1 overload<br />&#160;&#160;static member ParseQueryString : query:string -&gt; NameValueCollection + 1 overload<br />&#160;&#160;static member UrlDecode : str:string -&gt; string + 3 overloads<br />&#160;&#160;static member UrlDecodeToBytes : str:string -&gt; byte[] + 3 overloads<br />&#160;&#160;static member UrlEncode : str:string -&gt; string + 3 overloads<br />&#160;&#160;static member UrlEncodeToBytes : str:string -&gt; byte[] + 3 overloads<br />&#160;&#160;...<br /><br />Full name: System.Web.HttpUtility<br /><br />--------------------<br />HttpUtility() : unit</div>
+<div class="tip" id="fs23">HttpUtility.UrlEncode(bytes: byte []) : string<br />HttpUtility.UrlEncode(str: string) : string<br />HttpUtility.UrlEncode(str: string, e: Text.Encoding) : string<br />HttpUtility.UrlEncode(bytes: byte [], offset: int, count: int) : string</div>
+<div class="tip" id="fs24">val questions : (string -&gt; Uri)<br /><br />Full name: StackOverflowCrawler.questions</div>
+<div class="tip" id="fs25">val unanswered : (string -&gt; Uri)<br /><br />Full name: StackOverflowCrawler.unanswered</div>
+<div class="tip" id="fs26">val sumcount : fetched:string -&gt; float<br /><br />Full name: StackOverflowCrawler.sumcount</div>
+<div class="tip" id="fs27">val fetched : string</div>
+<div class="tip" id="fs28">val startpos : int</div>
+<div class="tip" id="fs29">String.IndexOf(value: string) : int<br />String.IndexOf(value: char) : int<br />String.IndexOf(value: string, comparisonType: StringComparison) : int<br />String.IndexOf(value: string, startIndex: int) : int<br />String.IndexOf(value: char, startIndex: int) : int<br />String.IndexOf(value: string, startIndex: int, comparisonType: StringComparison) : int<br />String.IndexOf(value: string, startIndex: int, count: int) : int<br />String.IndexOf(value: char, startIndex: int, count: int) : int<br />String.IndexOf(value: string, startIndex: int, count: int, comparisonType: StringComparison) : int</div>
+<div class="tip" id="fs30">val endpos : int</div>
+<div class="tip" id="fs31">String.Substring(startIndex: int) : string<br />String.Substring(startIndex: int, length: int) : string</div>
+<div class="tip" id="fs32">type Double =<br />&#160;&#160;struct<br />&#160;&#160;&#160;&#160;member CompareTo : value:obj -&gt; int + 1 overload<br />&#160;&#160;&#160;&#160;member Equals : obj:obj -&gt; bool + 1 overload<br />&#160;&#160;&#160;&#160;member GetHashCode : unit -&gt; int<br />&#160;&#160;&#160;&#160;member GetTypeCode : unit -&gt; TypeCode<br />&#160;&#160;&#160;&#160;member ToString : unit -&gt; string + 3 overloads<br />&#160;&#160;&#160;&#160;static val MinValue : float<br />&#160;&#160;&#160;&#160;static val MaxValue : float<br />&#160;&#160;&#160;&#160;static val Epsilon : float<br />&#160;&#160;&#160;&#160;static val NegativeInfinity : float<br />&#160;&#160;&#160;&#160;static val PositiveInfinity : float<br />&#160;&#160;&#160;&#160;...<br />&#160;&#160;end<br /><br />Full name: System.Double</div>
+<div class="tip" id="fs33">Double.Parse(s: string) : float<br />Double.Parse(s: string, provider: IFormatProvider) : float<br />Double.Parse(s: string, style: Globalization.NumberStyles) : float<br />Double.Parse(s: string, style: Globalization.NumberStyles, provider: IFormatProvider) : float</div>
+<div class="tip" id="fs34">val relatedtags : basetag:string -&gt; fetched:string -&gt; string list<br /><br />Full name: StackOverflowCrawler.relatedtags</div>
+<div class="tip" id="fs35">val basetag : string</div>
+<div class="tip" id="fs36">val relativepositions : (string -&gt; string list -&gt; string list)</div>
+<div class="tip" id="fs37">val links : string</div>
+<div class="tip" id="fs38">val found : string list</div>
+<div class="tip" id="fs39">type &#39;T list = List&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.list&lt;_&gt;</div>
+<div class="tip" id="fs40">val realpos : int</div>
+<div class="tip" id="fs41">property String.Length: int</div>
+<div class="tip" id="fs42">val tag : string</div>
+<div class="tip" id="fs43">type surfmode =<br />&#160;&#160;| Inclusive<br />&#160;&#160;| Exclusive<br /><br />Full name: StackOverflowCrawler.surfmode</div>
+<div class="tip" id="fs44">union case surfmode.Inclusive: surfmode</div>
+<div class="tip" id="fs45">union case surfmode.Exclusive: surfmode</div>
+<div class="tip" id="fs46">val checktag : basetag:string -&gt; sm:surfmode -&gt; unit<br /><br />Full name: StackOverflowCrawler.checktag</div>
+<div class="tip" id="fs47">val sm : surfmode</div>
+<div class="tip" id="fs48">val acceptRate : float</div>
+<div class="tip" id="fs49">val minCount : float</div>
+<div class="tip" id="fs50">val add : string</div>
+<div class="tip" id="fs51">val surf : (string -&gt; string list -&gt; unit)</div>
+<div class="tip" id="fs52">val tagsToSurf : string list</div>
+<div class="tip" id="fs53">val fetchTotalPage : string</div>
+<div class="tip" id="fs54">val taggedQuestions : float</div>
+<div class="tip" id="fs55">val unasweredWithTag : (string -&gt; float)</div>
+<div class="tip" id="fs56">val ratio : float</div>
+<div class="tip" id="fs57">val surfTheRestOfTree : unit</div>
+<div class="tip" id="fs58">val test : (string -&gt; unit)</div>
+<div class="tip" id="fs59">Multiple items<br />module List<br /><br />from Microsoft.FSharp.Collections<br /><br />--------------------<br />type List&lt;&#39;T&gt; =<br />&#160;&#160;| ( [] )<br />&#160;&#160;| ( :: ) of Head: &#39;T * Tail: &#39;T list<br />&#160;&#160;interface IEnumerable<br />&#160;&#160;interface IEnumerable&lt;&#39;T&gt;<br />&#160;&#160;member Head : &#39;T<br />&#160;&#160;member IsEmpty : bool<br />&#160;&#160;member Item : index:int -&gt; &#39;T with get<br />&#160;&#160;member Length : int<br />&#160;&#160;member Tail : &#39;T list<br />&#160;&#160;static member Cons : head:&#39;T * tail:&#39;T list -&gt; &#39;T list<br />&#160;&#160;static member Empty : &#39;T list<br /><br />Full name: Microsoft.FSharp.Collections.List&lt;_&gt;</div>
+<div class="tip" id="fs60">val iter : action:(&#39;T -&gt; unit) -&gt; list:&#39;T list -&gt; unit<br /><br />Full name: Microsoft.FSharp.Collections.List.iter</div>
+<div class="tip" id="fs61">val printfn : format:Printf.TextWriterFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.printfn</div>
+<div class="tip" id="fs62">val r : float</div>
+<div class="tip" id="fs63">val first : string</div>
+<div class="tip" id="fs64">val rest : string list</div>
+<div class="tip" id="fs65">property List.Length: int</div>
+<div class="tip" id="fs66">String.ToLower() : string<br />String.ToLower(culture: Globalization.CultureInfo) : string</div>
+

@@ -1,0 +1,87 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// Define SumOfSquares computation builder</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="t">SumOfSquaresMonoid</span>() <span class="o">=</span>
+  <span class="c">/// Combine two values</span>
+  <span class="c">/// sm.Combine (&#171;cexpr1&#187;, b.Delay(fun () -&gt; &#171;cexpr2&#187;))</span>
+  <span class="k">member</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">sm</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="f">Combine</span>(<span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="i">a</span>,<span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="i">b</span>) <span class="o">=</span> <span onmouseout="hideTip(event, 'fs4', 6)" onmouseover="showTip(event, 'fs4', 6)" class="i">a</span> <span class="o">+</span> <span onmouseout="hideTip(event, 'fs5', 7)" onmouseover="showTip(event, 'fs5', 7)" class="i">b</span>
+  <span class="c">/// Zero value</span>
+  <span class="c">/// sm.Zero()</span>
+  <span class="k">member</span> <span onmouseout="hideTip(event, 'fs2', 8)" onmouseover="showTip(event, 'fs2', 8)" class="i">sm</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs6', 9)" onmouseover="showTip(event, 'fs6', 9)" class="f">Zero</span>() <span class="o">=</span> <span class="n">0.0</span>
+  <span class="c">/// Return a value </span>
+  <span class="c">/// sm.Yield expr</span>
+  <span class="k">member</span> <span onmouseout="hideTip(event, 'fs2', 10)" onmouseover="showTip(event, 'fs2', 10)" class="i">sm</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs7', 11)" onmouseover="showTip(event, 'fs7', 11)" class="f">Yield</span>(<span onmouseout="hideTip(event, 'fs8', 12)" onmouseover="showTip(event, 'fs8', 12)" class="i">a</span>) <span class="o">=</span> <span onmouseout="hideTip(event, 'fs8', 13)" onmouseover="showTip(event, 'fs8', 13)" class="i">a</span>
+  <span class="c">/// Delay a computation</span>
+  <span class="c">/// sm.Delay (fun () -&gt; &#171;cexpr&#187;))</span>
+  <span class="k">member</span> <span onmouseout="hideTip(event, 'fs2', 14)" onmouseover="showTip(event, 'fs2', 14)" class="i">sm</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs9', 15)" onmouseover="showTip(event, 'fs9', 15)" class="f">Delay</span> <span onmouseout="hideTip(event, 'fs10', 16)" onmouseover="showTip(event, 'fs10', 16)" class="f">f</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs10', 17)" onmouseover="showTip(event, 'fs10', 17)" class="f">f</span>()
+  <span class="c">/// For loop</span>
+  <span class="c">/// sm.For (expr, (fun pat -&gt; &#171;cexpr&#187;))</span>
+  <span class="k">member</span> <span onmouseout="hideTip(event, 'fs2', 18)" onmouseover="showTip(event, 'fs2', 18)" class="i">sm</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs11', 19)" onmouseover="showTip(event, 'fs11', 19)" class="f">For</span>(<span onmouseout="hideTip(event, 'fs12', 20)" onmouseover="showTip(event, 'fs12', 20)" class="i">e</span>, <span onmouseout="hideTip(event, 'fs13', 21)" onmouseover="showTip(event, 'fs13', 21)" class="f">f</span>) <span class="o">=</span>
+    <span onmouseout="hideTip(event, 'fs14', 22)" onmouseover="showTip(event, 'fs14', 22)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs15', 23)" onmouseover="showTip(event, 'fs15', 23)" class="f">fold</span>(<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs16', 24)" onmouseover="showTip(event, 'fs16', 24)" class="i">s</span> <span onmouseout="hideTip(event, 'fs17', 25)" onmouseover="showTip(event, 'fs17', 25)" class="i">x</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs2', 26)" onmouseover="showTip(event, 'fs2', 26)" class="i">sm</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs18', 27)" onmouseover="showTip(event, 'fs18', 27)" class="f">Combine</span>(<span onmouseout="hideTip(event, 'fs16', 28)" onmouseover="showTip(event, 'fs16', 28)" class="i">s</span>, <span onmouseout="hideTip(event, 'fs13', 29)" onmouseover="showTip(event, 'fs13', 29)" class="f">f</span> <span onmouseout="hideTip(event, 'fs17', 30)" onmouseover="showTip(event, 'fs17', 30)" class="i">x</span>)) (<span onmouseout="hideTip(event, 'fs2', 31)" onmouseover="showTip(event, 'fs2', 31)" class="i">sm</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs19', 32)" onmouseover="showTip(event, 'fs19', 32)" class="f">Zero</span>()) <span onmouseout="hideTip(event, 'fs12', 33)" onmouseover="showTip(event, 'fs12', 33)" class="i">e</span>
+
+<span class="c">// Create an instance of each such monoid object</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs20', 34)" onmouseover="showTip(event, 'fs20', 34)" class="i">sosm</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs1', 35)" onmouseover="showTip(event, 'fs1', 35)" class="t">SumOfSquaresMonoid</span>()
+
+<span class="c">// Build a SumOfSquaresMonoid value(function)</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs21', 36)" onmouseover="showTip(event, 'fs21', 36)" class="f">sumOfSquares</span> <span onmouseout="hideTip(event, 'fs22', 37)" onmouseover="showTip(event, 'fs22', 37)" class="i">x</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs20', 38)" onmouseover="showTip(event, 'fs20', 38)" class="i">sosm</span> {<span class="k">for</span> <span onmouseout="hideTip(event, 'fs22', 39)" onmouseover="showTip(event, 'fs22', 39)" class="i">x</span> <span class="k">in</span> [<span class="n">1.0</span> <span class="o">..</span> <span class="n">0.2</span> <span class="o">..</span> <span onmouseout="hideTip(event, 'fs22', 40)" onmouseover="showTip(event, 'fs22', 40)" class="f">x</span>] <span class="k">do</span> <span class="k">yield</span> <span onmouseout="hideTip(event, 'fs22', 41)" onmouseover="showTip(event, 'fs22', 41)" class="i">x</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs22', 42)" onmouseover="showTip(event, 'fs22', 42)" class="i">x</span>}
+
+<span class="c">// Evaluation</span>
+<span onmouseout="hideTip(event, 'fs21', 43)" onmouseover="showTip(event, 'fs21', 43)" class="f">sumOfSquares</span> <span class="n">10.2</span>
+
+<span class="c">// Result</span>
+<span class="c">// val it : float = 1819.84</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">Multiple items<br />type SumOfSquaresMonoid =<br />&#160;&#160;new : unit -&gt; SumOfSquaresMonoid<br />&#160;&#160;member Combine : a:float * b:float -&gt; float<br />&#160;&#160;member Delay : f:(unit -&gt; &#39;b) -&gt; &#39;b<br />&#160;&#160;member For : e:seq&lt;&#39;a&gt; * f:(&#39;a -&gt; float) -&gt; float<br />&#160;&#160;member Yield : a:&#39;c -&gt; &#39;c<br />&#160;&#160;member Zero : unit -&gt; float<br /><br />Full name: Script.SumOfSquaresMonoid<br /><em><br /><br />&#160;Define SumOfSquares computation builder</em><br /><br />--------------------<br />new : unit -&gt; SumOfSquaresMonoid</div>
+<div class="tip" id="fs2">val sm : SumOfSquaresMonoid</div>
+<div class="tip" id="fs3">member SumOfSquaresMonoid.Combine : a:float * b:float -&gt; float<br /><br />Full name: Script.SumOfSquaresMonoid.Combine<br /><em><br /><br />&#160;Combine two values<br />&#160;sm.Combine (&#171;cexpr1&#187;, b.Delay(fun () -&gt; &#171;cexpr2&#187;))</em></div>
+<div class="tip" id="fs4">val a : float</div>
+<div class="tip" id="fs5">val b : float</div>
+<div class="tip" id="fs6">member SumOfSquaresMonoid.Zero : unit -&gt; float<br /><br />Full name: Script.SumOfSquaresMonoid.Zero<br /><em><br /><br />&#160;Zero value<br />&#160;sm.Zero()</em></div>
+<div class="tip" id="fs7">member SumOfSquaresMonoid.Yield : a:&#39;c -&gt; &#39;c<br /><br />Full name: Script.SumOfSquaresMonoid.Yield<br /><em><br /><br />&#160;Return a value <br />&#160;sm.Yield expr</em></div>
+<div class="tip" id="fs8">val a : &#39;c</div>
+<div class="tip" id="fs9">member SumOfSquaresMonoid.Delay : f:(unit -&gt; &#39;b) -&gt; &#39;b<br /><br />Full name: Script.SumOfSquaresMonoid.Delay<br /><em><br /><br />&#160;Delay a computation<br />&#160;sm.Delay (fun () -&gt; &#171;cexpr&#187;))</em></div>
+<div class="tip" id="fs10">val f : (unit -&gt; &#39;b)</div>
+<div class="tip" id="fs11">member SumOfSquaresMonoid.For : e:seq&lt;&#39;a&gt; * f:(&#39;a -&gt; float) -&gt; float<br /><br />Full name: Script.SumOfSquaresMonoid.For<br /><em><br /><br />&#160;For loop<br />&#160;sm.For (expr, (fun pat -&gt; &#171;cexpr&#187;))</em></div>
+<div class="tip" id="fs12">val e : seq&lt;&#39;a&gt;</div>
+<div class="tip" id="fs13">val f : (&#39;a -&gt; float)</div>
+<div class="tip" id="fs14">module Seq<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs15">val fold : folder:(&#39;State -&gt; &#39;T -&gt; &#39;State) -&gt; state:&#39;State -&gt; source:seq&lt;&#39;T&gt; -&gt; &#39;State<br /><br />Full name: Microsoft.FSharp.Collections.Seq.fold</div>
+<div class="tip" id="fs16">val s : float</div>
+<div class="tip" id="fs17">val x : &#39;a</div>
+<div class="tip" id="fs18">member SumOfSquaresMonoid.Combine : a:float * b:float -&gt; float<br /><em><br /><br />&#160;Combine two values<br />&#160;sm.Combine (&#171;cexpr1&#187;, b.Delay(fun () -&gt; &#171;cexpr2&#187;))</em></div>
+<div class="tip" id="fs19">member SumOfSquaresMonoid.Zero : unit -&gt; float<br /><em><br /><br />&#160;Zero value<br />&#160;sm.Zero()</em></div>
+<div class="tip" id="fs20">val sosm : SumOfSquaresMonoid<br /><br />Full name: Script.sosm</div>
+<div class="tip" id="fs21">val sumOfSquares : x:float -&gt; float<br /><br />Full name: Script.sumOfSquares</div>
+<div class="tip" id="fs22">val x : float</div>
+

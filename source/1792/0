@@ -1,0 +1,57 @@
+(* Reassemble "chunks" into "data".
+ *
+ * The input sequence is a stream of chunks. A chunk may correspond to zero or more pieces of data, and one or more chunks may correspond to a piece of data.
+ *
+ * func is given the current state and sees if it can extract any data from it.
+ * If it can, it will return Some of that data and whatever is left over. This leftover will become the current state for the next invocation.
+ * If it can't extract any data from the current state it returns None. Then reassemble pulls another chunk from the stream, adds it to the state, and invokes func again.
+ *)
+let inline reassemble (func: 'T -> ('T * 'T) option) (initial: 'T) (sequence: seq<'T>): seq<'T> =
+    let enumerator = sequence.GetEnumerator()
+
+    (* Pull next chunk from input and add it to current state
+     *)
+    let rec pullNext (state: 'T) =
+        seq {
+            let hasNext = enumerator.MoveNext()
+            match hasNext with
+            | true ->
+                yield! pushNext (state + enumerator.Current)
+            | false ->
+                (* end-of-stream but func doesn't consider it a complete piece yet. Send it anyway. *)
+                yield state
+        }
+    (* Push current state to func
+     *)
+    and pushNext (state: 'T) =
+        seq {
+            let next = func state
+            match next with
+            | Some (result, state) ->
+                yield result
+                yield! pushNext state
+            | None ->
+                yield! pullNext state
+        }
+
+    pushNext initial
+
+(* Convert chunks of strings into \n-delimited lines
+ *)
+let getLines (stream: seq<string>): seq<string> =
+    stream
+    |> reassemble
+        (fun chunk ->
+            match chunk.IndexOf('\n') with
+            | -1 ->
+                None
+            | index ->
+                Some (chunk.[0..index - 1], chunk.[index + 1..])
+        )
+        ""
+
+
+let stream = Seq.ofArray [| "asd\nqw"; "e\nzxc"; "rty"; "\n"; "fgh\nvbn"; |]
+
+(* "asd"; "qwe"; "zxcrty"; "fgh"; "vbn"; *)
+getLines stream |> Seq.iter (printfn "%A")

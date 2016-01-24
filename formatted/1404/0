@@ -1,0 +1,120 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+<span class="l">38: </span>
+<span class="l">39: </span>
+<span class="l">40: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">System</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 2)" onmouseover="showTip(event, 'fs1', 2)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 3)" onmouseover="showTip(event, 'fs2', 3)" class="i">Collections</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 4)" onmouseover="showTip(event, 'fs1', 4)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 5)" onmouseover="showTip(event, 'fs2', 5)" class="i">Collections</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 6)" onmouseover="showTip(event, 'fs3', 6)" class="i">Generic</span>
+
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs4', 7)" onmouseover="showTip(event, 'fs4', 7)" class="t">bigintRangeEnumerator</span>(<span onmouseout="hideTip(event, 'fs5', 8)" onmouseover="showTip(event, 'fs5', 8)" class="i">start</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs6', 9)" onmouseover="showTip(event, 'fs6', 9)" class="t">bigint</span>, <span onmouseout="hideTip(event, 'fs7', 10)" onmouseover="showTip(event, 'fs7', 10)" class="i">max</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs6', 11)" onmouseover="showTip(event, 'fs6', 11)" class="t">bigint</span>) <span class="o">=</span>
+    <span class="k">let</span> <span class="k">mutable</span> <span onmouseout="hideTip(event, 'fs8', 12)" onmouseover="showTip(event, 'fs8', 12)" class="v">current</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs6', 13)" onmouseover="showTip(event, 'fs6', 13)" class="t">bigint</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs9', 14)" onmouseover="showTip(event, 'fs9', 14)" class="i">Zero</span>
+    <span class="k">let</span> <span class="k">mutable</span> <span onmouseout="hideTip(event, 'fs10', 15)" onmouseover="showTip(event, 'fs10', 15)" class="v">started</span> <span class="o">=</span> <span class="k">false</span>
+    <span class="k">interface</span> <span onmouseout="hideTip(event, 'fs11', 16)" onmouseover="showTip(event, 'fs11', 16)" class="t">IEnumerator</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs6', 17)" onmouseover="showTip(event, 'fs6', 17)" class="t">bigint</span><span class="o">&gt;</span> <span class="k">with</span>
+        <span class="k">member</span> <span onmouseout="hideTip(event, 'fs12', 18)" onmouseover="showTip(event, 'fs12', 18)" class="i">this</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs13', 19)" onmouseover="showTip(event, 'fs13', 19)" class="i">Current</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs8', 20)" onmouseover="showTip(event, 'fs8', 20)" class="v">current</span>
+        <span class="k">member</span> <span onmouseout="hideTip(event, 'fs12', 21)" onmouseover="showTip(event, 'fs12', 21)" class="i">this</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs14', 22)" onmouseover="showTip(event, 'fs14', 22)" class="f">Dispose</span>() <span class="o">=</span> ()
+
+    <span class="k">interface</span> <span onmouseout="hideTip(event, 'fs11', 23)" onmouseover="showTip(event, 'fs11', 23)" class="t">IEnumerator</span> <span class="k">with</span>
+        <span class="k">member</span> <span onmouseout="hideTip(event, 'fs12', 24)" onmouseover="showTip(event, 'fs12', 24)" class="i">this</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs15', 25)" onmouseover="showTip(event, 'fs15', 25)" class="i">Current</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs16', 26)" onmouseover="showTip(event, 'fs16', 26)" class="f">box</span>(<span onmouseout="hideTip(event, 'fs8', 27)" onmouseover="showTip(event, 'fs8', 27)" class="v">current</span>)
+        <span class="k">member</span> <span onmouseout="hideTip(event, 'fs12', 28)" onmouseover="showTip(event, 'fs12', 28)" class="i">this</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs17', 29)" onmouseover="showTip(event, 'fs17', 29)" class="f">MoveNext</span>() <span class="o">=</span> 
+            <span class="k">if</span> ( <span onmouseout="hideTip(event, 'fs10', 30)" onmouseover="showTip(event, 'fs10', 30)" class="v">started</span> <span class="o">=</span> <span class="k">false</span> ) <span class="k">then</span>
+                <span onmouseout="hideTip(event, 'fs10', 31)" onmouseover="showTip(event, 'fs10', 31)" class="v">started</span> <span class="o">&lt;-</span> <span class="k">true</span>
+                <span onmouseout="hideTip(event, 'fs8', 32)" onmouseover="showTip(event, 'fs8', 32)" class="v">current</span> <span class="o">&lt;-</span> <span onmouseout="hideTip(event, 'fs5', 33)" onmouseover="showTip(event, 'fs5', 33)" class="i">start</span>
+                <span class="k">true</span>
+            <span class="k">else</span> <span class="k">if</span> ( <span onmouseout="hideTip(event, 'fs6', 34)" onmouseover="showTip(event, 'fs6', 34)" class="t">bigint</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs18', 35)" onmouseover="showTip(event, 'fs18', 35)" class="f">op_LessThan</span>(<span onmouseout="hideTip(event, 'fs8', 36)" onmouseover="showTip(event, 'fs8', 36)" class="v">current</span>,<span onmouseout="hideTip(event, 'fs7', 37)" onmouseover="showTip(event, 'fs7', 37)" class="i">max</span>) ) <span class="k">then</span>
+                <span onmouseout="hideTip(event, 'fs8', 38)" onmouseover="showTip(event, 'fs8', 38)" class="v">current</span> <span class="o">&lt;-</span> <span onmouseout="hideTip(event, 'fs6', 39)" onmouseover="showTip(event, 'fs6', 39)" class="t">bigint</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs19', 40)" onmouseover="showTip(event, 'fs19', 40)" class="f">op_Increment</span>(<span onmouseout="hideTip(event, 'fs8', 41)" onmouseover="showTip(event, 'fs8', 41)" class="v">current</span>)
+                <span class="k">true</span>
+            <span class="k">else</span>
+                <span class="k">false</span>
+        <span class="k">member</span> <span onmouseout="hideTip(event, 'fs20', 42)" onmouseover="showTip(event, 'fs20', 42)" class="i">x</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs21', 43)" onmouseover="showTip(event, 'fs21', 43)" class="f">Reset</span>() <span class="o">=</span> ()
+             
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs22', 44)" onmouseover="showTip(event, 'fs22', 44)" class="t">bigintRange</span>(<span onmouseout="hideTip(event, 'fs5', 45)" onmouseover="showTip(event, 'fs5', 45)" class="i">start</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs6', 46)" onmouseover="showTip(event, 'fs6', 46)" class="t">bigint</span>, <span onmouseout="hideTip(event, 'fs7', 47)" onmouseover="showTip(event, 'fs7', 47)" class="i">max</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs6', 48)" onmouseover="showTip(event, 'fs6', 48)" class="t">bigint</span>) <span class="o">=</span>
+    <span class="k">interface</span> <span onmouseout="hideTip(event, 'fs23', 49)" onmouseover="showTip(event, 'fs23', 49)" class="t">IEnumerable</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs6', 50)" onmouseover="showTip(event, 'fs6', 50)" class="t">bigint</span><span class="o">&gt;</span> <span class="k">with</span> 
+        <span class="k">member</span> <span onmouseout="hideTip(event, 'fs24', 51)" onmouseover="showTip(event, 'fs24', 51)" class="i">this</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs25', 52)" onmouseover="showTip(event, 'fs25', 52)" class="f">GetEnumerator</span>() <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs4', 53)" onmouseover="showTip(event, 'fs4', 53)" class="t">bigintRangeEnumerator</span>(<span onmouseout="hideTip(event, 'fs5', 54)" onmouseover="showTip(event, 'fs5', 54)" class="i">start</span>, <span onmouseout="hideTip(event, 'fs7', 55)" onmouseover="showTip(event, 'fs7', 55)" class="i">max</span>) <span class="o">:&gt;</span> <span onmouseout="hideTip(event, 'fs11', 56)" onmouseover="showTip(event, 'fs11', 56)" class="t">IEnumerator</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs6', 57)" onmouseover="showTip(event, 'fs6', 57)" class="t">bigint</span><span class="o">&gt;</span>
+    <span class="k">interface</span> <span onmouseout="hideTip(event, 'fs23', 58)" onmouseover="showTip(event, 'fs23', 58)" class="t">IEnumerable</span> <span class="k">with</span>
+        <span class="k">member</span> <span onmouseout="hideTip(event, 'fs24', 59)" onmouseover="showTip(event, 'fs24', 59)" class="i">this</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs26', 60)" onmouseover="showTip(event, 'fs26', 60)" class="f">GetEnumerator</span>() <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs4', 61)" onmouseover="showTip(event, 'fs4', 61)" class="t">bigintRangeEnumerator</span>(<span onmouseout="hideTip(event, 'fs5', 62)" onmouseover="showTip(event, 'fs5', 62)" class="i">start</span>, <span onmouseout="hideTip(event, 'fs7', 63)" onmouseover="showTip(event, 'fs7', 63)" class="i">max</span>) <span class="o">:&gt;</span> <span onmouseout="hideTip(event, 'fs11', 64)" onmouseover="showTip(event, 'fs11', 64)" class="t">IEnumerator</span>
+        
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs27', 65)" onmouseover="showTip(event, 'fs27', 65)" class="f">bigint_range</span> <span onmouseout="hideTip(event, 'fs28', 66)" onmouseover="showTip(event, 'fs28', 66)" class="i">s</span> <span onmouseout="hideTip(event, 'fs29', 67)" onmouseover="showTip(event, 'fs29', 67)" class="i">e</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs22', 68)" onmouseover="showTip(event, 'fs22', 68)" class="t">bigintRange</span>(<span onmouseout="hideTip(event, 'fs28', 69)" onmouseover="showTip(event, 'fs28', 69)" class="i">s</span>,<span onmouseout="hideTip(event, 'fs29', 70)" onmouseover="showTip(event, 'fs29', 70)" class="i">e</span>)
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs30', 71)" onmouseover="showTip(event, 'fs30', 71)" class="i">rangeEnd</span><span class="o">=</span>(<span onmouseout="hideTip(event, 'fs6', 72)" onmouseover="showTip(event, 'fs6', 72)" class="t">bigint</span> (<span onmouseout="hideTip(event, 'fs31', 73)" onmouseover="showTip(event, 'fs31', 73)" class="t">Int32</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs32', 74)" onmouseover="showTip(event, 'fs32', 74)" class="i">MaxValue</span> <span class="o">/</span> <span class="n">100</span>))
+
+<span class="prep">#time</span> <span class="s">&quot;on&quot;</span>
+<span onmouseout="hideTip(event, 'fs27', 75)" onmouseover="showTip(event, 'fs27', 75)" class="f">bigint_range</span> <span class="n">1I</span> <span onmouseout="hideTip(event, 'fs30', 76)" onmouseover="showTip(event, 'fs30', 76)" class="i">rangeEnd</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs33', 77)" onmouseover="showTip(event, 'fs33', 77)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs34', 78)" onmouseover="showTip(event, 'fs34', 78)" class="f">sum</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs35', 79)" onmouseover="showTip(event, 'fs35', 79)" class="f">printfn</span> <span class="s">&quot;bigint_range range: </span><span class="pf">%A</span><span class="s">&quot;</span> 
+<span class="prep">#time</span> <span class="s">&quot;on&quot;</span>
+{ <span class="n">1I</span><span class="o">..</span> <span onmouseout="hideTip(event, 'fs30', 80)" onmouseover="showTip(event, 'fs30', 80)" class="i">rangeEnd</span> } <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs33', 81)" onmouseover="showTip(event, 'fs33', 81)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs34', 82)" onmouseover="showTip(event, 'fs34', 82)" class="f">sum</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs35', 83)" onmouseover="showTip(event, 'fs35', 83)" class="f">printfn</span> <span class="s">&quot;F# bigint range: </span><span class="pf">%A</span><span class="s">&quot;</span> 
+<span class="prep">#time</span> <span class="s">&quot;off&quot;</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace System</div>
+<div class="tip" id="fs2">namespace System.Collections</div>
+<div class="tip" id="fs3">namespace System.Collections.Generic</div>
+<div class="tip" id="fs4">Multiple items<br />type bigintRangeEnumerator =<br />&#160;&#160;interface IEnumerator<br />&#160;&#160;interface IEnumerator&lt;bigint&gt;<br />&#160;&#160;new : start:bigint * max:bigint -&gt; bigintRangeEnumerator<br /><br />Full name: Script.bigintRangeEnumerator<br /><br />--------------------<br />new : start:bigint * max:bigint -&gt; bigintRangeEnumerator</div>
+<div class="tip" id="fs5">val start : bigint</div>
+<div class="tip" id="fs6">type bigint = Numerics.BigInteger<br /><br />Full name: Microsoft.FSharp.Core.bigint</div>
+<div class="tip" id="fs7">val max : bigint</div>
+<div class="tip" id="fs8">val mutable current : Numerics.BigInteger</div>
+<div class="tip" id="fs9">property Numerics.BigInteger.Zero: Numerics.BigInteger</div>
+<div class="tip" id="fs10">val mutable started : bool</div>
+<div class="tip" id="fs11">Multiple items<br />type IEnumerator =<br />&#160;&#160;member Current : obj<br />&#160;&#160;member MoveNext : unit -&gt; bool<br />&#160;&#160;member Reset : unit -&gt; unit<br /><br />Full name: System.Collections.IEnumerator<br /><br />--------------------<br />type IEnumerator&lt;&#39;T&gt; =<br />&#160;&#160;member Current : &#39;T<br /><br />Full name: System.Collections.Generic.IEnumerator&lt;_&gt;</div>
+<div class="tip" id="fs12">val this : bigintRangeEnumerator</div>
+<div class="tip" id="fs13">override bigintRangeEnumerator.Current : bigint<br /><br />Full name: Script.bigintRangeEnumerator.Current</div>
+<div class="tip" id="fs14">override bigintRangeEnumerator.Dispose : unit -&gt; unit<br /><br />Full name: Script.bigintRangeEnumerator.Dispose</div>
+<div class="tip" id="fs15">override bigintRangeEnumerator.Current : obj<br /><br />Full name: Script.bigintRangeEnumerator.Current</div>
+<div class="tip" id="fs16">val box : value:&#39;T -&gt; obj<br /><br />Full name: Microsoft.FSharp.Core.Operators.box</div>
+<div class="tip" id="fs17">override bigintRangeEnumerator.MoveNext : unit -&gt; bool<br /><br />Full name: Script.bigintRangeEnumerator.MoveNext</div>
+<div class="tip" id="fs18">Numerics.BigInteger.op_LessThan(left: uint64, right: Numerics.BigInteger) : bool<br />Numerics.BigInteger.op_LessThan(left: Numerics.BigInteger, right: uint64) : bool<br />Numerics.BigInteger.op_LessThan(left: int64, right: Numerics.BigInteger) : bool<br />Numerics.BigInteger.op_LessThan(left: Numerics.BigInteger, right: int64) : bool<br />Numerics.BigInteger.op_LessThan(left: Numerics.BigInteger, right: Numerics.BigInteger) : bool</div>
+<div class="tip" id="fs19">Numerics.BigInteger.op_Increment(value: Numerics.BigInteger) : Numerics.BigInteger</div>
+<div class="tip" id="fs20">val x : bigintRangeEnumerator</div>
+<div class="tip" id="fs21">override bigintRangeEnumerator.Reset : unit -&gt; unit<br /><br />Full name: Script.bigintRangeEnumerator.Reset</div>
+<div class="tip" id="fs22">Multiple items<br />type bigintRange =<br />&#160;&#160;interface IEnumerable<br />&#160;&#160;interface IEnumerable&lt;bigint&gt;<br />&#160;&#160;new : start:bigint * max:bigint -&gt; bigintRange<br /><br />Full name: Script.bigintRange<br /><br />--------------------<br />new : start:bigint * max:bigint -&gt; bigintRange</div>
+<div class="tip" id="fs23">Multiple items<br />type IEnumerable =<br />&#160;&#160;member GetEnumerator : unit -&gt; IEnumerator<br /><br />Full name: System.Collections.IEnumerable<br /><br />--------------------<br />type IEnumerable&lt;&#39;T&gt; =<br />&#160;&#160;member GetEnumerator : unit -&gt; IEnumerator&lt;&#39;T&gt;<br /><br />Full name: System.Collections.Generic.IEnumerable&lt;_&gt;</div>
+<div class="tip" id="fs24">val this : bigintRange</div>
+<div class="tip" id="fs25">override bigintRange.GetEnumerator : unit -&gt; IEnumerator&lt;bigint&gt;<br /><br />Full name: Script.bigintRange.GetEnumerator</div>
+<div class="tip" id="fs26">override bigintRange.GetEnumerator : unit -&gt; IEnumerator<br /><br />Full name: Script.bigintRange.GetEnumerator</div>
+<div class="tip" id="fs27">val bigint_range : s:bigint -&gt; e:bigint -&gt; bigintRange<br /><br />Full name: Script.bigint_range</div>
+<div class="tip" id="fs28">val s : bigint</div>
+<div class="tip" id="fs29">val e : bigint</div>
+<div class="tip" id="fs30">val rangeEnd : Numerics.BigInteger<br /><br />Full name: Script.rangeEnd</div>
+<div class="tip" id="fs31">type Int32 =<br />&#160;&#160;struct<br />&#160;&#160;&#160;&#160;member CompareTo : value:obj -&gt; int + 1 overload<br />&#160;&#160;&#160;&#160;member Equals : obj:obj -&gt; bool + 1 overload<br />&#160;&#160;&#160;&#160;member GetHashCode : unit -&gt; int<br />&#160;&#160;&#160;&#160;member GetTypeCode : unit -&gt; TypeCode<br />&#160;&#160;&#160;&#160;member ToString : unit -&gt; string + 3 overloads<br />&#160;&#160;&#160;&#160;static val MaxValue : int<br />&#160;&#160;&#160;&#160;static val MinValue : int<br />&#160;&#160;&#160;&#160;static member Parse : s:string -&gt; int + 3 overloads<br />&#160;&#160;&#160;&#160;static member TryParse : s:string * result:int -&gt; bool + 1 overload<br />&#160;&#160;end<br /><br />Full name: System.Int32</div>
+<div class="tip" id="fs32">field int.MaxValue = 2147483647</div>
+<div class="tip" id="fs33">module Seq<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs34">val sum : source:seq&lt;&#39;T&gt; -&gt; &#39;T (requires member ( + ) and member get_Zero)<br /><br />Full name: Microsoft.FSharp.Collections.Seq.sum</div>
+<div class="tip" id="fs35">val printfn : format:Printf.TextWriterFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.printfn</div>
+

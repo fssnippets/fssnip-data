@@ -1,0 +1,292 @@
+#if INTERACTIVE
+open System
+open System.IO
+
+Console.WriteLine "Downloading components, etc. Will take a while."
+// Run as admin, developer command prompt or F# Interactive. e.g. "fsi myfile.fsx"
+
+[<Literal>]
+let connectionString = "Data Source=localhost; Initial Catalog=myDatabase; Integrated Security=True;"
+let serverDir =  __SOURCE_DIRECTORY__ + @"/frontend"
+ 
+// --- Package Restore ------------------------------------
+Environment.CurrentDirectory <- __SOURCE_DIRECTORY__
+if not <| File.Exists "paket.exe" then
+    let url = "https://github.com/fsprojects/Paket/releases/download/1.18.0/paket.exe"
+    use wc = new Net.WebClient ()
+    let tmp = Path.GetTempFileName () 
+    wc.DownloadFile (url, tmp); 
+    File.Move (tmp,Path.GetFileName url)
+ 
+#r "paket.exe"
+ 
+Paket.Dependencies.Install """
+source https://nuget.org/api/v2
+nuget FAKE
+nuget FSharp.Formatting
+nuget FSharp.Data
+nuget FSharp.Data.SqlClient
+nuget Microsoft.AspNet.SignalR.Core
+nuget Microsoft.AspNet.WebApi.OwinSelfHost
+nuget Microsoft.Owin.Cors
+nuget Microsoft.Owin.StaticFiles
+nuget Rx-Main
+nuget SQLProvider
+nuget SourceLink.Fake
+""";; // Rx-Main and SourceLink are for future use only...
+
+// --- Drop and Create a Database ------------------------------------
+
+#I @"./packages/FAKE/tools"
+#r @"./packages/FAKE/tools/FakeLib.dll"
+#r @"./packages/FAKE/tools/Fake.SQL.dll"
+
+open Fake
+open Fake.SQL
+
+let SqlServerConnection = connectionString |> getServerInfo
+SqlServerConnection |> SqlServer.DropDb |> ignore
+SqlServerConnection |> SqlServer.CreateDb |> ignore
+
+// Wouldn't need this if you have the DB already or install it from Fake scripts
+// like this: SqlServer.runScript SqlServerConnection "createtables.sql"
+
+#r @"./packages/FSharp.Data.SqlClient/lib/net40/FSharp.Data.SqlClient.dll"
+open FSharp.Data
+
+// Create Tables
+[<Literal>]
+let personTable="""
+CREATE TABLE dbo.Person(
+	Id int NOT NULL IDENTITY (1, 1) PRIMARY KEY,
+	FirstName nvarchar(255) NOT NULL,
+	LastName nvarchar(255) NOT NULL
+	)  ON [PRIMARY]
+"""
+
+[<Literal>]
+let orderTable="""
+CREATE TABLE dbo.[Order](
+	Id int NOT NULL IDENTITY (1, 1) PRIMARY KEY,
+	PersonId int NOT NULL,
+	Amount decimal(18, 0) NOT NULL,
+	OrderDate smalldatetime NOT NULL
+	)  ON [PRIMARY]
+"""
+async {
+   use cmd1 = new SqlCommandProvider<personTable, connectionString>()
+   let! p = cmd1.AsyncExecute()
+   use cmd2 = new SqlCommandProvider<orderTable, connectionString>()
+   let! o = cmd2.AsyncExecute()
+   return p+o
+} |> Async.RunSynchronously;;
+
+// Insert Demo Data
+[<Literal>]
+let demoData="INSERT INTO [dbo].[Person] ([FirstName],[LastName]) VALUES (@firstName, @lastName)"
+
+async {
+   use cmd3 = new SqlCommandProvider<demoData, connectionString>()
+   let! i1 = cmd3.AsyncExecute(firstName = "John", lastName = "Doe")
+   let! i2 = cmd3.AsyncExecute(firstName = "Tuomas", lastName = "Hietanen")
+   return i1+i2
+} |> Async.RunSynchronously
+
+// --- Create a HTML-Page ------------------------------------
+
+// Could also load from separate files :-)
+let page = """
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta charset="UTF-8" />
+    <title>My Site</title>
+	<!--script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.1.4.min.js"></script-->
+	<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.1.4.js"></script>
+	<!--script src="http://ajax.aspnetcdn.com/ajax/signalr/jquery.signalr-2.2.0.min.js"></script-->
+	<script src="http://ajax.aspnetcdn.com/ajax/signalr/jquery.signalr-2.2.0.js"></script>
+    <script type="text/javascript" src="/signalr/hubs"></script>
+    <script type="text/javascript">
+		var personList = {};
+        $(document).ready(function () {
+
+            //SignalR Hub:
+            var signalHub;
+            $.connection.hub.url = "/signalr";
+            signalHub = $.connection.SignalHub; //Hub class
+            if (!signalHub) console.log("hub not found");
+
+            signalHub.client.listPersons = function (data) {
+				data.forEach(function(itm) {
+					 $('#peopleSelect')
+						 .append($("<option></option>")
+						 .attr("value",itm.Item1)
+						 .text(itm.Item2)); 
+					personList[itm.Item1] = itm.Item2;
+				});
+			};
+
+            signalHub.client.acceptedOrder = function (data) {
+                alert(data);
+			};
+
+            signalHub.client.NotifyAll = function (id, myDay) {
+                alert("Hi all! New order for person " + personList[id] + " added to the system at " + myDay + ". ");
+			};
+			
+            $.connection.hub.logging = true;
+            $.connection.hub.start().
+                done(function () {
+					
+                    $("#btn1").click(function () {
+						var person = $('#peopleSelect').val();
+						var ms = new Date();
+                        signalHub.server.createOrder(person, ms);
+                        return false;
+                    });
+                });
+        });
+    </script>
+    <style>
+        .bgFrame {
+            background-color: #ffffff;
+            border: thin solid #000000;
+            padding: 30px;
+            margin: 30px;
+            width: 600px;
+            height: 200px;
+            vertical-align: middle;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body style="background-color: #cc99ff">
+    <div class="bgFrame">
+        <h2>Create orders for persons:</h2><br />
+        <form method="post" action="index.html">
+            <select id="peopleSelect"></select><br />
+            <input type="button" id="btn1" value="Place new order!" />
+        </form>
+    </div>
+</body>
+</html>
+"""
+
+if not <| Directory.Exists serverDir then
+    Directory.CreateDirectory serverDir |> ignore
+
+let filename = serverDir + @"/index.html"
+if File.Exists filename then
+    File.Delete filename
+File.WriteAllText (filename, page)
+
+// --- Load the References ------------------------------------
+
+// Yes you can run this OWIN server also from Mono! Mono needs #I:s...
+
+#r @"./packages/FSharp.Data/lib/net40/FSharp.Data.dll"
+#r @"./packages/SQLProvider/lib/net40/FSharp.Data.SqlProvider.dll"
+
+// OWIN and SignalR-packages:
+#I @"./packages/Microsoft.AspNet.SignalR.Core/lib/net45"
+#r @"./packages/Microsoft.AspNet.SignalR.Core/lib/net45/Microsoft.AspNet.SignalR.Core.dll"
+#I @"./packages/Microsoft.Owin/lib/net45" 
+#r @"./packages/Microsoft.Owin/lib/net45/Microsoft.Owin.dll"
+#I @"./packages/Microsoft.Owin.Security/lib/net45"
+#r @"./packages/Microsoft.Owin.Security/lib/net45/Microsoft.Owin.Security.dll"
+#I @"./packages/Microsoft.Owin.Hosting/lib/net45"
+#r @"./packages/Microsoft.Owin.Hosting/lib/net45/Microsoft.Owin.Hosting.dll"
+#I @"./packages/Microsoft.Owin.Host.HttpListener/lib/net45"
+#r @"./packages/Microsoft.Owin.Host.HttpListener/lib/net45/Microsoft.Owin.Host.HttpListener.dll"
+#I @"./packages/Microsoft.Owin.StaticFiles/lib/net45"
+#r @"./packages/Microsoft.Owin.StaticFiles/lib/net45/Microsoft.Owin.StaticFiles.dll"
+#I @"./packages/Microsoft.Owin.FileSystems/lib/net45"
+#r @"./packages/Microsoft.Owin.FileSystems/lib/net45/Microsoft.Owin.FileSystems.dll"
+#I @"./packages/Newtonsoft.Json/lib/net45"
+#r @"./packages/Newtonsoft.Json/lib/net45/Newtonsoft.Json.dll"
+#I @"./packages/Owin/lib/net40"
+#r @"./packages/Owin/lib/net40/Owin.dll"
+
+#else
+// Use paket to manage project references. 
+module myServer
+#endif
+// --- SQL-Server Connection ------------------------------------
+
+open FSharp.Data
+open FSharp.Data.Sql
+
+type SqlConnection = 
+    SqlDataProvider< // Supports SQL-Server, Oracle, MySql, Odbc, etc. 
+        ConnectionString = connectionString,
+        DatabaseVendor = Common.DatabaseProviderTypes.MSSQLSERVER,
+        IndividualsAmount = 1000,
+        UseOptionTypes = true>
+
+// --- Communication to Clients ------------------------------------
+
+open System
+open System.Linq
+open Microsoft.AspNet.SignalR
+open Microsoft.AspNet.SignalR.Hubs 
+open System.Threading.Tasks
+
+type MessageToClient =  // Server can push data to single or all clients
+    abstract ListPersons : seq<int * string> -> Task
+    abstract AcceptedOrder : string -> Task
+    abstract NotifyAll : int * DateTime -> Task
+
+[<HubName("SignalHub")>]
+type SignalHub() as this = 
+    inherit Hub<MessageToClient>()
+
+    override __.OnConnected() =
+        base.OnConnected() |> ignore
+        let context = SqlConnection.GetDataContext()
+        let items =
+            query {
+                for c in context.``[dbo].[Person]`` do
+                // where (c.Id < 100000)
+                select (c.Id, c.FirstName + " " + c.LastName) 
+            } |> Seq.toArray
+        // printfn "Client connected: %s" this.Context.ConnectionId
+        this.Clients.Caller.ListPersons items
+       
+    member __.CreateOrder (personId:int) (time:DateTime) = 
+        let context = SqlConnection.GetDataContext()
+        let itm = context.``[dbo].[Order]``.Create(
+                    1.0m,
+                    PersonId = personId,
+                    OrderDate = time
+        ) // or could also use SqlCommandProvider...
+        context.SubmitUpdates()
+        this.Clients.Caller.AcceptedOrder "Thanks for the order!" |> ignore
+        this.Clients.All.NotifyAll (personId, time)
+
+let hubConfig = HubConfiguration(EnableDetailedErrors = true, EnableJavaScriptProxies = true)
+
+type MyWebStartup() =
+    member x.Configuration(ap:Owin.IAppBuilder) =
+        //OWIN Component registrations here...
+
+        //SignalR:
+        let app = Owin.OwinExtensions.MapSignalR(ap, hubConfig)
+
+        //Static files server (Note: default FileSystem is current directory!)
+        let fileServerOptions = Microsoft.Owin.StaticFiles.FileServerOptions()
+        fileServerOptions.DefaultFilesOptions.DefaultFileNames.Add "index.html"
+        fileServerOptions.FileSystem <- Microsoft.Owin.FileSystems.PhysicalFileSystem <| serverDir
+        Owin.FileServerExtensions.UseFileServer(app, fileServerOptions) |> ignore
+        ()
+
+[<assembly: Microsoft.Owin.OwinStartup(typeof<MyWebStartup>)>]
+do()
+
+let url = "http://localhost:7000"
+let server = Microsoft.Owin.Hosting.WebApp.Start<MyWebStartup> url
+Console.WriteLine ("Server started at: " + url)
+Console.WriteLine "Press Enter to stop & quit."
+Console.ReadLine()
+server.Dispose()

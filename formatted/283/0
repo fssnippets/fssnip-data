@@ -1,0 +1,135 @@
+<h2><a name="Asynchronous-Utilities-for-ASP-MVC" class="anchor" href="#Asynchronous-Utilities-for-ASP-MVC">Asynchronous Utilities for ASP.MVC</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// A computation builder that is almost the same as stnadard F# &#39;async&#39;.</span>
+<span class="c">/// The differnece is that it takes an ASP.NET MVC &#39;AsyncManager&#39; as an</span>
+<span class="c">/// argumnet and implements &#39;Run&#39; opration, so that the workflow is </span>
+<span class="c">/// automatically executed after it is created (using the AsyncManager)</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="t">AsyncActionBuilder</span>(<span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">asyncMgr</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="i">Async</span><span class="o">.</span><span class="i">AsyncManager</span>) <span class="o">=</span> 
+
+  <span id="fst4" onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4, document.getElementById('fst4'))" class="omitted">(Boilerplate code that exposes 'async' operations)</span>
+
+  <span class="c">/// Run the workflow automatically using ASP.NET AsyncManager</span>
+  <span class="k">member</span> <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="i">x</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="f">Run</span>(<span onmouseout="hideTip(event, 'fs7', 7)" onmouseover="showTip(event, 'fs7', 7)" class="i">workflow</span>) <span class="o">=</span> 
+    <span class="c">// Specify that there is some pending computation running</span>
+    <span onmouseout="hideTip(event, 'fs2', 8)" onmouseover="showTip(event, 'fs2', 8)" class="i">asyncMgr</span><span class="o">.</span><span class="i">OutstandingOperations</span><span class="o">.</span><span class="i">Increment</span>() <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs8', 9)" onmouseover="showTip(event, 'fs8', 9)" class="f">ignore</span>
+    <span onmouseout="hideTip(event, 'fs9', 10)" onmouseover="showTip(event, 'fs9', 10)" class="i">async</span> { <span class="c">// Run the asynchronous workflow </span>
+            <span class="k">let!</span> <span onmouseout="hideTip(event, 'fs10', 11)" onmouseover="showTip(event, 'fs10', 11)" class="i">res</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs7', 12)" onmouseover="showTip(event, 'fs7', 12)" class="i">workflow</span>
+            <span class="c">// Store the result of the workflow, so that it </span>
+            <span class="c">// is passed as an argument to &#39;Completed&#39; method.</span>
+            <span onmouseout="hideTip(event, 'fs2', 13)" onmouseover="showTip(event, 'fs2', 13)" class="i">asyncMgr</span><span class="o">.</span><span class="i">Parameters</span><span class="o">.</span>[<span class="s">&quot;result&quot;</span>] <span class="o">&lt;-</span> <span onmouseout="hideTip(event, 'fs10', 14)" onmouseover="showTip(event, 'fs10', 14)" class="i">res</span>
+            <span class="c">// Notify the manager that the workflow has completed</span>
+            <span onmouseout="hideTip(event, 'fs2', 15)" onmouseover="showTip(event, 'fs2', 15)" class="i">asyncMgr</span><span class="o">.</span><span class="i">OutstandingOperations</span><span class="o">.</span><span class="i">Decrement</span>() <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs8', 16)" onmouseover="showTip(event, 'fs8', 16)" class="f">ignore</span> }
+    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs3', 17)" onmouseover="showTip(event, 'fs3', 17)" class="t">Async</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs11', 18)" onmouseover="showTip(event, 'fs11', 18)" class="f">Start</span>
+     
+
+<span class="c">/// An F# specific asynchronous controller that provides </span>
+<span class="c">/// member &#39;AsyncAction&#39; as a simple way of creating </span>
+<span class="c">/// asynchronous actions (hiding &#39;AsyncManager&#39;).</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs12', 19)" onmouseover="showTip(event, 'fs12', 19)" class="t">FSharpAsyncController</span>() <span class="o">=</span> 
+  <span class="k">inherit</span> <span class="i">AsyncController</span>()
+  <span class="k">member</span> <span class="i">x</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs13', 20)" onmouseover="showTip(event, 'fs13', 20)" class="i">AsyncAction</span> <span class="o">=</span> 
+    <span class="c">// Create new asynchronous builder using the current AsyncManager</span>
+    <span class="k">new</span> <span onmouseout="hideTip(event, 'fs1', 21)" onmouseover="showTip(event, 'fs1', 21)" class="i">AsyncActionBuilder</span>(<span class="i">x</span><span class="o">.</span><span class="i">AsyncManager</span>)
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Sample-Asynchronous-Controller" class="anchor" href="#Sample-Asynchronous-Controller">Sample Asynchronous Controller</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp">[&lt;<span class="i">HandleError</span>&gt;]
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs14', 22)" onmouseover="showTip(event, 'fs14', 22)" class="t">MainController</span>() <span class="o">=</span>
+  <span class="k">inherit</span> <span onmouseout="hideTip(event, 'fs12', 23)" onmouseover="showTip(event, 'fs12', 23)" class="t">FSharpAsyncController</span>()
+
+  <span class="c">// Standard synchronous action that just renders view</span>
+  <span class="k">member</span> <span onmouseout="hideTip(event, 'fs15', 24)" onmouseover="showTip(event, 'fs15', 24)" class="i">x</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs16', 25)" onmouseover="showTip(event, 'fs16', 25)" class="f">Index</span>() <span class="o">=</span> <span onmouseout="hideTip(event, 'fs15', 26)" onmouseover="showTip(event, 'fs15', 26)" class="i">x</span><span class="o">.</span><span class="i">View</span>()
+
+  <span class="c">// Asynchronous action that uses F# asynchronous workflows</span>
+  <span class="c">// to download a web page and then returns the length (in bytes)</span>
+  <span class="k">member</span> <span onmouseout="hideTip(event, 'fs15', 27)" onmouseover="showTip(event, 'fs15', 27)" class="i">x</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs17', 28)" onmouseover="showTip(event, 'fs17', 28)" class="f">LengthAsync</span>(<span onmouseout="hideTip(event, 'fs18', 29)" onmouseover="showTip(event, 'fs18', 29)" class="i">url</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs19', 30)" onmouseover="showTip(event, 'fs19', 30)" class="t">string</span>) <span class="o">=</span> <span onmouseout="hideTip(event, 'fs15', 31)" onmouseover="showTip(event, 'fs15', 31)" class="i">x</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs20', 32)" onmouseover="showTip(event, 'fs20', 32)" class="f">AsyncAction</span> {
+    <span class="k">let</span> <span class="i">wc</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs21', 33)" onmouseover="showTip(event, 'fs21', 33)" class="i">WebClient</span>()
+    <span class="k">let!</span> <span class="i">html</span> <span class="o">=</span> <span class="i">wc</span><span class="o">.</span><span class="i">AsyncDownloadString</span>(<span onmouseout="hideTip(event, 'fs18', 34)" onmouseover="showTip(event, 'fs18', 34)" class="i">url</span>)
+    <span class="k">return</span> <span class="i">html</span><span class="o">.</span><span class="i">Length</span> }
+
+  <span class="c">// Called after the completion of workflow created by &#39;LengthAsync&#39;</span>
+  <span class="c">// (the result of the workflow is passed as parameter named &#39;result&#39;)</span>
+  <span class="k">member</span> <span onmouseout="hideTip(event, 'fs15', 35)" onmouseover="showTip(event, 'fs15', 35)" class="i">x</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs22', 36)" onmouseover="showTip(event, 'fs22', 36)" class="f">HelloCompleted</span>(<span onmouseout="hideTip(event, 'fs23', 37)" onmouseover="showTip(event, 'fs23', 37)" class="i">result</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs24', 38)" onmouseover="showTip(event, 'fs24', 38)" class="t">int</span>) <span class="o">=</span>
+    <span class="c">// Pass the result to the View</span>
+    <span onmouseout="hideTip(event, 'fs15', 39)" onmouseover="showTip(event, 'fs15', 39)" class="i">x</span><span class="o">.</span><span class="i">ViewData</span><span class="o">.</span><span class="i">Model</span> <span class="o">&lt;-</span> <span onmouseout="hideTip(event, 'fs23', 40)" onmouseover="showTip(event, 'fs23', 40)" class="i">result</span>
+    <span onmouseout="hideTip(event, 'fs15', 41)" onmouseover="showTip(event, 'fs15', 41)" class="i">x</span><span class="o">.</span><span class="i">View</span>()
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">Multiple items<br />type AsyncActionBuilder =<br />&#160;&#160;new : asyncMgr:obj -&gt; AsyncActionBuilder<br />&#160;&#160;member Bind : v:Async&lt;&#39;k&gt; * f:(&#39;k -&gt; Async&lt;&#39;l&gt;) -&gt; Async&lt;&#39;l&gt;<br />&#160;&#160;member Combine : a:Async&lt;unit&gt; * b:Async&lt;&#39;j&gt; -&gt; Async&lt;&#39;j&gt;<br />&#160;&#160;member Delay : f:(unit -&gt; Async&lt;&#39;i&gt;) -&gt; Async&lt;&#39;i&gt;<br />&#160;&#160;member For : s:seq&lt;&#39;g&gt; * f:(&#39;g -&gt; Async&lt;unit&gt;) -&gt; Async&lt;unit&gt;<br />&#160;&#160;member Return : v:&#39;h -&gt; Async&lt;&#39;h&gt;<br />&#160;&#160;member ReturnFrom : a:Async&lt;&#39;f&gt; -&gt; Async&lt;&#39;f&gt;<br />&#160;&#160;member Run : workflow:Async&lt;&#39;a&gt; -&gt; unit<br />&#160;&#160;member TryFinally : a:Async&lt;&#39;e&gt; * b:(unit -&gt; unit) -&gt; Async&lt;&#39;e&gt;<br />&#160;&#160;member TryWith : a:Async&lt;&#39;d&gt; * b:(exn -&gt; Async&lt;&#39;d&gt;) -&gt; Async&lt;&#39;d&gt;<br />&#160;&#160;...<br /><br />Full name: Script.AsyncActionBuilder<br /><em><br /><br />&#160;A computation builder that is almost the same as stnadard F# &#39;async&#39;.<br />&#160;The differnece is that it takes an ASP.NET MVC &#39;AsyncManager&#39; as an<br />&#160;argumnet and implements &#39;Run&#39; opration, so that the workflow is <br />&#160;automatically executed after it is created (using the AsyncManager)</em><br /><br />--------------------<br />new : asyncMgr:obj -&gt; AsyncActionBuilder</div>
+<div class="tip" id="fs2">val asyncMgr : obj</div>
+<div class="tip" id="fs3">Multiple items<br />type Async<br />static member AsBeginEnd : computation:(&#39;Arg -&gt; Async&lt;&#39;T&gt;) -&gt; (&#39;Arg * AsyncCallback * obj -&gt; IAsyncResult) * (IAsyncResult -&gt; &#39;T) * (IAsyncResult -&gt; unit)<br />static member AwaitEvent : event:IEvent&lt;&#39;Del,&#39;T&gt; * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt; (requires delegate and &#39;Del :&gt; Delegate)<br />static member AwaitIAsyncResult : iar:IAsyncResult * ?millisecondsTimeout:int -&gt; Async&lt;bool&gt;<br />static member AwaitTask : task:Task&lt;&#39;T&gt; -&gt; Async&lt;&#39;T&gt;<br />static member AwaitWaitHandle : waitHandle:WaitHandle * ?millisecondsTimeout:int -&gt; Async&lt;bool&gt;<br />static member CancelDefaultToken : unit -&gt; unit<br />static member Catch : computation:Async&lt;&#39;T&gt; -&gt; Async&lt;Choice&lt;&#39;T,exn&gt;&gt;<br />static member FromBeginEnd : beginAction:(AsyncCallback * obj -&gt; IAsyncResult) * endAction:(IAsyncResult -&gt; &#39;T) * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member FromBeginEnd : arg:&#39;Arg1 * beginAction:(&#39;Arg1 * AsyncCallback * obj -&gt; IAsyncResult) * endAction:(IAsyncResult -&gt; &#39;T) * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member FromBeginEnd : arg1:&#39;Arg1 * arg2:&#39;Arg2 * beginAction:(&#39;Arg1 * &#39;Arg2 * AsyncCallback * obj -&gt; IAsyncResult) * endAction:(IAsyncResult -&gt; &#39;T) * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member FromBeginEnd : arg1:&#39;Arg1 * arg2:&#39;Arg2 * arg3:&#39;Arg3 * beginAction:(&#39;Arg1 * &#39;Arg2 * &#39;Arg3 * AsyncCallback * obj -&gt; IAsyncResult) * endAction:(IAsyncResult -&gt; &#39;T) * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member FromContinuations : callback:((&#39;T -&gt; unit) * (exn -&gt; unit) * (OperationCanceledException -&gt; unit) -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member Ignore : computation:Async&lt;&#39;T&gt; -&gt; Async&lt;unit&gt;<br />static member OnCancel : interruption:(unit -&gt; unit) -&gt; Async&lt;IDisposable&gt;<br />static member Parallel : computations:seq&lt;Async&lt;&#39;T&gt;&gt; -&gt; Async&lt;&#39;T []&gt;<br />static member RunSynchronously : computation:Async&lt;&#39;T&gt; * ?timeout:int * ?cancellationToken:CancellationToken -&gt; &#39;T<br />static member Sleep : millisecondsDueTime:int -&gt; Async&lt;unit&gt;<br />static member Start : computation:Async&lt;unit&gt; * ?cancellationToken:CancellationToken -&gt; unit<br />static member StartAsTask : computation:Async&lt;&#39;T&gt; * ?taskCreationOptions:TaskCreationOptions * ?cancellationToken:CancellationToken -&gt; Task&lt;&#39;T&gt;<br />static member StartChild : computation:Async&lt;&#39;T&gt; * ?millisecondsTimeout:int -&gt; Async&lt;Async&lt;&#39;T&gt;&gt;<br />static member StartChildAsTask : computation:Async&lt;&#39;T&gt; * ?taskCreationOptions:TaskCreationOptions -&gt; Async&lt;Task&lt;&#39;T&gt;&gt;<br />static member StartImmediate : computation:Async&lt;unit&gt; * ?cancellationToken:CancellationToken -&gt; unit<br />static member StartWithContinuations : computation:Async&lt;&#39;T&gt; * continuation:(&#39;T -&gt; unit) * exceptionContinuation:(exn -&gt; unit) * cancellationContinuation:(OperationCanceledException -&gt; unit) * ?cancellationToken:CancellationToken -&gt; unit<br />static member SwitchToContext : syncContext:SynchronizationContext -&gt; Async&lt;unit&gt;<br />static member SwitchToNewThread : unit -&gt; Async&lt;unit&gt;<br />static member SwitchToThreadPool : unit -&gt; Async&lt;unit&gt;<br />static member TryCancelled : computation:Async&lt;&#39;T&gt; * compensation:(OperationCanceledException -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member CancellationToken : Async&lt;CancellationToken&gt;<br />static member DefaultCancellationToken : CancellationToken<br /><br />Full name: Microsoft.FSharp.Control.Async<br /><br />--------------------<br />type Async&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Control.Async&lt;_&gt;</div>
+<div class="tip" id="fs4">member x.Bind(v, f) = async.Bind(v, f)<br />&#160;&#160;member x.Combine(a, b) = async.Combine(a, b)<br />&#160;&#160;member x.Delay(f) = async.Delay(f)<br />&#160;&#160;member x.Return(v) = async.Return(v)<br />&#160;&#160;member x.For(s, f) = async.For(s, f)<br />&#160;&#160;member x.ReturnFrom(a) = async.ReturnFrom(a)<br />&#160;&#160;member x.TryFinally(a, b) = async.TryFinally(a, b)<br />&#160;&#160;member x.TryWith(a, b) = async.TryWith(a, b)<br />&#160;&#160;member x.Using(r, f) = async.Using(r, f)<br />&#160;&#160;member x.While(c, f) = async.While(c, f)<br />&#160;&#160;member x.Zero() = async.Zero()</div>
+<div class="tip" id="fs5">val x : AsyncActionBuilder</div>
+<div class="tip" id="fs6">member AsyncActionBuilder.Run : workflow:Async&lt;&#39;a&gt; -&gt; unit<br /><br />Full name: Script.AsyncActionBuilder.Run<br /><em><br /><br />&#160;Run the workflow automatically using ASP.NET AsyncManager</em></div>
+<div class="tip" id="fs7">val workflow : Async&lt;&#39;a&gt;</div>
+<div class="tip" id="fs8">val ignore : value:&#39;T -&gt; unit<br /><br />Full name: Microsoft.FSharp.Core.Operators.ignore</div>
+<div class="tip" id="fs9">val async : AsyncBuilder<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.async</div>
+<div class="tip" id="fs10">val res : &#39;a</div>
+<div class="tip" id="fs11">static member Async.Start : computation:Async&lt;unit&gt; * ?cancellationToken:Threading.CancellationToken -&gt; unit</div>
+<div class="tip" id="fs12">Multiple items<br />type FSharpAsyncController =<br />&#160;&#160;inherit obj<br />&#160;&#160;new : unit -&gt; FSharpAsyncController<br />&#160;&#160;member AsyncAction : (obj -&gt; &#39;b)<br /><br />Full name: Script.FSharpAsyncController<br /><em><br /><br />&#160;An F# specific asynchronous controller that provides <br />&#160;member &#39;AsyncAction&#39; as a simple way of creating <br />&#160;asynchronous actions (hiding &#39;AsyncManager&#39;).</em><br /><br />--------------------<br />new : unit -&gt; FSharpAsyncController</div>
+<div class="tip" id="fs13">member FSharpAsyncController.AsyncAction : (obj -&gt; &#39;b)<br /><br />Full name: Script.FSharpAsyncController.AsyncAction</div>
+<div class="tip" id="fs14">Multiple items<br />type MainController =<br />&#160;&#160;inherit FSharpAsyncController<br />&#160;&#160;new : unit -&gt; MainController<br />&#160;&#160;member HelloCompleted : result:int -&gt; &#39;a<br />&#160;&#160;member Index : unit -&gt; &#39;c<br />&#160;&#160;member LengthAsync : url:string -&gt; &#39;b<br /><br />Full name: Script.MainController<br /><br />--------------------<br />new : unit -&gt; MainController</div>
+<div class="tip" id="fs15">val x : MainController</div>
+<div class="tip" id="fs16">member MainController.Index : unit -&gt; &#39;c<br /><br />Full name: Script.MainController.Index</div>
+<div class="tip" id="fs17">member MainController.LengthAsync : url:string -&gt; &#39;b<br /><br />Full name: Script.MainController.LengthAsync</div>
+<div class="tip" id="fs18">val url : string</div>
+<div class="tip" id="fs19">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />Full name: Microsoft.FSharp.Core.Operators.string<br /><br />--------------------<br />type string = String<br /><br />Full name: Microsoft.FSharp.Core.string</div>
+<div class="tip" id="fs20">property FSharpAsyncController.AsyncAction: obj -&gt; &#39;b</div>
+<div class="tip" id="fs21">Multiple items<br />type WebClient =<br />&#160;&#160;inherit Component<br />&#160;&#160;new : unit -&gt; WebClient<br />&#160;&#160;member BaseAddress : string with get, set<br />&#160;&#160;member CachePolicy : RequestCachePolicy with get, set<br />&#160;&#160;member CancelAsync : unit -&gt; unit<br />&#160;&#160;member Credentials : ICredentials with get, set<br />&#160;&#160;member DownloadData : address:string -&gt; byte[] + 1 overload<br />&#160;&#160;member DownloadDataAsync : address:Uri -&gt; unit + 1 overload<br />&#160;&#160;member DownloadFile : address:string * fileName:string -&gt; unit + 1 overload<br />&#160;&#160;member DownloadFileAsync : address:Uri * fileName:string -&gt; unit + 1 overload<br />&#160;&#160;member DownloadString : address:string -&gt; string + 1 overload<br />&#160;&#160;...<br /><br />Full name: System.Net.WebClient<br /><br />--------------------<br />WebClient() : unit</div>
+<div class="tip" id="fs22">member MainController.HelloCompleted : result:int -&gt; &#39;a<br /><br />Full name: Script.MainController.HelloCompleted</div>
+<div class="tip" id="fs23">val result : int</div>
+<div class="tip" id="fs24">Multiple items<br />val int : value:&#39;T -&gt; int (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.int<br /><br />--------------------<br />type int = int32<br /><br />Full name: Microsoft.FSharp.Core.int<br /><br />--------------------<br />type int&lt;&#39;Measure&gt; = int<br /><br />Full name: Microsoft.FSharp.Core.int&lt;_&gt;</div>
+

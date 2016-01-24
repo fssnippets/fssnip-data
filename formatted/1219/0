@@ -1,0 +1,62 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="prep">#if</span> <span class="i">INTERACTIVE</span>
+<span class="inactive">#r</span><span class="inactive"> </span><span class="inactive">@&quot;System.IO.Compression&quot;</span>
+<span class="inactive">#r</span><span class="inactive"> </span><span class="inactive">@&quot;System.IO.Compression.FileSystem&quot;</span>
+<span class="prep">#endif</span>
+
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">IO</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 3)" onmouseover="showTip(event, 'fs1', 3)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 4)" onmouseover="showTip(event, 'fs3', 4)" class="i">Net</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 5)" onmouseover="showTip(event, 'fs1', 5)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 6)" onmouseover="showTip(event, 'fs2', 6)" class="i">IO</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs4', 7)" onmouseover="showTip(event, 'fs4', 7)" class="i">Compression</span>
+
+<span class="c">// Extract the contents of multiple zip archives in one pass.</span>
+<span class="c">//</span>
+<span class="c">// Eg. ExtractAll @&quot;C:\Data\Corpora\GoogleNGrams\Compressed&quot; @&quot;C:\Data\Corpora\GoogleNGrams\Uncompressed&quot;</span>
+<span class="c">//</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs5', 8)" onmouseover="showTip(event, 'fs5', 8)" class="f">ExtractAll</span> <span onmouseout="hideTip(event, 'fs6', 9)" onmouseover="showTip(event, 'fs6', 9)" class="i">sourceDir</span> <span onmouseout="hideTip(event, 'fs7', 10)" onmouseover="showTip(event, 'fs7', 10)" class="i">targetDir</span> <span class="o">=</span>
+    <span onmouseout="hideTip(event, 'fs8', 11)" onmouseover="showTip(event, 'fs8', 11)" class="t">Directory</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs9', 12)" onmouseover="showTip(event, 'fs9', 12)" class="f">EnumerateFiles</span>(<span onmouseout="hideTip(event, 'fs6', 13)" onmouseover="showTip(event, 'fs6', 13)" class="i">sourceDir</span>, <span class="s">&quot;*.zip&quot;</span>)
+    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs10', 14)" onmouseover="showTip(event, 'fs10', 14)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs11', 15)" onmouseover="showTip(event, 'fs11', 15)" class="f">iter</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs12', 16)" onmouseover="showTip(event, 'fs12', 16)" class="i">zipPath</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs13', 17)" onmouseover="showTip(event, 'fs13', 17)" class="f">printfn</span> <span class="s">&quot;Uncompressing </span><span class="pf">%s</span><span class="s">&quot;</span> (<span onmouseout="hideTip(event, 'fs14', 18)" onmouseover="showTip(event, 'fs14', 18)" class="t">Path</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs15', 19)" onmouseover="showTip(event, 'fs15', 19)" class="f">GetFileName</span>(<span onmouseout="hideTip(event, 'fs12', 20)" onmouseover="showTip(event, 'fs12', 20)" class="i">zipPath</span>))
+                                <span class="k">let</span> <span onmouseout="hideTip(event, 'fs16', 21)" onmouseover="showTip(event, 'fs16', 21)" class="i">archive</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs17', 22)" onmouseover="showTip(event, 'fs17', 22)" class="t">ZipFile</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs18', 23)" onmouseover="showTip(event, 'fs18', 23)" class="f">Open</span>(<span onmouseout="hideTip(event, 'fs12', 24)" onmouseover="showTip(event, 'fs12', 24)" class="i">zipPath</span>, <span onmouseout="hideTip(event, 'fs19', 25)" onmouseover="showTip(event, 'fs19', 25)" class="t">ZipArchiveMode</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs20', 26)" onmouseover="showTip(event, 'fs20', 26)" class="i">Read</span>)
+                                <span onmouseout="hideTip(event, 'fs16', 27)" onmouseover="showTip(event, 'fs16', 27)" class="i">archive</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs21', 28)" onmouseover="showTip(event, 'fs21', 28)" class="f">ExtractToDirectory</span>(<span onmouseout="hideTip(event, 'fs7', 29)" onmouseover="showTip(event, 'fs7', 29)" class="i">targetDir</span>))
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace System</div>
+<div class="tip" id="fs2">namespace System.IO</div>
+<div class="tip" id="fs3">namespace System.Net</div>
+<div class="tip" id="fs4">namespace System.IO.Compression</div>
+<div class="tip" id="fs5">val ExtractAll : sourceDir:string -&gt; targetDir:string -&gt; unit<br /><br />Full name: Script.ExtractAll</div>
+<div class="tip" id="fs6">val sourceDir : string</div>
+<div class="tip" id="fs7">val targetDir : string</div>
+<div class="tip" id="fs8">type Directory =<br />&#160;&#160;static member CreateDirectory : path:string -&gt; DirectoryInfo + 1 overload<br />&#160;&#160;static member Delete : path:string -&gt; unit + 1 overload<br />&#160;&#160;static member EnumerateDirectories : path:string -&gt; IEnumerable&lt;string&gt; + 2 overloads<br />&#160;&#160;static member EnumerateFileSystemEntries : path:string -&gt; IEnumerable&lt;string&gt; + 2 overloads<br />&#160;&#160;static member EnumerateFiles : path:string -&gt; IEnumerable&lt;string&gt; + 2 overloads<br />&#160;&#160;static member Exists : path:string -&gt; bool<br />&#160;&#160;static member GetAccessControl : path:string -&gt; DirectorySecurity + 1 overload<br />&#160;&#160;static member GetCreationTime : path:string -&gt; DateTime<br />&#160;&#160;static member GetCreationTimeUtc : path:string -&gt; DateTime<br />&#160;&#160;static member GetCurrentDirectory : unit -&gt; string<br />&#160;&#160;...<br /><br />Full name: System.IO.Directory</div>
+<div class="tip" id="fs9">Directory.EnumerateFiles(path: string) : System.Collections.Generic.IEnumerable&lt;string&gt;<br />Directory.EnumerateFiles(path: string, searchPattern: string) : System.Collections.Generic.IEnumerable&lt;string&gt;<br />Directory.EnumerateFiles(path: string, searchPattern: string, searchOption: SearchOption) : System.Collections.Generic.IEnumerable&lt;string&gt;</div>
+<div class="tip" id="fs10">module Seq<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs11">val iter : action:(&#39;T -&gt; unit) -&gt; source:seq&lt;&#39;T&gt; -&gt; unit<br /><br />Full name: Microsoft.FSharp.Collections.Seq.iter</div>
+<div class="tip" id="fs12">val zipPath : string</div>
+<div class="tip" id="fs13">val printfn : format:Printf.TextWriterFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.printfn</div>
+<div class="tip" id="fs14">type Path =<br />&#160;&#160;static val DirectorySeparatorChar : char<br />&#160;&#160;static val AltDirectorySeparatorChar : char<br />&#160;&#160;static val VolumeSeparatorChar : char<br />&#160;&#160;static val InvalidPathChars : char[]<br />&#160;&#160;static val PathSeparator : char<br />&#160;&#160;static member ChangeExtension : path:string * extension:string -&gt; string<br />&#160;&#160;static member Combine : [&lt;ParamArray&gt;] paths:string[] -&gt; string + 3 overloads<br />&#160;&#160;static member GetDirectoryName : path:string -&gt; string<br />&#160;&#160;static member GetExtension : path:string -&gt; string<br />&#160;&#160;static member GetFileName : path:string -&gt; string<br />&#160;&#160;...<br /><br />Full name: System.IO.Path</div>
+<div class="tip" id="fs15">Path.GetFileName(path: string) : string</div>
+<div class="tip" id="fs16">val archive : ZipArchive</div>
+<div class="tip" id="fs17">type ZipFile =<br />&#160;&#160;static member CreateFromDirectory : sourceDirectoryName:string * destinationArchiveFileName:string -&gt; unit + 2 overloads<br />&#160;&#160;static member ExtractToDirectory : sourceArchiveFileName:string * destinationDirectoryName:string -&gt; unit + 1 overload<br />&#160;&#160;static member Open : archiveFileName:string * mode:ZipArchiveMode -&gt; ZipArchive + 1 overload<br />&#160;&#160;static member OpenRead : archiveFileName:string -&gt; ZipArchive<br /><br />Full name: System.IO.Compression.ZipFile</div>
+<div class="tip" id="fs18">ZipFile.Open(archiveFileName: string, mode: ZipArchiveMode) : ZipArchive<br />ZipFile.Open(archiveFileName: string, mode: ZipArchiveMode, entryNameEncoding: System.Text.Encoding) : ZipArchive</div>
+<div class="tip" id="fs19">type ZipArchiveMode =<br />&#160;&#160;| Read = 0<br />&#160;&#160;| Create = 1<br />&#160;&#160;| Update = 2<br /><br />Full name: System.IO.Compression.ZipArchiveMode</div>
+<div class="tip" id="fs20">field ZipArchiveMode.Read = 0</div>
+<div class="tip" id="fs21">(extension) ZipArchive.ExtractToDirectory(destinationDirectoryName: string) : unit</div>
+

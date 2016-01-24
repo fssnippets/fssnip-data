@@ -1,0 +1,56 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">module</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="t">Dict</span>
+ 
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="i">Collections</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="i">Generic</span>
+
+<span class="c">// Converts seq of key - value pairs to mutable Dictionary</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="f">ofSeq</span> (<span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="i">src</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs7', 7)" onmouseover="showTip(event, 'fs7', 7)" class="t">seq</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">a</span> <span class="o">*</span> <span class="o">&#39;</span><span class="i">b</span><span class="o">&gt;</span>) <span class="o">=</span> 
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs8', 8)" onmouseover="showTip(event, 'fs8', 8)" class="i">d</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs9', 9)" onmouseover="showTip(event, 'fs9', 9)" class="t">Dictionary</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">a</span>, <span class="o">&#39;</span><span class="i">b</span><span class="o">&gt;</span>()
+    <span class="k">for</span> (<span onmouseout="hideTip(event, 'fs10', 10)" onmouseover="showTip(event, 'fs10', 10)" class="i">k</span>,<span onmouseout="hideTip(event, 'fs11', 11)" onmouseover="showTip(event, 'fs11', 11)" class="i">v</span>) <span class="k">in</span> <span onmouseout="hideTip(event, 'fs6', 12)" onmouseover="showTip(event, 'fs6', 12)" class="i">src</span> <span class="k">do</span>
+        <span onmouseout="hideTip(event, 'fs8', 13)" onmouseover="showTip(event, 'fs8', 13)" class="i">d</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs12', 14)" onmouseover="showTip(event, 'fs12', 14)" class="f">Add</span>(<span onmouseout="hideTip(event, 'fs10', 15)" onmouseover="showTip(event, 'fs10', 15)" class="i">k</span>,<span onmouseout="hideTip(event, 'fs11', 16)" onmouseover="showTip(event, 'fs11', 16)" class="i">v</span>)
+    <span onmouseout="hideTip(event, 'fs8', 17)" onmouseover="showTip(event, 'fs8', 17)" class="i">d</span>
+
+<span class="c">// get a seq of key-value pairs for easy iteration with for (k,v) in d do...</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs13', 18)" onmouseover="showTip(event, 'fs13', 18)" class="f">pairs</span> (<span onmouseout="hideTip(event, 'fs14', 19)" onmouseover="showTip(event, 'fs14', 19)" class="i">d</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs9', 20)" onmouseover="showTip(event, 'fs9', 20)" class="t">Dictionary</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">a</span>, <span class="o">&#39;</span><span class="i">b</span><span class="o">&gt;</span>) <span class="o">=</span>
+    <span onmouseout="hideTip(event, 'fs7', 21)" onmouseover="showTip(event, 'fs7', 21)" class="i">seq</span> {
+        <span class="k">for</span> <span onmouseout="hideTip(event, 'fs15', 22)" onmouseover="showTip(event, 'fs15', 22)" class="i">kv</span> <span class="k">in</span> <span onmouseout="hideTip(event, 'fs14', 23)" onmouseover="showTip(event, 'fs14', 23)" class="i">d</span> <span class="k">do</span>
+            <span class="k">yield</span> (<span onmouseout="hideTip(event, 'fs15', 24)" onmouseover="showTip(event, 'fs15', 24)" class="i">kv</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs16', 25)" onmouseover="showTip(event, 'fs16', 25)" class="i">Key</span>, <span onmouseout="hideTip(event, 'fs15', 26)" onmouseover="showTip(event, 'fs15', 26)" class="i">kv</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs17', 27)" onmouseover="showTip(event, 'fs17', 27)" class="i">Value</span>)
+    }
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">module Dict</div>
+<div class="tip" id="fs2">namespace System</div>
+<div class="tip" id="fs3">namespace System.Collections</div>
+<div class="tip" id="fs4">namespace System.Collections.Generic</div>
+<div class="tip" id="fs5">val ofSeq : src:seq&lt;&#39;a * &#39;b&gt; -&gt; Dictionary&lt;&#39;a,&#39;b&gt; (requires equality)<br /><br />Full name: Dict.ofSeq</div>
+<div class="tip" id="fs6">val src : seq&lt;&#39;a * &#39;b&gt; (requires equality)</div>
+<div class="tip" id="fs7">Multiple items<br />val seq : sequence:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Core.Operators.seq<br /><br />--------------------<br />type seq&lt;&#39;T&gt; = IEnumerable&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.seq&lt;_&gt;</div>
+<div class="tip" id="fs8">val d : Dictionary&lt;&#39;a,&#39;b&gt; (requires equality)</div>
+<div class="tip" id="fs9">Multiple items<br />type Dictionary&lt;&#39;TKey,&#39;TValue&gt; =<br />&#160;&#160;new : unit -&gt; Dictionary&lt;&#39;TKey, &#39;TValue&gt; + 5 overloads<br />&#160;&#160;member Add : key:&#39;TKey * value:&#39;TValue -&gt; unit<br />&#160;&#160;member Clear : unit -&gt; unit<br />&#160;&#160;member Comparer : IEqualityComparer&lt;&#39;TKey&gt;<br />&#160;&#160;member ContainsKey : key:&#39;TKey -&gt; bool<br />&#160;&#160;member ContainsValue : value:&#39;TValue -&gt; bool<br />&#160;&#160;member Count : int<br />&#160;&#160;member GetEnumerator : unit -&gt; Enumerator&lt;&#39;TKey, &#39;TValue&gt;<br />&#160;&#160;member GetObjectData : info:SerializationInfo * context:StreamingContext -&gt; unit<br />&#160;&#160;member Item : &#39;TKey -&gt; &#39;TValue with get, set<br />&#160;&#160;...<br />&#160;&#160;nested type Enumerator<br />&#160;&#160;nested type KeyCollection<br />&#160;&#160;nested type ValueCollection<br /><br />Full name: System.Collections.Generic.Dictionary&lt;_,_&gt;<br /><br />--------------------<br />Dictionary() : unit<br />Dictionary(capacity: int) : unit<br />Dictionary(comparer: IEqualityComparer&lt;&#39;TKey&gt;) : unit<br />Dictionary(dictionary: IDictionary&lt;&#39;TKey,&#39;TValue&gt;) : unit<br />Dictionary(capacity: int, comparer: IEqualityComparer&lt;&#39;TKey&gt;) : unit<br />Dictionary(dictionary: IDictionary&lt;&#39;TKey,&#39;TValue&gt;, comparer: IEqualityComparer&lt;&#39;TKey&gt;) : unit</div>
+<div class="tip" id="fs10">val k : &#39;a (requires equality)</div>
+<div class="tip" id="fs11">val v : &#39;b</div>
+<div class="tip" id="fs12">Dictionary.Add(key: &#39;a, value: &#39;b) : unit</div>
+<div class="tip" id="fs13">val pairs : d:Dictionary&lt;&#39;a,&#39;b&gt; -&gt; seq&lt;&#39;a * &#39;b&gt;<br /><br />Full name: Dict.pairs</div>
+<div class="tip" id="fs14">val d : Dictionary&lt;&#39;a,&#39;b&gt;</div>
+<div class="tip" id="fs15">val kv : KeyValuePair&lt;&#39;a,&#39;b&gt;</div>
+<div class="tip" id="fs16">property KeyValuePair.Key: &#39;a</div>
+<div class="tip" id="fs17">property KeyValuePair.Value: &#39;b</div>
+

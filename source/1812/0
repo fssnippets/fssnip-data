@@ -1,0 +1,99 @@
+module CsvSchema
+open System
+
+module TypeDetermination =
+        type TypeWrapper = None | Nullable | Option
+
+        //https://github.com/fsharp/FSharp.Data/blob/master/src/Csv/CsvInference.fs
+        let private nameToType =
+          ["int" ,           (typeof<int>     , TypeWrapper.None    )
+           "int64",          (typeof<int64>   , TypeWrapper.None    )
+           "bool",           (typeof<bool>    , TypeWrapper.None    )
+           "float",          (typeof<float>   , TypeWrapper.None    )
+           "decimal",        (typeof<decimal> , TypeWrapper.None    )
+           "date",           (typeof<DateTime>, TypeWrapper.None    )
+           "guid",           (typeof<Guid>    , TypeWrapper.None    )
+           "string",         (typeof<String>  , TypeWrapper.None    )
+           "int?",           (typeof<int>     , TypeWrapper.Nullable)
+           "int64?",         (typeof<int64>   , TypeWrapper.Nullable)
+           "bool?",          (typeof<bool>    , TypeWrapper.Nullable)
+           "float?",         (typeof<float>   , TypeWrapper.Nullable)
+           "decimal?",       (typeof<decimal> , TypeWrapper.Nullable)
+           "date?",          (typeof<DateTime>, TypeWrapper.Nullable)
+           "guid?",          (typeof<Guid>    , TypeWrapper.Nullable)
+           "int option",     (typeof<int>     , TypeWrapper.Option  )
+           "int64 option",   (typeof<int64>   , TypeWrapper.Option  )
+           "bool option",    (typeof<bool>    , TypeWrapper.Option  )
+           "float option",   (typeof<float>   , TypeWrapper.Option  )
+           "decimal option", (typeof<decimal> , TypeWrapper.Option  )
+           "date option",    (typeof<DateTime>, TypeWrapper.Option  )
+           "guid option",    (typeof<Guid>    , TypeWrapper.Option  )
+           "string option",  (typeof<string>  , TypeWrapper.Option  )]
+          |> dict
+        let determinType s = nameToType.[s]
+
+module Parsing =
+
+    let take i f (s:string) = 
+        let rec loop i acc =
+            if i < s.Length then
+                let c = s.[i]
+                if f c then loop (i+1) (c::acc)
+                else String(acc |> List.rev |> List.toArray),(i,s)
+            else String(acc |> List.rev |> List.toArray),(i,s)
+        loop i []
+
+    let isLetterOrDigit = Char.IsLetterOrDigit
+    let isWhitespace = Char.IsWhiteSpace
+    let isNotQuote = fun c -> c <> '"'
+
+    let (|Char|_|) c (i,s:string)  = 
+        if i < s.Length then 
+            if s.[i] = c then Some(i+1,s) else None 
+        else None
+
+    let (|Comma|_|)         = (|Char|_|) ','
+    let (|QuestionMark|_|)  = (|Char|_|) '?'
+    let (|LP|_|)            = (|Char|_|) '('
+    let (|RP|_|)            = (|Char|_|) ')'
+    let (|Quote|_|)         = (|Char|_|) '"'
+
+    let (|WS|) (i,s) = s |> take i isWhitespace |> snd
+    let (|TillEndQuote|) (i,s) = s |> take i isNotQuote
+    let (|Eof|_|) (i,s:string) = if i>=s.Length then Some(i) else None
+
+    let (|Token|_|) = function
+        |  Eof _-> None 
+        | (i,s) when  isLetterOrDigit s.[i] -> s |> take i isLetterOrDigit |> Some 
+        | _ -> None
+
+    let (|Option|_|) = function Token ("option", rest) -> Some rest | _ -> None
+
+    let (|DataType|) = function
+        | WS (Token (n, WS (QuestionMark rest)))     -> TypeDetermination.determinType (n+"?"), rest
+        | WS (Token (n, WS (Option rest)))           -> TypeDetermination.determinType (n+" option"), rest
+        | WS (Token (n, rest))                       -> TypeDetermination.determinType (n+" option"), rest
+        | _ -> failwith "expected datatype"
+
+    let (|Name|_|) = function
+        | WS (Quote (TillEndQuote (n, Quote(rest)))) -> Some (n,rest)
+        | WS (Token (n, rest))                       -> Some (n,rest)
+        | _                                          -> None
+
+    let rec (|Schema|) acc = function
+        | Eof _ -> acc |> List.rev
+        | Name (name, WS (LP ( WS (DataType (dt, RP(rest)))))) -> (|Schema|) ((name,dt)::acc) rest
+        | Name (name, rest) -> (|Schema|) ((name,(typeof<string>,TypeDetermination.TypeWrapper.None))::acc) rest
+        | Comma rest -> (|Schema|) acc rest 
+        | WS rest -> (|Schema|) acc rest 
+        | x -> failwithf "Unable to parse at %A" x
+
+let parseSchema s = Parsing.(|Schema|) [] (0,s)
+
+(*
+[<Literal>]
+let scma = """
+"f1 field" (int),"f2" (int),"f3","f4" (int),"f5" (date),"f6" (int?),"f7","f8","f9"(int?),"f10", f11 (float option)
+"""
+parseSchema scma
+*)

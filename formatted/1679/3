@@ -1,0 +1,294 @@
+<h2><a name="Multi-currency-domain" class="anchor" href="#Multi-currency-domain">Multi-currency domain</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">type</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="t">Money</span> <span class="o">=</span> <span class="k">private</span> { <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">Amount</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="t">decimal</span>; <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="i">Currency</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs4', 5)" onmouseover="showTip(event, 'fs4', 5)" class="t">Currency</span> } 
+   <span class="k">with</span>   
+   <span class="k">static</span> <span class="k">member</span> ( <span class="o">*</span> ) (<span onmouseout="hideTip(event, 'fs5', 6)" onmouseover="showTip(event, 'fs5', 6)" class="i">lhs</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs1', 7)" onmouseover="showTip(event, 'fs1', 7)" class="t">Money</span>,<span onmouseout="hideTip(event, 'fs6', 8)" onmouseover="showTip(event, 'fs6', 8)" class="i">rhs</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs3', 9)" onmouseover="showTip(event, 'fs3', 9)" class="t">decimal</span>) <span class="o">=</span> 
+      { <span onmouseout="hideTip(event, 'fs5', 10)" onmouseover="showTip(event, 'fs5', 10)" class="i">lhs</span> <span class="k">with</span> <span class="i">Amount</span><span class="o">=</span><span onmouseout="hideTip(event, 'fs5', 11)" onmouseover="showTip(event, 'fs5', 11)" class="i">lhs</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 12)" onmouseover="showTip(event, 'fs2', 12)" class="i">Amount</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs6', 13)" onmouseover="showTip(event, 'fs6', 13)" class="i">rhs</span> }
+   <span class="k">static</span> <span class="k">member</span> ( <span class="o">+</span> ) (<span onmouseout="hideTip(event, 'fs5', 14)" onmouseover="showTip(event, 'fs5', 14)" class="i">lhs</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs1', 15)" onmouseover="showTip(event, 'fs1', 15)" class="t">Money</span>,<span onmouseout="hideTip(event, 'fs7', 16)" onmouseover="showTip(event, 'fs7', 16)" class="i">rhs</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs1', 17)" onmouseover="showTip(event, 'fs1', 17)" class="t">Money</span>) <span class="o">=</span>
+      <span class="k">if</span> <span onmouseout="hideTip(event, 'fs5', 18)" onmouseover="showTip(event, 'fs5', 18)" class="i">lhs</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs8', 19)" onmouseover="showTip(event, 'fs8', 19)" class="i">Currency</span> <span class="o">&lt;&gt;</span> <span onmouseout="hideTip(event, 'fs7', 20)" onmouseover="showTip(event, 'fs7', 20)" class="i">rhs</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs8', 21)" onmouseover="showTip(event, 'fs8', 21)" class="i">Currency</span> <span class="k">then</span> <span onmouseout="hideTip(event, 'fs9', 22)" onmouseover="showTip(event, 'fs9', 22)" class="f">invalidOp</span> <span class="s">&quot;Currency mismatch&quot;</span>
+      { <span onmouseout="hideTip(event, 'fs5', 23)" onmouseover="showTip(event, 'fs5', 23)" class="i">lhs</span> <span class="k">with</span> <span class="i">Amount</span><span class="o">=</span><span onmouseout="hideTip(event, 'fs5', 24)" onmouseover="showTip(event, 'fs5', 24)" class="i">lhs</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 25)" onmouseover="showTip(event, 'fs2', 25)" class="i">Amount</span> <span class="o">+</span> <span onmouseout="hideTip(event, 'fs7', 26)" onmouseover="showTip(event, 'fs7', 26)" class="i">rhs</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 27)" onmouseover="showTip(event, 'fs2', 27)" class="i">Amount</span>}
+   <span class="k">override</span> <span onmouseout="hideTip(event, 'fs10', 28)" onmouseover="showTip(event, 'fs10', 28)" class="i">money</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs11', 29)" onmouseover="showTip(event, 'fs11', 29)" class="f">ToString</span>() <span class="o">=</span> <span onmouseout="hideTip(event, 'fs12', 30)" onmouseover="showTip(event, 'fs12', 30)" class="f">sprintf</span> <span class="s">&quot;</span><span class="pf">%M</span><span class="s"></span><span class="pf">%s</span><span class="s">&quot;</span> <span onmouseout="hideTip(event, 'fs10', 31)" onmouseover="showTip(event, 'fs10', 31)" class="i">money</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 32)" onmouseover="showTip(event, 'fs2', 32)" class="i">Amount</span> <span onmouseout="hideTip(event, 'fs10', 33)" onmouseover="showTip(event, 'fs10', 33)" class="i">money</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs8', 34)" onmouseover="showTip(event, 'fs8', 34)" class="i">Currency</span>
+<span class="k">and</span>  <span onmouseout="hideTip(event, 'fs13', 35)" onmouseover="showTip(event, 'fs13', 35)" class="t">Currency</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs14', 36)" onmouseover="showTip(event, 'fs14', 36)" class="t">string</span>
+
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs15', 37)" onmouseover="showTip(event, 'fs15', 37)" class="t">RateTable</span> <span class="o">=</span> { <span onmouseout="hideTip(event, 'fs16', 38)" onmouseover="showTip(event, 'fs16', 38)" class="i">To</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs13', 39)" onmouseover="showTip(event, 'fs13', 39)" class="t">Currency</span>; <span onmouseout="hideTip(event, 'fs17', 40)" onmouseover="showTip(event, 'fs17', 40)" class="i">From</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs18', 41)" onmouseover="showTip(event, 'fs18', 41)" class="t">Map</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs13', 42)" onmouseover="showTip(event, 'fs13', 42)" class="t">Currency</span>,<span onmouseout="hideTip(event, 'fs3', 43)" onmouseover="showTip(event, 'fs3', 43)" class="t">decimal</span><span class="o">&gt;</span> }
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs19', 44)" onmouseover="showTip(event, 'fs19', 44)" class="f">exchangeRate</span> (<span onmouseout="hideTip(event, 'fs20', 45)" onmouseover="showTip(event, 'fs20', 45)" class="i">rates</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs15', 46)" onmouseover="showTip(event, 'fs15', 46)" class="t">RateTable</span>) <span onmouseout="hideTip(event, 'fs21', 47)" onmouseover="showTip(event, 'fs21', 47)" class="i">cy</span> <span class="o">=</span>   
+   <span class="k">if</span> <span onmouseout="hideTip(event, 'fs20', 48)" onmouseover="showTip(event, 'fs20', 48)" class="i">rates</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs16', 49)" onmouseover="showTip(event, 'fs16', 49)" class="i">To</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs21', 50)" onmouseover="showTip(event, 'fs21', 50)" class="i">cy</span> <span class="k">then</span> <span class="n">1.0M</span> <span class="k">else</span> <span onmouseout="hideTip(event, 'fs20', 51)" onmouseover="showTip(event, 'fs20', 51)" class="i">rates</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs17', 52)" onmouseover="showTip(event, 'fs17', 52)" class="i">From</span><span class="o">.</span>[<span onmouseout="hideTip(event, 'fs21', 53)" onmouseover="showTip(event, 'fs21', 53)" class="i">cy</span>]
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs22', 54)" onmouseover="showTip(event, 'fs22', 54)" class="f">convertCurrency</span> (<span onmouseout="hideTip(event, 'fs20', 55)" onmouseover="showTip(event, 'fs20', 55)" class="i">rates</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs15', 56)" onmouseover="showTip(event, 'fs15', 56)" class="t">RateTable</span>) <span onmouseout="hideTip(event, 'fs10', 57)" onmouseover="showTip(event, 'fs10', 57)" class="i">money</span> <span class="o">=</span>
+   <span class="k">let</span> <span onmouseout="hideTip(event, 'fs23', 58)" onmouseover="showTip(event, 'fs23', 58)" class="i">rate</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs19', 59)" onmouseover="showTip(event, 'fs19', 59)" class="f">exchangeRate</span> <span onmouseout="hideTip(event, 'fs20', 60)" onmouseover="showTip(event, 'fs20', 60)" class="i">rates</span> <span onmouseout="hideTip(event, 'fs10', 61)" onmouseover="showTip(event, 'fs10', 61)" class="i">money</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs8', 62)" onmouseover="showTip(event, 'fs8', 62)" class="i">Currency</span>
+   { <span class="i">Amount</span><span class="o">=</span><span onmouseout="hideTip(event, 'fs10', 63)" onmouseover="showTip(event, 'fs10', 63)" class="i">money</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 64)" onmouseover="showTip(event, 'fs2', 64)" class="i">Amount</span> <span class="o">/</span> <span onmouseout="hideTip(event, 'fs23', 65)" onmouseover="showTip(event, 'fs23', 65)" class="i">rate</span>; <span onmouseout="hideTip(event, 'fs13', 66)" onmouseover="showTip(event, 'fs13', 66)" class="i">Currency</span><span class="o">=</span><span onmouseout="hideTip(event, 'fs20', 67)" onmouseover="showTip(event, 'fs20', 67)" class="i">rates</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs16', 68)" onmouseover="showTip(event, 'fs16', 68)" class="i">To</span> }
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Multi-currency-report-model" class="anchor" href="#Multi-currency-report-model">Multi-currency report model</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">type</span> <span onmouseout="hideTip(event, 'fs24', 69)" onmouseover="showTip(event, 'fs24', 69)" class="t">Report</span> <span class="o">=</span> { <span onmouseout="hideTip(event, 'fs25', 70)" onmouseover="showTip(event, 'fs25', 70)" class="i">Rows</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs26', 71)" onmouseover="showTip(event, 'fs26', 71)" class="t">Row</span> <span onmouseout="hideTip(event, 'fs27', 72)" onmouseover="showTip(event, 'fs27', 72)" class="t">list</span>; <span onmouseout="hideTip(event, 'fs28', 73)" onmouseover="showTip(event, 'fs28', 73)" class="i">Total</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs1', 74)" onmouseover="showTip(event, 'fs1', 74)" class="t">Money</span> }
+<span class="k">and</span>  <span onmouseout="hideTip(event, 'fs26', 75)" onmouseover="showTip(event, 'fs26', 75)" class="t">Row</span> <span class="o">=</span> { <span onmouseout="hideTip(event, 'fs29', 76)" onmouseover="showTip(event, 'fs29', 76)" class="i">Position</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs29', 77)" onmouseover="showTip(event, 'fs29', 77)" class="t">Position</span>; <span onmouseout="hideTip(event, 'fs30', 78)" onmouseover="showTip(event, 'fs30', 78)" class="i">Total</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs1', 79)" onmouseover="showTip(event, 'fs1', 79)" class="t">Money</span> }
+<span class="k">and</span>  <span onmouseout="hideTip(event, 'fs31', 80)" onmouseover="showTip(event, 'fs31', 80)" class="t">Position</span> <span class="o">=</span> { <span onmouseout="hideTip(event, 'fs32', 81)" onmouseover="showTip(event, 'fs32', 81)" class="i">Instrument</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs14', 82)" onmouseover="showTip(event, 'fs14', 82)" class="t">string</span>; <span onmouseout="hideTip(event, 'fs33', 83)" onmouseover="showTip(event, 'fs33', 83)" class="i">Shares</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs34', 84)" onmouseover="showTip(event, 'fs34', 84)" class="t">int</span>; <span onmouseout="hideTip(event, 'fs35', 85)" onmouseover="showTip(event, 'fs35', 85)" class="i">Price</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs1', 86)" onmouseover="showTip(event, 'fs1', 86)" class="t">Money</span> }
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs36', 87)" onmouseover="showTip(event, 'fs36', 87)" class="f">generateReport</span> <span onmouseout="hideTip(event, 'fs20', 88)" onmouseover="showTip(event, 'fs20', 88)" class="i">rates</span> <span onmouseout="hideTip(event, 'fs37', 89)" onmouseover="showTip(event, 'fs37', 89)" class="i">positions</span> <span class="o">=</span>
+   <span class="k">let</span> <span onmouseout="hideTip(event, 'fs38', 90)" onmouseover="showTip(event, 'fs38', 90)" class="i">rows</span> <span class="o">=</span>
+      [<span class="k">for</span> <span onmouseout="hideTip(event, 'fs39', 91)" onmouseover="showTip(event, 'fs39', 91)" class="i">position</span> <span class="k">in</span> <span onmouseout="hideTip(event, 'fs37', 92)" onmouseover="showTip(event, 'fs37', 92)" class="i">positions</span> <span class="k">-&gt;</span>        
+         <span class="k">let</span> <span onmouseout="hideTip(event, 'fs40', 93)" onmouseover="showTip(event, 'fs40', 93)" class="i">total</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs39', 94)" onmouseover="showTip(event, 'fs39', 94)" class="i">position</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs35', 95)" onmouseover="showTip(event, 'fs35', 95)" class="i">Price</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs3', 96)" onmouseover="showTip(event, 'fs3', 96)" class="f">decimal</span> <span onmouseout="hideTip(event, 'fs39', 97)" onmouseover="showTip(event, 'fs39', 97)" class="i">position</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs33', 98)" onmouseover="showTip(event, 'fs33', 98)" class="i">Shares</span>
+         { <span onmouseout="hideTip(event, 'fs31', 99)" onmouseover="showTip(event, 'fs31', 99)" class="i">Position</span><span class="o">=</span><span onmouseout="hideTip(event, 'fs39', 100)" onmouseover="showTip(event, 'fs39', 100)" class="i">position</span>; <span class="i">Total</span><span class="o">=</span><span onmouseout="hideTip(event, 'fs40', 101)" onmouseover="showTip(event, 'fs40', 101)" class="i">total</span> } ]
+   <span class="k">let</span> <span onmouseout="hideTip(event, 'fs40', 102)" onmouseover="showTip(event, 'fs40', 102)" class="i">total</span> <span class="o">=</span>
+      <span onmouseout="hideTip(event, 'fs38', 103)" onmouseover="showTip(event, 'fs38', 103)" class="i">rows</span>
+      <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs41', 104)" onmouseover="showTip(event, 'fs41', 104)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs42', 105)" onmouseover="showTip(event, 'fs42', 105)" class="f">map</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs43', 106)" onmouseover="showTip(event, 'fs43', 106)" class="i">row</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs22', 107)" onmouseover="showTip(event, 'fs22', 107)" class="f">convertCurrency</span> <span onmouseout="hideTip(event, 'fs20', 108)" onmouseover="showTip(event, 'fs20', 108)" class="i">rates</span> <span onmouseout="hideTip(event, 'fs43', 109)" onmouseover="showTip(event, 'fs43', 109)" class="i">row</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs30', 110)" onmouseover="showTip(event, 'fs30', 110)" class="i">Total</span>)   
+      <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs41', 111)" onmouseover="showTip(event, 'fs41', 111)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs44', 112)" onmouseover="showTip(event, 'fs44', 112)" class="f">reduce</span> (<span class="o">+</span>)
+   { <span class="i">Rows</span><span class="o">=</span><span onmouseout="hideTip(event, 'fs38', 113)" onmouseover="showTip(event, 'fs38', 113)" class="i">rows</span>; <span class="i">Total</span><span class="o">=</span><span onmouseout="hideTip(event, 'fs40', 114)" onmouseover="showTip(event, 'fs40', 114)" class="i">total</span> }
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Multi-currency-report-view" class="anchor" href="#Multi-currency-report-view">Multi-currency report view</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">let</span> <span onmouseout="hideTip(event, 'fs45', 115)" onmouseover="showTip(event, 'fs45', 115)" class="f">toHtml</span> (<span onmouseout="hideTip(event, 'fs46', 116)" onmouseover="showTip(event, 'fs46', 116)" class="i">report</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs24', 117)" onmouseover="showTip(event, 'fs24', 117)" class="t">Report</span>) <span class="o">=</span>
+   <span onmouseout="hideTip(event, 'fs47', 118)" onmouseover="showTip(event, 'fs47', 118)" class="f">html</span> [
+      <span onmouseout="hideTip(event, 'fs48', 119)" onmouseover="showTip(event, 'fs48', 119)" class="f">head</span> [ <span onmouseout="hideTip(event, 'fs49', 120)" onmouseover="showTip(event, 'fs49', 120)" class="f">title</span> <span class="o">%</span><span class="s">&quot;Multi-currency report&quot;</span> ]      
+      <span onmouseout="hideTip(event, 'fs50', 121)" onmouseover="showTip(event, 'fs50', 121)" class="f">body</span> [
+         <span onmouseout="hideTip(event, 'fs51', 122)" onmouseover="showTip(event, 'fs51', 122)" class="f">table</span> <span class="o">&lt;|</span>
+            (<span class="s">&quot;border&quot;</span><span class="o">%=</span><span class="s">&quot;1&quot;</span>) <span class="o">::</span>
+            (<span class="s">&quot;style&quot;</span><span class="o">%=</span><span class="s">&quot;border-collapse:collapse;&quot;</span>) <span class="o">::</span>
+            (<span class="s">&quot;cellpadding&quot;</span><span class="o">%=</span><span class="s">&quot;8&quot;</span>) <span class="o">::</span>
+            <span onmouseout="hideTip(event, 'fs52', 123)" onmouseover="showTip(event, 'fs52', 123)" class="f">thead</span> [
+               <span onmouseout="hideTip(event, 'fs53', 124)" onmouseover="showTip(event, 'fs53', 124)" class="f">tr</span> [<span onmouseout="hideTip(event, 'fs54', 125)" onmouseover="showTip(event, 'fs54', 125)" class="f">th</span> <span class="o">%</span><span class="s">&quot;Instrument&quot;</span>; <span onmouseout="hideTip(event, 'fs54', 126)" onmouseover="showTip(event, 'fs54', 126)" class="f">th</span> <span class="o">%</span><span class="s">&quot;Shares&quot;</span>; <span onmouseout="hideTip(event, 'fs54', 127)" onmouseover="showTip(event, 'fs54', 127)" class="f">th</span> <span class="o">%</span><span class="s">&quot;Price&quot;</span>; <span onmouseout="hideTip(event, 'fs54', 128)" onmouseover="showTip(event, 'fs54', 128)" class="f">th</span> <span class="o">%</span><span class="s">&quot;Total&quot;</span>] 
+            ] <span class="o">::</span>
+            <span onmouseout="hideTip(event, 'fs55', 129)" onmouseover="showTip(event, 'fs55', 129)" class="f">tbody</span> [
+               <span class="k">for</span> <span onmouseout="hideTip(event, 'fs43', 130)" onmouseover="showTip(event, 'fs43', 130)" class="i">row</span> <span class="k">in</span> <span onmouseout="hideTip(event, 'fs46', 131)" onmouseover="showTip(event, 'fs46', 131)" class="i">report</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs25', 132)" onmouseover="showTip(event, 'fs25', 132)" class="i">Rows</span> <span class="k">-&gt;</span>
+                  <span class="k">let</span> <span onmouseout="hideTip(event, 'fs56', 133)" onmouseover="showTip(event, 'fs56', 133)" class="i">p</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs43', 134)" onmouseover="showTip(event, 'fs43', 134)" class="i">row</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs57', 135)" onmouseover="showTip(event, 'fs57', 135)" class="i">Position</span>
+                  <span onmouseout="hideTip(event, 'fs53', 136)" onmouseover="showTip(event, 'fs53', 136)" class="f">tr</span> [<span onmouseout="hideTip(event, 'fs58', 137)" onmouseover="showTip(event, 'fs58', 137)" class="f">td</span> <span class="o">%</span><span onmouseout="hideTip(event, 'fs56', 138)" onmouseover="showTip(event, 'fs56', 138)" class="i">p</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs32', 139)" onmouseover="showTip(event, 'fs32', 139)" class="i">Instrument</span>; <span onmouseout="hideTip(event, 'fs58', 140)" onmouseover="showTip(event, 'fs58', 140)" class="f">td</span> <span class="o">%</span><span onmouseout="hideTip(event, 'fs56', 141)" onmouseover="showTip(event, 'fs56', 141)" class="i">p</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs33', 142)" onmouseover="showTip(event, 'fs33', 142)" class="i">Shares</span>; <span onmouseout="hideTip(event, 'fs58', 143)" onmouseover="showTip(event, 'fs58', 143)" class="f">td</span> <span class="o">%</span><span onmouseout="hideTip(event, 'fs56', 144)" onmouseover="showTip(event, 'fs56', 144)" class="i">p</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs35', 145)" onmouseover="showTip(event, 'fs35', 145)" class="i">Price</span>; <span onmouseout="hideTip(event, 'fs58', 146)" onmouseover="showTip(event, 'fs58', 146)" class="f">td</span> <span class="o">%</span><span onmouseout="hideTip(event, 'fs43', 147)" onmouseover="showTip(event, 'fs43', 147)" class="i">row</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs30', 148)" onmouseover="showTip(event, 'fs30', 148)" class="i">Total</span>]
+            ] <span class="o">::</span> 
+            [ <span onmouseout="hideTip(event, 'fs59', 149)" onmouseover="showTip(event, 'fs59', 149)" class="f">tfoot</span> [
+               <span onmouseout="hideTip(event, 'fs53', 150)" onmouseover="showTip(event, 'fs53', 150)" class="f">tr</span> [<span onmouseout="hideTip(event, 'fs58', 151)" onmouseover="showTip(event, 'fs58', 151)" class="f">td</span> (<span class="s">&quot;colspan&quot;</span><span class="o">%=</span><span class="s">&quot;3&quot;</span><span class="o">::</span><span class="s">&quot;align&quot;</span><span class="o">%=</span><span class="s">&quot;right&quot;</span><span class="o">::</span>[<span onmouseout="hideTip(event, 'fs60', 152)" onmouseover="showTip(event, 'fs60', 152)" class="f">strong</span> <span class="o">%</span><span class="s">&quot;Total&quot;</span>])
+                   <span onmouseout="hideTip(event, 'fs58', 153)" onmouseover="showTip(event, 'fs58', 153)" class="f">td</span> <span class="o">%</span><span onmouseout="hideTip(event, 'fs46', 154)" onmouseover="showTip(event, 'fs46', 154)" class="i">report</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs28', 155)" onmouseover="showTip(event, 'fs28', 155)" class="i">Total</span>]
+            ]]
+         ]
+      ]
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Example" class="anchor" href="#Example">Example</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">let</span> <span onmouseout="hideTip(event, 'fs61', 156)" onmouseover="showTip(event, 'fs61', 156)" class="f">USD</span> <span onmouseout="hideTip(event, 'fs62', 157)" onmouseover="showTip(event, 'fs62', 157)" class="i">amount</span> <span class="o">=</span> { <span class="i">Amount</span><span class="o">=</span><span onmouseout="hideTip(event, 'fs62', 158)" onmouseover="showTip(event, 'fs62', 158)" class="i">amount</span>; <span onmouseout="hideTip(event, 'fs13', 159)" onmouseover="showTip(event, 'fs13', 159)" class="i">Currency</span><span class="o">=</span><span class="s">&quot;USD&quot;</span> }
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs63', 160)" onmouseover="showTip(event, 'fs63', 160)" class="f">CHF</span> <span onmouseout="hideTip(event, 'fs62', 161)" onmouseover="showTip(event, 'fs62', 161)" class="i">amount</span> <span class="o">=</span> { <span class="i">Amount</span><span class="o">=</span><span onmouseout="hideTip(event, 'fs62', 162)" onmouseover="showTip(event, 'fs62', 162)" class="i">amount</span>; <span onmouseout="hideTip(event, 'fs13', 163)" onmouseover="showTip(event, 'fs13', 163)" class="i">Currency</span><span class="o">=</span><span class="s">&quot;CHF&quot;</span> }
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs64', 164)" onmouseover="showTip(event, 'fs64', 164)" class="i">positions</span> <span class="o">=</span>
+   [{<span class="i">Instrument</span><span class="o">=</span><span class="s">&quot;IBM&quot;</span>;      <span class="i">Shares</span><span class="o">=</span><span class="n">1000</span>; <span class="i">Price</span><span class="o">=</span><span onmouseout="hideTip(event, 'fs61', 165)" onmouseover="showTip(event, 'fs61', 165)" class="f">USD</span>( <span class="n">25M</span>)}
+    {<span class="i">Instrument</span><span class="o">=</span><span class="s">&quot;Novartis&quot;</span>; <span class="i">Shares</span><span class="o">=</span> <span class="n">400</span>; <span class="i">Price</span><span class="o">=</span><span onmouseout="hideTip(event, 'fs63', 166)" onmouseover="showTip(event, 'fs63', 166)" class="f">CHF</span>(<span class="n">150M</span>)}]
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs65', 167)" onmouseover="showTip(event, 'fs65', 167)" class="i">inUSD</span> <span class="o">=</span> { <span class="i">To</span><span class="o">=</span><span class="s">&quot;USD&quot;</span>; <span class="i">From</span><span class="o">=</span><span onmouseout="hideTip(event, 'fs18', 168)" onmouseover="showTip(event, 'fs18', 168)" class="t">Map</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs66', 169)" onmouseover="showTip(event, 'fs66', 169)" class="f">ofList</span> [<span class="s">&quot;CHF&quot;</span>,<span class="n">1.5M</span>] }
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs67', 170)" onmouseover="showTip(event, 'fs67', 170)" class="i">positionsInUSD</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs36', 171)" onmouseover="showTip(event, 'fs36', 171)" class="f">generateReport</span> <span onmouseout="hideTip(event, 'fs65', 172)" onmouseover="showTip(event, 'fs65', 172)" class="i">inUSD</span> <span onmouseout="hideTip(event, 'fs64', 173)" onmouseover="showTip(event, 'fs64', 173)" class="i">positions</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs68', 174)" onmouseover="showTip(event, 'fs68', 174)" class="i">report</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs67', 175)" onmouseover="showTip(event, 'fs67', 175)" class="i">positionsInUSD</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs45', 176)" onmouseover="showTip(event, 'fs45', 176)" class="f">toHtml</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs69', 177)" onmouseover="showTip(event, 'fs69', 177)" class="t">Html</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs70', 178)" onmouseover="showTip(event, 'fs70', 178)" class="f">toString</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Show-report-embedded" class="anchor" href="#Show-report-embedded">Show report embedded</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+<span class="l">6: </span>
+<span class="l">7: </span>
+<span class="l">8: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="prep">#r</span> <span class="s">&quot;System.Windows.Forms.dll&quot;</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs71', 179)" onmouseover="showTip(event, 'fs71', 179)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs72', 180)" onmouseover="showTip(event, 'fs72', 180)" class="i">Windows</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs73', 181)" onmouseover="showTip(event, 'fs73', 181)" class="i">Forms</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs74', 182)" onmouseover="showTip(event, 'fs74', 182)" class="i">form</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs75', 183)" onmouseover="showTip(event, 'fs75', 183)" class="t">Form</span>(<span onmouseout="hideTip(event, 'fs76', 184)" onmouseover="showTip(event, 'fs76', 184)" class="i">Text</span><span class="o">=</span><span class="s">&quot;Multi-currency report&quot;</span>)
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs77', 185)" onmouseover="showTip(event, 'fs77', 185)" class="i">web</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs78', 186)" onmouseover="showTip(event, 'fs78', 186)" class="t">WebBrowser</span>(<span class="i">Dock</span><span class="o">=</span><span onmouseout="hideTip(event, 'fs79', 187)" onmouseover="showTip(event, 'fs79', 187)" class="t">DockStyle</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs80', 188)" onmouseover="showTip(event, 'fs80', 188)" class="i">Fill</span>)
+<span onmouseout="hideTip(event, 'fs74', 189)" onmouseover="showTip(event, 'fs74', 189)" class="i">form</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs81', 190)" onmouseover="showTip(event, 'fs81', 190)" class="i">Controls</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs82', 191)" onmouseover="showTip(event, 'fs82', 191)" class="f">Add</span>(<span onmouseout="hideTip(event, 'fs77', 192)" onmouseover="showTip(event, 'fs77', 192)" class="i">web</span>)
+<span onmouseout="hideTip(event, 'fs77', 193)" onmouseover="showTip(event, 'fs77', 193)" class="i">web</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs83', 194)" onmouseover="showTip(event, 'fs83', 194)" class="f">Navigate</span>(<span class="s">&quot;about:blank&quot;</span>)
+<span onmouseout="hideTip(event, 'fs77', 195)" onmouseover="showTip(event, 'fs77', 195)" class="i">web</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs84', 196)" onmouseover="showTip(event, 'fs84', 196)" class="i">Document</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs85', 197)" onmouseover="showTip(event, 'fs85', 197)" class="f">Write</span>(<span onmouseout="hideTip(event, 'fs68', 198)" onmouseover="showTip(event, 'fs68', 198)" class="i">report</span>)
+<span onmouseout="hideTip(event, 'fs74', 199)" onmouseover="showTip(event, 'fs74', 199)" class="i">form</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs86', 200)" onmouseover="showTip(event, 'fs86', 200)" class="f">Show</span>()
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Write-report-amp-launch-in-browser" class="anchor" href="#Write-report-amp-launch-in-browser">Write report &amp; launch in browser</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+<span class="l">6: </span>
+<span class="l">7: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span onmouseout="hideTip(event, 'fs71', 201)" onmouseover="showTip(event, 'fs71', 201)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs87', 202)" onmouseover="showTip(event, 'fs87', 202)" class="i">IO</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs88', 203)" onmouseover="showTip(event, 'fs88', 203)" class="i">name</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs71', 204)" onmouseover="showTip(event, 'fs71', 204)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs89', 205)" onmouseover="showTip(event, 'fs89', 205)" class="t">Guid</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs90', 206)" onmouseover="showTip(event, 'fs90', 206)" class="f">NewGuid</span>()<span class="o">.</span><span class="f">ToString</span>()
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs91', 207)" onmouseover="showTip(event, 'fs91', 207)" class="i">path</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs92', 208)" onmouseover="showTip(event, 'fs92', 208)" class="t">Path</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs93', 209)" onmouseover="showTip(event, 'fs93', 209)" class="f">GetTempPath</span>() <span class="o">+</span> <span onmouseout="hideTip(event, 'fs88', 210)" onmouseover="showTip(event, 'fs88', 210)" class="i">name</span> <span class="o">+</span> <span class="s">&quot;.html&quot;</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs94', 211)" onmouseover="showTip(event, 'fs94', 211)" class="i">writer</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs95', 212)" onmouseover="showTip(event, 'fs95', 212)" class="t">File</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs96', 213)" onmouseover="showTip(event, 'fs96', 213)" class="f">CreateText</span>(<span onmouseout="hideTip(event, 'fs91', 214)" onmouseover="showTip(event, 'fs91', 214)" class="i">path</span>)
+<span onmouseout="hideTip(event, 'fs94', 215)" onmouseover="showTip(event, 'fs94', 215)" class="i">writer</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs97', 216)" onmouseover="showTip(event, 'fs97', 216)" class="f">Write</span>(<span onmouseout="hideTip(event, 'fs68', 217)" onmouseover="showTip(event, 'fs68', 217)" class="i">report</span>)
+<span onmouseout="hideTip(event, 'fs94', 218)" onmouseover="showTip(event, 'fs94', 218)" class="i">writer</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs98', 219)" onmouseover="showTip(event, 'fs98', 219)" class="f">Close</span>()
+<span onmouseout="hideTip(event, 'fs71', 220)" onmouseover="showTip(event, 'fs71', 220)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs99', 221)" onmouseover="showTip(event, 'fs99', 221)" class="i">Diagnostics</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs100', 222)" onmouseover="showTip(event, 'fs100', 222)" class="t">Process</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs101', 223)" onmouseover="showTip(event, 'fs101', 223)" class="f">Start</span>(<span onmouseout="hideTip(event, 'fs91', 224)" onmouseover="showTip(event, 'fs91', 224)" class="i">path</span>)
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">type Money =<br />&#160;&#160;private {Amount: decimal;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Currency: Currency;}<br />&#160;&#160;override ToString : unit -&gt; string<br />&#160;&#160;static member ( + ) : lhs:Money * rhs:Money -&gt; Money<br />&#160;&#160;static member ( * ) : lhs:Money * rhs:decimal -&gt; Money<br /><br />Full name: Script.Money</div>
+<div class="tip" id="fs2">Money.Amount: decimal</div>
+<div class="tip" id="fs3">Multiple items<br />val decimal : value:&#39;T -&gt; decimal (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.decimal<br /><br />--------------------<br />type decimal = System.Decimal<br /><br />Full name: Microsoft.FSharp.Core.decimal<br /><br />--------------------<br />type decimal&lt;&#39;Measure&gt; = decimal<br /><br />Full name: Microsoft.FSharp.Core.decimal&lt;_&gt;</div>
+<div class="tip" id="fs4">Multiple items<br />Money.Currency: Currency<br /><br />--------------------<br />type Currency = string<br /><br />Full name: Script.Currency</div>
+<div class="tip" id="fs5">val lhs : Money</div>
+<div class="tip" id="fs6">val rhs : decimal</div>
+<div class="tip" id="fs7">val rhs : Money</div>
+<div class="tip" id="fs8">Money.Currency: Currency</div>
+<div class="tip" id="fs9">val invalidOp : message:string -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.Operators.invalidOp</div>
+<div class="tip" id="fs10">val money : Money</div>
+<div class="tip" id="fs11">override Money.ToString : unit -&gt; string<br /><br />Full name: Script.Money.ToString</div>
+<div class="tip" id="fs12">val sprintf : format:Printf.StringFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.sprintf</div>
+<div class="tip" id="fs13">type Currency = string<br /><br />Full name: Script.Currency</div>
+<div class="tip" id="fs14">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />Full name: Microsoft.FSharp.Core.Operators.string<br /><br />--------------------<br />type string = System.String<br /><br />Full name: Microsoft.FSharp.Core.string</div>
+<div class="tip" id="fs15">type RateTable =<br />&#160;&#160;{To: Currency;<br />&#160;&#160;&#160;From: Map&lt;Currency,decimal&gt;;}<br /><br />Full name: Script.RateTable</div>
+<div class="tip" id="fs16">RateTable.To: Currency</div>
+<div class="tip" id="fs17">RateTable.From: Map&lt;Currency,decimal&gt;</div>
+<div class="tip" id="fs18">Multiple items<br />module Map<br /><br />from Microsoft.FSharp.Collections<br /><br />--------------------<br />type Map&lt;&#39;Key,&#39;Value (requires comparison)&gt; =<br />&#160;&#160;interface IEnumerable<br />&#160;&#160;interface IComparable<br />&#160;&#160;interface IEnumerable&lt;KeyValuePair&lt;&#39;Key,&#39;Value&gt;&gt;<br />&#160;&#160;interface ICollection&lt;KeyValuePair&lt;&#39;Key,&#39;Value&gt;&gt;<br />&#160;&#160;interface IDictionary&lt;&#39;Key,&#39;Value&gt;<br />&#160;&#160;new : elements:seq&lt;&#39;Key * &#39;Value&gt; -&gt; Map&lt;&#39;Key,&#39;Value&gt;<br />&#160;&#160;member Add : key:&#39;Key * value:&#39;Value -&gt; Map&lt;&#39;Key,&#39;Value&gt;<br />&#160;&#160;member ContainsKey : key:&#39;Key -&gt; bool<br />&#160;&#160;override Equals : obj -&gt; bool<br />&#160;&#160;member Remove : key:&#39;Key -&gt; Map&lt;&#39;Key,&#39;Value&gt;<br />&#160;&#160;...<br /><br />Full name: Microsoft.FSharp.Collections.Map&lt;_,_&gt;<br /><br />--------------------<br />new : elements:seq&lt;&#39;Key * &#39;Value&gt; -&gt; Map&lt;&#39;Key,&#39;Value&gt;</div>
+<div class="tip" id="fs19">val exchangeRate : rates:RateTable -&gt; cy:Currency -&gt; decimal<br /><br />Full name: Script.exchangeRate</div>
+<div class="tip" id="fs20">val rates : RateTable</div>
+<div class="tip" id="fs21">val cy : Currency</div>
+<div class="tip" id="fs22">val convertCurrency : rates:RateTable -&gt; money:Money -&gt; Money<br /><br />Full name: Script.convertCurrency</div>
+<div class="tip" id="fs23">val rate : decimal</div>
+<div class="tip" id="fs24">type Report =<br />&#160;&#160;{Rows: Row list;<br />&#160;&#160;&#160;Total: Money;}<br /><br />Full name: Script.Report</div>
+<div class="tip" id="fs25">Report.Rows: Row list</div>
+<div class="tip" id="fs26">type Row =<br />&#160;&#160;{Position: Position;<br />&#160;&#160;&#160;Total: Money;}<br /><br />Full name: Script.Row</div>
+<div class="tip" id="fs27">type &#39;T list = List&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.list&lt;_&gt;</div>
+<div class="tip" id="fs28">Report.Total: Money</div>
+<div class="tip" id="fs29">Multiple items<br />Row.Position: Position<br /><br />--------------------<br />type Position =<br />&#160;&#160;{Instrument: string;<br />&#160;&#160;&#160;Shares: int;<br />&#160;&#160;&#160;Price: Money;}<br /><br />Full name: Script.Position</div>
+<div class="tip" id="fs30">Row.Total: Money</div>
+<div class="tip" id="fs31">type Position =<br />&#160;&#160;{Instrument: string;<br />&#160;&#160;&#160;Shares: int;<br />&#160;&#160;&#160;Price: Money;}<br /><br />Full name: Script.Position</div>
+<div class="tip" id="fs32">Position.Instrument: string</div>
+<div class="tip" id="fs33">Position.Shares: int</div>
+<div class="tip" id="fs34">Multiple items<br />val int : value:&#39;T -&gt; int (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.int<br /><br />--------------------<br />type int = int32<br /><br />Full name: Microsoft.FSharp.Core.int<br /><br />--------------------<br />type int&lt;&#39;Measure&gt; = int<br /><br />Full name: Microsoft.FSharp.Core.int&lt;_&gt;</div>
+<div class="tip" id="fs35">Position.Price: Money</div>
+<div class="tip" id="fs36">val generateReport : rates:RateTable -&gt; positions:seq&lt;Position&gt; -&gt; Report<br /><br />Full name: Script.generateReport</div>
+<div class="tip" id="fs37">val positions : seq&lt;Position&gt;</div>
+<div class="tip" id="fs38">val rows : Row list</div>
+<div class="tip" id="fs39">val position : Position</div>
+<div class="tip" id="fs40">val total : Money</div>
+<div class="tip" id="fs41">module Seq<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs42">val map : mapping:(&#39;T -&gt; &#39;U) -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;U&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.map</div>
+<div class="tip" id="fs43">val row : Row</div>
+<div class="tip" id="fs44">val reduce : reduction:(&#39;T -&gt; &#39;T -&gt; &#39;T) -&gt; source:seq&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Collections.Seq.reduce</div>
+<div class="tip" id="fs45">val toHtml : report:Report -&gt; Html<br /><br />Full name: Script.toHtml</div>
+<div class="tip" id="fs46">val report : Report</div>
+<div class="tip" id="fs47">val html : (Html list -&gt; Html)<br /><br />Full name: Script.html</div>
+<div class="tip" id="fs48">val head : (Html list -&gt; Html)<br /><br />Full name: Script.head</div>
+<div class="tip" id="fs49">val title : (Html list -&gt; Html)<br /><br />Full name: Script.title</div>
+<div class="tip" id="fs50">val body : (Html list -&gt; Html)<br /><br />Full name: Script.body</div>
+<div class="tip" id="fs51">val table : (Html list -&gt; Html)<br /><br />Full name: Script.table</div>
+<div class="tip" id="fs52">val thead : (Html list -&gt; Html)<br /><br />Full name: Script.thead</div>
+<div class="tip" id="fs53">val tr : (Html list -&gt; Html)<br /><br />Full name: Script.tr</div>
+<div class="tip" id="fs54">val th : (Html list -&gt; Html)<br /><br />Full name: Script.th</div>
+<div class="tip" id="fs55">val tbody : (Html list -&gt; Html)<br /><br />Full name: Script.tbody</div>
+<div class="tip" id="fs56">val p : Position</div>
+<div class="tip" id="fs57">Row.Position: Position</div>
+<div class="tip" id="fs58">val td : (Html list -&gt; Html)<br /><br />Full name: Script.td</div>
+<div class="tip" id="fs59">val tfoot : (Html list -&gt; Html)<br /><br />Full name: Script.tfoot</div>
+<div class="tip" id="fs60">val strong : (Html list -&gt; Html)<br /><br />Full name: Script.strong</div>
+<div class="tip" id="fs61">val USD : amount:decimal -&gt; Money<br /><br />Full name: Script.USD</div>
+<div class="tip" id="fs62">val amount : decimal</div>
+<div class="tip" id="fs63">val CHF : amount:decimal -&gt; Money<br /><br />Full name: Script.CHF</div>
+<div class="tip" id="fs64">val positions : Position list<br /><br />Full name: Script.positions</div>
+<div class="tip" id="fs65">val inUSD : RateTable<br /><br />Full name: Script.inUSD</div>
+<div class="tip" id="fs66">val ofList : elements:(&#39;Key * &#39;T) list -&gt; Map&lt;&#39;Key,&#39;T&gt; (requires comparison)<br /><br />Full name: Microsoft.FSharp.Collections.Map.ofList</div>
+<div class="tip" id="fs67">val positionsInUSD : Report<br /><br />Full name: Script.positionsInUSD</div>
+<div class="tip" id="fs68">val report : string<br /><br />Full name: Script.report</div>
+<div class="tip" id="fs69">type Html =<br />&#160;&#160;| Elem of string * Html list<br />&#160;&#160;| Attr of string * string<br />&#160;&#160;| Text of string<br />&#160;&#160;override ToString : unit -&gt; string<br />&#160;&#160;static member toString : elem:Html -&gt; string<br /><br />Full name: Script.Html</div>
+<div class="tip" id="fs70">static member Html.toString : elem:Html -&gt; string</div>
+<div class="tip" id="fs71">namespace System</div>
+<div class="tip" id="fs72">namespace System.Windows</div>
+<div class="tip" id="fs73">namespace System.Windows.Forms</div>
+<div class="tip" id="fs74">val form : Form<br /><br />Full name: Script.form</div>
+<div class="tip" id="fs75">Multiple items<br />type Form =<br />&#160;&#160;inherit ContainerControl<br />&#160;&#160;new : unit -&gt; Form<br />&#160;&#160;member AcceptButton : IButtonControl with get, set<br />&#160;&#160;member Activate : unit -&gt; unit<br />&#160;&#160;member ActiveMdiChild : Form<br />&#160;&#160;member AddOwnedForm : ownedForm:Form -&gt; unit<br />&#160;&#160;member AllowTransparency : bool with get, set<br />&#160;&#160;member AutoScale : bool with get, set<br />&#160;&#160;member AutoScaleBaseSize : Size with get, set<br />&#160;&#160;member AutoScroll : bool with get, set<br />&#160;&#160;member AutoSize : bool with get, set<br />&#160;&#160;...<br />&#160;&#160;nested type ControlCollection<br /><br />Full name: System.Windows.Forms.Form<br /><br />--------------------<br />Form() : unit</div>
+<div class="tip" id="fs76">union case Html.Text: string -&gt; Html</div>
+<div class="tip" id="fs77">val web : WebBrowser<br /><br />Full name: Script.web</div>
+<div class="tip" id="fs78">Multiple items<br />type WebBrowser =<br />&#160;&#160;inherit WebBrowserBase<br />&#160;&#160;new : unit -&gt; WebBrowser<br />&#160;&#160;member AllowNavigation : bool with get, set<br />&#160;&#160;member AllowWebBrowserDrop : bool with get, set<br />&#160;&#160;member CanGoBack : bool<br />&#160;&#160;member CanGoForward : bool<br />&#160;&#160;member Document : HtmlDocument<br />&#160;&#160;member DocumentStream : Stream with get, set<br />&#160;&#160;member DocumentText : string with get, set<br />&#160;&#160;member DocumentTitle : string<br />&#160;&#160;member DocumentType : string<br />&#160;&#160;...<br /><br />Full name: System.Windows.Forms.WebBrowser<br /><br />--------------------<br />WebBrowser() : unit</div>
+<div class="tip" id="fs79">type DockStyle =<br />&#160;&#160;| None = 0<br />&#160;&#160;| Top = 1<br />&#160;&#160;| Bottom = 2<br />&#160;&#160;| Left = 3<br />&#160;&#160;| Right = 4<br />&#160;&#160;| Fill = 5<br /><br />Full name: System.Windows.Forms.DockStyle</div>
+<div class="tip" id="fs80">field DockStyle.Fill = 5</div>
+<div class="tip" id="fs81">property Control.Controls: Control.ControlCollection</div>
+<div class="tip" id="fs82">Control.ControlCollection.Add(value: Control) : unit</div>
+<div class="tip" id="fs83">WebBrowser.Navigate(urlString: string) : unit<br />WebBrowser.Navigate(url: System.Uri) : unit<br />WebBrowser.Navigate(urlString: string, newWindow: bool) : unit<br />WebBrowser.Navigate(url: System.Uri, newWindow: bool) : unit<br />WebBrowser.Navigate(urlString: string, targetFrameName: string) : unit<br />WebBrowser.Navigate(url: System.Uri, targetFrameName: string) : unit<br />WebBrowser.Navigate(urlString: string, targetFrameName: string, postData: byte [], additionalHeaders: string) : unit<br />WebBrowser.Navigate(url: System.Uri, targetFrameName: string, postData: byte [], additionalHeaders: string) : unit</div>
+<div class="tip" id="fs84">property WebBrowser.Document: HtmlDocument</div>
+<div class="tip" id="fs85">HtmlDocument.Write(text: string) : unit</div>
+<div class="tip" id="fs86">Control.Show() : unit<br />Form.Show(owner: IWin32Window) : unit</div>
+<div class="tip" id="fs87">namespace System.IO</div>
+<div class="tip" id="fs88">val name : string<br /><br />Full name: Script.name</div>
+<div class="tip" id="fs89">Multiple items<br />type Guid =<br />&#160;&#160;struct<br />&#160;&#160;&#160;&#160;new : b:byte[] -&gt; Guid + 4 overloads<br />&#160;&#160;&#160;&#160;member CompareTo : value:obj -&gt; int + 1 overload<br />&#160;&#160;&#160;&#160;member Equals : o:obj -&gt; bool + 1 overload<br />&#160;&#160;&#160;&#160;member GetHashCode : unit -&gt; int<br />&#160;&#160;&#160;&#160;member ToByteArray : unit -&gt; byte[]<br />&#160;&#160;&#160;&#160;member ToString : unit -&gt; string + 2 overloads<br />&#160;&#160;&#160;&#160;static val Empty : Guid<br />&#160;&#160;&#160;&#160;static member NewGuid : unit -&gt; Guid<br />&#160;&#160;&#160;&#160;static member Parse : input:string -&gt; Guid<br />&#160;&#160;&#160;&#160;static member ParseExact : input:string * format:string -&gt; Guid<br />&#160;&#160;&#160;&#160;...<br />&#160;&#160;end<br /><br />Full name: System.Guid<br /><br />--------------------<br />System.Guid()<br />System.Guid(b: byte []) : unit<br />System.Guid(g: string) : unit<br />System.Guid(a: int, b: int16, c: int16, d: byte []) : unit<br />System.Guid(a: uint32, b: uint16, c: uint16, d: byte, e: byte, f: byte, g: byte, h: byte, i: byte, j: byte, k: byte) : unit<br />System.Guid(a: int, b: int16, c: int16, d: byte, e: byte, f: byte, g: byte, h: byte, i: byte, j: byte, k: byte) : unit</div>
+<div class="tip" id="fs90">System.Guid.NewGuid() : System.Guid</div>
+<div class="tip" id="fs91">val path : string<br /><br />Full name: Script.path</div>
+<div class="tip" id="fs92">type Path =<br />&#160;&#160;static val DirectorySeparatorChar : char<br />&#160;&#160;static val AltDirectorySeparatorChar : char<br />&#160;&#160;static val VolumeSeparatorChar : char<br />&#160;&#160;static val InvalidPathChars : char[]<br />&#160;&#160;static val PathSeparator : char<br />&#160;&#160;static member ChangeExtension : path:string * extension:string -&gt; string<br />&#160;&#160;static member Combine : [&lt;ParamArray&gt;] paths:string[] -&gt; string + 3 overloads<br />&#160;&#160;static member GetDirectoryName : path:string -&gt; string<br />&#160;&#160;static member GetExtension : path:string -&gt; string<br />&#160;&#160;static member GetFileName : path:string -&gt; string<br />&#160;&#160;...<br /><br />Full name: System.IO.Path</div>
+<div class="tip" id="fs93">Path.GetTempPath() : string</div>
+<div class="tip" id="fs94">val writer : StreamWriter<br /><br />Full name: Script.writer</div>
+<div class="tip" id="fs95">type File =<br />&#160;&#160;static member AppendAllLines : path:string * contents:IEnumerable&lt;string&gt; -&gt; unit + 1 overload<br />&#160;&#160;static member AppendAllText : path:string * contents:string -&gt; unit + 1 overload<br />&#160;&#160;static member AppendText : path:string -&gt; StreamWriter<br />&#160;&#160;static member Copy : sourceFileName:string * destFileName:string -&gt; unit + 1 overload<br />&#160;&#160;static member Create : path:string -&gt; FileStream + 3 overloads<br />&#160;&#160;static member CreateText : path:string -&gt; StreamWriter<br />&#160;&#160;static member Decrypt : path:string -&gt; unit<br />&#160;&#160;static member Delete : path:string -&gt; unit<br />&#160;&#160;static member Encrypt : path:string -&gt; unit<br />&#160;&#160;static member Exists : path:string -&gt; bool<br />&#160;&#160;...<br /><br />Full name: System.IO.File</div>
+<div class="tip" id="fs96">File.CreateText(path: string) : StreamWriter</div>
+<div class="tip" id="fs97">TextWriter.Write(value: obj) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />TextWriter.Write(value: decimal) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />TextWriter.Write(value: float) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />TextWriter.Write(value: float32) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />TextWriter.Write(value: uint64) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />TextWriter.Write(value: int64) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />TextWriter.Write(value: uint32) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />TextWriter.Write(value: int) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />TextWriter.Write(value: bool) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />StreamWriter.Write(value: string) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em></div>
+<div class="tip" id="fs98">StreamWriter.Close() : unit</div>
+<div class="tip" id="fs99">namespace System.Diagnostics</div>
+<div class="tip" id="fs100">Multiple items<br />type Process =<br />&#160;&#160;inherit Component<br />&#160;&#160;new : unit -&gt; Process<br />&#160;&#160;member BasePriority : int<br />&#160;&#160;member BeginErrorReadLine : unit -&gt; unit<br />&#160;&#160;member BeginOutputReadLine : unit -&gt; unit<br />&#160;&#160;member CancelErrorRead : unit -&gt; unit<br />&#160;&#160;member CancelOutputRead : unit -&gt; unit<br />&#160;&#160;member Close : unit -&gt; unit<br />&#160;&#160;member CloseMainWindow : unit -&gt; bool<br />&#160;&#160;member EnableRaisingEvents : bool with get, set<br />&#160;&#160;member ExitCode : int<br />&#160;&#160;...<br /><br />Full name: System.Diagnostics.Process<br /><br />--------------------<br />System.Diagnostics.Process() : unit</div>
+<div class="tip" id="fs101">System.Diagnostics.Process.Start(startInfo: System.Diagnostics.ProcessStartInfo) : System.Diagnostics.Process<br />System.Diagnostics.Process.Start(fileName: string) : System.Diagnostics.Process<br />System.Diagnostics.Process.Start(fileName: string, arguments: string) : System.Diagnostics.Process<br />System.Diagnostics.Process.Start(fileName: string, userName: string, password: System.Security.SecureString, domain: string) : System.Diagnostics.Process<br />System.Diagnostics.Process.Start(fileName: string, arguments: string, userName: string, password: System.Security.SecureString, domain: string) : System.Diagnostics.Process</div>
+

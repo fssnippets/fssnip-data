@@ -1,0 +1,167 @@
+
+//  EXAMPLES:
+//
+//    http://localhost:8888/people/chefs/Jimbo?eggs=2&cheese=4
+//    http://localhost:8888/people/chefs/Jimbo?cheese=4&eggs=2
+//    http://localhost:8888/people/chefs/Jimbo?cheese=4&eggs=2&bacon=5
+//
+//  USAGE:
+//    C:\RestForFree>fsi restForFree.fsx
+//
+//  SEE ALSO:
+//    https://www.branded3.com/blog/creating-a-simple-http-server-with-f
+
+#I @"C:\RestForFree"
+#r @"FParsec.1.0.2\lib\net40-client\FParsecCS.dll"
+#r @"FParsec.1.0.2\lib\net40-client\FParsec.dll"
+
+////////////////////////////////////////////////////////////////////////////////
+
+//Naive, but its just a pedantic example
+module parsingStuff =
+  open System; open FParsec
+
+  //Just give me my result, parsec!
+  let (-=>) input someParser =
+    run someParser input
+    |> function
+    | Success(result,_,_) -> result
+    | _ -> Unchecked.defaultof<'T>    //Equivalent to C#'s default(T),
+                                      //since both pattern matches need same return type
+
+  type url = {
+    pathString: string
+    queryString: string }
+
+  let not = (<>) //Just eliminating parens
+
+  let psplitBy char =
+    let keep = manySatisfy(not char)
+    let toss = pstring(string(char))
+    sepBy(keep)(toss)
+
+  let pathParser = psplitBy('/')
+
+  let keyOrVal = many(noneOf "&=") |>> String.Concat
+  let keyValuePair =  keyOrVal .>> pstring "=" .>>. keyOrVal
+  let queryParser = sepBy(keyValuePair)(pstring "&")
+
+  let preamble = parse {
+    do! pstring "http" |>> ignore                                       //Proto
+    do! skipString "://"                                                //
+    do! many(noneOf ":/") |>> String.Concat |>> ignore                  //host
+    do! pstring(":") >>. manySatisfy(Char.IsDigit) <|>% "" |>> ignore } //port?
+
+  let urlParser = parse {
+    do! preamble
+    let! pathString = pstring("/") >>. manySatisfy(not '?') <|>% ""
+    let! queryString = pstring("?") >>. restOfLine(true) <|>% ""
+    return {
+      pathString = pathString
+      queryString = queryString } }
+
+////////////////////////////////////////////////////////////////////////////////
+
+module serverStuff =
+  open System; open System.Net; open System.Text
+
+  //Eliminate .NET line noise,
+  type HttpListenerResponse with
+    member me.WriteAsync str =
+      Encoding.ASCII.GetBytes(s=str)
+      |> me.OutputStream.AsyncWrite
+
+  //Config
+  let root,host = @"C:\RestForFree","http://localhost:8888/"
+
+  //.NET init stuff
+  let initListener =
+    let l = new HttpListener()
+    l.Prefixes.Add host
+    l.Start()
+    l
+
+  //As it turns out, Async.* was written by the smart ones at Microsoft
+  //However, HttpListener uses 'the IAsyncResult design pattern'
+  //https://msdn.microsoft.com/en-us/library/system.iasyncresult(v=vs.110).aspx
+  //The quote, however, comes from
+  //https://msdn.microsoft.com/en-us/library/ms228963(v=vs.110).aspx
+  let listen =
+    let l = initListener  //Called once upon definition of 'listen'
+    async {               //Is accessed repeatedly, however
+      let b,e = l.BeginGetContext, l.EndGetContext
+      let! context = Async.FromBeginEnd(b, e)
+      return context.Request,context.Response }
+
+  let serverStuff requestHandler =
+    Async.Start <| async {                    //Non-blocking
+      while true do
+        let! request, response = listen       //Get the context asynchronously
+        do! requestHandler request response } //Handle the context asynchronously
+    Console.ReadLine() |> ignore              //Retain console for printfn
+
+////////////////////////////////////////////////////////////////////////////////
+
+module httpStuff =
+  open System.Net; open serverStuff
+
+  //Parens for sake of type inferencer confused by partial application
+  let httpStuff (restHandler)(request)(response:HttpListenerResponse) =
+    async {
+      response.StatusCode  <- int HttpStatusCode.OK   //Response packaging
+      response.ContentType <- "text/html"             //Response packaging
+      let! mainOutput = restHandler request response
+      do! response.WriteAsync mainOutput
+      response.Close() }                               //Resource management :-)
+                                                       //TODO: Find IDisposables
+                                                       //      and 'use' them.
+
+////////////////////////////////////////////////////////////////////////////////
+
+open parsingStuff
+open serverStuff
+open httpStuff
+
+//Have to sort tuples by key alphabetically, lest there be no match! :-(
+let (|SORTED|) = SORTED List.sortBy fst
+let pretty s = sprintf "%A" s
+
+serverStuff(httpStuff(fun request response ->
+
+  //Thank you Microsoft, but I will parse the url myself
+  request.Url.AbsoluteUri -=> urlParser
+  |> function
+  | { url.pathString = pathString; url.queryString = queryString } ->
+
+      //'Routes'
+      pathString -=> pathParser
+      |> function
+
+      //"href=/people/chefs/Jimbo"
+      | [ "people"; "chefs"; chef ] ->
+
+        //Remote Procedure Call (RPC)-style 'rest' endpoints
+        queryString -=> queryParser
+        |> function
+
+        | SORTED[ "cheese",b ; "eggs",a ] -> async {
+            return
+              chef + " cannot make omlettes :-( ... <br />" +
+              "But, Dexter can make " + string(int a + int b + 1000) +
+              " omlettes du fromage!!  <br />" +
+              "because he is a boy-genious, with a very large laboratory." }
+
+        //b, then c, then e, here, but not in the url!
+        | SORTED[ "bacon",b ; "cheese",c ; "eggs",a ] -> async {
+            return
+              chef + " can make " + string(int a + int b + int c) + " omlets!" }
+
+        //b, then c, then e, here, but not in the url!
+        | SORTED[ "bacon",b ; "cheese",c ; "eggs",a ; "mushrooms",m ] -> async {
+            return "Mushrooms...Disgusting!" }
+
+        | SORTED query -> async {
+            return "NO QUERY MATCH FOR: " + pretty query }
+
+      | path -> async { return "NO PATH MATCH FOR: " + pretty path }
+))

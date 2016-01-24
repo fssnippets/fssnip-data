@@ -1,0 +1,195 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+<span class="l">38: </span>
+<span class="l">39: </span>
+<span class="l">40: </span>
+<span class="l">41: </span>
+<span class="l">42: </span>
+<span class="l">43: </span>
+<span class="l">44: </span>
+<span class="l">45: </span>
+<span class="l">46: </span>
+<span class="l">47: </span>
+<span class="l">48: </span>
+<span class="l">49: </span>
+<span class="l">50: </span>
+<span class="l">51: </span>
+<span class="l">52: </span>
+<span class="l">53: </span>
+<span class="l">54: </span>
+<span class="l">55: </span>
+<span class="l">56: </span>
+<span class="l">57: </span>
+<span class="l">58: </span>
+<span class="l">59: </span>
+<span class="l">60: </span>
+<span class="l">61: </span>
+<span class="l">62: </span>
+<span class="l">63: </span>
+<span class="l">64: </span>
+<span class="l">65: </span>
+<span class="l">66: </span>
+<span class="l">67: </span>
+<span class="l">68: </span>
+<span class="l">69: </span>
+<span class="l">70: </span>
+<span class="l">71: </span>
+<span class="l">72: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">//#r &quot;System.Xml.dll&quot; //for scripts or interactive</span>
+<span class="c">//#r &quot;System.Xml.Linq.dll&quot; //add reference if using F# as library</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">System</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 2)" onmouseover="showTip(event, 'fs1', 2)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 3)" onmouseover="showTip(event, 'fs2', 3)" class="i">Xml</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 4)" onmouseover="showTip(event, 'fs3', 4)" class="i">Linq</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 5)" onmouseover="showTip(event, 'fs1', 5)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs4', 6)" onmouseover="showTip(event, 'fs4', 6)" class="i">IO</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 7)" onmouseover="showTip(event, 'fs1', 7)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs5', 8)" onmouseover="showTip(event, 'fs5', 8)" class="i">Linq</span>
+
+<span class="c">///Fetch all *.csproj fiels</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs6', 9)" onmouseover="showTip(event, 'fs6', 9)" class="i">getFiles</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs7', 10)" onmouseover="showTip(event, 'fs7', 10)" class="t">Directory</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs8', 11)" onmouseover="showTip(event, 'fs8', 11)" class="f">GetFiles</span>(<span class="s">@&quot;c:\projects\&quot;</span>, <span class="s">&quot;*.csproj&quot;</span>, <span onmouseout="hideTip(event, 'fs9', 12)" onmouseover="showTip(event, 'fs9', 12)" class="t">SearchOption</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs10', 13)" onmouseover="showTip(event, 'fs10', 13)" class="i">AllDirectories</span>)
+               <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs11', 14)" onmouseover="showTip(event, 'fs11', 14)" class="t">Array</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs12', 15)" onmouseover="showTip(event, 'fs12', 15)" class="f">toSeq</span>
+
+<span class="c">///Linq-to-xml parsing</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs13', 16)" onmouseover="showTip(event, 'fs13', 16)" class="f">parse</span> (<span onmouseout="hideTip(event, 'fs14', 17)" onmouseover="showTip(event, 'fs14', 17)" class="i">filename</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs15', 18)" onmouseover="showTip(event, 'fs15', 18)" class="t">string</span>) <span class="o">=</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs16', 19)" onmouseover="showTip(event, 'fs16', 19)" class="f">xn</span> <span onmouseout="hideTip(event, 'fs17', 20)" onmouseover="showTip(event, 'fs17', 20)" class="i">ns</span> <span onmouseout="hideTip(event, 'fs18', 21)" onmouseover="showTip(event, 'fs18', 21)" class="i">s</span> <span class="o">=</span> <span class="i">XName</span><span class="o">.</span><span class="i">Get</span>(<span onmouseout="hideTip(event, 'fs18', 22)" onmouseover="showTip(event, 'fs18', 22)" class="i">s</span>,<span onmouseout="hideTip(event, 'fs17', 23)" onmouseover="showTip(event, 'fs17', 23)" class="i">ns</span>)
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs19', 24)" onmouseover="showTip(event, 'fs19', 24)" class="i">xml</span> <span class="o">=</span> <span class="i">XDocument</span><span class="o">.</span><span class="i">Load</span> <span onmouseout="hideTip(event, 'fs14', 25)" onmouseover="showTip(event, 'fs14', 25)" class="i">filename</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs20', 26)" onmouseover="showTip(event, 'fs20', 26)" class="f">xns</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs16', 27)" onmouseover="showTip(event, 'fs16', 27)" class="f">xn</span> (<span onmouseout="hideTip(event, 'fs19', 28)" onmouseover="showTip(event, 'fs19', 28)" class="i">xml</span><span class="o">.</span><span class="i">Root</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs21', 29)" onmouseover="showTip(event, 'fs21', 29)" class="i">Attribute</span>(<span class="i">XName</span><span class="o">.</span><span class="i">Get</span>(<span class="s">&quot;xmlns&quot;</span>))<span class="o">.</span><span class="i">Value</span>)
+
+    <span class="c">///Tags of TreatWarningsAsErrors</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs22', 30)" onmouseover="showTip(event, 'fs22', 30)" class="i">elem</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs19', 31)" onmouseover="showTip(event, 'fs19', 31)" class="i">xml</span><span class="o">.</span><span class="i">Descendants</span>(<span onmouseout="hideTip(event, 'fs20', 32)" onmouseover="showTip(event, 'fs20', 32)" class="i">xns</span> <span class="s">&quot;TreatWarningsAsErrors&quot;</span>)
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs23', 33)" onmouseover="showTip(event, 'fs23', 33)" class="i">values</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs22', 34)" onmouseover="showTip(event, 'fs22', 34)" class="i">elem</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs24', 35)" onmouseover="showTip(event, 'fs24', 35)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs25', 36)" onmouseover="showTip(event, 'fs25', 36)" class="f">map</span>(<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs26', 37)" onmouseover="showTip(event, 'fs26', 37)" class="i">x</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs26', 38)" onmouseover="showTip(event, 'fs26', 38)" class="i">x</span><span class="o">.</span><span class="i">Value</span>)
+    (<span onmouseout="hideTip(event, 'fs22', 39)" onmouseover="showTip(event, 'fs22', 39)" class="i">elem</span>, <span onmouseout="hideTip(event, 'fs23', 40)" onmouseover="showTip(event, 'fs23', 40)" class="i">values</span>, <span onmouseout="hideTip(event, 'fs19', 41)" onmouseover="showTip(event, 'fs19', 41)" class="i">xml</span>, <span onmouseout="hideTip(event, 'fs20', 42)" onmouseover="showTip(event, 'fs20', 42)" class="f">xns</span>)
+
+<span class="c">///Show file state: if active or deactive</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs27', 43)" onmouseover="showTip(event, 'fs27', 43)" class="f">getProjectInfo</span> (<span onmouseout="hideTip(event, 'fs14', 44)" onmouseover="showTip(event, 'fs14', 44)" class="i">filename</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs15', 45)" onmouseover="showTip(event, 'fs15', 45)" class="t">string</span>) <span class="o">=</span> 
+    <span class="k">let</span> _, <span onmouseout="hideTip(event, 'fs28', 46)" onmouseover="showTip(event, 'fs28', 46)" class="i">values</span>, _, _ <span class="o">=</span> <span onmouseout="hideTip(event, 'fs13', 47)" onmouseover="showTip(event, 'fs13', 47)" class="f">parse</span> <span onmouseout="hideTip(event, 'fs14', 48)" onmouseover="showTip(event, 'fs14', 48)" class="i">filename</span>
+
+    <span class="k">match</span> <span onmouseout="hideTip(event, 'fs28', 49)" onmouseover="showTip(event, 'fs28', 49)" class="i">values</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs29', 50)" onmouseover="showTip(event, 'fs29', 50)" class="f">Any</span>() <span class="k">with</span>
+    | <span class="k">true</span> <span class="k">-&gt;</span>
+        <span class="k">match</span> <span onmouseout="hideTip(event, 'fs28', 51)" onmouseover="showTip(event, 'fs28', 51)" class="i">values</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs29', 52)" onmouseover="showTip(event, 'fs29', 52)" class="f">Any</span>(<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs30', 53)" onmouseover="showTip(event, 'fs30', 53)" class="i">e</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs30', 54)" onmouseover="showTip(event, 'fs30', 54)" class="i">e</span> <span class="o">=</span> <span class="s">&quot;true&quot;</span>) <span class="k">with</span>
+        | <span class="k">true</span> <span class="k">-&gt;</span> <span class="s">&quot;Active: &quot;</span> <span class="o">+</span> <span onmouseout="hideTip(event, 'fs14', 55)" onmouseover="showTip(event, 'fs14', 55)" class="i">filename</span> <span class="c">//or just: &quot;&quot;</span>
+        | <span class="k">false</span> <span class="k">-&gt;</span> <span class="s">&quot;Disabled: &quot;</span> <span class="o">+</span> <span onmouseout="hideTip(event, 'fs14', 56)" onmouseover="showTip(event, 'fs14', 56)" class="i">filename</span> <span class="c">//or just: &quot;&quot;</span>
+    | <span class="k">false</span> <span class="k">-&gt;</span>
+        <span class="s">&quot;Not set: &quot;</span> <span class="o">+</span> <span onmouseout="hideTip(event, 'fs14', 57)" onmouseover="showTip(event, 'fs14', 57)" class="i">filename</span> <span class="c">//or just: &quot;&quot;</span>
+ 
+<span class="c">///Manipulate file state</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs31', 58)" onmouseover="showTip(event, 'fs31', 58)" class="f">modifyState</span> (<span onmouseout="hideTip(event, 'fs32', 59)" onmouseover="showTip(event, 'fs32', 59)" class="i">trueOrfalse</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs15', 60)" onmouseover="showTip(event, 'fs15', 60)" class="t">string</span>) (<span onmouseout="hideTip(event, 'fs14', 61)" onmouseover="showTip(event, 'fs14', 61)" class="i">filename</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs15', 62)" onmouseover="showTip(event, 'fs15', 62)" class="t">string</span>) <span class="o">=</span>     
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs33', 63)" onmouseover="showTip(event, 'fs33', 63)" class="i">elem</span>, <span onmouseout="hideTip(event, 'fs34', 64)" onmouseover="showTip(event, 'fs34', 64)" class="i">values</span>, <span onmouseout="hideTip(event, 'fs35', 65)" onmouseover="showTip(event, 'fs35', 65)" class="i">xml</span>, <span onmouseout="hideTip(event, 'fs36', 66)" onmouseover="showTip(event, 'fs36', 66)" class="f">xns</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs13', 67)" onmouseover="showTip(event, 'fs13', 67)" class="f">parse</span> <span onmouseout="hideTip(event, 'fs14', 68)" onmouseover="showTip(event, 'fs14', 68)" class="i">filename</span>
+
+    <span class="k">match</span> <span onmouseout="hideTip(event, 'fs34', 69)" onmouseover="showTip(event, 'fs34', 69)" class="i">values</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs29', 70)" onmouseover="showTip(event, 'fs29', 70)" class="f">Any</span>() <span class="k">with</span>
+    | <span class="k">true</span> <span class="k">-&gt;</span>
+        <span class="c">//modify existing states</span>
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs37', 71)" onmouseover="showTip(event, 'fs37', 71)" class="i">toModify</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs33', 72)" onmouseover="showTip(event, 'fs33', 72)" class="i">elem</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs24', 73)" onmouseover="showTip(event, 'fs24', 73)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs38', 74)" onmouseover="showTip(event, 'fs38', 74)" class="f">filter</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs39', 75)" onmouseover="showTip(event, 'fs39', 75)" class="i">el</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs39', 76)" onmouseover="showTip(event, 'fs39', 76)" class="i">el</span><span class="o">.</span><span class="i">Value</span> <span class="o">&lt;&gt;</span> <span onmouseout="hideTip(event, 'fs32', 77)" onmouseover="showTip(event, 'fs32', 77)" class="i">trueOrfalse</span>)
+                       
+        <span class="k">match</span> <span onmouseout="hideTip(event, 'fs37', 78)" onmouseover="showTip(event, 'fs37', 78)" class="i">toModify</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs29', 79)" onmouseover="showTip(event, 'fs29', 79)" class="f">Any</span>() <span class="k">with</span>
+        | <span class="k">true</span> <span class="k">-&gt;</span>
+            <span onmouseout="hideTip(event, 'fs37', 80)" onmouseover="showTip(event, 'fs37', 80)" class="i">toModify</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs24', 81)" onmouseover="showTip(event, 'fs24', 81)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs40', 82)" onmouseover="showTip(event, 'fs40', 82)" class="f">iter</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs39', 83)" onmouseover="showTip(event, 'fs39', 83)" class="i">el</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs39', 84)" onmouseover="showTip(event, 'fs39', 84)" class="i">el</span><span class="o">.</span><span class="i">Value</span> <span class="o">&lt;-</span> <span onmouseout="hideTip(event, 'fs32', 85)" onmouseover="showTip(event, 'fs32', 85)" class="i">trueOrfalse</span>)
+            <span class="c">//Maybe: version control checkout filename </span>
+            <span class="c">//Or hijack, remove readonly: File.SetAttributes(filename, FileAttributes.Normal)</span>
+            <span onmouseout="hideTip(event, 'fs35', 86)" onmouseover="showTip(event, 'fs35', 86)" class="i">xml</span><span class="o">.</span><span class="i">Save</span> <span onmouseout="hideTip(event, 'fs14', 87)" onmouseover="showTip(event, 'fs14', 87)" class="i">filename</span>
+            
+            <span class="s">&quot;Modified to &quot;</span> <span class="o">+</span> <span onmouseout="hideTip(event, 'fs32', 88)" onmouseover="showTip(event, 'fs32', 88)" class="i">trueOrfalse</span> <span class="o">+</span> <span class="s">&quot;: &quot;</span> <span class="o">+</span> <span onmouseout="hideTip(event, 'fs14', 89)" onmouseover="showTip(event, 'fs14', 89)" class="i">filename</span>
+        | <span class="k">false</span> <span class="k">-&gt;</span>
+            <span class="s">&quot;Was already &quot;</span> <span class="o">+</span> <span onmouseout="hideTip(event, 'fs32', 90)" onmouseover="showTip(event, 'fs32', 90)" class="i">trueOrfalse</span> <span class="o">+</span> <span class="s">&quot;: &quot;</span> <span class="o">+</span> <span onmouseout="hideTip(event, 'fs14', 91)" onmouseover="showTip(event, 'fs14', 91)" class="i">filename</span>
+    | <span class="k">false</span> <span class="k">-&gt;</span>
+        <span class="c">//Add new element next to ProjectGuid</span>
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs41', 92)" onmouseover="showTip(event, 'fs41', 92)" class="i">scc</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs35', 93)" onmouseover="showTip(event, 'fs35', 93)" class="i">xml</span><span class="o">.</span><span class="i">Element</span>(<span onmouseout="hideTip(event, 'fs36', 94)" onmouseover="showTip(event, 'fs36', 94)" class="i">xns</span> <span class="s">&quot;Project&quot;</span>)<span class="o">.</span><span class="i">Element</span>(<span onmouseout="hideTip(event, 'fs36', 95)" onmouseover="showTip(event, 'fs36', 95)" class="i">xns</span> <span class="s">&quot;PropertyGroup&quot;</span>)<span class="o">.</span><span class="i">Element</span>(<span onmouseout="hideTip(event, 'fs36', 96)" onmouseover="showTip(event, 'fs36', 96)" class="i">xns</span> <span class="s">&quot;ProjectGuid&quot;</span>)
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs42', 97)" onmouseover="showTip(event, 'fs42', 97)" class="i">newXElement</span> <span class="o">=</span> <span class="k">new</span> <span class="i">XElement</span>(<span onmouseout="hideTip(event, 'fs36', 98)" onmouseover="showTip(event, 'fs36', 98)" class="i">xns</span> <span class="s">&quot;TreatWarningsAsErrors&quot;</span>, <span onmouseout="hideTip(event, 'fs32', 99)" onmouseover="showTip(event, 'fs32', 99)" class="i">trueOrfalse</span>)
+        <span class="k">try</span> <span class="c">//try: assume that ProjectGuid found</span>
+            <span onmouseout="hideTip(event, 'fs41', 100)" onmouseover="showTip(event, 'fs41', 100)" class="i">scc</span><span class="o">.</span><span class="i">AddAfterSelf</span>(<span onmouseout="hideTip(event, 'fs42', 101)" onmouseover="showTip(event, 'fs42', 101)" class="i">newXElement</span>)
+            <span class="c">//Maybe: version control checkout filename </span>
+            <span class="c">//Or hijack, remove readonly: File.SetAttributes(filename, FileAttributes.Normal)</span>
+            <span onmouseout="hideTip(event, 'fs35', 102)" onmouseover="showTip(event, 'fs35', 102)" class="i">xml</span><span class="o">.</span><span class="i">Save</span> <span onmouseout="hideTip(event, 'fs14', 103)" onmouseover="showTip(event, 'fs14', 103)" class="i">filename</span>
+            <span class="s">&quot;Added: &quot;</span> <span class="o">+</span> <span onmouseout="hideTip(event, 'fs14', 104)" onmouseover="showTip(event, 'fs14', 104)" class="i">filename</span>
+        <span class="k">with</span>
+        | _ <span class="k">-&gt;</span> <span class="s">&quot;Failed: &quot;</span> <span class="o">+</span> <span onmouseout="hideTip(event, 'fs14', 105)" onmouseover="showTip(event, 'fs14', 105)" class="i">filename</span>
+
+<span class="c">//To show:</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs43', 106)" onmouseover="showTip(event, 'fs43', 106)" class="i">showAllProjects</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs6', 107)" onmouseover="showTip(event, 'fs6', 107)" class="i">getFiles</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs24', 108)" onmouseover="showTip(event, 'fs24', 108)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs25', 109)" onmouseover="showTip(event, 'fs25', 109)" class="f">map</span> (<span onmouseout="hideTip(event, 'fs27', 110)" onmouseover="showTip(event, 'fs27', 110)" class="f">getProjectInfo</span>) <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs24', 111)" onmouseover="showTip(event, 'fs24', 111)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs38', 112)" onmouseover="showTip(event, 'fs38', 112)" class="f">filter</span>(<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs44', 113)" onmouseover="showTip(event, 'fs44', 113)" class="i">f</span><span class="k">-&gt;</span><span onmouseout="hideTip(event, 'fs44', 114)" onmouseover="showTip(event, 'fs44', 114)" class="i">f</span><span class="o">&lt;&gt;</span><span class="s">&quot;&quot;</span>) <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs24', 115)" onmouseover="showTip(event, 'fs24', 115)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs40', 116)" onmouseover="showTip(event, 'fs40', 116)" class="f">iter</span> <span onmouseout="hideTip(event, 'fs45', 117)" onmouseover="showTip(event, 'fs45', 117)" class="t">Console</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs46', 118)" onmouseover="showTip(event, 'fs46', 118)" class="f">WriteLine</span>
+
+<span class="c">//To modify:</span>
+<span class="c">//let setAllToFalse = getFiles |&gt; Seq.map (modifyState &quot;false&quot;) |&gt; Seq.iter Console.WriteLine</span>
+<span class="c">//let setAllToTrue = getFiles |&gt; Seq.map (modifyState &quot;true&quot;) |&gt; Seq.iter Console.WriteLine</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace System</div>
+<div class="tip" id="fs2">namespace System.Xml</div>
+<div class="tip" id="fs3">Multiple items<br />namespace System.Linq<br /><br />--------------------<br />namespace Microsoft.FSharp.Linq</div>
+<div class="tip" id="fs4">namespace System.IO</div>
+<div class="tip" id="fs5">namespace System.Linq</div>
+<div class="tip" id="fs6">val getFiles : seq&lt;string&gt;<br /><br />Full name: Script.getFiles<br /><em><br /><br />Fetch all *.csproj fiels</em></div>
+<div class="tip" id="fs7">type Directory =<br />&#160;&#160;static member CreateDirectory : path:string -&gt; DirectoryInfo + 1 overload<br />&#160;&#160;static member Delete : path:string -&gt; unit + 1 overload<br />&#160;&#160;static member EnumerateDirectories : path:string -&gt; IEnumerable&lt;string&gt; + 2 overloads<br />&#160;&#160;static member EnumerateFileSystemEntries : path:string -&gt; IEnumerable&lt;string&gt; + 2 overloads<br />&#160;&#160;static member EnumerateFiles : path:string -&gt; IEnumerable&lt;string&gt; + 2 overloads<br />&#160;&#160;static member Exists : path:string -&gt; bool<br />&#160;&#160;static member GetAccessControl : path:string -&gt; DirectorySecurity + 1 overload<br />&#160;&#160;static member GetCreationTime : path:string -&gt; DateTime<br />&#160;&#160;static member GetCreationTimeUtc : path:string -&gt; DateTime<br />&#160;&#160;static member GetCurrentDirectory : unit -&gt; string<br />&#160;&#160;...<br /><br />Full name: System.IO.Directory</div>
+<div class="tip" id="fs8">Directory.GetFiles(path: string) : string []<br />Directory.GetFiles(path: string, searchPattern: string) : string []<br />Directory.GetFiles(path: string, searchPattern: string, searchOption: SearchOption) : string []</div>
+<div class="tip" id="fs9">type SearchOption =<br />&#160;&#160;| TopDirectoryOnly = 0<br />&#160;&#160;| AllDirectories = 1<br /><br />Full name: System.IO.SearchOption</div>
+<div class="tip" id="fs10">field SearchOption.AllDirectories = 1</div>
+<div class="tip" id="fs11">type Array =<br />&#160;&#160;member Clone : unit -&gt; obj<br />&#160;&#160;member CopyTo : array:Array * index:int -&gt; unit + 1 overload<br />&#160;&#160;member GetEnumerator : unit -&gt; IEnumerator<br />&#160;&#160;member GetLength : dimension:int -&gt; int<br />&#160;&#160;member GetLongLength : dimension:int -&gt; int64<br />&#160;&#160;member GetLowerBound : dimension:int -&gt; int<br />&#160;&#160;member GetUpperBound : dimension:int -&gt; int<br />&#160;&#160;member GetValue : [&lt;ParamArray&gt;] indices:int[] -&gt; obj + 7 overloads<br />&#160;&#160;member Initialize : unit -&gt; unit<br />&#160;&#160;member IsFixedSize : bool<br />&#160;&#160;...<br /><br />Full name: System.Array</div>
+<div class="tip" id="fs12">val toSeq : array:&#39;T [] -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Array.toSeq</div>
+<div class="tip" id="fs13">val parse : filename:string -&gt; #seq&lt;&#39;b&gt; * seq&lt;&#39;c&gt; * &#39;d * (&#39;e -&gt; &#39;f)<br /><br />Full name: Script.parse<br /><em><br /><br />Linq-to-xml parsing</em></div>
+<div class="tip" id="fs14">val filename : string</div>
+<div class="tip" id="fs15">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />Full name: Microsoft.FSharp.Core.Operators.string<br /><br />--------------------<br />type string = String<br /><br />Full name: Microsoft.FSharp.Core.string</div>
+<div class="tip" id="fs16">val xn : (&#39;g -&gt; &#39;h -&gt; &#39;i)</div>
+<div class="tip" id="fs17">val ns : &#39;g</div>
+<div class="tip" id="fs18">val s : &#39;h</div>
+<div class="tip" id="fs19">val xml : &#39;d</div>
+<div class="tip" id="fs20">val xns : (&#39;e -&gt; &#39;f)</div>
+<div class="tip" id="fs21">type Attribute =<br />&#160;&#160;member Equals : obj:obj -&gt; bool<br />&#160;&#160;member GetHashCode : unit -&gt; int<br />&#160;&#160;member IsDefaultAttribute : unit -&gt; bool<br />&#160;&#160;member Match : obj:obj -&gt; bool<br />&#160;&#160;member TypeId : obj<br />&#160;&#160;static member GetCustomAttribute : element:MemberInfo * attributeType:Type -&gt; Attribute + 7 overloads<br />&#160;&#160;static member GetCustomAttributes : element:MemberInfo -&gt; Attribute[] + 15 overloads<br />&#160;&#160;static member IsDefined : element:MemberInfo * attributeType:Type -&gt; bool + 7 overloads<br /><br />Full name: System.Attribute</div>
+<div class="tip" id="fs22">val elem : #seq&lt;&#39;b&gt;<br /><em><br /><br />Tags of TreatWarningsAsErrors</em></div>
+<div class="tip" id="fs23">val values : seq&lt;&#39;c&gt;</div>
+<div class="tip" id="fs24">module Seq<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs25">val map : mapping:(&#39;T -&gt; &#39;U) -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;U&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.map</div>
+<div class="tip" id="fs26">val x : &#39;b</div>
+<div class="tip" id="fs27">val getProjectInfo : filename:string -&gt; string<br /><br />Full name: Script.getProjectInfo<br /><em><br /><br />Show file state: if active or deactive</em></div>
+<div class="tip" id="fs28">val values : seq&lt;string&gt;</div>
+<div class="tip" id="fs29">(extension) Collections.Generic.IEnumerable.Any&lt;&#39;TSource&gt;() : bool<br />(extension) Collections.Generic.IEnumerable.Any&lt;&#39;TSource&gt;(predicate: Func&lt;&#39;TSource,bool&gt;) : bool</div>
+<div class="tip" id="fs30">val e : string</div>
+<div class="tip" id="fs31">val modifyState : trueOrfalse:string -&gt; filename:string -&gt; string<br /><br />Full name: Script.modifyState<br /><em><br /><br />Manipulate file state</em></div>
+<div class="tip" id="fs32">val trueOrfalse : string</div>
+<div class="tip" id="fs33">val elem : seq&lt;obj&gt;</div>
+<div class="tip" id="fs34">val values : seq&lt;obj&gt;</div>
+<div class="tip" id="fs35">val xml : obj</div>
+<div class="tip" id="fs36">val xns : (obj -&gt; obj)</div>
+<div class="tip" id="fs37">val toModify : seq&lt;obj&gt;</div>
+<div class="tip" id="fs38">val filter : predicate:(&#39;T -&gt; bool) -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.filter</div>
+<div class="tip" id="fs39">val el : obj</div>
+<div class="tip" id="fs40">val iter : action:(&#39;T -&gt; unit) -&gt; source:seq&lt;&#39;T&gt; -&gt; unit<br /><br />Full name: Microsoft.FSharp.Collections.Seq.iter</div>
+<div class="tip" id="fs41">val scc : obj</div>
+<div class="tip" id="fs42">val newXElement : obj</div>
+<div class="tip" id="fs43">val showAllProjects : unit<br /><br />Full name: Script.showAllProjects</div>
+<div class="tip" id="fs44">val f : string</div>
+<div class="tip" id="fs45">type Console =<br />&#160;&#160;static member BackgroundColor : ConsoleColor with get, set<br />&#160;&#160;static member Beep : unit -&gt; unit + 1 overload<br />&#160;&#160;static member BufferHeight : int with get, set<br />&#160;&#160;static member BufferWidth : int with get, set<br />&#160;&#160;static member CapsLock : bool<br />&#160;&#160;static member Clear : unit -&gt; unit<br />&#160;&#160;static member CursorLeft : int with get, set<br />&#160;&#160;static member CursorSize : int with get, set<br />&#160;&#160;static member CursorTop : int with get, set<br />&#160;&#160;static member CursorVisible : bool with get, set<br />&#160;&#160;...<br /><br />Full name: System.Console</div>
+<div class="tip" id="fs46">Console.WriteLine() : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.WriteLine(value: string) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.WriteLine(value: obj) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.WriteLine(value: uint64) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.WriteLine(value: int64) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.WriteLine(value: uint32) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.WriteLine(value: int) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.WriteLine(value: float32) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.WriteLine(value: float) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.WriteLine(value: decimal) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em></div>
+

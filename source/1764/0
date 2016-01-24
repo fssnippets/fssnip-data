@@ -1,0 +1,88 @@
+#r "System.Xml.Linq.dll"
+
+open System.IO
+open System.Xml.Linq
+
+//Script will read all old rules entries from Settings.StyleCop file
+//they will appear in output.xml as <Rule Id="###" Action="None">
+let oldRulesFile = "Settings.StyleCop"
+//rules form Settings.StyleCop will overwrite rules found in FxCop.ruleset
+let newRulesFile = "FxCop.ruleset"
+//first we need all StyleCop rules with their Names and Ids: run 
+//git clone git@github.com:StyleCop/StyleCop.git c:\stylecop
+let allRulesFiles = Directory.EnumerateFiles("c:\stylecop\Project\Src\Analyzers", "*.xml")
+let outputPath = Path.GetFullPath("output.xml")
+
+type RuleAction = Warning | Error | Hidden | Info | None
+                  override this.ToString() = sprintf "%A" this
+
+type Rule = { Id : string; Name: string; Action: RuleAction }
+            override this.ToString() = sprintf "%s: %s" this.Id this.Name
+
+let stringToRule str = 
+  match str with
+  | "Warning" -> Warning
+  | "Error" -> Error
+  | "Hidden" -> Hidden
+  | "Info" -> Info
+  | _ -> None
+
+let xelement name children =
+    XElement(XName.Get name, (Seq.cast children:XObject seq))
+
+let xattribute name value =
+    XAttribute(XName.Get name, value) :> XObject
+
+
+let readAllRules file = 
+  File.ReadAllText file
+  |> XDocument.Parse
+  |> fun xml -> xml.Descendants(XName.Get("Rule"))
+  |> Seq.map (fun el -> { Id = el.Attribute(XName.Get("CheckId")).Value; Name = el.Attribute(XName.Get("Name")).Value; Action = None })
+
+let allRules = Seq.collect readAllRules allRulesFiles
+  
+let allRulesMap = Map.ofSeq <| Seq.map (fun rule -> (rule.Name, rule)) allRules
+
+let oldRules =
+  File.ReadAllText oldRulesFile
+  |> XDocument.Parse
+  |> fun xml -> xml.Descendants(XName.Get("Rule"))
+  |> Seq.map (fun el -> { Id = null; Name = el.Attribute(XName.Get("Name")).Value; Action = Hidden })
+
+let document = XDocument.Parse <| File.ReadAllText newRulesFile
+let root = document.Root;
+let styleCopNode = 
+  root.Descendants(XName.Get "Rules")
+  |> Seq.filter (fun x -> x.Attribute(XName.Get "AnalyzerId").Value = "StyleCop.Analyzers")
+  |> Seq.cast<XElement>
+  |> Seq.tryHead
+let mutable existingRules = 
+  match styleCopNode with
+    | Some node -> 
+        node.Remove() |> ignore
+        node.Descendants(XName.Get "Rule")
+        |> Seq.map (fun x -> { Id = x.Attribute(XName.Get "Id").Value; Action = stringToRule (x.Attribute(XName.Get "Action").Value); Name = null })
+    | _ -> Seq.empty
+
+let mutable matched = List.Empty
+let mutable notMatched = List.Empty
+for rule in oldRules do
+  match allRulesMap |> Map.tryFind rule.Name with
+    | Some x -> matched <- List.append matched [{x with Action = rule.Action}]
+    | _ -> notMatched <- List.append notMatched [rule]
+  |> ignore
+
+existingRules
+  |> Seq.filter (fun rule -> Option.isNone <| List.tryFind (fun x -> x.Id = rule.Id) matched)
+  |> Seq.append matched
+  |> Seq.map (fun rule -> xelement "Rule" [ xattribute "Id" rule.Id; xattribute "Action" (string rule.Action) ])
+  |> Seq.cast<XObject>
+  |> Seq.append [ xattribute "AnalyzerId" "StyleCop.Analyzers"; xattribute "RuleNamespace" "StyleCop.Analyzers" ]
+  |> xelement "Rules"
+  |> root.Add
+
+//File.WriteAllLines("allRules.txt", (Seq.map (fun x -> x.ToString()) allRules))
+
+document.Save(newRulesFile)
+printfn "Not matched: %d" notMatched.Length

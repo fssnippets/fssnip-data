@@ -1,0 +1,75 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// A type that inherits from FSharpFunc type (F# functions)</span>
+<span class="c">/// and overrides the Finalize method with custom handler</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="t">FinalizableFunc</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span>, <span class="o">&#39;</span><span class="i">R</span><span class="o">&gt;</span>(<span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="f">f</span>, <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="f">finalizer</span>) <span class="o">=</span> 
+  <span class="k">inherit</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="i">Microsoft</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="i">FSharp</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="i">Core</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs7', 7)" onmouseover="showTip(event, 'fs7', 7)" class="t">FSharpFunc</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span>, <span class="o">&#39;</span><span class="i">R</span><span class="o">&gt;</span>()
+  <span class="k">override</span> <span onmouseout="hideTip(event, 'fs8', 8)" onmouseover="showTip(event, 'fs8', 8)" class="i">x</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs9', 9)" onmouseover="showTip(event, 'fs9', 9)" class="f">Invoke</span>(<span onmouseout="hideTip(event, 'fs10', 10)" onmouseover="showTip(event, 'fs10', 10)" class="i">a</span>) <span class="o">=</span> <span onmouseout="hideTip(event, 'fs2', 11)" onmouseover="showTip(event, 'fs2', 11)" class="f">f</span> <span onmouseout="hideTip(event, 'fs10', 12)" onmouseover="showTip(event, 'fs10', 12)" class="i">a</span>
+  <span class="k">override</span> <span onmouseout="hideTip(event, 'fs8', 13)" onmouseover="showTip(event, 'fs8', 13)" class="i">x</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs11', 14)" onmouseover="showTip(event, 'fs11', 14)" class="f">Finalize</span>() <span class="o">=</span> <span onmouseout="hideTip(event, 'fs3', 15)" onmouseover="showTip(event, 'fs3', 15)" class="f">finalizer</span>()
+
+<span class="c">/// Create a function with custom finalizer</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs12', 16)" onmouseover="showTip(event, 'fs12', 16)" class="f">finalizable</span> (<span onmouseout="hideTip(event, 'fs2', 17)" onmouseover="showTip(event, 'fs2', 17)" class="f">f</span><span class="o">:</span><span class="o">&#39;</span><span class="i">T</span> <span class="k">-&gt;</span> <span class="o">&#39;</span><span class="i">R</span>) <span onmouseout="hideTip(event, 'fs13', 18)" onmouseover="showTip(event, 'fs13', 18)" class="f">handler</span> <span class="o">=</span>
+  <span class="c">// F# does not allow direct cast, so we need to box</span>
+  <span class="k">let</span> <span onmouseout="hideTip(event, 'fs14', 19)" onmouseover="showTip(event, 'fs14', 19)" class="i">ff</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs1', 20)" onmouseover="showTip(event, 'fs1', 20)" class="t">FinalizableFunc</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span>, <span class="o">&#39;</span><span class="i">R</span><span class="o">&gt;</span>(<span onmouseout="hideTip(event, 'fs2', 21)" onmouseover="showTip(event, 'fs2', 21)" class="f">f</span>, <span onmouseout="hideTip(event, 'fs13', 22)" onmouseover="showTip(event, 'fs13', 22)" class="f">handler</span>)
+  <span onmouseout="hideTip(event, 'fs15', 23)" onmouseover="showTip(event, 'fs15', 23)" class="f">box</span> <span onmouseout="hideTip(event, 'fs14', 24)" onmouseover="showTip(event, 'fs14', 24)" class="i">ff</span> <span class="o">:?&gt;</span> (<span class="o">&#39;</span><span class="i">T</span> <span class="k">-&gt;</span> <span class="o">&#39;</span><span class="i">R</span>)
+
+<span class="c">/// Create finalizable function &amp; call it</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs16', 25)" onmouseover="showTip(event, 'fs16', 25)" class="f">foo</span> () <span class="o">=</span>
+  <span class="k">let</span> <span onmouseout="hideTip(event, 'fs17', 26)" onmouseover="showTip(event, 'fs17', 26)" class="f">f</span> <span class="o">=</span> 
+    <span onmouseout="hideTip(event, 'fs12', 27)" onmouseover="showTip(event, 'fs12', 27)" class="f">finalizable</span> 
+      (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs18', 28)" onmouseover="showTip(event, 'fs18', 28)" class="i">n</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs18', 29)" onmouseover="showTip(event, 'fs18', 29)" class="i">n</span> <span class="o">+</span> <span class="n">1</span>) 
+      (<span class="k">fun</span> () <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs19', 30)" onmouseover="showTip(event, 'fs19', 30)" class="f">printfn</span> <span class="s">&quot;bye!&quot;</span>)
+  <span onmouseout="hideTip(event, 'fs17', 31)" onmouseover="showTip(event, 'fs17', 31)" class="f">f</span> <span class="n">1</span>
+
+<span class="c">/// The function will be collected on GC.Collect call</span>
+<span onmouseout="hideTip(event, 'fs16', 32)" onmouseover="showTip(event, 'fs16', 32)" class="f">foo</span> ()
+<span onmouseout="hideTip(event, 'fs20', 33)" onmouseover="showTip(event, 'fs20', 33)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs21', 34)" onmouseover="showTip(event, 'fs21', 34)" class="t">GC</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs22', 35)" onmouseover="showTip(event, 'fs22', 35)" class="f">Collect</span>()
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">Multiple items<br />type FinalizableFunc&lt;&#39;T,&#39;R&gt; =<br />&#160;&#160;inherit FSharpFunc&lt;&#39;T,&#39;R&gt;<br />&#160;&#160;new : f:(&#39;T -&gt; &#39;R) * finalizer:(unit -&gt; unit) -&gt; FinalizableFunc&lt;&#39;T,&#39;R&gt;<br />&#160;&#160;override Finalize : unit -&gt; unit<br />&#160;&#160;override Invoke : a:&#39;T -&gt; &#39;R<br /><br />Full name: Script.FinalizableFunc&lt;_,_&gt;<br /><em><br /><br />&#160;A type that inherits from FSharpFunc type (F# functions)<br />&#160;and overrides the Finalize method with custom handler</em><br /><br />--------------------<br />new : f:(&#39;T -&gt; &#39;R) * finalizer:(unit -&gt; unit) -&gt; FinalizableFunc&lt;&#39;T,&#39;R&gt;</div>
+<div class="tip" id="fs2">val f : (&#39;T -&gt; &#39;R)</div>
+<div class="tip" id="fs3">val finalizer : (unit -&gt; unit)</div>
+<div class="tip" id="fs4">namespace Microsoft</div>
+<div class="tip" id="fs5">namespace Microsoft.FSharp</div>
+<div class="tip" id="fs6">namespace Microsoft.FSharp.Core</div>
+<div class="tip" id="fs7">new : unit -&gt; FSharpFunc&lt;&#39;T,&#39;U&gt;</div>
+<div class="tip" id="fs8">val x : FinalizableFunc&lt;&#39;T,&#39;R&gt;</div>
+<div class="tip" id="fs9">override FinalizableFunc.Invoke : a:&#39;T -&gt; &#39;R<br /><br />Full name: Script.FinalizableFunc`2.Invoke</div>
+<div class="tip" id="fs10">val a : &#39;T</div>
+<div class="tip" id="fs11">override FinalizableFunc.Finalize : unit -&gt; unit<br /><br />Full name: Script.FinalizableFunc`2.Finalize</div>
+<div class="tip" id="fs12">val finalizable : f:(&#39;T -&gt; &#39;R) -&gt; handler:(unit -&gt; unit) -&gt; (&#39;T -&gt; &#39;R)<br /><br />Full name: Script.finalizable<br /><em><br /><br />&#160;Create a function with custom finalizer</em></div>
+<div class="tip" id="fs13">val handler : (unit -&gt; unit)</div>
+<div class="tip" id="fs14">val ff : FinalizableFunc&lt;&#39;T,&#39;R&gt;</div>
+<div class="tip" id="fs15">val box : value:&#39;T -&gt; obj<br /><br />Full name: Microsoft.FSharp.Core.Operators.box</div>
+<div class="tip" id="fs16">val foo : unit -&gt; int<br /><br />Full name: Script.foo<br /><em><br /><br />&#160;Create finalizable function &amp; call it</em></div>
+<div class="tip" id="fs17">val f : (int -&gt; int)</div>
+<div class="tip" id="fs18">val n : int</div>
+<div class="tip" id="fs19">val printfn : format:Printf.TextWriterFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.printfn</div>
+<div class="tip" id="fs20">namespace System</div>
+<div class="tip" id="fs21">type GC =<br />&#160;&#160;static member AddMemoryPressure : bytesAllocated:int64 -&gt; unit<br />&#160;&#160;static member CancelFullGCNotification : unit -&gt; unit<br />&#160;&#160;static member Collect : unit -&gt; unit + 2 overloads<br />&#160;&#160;static member CollectionCount : generation:int -&gt; int<br />&#160;&#160;static member GetGeneration : obj:obj -&gt; int + 1 overload<br />&#160;&#160;static member GetTotalMemory : forceFullCollection:bool -&gt; int64<br />&#160;&#160;static member KeepAlive : obj:obj -&gt; unit<br />&#160;&#160;static member MaxGeneration : int<br />&#160;&#160;static member ReRegisterForFinalize : obj:obj -&gt; unit<br />&#160;&#160;static member RegisterForFullGCNotification : maxGenerationThreshold:int * largeObjectHeapThreshold:int -&gt; unit<br />&#160;&#160;...<br /><br />Full name: System.GC</div>
+<div class="tip" id="fs22">System.GC.Collect() : unit<br />System.GC.Collect(generation: int) : unit<br />System.GC.Collect(generation: int, mode: System.GCCollectionMode) : unit</div>
+

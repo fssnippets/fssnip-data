@@ -1,0 +1,140 @@
+namespace YourNamespaceHere
+open System
+open System.Diagnostics
+open System.Threading
+open System.Threading.Tasks
+
+/// The 'Sync' builder for evaluating expressions in a synchronous style to aid debugging.
+type [<Sealed>] Sync () =
+    member inline this.Bind (x, f) = f x
+    member inline this.Return x = x
+    member inline this.ReturnFrom x = x
+    member inline this.Zero () = ()
+    member inline this.Combine ((), _) = ()
+    member inline this.Yield x = x
+    member inline this.YieldFrom x = x
+    member inline this.Run f = f ()
+    member inline this.Delay f = fun () -> f ()
+    member inline this.For (s, f) = for x in s do f x
+    member inline this.While (g, b) = while g () do this.Run b
+    member inline this.TryWith (b, h) = try this.Run b with exn -> h exn
+    member inline this.TryFinally (b, c) = try this.Run b finally c ()
+    member inline this.Using (d, b) = use u = d in b u
+    static member inline Ignore _ = ()
+    static member inline Sleep (t : int) = Thread.Sleep t
+    static member inline RunSynchronously x = x
+    static member inline Start x = x
+    static member inline StartAsTask x : _ Task = Task.Factory.StartNew (fun () -> x)
+    static member inline AwaitTask (t : _ Task) = t.Result
+    static member inline Catch x = Choice1Of2 x
+    static member inline Parallel (s : _ seq) = s |> Seq.map (fun x -> Thread.Sleep 10; x) |> List.ofSeq |> Seq.ofList // Thread.Sleep keeps from soaking CPU
+
+[<AutoOpen; CompilationRepresentation (CompilationRepresentationFlags.ModuleSuffix)>]
+module Sync =
+
+    /// The Sync builder instance.
+    /// Used like: sync { return 0 }
+    let sync = Sync ()
+
+/// The 'Vsync' (AKA, 'Variable Synchronization') cexpr that coheres into the Sync cexpr when SYNC is #defined, and
+/// into the Async cexpr otherwise.
+/// TODO: forward documentation from FSharp.Core.
+type [<Sealed>] Vsync () =
+
+    member inline this.Builder =
+#if SYNC
+        sync
+#else
+        async
+#endif
+
+    member inline this.Bind (m, f) = this.Builder.Bind (m, f)
+    member inline this.Return x = this.Builder.Return x
+    member inline this.ReturnFrom m = this.Builder.ReturnFrom m
+    member inline this.Zero () = this.Builder.Zero ()
+    member inline this.Combine (a, b) = this.Builder.Combine (a, b)
+#if SYNC
+    member inline this.Yield x = this.Builder.Yield x
+    member inline this.YieldFrom x = this.Builder.YieldFrom x
+    member inline this.Run f = this.Builder.Run f
+#endif
+    member inline this.Delay f = this.Builder.Delay f
+    member inline this.For (m, f) = this.Builder.For (m, f)
+    member inline this.While (g, b) = this.Builder.While (g, b)
+    member inline this.TryWith (b, h) = this.Builder.TryWith (b, h)
+    member inline this.TryFinally (b, c) = this.Builder.TryFinally (b, c)
+    member inline this.Using (d, b) = this.Builder.Using (d, b)
+
+    static member inline Ignore m =
+#if SYNC
+        Sync.Ignore m
+#else
+        Async.Ignore m
+#endif
+
+    static member inline Sleep t =
+#if SYNC
+        Sync.Sleep t
+#else
+        Async.Sleep t
+#endif
+
+    static member inline RunSynchronously m =
+#if SYNC
+        Sync.RunSynchronously m
+#else
+        Async.RunSynchronously m
+#endif
+
+    static member inline Start m =
+#if SYNC
+        Sync.Start m
+#else
+        Async.Start m
+#endif
+
+    static member inline StartAsTask m : _ Task =
+#if SYNC
+        Sync.StartAsTask m
+#else
+        Async.StartAsTask m
+#endif
+
+    static member inline AwaitTask (t : _ Task) =
+#if SYNC
+        Sync.AwaitTask t
+#else
+        Async.AwaitTask t
+#endif
+
+    /// Catch an exception while binding m.
+    /// NOTE: the semantics between a Sync.Catch and an Async.Catch are remarkably different. Most notably, Sync.Catch
+    /// is just the application of Choice1Of2 to m since there is no evaluation taking place inside of it.
+    static member inline Catch m =
+#if SYNC
+        Sync.Catch m
+#else
+        Async.Catch m
+#endif
+
+    static member inline Parallel s =
+#if SYNC
+        Sync.Parallel s
+#else
+        Async.Parallel s
+#endif
+
+[<AutoOpen; CompilationRepresentation (CompilationRepresentationFlags.ModuleSuffix)>]
+module Vsync =
+
+    /// The Vsync builder instance.
+    /// Used like: vsync { return 0 }
+    let vsync = Vsync ()
+
+/// The Vsync alias.
+type Vsync<'a> =
+#if SYNC
+    'a
+#else
+    Async<'a>
+#endif

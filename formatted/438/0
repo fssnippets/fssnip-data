@@ -1,0 +1,91 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">module</span> <span class="t">PairingHeap</span> <span class="o">=</span> 
+    <span class="k">type</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="t">Heap</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs1', 2)" onmouseover="showTip(event, 'fs1', 2)" class="p">Heap</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs2', 3)" onmouseover="showTip(event, 'fs2', 3)" class="t">List</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs1', 4)" onmouseover="showTip(event, 'fs1', 4)" class="t">Heap</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span><span class="o">&gt;</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs3', 5)" onmouseover="showTip(event, 'fs3', 5)" class="f">findMin</span> <span onmouseout="hideTip(event, 'fs4', 6)" onmouseover="showTip(event, 'fs4', 6)" class="i">heap</span> <span class="o">=</span>
+        <span class="k">match</span> <span onmouseout="hideTip(event, 'fs4', 7)" onmouseover="showTip(event, 'fs4', 7)" class="i">heap</span> <span class="k">with</span>
+        | <span onmouseout="hideTip(event, 'fs1', 8)" onmouseover="showTip(event, 'fs1', 8)" class="p">Heap</span>([]) <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs1', 9)" onmouseover="showTip(event, 'fs1', 9)" class="p">Heap</span>([])
+        | <span onmouseout="hideTip(event, 'fs1', 10)" onmouseover="showTip(event, 'fs1', 10)" class="p">Heap</span>(<span onmouseout="hideTip(event, 'fs5', 11)" onmouseover="showTip(event, 'fs5', 11)" class="i">element</span><span class="o">::</span>_) <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs1', 12)" onmouseover="showTip(event, 'fs1', 12)" class="p">Heap</span>([<span onmouseout="hideTip(event, 'fs5', 13)" onmouseover="showTip(event, 'fs5', 13)" class="i">element</span>])
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs6', 14)" onmouseover="showTip(event, 'fs6', 14)" class="f">merge</span> <span onmouseout="hideTip(event, 'fs7', 15)" onmouseover="showTip(event, 'fs7', 15)" class="i">heap1</span> <span onmouseout="hideTip(event, 'fs8', 16)" onmouseover="showTip(event, 'fs8', 16)" class="i">heap2</span> <span class="o">=</span>
+        <span class="k">match</span> <span onmouseout="hideTip(event, 'fs7', 17)" onmouseover="showTip(event, 'fs7', 17)" class="i">heap1</span>, <span onmouseout="hideTip(event, 'fs8', 18)" onmouseover="showTip(event, 'fs8', 18)" class="i">heap2</span> <span class="k">with</span>
+        | <span onmouseout="hideTip(event, 'fs1', 19)" onmouseover="showTip(event, 'fs1', 19)" class="p">Heap</span>([]), <span onmouseout="hideTip(event, 'fs1', 20)" onmouseover="showTip(event, 'fs1', 20)" class="p">Heap</span>([]) <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs1', 21)" onmouseover="showTip(event, 'fs1', 21)" class="p">Heap</span>([])
+        | <span onmouseout="hideTip(event, 'fs1', 22)" onmouseover="showTip(event, 'fs1', 22)" class="p">Heap</span>([]), _ <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs8', 23)" onmouseover="showTip(event, 'fs8', 23)" class="i">heap2</span>
+        | _, <span onmouseout="hideTip(event, 'fs1', 24)" onmouseover="showTip(event, 'fs1', 24)" class="p">Heap</span>([]) <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs7', 25)" onmouseover="showTip(event, 'fs7', 25)" class="i">heap1</span>
+        | <span onmouseout="hideTip(event, 'fs1', 26)" onmouseover="showTip(event, 'fs1', 26)" class="p">Heap</span>(<span onmouseout="hideTip(event, 'fs9', 27)" onmouseover="showTip(event, 'fs9', 27)" class="i">elem1</span><span class="o">::</span><span onmouseout="hideTip(event, 'fs10', 28)" onmouseover="showTip(event, 'fs10', 28)" class="i">sub1</span>), <span onmouseout="hideTip(event, 'fs1', 29)" onmouseover="showTip(event, 'fs1', 29)" class="p">Heap</span>(<span onmouseout="hideTip(event, 'fs11', 30)" onmouseover="showTip(event, 'fs11', 30)" class="i">elem2</span><span class="o">::</span><span onmouseout="hideTip(event, 'fs12', 31)" onmouseover="showTip(event, 'fs12', 31)" class="i">sub2</span>) <span class="k">-&gt;</span>
+            <span class="k">match</span> <span onmouseout="hideTip(event, 'fs9', 32)" onmouseover="showTip(event, 'fs9', 32)" class="i">elem1</span> <span class="o">&lt;</span> <span onmouseout="hideTip(event, 'fs11', 33)" onmouseover="showTip(event, 'fs11', 33)" class="i">elem2</span> <span class="k">with</span>
+            | <span class="k">true</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs1', 34)" onmouseover="showTip(event, 'fs1', 34)" class="p">Heap</span>(<span onmouseout="hideTip(event, 'fs9', 35)" onmouseover="showTip(event, 'fs9', 35)" class="i">elem1</span><span class="o">::</span><span onmouseout="hideTip(event, 'fs11', 36)" onmouseover="showTip(event, 'fs11', 36)" class="i">elem2</span><span class="o">::</span><span onmouseout="hideTip(event, 'fs12', 37)" onmouseover="showTip(event, 'fs12', 37)" class="i">sub2</span><span class="o">@</span><span onmouseout="hideTip(event, 'fs10', 38)" onmouseover="showTip(event, 'fs10', 38)" class="i">sub1</span>)
+            | <span class="k">false</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs1', 39)" onmouseover="showTip(event, 'fs1', 39)" class="p">Heap</span>(<span onmouseout="hideTip(event, 'fs11', 40)" onmouseover="showTip(event, 'fs11', 40)" class="i">elem2</span><span class="o">::</span><span onmouseout="hideTip(event, 'fs9', 41)" onmouseover="showTip(event, 'fs9', 41)" class="i">elem1</span><span class="o">::</span><span onmouseout="hideTip(event, 'fs10', 42)" onmouseover="showTip(event, 'fs10', 42)" class="i">sub1</span><span class="o">@</span><span onmouseout="hideTip(event, 'fs12', 43)" onmouseover="showTip(event, 'fs12', 43)" class="i">sub2</span>)
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs13', 44)" onmouseover="showTip(event, 'fs13', 44)" class="f">insert</span> <span onmouseout="hideTip(event, 'fs5', 45)" onmouseover="showTip(event, 'fs5', 45)" class="i">element</span> <span onmouseout="hideTip(event, 'fs4', 46)" onmouseover="showTip(event, 'fs4', 46)" class="i">heap</span> <span class="o">=</span>
+        <span onmouseout="hideTip(event, 'fs6', 47)" onmouseover="showTip(event, 'fs6', 47)" class="f">merge</span> (<span onmouseout="hideTip(event, 'fs1', 48)" onmouseover="showTip(event, 'fs1', 48)" class="p">Heap</span>([<span onmouseout="hideTip(event, 'fs5', 49)" onmouseover="showTip(event, 'fs5', 49)" class="i">element</span>])) <span onmouseout="hideTip(event, 'fs4', 50)" onmouseover="showTip(event, 'fs4', 50)" class="i">heap</span>
+    <span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs14', 51)" onmouseover="showTip(event, 'fs14', 51)" class="f">mergePairs</span> <span onmouseout="hideTip(event, 'fs4', 52)" onmouseover="showTip(event, 'fs4', 52)" class="i">heap</span> <span class="o">=</span>
+        <span class="k">match</span> <span onmouseout="hideTip(event, 'fs4', 53)" onmouseover="showTip(event, 'fs4', 53)" class="i">heap</span> <span class="k">with</span>
+        | <span onmouseout="hideTip(event, 'fs1', 54)" onmouseover="showTip(event, 'fs1', 54)" class="p">Heap</span> ([]) <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs1', 55)" onmouseover="showTip(event, 'fs1', 55)" class="p">Heap</span>([])
+        | <span onmouseout="hideTip(event, 'fs1', 56)" onmouseover="showTip(event, 'fs1', 56)" class="p">Heap</span> ([<span onmouseout="hideTip(event, 'fs15', 57)" onmouseover="showTip(event, 'fs15', 57)" class="i">h</span>]) <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs1', 58)" onmouseover="showTip(event, 'fs1', 58)" class="p">Heap</span>([<span onmouseout="hideTip(event, 'fs15', 59)" onmouseover="showTip(event, 'fs15', 59)" class="i">h</span>])
+        | <span onmouseout="hideTip(event, 'fs1', 60)" onmouseover="showTip(event, 'fs1', 60)" class="p">Heap</span> (<span onmouseout="hideTip(event, 'fs16', 61)" onmouseover="showTip(event, 'fs16', 61)" class="i">h1</span><span class="o">::</span><span onmouseout="hideTip(event, 'fs17', 62)" onmouseover="showTip(event, 'fs17', 62)" class="i">h2</span><span class="o">::</span><span onmouseout="hideTip(event, 'fs18', 63)" onmouseover="showTip(event, 'fs18', 63)" class="i">hs</span>) <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs6', 64)" onmouseover="showTip(event, 'fs6', 64)" class="f">merge</span> (<span onmouseout="hideTip(event, 'fs6', 65)" onmouseover="showTip(event, 'fs6', 65)" class="f">merge</span> <span onmouseout="hideTip(event, 'fs16', 66)" onmouseover="showTip(event, 'fs16', 66)" class="i">h1</span> <span onmouseout="hideTip(event, 'fs17', 67)" onmouseover="showTip(event, 'fs17', 67)" class="i">h2</span>) (<span onmouseout="hideTip(event, 'fs14', 68)" onmouseover="showTip(event, 'fs14', 68)" class="f">mergePairs</span> <span onmouseout="hideTip(event, 'fs4', 69)" onmouseover="showTip(event, 'fs4', 69)" class="i">heap</span>)
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs19', 70)" onmouseover="showTip(event, 'fs19', 70)" class="f">deleteMin</span> (<span onmouseout="hideTip(event, 'fs20', 71)" onmouseover="showTip(event, 'fs20', 71)" class="i">heap</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs1', 72)" onmouseover="showTip(event, 'fs1', 72)" class="t">Heap</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span>) <span class="o">=</span>
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs21', 73)" onmouseover="showTip(event, 'fs21', 73)" class="f">unfurl</span> (<span onmouseout="hideTip(event, 'fs1', 74)" onmouseover="showTip(event, 'fs1', 74)" class="p">Heap</span>(<span onmouseout="hideTip(event, 'fs22', 75)" onmouseover="showTip(event, 'fs22', 75)" class="i">heapList</span>)) <span class="o">=</span> <span class="i">heapList</span>
+        <span class="k">match</span> <span onmouseout="hideTip(event, 'fs20', 76)" onmouseover="showTip(event, 'fs20', 76)" class="i">heap</span> <span class="k">with</span>
+        | <span onmouseout="hideTip(event, 'fs1', 77)" onmouseover="showTip(event, 'fs1', 77)" class="p">Heap</span> ([]) <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs1', 78)" onmouseover="showTip(event, 'fs1', 78)" class="p">Heap</span>([])
+        | <span onmouseout="hideTip(event, 'fs1', 79)" onmouseover="showTip(event, 'fs1', 79)" class="p">Heap</span> (<span onmouseout="hideTip(event, 'fs23', 80)" onmouseover="showTip(event, 'fs23', 80)" class="i">elem</span><span class="o">::</span>[]) <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs1', 81)" onmouseover="showTip(event, 'fs1', 81)" class="p">Heap</span>([])
+        | <span onmouseout="hideTip(event, 'fs1', 82)" onmouseover="showTip(event, 'fs1', 82)" class="p">Heap</span> (<span onmouseout="hideTip(event, 'fs23', 83)" onmouseover="showTip(event, 'fs23', 83)" class="i">elem</span><span class="o">::</span><span onmouseout="hideTip(event, 'fs24', 84)" onmouseover="showTip(event, 'fs24', 84)" class="i">newElement</span><span class="o">::</span>[]) <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs24', 85)" onmouseover="showTip(event, 'fs24', 85)" class="i">newElement</span>
+        | <span onmouseout="hideTip(event, 'fs1', 86)" onmouseover="showTip(event, 'fs1', 86)" class="p">Heap</span> (<span onmouseout="hideTip(event, 'fs25', 87)" onmouseover="showTip(event, 'fs25', 87)" class="i">element</span><span class="o">::</span><span onmouseout="hideTip(event, 'fs24', 88)" onmouseover="showTip(event, 'fs24', 88)" class="i">newElement</span><span class="o">::</span><span onmouseout="hideTip(event, 'fs26', 89)" onmouseover="showTip(event, 'fs26', 89)" class="i">subheaps</span>) <span class="k">-&gt;</span> 
+            <span onmouseout="hideTip(event, 'fs1', 90)" onmouseover="showTip(event, 'fs1', 90)" class="p">Heap</span>(<span onmouseout="hideTip(event, 'fs24', 91)" onmouseover="showTip(event, 'fs24', 91)" class="i">newElement</span><span class="o">::</span>(<span onmouseout="hideTip(event, 'fs21', 92)" onmouseover="showTip(event, 'fs21', 92)" class="f">unfurl</span> (<span onmouseout="hideTip(event, 'fs14', 93)" onmouseover="showTip(event, 'fs14', 93)" class="f">mergePairs</span> (<span onmouseout="hideTip(event, 'fs1', 94)" onmouseover="showTip(event, 'fs1', 94)" class="p">Heap</span>(<span onmouseout="hideTip(event, 'fs26', 95)" onmouseover="showTip(event, 'fs26', 95)" class="i">subheaps</span>)))))
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">Multiple items<br />union case Heap.Heap: List&lt;Heap&lt;&#39;T&gt;&gt; -&gt; Heap&lt;&#39;T&gt;<br /><br />--------------------<br />type Heap&lt;&#39;T&gt; = | Heap of List&lt;Heap&lt;&#39;T&gt;&gt;<br /><br />Full name: Script.PairingHeap.Heap&lt;_&gt;</div>
+<div class="tip" id="fs2">Multiple items<br />module List<br /><br />from Microsoft.FSharp.Collections<br /><br />--------------------<br />type List&lt;&#39;T&gt; =<br />&#160;&#160;| ( [] )<br />&#160;&#160;| ( :: ) of Head: &#39;T * Tail: &#39;T list<br />&#160;&#160;interface IEnumerable<br />&#160;&#160;interface IEnumerable&lt;&#39;T&gt;<br />&#160;&#160;member Head : &#39;T<br />&#160;&#160;member IsEmpty : bool<br />&#160;&#160;member Item : index:int -&gt; &#39;T with get<br />&#160;&#160;member Length : int<br />&#160;&#160;member Tail : &#39;T list<br />&#160;&#160;static member Cons : head:&#39;T * tail:&#39;T list -&gt; &#39;T list<br />&#160;&#160;static member Empty : &#39;T list<br /><br />Full name: Microsoft.FSharp.Collections.List&lt;_&gt;</div>
+<div class="tip" id="fs3">val findMin : heap:Heap&lt;&#39;a&gt; -&gt; Heap&lt;&#39;a&gt;<br /><br />Full name: Script.PairingHeap.findMin</div>
+<div class="tip" id="fs4">val heap : Heap&lt;&#39;a&gt;</div>
+<div class="tip" id="fs5">val element : Heap&lt;&#39;a&gt;</div>
+<div class="tip" id="fs6">val merge : heap1:Heap&lt;&#39;a&gt; -&gt; heap2:Heap&lt;&#39;a&gt; -&gt; Heap&lt;&#39;a&gt;<br /><br />Full name: Script.PairingHeap.merge</div>
+<div class="tip" id="fs7">val heap1 : Heap&lt;&#39;a&gt;</div>
+<div class="tip" id="fs8">val heap2 : Heap&lt;&#39;a&gt;</div>
+<div class="tip" id="fs9">val elem1 : Heap&lt;&#39;a&gt;</div>
+<div class="tip" id="fs10">val sub1 : Heap&lt;&#39;a&gt; list</div>
+<div class="tip" id="fs11">val elem2 : Heap&lt;&#39;a&gt;</div>
+<div class="tip" id="fs12">val sub2 : Heap&lt;&#39;a&gt; list</div>
+<div class="tip" id="fs13">val insert : element:Heap&lt;&#39;a&gt; -&gt; heap:Heap&lt;&#39;a&gt; -&gt; Heap&lt;&#39;a&gt;<br /><br />Full name: Script.PairingHeap.insert</div>
+<div class="tip" id="fs14">val mergePairs : heap:Heap&lt;&#39;a&gt; -&gt; Heap&lt;&#39;a&gt;<br /><br />Full name: Script.PairingHeap.mergePairs</div>
+<div class="tip" id="fs15">val h : Heap&lt;&#39;a&gt;</div>
+<div class="tip" id="fs16">val h1 : Heap&lt;&#39;a&gt;</div>
+<div class="tip" id="fs17">val h2 : Heap&lt;&#39;a&gt;</div>
+<div class="tip" id="fs18">val hs : Heap&lt;&#39;a&gt; list</div>
+<div class="tip" id="fs19">val deleteMin : heap:Heap&lt;&#39;T&gt; -&gt; Heap&lt;&#39;T&gt;<br /><br />Full name: Script.PairingHeap.deleteMin</div>
+<div class="tip" id="fs20">val heap : Heap&lt;&#39;T&gt;</div>
+<div class="tip" id="fs21">val unfurl : (Heap&lt;&#39;a&gt; -&gt; List&lt;Heap&lt;&#39;a&gt;&gt;)</div>
+<div class="tip" id="fs22">val heapList : List&lt;Heap&lt;&#39;a&gt;&gt;</div>
+<div class="tip" id="fs23">val elem : Heap&lt;&#39;T&gt;</div>
+<div class="tip" id="fs24">val newElement : Heap&lt;&#39;T&gt;</div>
+<div class="tip" id="fs25">val element : Heap&lt;&#39;T&gt;</div>
+<div class="tip" id="fs26">val subheaps : Heap&lt;&#39;T&gt; list</div>
+

@@ -1,0 +1,23 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+<span class="l">6: </span>
+<span class="l">7: </span>
+<span class="l">8: </span>
+<span class="l">9: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="i">pipeline</span> {
+    <span class="k">let</span> <span class="i">inputQ</span> <span class="o">=</span> <span class="k">new</span> <span class="i">PipelineInputQueue</span><span class="o">&lt;</span>_<span class="o">&gt;</span>(<span class="i">this</span><span class="o">.</span><span class="i">QueueLength</span>, <span class="n">0</span>)
+    <span class="k">let!</span> <span class="i">rawDataQ</span> <span class="o">=</span> <span class="i">stage</span> <span class="i">this</span><span class="o">.</span><span class="i">GetRawData</span> <span class="i">inputQ</span>
+    <span class="k">let!</span> <span class="i">recordsQ</span> <span class="o">=</span> <span class="i">stage</span> <span class="i">this</span><span class="o">.</span><span class="i">ParseRawData</span> <span class="i">rawDataQ</span>
+    <span class="k">let!</span> <span class="i">conformedRecordsQ</span> <span class="o">=</span> <span class="i">stage</span> <span class="i">this</span><span class="o">.</span><span class="i">ConformRecords</span> <span class="i">recordsQ</span>
+    <span class="k">let!</span> <span class="i">transformedDataQ</span> <span class="o">=</span> <span class="i">stage</span> <span class="i">this</span><span class="o">.</span><span class="i">TransformRecord</span> <span class="i">conformedRecordsQ</span>
+    <span class="k">do!</span> <span class="i">sink</span> <span class="i">this</span><span class="o">.</span><span class="i">Sink</span> <span class="i">transformedDataQ</span>     
+    <span class="k">return</span> <span class="i">inputQ</span>
+}
+</code></pre></td>
+</tr>
+</table>
+

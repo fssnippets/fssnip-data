@@ -1,0 +1,76 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">System</span>
+
+<span class="c">//Assert the convergence of a series.</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="f">assertSeriesConvergence</span>(<span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="i">expected</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="t">float</span>) (<span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="i">delta</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs4', 6)" onmouseover="showTip(event, 'fs4', 6)" class="t">float</span>) <span onmouseout="hideTip(event, 'fs6', 7)" onmouseover="showTip(event, 'fs6', 7)" class="i">low</span> <span onmouseout="hideTip(event, 'fs7', 8)" onmouseover="showTip(event, 'fs7', 8)" class="i">high</span> <span onmouseout="hideTip(event, 'fs8', 9)" onmouseover="showTip(event, 'fs8', 9)" class="f">series</span> <span class="o">=</span>
+    <span class="k">if</span> <span onmouseout="hideTip(event, 'fs6', 10)" onmouseover="showTip(event, 'fs6', 10)" class="i">low</span> <span class="o">&gt;</span> <span onmouseout="hideTip(event, 'fs7', 11)" onmouseover="showTip(event, 'fs7', 11)" class="i">high</span> <span class="k">then</span> 
+        <span onmouseout="hideTip(event, 'fs9', 12)" onmouseover="showTip(event, 'fs9', 12)" class="f">failwith</span> <span class="s">&quot;Incorrect boundaries for the series&quot;</span>
+    <span class="k">else</span>
+        <span onmouseout="hideTip(event, 'fs10', 13)" onmouseover="showTip(event, 'fs10', 13)" class="i">seq</span> {<span class="k">for</span> <span onmouseout="hideTip(event, 'fs11', 14)" onmouseover="showTip(event, 'fs11', 14)" class="i">n</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs6', 15)" onmouseover="showTip(event, 'fs6', 15)" class="i">low</span> <span class="k">to</span> <span onmouseout="hideTip(event, 'fs7', 16)" onmouseover="showTip(event, 'fs7', 16)" class="i">high</span> <span class="k">do</span> <span class="k">yield</span> <span onmouseout="hideTip(event, 'fs11', 17)" onmouseover="showTip(event, 'fs11', 17)" class="i">n</span>}
+        <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs12', 18)" onmouseover="showTip(event, 'fs12', 18)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs13', 19)" onmouseover="showTip(event, 'fs13', 19)" class="f">map</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs11', 20)" onmouseover="showTip(event, 'fs11', 20)" class="i">n</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs14', 21)" onmouseover="showTip(event, 'fs14', 21)" class="t">Math</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs15', 22)" onmouseover="showTip(event, 'fs15', 22)" class="f">Abs</span>((<span onmouseout="hideTip(event, 'fs8', 23)" onmouseover="showTip(event, 'fs8', 23)" class="f">series</span> <span onmouseout="hideTip(event, 'fs11', 24)" onmouseover="showTip(event, 'fs11', 24)" class="i">n</span>) <span class="o">-</span> <span onmouseout="hideTip(event, 'fs3', 25)" onmouseover="showTip(event, 'fs3', 25)" class="i">expected</span>) <span class="o">&lt;=</span> <span onmouseout="hideTip(event, 'fs5', 26)" onmouseover="showTip(event, 'fs5', 26)" class="i">delta</span>) <span class="c">//build the assertions</span>
+        <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs12', 27)" onmouseover="showTip(event, 'fs12', 27)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs16', 28)" onmouseover="showTip(event, 'fs16', 28)" class="f">forall</span> ((<span class="o">=</span>) <span class="k">true</span>)
+
+<span class="c">//Naive factorial with tail recursion.</span>
+<span class="k">let</span> (<span class="o">!</span>) <span onmouseout="hideTip(event, 'fs11', 29)" onmouseover="showTip(event, 'fs11', 29)" class="i">n</span>  <span class="o">=</span> <span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs17', 30)" onmouseover="showTip(event, 'fs17', 30)" class="i">_fact</span> <span onmouseout="hideTip(event, 'fs11', 31)" onmouseover="showTip(event, 'fs11', 31)" class="i">n</span> <span onmouseout="hideTip(event, 'fs18', 32)" onmouseover="showTip(event, 'fs18', 32)" class="i">result</span> <span class="o">=</span> <span class="k">if</span> <span onmouseout="hideTip(event, 'fs11', 33)" onmouseover="showTip(event, 'fs11', 33)" class="i">n</span> <span class="o">=</span> <span class="n">1.0</span> <span class="o">||</span> <span onmouseout="hideTip(event, 'fs11', 34)" onmouseover="showTip(event, 'fs11', 34)" class="i">n</span> <span class="o">=</span> <span class="n">0.0</span> <span class="k">then</span> <span onmouseout="hideTip(event, 'fs18', 35)" onmouseover="showTip(event, 'fs18', 35)" class="i">result</span> <span class="k">else</span> <span onmouseout="hideTip(event, 'fs17', 36)" onmouseover="showTip(event, 'fs17', 36)" class="f">_fact</span> (<span onmouseout="hideTip(event, 'fs11', 37)" onmouseover="showTip(event, 'fs11', 37)" class="i">n</span> <span class="o">-</span> <span class="n">1.0</span>) (<span onmouseout="hideTip(event, 'fs18', 38)" onmouseover="showTip(event, 'fs18', 38)" class="i">result</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs11', 39)" onmouseover="showTip(event, 'fs11', 39)" class="i">n</span>)
+             <span onmouseout="hideTip(event, 'fs17', 40)" onmouseover="showTip(event, 'fs17', 40)" class="f">_fact</span> <span onmouseout="hideTip(event, 'fs11', 41)" onmouseover="showTip(event, 'fs11', 41)" class="i">n</span> <span class="n">1.0</span>
+
+<span class="c">//Ramanujan Formula.</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs19', 42)" onmouseover="showTip(event, 'fs19', 42)" class="f">Ramanujan</span> <span onmouseout="hideTip(event, 'fs20', 43)" onmouseover="showTip(event, 'fs20', 43)" class="i">x</span> <span class="o">=</span> 
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs21', 44)" onmouseover="showTip(event, 'fs21', 44)" class="i">sum</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs10', 45)" onmouseover="showTip(event, 'fs10', 45)" class="i">seq</span> {<span class="k">for</span> <span onmouseout="hideTip(event, 'fs22', 46)" onmouseover="showTip(event, 'fs22', 46)" class="i">i</span> <span class="o">=</span> <span class="n">0.0</span> <span class="k">to</span> <span onmouseout="hideTip(event, 'fs20', 47)" onmouseover="showTip(event, 'fs20', 47)" class="i">x</span> <span class="k">do</span> <span class="k">yield</span> <span onmouseout="hideTip(event, 'fs22', 48)" onmouseover="showTip(event, 'fs22', 48)" class="i">i</span>}
+               <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs12', 49)" onmouseover="showTip(event, 'fs12', 49)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs13', 50)" onmouseover="showTip(event, 'fs13', 50)" class="f">map</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs11', 51)" onmouseover="showTip(event, 'fs11', 51)" class="i">n</span> <span class="k">-&gt;</span> (<span class="o">!</span>(<span class="n">4.0</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs11', 52)" onmouseover="showTip(event, 'fs11', 52)" class="i">n</span>) <span class="o">*</span> (<span class="n">1103.0</span> <span class="o">+</span> (<span class="n">26390.0</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs11', 53)" onmouseover="showTip(event, 'fs11', 53)" class="i">n</span>))) <span class="o">/</span> (((<span class="o">!</span><span onmouseout="hideTip(event, 'fs11', 54)" onmouseover="showTip(event, 'fs11', 54)" class="i">n</span>) <span class="o">**</span> <span class="n">4.0</span>) <span class="o">*</span> (<span class="n">3964.0</span> <span class="o">**</span> (<span class="n">4.0</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs11', 55)" onmouseover="showTip(event, 'fs11', 55)" class="i">n</span>))))
+               <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs12', 56)" onmouseover="showTip(event, 'fs12', 56)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs23', 57)" onmouseover="showTip(event, 'fs23', 57)" class="f">sum</span>
+    ((<span class="n">2.0</span> <span class="o">*</span> (<span onmouseout="hideTip(event, 'fs24', 58)" onmouseover="showTip(event, 'fs24', 58)" class="f">sqrt</span> <span class="n">2.0</span>)) <span class="o">/</span> <span class="n">9801.0</span>) <span class="o">*</span> <span onmouseout="hideTip(event, 'fs21', 59)" onmouseover="showTip(event, 'fs21', 59)" class="i">sum</span> <span class="c">//any ideas?</span>
+
+<span onmouseout="hideTip(event, 'fs2', 60)" onmouseover="showTip(event, 'fs2', 60)" class="f">assertSeriesConvergence</span> (<span class="n">1.0</span> <span class="o">/</span> <span onmouseout="hideTip(event, 'fs14', 61)" onmouseover="showTip(event, 'fs14', 61)" class="t">Math</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs25', 62)" onmouseover="showTip(event, 'fs25', 62)" class="i">PI</span>) (<span class="n">10.0</span> <span class="o">**</span> (<span class="o">-</span><span class="n">8.0</span>)) <span class="n">1.0</span> <span class="n">40.0</span> <span onmouseout="hideTip(event, 'fs19', 63)" onmouseover="showTip(event, 'fs19', 63)" class="f">Ramanujan</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace System</div>
+<div class="tip" id="fs2">val assertSeriesConvergence : expected:float -&gt; delta:float -&gt; low:float -&gt; high:float -&gt; series:(float -&gt; float) -&gt; bool<br /><br />Full name: Script.assertSeriesConvergence</div>
+<div class="tip" id="fs3">val expected : float</div>
+<div class="tip" id="fs4">Multiple items<br />val float : value:&#39;T -&gt; float (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.float<br /><br />--------------------<br />type float = Double<br /><br />Full name: Microsoft.FSharp.Core.float<br /><br />--------------------<br />type float&lt;&#39;Measure&gt; = float<br /><br />Full name: Microsoft.FSharp.Core.float&lt;_&gt;</div>
+<div class="tip" id="fs5">val delta : float</div>
+<div class="tip" id="fs6">val low : float</div>
+<div class="tip" id="fs7">val high : float</div>
+<div class="tip" id="fs8">val series : (float -&gt; float)</div>
+<div class="tip" id="fs9">val failwith : message:string -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.Operators.failwith</div>
+<div class="tip" id="fs10">Multiple items<br />val seq : sequence:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Core.Operators.seq<br /><br />--------------------<br />type seq&lt;&#39;T&gt; = Collections.Generic.IEnumerable&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.seq&lt;_&gt;</div>
+<div class="tip" id="fs11">val n : float</div>
+<div class="tip" id="fs12">module Seq<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs13">val map : mapping:(&#39;T -&gt; &#39;U) -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;U&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.map</div>
+<div class="tip" id="fs14">type Math =<br />&#160;&#160;static val PI : float<br />&#160;&#160;static val E : float<br />&#160;&#160;static member Abs : value:sbyte -&gt; sbyte + 6 overloads<br />&#160;&#160;static member Acos : d:float -&gt; float<br />&#160;&#160;static member Asin : d:float -&gt; float<br />&#160;&#160;static member Atan : d:float -&gt; float<br />&#160;&#160;static member Atan2 : y:float * x:float -&gt; float<br />&#160;&#160;static member BigMul : a:int * b:int -&gt; int64<br />&#160;&#160;static member Ceiling : d:decimal -&gt; decimal + 1 overload<br />&#160;&#160;static member Cos : d:float -&gt; float<br />&#160;&#160;...<br /><br />Full name: System.Math</div>
+<div class="tip" id="fs15">Math.Abs(value: decimal) : decimal<br />Math.Abs(value: float) : float<br />Math.Abs(value: float32) : float32<br />Math.Abs(value: int64) : int64<br />Math.Abs(value: int) : int<br />Math.Abs(value: int16) : int16<br />Math.Abs(value: sbyte) : sbyte</div>
+<div class="tip" id="fs16">val forall : predicate:(&#39;T -&gt; bool) -&gt; source:seq&lt;&#39;T&gt; -&gt; bool<br /><br />Full name: Microsoft.FSharp.Collections.Seq.forall</div>
+<div class="tip" id="fs17">val _fact : (float -&gt; float -&gt; float)</div>
+<div class="tip" id="fs18">val result : float</div>
+<div class="tip" id="fs19">val Ramanujan : x:float -&gt; float<br /><br />Full name: Script.Ramanujan</div>
+<div class="tip" id="fs20">val x : float</div>
+<div class="tip" id="fs21">val sum : float</div>
+<div class="tip" id="fs22">val i : float</div>
+<div class="tip" id="fs23">val sum : source:seq&lt;&#39;T&gt; -&gt; &#39;T (requires member ( + ) and member get_Zero)<br /><br />Full name: Microsoft.FSharp.Collections.Seq.sum</div>
+<div class="tip" id="fs24">val sqrt : value:&#39;T -&gt; &#39;U (requires member Sqrt)<br /><br />Full name: Microsoft.FSharp.Core.Operators.sqrt</div>
+<div class="tip" id="fs25">field Math.PI = 3.14159265359</div>
+

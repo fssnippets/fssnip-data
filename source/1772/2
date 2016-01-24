@@ -1,0 +1,7 @@
+module Memoize
+
+//More generic variant of http://www.fssnip.net/c4  
+open System.Collections.Concurrent  
+let cache = ConcurrentDictionary<(string * obj),Lazy<obj>>()  
+let memoizeConcurrent (caller:string) (f: ('a -> 'b)) =  
+    fun x -> (cache.GetOrAdd((caller, x|>box), lazy ((f x)|>box)).Force() |> unbox) : 'b

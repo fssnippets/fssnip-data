@@ -1,0 +1,11 @@
+let reverse x =
+    (* swap every neigbouring bit *)
+    ((x &&& 0xAAAAAAAAu) >>> 1) ||| ((x &&& 0x55555555u) <<< 1)
+    (* swap every 2 neighbouring bits *)
+    |> fun x -> ((x &&& 0xCCCCCCCCu) >>> 2) ||| ((x &&& 0x33333333u) <<< 2)
+    (* swap every 4 neighbouring bits *)
+    |> fun x -> ((x &&& 0xF0F0F0F0u) >>> 4) ||| ((x &&& 0x0F0F0F0Fu) <<< 4)
+    (* swap every 8 neighbouring bits *)
+    |> fun x -> ((x &&& 0xFF00FF00u) >>> 8) ||| ((x &&& 0x00FF00FFu) <<< 8)
+    (* and so forth, for say, 32 bit int *)
+    |> fun x -> ((x &&& 0xFFFF0000u) >>> 16) ||| ((x &&& 0x0000FFFFu) <<< 16)

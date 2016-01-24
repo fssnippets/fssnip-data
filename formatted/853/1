@@ -1,0 +1,58 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">NUnit</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">Framework</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="f">shouldMatch</span> (<span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="f">f</span> <span class="o">:</span> <span class="o">&#39;</span><span class="i">a</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="t">bool</span>) (<span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="i">x</span> <span class="o">:</span> <span class="o">&#39;</span><span class="i">a</span>) <span class="o">=</span>
+    <span class="k">if</span> <span onmouseout="hideTip(event, 'fs4', 7)" onmouseover="showTip(event, 'fs4', 7)" class="f">f</span> <span onmouseout="hideTip(event, 'fs6', 8)" onmouseover="showTip(event, 'fs6', 8)" class="i">x</span> <span class="k">then</span> () 
+    <span class="k">else</span> <span onmouseout="hideTip(event, 'fs7', 9)" onmouseover="showTip(event, 'fs7', 9)" class="f">raise</span> <span class="o">&lt;|</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs8', 10)" onmouseover="showTip(event, 'fs8', 10)" class="t">AssertionException</span>(<span onmouseout="hideTip(event, 'fs9', 11)" onmouseover="showTip(event, 'fs9', 11)" class="f">sprintf</span> <span class="s">&quot;Unexpected result: </span><span class="pf">%A</span><span class="s">.&quot;</span> <span onmouseout="hideTip(event, 'fs6', 12)" onmouseover="showTip(event, 'fs6', 12)" class="i">x</span>)
+
+
+[&lt;<span onmouseout="hideTip(event, 'fs10', 13)" onmouseover="showTip(event, 'fs10', 13)" class="t">TestFixture</span>&gt;]
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs11', 14)" onmouseover="showTip(event, 'fs11', 14)" class="t">Test</span>() <span class="o">=</span>
+
+    <span class="c">// concoct some random test scenario</span>
+    [&lt;<span onmouseout="hideTip(event, 'fs11', 15)" onmouseover="showTip(event, 'fs11', 15)" class="t">Test</span>&gt;]
+    <span class="k">member</span> <span class="i">__</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs12', 16)" onmouseover="showTip(event, 'fs12', 16)" class="f">``test scenario``</span>() <span class="o">=</span>
+        [<span class="n">1..</span><span class="n">10</span>]
+        <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs13', 17)" onmouseover="showTip(event, 'fs13', 17)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs14', 18)" onmouseover="showTip(event, 'fs14', 18)" class="f">map</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs15', 19)" onmouseover="showTip(event, 'fs15', 19)" class="i">i</span> <span class="k">-&gt;</span> (<span onmouseout="hideTip(event, 'fs15', 20)" onmouseover="showTip(event, 'fs15', 20)" class="i">i</span>,<span onmouseout="hideTip(event, 'fs15', 21)" onmouseover="showTip(event, 'fs15', 21)" class="i">i</span> <span class="o">%</span> <span class="n">2</span> <span class="o">=</span> <span class="n">0</span>))
+        <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs13', 22)" onmouseover="showTip(event, 'fs13', 22)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs16', 23)" onmouseover="showTip(event, 'fs16', 23)" class="f">filter</span> <span onmouseout="hideTip(event, 'fs17', 24)" onmouseover="showTip(event, 'fs17', 24)" class="f">snd</span>
+        <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs3', 25)" onmouseover="showTip(event, 'fs3', 25)" class="f">shouldMatch</span> (<span class="k">function</span> _ <span class="o">::</span> (<span class="n">4</span>,_) <span class="o">::</span> _ <span class="k">-&gt;</span> <span class="k">true</span> | _ <span class="k">-&gt;</span> <span class="k">false</span>)
+        
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace NUnit</div>
+<div class="tip" id="fs2">namespace NUnit.Framework</div>
+<div class="tip" id="fs3">val shouldMatch : f:(&#39;a -&gt; bool) -&gt; x:&#39;a -&gt; unit<br /><br />Full name: Script.shouldMatch</div>
+<div class="tip" id="fs4">val f : (&#39;a -&gt; bool)</div>
+<div class="tip" id="fs5">type bool = System.Boolean<br /><br />Full name: Microsoft.FSharp.Core.bool</div>
+<div class="tip" id="fs6">val x : &#39;a</div>
+<div class="tip" id="fs7">val raise : exn:System.Exception -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.Operators.raise</div>
+<div class="tip" id="fs8">Multiple items<br />type AssertionException =<br />&#160;&#160;inherit Exception<br />&#160;&#160;new : message:string -&gt; AssertionException + 1 overload<br /><br />Full name: NUnit.Framework.AssertionException<br /><br />--------------------<br />AssertionException(message: string) : unit<br />AssertionException(message: string, inner: exn) : unit</div>
+<div class="tip" id="fs9">val sprintf : format:Printf.StringFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.sprintf</div>
+<div class="tip" id="fs10">Multiple items<br />type TestFixtureAttribute =<br />&#160;&#160;inherit Attribute<br />&#160;&#160;new : unit -&gt; TestFixtureAttribute + 1 overload<br />&#160;&#160;member Arguments : obj[]<br />&#160;&#160;member Categories : IList<br />&#160;&#160;member Category : string with get, set<br />&#160;&#160;member Description : string with get, set<br />&#160;&#160;member Ignore : bool with get, set<br />&#160;&#160;member IgnoreReason : string with get, set<br />&#160;&#160;member TypeArgs : Type[] with get, set<br /><br />Full name: NUnit.Framework.TestFixtureAttribute<br /><br />--------------------<br />TestFixtureAttribute() : unit<br />TestFixtureAttribute([&lt;System.ParamArray&gt;] arguments: obj []) : unit</div>
+<div class="tip" id="fs11">Multiple items<br />type Test =<br />&#160;&#160;new : unit -&gt; Test<br />&#160;&#160;member ( test scenario ) : unit -&gt; unit<br /><br />Full name: Script.Test<br /><br />--------------------<br />type TestAttribute =<br />&#160;&#160;inherit Attribute<br />&#160;&#160;new : unit -&gt; TestAttribute<br />&#160;&#160;member Description : string with get, set<br /><br />Full name: NUnit.Framework.TestAttribute<br /><br />--------------------<br />new : unit -&gt; Test<br /><br />--------------------<br />TestAttribute() : unit</div>
+<div class="tip" id="fs12">member Test.( test scenario ) : unit -&gt; unit<br /><br />Full name: Script.Test.( test scenario )</div>
+<div class="tip" id="fs13">Multiple items<br />type List =<br />&#160;&#160;new : unit -&gt; List<br />&#160;&#160;static member Map : actual:ICollection -&gt; ListMapper<br /><br />Full name: NUnit.Framework.List<br /><br />--------------------<br />type List&lt;&#39;T&gt; =<br />&#160;&#160;| ( [] )<br />&#160;&#160;| ( :: ) of Head: &#39;T * Tail: &#39;T list<br />&#160;&#160;interface IEnumerable<br />&#160;&#160;interface IEnumerable&lt;&#39;T&gt;<br />&#160;&#160;member Head : &#39;T<br />&#160;&#160;member IsEmpty : bool<br />&#160;&#160;member Item : index:int -&gt; &#39;T with get<br />&#160;&#160;member Length : int<br />&#160;&#160;member Tail : &#39;T list<br />&#160;&#160;static member Cons : head:&#39;T * tail:&#39;T list -&gt; &#39;T list<br />&#160;&#160;static member Empty : &#39;T list<br /><br />Full name: Microsoft.FSharp.Collections.List&lt;_&gt;<br /><br />--------------------<br />List() : unit</div>
+<div class="tip" id="fs14">val map : mapping:(&#39;T -&gt; &#39;U) -&gt; list:&#39;T list -&gt; &#39;U list<br /><br />Full name: Microsoft.FSharp.Collections.List.map</div>
+<div class="tip" id="fs15">val i : int</div>
+<div class="tip" id="fs16">val filter : predicate:(&#39;T -&gt; bool) -&gt; list:&#39;T list -&gt; &#39;T list<br /><br />Full name: Microsoft.FSharp.Collections.List.filter</div>
+<div class="tip" id="fs17">val snd : tuple:(&#39;T1 * &#39;T2) -&gt; &#39;T2<br /><br />Full name: Microsoft.FSharp.Core.Operators.snd</div>
+

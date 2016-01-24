@@ -1,0 +1,126 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+<span class="l">38: </span>
+<span class="l">39: </span>
+<span class="l">40: </span>
+<span class="l">41: </span>
+<span class="l">42: </span>
+<span class="l">43: </span>
+<span class="l">44: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">// Miss Grant&#39;s Controller as an Internal DSL in F#</span>
+<span class="c">// See Domain-Specific Languages: An Introductory Example by Martin Fowler</span>
+<span class="c">// http://www.informit.com/articles/article.aspx?p=1592379&amp;seqNum=3</span>
+
+<span class="c">// [omit:Semantic model type definitions]</span>
+<span class="k">type</span> <span class="t">code</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="t">string</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="t">event</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="p">Event</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="t">code</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="t">command</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="p">Command</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs4', 7)" onmouseover="showTip(event, 'fs4', 7)" class="t">code</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs7', 8)" onmouseover="showTip(event, 'fs7', 8)" class="t">transition</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs8', 9)" onmouseover="showTip(event, 'fs8', 9)" class="p">Transition</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs2', 10)" onmouseover="showTip(event, 'fs2', 10)" class="t">event</span> <span class="o">*</span> (<span onmouseout="hideTip(event, 'fs9', 11)" onmouseover="showTip(event, 'fs9', 11)" class="t">unit</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs10', 12)" onmouseover="showTip(event, 'fs10', 12)" class="t">state</span>)
+<span class="k">and</span>  <span onmouseout="hideTip(event, 'fs10', 13)" onmouseover="showTip(event, 'fs10', 13)" class="t">state</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs11', 14)" onmouseover="showTip(event, 'fs11', 14)" class="p">State</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs5', 15)" onmouseover="showTip(event, 'fs5', 15)" class="t">command</span> <span onmouseout="hideTip(event, 'fs12', 16)" onmouseover="showTip(event, 'fs12', 16)" class="t">seq</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs7', 17)" onmouseover="showTip(event, 'fs7', 17)" class="t">transition</span> <span onmouseout="hideTip(event, 'fs12', 18)" onmouseover="showTip(event, 'fs12', 18)" class="t">seq</span>
+<span class="c">// [/omit]</span>
+
+<span class="c">// [omit:Internal DSL helper functions]</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs13', 19)" onmouseover="showTip(event, 'fs13', 19)" class="f">event</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs3', 20)" onmouseover="showTip(event, 'fs3', 20)" class="p">Event</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs14', 21)" onmouseover="showTip(event, 'fs14', 21)" class="f">command</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs6', 22)" onmouseover="showTip(event, 'fs6', 22)" class="p">Command</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs15', 23)" onmouseover="showTip(event, 'fs15', 23)" class="f">state</span> <span onmouseout="hideTip(event, 'fs16', 24)" onmouseover="showTip(event, 'fs16', 24)" class="i">actions</span> <span onmouseout="hideTip(event, 'fs17', 25)" onmouseover="showTip(event, 'fs17', 25)" class="i">transitions</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs11', 26)" onmouseover="showTip(event, 'fs11', 26)" class="p">State</span>(<span onmouseout="hideTip(event, 'fs16', 27)" onmouseover="showTip(event, 'fs16', 27)" class="i">actions</span>,<span onmouseout="hideTip(event, 'fs17', 28)" onmouseover="showTip(event, 'fs17', 28)" class="i">transitions</span>)
+<span class="k">let</span> (<span class="o">=&gt;</span>) <span onmouseout="hideTip(event, 'fs18', 29)" onmouseover="showTip(event, 'fs18', 29)" class="i">event</span> <span onmouseout="hideTip(event, 'fs19', 30)" onmouseover="showTip(event, 'fs19', 30)" class="f">state</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs8', 31)" onmouseover="showTip(event, 'fs8', 31)" class="p">Transition</span>(<span onmouseout="hideTip(event, 'fs18', 32)" onmouseover="showTip(event, 'fs18', 32)" class="i">event</span>,<span onmouseout="hideTip(event, 'fs19', 33)" onmouseover="showTip(event, 'fs19', 33)" class="f">state</span>)
+<span class="c">// [/omit]</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs20', 34)" onmouseover="showTip(event, 'fs20', 34)" class="i">doorClosed</span> <span class="o">=</span>    <span onmouseout="hideTip(event, 'fs13', 35)" onmouseover="showTip(event, 'fs13', 35)" class="f">event</span> <span class="s">&quot;D1CL&quot;</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs21', 36)" onmouseover="showTip(event, 'fs21', 36)" class="i">drawerOpened</span> <span class="o">=</span>  <span onmouseout="hideTip(event, 'fs13', 37)" onmouseover="showTip(event, 'fs13', 37)" class="f">event</span> <span class="s">&quot;D2OP&quot;</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs22', 38)" onmouseover="showTip(event, 'fs22', 38)" class="i">lightOn</span> <span class="o">=</span>       <span onmouseout="hideTip(event, 'fs13', 39)" onmouseover="showTip(event, 'fs13', 39)" class="f">event</span> <span class="s">&quot;L1ON&quot;</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs23', 40)" onmouseover="showTip(event, 'fs23', 40)" class="i">doorOpened</span> <span class="o">=</span>    <span onmouseout="hideTip(event, 'fs13', 41)" onmouseover="showTip(event, 'fs13', 41)" class="f">event</span> <span class="s">&quot;D1OP&quot;</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs24', 42)" onmouseover="showTip(event, 'fs24', 42)" class="i">panelClosed</span> <span class="o">=</span>   <span onmouseout="hideTip(event, 'fs13', 43)" onmouseover="showTip(event, 'fs13', 43)" class="f">event</span> <span class="s">&quot;PNCL&quot;</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs25', 44)" onmouseover="showTip(event, 'fs25', 44)" class="i">unlockPanel</span> <span class="o">=</span>   <span onmouseout="hideTip(event, 'fs14', 45)" onmouseover="showTip(event, 'fs14', 45)" class="f">command</span> <span class="s">&quot;PNUL&quot;</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs26', 46)" onmouseover="showTip(event, 'fs26', 46)" class="i">lockPanel</span> <span class="o">=</span>     <span onmouseout="hideTip(event, 'fs14', 47)" onmouseover="showTip(event, 'fs14', 47)" class="f">command</span> <span class="s">&quot;PNLK&quot;</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs27', 48)" onmouseover="showTip(event, 'fs27', 48)" class="i">lockDoor</span> <span class="o">=</span>      <span onmouseout="hideTip(event, 'fs14', 49)" onmouseover="showTip(event, 'fs14', 49)" class="f">command</span> <span class="s">&quot;D1LK&quot;</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs28', 50)" onmouseover="showTip(event, 'fs28', 50)" class="i">unlockDoor</span> <span class="o">=</span>    <span onmouseout="hideTip(event, 'fs14', 51)" onmouseover="showTip(event, 'fs14', 51)" class="f">command</span> <span class="s">&quot;D1UL&quot;</span>
+
+<span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs29', 52)" onmouseover="showTip(event, 'fs29', 52)" class="f">idle</span> () <span class="o">=</span> 
+    <span onmouseout="hideTip(event, 'fs15', 53)" onmouseover="showTip(event, 'fs15', 53)" class="f">state</span>
+        [<span onmouseout="hideTip(event, 'fs28', 54)" onmouseover="showTip(event, 'fs28', 54)" class="i">unlockDoor</span>; <span onmouseout="hideTip(event, 'fs26', 55)" onmouseover="showTip(event, 'fs26', 55)" class="i">lockPanel</span>]
+        [<span onmouseout="hideTip(event, 'fs20', 56)" onmouseover="showTip(event, 'fs20', 56)" class="i">doorClosed</span> <span class="o">=&gt;</span> <span onmouseout="hideTip(event, 'fs30', 57)" onmouseover="showTip(event, 'fs30', 57)" class="f">active</span>]
+<span class="k">and</span> <span onmouseout="hideTip(event, 'fs30', 58)" onmouseover="showTip(event, 'fs30', 58)" class="f">active</span> () <span class="o">=</span>
+    <span onmouseout="hideTip(event, 'fs15', 59)" onmouseover="showTip(event, 'fs15', 59)" class="f">state</span> [] [<span onmouseout="hideTip(event, 'fs22', 60)" onmouseover="showTip(event, 'fs22', 60)" class="i">lightOn</span> <span class="o">=&gt;</span> <span onmouseout="hideTip(event, 'fs31', 61)" onmouseover="showTip(event, 'fs31', 61)" class="f">waitingForDrawer</span>]
+<span class="k">and</span> <span onmouseout="hideTip(event, 'fs32', 62)" onmouseover="showTip(event, 'fs32', 62)" class="f">waitingForLight</span> () <span class="o">=</span>
+    <span onmouseout="hideTip(event, 'fs15', 63)" onmouseover="showTip(event, 'fs15', 63)" class="f">state</span> [] [<span onmouseout="hideTip(event, 'fs22', 64)" onmouseover="showTip(event, 'fs22', 64)" class="i">lightOn</span> <span class="o">=&gt;</span> <span onmouseout="hideTip(event, 'fs33', 65)" onmouseover="showTip(event, 'fs33', 65)" class="f">unlockedPanel</span>]
+<span class="k">and</span> <span onmouseout="hideTip(event, 'fs31', 66)" onmouseover="showTip(event, 'fs31', 66)" class="f">waitingForDrawer</span> () <span class="o">=</span>
+    <span onmouseout="hideTip(event, 'fs15', 67)" onmouseover="showTip(event, 'fs15', 67)" class="f">state</span> [] [<span onmouseout="hideTip(event, 'fs21', 68)" onmouseover="showTip(event, 'fs21', 68)" class="i">drawerOpened</span> <span class="o">=&gt;</span> <span onmouseout="hideTip(event, 'fs33', 69)" onmouseover="showTip(event, 'fs33', 69)" class="f">unlockedPanel</span>]
+<span class="k">and</span> <span onmouseout="hideTip(event, 'fs33', 70)" onmouseover="showTip(event, 'fs33', 70)" class="f">unlockedPanel</span> () <span class="o">=</span>
+    <span onmouseout="hideTip(event, 'fs15', 71)" onmouseover="showTip(event, 'fs15', 71)" class="f">state</span>
+        [<span onmouseout="hideTip(event, 'fs25', 72)" onmouseover="showTip(event, 'fs25', 72)" class="i">unlockPanel</span>; <span onmouseout="hideTip(event, 'fs27', 73)" onmouseover="showTip(event, 'fs27', 73)" class="i">lockDoor</span>]
+        [<span onmouseout="hideTip(event, 'fs24', 74)" onmouseover="showTip(event, 'fs24', 74)" class="i">panelClosed</span> <span class="o">=&gt;</span> <span onmouseout="hideTip(event, 'fs29', 75)" onmouseover="showTip(event, 'fs29', 75)" class="f">idle</span>]
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />Full name: Microsoft.FSharp.Core.Operators.string<br /><br />--------------------<br />type string = System.String<br /><br />Full name: Microsoft.FSharp.Core.string</div>
+<div class="tip" id="fs2">type event = | Event of code<br /><br />Full name: Script.event</div>
+<div class="tip" id="fs3">Multiple items<br />union case event.Event: code -&gt; event<br /><br />--------------------<br />module Event<br /><br />from Microsoft.FSharp.Control<br /><br />--------------------<br />type Event&lt;&#39;T&gt; =<br />&#160;&#160;new : unit -&gt; Event&lt;&#39;T&gt;<br />&#160;&#160;member Trigger : arg:&#39;T -&gt; unit<br />&#160;&#160;member Publish : IEvent&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Control.Event&lt;_&gt;<br /><br />--------------------<br />type Event&lt;&#39;Delegate,&#39;Args (requires delegate and &#39;Delegate :&gt; Delegate)&gt; =<br />&#160;&#160;new : unit -&gt; Event&lt;&#39;Delegate,&#39;Args&gt;<br />&#160;&#160;member Trigger : sender:obj * args:&#39;Args -&gt; unit<br />&#160;&#160;member Publish : IEvent&lt;&#39;Delegate,&#39;Args&gt;<br /><br />Full name: Microsoft.FSharp.Control.Event&lt;_,_&gt;<br /><br />--------------------<br />new : unit -&gt; Event&lt;&#39;T&gt;<br /><br />--------------------<br />new : unit -&gt; Event&lt;&#39;Delegate,&#39;Args&gt;</div>
+<div class="tip" id="fs4">type code = string<br /><br />Full name: Script.code</div>
+<div class="tip" id="fs5">type command = | Command of code<br /><br />Full name: Script.command</div>
+<div class="tip" id="fs6">union case command.Command: code -&gt; command</div>
+<div class="tip" id="fs7">type transition = | Transition of event * (unit -&gt; state)<br /><br />Full name: Script.transition</div>
+<div class="tip" id="fs8">union case transition.Transition: event * (unit -&gt; state) -&gt; transition</div>
+<div class="tip" id="fs9">type unit = Unit<br /><br />Full name: Microsoft.FSharp.Core.unit</div>
+<div class="tip" id="fs10">type state = | State of seq&lt;command&gt; * seq&lt;transition&gt;<br /><br />Full name: Script.state</div>
+<div class="tip" id="fs11">union case state.State: seq&lt;command&gt; * seq&lt;transition&gt; -&gt; state</div>
+<div class="tip" id="fs12">Multiple items<br />val seq : sequence:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Core.Operators.seq<br /><br />--------------------<br />type seq&lt;&#39;T&gt; = System.Collections.Generic.IEnumerable&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.seq&lt;_&gt;</div>
+<div class="tip" id="fs13">Multiple items<br />val event : arg0:code -&gt; event<br /><br />Full name: Script.event<br /><br />--------------------<br />type event = | Event of code<br /><br />Full name: Script.event</div>
+<div class="tip" id="fs14">Multiple items<br />val command : arg0:code -&gt; command<br /><br />Full name: Script.command<br /><br />--------------------<br />type command = | Command of code<br /><br />Full name: Script.command</div>
+<div class="tip" id="fs15">Multiple items<br />val state : actions:seq&lt;command&gt; -&gt; transitions:seq&lt;transition&gt; -&gt; state<br /><br />Full name: Script.state<br /><br />--------------------<br />type state = | State of seq&lt;command&gt; * seq&lt;transition&gt;<br /><br />Full name: Script.state</div>
+<div class="tip" id="fs16">val actions : seq&lt;command&gt;</div>
+<div class="tip" id="fs17">val transitions : seq&lt;transition&gt;</div>
+<div class="tip" id="fs18">Multiple items<br />val event : event<br /><br />--------------------<br />type event = | Event of code<br /><br />Full name: Script.event</div>
+<div class="tip" id="fs19">Multiple items<br />val state : (unit -&gt; state)<br /><br />--------------------<br />type state = | State of seq&lt;command&gt; * seq&lt;transition&gt;<br /><br />Full name: Script.state</div>
+<div class="tip" id="fs20">val doorClosed : event<br /><br />Full name: Script.doorClosed</div>
+<div class="tip" id="fs21">val drawerOpened : event<br /><br />Full name: Script.drawerOpened</div>
+<div class="tip" id="fs22">val lightOn : event<br /><br />Full name: Script.lightOn</div>
+<div class="tip" id="fs23">val doorOpened : event<br /><br />Full name: Script.doorOpened</div>
+<div class="tip" id="fs24">val panelClosed : event<br /><br />Full name: Script.panelClosed</div>
+<div class="tip" id="fs25">val unlockPanel : command<br /><br />Full name: Script.unlockPanel</div>
+<div class="tip" id="fs26">val lockPanel : command<br /><br />Full name: Script.lockPanel</div>
+<div class="tip" id="fs27">val lockDoor : command<br /><br />Full name: Script.lockDoor</div>
+<div class="tip" id="fs28">val unlockDoor : command<br /><br />Full name: Script.unlockDoor</div>
+<div class="tip" id="fs29">val idle : unit -&gt; state<br /><br />Full name: Script.idle</div>
+<div class="tip" id="fs30">val active : unit -&gt; state<br /><br />Full name: Script.active</div>
+<div class="tip" id="fs31">val waitingForDrawer : unit -&gt; state<br /><br />Full name: Script.waitingForDrawer</div>
+<div class="tip" id="fs32">val waitingForLight : unit -&gt; state<br /><br />Full name: Script.waitingForLight</div>
+<div class="tip" id="fs33">val unlockedPanel : unit -&gt; state<br /><br />Full name: Script.unlockedPanel</div>
+

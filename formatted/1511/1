@@ -1,0 +1,62 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">// Two perfect logicians, S and P, are told that integers x and y have been chosen</span>
+<span class="c">// such that 1 &lt; x &lt; y and x+y &lt; 100.  S is given the value x+y and P is given the</span>
+<span class="c">// value xy. They then have the following conversation.</span>
+<span class="c">//</span>
+<span class="c">//     P:  I cannot determine the two numbers.</span>
+<span class="c">//     S:  I knew that.</span>
+<span class="c">//     P:  Now I can determine them.</span>
+<span class="c">//     S:  So can I.</span>
+<span class="c">//</span>
+<span class="c">// Given that the above statements are true, what are the two numbers?</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="f">inOp</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="f">op</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="f">f</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="f">groupBy</span> (<span class="k">fun</span> (<span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="i">x</span>, <span onmouseout="hideTip(event, 'fs7', 7)" onmouseover="showTip(event, 'fs7', 7)" class="i">y</span>) <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs2', 8)" onmouseover="showTip(event, 'fs2', 8)" class="f">op</span> <span onmouseout="hideTip(event, 'fs6', 9)" onmouseover="showTip(event, 'fs6', 9)" class="i">x</span> <span onmouseout="hideTip(event, 'fs7', 10)" onmouseover="showTip(event, 'fs7', 10)" class="i">y</span>) <span class="o">&gt;</span><span class="o">&gt;</span> <span onmouseout="hideTip(event, 'fs4', 11)" onmouseover="showTip(event, 'fs4', 11)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs8', 12)" onmouseover="showTip(event, 'fs8', 12)" class="f">filter</span> <span onmouseout="hideTip(event, 'fs3', 13)" onmouseover="showTip(event, 'fs3', 13)" class="f">f</span> <span class="o">&gt;</span><span class="o">&gt;</span> <span onmouseout="hideTip(event, 'fs4', 14)" onmouseover="showTip(event, 'fs4', 14)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs9', 15)" onmouseover="showTip(event, 'fs9', 15)" class="f">collect</span> <span onmouseout="hideTip(event, 'fs10', 16)" onmouseover="showTip(event, 'fs10', 16)" class="f">snd</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs11', 17)" onmouseover="showTip(event, 'fs11', 17)" class="f">singleCase</span> <span onmouseout="hideTip(event, 'fs2', 18)" onmouseover="showTip(event, 'fs2', 18)" class="f">op</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs1', 19)" onmouseover="showTip(event, 'fs1', 19)" class="f">inOp</span> <span onmouseout="hideTip(event, 'fs2', 20)" onmouseover="showTip(event, 'fs2', 20)" class="f">op</span> (<span onmouseout="hideTip(event, 'fs10', 21)" onmouseover="showTip(event, 'fs10', 21)" class="f">snd</span> <span class="o">&gt;</span><span class="o">&gt;</span> <span onmouseout="hideTip(event, 'fs4', 22)" onmouseover="showTip(event, 'fs4', 22)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs12', 23)" onmouseover="showTip(event, 'fs12', 23)" class="f">length</span> <span class="o">&gt;</span><span class="o">&gt;</span> (<span class="o">=</span>) <span class="n">1</span>)
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs13', 24)" onmouseover="showTip(event, 'fs13', 24)" class="i">all</span> <span class="o">=</span> [<span class="k">for</span> <span onmouseout="hideTip(event, 'fs14', 25)" onmouseover="showTip(event, 'fs14', 25)" class="i">x</span> <span class="o">=</span> <span class="n">2</span> <span class="k">to</span> <span class="n">49</span> <span class="k">do</span> <span class="k">for</span> <span onmouseout="hideTip(event, 'fs15', 26)" onmouseover="showTip(event, 'fs15', 26)" class="i">y</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs14', 27)" onmouseover="showTip(event, 'fs14', 27)" class="i">x</span> <span class="o">+</span> <span class="n">1</span> <span class="k">to</span> <span class="n">99</span> <span class="o">-</span> <span onmouseout="hideTip(event, 'fs14', 28)" onmouseover="showTip(event, 'fs14', 28)" class="i">x</span> <span class="k">do</span> <span class="k">yield</span> <span onmouseout="hideTip(event, 'fs14', 29)" onmouseover="showTip(event, 'fs14', 29)" class="i">x</span>, <span onmouseout="hideTip(event, 'fs15', 30)" onmouseover="showTip(event, 'fs15', 30)" class="i">y</span>]
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs16', 31)" onmouseover="showTip(event, 'fs16', 31)" class="i">spoilP</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs13', 32)" onmouseover="showTip(event, 'fs13', 32)" class="i">all</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs11', 33)" onmouseover="showTip(event, 'fs11', 33)" class="f">singleCase</span> <span class="o">(*)</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs17', 34)" onmouseover="showTip(event, 'fs17', 34)" class="t">Set</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs18', 35)" onmouseover="showTip(event, 'fs18', 35)" class="f">ofSeq</span>
+<span onmouseout="hideTip(event, 'fs13', 36)" onmouseover="showTip(event, 'fs13', 36)" class="i">all</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs1', 37)" onmouseover="showTip(event, 'fs1', 37)" class="f">inOp</span> (<span class="o">+</span>) (<span onmouseout="hideTip(event, 'fs10', 38)" onmouseover="showTip(event, 'fs10', 38)" class="f">snd</span> <span class="o">&gt;</span><span class="o">&gt;</span> <span onmouseout="hideTip(event, 'fs17', 39)" onmouseover="showTip(event, 'fs17', 39)" class="t">Set</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs18', 40)" onmouseover="showTip(event, 'fs18', 40)" class="f">ofSeq</span> <span class="o">&gt;</span><span class="o">&gt;</span> <span onmouseout="hideTip(event, 'fs17', 41)" onmouseover="showTip(event, 'fs17', 41)" class="t">Set</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs19', 42)" onmouseover="showTip(event, 'fs19', 42)" class="f">intersect</span> <span onmouseout="hideTip(event, 'fs16', 43)" onmouseover="showTip(event, 'fs16', 43)" class="i">spoilP</span> <span class="o">&gt;</span><span class="o">&gt;</span> <span onmouseout="hideTip(event, 'fs17', 44)" onmouseover="showTip(event, 'fs17', 44)" class="t">Set</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs20', 45)" onmouseover="showTip(event, 'fs20', 45)" class="f">isEmpty</span>)
+<span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs11', 46)" onmouseover="showTip(event, 'fs11', 46)" class="f">singleCase</span> <span class="o">(*)</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs11', 47)" onmouseover="showTip(event, 'fs11', 47)" class="f">singleCase</span> (<span class="o">+</span>) <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs4', 48)" onmouseover="showTip(event, 'fs4', 48)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs21', 49)" onmouseover="showTip(event, 'fs21', 49)" class="f">exactlyOne</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">val inOp : op:(&#39;a -&gt; &#39;b -&gt; &#39;c) -&gt; f:(&#39;c * seq&lt;&#39;a * &#39;b&gt; -&gt; bool) -&gt; (seq&lt;&#39;a * &#39;b&gt; -&gt; seq&lt;&#39;a * &#39;b&gt;) (requires equality)<br /><br />Full name: Script.inOp</div>
+<div class="tip" id="fs2">val op : (&#39;a -&gt; &#39;b -&gt; &#39;c) (requires equality)</div>
+<div class="tip" id="fs3">val f : (&#39;c * seq&lt;&#39;a * &#39;b&gt; -&gt; bool) (requires equality)</div>
+<div class="tip" id="fs4">module Seq<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs5">val groupBy : projection:(&#39;T -&gt; &#39;Key) -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;Key * seq&lt;&#39;T&gt;&gt; (requires equality)<br /><br />Full name: Microsoft.FSharp.Collections.Seq.groupBy</div>
+<div class="tip" id="fs6">val x : &#39;a</div>
+<div class="tip" id="fs7">val y : &#39;b</div>
+<div class="tip" id="fs8">val filter : predicate:(&#39;T -&gt; bool) -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.filter</div>
+<div class="tip" id="fs9">val collect : mapping:(&#39;T -&gt; #seq&lt;&#39;U&gt;) -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;U&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.collect</div>
+<div class="tip" id="fs10">val snd : tuple:(&#39;T1 * &#39;T2) -&gt; &#39;T2<br /><br />Full name: Microsoft.FSharp.Core.Operators.snd</div>
+<div class="tip" id="fs11">val singleCase : op:(&#39;a -&gt; &#39;b -&gt; &#39;c) -&gt; (seq&lt;&#39;a * &#39;b&gt; -&gt; seq&lt;&#39;a * &#39;b&gt;) (requires equality)<br /><br />Full name: Script.singleCase</div>
+<div class="tip" id="fs12">val length : source:seq&lt;&#39;T&gt; -&gt; int<br /><br />Full name: Microsoft.FSharp.Collections.Seq.length</div>
+<div class="tip" id="fs13">val all : (int * int) list<br /><br />Full name: Script.all</div>
+<div class="tip" id="fs14">val x : int</div>
+<div class="tip" id="fs15">val y : int</div>
+<div class="tip" id="fs16">val spoilP : Set&lt;int * int&gt;<br /><br />Full name: Script.spoilP</div>
+<div class="tip" id="fs17">Multiple items<br />module Set<br /><br />from Microsoft.FSharp.Collections<br /><br />--------------------<br />type Set&lt;&#39;T (requires comparison)&gt; =<br />&#160;&#160;interface IComparable<br />&#160;&#160;interface IEnumerable<br />&#160;&#160;interface IEnumerable&lt;&#39;T&gt;<br />&#160;&#160;interface ICollection&lt;&#39;T&gt;<br />&#160;&#160;new : elements:seq&lt;&#39;T&gt; -&gt; Set&lt;&#39;T&gt;<br />&#160;&#160;member Add : value:&#39;T -&gt; Set&lt;&#39;T&gt;<br />&#160;&#160;member Contains : value:&#39;T -&gt; bool<br />&#160;&#160;override Equals : obj -&gt; bool<br />&#160;&#160;member IsProperSubsetOf : otherSet:Set&lt;&#39;T&gt; -&gt; bool<br />&#160;&#160;member IsProperSupersetOf : otherSet:Set&lt;&#39;T&gt; -&gt; bool<br />&#160;&#160;...<br /><br />Full name: Microsoft.FSharp.Collections.Set&lt;_&gt;<br /><br />--------------------<br />new : elements:seq&lt;&#39;T&gt; -&gt; Set&lt;&#39;T&gt;</div>
+<div class="tip" id="fs18">val ofSeq : elements:seq&lt;&#39;T&gt; -&gt; Set&lt;&#39;T&gt; (requires comparison)<br /><br />Full name: Microsoft.FSharp.Collections.Set.ofSeq</div>
+<div class="tip" id="fs19">val intersect : set1:Set&lt;&#39;T&gt; -&gt; set2:Set&lt;&#39;T&gt; -&gt; Set&lt;&#39;T&gt; (requires comparison)<br /><br />Full name: Microsoft.FSharp.Collections.Set.intersect</div>
+<div class="tip" id="fs20">val isEmpty : set:Set&lt;&#39;T&gt; -&gt; bool (requires comparison)<br /><br />Full name: Microsoft.FSharp.Collections.Set.isEmpty</div>
+<div class="tip" id="fs21">val exactlyOne : source:seq&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Collections.Seq.exactlyOne</div>
+

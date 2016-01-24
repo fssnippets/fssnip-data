@@ -1,0 +1,12 @@
+    type FeatureTypes = Dent|MetalLoss|Tap
+    let applicableNotes = [
+        "in long seam",[Dent;Tap]
+        "adjacent external long seam",[Dent;MetalLoss;Tap]
+        ]
+
+    // list applicable notes for a feature
+    let notesFor feature = applicableNotes |> List.filter (fun (note,features) -> features |> List.exists (fun f -> f = feature) ) |> List.map (fun (n,_) -> n)
+
+    // examples
+    notesFor Dent 
+    notesFor MetalLoss

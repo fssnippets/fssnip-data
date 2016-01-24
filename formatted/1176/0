@@ -1,0 +1,88 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">module</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="t">World</span>
+
+<span class="c">/// Specifies the address of an element in a world.</span>
+<span class="c">/// Note that, similar to Mu, the last node of the address is the name of the event (such as &quot;clicked&quot;).</span>
+<span class="c">/// Also note that subscribing to a partial address results in listening to all messages whose</span>
+<span class="c">/// beginning address nodes match the partial address (sort of a wild-card).</span>
+<span class="c">/// A value type.</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="t">Address</span> <span class="o">=</span> <span class="i">Lun</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="t">list</span>
+
+<span class="c">/// Represents an open world, in a functional sense.</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="t">IWorld</span> <span class="o">=</span>
+    <span class="c">/// Try to find an element of a world.</span>
+    <span class="k">abstract</span> <span class="k">member</span> <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="f">TryFind</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">e</span><span class="o">&gt;</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs2', 6)" onmouseover="showTip(event, 'fs2', 6)" class="t">Address</span> <span class="k">-&gt;</span> <span class="o">&#39;</span><span class="i">e</span> <span onmouseout="hideTip(event, 'fs6', 7)" onmouseover="showTip(event, 'fs6', 7)" class="t">option</span>
+    <span class="c">/// Set an element of a world.</span>
+    <span class="k">abstract</span> <span class="k">member</span> <span onmouseout="hideTip(event, 'fs7', 8)" onmouseover="showTip(event, 'fs7', 8)" class="f">Set</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">e</span>, <span class="o">&#39;</span><span class="i">w</span> <span class="k">when</span> <span class="o">&#39;</span><span class="i">w</span> <span class="o">:&gt;</span> <span onmouseout="hideTip(event, 'fs4', 9)" onmouseover="showTip(event, 'fs4', 9)" class="t">IWorld</span><span class="o">&gt;</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs2', 10)" onmouseover="showTip(event, 'fs2', 10)" class="t">Address</span> <span class="k">-&gt;</span> <span class="o">&#39;</span><span class="i">e</span> <span class="k">-&gt;</span> <span class="o">&#39;</span><span class="i">w</span>
+    <span class="c">/// Remove an element of a world.</span>
+    <span class="k">abstract</span> <span class="k">member</span> <span onmouseout="hideTip(event, 'fs8', 11)" onmouseover="showTip(event, 'fs8', 11)" class="f">Remove</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">w</span> <span class="k">when</span> <span class="o">&#39;</span><span class="i">w</span> <span class="o">:&gt;</span> <span onmouseout="hideTip(event, 'fs4', 12)" onmouseover="showTip(event, 'fs4', 12)" class="t">IWorld</span><span class="o">&gt;</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs2', 13)" onmouseover="showTip(event, 'fs2', 13)" class="t">Address</span> <span class="k">-&gt;</span> <span class="o">&#39;</span><span class="i">w</span>
+
+<span class="c">/// Try to find an element of a world.</span>
+<span class="k">let</span> <span class="k">inline</span> <span onmouseout="hideTip(event, 'fs9', 14)" onmouseover="showTip(event, 'fs9', 14)" class="f">tryFind</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">w</span> <span class="k">when</span> <span class="o">&#39;</span><span class="i">w</span> <span class="o">:&gt;</span> <span onmouseout="hideTip(event, 'fs4', 15)" onmouseover="showTip(event, 'fs4', 15)" class="t">IWorld</span><span class="o">&gt;</span> <span onmouseout="hideTip(event, 'fs10', 16)" onmouseover="showTip(event, 'fs10', 16)" class="i">address</span> (<span onmouseout="hideTip(event, 'fs11', 17)" onmouseover="showTip(event, 'fs11', 17)" class="i">world</span> <span class="o">:</span> <span class="o">&#39;</span><span class="i">w</span>) <span class="o">=</span>
+    <span onmouseout="hideTip(event, 'fs11', 18)" onmouseover="showTip(event, 'fs11', 18)" class="i">world</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs12', 19)" onmouseover="showTip(event, 'fs12', 19)" class="f">TryFind</span> <span onmouseout="hideTip(event, 'fs10', 20)" onmouseover="showTip(event, 'fs10', 20)" class="i">address</span>
+
+<span class="c">(* I might rather drop the interface and use generics like this -</span>
+<span class="c">let inline tryFind&lt;&#39;w when &#39;w : (member TryFind&lt;&#39;e&gt; : Address -&gt; &#39;e)&gt; address (world : &#39;w) =</span>
+<span class="c">    world.TryFind&lt;&#39;e&gt; address*)</span>
+
+<span class="c">/// Set an element of a world.</span>
+<span class="k">let</span> <span class="k">inline</span> <span onmouseout="hideTip(event, 'fs13', 21)" onmouseover="showTip(event, 'fs13', 21)" class="f">set</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">w</span> <span class="k">when</span> <span class="o">&#39;</span><span class="i">w</span> <span class="o">:&gt;</span> <span onmouseout="hideTip(event, 'fs4', 22)" onmouseover="showTip(event, 'fs4', 22)" class="t">IWorld</span><span class="o">&gt;</span> <span onmouseout="hideTip(event, 'fs10', 23)" onmouseover="showTip(event, 'fs10', 23)" class="i">address</span> <span onmouseout="hideTip(event, 'fs14', 24)" onmouseover="showTip(event, 'fs14', 24)" class="i">element</span> (<span onmouseout="hideTip(event, 'fs11', 25)" onmouseover="showTip(event, 'fs11', 25)" class="i">world</span> <span class="o">:</span> <span class="o">&#39;</span><span class="i">w</span>) <span class="o">=</span>
+    <span onmouseout="hideTip(event, 'fs11', 26)" onmouseover="showTip(event, 'fs11', 26)" class="i">world</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs15', 27)" onmouseover="showTip(event, 'fs15', 27)" class="f">Set</span> <span onmouseout="hideTip(event, 'fs10', 28)" onmouseover="showTip(event, 'fs10', 28)" class="i">address</span> <span onmouseout="hideTip(event, 'fs14', 29)" onmouseover="showTip(event, 'fs14', 29)" class="i">element</span>
+    
+<span class="c">/// Remove an element of a world.</span>
+<span class="k">let</span> <span class="k">inline</span> <span onmouseout="hideTip(event, 'fs16', 30)" onmouseover="showTip(event, 'fs16', 30)" class="f">remove</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">w</span> <span class="k">when</span> <span class="o">&#39;</span><span class="i">w</span> <span class="o">:&gt;</span> <span onmouseout="hideTip(event, 'fs4', 31)" onmouseover="showTip(event, 'fs4', 31)" class="t">IWorld</span><span class="o">&gt;</span> <span onmouseout="hideTip(event, 'fs10', 32)" onmouseover="showTip(event, 'fs10', 32)" class="i">address</span> (<span onmouseout="hideTip(event, 'fs11', 33)" onmouseover="showTip(event, 'fs11', 33)" class="i">world</span> <span class="o">:</span> <span class="o">&#39;</span><span class="i">w</span>) <span class="o">=</span>
+    <span onmouseout="hideTip(event, 'fs11', 34)" onmouseover="showTip(event, 'fs11', 34)" class="i">world</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs17', 35)" onmouseover="showTip(event, 'fs17', 35)" class="f">Remove</span> <span onmouseout="hideTip(event, 'fs10', 36)" onmouseover="showTip(event, 'fs10', 36)" class="i">address</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">module World</div>
+<div class="tip" id="fs2">type Address = obj<br /><br />Full name: World.Address<br /><em><br /><br />&#160;Specifies the address of an element in a world.<br />&#160;Note that, similar to Mu, the last node of the address is the name of the event (such as &quot;clicked&quot;).<br />&#160;Also note that subscribing to a partial address results in listening to all messages whose<br />&#160;beginning address nodes match the partial address (sort of a wild-card).<br />&#160;A value type.</em></div>
+<div class="tip" id="fs3">type &#39;T list = List&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.list&lt;_&gt;</div>
+<div class="tip" id="fs4">type IWorld =<br />&#160;&#160;interface<br />&#160;&#160;&#160;&#160;abstract member Remove : Address -&gt; #IWorld<br />&#160;&#160;&#160;&#160;abstract member Set : Address -&gt; &#39;e -&gt; #IWorld<br />&#160;&#160;&#160;&#160;abstract member TryFind : Address -&gt; &#39;e option<br />&#160;&#160;end<br /><br />Full name: World.IWorld<br /><em><br /><br />&#160;Represents an open world, in a functional sense.</em></div>
+<div class="tip" id="fs5">abstract member IWorld.TryFind : Address -&gt; &#39;e option<br /><br />Full name: World.IWorld.TryFind<br /><em><br /><br />&#160;Try to find an element of a world.</em></div>
+<div class="tip" id="fs6">type &#39;T option = Option&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Core.option&lt;_&gt;</div>
+<div class="tip" id="fs7">Multiple items<br />abstract member IWorld.Set : Address -&gt; &#39;e -&gt; #IWorld<br /><br />Full name: World.IWorld.Set<br /><em><br /><br />&#160;Set an element of a world.</em><br /><br />--------------------<br />module Set<br /><br />from Microsoft.FSharp.Collections<br /><br />--------------------<br />type Set&lt;&#39;T (requires comparison)&gt; =<br />&#160;&#160;interface IComparable<br />&#160;&#160;interface IEnumerable<br />&#160;&#160;interface IEnumerable&lt;&#39;T&gt;<br />&#160;&#160;interface ICollection&lt;&#39;T&gt;<br />&#160;&#160;new : elements:seq&lt;&#39;T&gt; -&gt; Set&lt;&#39;T&gt;<br />&#160;&#160;member Add : value:&#39;T -&gt; Set&lt;&#39;T&gt;<br />&#160;&#160;member Contains : value:&#39;T -&gt; bool<br />&#160;&#160;override Equals : obj -&gt; bool<br />&#160;&#160;member IsProperSubsetOf : otherSet:Set&lt;&#39;T&gt; -&gt; bool<br />&#160;&#160;member IsProperSupersetOf : otherSet:Set&lt;&#39;T&gt; -&gt; bool<br />&#160;&#160;...<br /><br />Full name: Microsoft.FSharp.Collections.Set&lt;_&gt;<br /><br />--------------------<br />new : elements:seq&lt;&#39;T&gt; -&gt; Set&lt;&#39;T&gt;</div>
+<div class="tip" id="fs8">abstract member IWorld.Remove : Address -&gt; #IWorld<br /><br />Full name: World.IWorld.Remove<br /><em><br /><br />&#160;Remove an element of a world.</em></div>
+<div class="tip" id="fs9">val tryFind : address:obj -&gt; world:#IWorld -&gt; obj option<br /><br />Full name: World.tryFind<br /><em><br /><br />&#160;Try to find an element of a world.</em></div>
+<div class="tip" id="fs10">val address : obj</div>
+<div class="tip" id="fs11">val world : #IWorld</div>
+<div class="tip" id="fs12">abstract member IWorld.TryFind : Address -&gt; &#39;e option<br /><em><br /><br />&#160;Try to find an element of a world.</em></div>
+<div class="tip" id="fs13">val set : address:obj -&gt; element:obj -&gt; world:#IWorld -&gt; IWorld<br /><br />Full name: World.set<br /><em><br /><br />&#160;Set an element of a world.</em></div>
+<div class="tip" id="fs14">val element : obj</div>
+<div class="tip" id="fs15">abstract member IWorld.Set : Address -&gt; &#39;e -&gt; #IWorld<br /><em><br /><br />&#160;Set an element of a world.</em></div>
+<div class="tip" id="fs16">val remove : address:obj -&gt; world:#IWorld -&gt; IWorld<br /><br />Full name: World.remove<br /><em><br /><br />&#160;Remove an element of a world.</em></div>
+<div class="tip" id="fs17">abstract member IWorld.Remove : Address -&gt; #IWorld<br /><em><br /><br />&#160;Remove an element of a world.</em></div>
+

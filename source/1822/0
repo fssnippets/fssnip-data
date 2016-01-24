@@ -1,0 +1,53 @@
+// HttpEcho.fsx
+open System.Net
+open System
+
+let echo prefix =
+    let listener =  new HttpListener(IgnoreWriteExceptions = true)
+    listener.Prefixes.Add prefix
+    listener.Start()
+
+    let rec listen() =
+        async {
+        let! context = listener.GetContextAsync() |> Async.AwaitTask
+
+        async {
+            let request = context.Request
+            let response = context.Response
+
+            try
+                response.StatusCode <- 200
+                response.ContentType <- request.ContentType
+
+                if request.HasEntityBody then
+                    do! request.InputStream.CopyToAsync(response.OutputStream) |> Async.AwaitTask
+            with
+            | ex ->
+                response.StatusCode <- 500
+                response.StatusDescription <- ex.Message
+
+            context.Response.Close()
+        } |> Async.Start
+
+        return! listen() }
+       
+    listen() |> Async.Start
+
+    listener
+
+
+let cancel = new Threading.Tasks.TaskCompletionSource<unit>()
+Console.CancelKeyPress |> Event.add (fun e -> cancel.SetResult(); e.Cancel <- true)
+
+async
+ { 
+    let prefix = "http://*:80/"
+    use _ = echo prefix
+    printfn "Listening on %s" prefix
+    do! Async.AwaitTask cancel.Task
+    printfn "Stop"
+
+} |> Async.RunSynchronously
+
+
+ 

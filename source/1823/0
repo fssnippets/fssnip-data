@@ -1,0 +1,63 @@
+#if INTERACTIVE
+#else
+module Readability
+#endif
+
+open System.Text.RegularExpressions
+open System
+
+module Seq =
+    let IntAverage = 
+        Seq.map float
+        >> Seq.average
+
+[<AutoOpen>]
+module private __ =
+    // Naive but good-enough for syllable count:
+    let reSyllables = Regex(@"([aeiouy])+([^aeiouy])?", RegexOptions.IgnoreCase)
+    let reWords =  Regex(@"(\w+)", RegexOptions.IgnoreCase)
+    
+let CountSyllables s =
+    let ms = reSyllables.Matches(s)
+    ms.Count
+
+let Words s =
+    let matches = reWords.Matches(s)
+    seq { for m in matches -> m.Value }
+
+let WordsPerSentence =
+    Seq.map Words
+    >> Seq.map Seq.length
+
+let SyllablesPerWord =
+    Seq.map CountSyllables
+
+let MinLength n seq =
+    seq |> Seq.length > n
+
+let Sentences (s : string) =
+    // Assumes \n or \r\n ends a sentence (e.g. titles). Consider removing \n and \r\n
+    // for line-split formats like Gutenberg.
+    s.Split([|". "; "! "; "? "; "\n"; "\r\n"|], StringSplitOptions.RemoveEmptyEntries)
+    |> Seq.filter (MinLength 1)
+
+let AvgWordsPerSentence =
+    Sentences
+    >> WordsPerSentence
+    >> Seq.IntAverage
+
+let AvgSyllablesPerWord =
+    Words
+    >> SyllablesPerWord
+    >> Seq.IntAverage
+
+let Flesch s =
+    let wps = s |> AvgWordsPerSentence
+    let spw = s |> AvgSyllablesPerWord
+    206.835 - (1.015 * wps) - (84.6 * spw)
+
+let FileFlesch =
+    IO.File.ReadAllText
+    >> Flesch
+
+do Flesch "The cat sat on the mat." |> printfn "%f" // 116.14

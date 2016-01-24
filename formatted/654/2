@@ -1,0 +1,131 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+<span class="l">38: </span>
+<span class="l">39: </span>
+<span class="l">40: </span>
+<span class="l">41: </span>
+<span class="l">42: </span>
+<span class="l">43: </span>
+<span class="l">44: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">System</span>
+
+<span class="prep">#r</span> <span class="s">&quot;FSharp.PowerPack.Parallel.Seq&quot;</span>;;
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">Microsoft</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="i">FSharp</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="i">Collections</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="i">MD5</span> <span class="o">=</span> <span class="k">new</span> <span class="i">MD5CryptoServiceProvider</span>()
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="f">alignMD5</span> (<span onmouseout="hideTip(event, 'fs7', 7)" onmouseover="showTip(event, 'fs7', 7)" class="i">md</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs8', 8)" onmouseover="showTip(event, 'fs8', 8)" class="t">string</span>) <span class="o">=</span> 
+  <span onmouseout="hideTip(event, 'fs7', 9)" onmouseover="showTip(event, 'fs7', 9)" class="i">md</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs9', 10)" onmouseover="showTip(event, 'fs9', 10)" class="f">Replace</span>(<span class="s">&quot;-&quot;</span>,<span class="s">&quot;&quot;</span>)<span class="o">.</span><span class="f">ToLower</span>() 
+
+<span class="c">(* new md5, much faster, no create()*)</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs10', 11)" onmouseover="showTip(event, 'fs10', 11)" class="f">md5</span> (<span onmouseout="hideTip(event, 'fs11', 12)" onmouseover="showTip(event, 'fs11', 12)" class="i">s</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs8', 13)" onmouseover="showTip(event, 'fs8', 13)" class="t">string</span>) <span class="o">=</span> 
+  <span class="i">Encoding</span><span class="o">.</span><span class="i">UTF8</span><span class="o">.</span><span class="i">GetBytes</span> <span onmouseout="hideTip(event, 'fs11', 14)" onmouseover="showTip(event, 'fs11', 14)" class="i">s</span>
+  <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs5', 15)" onmouseover="showTip(event, 'fs5', 15)" class="i">MD5</span><span class="o">.</span><span class="i">ComputeHash</span>
+  <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs12', 16)" onmouseover="showTip(event, 'fs12', 16)" class="t">BitConverter</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs13', 17)" onmouseover="showTip(event, 'fs13', 17)" class="f">ToString</span>
+  <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs6', 18)" onmouseover="showTip(event, 'fs6', 18)" class="f">alignMD5</span>
+
+<span class="c">(* perm code from</span>
+<span class="c">   http://stackoverflow.com/questions/4495597/combinations-and-permutations-in-f </span>
+
+<span class="c">   Generates the cartesian outer product of a list of sequences LL *)</span>
+<span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs14', 19)" onmouseover="showTip(event, 'fs14', 19)" class="f">outerProduct</span> <span class="o">=</span> <span class="k">function</span>
+  | []    <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs15', 20)" onmouseover="showTip(event, 'fs15', 20)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs16', 21)" onmouseover="showTip(event, 'fs16', 21)" class="f">singleton</span> []
+  | <span onmouseout="hideTip(event, 'fs17', 22)" onmouseover="showTip(event, 'fs17', 22)" class="i">L</span><span class="o">::</span><span onmouseout="hideTip(event, 'fs18', 23)" onmouseover="showTip(event, 'fs18', 23)" class="i">Ls</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs17', 24)" onmouseover="showTip(event, 'fs17', 24)" class="i">L</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs15', 25)" onmouseover="showTip(event, 'fs15', 25)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs19', 26)" onmouseover="showTip(event, 'fs19', 26)" class="f">collect</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs20', 27)" onmouseover="showTip(event, 'fs20', 27)" class="i">x</span> <span class="k">-&gt;</span> 
+                  <span onmouseout="hideTip(event, 'fs14', 28)" onmouseover="showTip(event, 'fs14', 28)" class="f">outerProduct</span> <span onmouseout="hideTip(event, 'fs18', 29)" onmouseover="showTip(event, 'fs18', 29)" class="i">Ls</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs15', 30)" onmouseover="showTip(event, 'fs15', 30)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs21', 31)" onmouseover="showTip(event, 'fs21', 31)" class="f">map</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs22', 32)" onmouseover="showTip(event, 'fs22', 32)" class="i">L</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs20', 33)" onmouseover="showTip(event, 'fs20', 33)" class="i">x</span><span class="o">::</span><span onmouseout="hideTip(event, 'fs22', 34)" onmouseover="showTip(event, 'fs22', 34)" class="i">L</span>))
+
+<span class="c">(* Generates all n-element combination from a list L *)</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs23', 35)" onmouseover="showTip(event, 'fs23', 35)" class="f">getPermsWithRep</span> <span onmouseout="hideTip(event, 'fs24', 36)" onmouseover="showTip(event, 'fs24', 36)" class="i">n</span> <span onmouseout="hideTip(event, 'fs25', 37)" onmouseover="showTip(event, 'fs25', 37)" class="i">L</span> <span class="o">=</span> 
+    <span onmouseout="hideTip(event, 'fs26', 38)" onmouseover="showTip(event, 'fs26', 38)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs27', 39)" onmouseover="showTip(event, 'fs27', 39)" class="f">replicate</span> <span onmouseout="hideTip(event, 'fs24', 40)" onmouseover="showTip(event, 'fs24', 40)" class="i">n</span> <span onmouseout="hideTip(event, 'fs25', 41)" onmouseover="showTip(event, 'fs25', 41)" class="i">L</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs14', 42)" onmouseover="showTip(event, 'fs14', 42)" class="f">outerProduct</span>  
+ 
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs28', 43)" onmouseover="showTip(event, 'fs28', 43)" class="f">listToStr</span> <span onmouseout="hideTip(event, 'fs29', 44)" onmouseover="showTip(event, 'fs29', 44)" class="i">xs</span> <span class="o">=</span> 
+   <span onmouseout="hideTip(event, 'fs26', 45)" onmouseover="showTip(event, 'fs26', 45)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs30', 46)" onmouseover="showTip(event, 'fs30', 46)" class="f">toArray</span> <span onmouseout="hideTip(event, 'fs29', 47)" onmouseover="showTip(event, 'fs29', 47)" class="i">xs</span> <span class="o">|&gt;</span> <span class="k">fun</span> <span onmouseout="hideTip(event, 'fs31', 48)" onmouseover="showTip(event, 'fs31', 48)" class="i">c</span> <span class="k">-&gt;</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs8', 49)" onmouseover="showTip(event, 'fs8', 49)" class="t">string</span> (<span onmouseout="hideTip(event, 'fs31', 50)" onmouseover="showTip(event, 'fs31', 50)" class="i">c</span>)
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs32', 51)" onmouseover="showTip(event, 'fs32', 51)" class="f">crmd</span> <span onmouseout="hideTip(event, 'fs33', 52)" onmouseover="showTip(event, 'fs33', 52)" class="i">md5&#39;</span> (<span onmouseout="hideTip(event, 'fs34', 53)" onmouseover="showTip(event, 'fs34', 53)" class="i">charset</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs8', 54)" onmouseover="showTip(event, 'fs8', 54)" class="t">string</span>) <span onmouseout="hideTip(event, 'fs24', 55)" onmouseover="showTip(event, 'fs24', 55)" class="i">n</span> <span class="o">=</span> 
+
+  <span onmouseout="hideTip(event, 'fs23', 56)" onmouseover="showTip(event, 'fs23', 56)" class="f">getPermsWithRep</span> <span onmouseout="hideTip(event, 'fs24', 57)" onmouseover="showTip(event, 'fs24', 57)" class="i">n</span> (<span onmouseout="hideTip(event, 'fs34', 58)" onmouseover="showTip(event, 'fs34', 58)" class="i">charset</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs15', 59)" onmouseover="showTip(event, 'fs15', 59)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs35', 60)" onmouseover="showTip(event, 'fs35', 60)" class="f">toList</span>)
+  <span class="o">|&gt;</span> <span class="i">PSeq</span><span class="o">.</span><span class="i">map</span> (<span class="i">PSeq</span><span class="o">.</span><span class="i">toList</span> <span class="o">&gt;</span><span class="o">&gt;</span> <span onmouseout="hideTip(event, 'fs28', 61)" onmouseover="showTip(event, 'fs28', 61)" class="i">listToStr</span> <span class="o">&gt;</span><span class="o">&gt;</span> <span onmouseout="hideTip(event, 'fs10', 62)" onmouseover="showTip(event, 'fs10', 62)" class="i">md5</span>) 
+
+  <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs15', 63)" onmouseover="showTip(event, 'fs15', 63)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs36', 64)" onmouseover="showTip(event, 'fs36', 64)" class="f">filter</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs37', 65)" onmouseover="showTip(event, 'fs37', 65)" class="i">e</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs37', 66)" onmouseover="showTip(event, 'fs37', 66)" class="i">e</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs33', 67)" onmouseover="showTip(event, 'fs33', 67)" class="i">md5&#39;</span>)
+  
+<span class="c">(* (&quot;c1a2bb1&quot;, &quot;34a79dcbe2670a58abfa4d502ae0fe77&quot;) *)</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs38', 68)" onmouseover="showTip(event, 'fs38', 68)" class="i">md</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs10', 69)" onmouseover="showTip(event, 'fs10', 69)" class="f">md5</span> <span class="s">&quot;c1a2bb1&quot;</span>
+
+<span onmouseout="hideTip(event, 'fs32', 70)" onmouseover="showTip(event, 'fs32', 70)" class="f">crmd</span> <span onmouseout="hideTip(event, 'fs38', 71)" onmouseover="showTip(event, 'fs38', 71)" class="i">md</span> <span class="s">&quot;abc123&quot;</span> <span class="n">7</span> 
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace System</div>
+<div class="tip" id="fs2">namespace Microsoft</div>
+<div class="tip" id="fs3">namespace Microsoft.FSharp</div>
+<div class="tip" id="fs4">namespace Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs5">val MD5 : obj<br /><br />Full name: Script.MD5</div>
+<div class="tip" id="fs6">val alignMD5 : md:string -&gt; string<br /><br />Full name: Script.alignMD5</div>
+<div class="tip" id="fs7">val md : string</div>
+<div class="tip" id="fs8">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />Full name: Microsoft.FSharp.Core.Operators.string<br /><br />--------------------<br />type string = String<br /><br />Full name: Microsoft.FSharp.Core.string</div>
+<div class="tip" id="fs9">String.Replace(oldValue: string, newValue: string) : string<br />String.Replace(oldChar: char, newChar: char) : string</div>
+<div class="tip" id="fs10">val md5 : s:string -&gt; string<br /><br />Full name: Script.md5</div>
+<div class="tip" id="fs11">val s : string</div>
+<div class="tip" id="fs12">type BitConverter =<br />&#160;&#160;static val IsLittleEndian : bool<br />&#160;&#160;static member DoubleToInt64Bits : value:float -&gt; int64<br />&#160;&#160;static member GetBytes : value:bool -&gt; byte[] + 9 overloads<br />&#160;&#160;static member Int64BitsToDouble : value:int64 -&gt; float<br />&#160;&#160;static member ToBoolean : value:byte[] * startIndex:int -&gt; bool<br />&#160;&#160;static member ToChar : value:byte[] * startIndex:int -&gt; char<br />&#160;&#160;static member ToDouble : value:byte[] * startIndex:int -&gt; float<br />&#160;&#160;static member ToInt16 : value:byte[] * startIndex:int -&gt; int16<br />&#160;&#160;static member ToInt32 : value:byte[] * startIndex:int -&gt; int<br />&#160;&#160;static member ToInt64 : value:byte[] * startIndex:int -&gt; int64<br />&#160;&#160;...<br /><br />Full name: System.BitConverter</div>
+<div class="tip" id="fs13">BitConverter.ToString(value: byte []) : string<br />BitConverter.ToString(value: byte [], startIndex: int) : string<br />BitConverter.ToString(value: byte [], startIndex: int, length: int) : string</div>
+<div class="tip" id="fs14">val outerProduct : _arg1:#seq&lt;&#39;b&gt; list -&gt; seq&lt;&#39;b list&gt;<br /><br />Full name: Script.outerProduct</div>
+<div class="tip" id="fs15">module Seq<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs16">val singleton : value:&#39;T -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.singleton</div>
+<div class="tip" id="fs17">val L : #seq&lt;&#39;b&gt;</div>
+<div class="tip" id="fs18">val Ls : #seq&lt;&#39;b&gt; list</div>
+<div class="tip" id="fs19">val collect : mapping:(&#39;T -&gt; #seq&lt;&#39;U&gt;) -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;U&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.collect</div>
+<div class="tip" id="fs20">val x : &#39;b</div>
+<div class="tip" id="fs21">val map : mapping:(&#39;T -&gt; &#39;U) -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;U&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.map</div>
+<div class="tip" id="fs22">val L : &#39;b list</div>
+<div class="tip" id="fs23">val getPermsWithRep : n:int -&gt; L:seq&lt;&#39;a&gt; -&gt; seq&lt;&#39;a list&gt;<br /><br />Full name: Script.getPermsWithRep</div>
+<div class="tip" id="fs24">val n : int</div>
+<div class="tip" id="fs25">val L : seq&lt;&#39;a&gt;</div>
+<div class="tip" id="fs26">Multiple items<br />module List<br /><br />from Microsoft.FSharp.Collections<br /><br />--------------------<br />type List&lt;&#39;T&gt; =<br />&#160;&#160;| ( [] )<br />&#160;&#160;| ( :: ) of Head: &#39;T * Tail: &#39;T list<br />&#160;&#160;interface IEnumerable<br />&#160;&#160;interface IEnumerable&lt;&#39;T&gt;<br />&#160;&#160;member Head : &#39;T<br />&#160;&#160;member IsEmpty : bool<br />&#160;&#160;member Item : index:int -&gt; &#39;T with get<br />&#160;&#160;member Length : int<br />&#160;&#160;member Tail : &#39;T list<br />&#160;&#160;static member Cons : head:&#39;T * tail:&#39;T list -&gt; &#39;T list<br />&#160;&#160;static member Empty : &#39;T list<br /><br />Full name: Microsoft.FSharp.Collections.List&lt;_&gt;</div>
+<div class="tip" id="fs27">val replicate : count:int -&gt; initial:&#39;T -&gt; &#39;T list<br /><br />Full name: Microsoft.FSharp.Collections.List.replicate</div>
+<div class="tip" id="fs28">val listToStr : xs:char list -&gt; string<br /><br />Full name: Script.listToStr</div>
+<div class="tip" id="fs29">val xs : char list</div>
+<div class="tip" id="fs30">val toArray : list:&#39;T list -&gt; &#39;T []<br /><br />Full name: Microsoft.FSharp.Collections.List.toArray</div>
+<div class="tip" id="fs31">val c : char []</div>
+<div class="tip" id="fs32">val crmd : md5&#39;:&#39;a -&gt; charset:string -&gt; n:int -&gt; seq&lt;&#39;a&gt; (requires equality)<br /><br />Full name: Script.crmd</div>
+<div class="tip" id="fs33">val md5&#39; : &#39;a (requires equality)</div>
+<div class="tip" id="fs34">val charset : string</div>
+<div class="tip" id="fs35">val toList : source:seq&lt;&#39;T&gt; -&gt; &#39;T list<br /><br />Full name: Microsoft.FSharp.Collections.Seq.toList</div>
+<div class="tip" id="fs36">val filter : predicate:(&#39;T -&gt; bool) -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.filter</div>
+<div class="tip" id="fs37">val e : &#39;a (requires equality)</div>
+<div class="tip" id="fs38">val md : string<br /><br />Full name: Script.md</div>
+

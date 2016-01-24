@@ -1,0 +1,64 @@
+open EvReact
+open EvReact.Expr
+open EvReact.Orchestrator
+
+open System.Windows.Forms
+open System.Drawing
+
+let E (e:IEvent<'c,'a>) = 
+  let evt = new Control.Event<'a>()
+  e.Add(fun e -> evt.Trigger(e))
+  evt.Publish
+
+type MyForm() as this =
+  inherit Form()
+
+  do this.SetStyle(ControlStyles.AllPaintingInWmPaint ||| ControlStyles.OptimizedDoubleBuffer, true)
+
+let f = new MyForm(Text="Drag&Drop test with evReact", Width=640, Height=600)
+
+let rect = ref(new Rectangle(0, 0, 50, 50))
+let target = ref(new Rectangle(300, 300, 200, 200))
+let bgcol = ref(Brushes.Red)
+let off = ref(new Point())
+
+f.Paint.Add(fun e ->
+  let g = e.Graphics
+  g.DrawRectangle(Pens.Gray, !target)
+
+  g.FillRectangle(!bgcol, !rect)
+  g.DrawRectangle(Pens.Black, !rect)
+)
+
+let md = E f.MouseDown
+let mm = E f.MouseMove
+let mu = E f.MouseUp
+
+// Utilities
+let uc col = bgcol := col; f.Invalidate()
+let dc col = !bgcol <> col
+let inR (p:Point) = (!rect).Contains(p)
+let placeR (p:Point) = let r = !rect in rect := new Rectangle(p.X, p.Y, r.Width, r.Height);f.Invalidate()
+let inT () = (!target).Contains(!rect)
+
+// Net recognizing hovering
+let highlight =
+  +(
+        ((mm %- fun e -> dc Brushes.Yellow && inR(e.Location)) |-> fun _ -> uc Brushes.Yellow)
+    ||| ((mm %- fun e -> dc Brushes.Red && not(inR(e.Location))) |-> fun _ -> uc Brushes.Red)
+   )
+
+// Net performing the drag
+let drag = 
+  +(
+     ((md %- fun e -> (!rect).Contains(e.Location)) 
+         |-> fun e -> let r = !rect in off := new Point(e.X - r.Left, e.Y - r.Top))
+     - ((+(!!mm) |-> fun e -> placeR(new Point(e.X - (!off).X, e.Y - (!off).Y))) / [| mm; mu |])
+     - (!!mu |-> fun e -> if not(inT()) then (placeR(new Point()); uc Brushes.Red))
+   )
+
+let orch = Orchestrator.create()
+Expr.start null orch highlight
+Expr.start null orch drag
+
+f.Show()

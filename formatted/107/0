@@ -1,0 +1,65 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">module</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="t">Seq</span> <span class="o">=</span>
+    <span class="k">let</span> <span class="k">private</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">proxyGen</span> <span class="o">=</span> <span class="i">Castle</span><span class="o">.</span><span class="i">DynamicProxy</span><span class="o">.</span><span class="i">ProxyGenerator</span> ()
+    
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="f">cast2</span> (<span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="i">t</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="t">Type</span>) (<span onmouseout="hideTip(event, 'fs7', 7)" onmouseover="showTip(event, 'fs7', 7)" class="i">sq</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs5', 8)" onmouseover="showTip(event, 'fs5', 8)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs8', 9)" onmouseover="showTip(event, 'fs8', 9)" class="i">Collections</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs9', 10)" onmouseover="showTip(event, 'fs9', 10)" class="t">IEnumerable</span>) <span class="o">=</span>
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs10', 11)" onmouseover="showTip(event, 'fs10', 11)" class="i">t1</span> <span class="o">=</span> (<span onmouseout="hideTip(event, 'fs11', 12)" onmouseover="showTip(event, 'fs11', 12)" class="i">typedefof</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs12', 13)" onmouseover="showTip(event, 'fs12', 13)" class="t">seq</span><span class="o">&lt;</span>_<span class="o">&gt;</span><span class="o">&gt;</span>)<span class="o">.</span><span class="f">MakeGenericType</span> [| <span onmouseout="hideTip(event, 'fs4', 14)" onmouseover="showTip(event, 'fs4', 14)" class="i">t</span> |]
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs13', 15)" onmouseover="showTip(event, 'fs13', 15)" class="i">t2</span> <span class="o">=</span> (<span onmouseout="hideTip(event, 'fs11', 16)" onmouseover="showTip(event, 'fs11', 16)" class="i">typedefof</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs5', 17)" onmouseover="showTip(event, 'fs5', 17)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs8', 18)" onmouseover="showTip(event, 'fs8', 18)" class="i">Collections</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs14', 19)" onmouseover="showTip(event, 'fs14', 19)" class="i">Generic</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs15', 20)" onmouseover="showTip(event, 'fs15', 20)" class="t">IEnumerator</span><span class="o">&lt;</span>_<span class="o">&gt;</span><span class="o">&gt;</span>)<span class="o">.</span><span class="f">MakeGenericType</span> [| <span onmouseout="hideTip(event, 'fs4', 21)" onmouseover="showTip(event, 'fs4', 21)" class="i">t</span> |]
+        <span onmouseout="hideTip(event, 'fs2', 22)" onmouseover="showTip(event, 'fs2', 22)" class="i">proxyGen</span><span class="o">.</span><span class="i">CreateInterfaceProxyWithoutTarget</span> (<span onmouseout="hideTip(event, 'fs10', 23)" onmouseover="showTip(event, 'fs10', 23)" class="i">t1</span>,
+            { <span class="k">new</span> <span class="i">IInterceptor</span> <span class="k">with</span>
+                <span class="k">member</span> <span class="i">self</span><span class="o">.</span><span class="i">Intercept</span> (<span class="i">inv</span> <span class="o">:</span> <span class="i">IInvocation</span>) <span class="o">=</span>
+                    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs16', 24)" onmouseover="showTip(event, 'fs16', 24)" class="i">enum</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs7', 25)" onmouseover="showTip(event, 'fs7', 25)" class="i">sq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs17', 26)" onmouseover="showTip(event, 'fs17', 26)" class="i">GetEnumerator</span> ()
+                    <span class="i">inv</span><span class="o">.</span><span class="i">ReturnValue</span> <span class="o">&lt;-</span>
+                        <span onmouseout="hideTip(event, 'fs2', 27)" onmouseover="showTip(event, 'fs2', 27)" class="i">proxyGen</span><span class="o">.</span><span class="i">CreateInterfaceProxyWithoutTarget</span> (<span onmouseout="hideTip(event, 'fs13', 28)" onmouseover="showTip(event, 'fs13', 28)" class="i">t2</span>,
+                            { <span class="k">new</span> <span class="i">IInterceptor</span> <span class="k">with</span>
+                                <span class="k">member</span> <span class="i">self</span><span class="o">.</span><span class="i">Intercept</span> (<span class="i">inv</span> <span class="o">:</span> <span class="i">IInvocation</span>) <span class="o">=</span>
+                                    <span class="k">match</span> <span class="i">inv</span><span class="o">.</span><span class="i">Method</span><span class="o">.</span><span class="i">Name</span> <span class="k">with</span>
+                                    | <span class="s">&quot;MoveNext&quot;</span> <span class="k">-&gt;</span> <span class="i">inv</span><span class="o">.</span><span class="i">ReturnValue</span> <span class="o">&lt;-</span> <span onmouseout="hideTip(event, 'fs16', 29)" onmouseover="showTip(event, 'fs16', 29)" class="i">enum</span><span class="o">.</span><span class="i">MoveNext</span> ()
+                                    | <span class="s">&quot;Reset&quot;</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs16', 30)" onmouseover="showTip(event, 'fs16', 30)" class="i">enum</span><span class="o">.</span><span class="i">Reset</span> ()
+                                    | <span class="s">&quot;get_Current&quot;</span> <span class="k">-&gt;</span> <span class="i">inv</span><span class="o">.</span><span class="i">ReturnValue</span> <span class="o">&lt;-</span> <span onmouseout="hideTip(event, 'fs16', 31)" onmouseover="showTip(event, 'fs16', 31)" class="i">enum</span><span class="o">.</span><span class="i">Current</span>
+                                    | _ <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs18', 32)" onmouseover="showTip(event, 'fs18', 32)" class="i">failwith</span> <span class="s">&quot;inconceivable&quot;</span>
+                            })
+            })
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">module Seq<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs2">val private proxyGen : obj<br /><br />Full name: Script.Seq.proxyGen</div>
+<div class="tip" id="fs3">val cast2 : t:System.Type -&gt; sq:System.Collections.IEnumerable -&gt; &#39;a<br /><br />Full name: Script.Seq.cast2</div>
+<div class="tip" id="fs4">val t : System.Type</div>
+<div class="tip" id="fs5">namespace System</div>
+<div class="tip" id="fs6">type Type =<br />&#160;&#160;inherit MemberInfo<br />&#160;&#160;member Assembly : Assembly<br />&#160;&#160;member AssemblyQualifiedName : string<br />&#160;&#160;member Attributes : TypeAttributes<br />&#160;&#160;member BaseType : Type<br />&#160;&#160;member ContainsGenericParameters : bool<br />&#160;&#160;member DeclaringMethod : MethodBase<br />&#160;&#160;member DeclaringType : Type<br />&#160;&#160;member Equals : o:obj -&gt; bool + 1 overload<br />&#160;&#160;member FindInterfaces : filter:TypeFilter * filterCriteria:obj -&gt; Type[]<br />&#160;&#160;member FindMembers : memberType:MemberTypes * bindingAttr:BindingFlags * filter:MemberFilter * filterCriteria:obj -&gt; MemberInfo[]<br />&#160;&#160;...<br /><br />Full name: System.Type</div>
+<div class="tip" id="fs7">val sq : System.Collections.IEnumerable</div>
+<div class="tip" id="fs8">namespace System.Collections</div>
+<div class="tip" id="fs9">type IEnumerable =<br />&#160;&#160;member GetEnumerator : unit -&gt; IEnumerator<br /><br />Full name: System.Collections.IEnumerable</div>
+<div class="tip" id="fs10">val t1 : System.Type</div>
+<div class="tip" id="fs11">val typedefof&lt;&#39;T&gt; : System.Type<br /><br />Full name: Microsoft.FSharp.Core.Operators.typedefof</div>
+<div class="tip" id="fs12">Multiple items<br />val seq : sequence:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Core.Operators.seq<br /><br />--------------------<br />type seq&lt;&#39;T&gt; = System.Collections.Generic.IEnumerable&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.seq&lt;_&gt;</div>
+<div class="tip" id="fs13">val t2 : System.Type</div>
+<div class="tip" id="fs14">namespace System.Collections.Generic</div>
+<div class="tip" id="fs15">type IEnumerator&lt;&#39;T&gt; =<br />&#160;&#160;member Current : &#39;T<br /><br />Full name: System.Collections.Generic.IEnumerator&lt;_&gt;</div>
+<div class="tip" id="fs16">val enum : value:int32 -&gt; &#39;U (requires enum)<br /><br />Full name: Microsoft.FSharp.Core.Operators.enum</div>
+<div class="tip" id="fs17">System.Collections.IEnumerable.GetEnumerator() : System.Collections.IEnumerator</div>
+<div class="tip" id="fs18">val failwith : message:string -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.Operators.failwith</div>
+

@@ -1,0 +1,74 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">Linq</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="i">indicesToDrop</span> <span class="o">=</span> [<span class="n">2</span>; <span class="n">3</span>; <span class="n">5</span>; <span class="n">7</span>; <span class="n">11</span>; <span class="n">13</span>; <span class="n">17</span>]
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="i">myArray</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="t">Array2D</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="f">init</span> <span class="n">30</span> <span class="n">20</span> (<span class="o">+</span>)
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs7', 7)" onmouseover="showTip(event, 'fs7', 7)" class="i">array</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs4', 8)" onmouseover="showTip(event, 'fs4', 8)" class="i">myArray</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs8', 9)" onmouseover="showTip(event, 'fs8', 9)" class="f">copyCol</span> <span onmouseout="hideTip(event, 'fs9', 10)" onmouseover="showTip(event, 'fs9', 10)" class="i">length</span> (<span onmouseout="hideTip(event, 'fs10', 11)" onmouseover="showTip(event, 'fs10', 11)" class="i">newArray</span> <span class="o">:</span> _ [,]) (<span onmouseout="hideTip(event, 'fs11', 12)" onmouseover="showTip(event, 'fs11', 12)" class="i">originalArray</span> <span class="o">:</span> _ [,]) <span onmouseout="hideTip(event, 'fs12', 13)" onmouseover="showTip(event, 'fs12', 13)" class="i">newIndex</span> <span onmouseout="hideTip(event, 'fs13', 14)" onmouseover="showTip(event, 'fs13', 14)" class="i">originalIndex</span> <span class="o">=</span>
+    <span class="k">for</span> <span onmouseout="hideTip(event, 'fs14', 15)" onmouseover="showTip(event, 'fs14', 15)" class="i">i</span> <span class="o">=</span> <span class="n">0</span> <span class="k">to</span> <span onmouseout="hideTip(event, 'fs9', 16)" onmouseover="showTip(event, 'fs9', 16)" class="i">length</span> <span class="o">-</span> <span class="n">1</span> <span class="k">do</span>
+        <span onmouseout="hideTip(event, 'fs10', 17)" onmouseover="showTip(event, 'fs10', 17)" class="i">newArray</span><span class="o">.</span>[<span onmouseout="hideTip(event, 'fs14', 18)" onmouseover="showTip(event, 'fs14', 18)" class="i">i</span>, <span onmouseout="hideTip(event, 'fs12', 19)" onmouseover="showTip(event, 'fs12', 19)" class="i">newIndex</span>] <span class="o">&lt;-</span> <span onmouseout="hideTip(event, 'fs11', 20)" onmouseover="showTip(event, 'fs11', 20)" class="i">originalArray</span><span class="o">.</span>[<span onmouseout="hideTip(event, 'fs14', 21)" onmouseover="showTip(event, 'fs14', 21)" class="i">i</span>, <span onmouseout="hideTip(event, 'fs13', 22)" onmouseover="showTip(event, 'fs13', 22)" class="i">originalIndex</span>]
+        
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs15', 23)" onmouseover="showTip(event, 'fs15', 23)" class="f">filterCols</span> <span onmouseout="hideTip(event, 'fs16', 24)" onmouseover="showTip(event, 'fs16', 24)" class="i">array</span> <span onmouseout="hideTip(event, 'fs17', 25)" onmouseover="showTip(event, 'fs17', 25)" class="i">indicesToDrop</span> <span class="o">=</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs18', 26)" onmouseover="showTip(event, 'fs18', 26)" class="i">rows</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs5', 27)" onmouseover="showTip(event, 'fs5', 27)" class="t">Array2D</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs19', 28)" onmouseover="showTip(event, 'fs19', 28)" class="f">length1</span> <span onmouseout="hideTip(event, 'fs16', 29)" onmouseover="showTip(event, 'fs16', 29)" class="i">array</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs20', 30)" onmouseover="showTip(event, 'fs20', 30)" class="i">cols</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs5', 31)" onmouseover="showTip(event, 'fs5', 31)" class="t">Array2D</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs21', 32)" onmouseover="showTip(event, 'fs21', 32)" class="f">length2</span> <span onmouseout="hideTip(event, 'fs16', 33)" onmouseover="showTip(event, 'fs16', 33)" class="i">array</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs22', 34)" onmouseover="showTip(event, 'fs22', 34)" class="i">indices</span> <span class="o">=</span> [<span class="n">0..</span><span onmouseout="hideTip(event, 'fs20', 35)" onmouseover="showTip(event, 'fs20', 35)" class="i">cols</span><span class="o">-</span><span class="n">1</span>]<span class="o">.</span><span class="f">Except</span> <span onmouseout="hideTip(event, 'fs17', 36)" onmouseover="showTip(event, 'fs17', 36)" class="i">indicesToDrop</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs23', 37)" onmouseover="showTip(event, 'fs23', 37)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs24', 38)" onmouseover="showTip(event, 'fs24', 38)" class="f">ofSeq</span>
+
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs10', 39)" onmouseover="showTip(event, 'fs10', 39)" class="i">newArray</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs5', 40)" onmouseover="showTip(event, 'fs5', 40)" class="t">Array2D</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs25', 41)" onmouseover="showTip(event, 'fs25', 41)" class="f">zeroCreate</span> <span onmouseout="hideTip(event, 'fs18', 42)" onmouseover="showTip(event, 'fs18', 42)" class="i">rows</span> (<span onmouseout="hideTip(event, 'fs23', 43)" onmouseover="showTip(event, 'fs23', 43)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs26', 44)" onmouseover="showTip(event, 'fs26', 44)" class="f">length</span> <span onmouseout="hideTip(event, 'fs22', 45)" onmouseover="showTip(event, 'fs22', 45)" class="i">indices</span>)
+    <span onmouseout="hideTip(event, 'fs22', 46)" onmouseover="showTip(event, 'fs22', 46)" class="i">indices</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs23', 47)" onmouseover="showTip(event, 'fs23', 47)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs27', 48)" onmouseover="showTip(event, 'fs27', 48)" class="f">iteri</span> (<span onmouseout="hideTip(event, 'fs8', 49)" onmouseover="showTip(event, 'fs8', 49)" class="f">copyCol</span> <span onmouseout="hideTip(event, 'fs18', 50)" onmouseover="showTip(event, 'fs18', 50)" class="i">rows</span> <span onmouseout="hideTip(event, 'fs10', 51)" onmouseover="showTip(event, 'fs10', 51)" class="i">newArray</span> <span onmouseout="hideTip(event, 'fs16', 52)" onmouseover="showTip(event, 'fs16', 52)" class="i">array</span>)
+    <span onmouseout="hideTip(event, 'fs10', 53)" onmouseover="showTip(event, 'fs10', 53)" class="i">newArray</span>
+    
+<span onmouseout="hideTip(event, 'fs15', 54)" onmouseover="showTip(event, 'fs15', 54)" class="f">filterCols</span> <span onmouseout="hideTip(event, 'fs4', 55)" onmouseover="showTip(event, 'fs4', 55)" class="i">myArray</span> <span onmouseout="hideTip(event, 'fs3', 56)" onmouseover="showTip(event, 'fs3', 56)" class="i">indicesToDrop</span> 
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace System</div>
+<div class="tip" id="fs2">namespace System.Linq</div>
+<div class="tip" id="fs3">val indicesToDrop : int list<br /><br />Full name: Script.indicesToDrop</div>
+<div class="tip" id="fs4">val myArray : int [,]<br /><br />Full name: Script.myArray</div>
+<div class="tip" id="fs5">module Array2D<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs6">val init : length1:int -&gt; length2:int -&gt; initializer:(int -&gt; int -&gt; &#39;T) -&gt; &#39;T [,]<br /><br />Full name: Microsoft.FSharp.Collections.Array2D.init</div>
+<div class="tip" id="fs7">Multiple items<br />val array : int [,]<br /><br />Full name: Script.array<br /><br />--------------------<br />type &#39;T array = &#39;T []<br /><br />Full name: Microsoft.FSharp.Core.array&lt;_&gt;</div>
+<div class="tip" id="fs8">val copyCol : length:int -&gt; newArray:&#39;a [,] -&gt; originalArray:&#39;a [,] -&gt; newIndex:int -&gt; originalIndex:int -&gt; unit<br /><br />Full name: Script.copyCol</div>
+<div class="tip" id="fs9">val length : int</div>
+<div class="tip" id="fs10">val newArray : &#39;a [,]</div>
+<div class="tip" id="fs11">val originalArray : &#39;a [,]</div>
+<div class="tip" id="fs12">val newIndex : int</div>
+<div class="tip" id="fs13">val originalIndex : int</div>
+<div class="tip" id="fs14">val i : int</div>
+<div class="tip" id="fs15">val filterCols : array:&#39;a [,] -&gt; indicesToDrop:System.Collections.Generic.IEnumerable&lt;int&gt; -&gt; &#39;a [,]<br /><br />Full name: Script.filterCols</div>
+<div class="tip" id="fs16">Multiple items<br />val array : &#39;a [,]<br /><br />--------------------<br />type &#39;T array = &#39;T []<br /><br />Full name: Microsoft.FSharp.Core.array&lt;_&gt;</div>
+<div class="tip" id="fs17">val indicesToDrop : System.Collections.Generic.IEnumerable&lt;int&gt;</div>
+<div class="tip" id="fs18">val rows : int</div>
+<div class="tip" id="fs19">val length1 : array:&#39;T [,] -&gt; int<br /><br />Full name: Microsoft.FSharp.Collections.Array2D.length1</div>
+<div class="tip" id="fs20">val cols : int</div>
+<div class="tip" id="fs21">val length2 : array:&#39;T [,] -&gt; int<br /><br />Full name: Microsoft.FSharp.Collections.Array2D.length2</div>
+<div class="tip" id="fs22">val indices : int list</div>
+<div class="tip" id="fs23">Multiple items<br />module List<br /><br />from Microsoft.FSharp.Collections<br /><br />--------------------<br />type List&lt;&#39;T&gt; =<br />&#160;&#160;| ( [] )<br />&#160;&#160;| ( :: ) of Head: &#39;T * Tail: &#39;T list<br />&#160;&#160;interface IEnumerable<br />&#160;&#160;interface IEnumerable&lt;&#39;T&gt;<br />&#160;&#160;member Head : &#39;T<br />&#160;&#160;member IsEmpty : bool<br />&#160;&#160;member Item : index:int -&gt; &#39;T with get<br />&#160;&#160;member Length : int<br />&#160;&#160;member Tail : &#39;T list<br />&#160;&#160;static member Cons : head:&#39;T * tail:&#39;T list -&gt; &#39;T list<br />&#160;&#160;static member Empty : &#39;T list<br /><br />Full name: Microsoft.FSharp.Collections.List&lt;_&gt;</div>
+<div class="tip" id="fs24">val ofSeq : source:seq&lt;&#39;T&gt; -&gt; &#39;T list<br /><br />Full name: Microsoft.FSharp.Collections.List.ofSeq</div>
+<div class="tip" id="fs25">val zeroCreate : length1:int -&gt; length2:int -&gt; &#39;T [,]<br /><br />Full name: Microsoft.FSharp.Collections.Array2D.zeroCreate</div>
+<div class="tip" id="fs26">val length : list:&#39;T list -&gt; int<br /><br />Full name: Microsoft.FSharp.Collections.List.length</div>
+<div class="tip" id="fs27">val iteri : action:(int -&gt; &#39;T -&gt; unit) -&gt; list:&#39;T list -&gt; unit<br /><br />Full name: Microsoft.FSharp.Collections.List.iteri</div>
+

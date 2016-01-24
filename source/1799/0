@@ -1,0 +1,82 @@
+/// LinearStudent: a first tutorial on programming the Simplex method in F#
+/// F# is a functional-first programming language developed in the Cambridge Microsoft research lab
+/// under the direction of a group of well-qualified researchers headed by Simon Peyton-Jones
+
+let A2FM = "good class!"
+
+// glorified calculator
+2.*asin(1.0)
+let pi = 3.141592654
+sin(pi/2.0)
+
+[|sin(3.*pi/2.0); cos(2.*pi/3.0); sin(2.*pi/3.); sqrt(3.)/2.|]
+
+(fun y -> 2*y) (3+2)
+
+// Create a matrix of floating point numbers
+let matrix = [| [| 0.; 1.; 2.; 3. |]; [|4.0; 5.0; 6.0; 7.0|]; [|8.0; 9.0; 10.0; 11.0|]|]
+
+// float converts an integer to a float
+// and Array.map float r converts all the entries of the array r to floats
+
+matrix.[0].[1]
+// this takes the 2nd element of the 1st row of matrix.
+// in F# arrays are indexed from 0 rather than 1.  Cope!
+
+// pivotDivideMax: ensures the maximum entry in an array is 1
+let inline pivotDivideMax l = Array.map (fun x -> x/(Array.max l)) l
+
+// Array.map f builds a new array whose elements have all had function f applied to them
+Array.map (fun x -> 2.*x ) matrix.[0]
+
+matrix.[0]
+// The old array is still there. This is functional (first) programming
+
+// A better but more generic version without requiring the "inline" directive
+// pivotDivideMaxHigher : div:('a -> 'a -> 'b) -> l:'a [] -> 'b []
+let pivotDivideMaxHigher div l = Array.map (fun x -> div x (Array.max l)) l
+
+// Test better version
+pivotDivideMaxHigher (fun x y -> x/y) matrix.[1]
+
+// F# uses a special syntax x <- v to change the value of mutable variables
+matrix.[0] <- pivotDivideMaxHigher (fun x y -> x/y) matrix.[0]
+
+// The entire first row of matrix has now been normalised
+matrix
+
+// we could -- with a bit of jiggery pokery -- define a generic division function ...
+let inline myDiv (x:^a) (y:^a) = x/y
+// test myDiv
+myDiv 3 4
+myDiv 3.0 4.0
+
+// .... and use it to abbreviate pivot division actions
+pivotDivideMaxHigher myDiv matrix.[1]
+let inline pivotDivideMax2 l = pivotDivideMaxHigher myDiv l
+
+matrix.[1] <- pivotDivideMax2 matrix.[1]
+// The second row of matrix has been normalised as well
+matrix
+
+// rowOp applies a generic row operation to 2 rows
+// rowOp : ('a -> 'b -> 'c) -> 'a [] -> 'b [] -> 'c []
+let rowOp op r1 r2 = Array.map2 op r1 r2
+
+// Compute r1 - 2 r2 as a new row
+rowOp (fun x y -> x - 2.0*y) matrix.[0] matrix.[1]
+
+// Note that rowOp works on any array, so columns work as well
+
+// let badDiv x y = x/y // this does not have a general type
+// badDiv 3 4 // this is ok
+// badDiv 3.0 4.0 // but this is not ok
+
+/// How to locate the _position_ of an element in an Array
+(fun x -> x = 1.0) 2.0 // false
+(fun x -> x = 1.0) 1.0 // true
+
+let unit = Array.findIndex (fun x -> x = 1.0) matrix.[0] // find the (first) element equal to 1.0
+matrix.[0].[unit]
+
+/// Exercise: now find the position of the _maximum_ element in the 3rd row of matrix

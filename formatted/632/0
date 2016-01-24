@@ -1,0 +1,107 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">Data</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="i">SqlClient</span>
+
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="t">SqlReader</span> (<span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="i">connection</span>) <span class="o">=</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="f">exec</span> <span onmouseout="hideTip(event, 'fs7', 7)" onmouseover="showTip(event, 'fs7', 7)" class="f">convert</span> <span onmouseout="hideTip(event, 'fs8', 8)" onmouseover="showTip(event, 'fs8', 8)" class="i">parametres</span> <span onmouseout="hideTip(event, 'fs9', 9)" onmouseover="showTip(event, 'fs9', 9)" class="i">query</span> <span class="o">=</span> 
+        <span class="k">use</span> <span onmouseout="hideTip(event, 'fs10', 10)" onmouseover="showTip(event, 'fs10', 10)" class="i">conn</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs11', 11)" onmouseover="showTip(event, 'fs11', 11)" class="t">SqlConnection</span> (<span onmouseout="hideTip(event, 'fs5', 12)" onmouseover="showTip(event, 'fs5', 12)" class="i">connection</span>)
+        <span onmouseout="hideTip(event, 'fs10', 13)" onmouseover="showTip(event, 'fs10', 13)" class="i">conn</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs12', 14)" onmouseover="showTip(event, 'fs12', 14)" class="f">Open</span>()
+        <span class="k">use</span> <span onmouseout="hideTip(event, 'fs13', 15)" onmouseover="showTip(event, 'fs13', 15)" class="i">cmd</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs14', 16)" onmouseover="showTip(event, 'fs14', 16)" class="t">SqlCommand</span> (<span onmouseout="hideTip(event, 'fs9', 17)" onmouseover="showTip(event, 'fs9', 17)" class="i">query</span>, <span onmouseout="hideTip(event, 'fs10', 18)" onmouseover="showTip(event, 'fs10', 18)" class="i">conn</span>)
+        <span onmouseout="hideTip(event, 'fs8', 19)" onmouseover="showTip(event, 'fs8', 19)" class="i">parametres</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs15', 20)" onmouseover="showTip(event, 'fs15', 20)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs16', 21)" onmouseover="showTip(event, 'fs16', 21)" class="f">iteri</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs17', 22)" onmouseover="showTip(event, 'fs17', 22)" class="i">i</span> <span onmouseout="hideTip(event, 'fs18', 23)" onmouseover="showTip(event, 'fs18', 23)" class="i">p</span> <span class="k">-&gt;</span> 
+                        <span onmouseout="hideTip(event, 'fs13', 24)" onmouseover="showTip(event, 'fs13', 24)" class="i">cmd</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs19', 25)" onmouseover="showTip(event, 'fs19', 25)" class="i">Parameters</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs20', 26)" onmouseover="showTip(event, 'fs20', 26)" class="f">AddWithValue</span>(<span onmouseout="hideTip(event, 'fs21', 27)" onmouseover="showTip(event, 'fs21', 27)" class="f">sprintf</span> <span class="s">&quot;@p</span><span class="pf">%d</span><span class="s">&quot;</span>  <span onmouseout="hideTip(event, 'fs17', 28)" onmouseover="showTip(event, 'fs17', 28)" class="i">i</span>, <span onmouseout="hideTip(event, 'fs22', 29)" onmouseover="showTip(event, 'fs22', 29)" class="f">box</span> <span onmouseout="hideTip(event, 'fs18', 30)" onmouseover="showTip(event, 'fs18', 30)" class="i">p</span>) <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs23', 31)" onmouseover="showTip(event, 'fs23', 31)" class="f">ignore</span>)
+        <span onmouseout="hideTip(event, 'fs7', 32)" onmouseover="showTip(event, 'fs7', 32)" class="f">convert</span> <span onmouseout="hideTip(event, 'fs13', 33)" onmouseover="showTip(event, 'fs13', 33)" class="i">cmd</span>
+
+    <span class="k">member</span> <span class="i">__</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs24', 34)" onmouseover="showTip(event, 'fs24', 34)" class="i">Execute</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs6', 35)" onmouseover="showTip(event, 'fs6', 35)" class="f">exec</span> <span class="o">&lt;|</span> <span class="k">fun</span> <span onmouseout="hideTip(event, 'fs25', 36)" onmouseover="showTip(event, 'fs25', 36)" class="i">c</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs25', 37)" onmouseover="showTip(event, 'fs25', 37)" class="i">c</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs26', 38)" onmouseover="showTip(event, 'fs26', 38)" class="f">ExecuteNonQuery</span>() <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs23', 39)" onmouseover="showTip(event, 'fs23', 39)" class="f">ignore</span>
+    <span class="k">member</span> <span onmouseout="hideTip(event, 'fs27', 40)" onmouseover="showTip(event, 'fs27', 40)" class="i">__</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs28', 41)" onmouseover="showTip(event, 'fs28', 41)" class="i">Scalar</span>  <span class="o">=</span> <span onmouseout="hideTip(event, 'fs6', 42)" onmouseover="showTip(event, 'fs6', 42)" class="f">exec</span> <span class="o">&lt;|</span> <span class="k">fun</span> <span onmouseout="hideTip(event, 'fs25', 43)" onmouseover="showTip(event, 'fs25', 43)" class="i">c</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs25', 44)" onmouseover="showTip(event, 'fs25', 44)" class="i">c</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs29', 45)" onmouseover="showTip(event, 'fs29', 45)" class="f">ExecuteScalar</span>()
+    <span class="k">member</span> <span onmouseout="hideTip(event, 'fs27', 46)" onmouseover="showTip(event, 'fs27', 46)" class="i">__</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs30', 47)" onmouseover="showTip(event, 'fs30', 47)" class="f">Read</span> <span onmouseout="hideTip(event, 'fs31', 48)" onmouseover="showTip(event, 'fs31', 48)" class="f">f</span>  <span class="o">=</span> <span onmouseout="hideTip(event, 'fs6', 49)" onmouseover="showTip(event, 'fs6', 49)" class="f">exec</span> <span class="o">&lt;|</span> <span class="k">fun</span> <span onmouseout="hideTip(event, 'fs25', 50)" onmouseover="showTip(event, 'fs25', 50)" class="i">c</span> <span class="k">-&gt;</span> [ <span class="k">let</span> <span onmouseout="hideTip(event, 'fs32', 51)" onmouseover="showTip(event, 'fs32', 51)" class="i">read</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs25', 52)" onmouseover="showTip(event, 'fs25', 52)" class="i">c</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs33', 53)" onmouseover="showTip(event, 'fs33', 53)" class="f">ExecuteReader</span>()
+                                           <span class="k">while</span> <span onmouseout="hideTip(event, 'fs32', 54)" onmouseover="showTip(event, 'fs32', 54)" class="i">read</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs34', 55)" onmouseover="showTip(event, 'fs34', 55)" class="f">Read</span>() <span class="k">do</span> 
+                                               <span class="k">yield</span> <span onmouseout="hideTip(event, 'fs31', 56)" onmouseover="showTip(event, 'fs31', 56)" class="f">f</span> <span onmouseout="hideTip(event, 'fs32', 57)" onmouseover="showTip(event, 'fs32', 57)" class="i">read</span> ]
+
+<span class="c">// usage</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs35', 58)" onmouseover="showTip(event, 'fs35', 58)" class="t">Customer</span> <span class="o">=</span> { <span onmouseout="hideTip(event, 'fs36', 59)" onmouseover="showTip(event, 'fs36', 59)" class="i">Id</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs37', 60)" onmouseover="showTip(event, 'fs37', 60)" class="t">int</span>; <span onmouseout="hideTip(event, 'fs38', 61)" onmouseover="showTip(event, 'fs38', 61)" class="i">Name</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs39', 62)" onmouseover="showTip(event, 'fs39', 62)" class="t">string</span> }
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs40', 63)" onmouseover="showTip(event, 'fs40', 63)" class="i">reader</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs4', 64)" onmouseover="showTip(event, 'fs4', 64)" class="t">SqlReader</span> (<span class="s">&quot;some connection&quot;</span>)
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs41', 65)" onmouseover="showTip(event, 'fs41', 65)" class="f">getCustomers</span> <span onmouseout="hideTip(event, 'fs42', 66)" onmouseover="showTip(event, 'fs42', 66)" class="i">cityId</span> <span onmouseout="hideTip(event, 'fs43', 67)" onmouseover="showTip(event, 'fs43', 67)" class="i">minAges</span> <span class="o">=</span> 
+    <span onmouseout="hideTip(event, 'fs40', 68)" onmouseover="showTip(event, 'fs40', 68)" class="i">reader</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs44', 69)" onmouseover="showTip(event, 'fs44', 69)" class="f">Read</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs45', 70)" onmouseover="showTip(event, 'fs45', 70)" class="i">r</span> <span class="k">-&gt;</span> { <span class="i">Id</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs46', 71)" onmouseover="showTip(event, 'fs46', 71)" class="f">unbox</span> <span onmouseout="hideTip(event, 'fs45', 72)" onmouseover="showTip(event, 'fs45', 72)" class="i">r</span><span class="o">.</span>[<span class="n">0</span>]; <span class="i">Name</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs46', 73)" onmouseover="showTip(event, 'fs46', 73)" class="f">unbox</span> <span onmouseout="hideTip(event, 'fs45', 74)" onmouseover="showTip(event, 'fs45', 74)" class="i">r</span><span class="o">.</span>[<span class="n">1</span>] })
+                 [<span onmouseout="hideTip(event, 'fs42', 75)" onmouseover="showTip(event, 'fs42', 75)" class="i">cityId</span>; <span onmouseout="hideTip(event, 'fs43', 76)" onmouseover="showTip(event, 'fs43', 76)" class="i">minAges</span>] 
+                 <span class="s">&quot;select Id, Name </span>
+<span class="s">                  from dbo.Customers </span>
+<span class="s">                  where CityId = @p0 and Age &gt; @p1&quot;</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace System</div>
+<div class="tip" id="fs2">namespace System.Data</div>
+<div class="tip" id="fs3">namespace System.Data.SqlClient</div>
+<div class="tip" id="fs4">Multiple items<br />type SqlReader =<br />&#160;&#160;new : connection:string -&gt; SqlReader<br />&#160;&#160;member Read : f:(SqlDataReader -&gt; &#39;a) -&gt; (&#39;b list -&gt; string -&gt; &#39;a list)<br />&#160;&#160;member Execute : (obj list -&gt; string -&gt; unit)<br />&#160;&#160;member Scalar : (obj list -&gt; string -&gt; obj)<br /><br />Full name: Script.SqlReader<br /><br />--------------------<br />new : connection:string -&gt; SqlReader</div>
+<div class="tip" id="fs5">val connection : string</div>
+<div class="tip" id="fs6">val exec : ((SqlCommand -&gt; &#39;c) -&gt; &#39;d list -&gt; string -&gt; &#39;c)</div>
+<div class="tip" id="fs7">val convert : (SqlCommand -&gt; &#39;c)</div>
+<div class="tip" id="fs8">val parametres : &#39;d list</div>
+<div class="tip" id="fs9">val query : string</div>
+<div class="tip" id="fs10">val conn : SqlConnection</div>
+<div class="tip" id="fs11">Multiple items<br />type SqlConnection =<br />&#160;&#160;inherit DbConnection<br />&#160;&#160;new : unit -&gt; SqlConnection + 1 overload<br />&#160;&#160;member BeginTransaction : unit -&gt; SqlTransaction + 3 overloads<br />&#160;&#160;member ChangeDatabase : database:string -&gt; unit<br />&#160;&#160;member Close : unit -&gt; unit<br />&#160;&#160;member ConnectionString : string with get, set<br />&#160;&#160;member ConnectionTimeout : int<br />&#160;&#160;member CreateCommand : unit -&gt; SqlCommand<br />&#160;&#160;member DataSource : string<br />&#160;&#160;member Database : string<br />&#160;&#160;member EnlistDistributedTransaction : transaction:ITransaction -&gt; unit<br />&#160;&#160;...<br /><br />Full name: System.Data.SqlClient.SqlConnection<br /><br />--------------------<br />SqlConnection() : unit<br />SqlConnection(connectionString: string) : unit</div>
+<div class="tip" id="fs12"></div>
+<div class="tip" id="fs13">val cmd : SqlCommand</div>
+<div class="tip" id="fs14">Multiple items<br />type SqlCommand =<br />&#160;&#160;inherit DbCommand<br />&#160;&#160;new : unit -&gt; SqlCommand + 3 overloads<br />&#160;&#160;member BeginExecuteNonQuery : unit -&gt; IAsyncResult + 1 overload<br />&#160;&#160;member BeginExecuteReader : unit -&gt; IAsyncResult + 3 overloads<br />&#160;&#160;member BeginExecuteXmlReader : unit -&gt; IAsyncResult + 1 overload<br />&#160;&#160;member Cancel : unit -&gt; unit<br />&#160;&#160;member Clone : unit -&gt; SqlCommand<br />&#160;&#160;member CommandText : string with get, set<br />&#160;&#160;member CommandTimeout : int with get, set<br />&#160;&#160;member CommandType : CommandType with get, set<br />&#160;&#160;member Connection : SqlConnection with get, set<br />&#160;&#160;...<br /><br />Full name: System.Data.SqlClient.SqlCommand<br /><br />--------------------<br />SqlCommand() : unit<br />SqlCommand(cmdText: string) : unit<br />SqlCommand(cmdText: string, connection: SqlConnection) : unit<br />SqlCommand(cmdText: string, connection: SqlConnection, transaction: SqlTransaction) : unit</div>
+<div class="tip" id="fs15">Multiple items<br />module List<br /><br />from Microsoft.FSharp.Collections<br /><br />--------------------<br />type List&lt;&#39;T&gt; =<br />&#160;&#160;| ( [] )<br />&#160;&#160;| ( :: ) of Head: &#39;T * Tail: &#39;T list<br />&#160;&#160;interface IEnumerable<br />&#160;&#160;interface IEnumerable&lt;&#39;T&gt;<br />&#160;&#160;member Head : &#39;T<br />&#160;&#160;member IsEmpty : bool<br />&#160;&#160;member Item : index:int -&gt; &#39;T with get<br />&#160;&#160;member Length : int<br />&#160;&#160;member Tail : &#39;T list<br />&#160;&#160;static member Cons : head:&#39;T * tail:&#39;T list -&gt; &#39;T list<br />&#160;&#160;static member Empty : &#39;T list<br /><br />Full name: Microsoft.FSharp.Collections.List&lt;_&gt;</div>
+<div class="tip" id="fs16">val iteri : action:(int -&gt; &#39;T -&gt; unit) -&gt; list:&#39;T list -&gt; unit<br /><br />Full name: Microsoft.FSharp.Collections.List.iteri</div>
+<div class="tip" id="fs17">val i : int</div>
+<div class="tip" id="fs18">val p : &#39;d</div>
+<div class="tip" id="fs19">property SqlCommand.Parameters: SqlParameterCollection</div>
+<div class="tip" id="fs20">SqlParameterCollection.AddWithValue(parameterName: string, value: obj) : SqlParameter</div>
+<div class="tip" id="fs21">val sprintf : format:Printf.StringFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.sprintf</div>
+<div class="tip" id="fs22">val box : value:&#39;T -&gt; obj<br /><br />Full name: Microsoft.FSharp.Core.Operators.box</div>
+<div class="tip" id="fs23">val ignore : value:&#39;T -&gt; unit<br /><br />Full name: Microsoft.FSharp.Core.Operators.ignore</div>
+<div class="tip" id="fs24">member SqlReader.Execute : (obj list -&gt; string -&gt; unit)<br /><br />Full name: Script.SqlReader.Execute</div>
+<div class="tip" id="fs25">val c : SqlCommand</div>
+<div class="tip" id="fs26">SqlCommand.ExecuteNonQuery() : int</div>
+<div class="tip" id="fs27">val __ : SqlReader</div>
+<div class="tip" id="fs28">member SqlReader.Scalar : (obj list -&gt; string -&gt; obj)<br /><br />Full name: Script.SqlReader.Scalar</div>
+<div class="tip" id="fs29">SqlCommand.ExecuteScalar() : obj</div>
+<div class="tip" id="fs30">member SqlReader.Read : f:(SqlDataReader -&gt; &#39;a) -&gt; (&#39;b list -&gt; string -&gt; &#39;a list)<br /><br />Full name: Script.SqlReader.Read</div>
+<div class="tip" id="fs31">val f : (SqlDataReader -&gt; &#39;a)</div>
+<div class="tip" id="fs32">val read : SqlDataReader</div>
+<div class="tip" id="fs33">SqlCommand.ExecuteReader() : SqlDataReader<br />SqlCommand.ExecuteReader(behavior: System.Data.CommandBehavior) : SqlDataReader</div>
+<div class="tip" id="fs34">SqlDataReader.Read() : bool</div>
+<div class="tip" id="fs35">type Customer =<br />&#160;&#160;{Id: int;<br />&#160;&#160;&#160;Name: string;}<br /><br />Full name: Script.Customer</div>
+<div class="tip" id="fs36">Customer.Id: int</div>
+<div class="tip" id="fs37">Multiple items<br />val int : value:&#39;T -&gt; int (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.int<br /><br />--------------------<br />type int = int32<br /><br />Full name: Microsoft.FSharp.Core.int<br /><br />--------------------<br />type int&lt;&#39;Measure&gt; = int<br /><br />Full name: Microsoft.FSharp.Core.int&lt;_&gt;</div>
+<div class="tip" id="fs38">Customer.Name: string</div>
+<div class="tip" id="fs39">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />Full name: Microsoft.FSharp.Core.Operators.string<br /><br />--------------------<br />type string = System.String<br /><br />Full name: Microsoft.FSharp.Core.string</div>
+<div class="tip" id="fs40">val reader : SqlReader<br /><br />Full name: Script.reader</div>
+<div class="tip" id="fs41">val getCustomers : cityId:&#39;a -&gt; minAges:&#39;a -&gt; Customer list<br /><br />Full name: Script.getCustomers</div>
+<div class="tip" id="fs42">val cityId : &#39;a</div>
+<div class="tip" id="fs43">val minAges : &#39;a</div>
+<div class="tip" id="fs44">member SqlReader.Read : f:(SqlDataReader -&gt; &#39;a) -&gt; (&#39;b list -&gt; string -&gt; &#39;a list)</div>
+<div class="tip" id="fs45">val r : SqlDataReader</div>
+<div class="tip" id="fs46">val unbox : value:obj -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.Operators.unbox</div>
+

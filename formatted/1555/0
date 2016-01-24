@@ -1,0 +1,209 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+<span class="l">38: </span>
+<span class="l">39: </span>
+<span class="l">40: </span>
+<span class="l">41: </span>
+<span class="l">42: </span>
+<span class="l">43: </span>
+<span class="l">44: </span>
+<span class="l">45: </span>
+<span class="l">46: </span>
+<span class="l">47: </span>
+<span class="l">48: </span>
+<span class="l">49: </span>
+<span class="l">50: </span>
+<span class="l">51: </span>
+<span class="l">52: </span>
+<span class="l">53: </span>
+<span class="l">54: </span>
+<span class="l">55: </span>
+<span class="l">56: </span>
+<span class="l">57: </span>
+<span class="l">58: </span>
+<span class="l">59: </span>
+<span class="l">60: </span>
+<span class="l">61: </span>
+<span class="l">62: </span>
+<span class="l">63: </span>
+<span class="l">64: </span>
+<span class="l">65: </span>
+<span class="l">66: </span>
+<span class="l">67: </span>
+<span class="l">68: </span>
+<span class="l">69: </span>
+<span class="l">70: </span>
+<span class="l">71: </span>
+<span class="l">72: </span>
+<span class="l">73: </span>
+<span class="l">74: </span>
+<span class="l">75: </span>
+<span class="l">76: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span id="fst1" onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1, document.getElementById('fst1'))" class="omitted">opens</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">nums</span> <span class="o">=</span> [ <span class="k">for</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="i">i</span> <span class="k">in</span> <span class="n">0L</span> <span class="o">..</span> <span class="n">1000L</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs3', 4)" onmouseover="showTip(event, 'fs3', 4)" class="i">i</span> <span class="o">+</span> <span class="n">5000000000000L</span> ]
+
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs4', 5)" onmouseover="showTip(event, 'fs4', 5)" class="t">Tree</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span> <span class="o">=</span> 
+  | <span onmouseout="hideTip(event, 'fs5', 6)" onmouseover="showTip(event, 'fs5', 6)" class="p">Leaf</span> <span class="k">of</span> <span class="o">&#39;</span><span class="i">T</span> 
+  | <span onmouseout="hideTip(event, 'fs6', 7)" onmouseover="showTip(event, 'fs6', 7)" class="p">Node</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs4', 8)" onmouseover="showTip(event, 'fs4', 8)" class="t">Tree</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs4', 9)" onmouseover="showTip(event, 'fs4', 9)" class="t">Tree</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span>
+
+<span class="c">/// Creates a ballanced tree from a non-empty list</span>
+<span class="c">/// (odd elements are added to the left and even to the right)</span>
+<span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs7', 10)" onmouseover="showTip(event, 'fs7', 10)" class="f">ballancedOfList</span> <span onmouseout="hideTip(event, 'fs8', 11)" onmouseover="showTip(event, 'fs8', 11)" class="i">list</span> <span class="o">=</span>
+  <span class="k">match</span> <span onmouseout="hideTip(event, 'fs8', 12)" onmouseover="showTip(event, 'fs8', 12)" class="i">list</span> <span class="k">with</span> 
+  | [] <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs9', 13)" onmouseover="showTip(event, 'fs9', 13)" class="f">failwith</span> <span class="s">&quot;Cannot create tree of empty list&quot;</span>
+  | [<span onmouseout="hideTip(event, 'fs10', 14)" onmouseover="showTip(event, 'fs10', 14)" class="i">n</span>] <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs5', 15)" onmouseover="showTip(event, 'fs5', 15)" class="p">Leaf</span> <span onmouseout="hideTip(event, 'fs10', 16)" onmouseover="showTip(event, 'fs10', 16)" class="i">n</span>
+  | _ <span class="k">-&gt;</span> 
+      <span class="c">// Split the elements into odd and even using their index</span>
+      <span class="k">let</span> <span onmouseout="hideTip(event, 'fs11', 17)" onmouseover="showTip(event, 'fs11', 17)" class="i">left</span>, <span onmouseout="hideTip(event, 'fs12', 18)" onmouseover="showTip(event, 'fs12', 18)" class="i">right</span> <span class="o">=</span>
+        <span onmouseout="hideTip(event, 'fs8', 19)" onmouseover="showTip(event, 'fs8', 19)" class="i">list</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs13', 20)" onmouseover="showTip(event, 'fs13', 20)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs14', 21)" onmouseover="showTip(event, 'fs14', 21)" class="f">mapi</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs15', 22)" onmouseover="showTip(event, 'fs15', 22)" class="i">i</span> <span onmouseout="hideTip(event, 'fs16', 23)" onmouseover="showTip(event, 'fs16', 23)" class="i">v</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs15', 24)" onmouseover="showTip(event, 'fs15', 24)" class="i">i</span>, <span onmouseout="hideTip(event, 'fs16', 25)" onmouseover="showTip(event, 'fs16', 25)" class="i">v</span>)
+             <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs13', 26)" onmouseover="showTip(event, 'fs13', 26)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs17', 27)" onmouseover="showTip(event, 'fs17', 27)" class="f">partition</span> (<span class="k">fun</span> (<span onmouseout="hideTip(event, 'fs15', 28)" onmouseover="showTip(event, 'fs15', 28)" class="i">i</span>, <span onmouseout="hideTip(event, 'fs16', 29)" onmouseover="showTip(event, 'fs16', 29)" class="i">v</span>) <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs15', 30)" onmouseover="showTip(event, 'fs15', 30)" class="i">i</span><span class="o">%</span><span class="n">2</span> <span class="o">=</span> <span class="n">0</span>)
+      <span class="c">// Create ballanced trees for both parts</span>
+      <span class="k">let</span> <span onmouseout="hideTip(event, 'fs18', 31)" onmouseover="showTip(event, 'fs18', 31)" class="i">left</span>, <span onmouseout="hideTip(event, 'fs19', 32)" onmouseover="showTip(event, 'fs19', 32)" class="i">right</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs13', 33)" onmouseover="showTip(event, 'fs13', 33)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs20', 34)" onmouseover="showTip(event, 'fs20', 34)" class="f">map</span> <span onmouseout="hideTip(event, 'fs21', 35)" onmouseover="showTip(event, 'fs21', 35)" class="f">snd</span> <span onmouseout="hideTip(event, 'fs11', 36)" onmouseover="showTip(event, 'fs11', 36)" class="i">left</span>, <span onmouseout="hideTip(event, 'fs13', 37)" onmouseover="showTip(event, 'fs13', 37)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs20', 38)" onmouseover="showTip(event, 'fs20', 38)" class="f">map</span> <span onmouseout="hideTip(event, 'fs21', 39)" onmouseover="showTip(event, 'fs21', 39)" class="f">snd</span> <span onmouseout="hideTip(event, 'fs19', 40)" onmouseover="showTip(event, 'fs19', 40)" class="i">right</span>
+      <span onmouseout="hideTip(event, 'fs6', 41)" onmouseover="showTip(event, 'fs6', 41)" class="p">Node</span>(<span onmouseout="hideTip(event, 'fs7', 42)" onmouseover="showTip(event, 'fs7', 42)" class="f">ballancedOfList</span> <span onmouseout="hideTip(event, 'fs18', 43)" onmouseover="showTip(event, 'fs18', 43)" class="i">left</span>, <span onmouseout="hideTip(event, 'fs7', 44)" onmouseover="showTip(event, 'fs7', 44)" class="f">ballancedOfList</span> <span onmouseout="hideTip(event, 'fs19', 45)" onmouseover="showTip(event, 'fs19', 45)" class="i">right</span>)
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs22', 46)" onmouseover="showTip(event, 'fs22', 46)" class="f">isPrime</span> <span onmouseout="hideTip(event, 'fs23', 47)" onmouseover="showTip(event, 'fs23', 47)" class="i">num</span> <span class="o">=</span> 
+  <span onmouseout="hideTip(event, 'fs24', 48)" onmouseover="showTip(event, 'fs24', 48)" class="i">seq</span> { <span class="n">2L</span> <span class="o">..</span> <span onmouseout="hideTip(event, 'fs25', 49)" onmouseover="showTip(event, 'fs25', 49)" class="f">int64</span> (<span onmouseout="hideTip(event, 'fs26', 50)" onmouseover="showTip(event, 'fs26', 50)" class="f">sqrt</span> (<span onmouseout="hideTip(event, 'fs27', 51)" onmouseover="showTip(event, 'fs27', 51)" class="f">float</span> <span onmouseout="hideTip(event, 'fs23', 52)" onmouseover="showTip(event, 'fs23', 52)" class="i">num</span>)) } 
+  <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs28', 53)" onmouseover="showTip(event, 'fs28', 53)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs29', 54)" onmouseover="showTip(event, 'fs29', 54)" class="f">forall</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs30', 55)" onmouseover="showTip(event, 'fs30', 55)" class="i">div</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs23', 56)" onmouseover="showTip(event, 'fs23', 56)" class="i">num</span> <span class="o">%</span> <span onmouseout="hideTip(event, 'fs30', 57)" onmouseover="showTip(event, 'fs30', 57)" class="i">div</span> <span class="o">&lt;&gt;</span> <span class="n">0L</span>)
+
+<span class="c">// Create a list with large prime numbers</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs31', 58)" onmouseover="showTip(event, 'fs31', 58)" class="i">primes</span> <span class="o">=</span> 
+  <span onmouseout="hideTip(event, 'fs2', 59)" onmouseover="showTip(event, 'fs2', 59)" class="i">nums</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs13', 60)" onmouseover="showTip(event, 'fs13', 60)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs20', 61)" onmouseover="showTip(event, 'fs20', 61)" class="f">map</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs32', 62)" onmouseover="showTip(event, 'fs32', 62)" class="i">v</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs22', 63)" onmouseover="showTip(event, 'fs22', 63)" class="f">isPrime</span> <span onmouseout="hideTip(event, 'fs32', 64)" onmouseover="showTip(event, 'fs32', 64)" class="i">v</span>, <span onmouseout="hideTip(event, 'fs32', 65)" onmouseover="showTip(event, 'fs32', 65)" class="i">v</span>) 
+       <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs13', 66)" onmouseover="showTip(event, 'fs13', 66)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs33', 67)" onmouseover="showTip(event, 'fs33', 67)" class="f">filter</span> <span onmouseout="hideTip(event, 'fs34', 68)" onmouseover="showTip(event, 'fs34', 68)" class="f">fst</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs13', 69)" onmouseover="showTip(event, 'fs13', 69)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs20', 70)" onmouseover="showTip(event, 'fs20', 70)" class="f">map</span> <span onmouseout="hideTip(event, 'fs21', 71)" onmouseover="showTip(event, 'fs21', 71)" class="f">snd</span>
+<span class="c">// Create a list with some additional non-primes</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs35', 72)" onmouseover="showTip(event, 'fs35', 72)" class="i">mixed</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs31', 73)" onmouseover="showTip(event, 'fs31', 73)" class="i">primes</span> <span class="o">@</span> [ <span class="n">2L</span> <span class="o">..</span> <span class="n">20L</span> ]
+
+<span class="c">// Created ballanced trees from both lists</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs36', 74)" onmouseover="showTip(event, 'fs36', 74)" class="i">primeTree</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs7', 75)" onmouseover="showTip(event, 'fs7', 75)" class="f">ballancedOfList</span> <span onmouseout="hideTip(event, 'fs31', 76)" onmouseover="showTip(event, 'fs31', 76)" class="i">primes</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs37', 77)" onmouseover="showTip(event, 'fs37', 77)" class="i">mixedTree</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs7', 78)" onmouseover="showTip(event, 'fs7', 78)" class="f">ballancedOfList</span> <span onmouseout="hideTip(event, 'fs35', 79)" onmouseover="showTip(event, 'fs35', 79)" class="i">mixed</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs38', 80)" onmouseover="showTip(event, 'fs38', 80)" class="f">forall</span> <span onmouseout="hideTip(event, 'fs39', 81)" onmouseover="showTip(event, 'fs39', 81)" class="f">f</span> <span onmouseout="hideTip(event, 'fs40', 82)" onmouseover="showTip(event, 'fs40', 82)" class="i">tree</span> <span class="o">=</span>
+  <span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs41', 83)" onmouseover="showTip(event, 'fs41', 83)" class="f">loop</span> <span onmouseout="hideTip(event, 'fs40', 84)" onmouseover="showTip(event, 'fs40', 84)" class="i">tree</span> <span class="o">=</span>
+    <span class="k">match</span> <span onmouseout="hideTip(event, 'fs40', 85)" onmouseover="showTip(event, 'fs40', 85)" class="i">tree</span> <span class="k">with</span>
+    | <span onmouseout="hideTip(event, 'fs5', 86)" onmouseover="showTip(event, 'fs5', 86)" class="p">Leaf</span> <span onmouseout="hideTip(event, 'fs16', 87)" onmouseover="showTip(event, 'fs16', 87)" class="i">v</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs39', 88)" onmouseover="showTip(event, 'fs39', 88)" class="f">f</span> <span onmouseout="hideTip(event, 'fs16', 89)" onmouseover="showTip(event, 'fs16', 89)" class="i">v</span> 
+    | <span onmouseout="hideTip(event, 'fs6', 90)" onmouseover="showTip(event, 'fs6', 90)" class="p">Node</span> (<span onmouseout="hideTip(event, 'fs42', 91)" onmouseover="showTip(event, 'fs42', 91)" class="i">left</span>, <span onmouseout="hideTip(event, 'fs43', 92)" onmouseover="showTip(event, 'fs43', 92)" class="i">right</span>) <span class="k">-&gt;</span>
+        <span class="c">// Process left and right branch</span>
+        <span onmouseout="hideTip(event, 'fs41', 93)" onmouseover="showTip(event, 'fs41', 93)" class="f">loop</span> <span onmouseout="hideTip(event, 'fs42', 94)" onmouseover="showTip(event, 'fs42', 94)" class="i">left</span> <span class="o">&amp;&amp;</span> <span onmouseout="hideTip(event, 'fs41', 95)" onmouseover="showTip(event, 'fs41', 95)" class="f">loop</span> <span onmouseout="hideTip(event, 'fs43', 96)" onmouseover="showTip(event, 'fs43', 96)" class="i">right</span>
+  <span class="c">// Start the recursive processing &amp; wait for the result</span>
+  <span onmouseout="hideTip(event, 'fs41', 97)" onmouseover="showTip(event, 'fs41', 97)" class="f">loop</span> <span onmouseout="hideTip(event, 'fs40', 98)" onmouseover="showTip(event, 'fs40', 98)" class="i">tree</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs44', 99)" onmouseover="showTip(event, 'fs44', 99)" class="f">parallelForall</span> <span onmouseout="hideTip(event, 'fs39', 100)" onmouseover="showTip(event, 'fs39', 100)" class="f">f</span> <span onmouseout="hideTip(event, 'fs40', 101)" onmouseover="showTip(event, 'fs40', 101)" class="i">tree</span> <span class="o">=</span>
+  <span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs45', 102)" onmouseover="showTip(event, 'fs45', 102)" class="f">loop</span> <span onmouseout="hideTip(event, 'fs40', 103)" onmouseover="showTip(event, 'fs40', 103)" class="i">tree</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs46', 104)" onmouseover="showTip(event, 'fs46', 104)" class="t">Job</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs47', 105)" onmouseover="showTip(event, 'fs47', 105)" class="f">delay</span> <span class="o">&lt;|</span> <span class="k">fun</span> _ <span class="k">-&gt;</span>
+    <span class="k">match</span> <span onmouseout="hideTip(event, 'fs40', 106)" onmouseover="showTip(event, 'fs40', 106)" class="i">tree</span> <span class="k">with</span>
+    | <span onmouseout="hideTip(event, 'fs5', 107)" onmouseover="showTip(event, 'fs5', 107)" class="p">Leaf</span> <span onmouseout="hideTip(event, 'fs16', 108)" onmouseover="showTip(event, 'fs16', 108)" class="i">v</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs46', 109)" onmouseover="showTip(event, 'fs46', 109)" class="t">Job</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs48', 110)" onmouseover="showTip(event, 'fs48', 110)" class="f">lift</span> <span onmouseout="hideTip(event, 'fs39', 111)" onmouseover="showTip(event, 'fs39', 111)" class="f">f</span> <span onmouseout="hideTip(event, 'fs16', 112)" onmouseover="showTip(event, 'fs16', 112)" class="i">v</span> 
+    | <span onmouseout="hideTip(event, 'fs6', 113)" onmouseover="showTip(event, 'fs6', 113)" class="p">Node</span> (<span onmouseout="hideTip(event, 'fs42', 114)" onmouseover="showTip(event, 'fs42', 114)" class="i">left</span>, <span onmouseout="hideTip(event, 'fs43', 115)" onmouseover="showTip(event, 'fs43', 115)" class="i">right</span>) <span class="k">-&gt;</span>
+        <span class="c">// Process left and right branch in parallel</span>
+        <span onmouseout="hideTip(event, 'fs45', 116)" onmouseover="showTip(event, 'fs45', 116)" class="f">loop</span> <span onmouseout="hideTip(event, 'fs42', 117)" onmouseover="showTip(event, 'fs42', 117)" class="i">left</span> <span class="o">&lt;*&gt;</span> <span onmouseout="hideTip(event, 'fs45', 118)" onmouseover="showTip(event, 'fs45', 118)" class="f">loop</span> <span onmouseout="hideTip(event, 'fs43', 119)" onmouseover="showTip(event, 'fs43', 119)" class="i">right</span> <span class="o">|&gt;&gt;</span> <span class="k">fun</span> (<span onmouseout="hideTip(event, 'fs49', 120)" onmouseover="showTip(event, 'fs49', 120)" class="i">l</span>, <span onmouseout="hideTip(event, 'fs50', 121)" onmouseover="showTip(event, 'fs50', 121)" class="i">r</span>) <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs49', 122)" onmouseover="showTip(event, 'fs49', 122)" class="i">l</span> <span class="o">&amp;&amp;</span> <span onmouseout="hideTip(event, 'fs50', 123)" onmouseover="showTip(event, 'fs50', 123)" class="i">r</span>
+  <span class="c">// Start the recursive processing &amp; wait for the result</span>
+  <span onmouseout="hideTip(event, 'fs51', 124)" onmouseover="showTip(event, 'fs51', 124)" class="f">run</span> (<span onmouseout="hideTip(event, 'fs45', 125)" onmouseover="showTip(event, 'fs45', 125)" class="f">loop</span> <span onmouseout="hideTip(event, 'fs40', 126)" onmouseover="showTip(event, 'fs40', 126)" class="i">tree</span>)
+
+<span class="c">// Test processing on two sample trees</span>
+<span onmouseout="hideTip(event, 'fs52', 127)" onmouseover="showTip(event, 'fs52', 127)" class="f">compareTwoRuntimes</span>
+    <span class="n">5</span>
+    <span class="s">&quot;Sequential&quot;</span> (<span class="k">fun</span> _ <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs38', 128)" onmouseover="showTip(event, 'fs38', 128)" class="f">forall</span> <span onmouseout="hideTip(event, 'fs22', 129)" onmouseover="showTip(event, 'fs22', 129)" class="f">isPrime</span> <span onmouseout="hideTip(event, 'fs37', 130)" onmouseover="showTip(event, 'fs37', 130)" class="i">mixedTree</span>)
+    <span class="s">&quot;Parallel&quot;</span> (<span class="k">fun</span> _ <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs44', 131)" onmouseover="showTip(event, 'fs44', 131)" class="f">parallelForall</span> <span onmouseout="hideTip(event, 'fs22', 132)" onmouseover="showTip(event, 'fs22', 132)" class="f">isPrime</span> <span onmouseout="hideTip(event, 'fs37', 133)" onmouseover="showTip(event, 'fs37', 133)" class="i">mixedTree</span>)
+
+<span class="c">// Sequential 931.4ms</span>
+<span class="c">// Parallel 1185.4ms</span>
+<span class="c">//   Ratio:  0.7857263371</span>
+
+<span onmouseout="hideTip(event, 'fs52', 134)" onmouseover="showTip(event, 'fs52', 134)" class="f">compareTwoRuntimes</span>
+    <span class="n">5</span>
+    <span class="s">&quot;Sequential&quot;</span> (<span class="k">fun</span> _ <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs38', 135)" onmouseover="showTip(event, 'fs38', 135)" class="f">forall</span> <span onmouseout="hideTip(event, 'fs22', 136)" onmouseover="showTip(event, 'fs22', 136)" class="f">isPrime</span> <span onmouseout="hideTip(event, 'fs36', 137)" onmouseover="showTip(event, 'fs36', 137)" class="i">primeTree</span>)
+    <span class="s">&quot;Parallel&quot;</span> (<span class="k">fun</span> _ <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs44', 138)" onmouseover="showTip(event, 'fs44', 138)" class="f">parallelForall</span> <span onmouseout="hideTip(event, 'fs22', 139)" onmouseover="showTip(event, 'fs22', 139)" class="f">isPrime</span> <span onmouseout="hideTip(event, 'fs36', 140)" onmouseover="showTip(event, 'fs36', 140)" class="i">primeTree</span>)
+
+<span class="c">// Sequential 3974.6ms</span>
+<span class="c">// Parallel 1262.0ms</span>
+<span class="c">//   Ratio:  3.149445325</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">open Hopac<br />open Hopac.Job.Infixes<br />open FSharpx.TimeMeasurement</div>
+<div class="tip" id="fs2">val nums : int64 list<br /><br />Full name: Script.nums</div>
+<div class="tip" id="fs3">val i : int64</div>
+<div class="tip" id="fs4">type Tree&lt;&#39;T&gt; =<br />&#160;&#160;| Leaf of &#39;T<br />&#160;&#160;| Node of Tree&lt;&#39;T&gt; * Tree&lt;&#39;T&gt;<br /><br />Full name: Script.Tree&lt;_&gt;</div>
+<div class="tip" id="fs5">union case Tree.Leaf: &#39;T -&gt; Tree&lt;&#39;T&gt;</div>
+<div class="tip" id="fs6">union case Tree.Node: Tree&lt;&#39;T&gt; * Tree&lt;&#39;T&gt; -&gt; Tree&lt;&#39;T&gt;</div>
+<div class="tip" id="fs7">val ballancedOfList : list:&#39;a list -&gt; Tree&lt;&#39;a&gt;<br /><br />Full name: Script.ballancedOfList<br /><em><br /><br />&#160;Creates a ballanced tree from a non-empty list<br />&#160;(odd elements are added to the left and even to the right)</em></div>
+<div class="tip" id="fs8">Multiple items<br />val list : &#39;a list<br /><br />--------------------<br />type &#39;T list = List&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.list&lt;_&gt;</div>
+<div class="tip" id="fs9">val failwith : message:string -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.Operators.failwith</div>
+<div class="tip" id="fs10">val n : &#39;a</div>
+<div class="tip" id="fs11">val left : (int * &#39;a) list</div>
+<div class="tip" id="fs12">val right : (int * &#39;a) list</div>
+<div class="tip" id="fs13">Multiple items<br />module List<br /><br />from Microsoft.FSharp.Collections<br /><br />--------------------<br />type List&lt;&#39;T&gt; =<br />&#160;&#160;| ( [] )<br />&#160;&#160;| ( :: ) of Head: &#39;T * Tail: &#39;T list<br />&#160;&#160;interface IEnumerable<br />&#160;&#160;interface IEnumerable&lt;&#39;T&gt;<br />&#160;&#160;member Head : &#39;T<br />&#160;&#160;member IsEmpty : bool<br />&#160;&#160;member Item : index:int -&gt; &#39;T with get<br />&#160;&#160;member Length : int<br />&#160;&#160;member Tail : &#39;T list<br />&#160;&#160;static member Cons : head:&#39;T * tail:&#39;T list -&gt; &#39;T list<br />&#160;&#160;static member Empty : &#39;T list<br /><br />Full name: Microsoft.FSharp.Collections.List&lt;_&gt;</div>
+<div class="tip" id="fs14">val mapi : mapping:(int -&gt; &#39;T -&gt; &#39;U) -&gt; list:&#39;T list -&gt; &#39;U list<br /><br />Full name: Microsoft.FSharp.Collections.List.mapi</div>
+<div class="tip" id="fs15">val i : int</div>
+<div class="tip" id="fs16">val v : &#39;a</div>
+<div class="tip" id="fs17">val partition : predicate:(&#39;T -&gt; bool) -&gt; list:&#39;T list -&gt; &#39;T list * &#39;T list<br /><br />Full name: Microsoft.FSharp.Collections.List.partition</div>
+<div class="tip" id="fs18">val left : &#39;a list</div>
+<div class="tip" id="fs19">val right : &#39;a list</div>
+<div class="tip" id="fs20">val map : mapping:(&#39;T -&gt; &#39;U) -&gt; list:&#39;T list -&gt; &#39;U list<br /><br />Full name: Microsoft.FSharp.Collections.List.map</div>
+<div class="tip" id="fs21">val snd : tuple:(&#39;T1 * &#39;T2) -&gt; &#39;T2<br /><br />Full name: Microsoft.FSharp.Core.Operators.snd</div>
+<div class="tip" id="fs22">val isPrime : num:int64 -&gt; bool<br /><br />Full name: Script.isPrime</div>
+<div class="tip" id="fs23">val num : int64</div>
+<div class="tip" id="fs24">Multiple items<br />val seq : sequence:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Core.Operators.seq<br /><br />--------------------<br />type seq&lt;&#39;T&gt; = System.Collections.Generic.IEnumerable&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.seq&lt;_&gt;</div>
+<div class="tip" id="fs25">Multiple items<br />val int64 : value:&#39;T -&gt; int64 (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.int64<br /><br />--------------------<br />type int64 = System.Int64<br /><br />Full name: Microsoft.FSharp.Core.int64<br /><br />--------------------<br />type int64&lt;&#39;Measure&gt; = int64<br /><br />Full name: Microsoft.FSharp.Core.int64&lt;_&gt;</div>
+<div class="tip" id="fs26">val sqrt : value:&#39;T -&gt; &#39;U (requires member Sqrt)<br /><br />Full name: Microsoft.FSharp.Core.Operators.sqrt</div>
+<div class="tip" id="fs27">Multiple items<br />val float : value:&#39;T -&gt; float (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.float<br /><br />--------------------<br />type float = System.Double<br /><br />Full name: Microsoft.FSharp.Core.float<br /><br />--------------------<br />type float&lt;&#39;Measure&gt; = float<br /><br />Full name: Microsoft.FSharp.Core.float&lt;_&gt;</div>
+<div class="tip" id="fs28">module Seq<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs29">val forall : predicate:(&#39;T -&gt; bool) -&gt; source:seq&lt;&#39;T&gt; -&gt; bool<br /><br />Full name: Microsoft.FSharp.Collections.Seq.forall</div>
+<div class="tip" id="fs30">val div : int64</div>
+<div class="tip" id="fs31">val primes : int64 list<br /><br />Full name: Script.primes</div>
+<div class="tip" id="fs32">val v : int64</div>
+<div class="tip" id="fs33">val filter : predicate:(&#39;T -&gt; bool) -&gt; list:&#39;T list -&gt; &#39;T list<br /><br />Full name: Microsoft.FSharp.Collections.List.filter</div>
+<div class="tip" id="fs34">val fst : tuple:(&#39;T1 * &#39;T2) -&gt; &#39;T1<br /><br />Full name: Microsoft.FSharp.Core.Operators.fst</div>
+<div class="tip" id="fs35">val mixed : int64 list<br /><br />Full name: Script.mixed</div>
+<div class="tip" id="fs36">val primeTree : Tree&lt;int64&gt;<br /><br />Full name: Script.primeTree</div>
+<div class="tip" id="fs37">val mixedTree : Tree&lt;int64&gt;<br /><br />Full name: Script.mixedTree</div>
+<div class="tip" id="fs38">val forall : f:(&#39;a -&gt; bool) -&gt; tree:Tree&lt;&#39;a&gt; -&gt; bool<br /><br />Full name: Script.forall</div>
+<div class="tip" id="fs39">val f : (&#39;a -&gt; bool)</div>
+<div class="tip" id="fs40">val tree : Tree&lt;&#39;a&gt;</div>
+<div class="tip" id="fs41">val loop : (Tree&lt;&#39;a&gt; -&gt; bool)</div>
+<div class="tip" id="fs42">val left : Tree&lt;&#39;a&gt;</div>
+<div class="tip" id="fs43">val right : Tree&lt;&#39;a&gt;</div>
+<div class="tip" id="fs44">val parallelForall : f:(&#39;a -&gt; bool) -&gt; tree:Tree&lt;&#39;a&gt; -&gt; bool<br /><br />Full name: Script.parallelForall</div>
+<div class="tip" id="fs45">val loop : (Tree&lt;&#39;a&gt; -&gt; Job&lt;bool&gt;)</div>
+<div class="tip" id="fs46">type Job&lt;&#39;T&gt; =<br /><br />Full name: Hopac.Job&lt;_&gt;</div>
+<div class="tip" id="fs47">val delay : (unit -&gt; #Job&lt;&#39;x&gt;) -&gt; Job&lt;&#39;x&gt;<br /><br />Full name: Hopac.Job.delay</div>
+<div class="tip" id="fs48">val lift : (&#39;x -&gt; &#39;y) -&gt; &#39;x -&gt; Job&lt;&#39;y&gt;<br /><br />Full name: Hopac.Job.lift</div>
+<div class="tip" id="fs49">val l : bool</div>
+<div class="tip" id="fs50">val r : bool</div>
+<div class="tip" id="fs51">val run : Job&lt;&#39;x&gt; -&gt; &#39;x<br /><br />Full name: Hopac.TopLevel.run</div>
+<div class="tip" id="fs52">val compareTwoRuntimes : count:int -&gt; desc1:string -&gt; f1:(unit -&gt; &#39;a) -&gt; desc2:string -&gt; f2:(unit -&gt; &#39;b) -&gt; unit<br /><br />Full name: FSharpx.TimeMeasurement.compareTwoRuntimes</div>
+

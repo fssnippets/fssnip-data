@@ -1,0 +1,266 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+<span class="l">38: </span>
+<span class="l">39: </span>
+<span class="l">40: </span>
+<span class="l">41: </span>
+<span class="l">42: </span>
+<span class="l">43: </span>
+<span class="l">44: </span>
+<span class="l">45: </span>
+<span class="l">46: </span>
+<span class="l">47: </span>
+<span class="l">48: </span>
+<span class="l">49: </span>
+<span class="l">50: </span>
+<span class="l">51: </span>
+<span class="l">52: </span>
+<span class="l">53: </span>
+<span class="l">54: </span>
+<span class="l">55: </span>
+<span class="l">56: </span>
+<span class="l">57: </span>
+<span class="l">58: </span>
+<span class="l">59: </span>
+<span class="l">60: </span>
+<span class="l">61: </span>
+<span class="l">62: </span>
+<span class="l">63: </span>
+<span class="l">64: </span>
+<span class="l">65: </span>
+<span class="l">66: </span>
+<span class="l">67: </span>
+<span class="l">68: </span>
+<span class="l">69: </span>
+<span class="l">70: </span>
+<span class="l">71: </span>
+<span class="l">72: </span>
+<span class="l">73: </span>
+<span class="l">74: </span>
+<span class="l">75: </span>
+<span class="l">76: </span>
+<span class="l">77: </span>
+<span class="l">78: </span>
+<span class="l">79: </span>
+<span class="l">80: </span>
+<span class="l">81: </span>
+<span class="l">82: </span>
+<span class="l">83: </span>
+<span class="l">84: </span>
+<span class="l">85: </span>
+<span class="l">86: </span>
+<span class="l">87: </span>
+<span class="l">88: </span>
+<span class="l">89: </span>
+<span class="l">90: </span>
+<span class="l">91: </span>
+<span class="l">92: </span>
+<span class="l">93: </span>
+<span class="l">94: </span>
+<span class="l">95: </span>
+<span class="l">96: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">System</span>
+
+<span class="c">(* Petrovich provides two methods of influencing its behaviour: rewards and punishments. </span>
+<span class="c">Whenever Petrovich does something the user doesn&#39;t approve of, the user can punish it. </span>
+<span class="c">Conversely, whenever Petrovich does something useful, the user can reward it. </span>
+<span class="c">Petrovich then adapts its behaviour to avoid punishment and enjoy more rewards. *)</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="t">Action</span> <span class="o">=</span> 
+    | <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="p">DoSmth</span>                    <span class="c">//Causes Petrovich to do something. </span>
+    | <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="p">DoSmthWithFile</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="t">string</span>  <span class="c">//Causes Petrovich to do something using the named file. </span>
+    | <span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="p">Punish</span>                    <span class="c">//Punishes Petrovich. </span>
+    | <span onmouseout="hideTip(event, 'fs7', 7)" onmouseover="showTip(event, 'fs7', 7)" class="p">Reward</span>                    <span class="c">//Rewards Petrovich. </span>
+    | <span onmouseout="hideTip(event, 'fs8', 8)" onmouseover="showTip(event, 'fs8', 8)" class="p">Exit</span>                      
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs9', 9)" onmouseover="showTip(event, 'fs9', 9)" class="f">print</span> <span onmouseout="hideTip(event, 'fs10', 10)" onmouseover="showTip(event, 'fs10', 10)" class="f">a</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs10', 11)" onmouseover="showTip(event, 'fs10', 11)" class="f">a</span> <span class="o">&gt;</span><span class="o">&gt;</span> <span onmouseout="hideTip(event, 'fs11', 12)" onmouseover="showTip(event, 'fs11', 12)" class="f">printfn</span> <span class="s">&quot;</span><span class="pf">%A</span><span class="s">&quot;</span>
+
+<span id="fst12" onmouseout="hideTip(event, 'fs12', 13)" onmouseover="showTip(event, 'fs12', 13, document.getElementById('fst12'))" class="omitted">(Do Something Actions Realization)</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs13', 14)" onmouseover="showTip(event, 'fs13', 14)" class="i">doSmthActions</span> <span class="o">=</span> [
+    <span onmouseout="hideTip(event, 'fs14', 15)" onmouseover="showTip(event, 'fs14', 15)" class="f">beep</span>
+    <span onmouseout="hideTip(event, 'fs9', 16)" onmouseover="showTip(event, 'fs9', 16)" class="f">print</span> <span onmouseout="hideTip(event, 'fs15', 17)" onmouseover="showTip(event, 'fs15', 17)" class="f">get100Numbers</span>
+    <span onmouseout="hideTip(event, 'fs9', 18)" onmouseover="showTip(event, 'fs9', 18)" class="f">print</span> <span onmouseout="hideTip(event, 'fs16', 19)" onmouseover="showTip(event, 'fs16', 19)" class="f">getDate</span> 
+    <span onmouseout="hideTip(event, 'fs9', 20)" onmouseover="showTip(event, 'fs9', 20)" class="f">print</span> <span onmouseout="hideTip(event, 'fs17', 21)" onmouseover="showTip(event, 'fs17', 21)" class="f">getTimeZoneInfo</span> 
+    <span onmouseout="hideTip(event, 'fs9', 22)" onmouseover="showTip(event, 'fs9', 22)" class="f">print</span> <span onmouseout="hideTip(event, 'fs18', 23)" onmouseover="showTip(event, 'fs18', 23)" class="f">sortArray</span>
+    <span onmouseout="hideTip(event, 'fs19', 24)" onmouseover="showTip(event, 'fs19', 24)" class="f">sleep</span>
+]
+
+<span id="fst20" onmouseout="hideTip(event, 'fs20', 25)" onmouseover="showTip(event, 'fs20', 25, document.getElementById('fst20'))" class="omitted">(Do Something With File Actions Realization)</span>
+<span class="c">//Attention! Don&#39;t try this at home, especially with some important files! =)</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs21', 26)" onmouseover="showTip(event, 'fs21', 26)" class="i">doSmthWithFileActions</span> <span class="o">=</span> [
+    <span onmouseout="hideTip(event, 'fs22', 27)" onmouseover="showTip(event, 'fs22', 27)" class="f">getCreationTime</span>
+    <span onmouseout="hideTip(event, 'fs9', 28)" onmouseover="showTip(event, 'fs9', 28)" class="f">print</span> <span onmouseout="hideTip(event, 'fs23', 29)" onmouseover="showTip(event, 'fs23', 29)" class="f">getPath</span>
+    <span onmouseout="hideTip(event, 'fs24', 30)" onmouseover="showTip(event, 'fs24', 30)" class="f">writeGuid</span>
+    <span onmouseout="hideTip(event, 'fs25', 31)" onmouseover="showTip(event, 'fs25', 31)" class="f">delete</span>
+    <span onmouseout="hideTip(event, 'fs26', 32)" onmouseover="showTip(event, 'fs26', 32)" class="f">read</span>
+]
+
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs27', 33)" onmouseover="showTip(event, 'fs27', 33)" class="t">DecisionList</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">a</span><span class="o">&gt;</span>(<span onmouseout="hideTip(event, 'fs28', 34)" onmouseover="showTip(event, 'fs28', 34)" class="i">list</span><span class="o">:</span> <span class="o">&#39;</span><span class="i">a</span> <span onmouseout="hideTip(event, 'fs28', 35)" onmouseover="showTip(event, 'fs28', 35)" class="t">list</span>) <span class="o">=</span>
+    <span id="fst29" onmouseout="hideTip(event, 'fs29', 36)" onmouseover="showTip(event, 'fs29', 36, document.getElementById('fst29'))" class="omitted">(private fields)</span>
+    <span class="k">member</span> <span onmouseout="hideTip(event, 'fs30', 37)" onmouseover="showTip(event, 'fs30', 37)" class="i">i</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs31', 38)" onmouseover="showTip(event, 'fs31', 38)" class="f">Choose</span>() <span class="o">=</span> <span id="fst32" onmouseout="hideTip(event, 'fs32', 39)" onmouseover="showTip(event, 'fs32', 39, document.getElementById('fst32'))" class="omitted">(...)</span>
+    <span class="k">member</span> <span onmouseout="hideTip(event, 'fs30', 40)" onmouseover="showTip(event, 'fs30', 40)" class="i">i</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs33', 41)" onmouseover="showTip(event, 'fs33', 41)" class="f">Reward</span>() <span class="o">=</span> <span id="fst34" onmouseout="hideTip(event, 'fs34', 42)" onmouseover="showTip(event, 'fs34', 42, document.getElementById('fst34'))" class="omitted">(...)</span>
+    <span class="k">member</span> <span onmouseout="hideTip(event, 'fs30', 43)" onmouseover="showTip(event, 'fs30', 43)" class="i">i</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs35', 44)" onmouseover="showTip(event, 'fs35', 44)" class="f">Punish</span>() <span class="o">=</span> <span id="fst36" onmouseout="hideTip(event, 'fs36', 45)" onmouseover="showTip(event, 'fs36', 45, document.getElementById('fst36'))" class="omitted">(...)</span>                 
+
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs37', 46)" onmouseover="showTip(event, 'fs37', 46)" class="t">OS</span>() <span class="o">=</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs38', 47)" onmouseover="showTip(event, 'fs38', 47)" class="i">doSmth</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs27', 48)" onmouseover="showTip(event, 'fs27', 48)" class="t">DecisionList</span><span class="o">&lt;</span>_<span class="o">&gt;</span>(<span onmouseout="hideTip(event, 'fs13', 49)" onmouseover="showTip(event, 'fs13', 49)" class="i">doSmthActions</span>)
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs39', 50)" onmouseover="showTip(event, 'fs39', 50)" class="i">doSmthWithFile</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs27', 51)" onmouseover="showTip(event, 'fs27', 51)" class="t">DecisionList</span><span class="o">&lt;</span>_<span class="o">&gt;</span>(<span onmouseout="hideTip(event, 'fs21', 52)" onmouseover="showTip(event, 'fs21', 52)" class="i">doSmthWithFileActions</span>)
+
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs40', 53)" onmouseover="showTip(event, 'fs40', 53)" class="f">printLine</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs11', 54)" onmouseover="showTip(event, 'fs11', 54)" class="f">printfn</span> <span class="s">&quot;Petrovich&gt; </span><span class="pf">%s</span><span class="s">&quot;</span>
+    <span class="c">(* MailboxProcessor with 2 states: </span>
+<span class="c">        - &#39;command&#39; to make it do something</span>
+<span class="c">        - &#39;response&#39; to formulate a reflex *)</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs41', 55)" onmouseover="showTip(event, 'fs41', 55)" class="i">core</span> <span class="o">=</span>
+        <span onmouseout="hideTip(event, 'fs42', 56)" onmouseover="showTip(event, 'fs42', 56)" class="t">MailboxProcessor</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs43', 57)" onmouseover="showTip(event, 'fs43', 57)" class="f">Start</span>(<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs44', 58)" onmouseover="showTip(event, 'fs44', 58)" class="i">inbox</span> <span class="k">-&gt;</span>
+            <span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs45', 59)" onmouseover="showTip(event, 'fs45', 59)" class="f">command</span>() <span class="o">=</span>
+                <span onmouseout="hideTip(event, 'fs46', 60)" onmouseover="showTip(event, 'fs46', 60)" class="i">async</span> { <span class="k">let!</span> <span onmouseout="hideTip(event, 'fs47', 61)" onmouseover="showTip(event, 'fs47', 61)" class="i">msg</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs44', 62)" onmouseover="showTip(event, 'fs44', 62)" class="i">inbox</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs48', 63)" onmouseover="showTip(event, 'fs48', 63)" class="f">Receive</span>()
+                    <span class="k">match</span> <span onmouseout="hideTip(event, 'fs47', 64)" onmouseover="showTip(event, 'fs47', 64)" class="i">msg</span> <span class="k">with</span>
+                    | <span onmouseout="hideTip(event, 'fs3', 65)" onmouseover="showTip(event, 'fs3', 65)" class="p">DoSmth</span> <span class="k">-&gt;</span> 
+                        <span onmouseout="hideTip(event, 'fs40', 66)" onmouseover="showTip(event, 'fs40', 66)" class="f">printLine</span> <span class="s">&quot;do something&quot;</span>
+                        <span onmouseout="hideTip(event, 'fs38', 67)" onmouseover="showTip(event, 'fs38', 67)" class="i">doSmth</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs49', 68)" onmouseover="showTip(event, 'fs49', 68)" class="f">Choose</span>()()
+                        <span class="k">return!</span> <span onmouseout="hideTip(event, 'fs50', 69)" onmouseover="showTip(event, 'fs50', 69)" class="f">response</span> <span onmouseout="hideTip(event, 'fs38', 70)" onmouseover="showTip(event, 'fs38', 70)" class="i">doSmth</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs51', 71)" onmouseover="showTip(event, 'fs51', 71)" class="f">Punish</span> <span onmouseout="hideTip(event, 'fs38', 72)" onmouseover="showTip(event, 'fs38', 72)" class="i">doSmth</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs52', 73)" onmouseover="showTip(event, 'fs52', 73)" class="f">Reward</span>
+                    | <span onmouseout="hideTip(event, 'fs4', 74)" onmouseover="showTip(event, 'fs4', 74)" class="p">DoSmthWithFile</span> <span onmouseout="hideTip(event, 'fs53', 75)" onmouseover="showTip(event, 'fs53', 75)" class="i">fileName</span> <span class="k">-&gt;</span>
+                        <span onmouseout="hideTip(event, 'fs40', 76)" onmouseover="showTip(event, 'fs40', 76)" class="f">printLine</span> <span class="o">&lt;|</span> <span class="s">&quot;do something with &quot;</span> <span class="o">+</span> <span onmouseout="hideTip(event, 'fs53', 77)" onmouseover="showTip(event, 'fs53', 77)" class="i">fileName</span>
+                        <span onmouseout="hideTip(event, 'fs39', 78)" onmouseover="showTip(event, 'fs39', 78)" class="i">doSmthWithFile</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs49', 79)" onmouseover="showTip(event, 'fs49', 79)" class="f">Choose</span>() <span onmouseout="hideTip(event, 'fs53', 80)" onmouseover="showTip(event, 'fs53', 80)" class="i">fileName</span>
+                        <span class="k">return!</span> <span onmouseout="hideTip(event, 'fs50', 81)" onmouseover="showTip(event, 'fs50', 81)" class="f">response</span> <span onmouseout="hideTip(event, 'fs39', 82)" onmouseover="showTip(event, 'fs39', 82)" class="i">doSmthWithFile</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs51', 83)" onmouseover="showTip(event, 'fs51', 83)" class="f">Punish</span> <span onmouseout="hideTip(event, 'fs39', 84)" onmouseover="showTip(event, 'fs39', 84)" class="i">doSmthWithFile</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs52', 85)" onmouseover="showTip(event, 'fs52', 85)" class="f">Reward</span>
+                    | <span onmouseout="hideTip(event, 'fs8', 86)" onmouseover="showTip(event, 'fs8', 86)" class="p">Exit</span> <span class="k">-&gt;</span>
+                        <span onmouseout="hideTip(event, 'fs40', 87)" onmouseover="showTip(event, 'fs40', 87)" class="f">printLine</span> <span class="s">&quot;exit&quot;</span> 
+                        <span class="k">return</span> ()
+                    | _ <span class="k">-&gt;</span> <span class="k">return!</span> <span onmouseout="hideTip(event, 'fs45', 88)" onmouseover="showTip(event, 'fs45', 88)" class="f">command</span>()
+                }
+            <span class="k">and</span> <span onmouseout="hideTip(event, 'fs50', 89)" onmouseover="showTip(event, 'fs50', 89)" class="f">response</span> <span class="c">(*on punish*)</span><span onmouseout="hideTip(event, 'fs54', 90)" onmouseover="showTip(event, 'fs54', 90)" class="f">p</span> <span class="c">(*on reward*)</span><span onmouseout="hideTip(event, 'fs55', 91)" onmouseover="showTip(event, 'fs55', 91)" class="f">r</span> <span class="o">=</span>
+                <span onmouseout="hideTip(event, 'fs46', 92)" onmouseover="showTip(event, 'fs46', 92)" class="i">async</span> { <span class="k">let!</span> <span onmouseout="hideTip(event, 'fs47', 93)" onmouseover="showTip(event, 'fs47', 93)" class="i">msg</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs44', 94)" onmouseover="showTip(event, 'fs44', 94)" class="i">inbox</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs48', 95)" onmouseover="showTip(event, 'fs48', 95)" class="f">Receive</span>()
+                    <span class="k">match</span> <span onmouseout="hideTip(event, 'fs47', 96)" onmouseover="showTip(event, 'fs47', 96)" class="i">msg</span> <span class="k">with</span>
+                    | <span onmouseout="hideTip(event, 'fs6', 97)" onmouseover="showTip(event, 'fs6', 97)" class="p">Punish</span> <span class="k">-&gt;</span>
+                        <span onmouseout="hideTip(event, 'fs40', 98)" onmouseover="showTip(event, 'fs40', 98)" class="f">printLine</span> <span class="s">&quot;punish&quot;</span>; <span onmouseout="hideTip(event, 'fs54', 99)" onmouseover="showTip(event, 'fs54', 99)" class="f">p</span>()
+                        <span class="k">return!</span> <span onmouseout="hideTip(event, 'fs45', 100)" onmouseover="showTip(event, 'fs45', 100)" class="f">command</span>()
+                    | <span onmouseout="hideTip(event, 'fs7', 101)" onmouseover="showTip(event, 'fs7', 101)" class="p">Reward</span> <span class="k">-&gt;</span>
+                        <span onmouseout="hideTip(event, 'fs40', 102)" onmouseover="showTip(event, 'fs40', 102)" class="f">printLine</span> <span class="s">&quot;reward&quot;</span>; <span onmouseout="hideTip(event, 'fs55', 103)" onmouseover="showTip(event, 'fs55', 103)" class="f">r</span>()
+                        <span class="k">return!</span> <span onmouseout="hideTip(event, 'fs45', 104)" onmouseover="showTip(event, 'fs45', 104)" class="f">command</span>()
+                    | <span onmouseout="hideTip(event, 'fs8', 105)" onmouseover="showTip(event, 'fs8', 105)" class="p">Exit</span> <span class="k">-&gt;</span>
+                        <span onmouseout="hideTip(event, 'fs40', 106)" onmouseover="showTip(event, 'fs40', 106)" class="f">printLine</span> <span class="s">&quot;exit&quot;</span> 
+                        <span class="k">return</span> ()
+                    | _ <span class="k">-&gt;</span> <span class="k">return!</span> <span onmouseout="hideTip(event, 'fs50', 107)" onmouseover="showTip(event, 'fs50', 107)" class="f">response</span> <span onmouseout="hideTip(event, 'fs54', 108)" onmouseover="showTip(event, 'fs54', 108)" class="f">p</span> <span onmouseout="hideTip(event, 'fs55', 109)" onmouseover="showTip(event, 'fs55', 109)" class="f">r</span>
+                }
+            <span onmouseout="hideTip(event, 'fs45', 110)" onmouseover="showTip(event, 'fs45', 110)" class="f">command</span>())
+
+    <span class="k">member</span> <span onmouseout="hideTip(event, 'fs56', 111)" onmouseover="showTip(event, 'fs56', 111)" class="i">i</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs57', 112)" onmouseover="showTip(event, 'fs57', 112)" class="f">DoSomething</span>() <span class="o">=</span> <span onmouseout="hideTip(event, 'fs41', 113)" onmouseover="showTip(event, 'fs41', 113)" class="i">core</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs58', 114)" onmouseover="showTip(event, 'fs58', 114)" class="f">Post</span> <span onmouseout="hideTip(event, 'fs3', 115)" onmouseover="showTip(event, 'fs3', 115)" class="p">DoSmth</span>
+    <span class="k">member</span> <span onmouseout="hideTip(event, 'fs56', 116)" onmouseover="showTip(event, 'fs56', 116)" class="i">i</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs59', 117)" onmouseover="showTip(event, 'fs59', 117)" class="f">DoSomethingWithFile</span> <span onmouseout="hideTip(event, 'fs60', 118)" onmouseover="showTip(event, 'fs60', 118)" class="i">fName</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs41', 119)" onmouseover="showTip(event, 'fs41', 119)" class="i">core</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs58', 120)" onmouseover="showTip(event, 'fs58', 120)" class="f">Post</span> <span class="o">&lt;&lt;</span> <span onmouseout="hideTip(event, 'fs4', 121)" onmouseover="showTip(event, 'fs4', 121)" class="p">DoSmthWithFile</span> <span class="o">&lt;|</span> <span onmouseout="hideTip(event, 'fs60', 122)" onmouseover="showTip(event, 'fs60', 122)" class="i">fName</span>
+    <span class="k">member</span> <span onmouseout="hideTip(event, 'fs56', 123)" onmouseover="showTip(event, 'fs56', 123)" class="i">i</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs61', 124)" onmouseover="showTip(event, 'fs61', 124)" class="f">Reward</span>() <span class="o">=</span> <span onmouseout="hideTip(event, 'fs41', 125)" onmouseover="showTip(event, 'fs41', 125)" class="i">core</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs58', 126)" onmouseover="showTip(event, 'fs58', 126)" class="f">Post</span> <span onmouseout="hideTip(event, 'fs7', 127)" onmouseover="showTip(event, 'fs7', 127)" class="p">Reward</span>
+    <span class="k">member</span> <span onmouseout="hideTip(event, 'fs56', 128)" onmouseover="showTip(event, 'fs56', 128)" class="i">i</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs62', 129)" onmouseover="showTip(event, 'fs62', 129)" class="f">Punish</span>() <span class="o">=</span> <span onmouseout="hideTip(event, 'fs41', 130)" onmouseover="showTip(event, 'fs41', 130)" class="i">core</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs58', 131)" onmouseover="showTip(event, 'fs58', 131)" class="f">Post</span> <span onmouseout="hideTip(event, 'fs6', 132)" onmouseover="showTip(event, 'fs6', 132)" class="p">Punish</span>
+    <span class="k">member</span> <span onmouseout="hideTip(event, 'fs56', 133)" onmouseover="showTip(event, 'fs56', 133)" class="i">i</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs63', 134)" onmouseover="showTip(event, 'fs63', 134)" class="f">Exit</span>() <span class="o">=</span> <span onmouseout="hideTip(event, 'fs41', 135)" onmouseover="showTip(event, 'fs41', 135)" class="i">core</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs58', 136)" onmouseover="showTip(event, 'fs58', 136)" class="f">Post</span> <span onmouseout="hideTip(event, 'fs8', 137)" onmouseover="showTip(event, 'fs8', 137)" class="p">Exit</span>
+
+<span class="c">//time to test:</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs64', 138)" onmouseover="showTip(event, 'fs64', 138)" class="i">petrovich</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs37', 139)" onmouseover="showTip(event, 'fs37', 139)" class="t">OS</span>()
+<span onmouseout="hideTip(event, 'fs64', 140)" onmouseover="showTip(event, 'fs64', 140)" class="i">petrovich</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs65', 141)" onmouseover="showTip(event, 'fs65', 141)" class="f">DoSomething</span>()
+<span onmouseout="hideTip(event, 'fs64', 142)" onmouseover="showTip(event, 'fs64', 142)" class="i">petrovich</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs66', 143)" onmouseover="showTip(event, 'fs66', 143)" class="f">DoSomethingWithFile</span> <span class="s">&quot;test.txt&quot;</span>
+<span onmouseout="hideTip(event, 'fs64', 144)" onmouseover="showTip(event, 'fs64', 144)" class="i">petrovich</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs67', 145)" onmouseover="showTip(event, 'fs67', 145)" class="f">Reward</span>()
+<span onmouseout="hideTip(event, 'fs64', 146)" onmouseover="showTip(event, 'fs64', 146)" class="i">petrovich</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs68', 147)" onmouseover="showTip(event, 'fs68', 147)" class="f">Punish</span>()
+<span onmouseout="hideTip(event, 'fs64', 148)" onmouseover="showTip(event, 'fs64', 148)" class="i">petrovich</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs69', 149)" onmouseover="showTip(event, 'fs69', 149)" class="f">Exit</span>()
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace System</div>
+<div class="tip" id="fs2">Multiple items<br />type Action =<br />&#160;&#160;| DoSmth<br />&#160;&#160;| DoSmthWithFile of string<br />&#160;&#160;| Punish<br />&#160;&#160;| Reward<br />&#160;&#160;| Exit<br /><br />Full name: Script.Action<br /><br />--------------------<br />type Action&lt;&#39;T&gt; =<br />&#160;&#160;delegate of &#39;T -&gt; unit<br /><br />Full name: System.Action&lt;_&gt;<br /><br />--------------------<br />type Action&lt;&#39;T1,&#39;T2&gt; =<br />&#160;&#160;delegate of &#39;T1 * &#39;T2 -&gt; unit<br /><br />Full name: System.Action&lt;_,_&gt;<br /><br />--------------------<br />type Action&lt;&#39;T1,&#39;T2,&#39;T3&gt; =<br />&#160;&#160;delegate of &#39;T1 * &#39;T2 * &#39;T3 -&gt; unit<br /><br />Full name: System.Action&lt;_,_,_&gt;<br /><br />--------------------<br />type Action&lt;&#39;T1,&#39;T2,&#39;T3,&#39;T4&gt; =<br />&#160;&#160;delegate of &#39;T1 * &#39;T2 * &#39;T3 * &#39;T4 -&gt; unit<br /><br />Full name: System.Action&lt;_,_,_,_&gt;<br /><br />--------------------<br />type Action&lt;&#39;T1,&#39;T2,&#39;T3,&#39;T4,&#39;T5&gt; =<br />&#160;&#160;delegate of &#39;T1 * &#39;T2 * &#39;T3 * &#39;T4 * &#39;T5 -&gt; unit<br /><br />Full name: System.Action&lt;_,_,_,_,_&gt;<br /><br />--------------------<br />type Action&lt;&#39;T1,&#39;T2,&#39;T3,&#39;T4,&#39;T5,&#39;T6&gt; =<br />&#160;&#160;delegate of &#39;T1 * &#39;T2 * &#39;T3 * &#39;T4 * &#39;T5 * &#39;T6 -&gt; unit<br /><br />Full name: System.Action&lt;_,_,_,_,_,_&gt;<br /><br />--------------------<br />type Action&lt;&#39;T1,&#39;T2,&#39;T3,&#39;T4,&#39;T5,&#39;T6,&#39;T7&gt; =<br />&#160;&#160;delegate of &#39;T1 * &#39;T2 * &#39;T3 * &#39;T4 * &#39;T5 * &#39;T6 * &#39;T7 -&gt; unit<br /><br />Full name: System.Action&lt;_,_,_,_,_,_,_&gt;<br /><br />--------------------<br />type Action&lt;&#39;T1,&#39;T2,&#39;T3,&#39;T4,&#39;T5,&#39;T6,&#39;T7,&#39;T8&gt; =<br />&#160;&#160;delegate of &#39;T1 * &#39;T2 * &#39;T3 * &#39;T4 * &#39;T5 * &#39;T6 * &#39;T7 * &#39;T8 -&gt; unit<br /><br />Full name: System.Action&lt;_,_,_,_,_,_,_,_&gt;<br /><br />--------------------<br />type Action&lt;&#39;T1,&#39;T2,&#39;T3,&#39;T4,&#39;T5,&#39;T6,&#39;T7,&#39;T8,&#39;T9&gt; =<br />&#160;&#160;delegate of &#39;T1 * &#39;T2 * &#39;T3 * &#39;T4 * &#39;T5 * &#39;T6 * &#39;T7 * &#39;T8 * &#39;T9 -&gt; unit<br /><br />Full name: System.Action&lt;_,_,_,_,_,_,_,_,_&gt;<br /><br />--------------------<br />type Action&lt;&#39;T1,&#39;T2,&#39;T3,&#39;T4,&#39;T5,&#39;T6,&#39;T7,&#39;T8,&#39;T9,&#39;T10&gt; =<br />&#160;&#160;delegate of &#39;T1 * &#39;T2 * &#39;T3 * &#39;T4 * &#39;T5 * &#39;T6 * &#39;T7 * &#39;T8 * &#39;T9 * &#39;T10 -&gt; unit<br /><br />Full name: System.Action&lt;_,_,_,_,_,_,_,_,_,_&gt;<br /><br />--------------------<br />type Action&lt;&#39;T1,&#39;T2,&#39;T3,&#39;T4,&#39;T5,&#39;T6,&#39;T7,&#39;T8,&#39;T9,&#39;T10,&#39;T11&gt; =<br />&#160;&#160;delegate of &#39;T1 * &#39;T2 * &#39;T3 * &#39;T4 * &#39;T5 * &#39;T6 * &#39;T7 * &#39;T8 * &#39;T9 * &#39;T10 * &#39;T11 -&gt; unit<br /><br />Full name: System.Action&lt;_,_,_,_,_,_,_,_,_,_,_&gt;<br /><br />--------------------<br />type Action&lt;&#39;T1,&#39;T2,&#39;T3,&#39;T4,&#39;T5,&#39;T6,&#39;T7,&#39;T8,&#39;T9,&#39;T10,&#39;T11,&#39;T12&gt; =<br />&#160;&#160;delegate of &#39;T1 * &#39;T2 * &#39;T3 * &#39;T4 * &#39;T5 * &#39;T6 * &#39;T7 * &#39;T8 * &#39;T9 * &#39;T10 * &#39;T11 * &#39;T12 -&gt; unit<br /><br />Full name: System.Action&lt;_,_,_,_,_,_,_,_,_,_,_,_&gt;<br /><br />--------------------<br />type Action&lt;&#39;T1,&#39;T2,&#39;T3,&#39;T4,&#39;T5,&#39;T6,&#39;T7,&#39;T8,&#39;T9,&#39;T10,&#39;T11,&#39;T12,&#39;T13&gt; =<br />&#160;&#160;delegate of &#39;T1 * &#39;T2 * &#39;T3 * &#39;T4 * &#39;T5 * &#39;T6 * &#39;T7 * &#39;T8 * &#39;T9 * &#39;T10 * &#39;T11 * &#39;T12 * &#39;T13 -&gt; unit<br /><br />Full name: System.Action&lt;_,_,_,_,_,_,_,_,_,_,_,_,_&gt;<br /><br />--------------------<br />type Action&lt;&#39;T1,&#39;T2,&#39;T3,&#39;T4,&#39;T5,&#39;T6,&#39;T7,&#39;T8,&#39;T9,&#39;T10,&#39;T11,&#39;T12,&#39;T13,&#39;T14&gt; =<br />&#160;&#160;delegate of &#39;T1 * &#39;T2 * &#39;T3 * &#39;T4 * &#39;T5 * &#39;T6 * &#39;T7 * &#39;T8 * &#39;T9 * &#39;T10 * &#39;T11 * &#39;T12 * &#39;T13 * &#39;T14 -&gt; unit<br /><br />Full name: System.Action&lt;_,_,_,_,_,_,_,_,_,_,_,_,_,_&gt;<br /><br />--------------------<br />type Action&lt;&#39;T1,&#39;T2,&#39;T3,&#39;T4,&#39;T5,&#39;T6,&#39;T7,&#39;T8,&#39;T9,&#39;T10,&#39;T11,&#39;T12,&#39;T13,&#39;T14,&#39;T15&gt; =<br />&#160;&#160;delegate of &#39;T1 * &#39;T2 * &#39;T3 * &#39;T4 * &#39;T5 * &#39;T6 * &#39;T7 * &#39;T8 * &#39;T9 * &#39;T10 * &#39;T11 * &#39;T12 * &#39;T13 * &#39;T14 * &#39;T15 -&gt; unit<br /><br />Full name: System.Action&lt;_,_,_,_,_,_,_,_,_,_,_,_,_,_,_&gt;<br /><br />--------------------<br />type Action&lt;&#39;T1,&#39;T2,&#39;T3,&#39;T4,&#39;T5,&#39;T6,&#39;T7,&#39;T8,&#39;T9,&#39;T10,&#39;T11,&#39;T12,&#39;T13,&#39;T14,&#39;T15,&#39;T16&gt; =<br />&#160;&#160;delegate of &#39;T1 * &#39;T2 * &#39;T3 * &#39;T4 * &#39;T5 * &#39;T6 * &#39;T7 * &#39;T8 * &#39;T9 * &#39;T10 * &#39;T11 * &#39;T12 * &#39;T13 * &#39;T14 * &#39;T15 * &#39;T16 -&gt; unit<br /><br />Full name: System.Action&lt;_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_&gt;</div>
+<div class="tip" id="fs3">union case Action.DoSmth: Action</div>
+<div class="tip" id="fs4">union case Action.DoSmthWithFile: string -&gt; Action</div>
+<div class="tip" id="fs5">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />Full name: Microsoft.FSharp.Core.Operators.string<br /><br />--------------------<br />type string = String<br /><br />Full name: Microsoft.FSharp.Core.string</div>
+<div class="tip" id="fs6">union case Action.Punish: Action</div>
+<div class="tip" id="fs7">union case Action.Reward: Action</div>
+<div class="tip" id="fs8">union case Action.Exit: Action</div>
+<div class="tip" id="fs9">val print : a:(&#39;a -&gt; &#39;b) -&gt; (&#39;a -&gt; unit)<br /><br />Full name: Script.print</div>
+<div class="tip" id="fs10">val a : (&#39;a -&gt; &#39;b)</div>
+<div class="tip" id="fs11">val printfn : format:Printf.TextWriterFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.printfn</div>
+<div class="tip" id="fs12">let beep() = Console.Beep()<br />let get100Numbers() = [1..100]<br />let getDate() = DateTime.Now<br />let getTimeZoneInfo() = TimeZoneInfo.Local<br />let sleep() = printfn &quot;sleeping...&quot;; Threading.Thread.Sleep 10000<br />let sortArray() = <br />&#160;&#160;&#160;&#160;let r = new Random()<br />&#160;&#160;&#160;&#160;let array = Array.init 10 r.Next<br />&#160;&#160;&#160;&#160;printfn &quot;sorting: %A&quot; array<br />&#160;&#160;&#160;&#160;Array.sort array</div>
+<div class="tip" id="fs13">val doSmthActions : (unit -&gt; unit) list<br /><br />Full name: Script.doSmthActions</div>
+<div class="tip" id="fs14">val beep : unit -&gt; unit<br /><br />Full name: Script.beep</div>
+<div class="tip" id="fs15">val get100Numbers : unit -&gt; int list<br /><br />Full name: Script.get100Numbers</div>
+<div class="tip" id="fs16">val getDate : unit -&gt; DateTime<br /><br />Full name: Script.getDate</div>
+<div class="tip" id="fs17">val getTimeZoneInfo : unit -&gt; TimeZoneInfo<br /><br />Full name: Script.getTimeZoneInfo</div>
+<div class="tip" id="fs18">val sortArray : unit -&gt; int []<br /><br />Full name: Script.sortArray</div>
+<div class="tip" id="fs19">val sleep : unit -&gt; unit<br /><br />Full name: Script.sleep</div>
+<div class="tip" id="fs20">let doIfExists action fName = <br />&#160;&#160;&#160;&#160;if IO.File.Exists fName then action fName<br />&#160;&#160;&#160;&#160;else <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;IO.File.WriteAllText(fName, &quot;new file&quot;)<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;printfn &quot;file was created&quot;<br /><br />let getCreationTime = doIfExists &lt;| print IO.File.GetCreationTime<br />let getPath = IO.Path.GetFullPath<br />let read = doIfExists &lt;| print IO.File.ReadAllText<br /><br />let delete = doIfExists (fun fName -&gt; <br />&#160;&#160;&#160;&#160;IO.File.Delete fName <br />&#160;&#160;&#160;&#160;printfn &quot;file was deleted&quot;)<br /><br />let writeGuid = doIfExists (fun fName -&gt; <br />&#160;&#160;&#160;&#160;IO.File.WriteAllText(fName, Guid.NewGuid().ToString())<br />&#160;&#160;&#160;&#160;printfn &quot;guid was saved&quot;)</div>
+<div class="tip" id="fs21">val doSmthWithFileActions : (string -&gt; unit) list<br /><br />Full name: Script.doSmthWithFileActions</div>
+<div class="tip" id="fs22">val getCreationTime : (string -&gt; unit)<br /><br />Full name: Script.getCreationTime</div>
+<div class="tip" id="fs23">val getPath : arg00:string -&gt; string<br /><br />Full name: Script.getPath</div>
+<div class="tip" id="fs24">val writeGuid : (string -&gt; unit)<br /><br />Full name: Script.writeGuid</div>
+<div class="tip" id="fs25">val delete : (string -&gt; unit)<br /><br />Full name: Script.delete</div>
+<div class="tip" id="fs26">val read : (string -&gt; unit)<br /><br />Full name: Script.read</div>
+<div class="tip" id="fs27">Multiple items<br />type DecisionList&lt;&#39;a&gt; =<br />&#160;&#160;new : list:&#39;a list -&gt; DecisionList&lt;&#39;a&gt;<br />&#160;&#160;member Choose : unit -&gt; &#39;a<br />&#160;&#160;member Punish : unit -&gt; unit<br />&#160;&#160;member Reward : unit -&gt; unit<br /><br />Full name: Script.DecisionList&lt;_&gt;<br /><br />--------------------<br />new : list:&#39;a list -&gt; DecisionList&lt;&#39;a&gt;</div>
+<div class="tip" id="fs28">Multiple items<br />val list : &#39;a list<br /><br />--------------------<br />type &#39;T list = List&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.list&lt;_&gt;</div>
+<div class="tip" id="fs29">let variants = list.Length / 3 <br />&#160;&#160;&#160;&#160;let decisions = new Collections.Generic.List&lt;&#39;a&gt;(list)<br />&#160;&#160;&#160;&#160;let random = new Random()<br />&#160;&#160;&#160;&#160;let mutable last: Option&lt;int&gt; = None</div>
+<div class="tip" id="fs30">val i : DecisionList&lt;&#39;a&gt;</div>
+<div class="tip" id="fs31">member DecisionList.Choose : unit -&gt; &#39;a<br /><br />Full name: Script.DecisionList`1.Choose</div>
+<div class="tip" id="fs32">let index = random.Next(0, variants)<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;last &lt;- Some index<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;decisions.[index]</div>
+<div class="tip" id="fs33">member DecisionList.Reward : unit -&gt; unit<br /><br />Full name: Script.DecisionList`1.Reward</div>
+<div class="tip" id="fs34">match last with<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| None  -&gt; ()<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| Some index -&gt; <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;let decision = decisions.[index]<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;decisions.RemoveAt index<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;decisions.Insert (random.Next variants, decision)<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;last &lt;- None</div>
+<div class="tip" id="fs35">member DecisionList.Punish : unit -&gt; unit<br /><br />Full name: Script.DecisionList`1.Punish</div>
+<div class="tip" id="fs36">match last with<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| None -&gt; ()<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| Some index -&gt; <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;let decision = decisions.[index]<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;decisions.RemoveAt index<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;let newIndex = index + random.Next(variants, decisions.Count) <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;if newIndex &lt; decisions.Count then<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;decisions.Insert (newIndex, decision)<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;else <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;decisions.Add decision  <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;last &lt;- None</div>
+<div class="tip" id="fs37">Multiple items<br />type OS =<br />&#160;&#160;new : unit -&gt; OS<br />&#160;&#160;member DoSomething : unit -&gt; unit<br />&#160;&#160;member DoSomethingWithFile : fName:string -&gt; unit<br />&#160;&#160;member Exit : unit -&gt; unit<br />&#160;&#160;member Punish : unit -&gt; unit<br />&#160;&#160;member Reward : unit -&gt; unit<br /><br />Full name: Script.OS<br /><br />--------------------<br />new : unit -&gt; OS</div>
+<div class="tip" id="fs38">val doSmth : DecisionList&lt;(unit -&gt; unit)&gt;</div>
+<div class="tip" id="fs39">val doSmthWithFile : DecisionList&lt;(string -&gt; unit)&gt;</div>
+<div class="tip" id="fs40">val printLine : (string -&gt; unit)</div>
+<div class="tip" id="fs41">val core : MailboxProcessor&lt;Action&gt;</div>
+<div class="tip" id="fs42">Multiple items<br />type MailboxProcessor&lt;&#39;Msg&gt; =<br />&#160;&#160;interface IDisposable<br />&#160;&#160;new : body:(MailboxProcessor&lt;&#39;Msg&gt; -&gt; Async&lt;unit&gt;) * ?cancellationToken:CancellationToken -&gt; MailboxProcessor&lt;&#39;Msg&gt;<br />&#160;&#160;member Post : message:&#39;Msg -&gt; unit<br />&#160;&#160;member PostAndAsyncReply : buildMessage:(AsyncReplyChannel&lt;&#39;Reply&gt; -&gt; &#39;Msg) * ?timeout:int -&gt; Async&lt;&#39;Reply&gt;<br />&#160;&#160;member PostAndReply : buildMessage:(AsyncReplyChannel&lt;&#39;Reply&gt; -&gt; &#39;Msg) * ?timeout:int -&gt; &#39;Reply<br />&#160;&#160;member PostAndTryAsyncReply : buildMessage:(AsyncReplyChannel&lt;&#39;Reply&gt; -&gt; &#39;Msg) * ?timeout:int -&gt; Async&lt;&#39;Reply option&gt;<br />&#160;&#160;member Receive : ?timeout:int -&gt; Async&lt;&#39;Msg&gt;<br />&#160;&#160;member Scan : scanner:(&#39;Msg -&gt; Async&lt;&#39;T&gt; option) * ?timeout:int -&gt; Async&lt;&#39;T&gt;<br />&#160;&#160;member Start : unit -&gt; unit<br />&#160;&#160;member TryPostAndReply : buildMessage:(AsyncReplyChannel&lt;&#39;Reply&gt; -&gt; &#39;Msg) * ?timeout:int -&gt; &#39;Reply option<br />&#160;&#160;...<br /><br />Full name: Microsoft.FSharp.Control.MailboxProcessor&lt;_&gt;<br /><br />--------------------<br />new : body:(MailboxProcessor&lt;&#39;Msg&gt; -&gt; Async&lt;unit&gt;) * ?cancellationToken:Threading.CancellationToken -&gt; MailboxProcessor&lt;&#39;Msg&gt;</div>
+<div class="tip" id="fs43">static member MailboxProcessor.Start : body:(MailboxProcessor&lt;&#39;Msg&gt; -&gt; Async&lt;unit&gt;) * ?cancellationToken:Threading.CancellationToken -&gt; MailboxProcessor&lt;&#39;Msg&gt;</div>
+<div class="tip" id="fs44">val inbox : MailboxProcessor&lt;Action&gt;</div>
+<div class="tip" id="fs45">val command : (unit -&gt; Async&lt;unit&gt;)</div>
+<div class="tip" id="fs46">val async : AsyncBuilder<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.async</div>
+<div class="tip" id="fs47">val msg : Action</div>
+<div class="tip" id="fs48">member MailboxProcessor.Receive : ?timeout:int -&gt; Async&lt;&#39;Msg&gt;</div>
+<div class="tip" id="fs49">member DecisionList.Choose : unit -&gt; &#39;a</div>
+<div class="tip" id="fs50">val response : ((unit -&gt; unit) -&gt; (unit -&gt; unit) -&gt; Async&lt;unit&gt;)</div>
+<div class="tip" id="fs51">member DecisionList.Punish : unit -&gt; unit</div>
+<div class="tip" id="fs52">member DecisionList.Reward : unit -&gt; unit</div>
+<div class="tip" id="fs53">val fileName : string</div>
+<div class="tip" id="fs54">val p : (unit -&gt; unit)</div>
+<div class="tip" id="fs55">val r : (unit -&gt; unit)</div>
+<div class="tip" id="fs56">val i : OS</div>
+<div class="tip" id="fs57">member OS.DoSomething : unit -&gt; unit<br /><br />Full name: Script.OS.DoSomething</div>
+<div class="tip" id="fs58">member MailboxProcessor.Post : message:&#39;Msg -&gt; unit</div>
+<div class="tip" id="fs59">member OS.DoSomethingWithFile : fName:string -&gt; unit<br /><br />Full name: Script.OS.DoSomethingWithFile</div>
+<div class="tip" id="fs60">val fName : string</div>
+<div class="tip" id="fs61">member OS.Reward : unit -&gt; unit<br /><br />Full name: Script.OS.Reward</div>
+<div class="tip" id="fs62">member OS.Punish : unit -&gt; unit<br /><br />Full name: Script.OS.Punish</div>
+<div class="tip" id="fs63">member OS.Exit : unit -&gt; unit<br /><br />Full name: Script.OS.Exit</div>
+<div class="tip" id="fs64">val petrovich : OS<br /><br />Full name: Script.petrovich</div>
+<div class="tip" id="fs65">member OS.DoSomething : unit -&gt; unit</div>
+<div class="tip" id="fs66">member OS.DoSomethingWithFile : fName:string -&gt; unit</div>
+<div class="tip" id="fs67">member OS.Reward : unit -&gt; unit</div>
+<div class="tip" id="fs68">member OS.Punish : unit -&gt; unit</div>
+<div class="tip" id="fs69">member OS.Exit : unit -&gt; unit</div>
+

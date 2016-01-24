@@ -1,0 +1,41 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">let</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="f">force</span> (<span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">value</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="t">Lazy</span><span class="o">&lt;</span>_<span class="o">&gt;</span>) <span class="o">=</span> <span onmouseout="hideTip(event, 'fs2', 4)" onmouseover="showTip(event, 'fs2', 4)" class="i">value</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs4', 5)" onmouseover="showTip(event, 'fs4', 5)" class="f">Force</span>()
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs5', 6)" onmouseover="showTip(event, 'fs5', 6)" class="f">fix</span> <span onmouseout="hideTip(event, 'fs6', 7)" onmouseover="showTip(event, 'fs6', 7)" class="f">f</span> <span class="o">=</span> <span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs7', 8)" onmouseover="showTip(event, 'fs7', 8)" class="i">x</span> <span class="o">=</span> <span class="k">lazy</span> (<span onmouseout="hideTip(event, 'fs6', 9)" onmouseover="showTip(event, 'fs6', 9)" class="f">f</span> <span onmouseout="hideTip(event, 'fs7', 10)" onmouseover="showTip(event, 'fs7', 10)" class="i">x</span>) <span class="k">in</span> <span onmouseout="hideTip(event, 'fs7', 11)" onmouseover="showTip(event, 'fs7', 11)" class="i">x</span>
+
+<span class="c">// Examples</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs8', 12)" onmouseover="showTip(event, 'fs8', 12)" class="i">fac</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs5', 13)" onmouseover="showTip(event, 'fs5', 13)" class="f">fix</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs9', 14)" onmouseover="showTip(event, 'fs9', 14)" class="i">f</span> <span onmouseout="hideTip(event, 'fs10', 15)" onmouseover="showTip(event, 'fs10', 15)" class="i">x</span> <span class="k">-&gt;</span> <span class="k">if</span> <span onmouseout="hideTip(event, 'fs10', 16)" onmouseover="showTip(event, 'fs10', 16)" class="i">x</span> <span class="o">=</span> <span class="n">0</span> <span class="k">then</span> <span class="n">1</span> <span class="k">else</span> <span onmouseout="hideTip(event, 'fs10', 17)" onmouseover="showTip(event, 'fs10', 17)" class="i">x</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs1', 18)" onmouseover="showTip(event, 'fs1', 18)" class="f">force</span> <span onmouseout="hideTip(event, 'fs9', 19)" onmouseover="showTip(event, 'fs9', 19)" class="i">f</span> (<span onmouseout="hideTip(event, 'fs10', 20)" onmouseover="showTip(event, 'fs10', 20)" class="i">x</span> <span class="o">-</span> <span class="n">1</span>) )
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs11', 21)" onmouseover="showTip(event, 'fs11', 21)" class="i">nums</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs5', 22)" onmouseover="showTip(event, 'fs5', 22)" class="f">fix</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs12', 23)" onmouseover="showTip(event, 'fs12', 23)" class="i">v</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs13', 24)" onmouseover="showTip(event, 'fs13', 24)" class="i">seq</span> { <span class="k">yield</span> <span class="n">0</span>; <span class="k">yield!</span> <span onmouseout="hideTip(event, 'fs14', 25)" onmouseover="showTip(event, 'fs14', 25)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs15', 26)" onmouseover="showTip(event, 'fs15', 26)" class="f">map</span> ((<span class="o">+</span>) <span class="n">1</span>) (<span onmouseout="hideTip(event, 'fs1', 27)" onmouseover="showTip(event, 'fs1', 27)" class="f">force</span> <span onmouseout="hideTip(event, 'fs12', 28)" onmouseover="showTip(event, 'fs12', 28)" class="i">v</span>) }) 
+
+<span onmouseout="hideTip(event, 'fs1', 29)" onmouseover="showTip(event, 'fs1', 29)" class="f">force</span> <span onmouseout="hideTip(event, 'fs8', 30)" onmouseover="showTip(event, 'fs8', 30)" class="i">fac</span> <span class="n">10</span> <span class="c">// 10! = 3628800</span>
+<span onmouseout="hideTip(event, 'fs14', 31)" onmouseover="showTip(event, 'fs14', 31)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs16', 32)" onmouseover="showTip(event, 'fs16', 32)" class="f">take</span> <span class="n">10</span> (<span onmouseout="hideTip(event, 'fs1', 33)" onmouseover="showTip(event, 'fs1', 33)" class="f">force</span> <span onmouseout="hideTip(event, 'fs11', 34)" onmouseover="showTip(event, 'fs11', 34)" class="i">nums</span>) <span class="c">// seq [0; 1; 2; 3; ...]</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">val force : value:Lazy&lt;&#39;a&gt; -&gt; &#39;a<br /><br />Full name: Script.force</div>
+<div class="tip" id="fs2">val value : Lazy&lt;&#39;a&gt;</div>
+<div class="tip" id="fs3">Multiple items<br />active recognizer Lazy: Lazy&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.( |Lazy| )<br /><br />--------------------<br />type Lazy&lt;&#39;T&gt; = System.Lazy&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Control.Lazy&lt;_&gt;</div>
+<div class="tip" id="fs4">member System.Lazy.Force : unit -&gt; &#39;T</div>
+<div class="tip" id="fs5">val fix : f:(Lazy&lt;&#39;a&gt; -&gt; &#39;a) -&gt; Lazy&lt;&#39;a&gt;<br /><br />Full name: Script.fix</div>
+<div class="tip" id="fs6">val f : (Lazy&lt;&#39;a&gt; -&gt; &#39;a)</div>
+<div class="tip" id="fs7">val x : Lazy&lt;&#39;a&gt;</div>
+<div class="tip" id="fs8">val fac : Lazy&lt;(int -&gt; int)&gt;<br /><br />Full name: Script.fac</div>
+<div class="tip" id="fs9">val f : Lazy&lt;(int -&gt; int)&gt;</div>
+<div class="tip" id="fs10">val x : int</div>
+<div class="tip" id="fs11">val nums : Lazy&lt;seq&lt;int&gt;&gt;<br /><br />Full name: Script.nums</div>
+<div class="tip" id="fs12">val v : Lazy&lt;seq&lt;int&gt;&gt;</div>
+<div class="tip" id="fs13">Multiple items<br />val seq : sequence:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Core.Operators.seq<br /><br />--------------------<br />type seq&lt;&#39;T&gt; = System.Collections.Generic.IEnumerable&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.seq&lt;_&gt;</div>
+<div class="tip" id="fs14">module Seq<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs15">val map : mapping:(&#39;T -&gt; &#39;U) -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;U&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.map</div>
+<div class="tip" id="fs16">val take : count:int -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.take</div>
+

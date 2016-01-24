@@ -1,0 +1,90 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+<span class="l">38: </span>
+<span class="l">39: </span>
+<span class="l">40: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">namespace</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">RodhernF</span>
+
+<span class="k">open</span> <span class="i">UnityEngine</span>
+<span class="k">open</span> <span class="i">KSP</span>
+
+[&lt;<span class="i">KSPAddon</span>(<span class="i">KSPAddon</span><span class="o">.</span><span class="i">Startup</span><span class="o">.</span><span class="i">EveryScene</span>, <span class="k">true</span>)&gt;]
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs1', 2)" onmouseover="showTip(event, 'fs1', 2)" class="t">RodhernF</span> () <span class="o">=</span> 
+    <span class="k">inherit</span> <span class="i">MonoBehaviour</span> ()
+    
+    <span class="c">/// Write message to the KSP.log file.</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs2', 3)" onmouseover="showTip(event, 'fs2', 3)" class="i">log</span> <span class="i">s</span> <span class="o">=</span>
+        <span class="k">do</span> <span class="i">Debug</span><span class="o">.</span><span class="i">Log</span> (<span class="s">&quot;[RodhernF] &quot;</span> <span class="o">+</span> <span class="i">s</span>)
+   
+    <span class="c">/// Write message on screen and to log file.</span>
+    <span class="k">let</span> <span class="i">msg</span> <span class="i">s</span> <span class="o">=</span>
+        <span class="k">do</span> <span onmouseout="hideTip(event, 'fs2', 4)" onmouseover="showTip(event, 'fs2', 4)" class="i">log</span> <span class="i">s</span>
+        <span class="k">do</span> <span class="i">ScreenMessages</span><span class="o">.</span><span class="i">PostScreenMessage</span>(<span class="i">s</span>, <span class="n">5.f</span>) <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs3', 5)" onmouseover="showTip(event, 'fs3', 5)" class="i">ignore</span>
+    
+    <span class="c">/// A handler called when a change of scene is requested.</span>
+    <span class="k">let</span> <span class="i">onSceneSwitchRequest</span> <span class="o">=</span>
+        <span class="k">let</span> <span class="i">handler</span> (<span class="i">actionFromTo</span><span class="o">:</span> <span class="i">GameEvents</span><span class="o">.</span><span class="i">FromToAction</span><span class="o">&lt;</span><span class="i">GameScenes</span>,<span class="i">GameScenes</span><span class="o">&gt;</span>) <span class="o">=</span>
+            <span class="k">do</span> <span onmouseout="hideTip(event, 'fs4', 6)" onmouseover="showTip(event, 'fs4', 6)" class="i">sprintf</span> <span class="s">&quot;Going from &#39;%A&#39; to &#39;%A&#39;.&quot;</span>
+                       (<span class="i">actionFromTo</span><span class="o">.</span><span class="i">``from``</span>) (<span class="i">actionFromTo</span><span class="o">.</span><span class="i">``to``</span>)
+               <span class="o">|&gt;</span> <span class="i">msg</span>
+        <span class="k">new</span> <span class="i">EventData</span><span class="o">&lt;</span>_<span class="o">&gt;</span><span class="o">.</span><span class="i">OnEvent</span>(<span class="i">handler</span>)
+    
+    <span class="c">/// A handler called when a vessel is selected in the launch dialog.</span>
+    <span class="k">let</span> <span class="i">onVesselSelect</span> <span class="o">=</span>
+        <span class="k">let</span> <span class="i">handler</span> (<span class="i">template</span><span class="o">:</span> <span class="i">ShipTemplate</span>) <span class="o">=</span>
+            <span class="k">do</span> <span onmouseout="hideTip(event, 'fs4', 7)" onmouseover="showTip(event, 'fs4', 7)" class="i">sprintf</span> <span class="s">&quot;Selected &#39;%s&#39;.&quot;</span>
+                       (<span class="i">template</span><span class="o">.</span><span class="i">shipName</span>)
+               <span class="o">|&gt;</span> <span class="i">msg</span>
+        <span class="k">new</span> <span class="i">EventData</span><span class="o">&lt;</span>_<span class="o">&gt;</span><span class="o">.</span><span class="i">OnEvent</span>(<span class="i">handler</span>)
+    
+    <span class="c">/// This is the method that KSP/Unity will invoke.</span>
+    <span class="k">member</span> <span class="k">public</span> <span class="i">rodhernf</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs5', 8)" onmouseover="showTip(event, 'fs5', 8)" class="f">Start</span> () <span class="o">=</span>
+        <span class="k">do</span> <span onmouseout="hideTip(event, 'fs2', 9)" onmouseover="showTip(event, 'fs2', 9)" class="i">log</span> <span class="s">&quot;rodhernf.Start begin&quot;</span>
+        <span class="i">GameEvents</span><span class="o">.</span><span class="i">onGameSceneSwitchRequested</span><span class="o">.</span><span class="i">Add</span> <span class="i">onSceneSwitchRequest</span>
+        <span class="i">GameEvents</span><span class="o">.</span><span class="i">onGUILaunchScreenVesselSelected</span><span class="o">.</span><span class="i">Add</span> <span class="i">onVesselSelect</span>
+        <span class="k">do</span> <span onmouseout="hideTip(event, 'fs2', 10)" onmouseover="showTip(event, 'fs2', 10)" class="i">log</span> <span class="s">&quot;rodhernf.Start end&quot;</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">Multiple items<br />type RodhernF =<br />&#160;&#160;inherit obj<br />&#160;&#160;new : unit -&gt; RodhernF<br />&#160;&#160;member Start : unit -&gt; &#39;a<br /><br />Full name: RodhernF.RodhernF<br /><br />--------------------<br />new : unit -&gt; RodhernF</div>
+<div class="tip" id="fs2">val log : value:&#39;T -&gt; &#39;T (requires member Log)<br /><br />Full name: Microsoft.FSharp.Core.Operators.log</div>
+<div class="tip" id="fs3">val ignore : value:&#39;T -&gt; unit<br /><br />Full name: Microsoft.FSharp.Core.Operators.ignore</div>
+<div class="tip" id="fs4">val sprintf : format:Printf.StringFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.sprintf</div>
+<div class="tip" id="fs5">member RodhernF.Start : unit -&gt; &#39;a<br /><br />Full name: RodhernF.RodhernF.Start<br /><em><br /><br />&#160;This is the method that KSP/Unity will invoke.</em></div>
+

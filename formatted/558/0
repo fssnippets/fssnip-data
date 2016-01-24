@@ -1,0 +1,55 @@
+<h2><a name="Implementation" class="anchor" href="#Implementation">Implementation</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">module</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="t">Seq</span> <span class="o">=</span>
+<span class="c">/// Iterates over the elements of the input sequence and groups adjacent</span>
+<span class="c">/// elements. A new group is started after the specified predicate holds </span>
+<span class="c">/// about the element of the sequence (and at the beginning of the iteration).</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="f">groupAfter</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="f">f</span> (<span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="i">input</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="t">seq</span><span class="o">&lt;</span>_<span class="o">&gt;</span>) <span class="o">=</span> 
+        <span class="k">use</span> <span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="i">en</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs4', 7)" onmouseover="showTip(event, 'fs4', 7)" class="i">input</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs7', 8)" onmouseover="showTip(event, 'fs7', 8)" class="f">GetEnumerator</span>()
+        <span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs8', 9)" onmouseover="showTip(event, 'fs8', 9)" class="f">group</span>() <span class="o">=</span>
+            [   <span class="k">yield</span> <span onmouseout="hideTip(event, 'fs6', 10)" onmouseover="showTip(event, 'fs6', 10)" class="i">en</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs9', 11)" onmouseover="showTip(event, 'fs9', 11)" class="i">Current</span>
+                <span class="k">if</span> <span onmouseout="hideTip(event, 'fs10', 12)" onmouseover="showTip(event, 'fs10', 12)" class="f">not</span>(<span onmouseout="hideTip(event, 'fs3', 13)" onmouseover="showTip(event, 'fs3', 13)" class="f">f</span> <span onmouseout="hideTip(event, 'fs6', 14)" onmouseover="showTip(event, 'fs6', 14)" class="i">en</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs9', 15)" onmouseover="showTip(event, 'fs9', 15)" class="i">Current</span>) <span class="o">&amp;&amp;</span> <span onmouseout="hideTip(event, 'fs6', 16)" onmouseover="showTip(event, 'fs6', 16)" class="i">en</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs11', 17)" onmouseover="showTip(event, 'fs11', 17)" class="f">MoveNext</span>() <span class="k">then</span>
+                    <span class="k">yield!</span> <span onmouseout="hideTip(event, 'fs8', 18)" onmouseover="showTip(event, 'fs8', 18)" class="f">group</span>() ]
+        <span onmouseout="hideTip(event, 'fs5', 19)" onmouseover="showTip(event, 'fs5', 19)" class="i">seq</span>{
+            <span class="k">while</span> <span onmouseout="hideTip(event, 'fs6', 20)" onmouseover="showTip(event, 'fs6', 20)" class="i">en</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs11', 21)" onmouseover="showTip(event, 'fs11', 21)" class="f">MoveNext</span>() <span class="k">do</span>
+                <span class="k">yield</span> <span onmouseout="hideTip(event, 'fs8', 22)" onmouseover="showTip(event, 'fs8', 22)" class="f">group</span>() <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs1', 23)" onmouseover="showTip(event, 'fs1', 23)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs12', 24)" onmouseover="showTip(event, 'fs12', 24)" class="f">ofList</span> }
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Example" class="anchor" href="#Example">Example</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp">[<span class="n">3</span>;<span class="n">3</span>;<span class="n">2</span>;<span class="n">4</span>;<span class="n">1</span>;<span class="n">2</span>] <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs13', 25)" onmouseover="showTip(event, 'fs13', 25)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 26)" onmouseover="showTip(event, 'fs2', 26)" class="f">groupAfter</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs14', 27)" onmouseover="showTip(event, 'fs14', 27)" class="i">n</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs14', 28)" onmouseover="showTip(event, 'fs14', 28)" class="i">n</span><span class="o">%</span><span class="n">2</span> <span class="o">=</span> <span class="n">1</span>);;
+<span class="c">/// val it : seq&lt;seq&lt;int&gt;&gt; = seq [[3]; [3]; [2; 4; 1]; [2]]</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">module Seq<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs2">val groupAfter : f:(&#39;a -&gt; bool) -&gt; input:seq&lt;&#39;a&gt; -&gt; seq&lt;seq&lt;&#39;a&gt;&gt;<br /><br />Full name: Script.Seq.groupAfter<br /><em><br /><br />&#160;Iterates over the elements of the input sequence and groups adjacent<br />&#160;elements. A new group is started after the specified predicate holds <br />&#160;about the element of the sequence (and at the beginning of the iteration).</em></div>
+<div class="tip" id="fs3">val f : (&#39;a -&gt; bool)</div>
+<div class="tip" id="fs4">val input : seq&lt;&#39;a&gt;</div>
+<div class="tip" id="fs5">Multiple items<br />val seq : sequence:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Core.Operators.seq<br /><br />--------------------<br />type seq&lt;&#39;T&gt; = System.Collections.Generic.IEnumerable&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.seq&lt;_&gt;</div>
+<div class="tip" id="fs6">val en : System.Collections.Generic.IEnumerator&lt;&#39;a&gt;</div>
+<div class="tip" id="fs7">System.Collections.Generic.IEnumerable.GetEnumerator() : System.Collections.Generic.IEnumerator&lt;&#39;a&gt;</div>
+<div class="tip" id="fs8">val group : (unit -&gt; &#39;a list)</div>
+<div class="tip" id="fs9">property System.Collections.Generic.IEnumerator.Current: &#39;a</div>
+<div class="tip" id="fs10">val not : value:bool -&gt; bool<br /><br />Full name: Microsoft.FSharp.Core.Operators.not</div>
+<div class="tip" id="fs11">System.Collections.IEnumerator.MoveNext() : bool</div>
+<div class="tip" id="fs12">val ofList : source:&#39;T list -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.ofList</div>
+<div class="tip" id="fs13">Multiple items<br />module Seq<br /><br />from Script<br /><br />--------------------<br />module Seq<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs14">val n : int</div>
+

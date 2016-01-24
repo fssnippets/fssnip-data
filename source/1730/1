@@ -1,0 +1,14 @@
+module AplMode =
+  let (%) l n = List.map (fun v -> v % n) l
+  let (=) l b = List.map (fun v -> v = b) l
+  let (||) l1 l2 = List.zip l1 l2 |> List.map (fun (a, b) -> a || b)
+  let (~+) l = List.reduce (+) l
+
+  type List<'T> with 
+    member x.Item with get(a) = List.zip a x |> List.filter fst |> List.map snd
+
+open AplMode
+let w = [1..999]
+
+// See: http://theburningmonk.com/2015/07/apl-solving-euler-problem-1/
++(w.[w%3=0||w%5=0])

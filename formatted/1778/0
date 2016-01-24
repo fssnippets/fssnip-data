@@ -1,0 +1,179 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+<span class="l">38: </span>
+<span class="l">39: </span>
+<span class="l">40: </span>
+<span class="l">41: </span>
+<span class="l">42: </span>
+<span class="l">43: </span>
+<span class="l">44: </span>
+<span class="l">45: </span>
+<span class="l">46: </span>
+<span class="l">47: </span>
+<span class="l">48: </span>
+<span class="l">49: </span>
+<span class="l">50: </span>
+<span class="l">51: </span>
+<span class="l">52: </span>
+<span class="l">53: </span>
+<span class="l">54: </span>
+<span class="l">55: </span>
+<span class="l">56: </span>
+<span class="l">57: </span>
+<span class="l">58: </span>
+<span class="l">59: </span>
+<span class="l">60: </span>
+<span class="l">61: </span>
+<span class="l">62: </span>
+<span class="l">63: </span>
+<span class="l">64: </span>
+<span class="l">65: </span>
+<span class="l">66: </span>
+<span class="l">67: </span>
+<span class="l">68: </span>
+<span class="l">69: </span>
+<span class="l">70: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">// Microsoft: DEV207.1x Programming in F#</span>
+<span class="c">// Module 2 assignment solution</span>
+<span class="c">// This code with proper indentation is available: [LINK]</span>
+
+<span class="c">(*</span>
+<span class="c">   Please provide person&#39;s &lt;name&gt; followed by single space and &lt;age&gt;. Submit with &lt;enter&gt; key. </span>
+<span class="c">   Name have to be not empty string, age - integer in range [0..100]</span>
+<span class="c">   Invalid input will end reading people and prints result.</span>
+
+<span class="c">   Expected input:</span>
+<span class="c">      &lt;name :string&gt; &lt;age :int&gt;</span>
+
+<span class="c">    Example:</span>
+<span class="c">      John 25</span>
+
+<span class="c">    Hit &lt;enter&gt; key to stop reading people and print result.</span>
+<span class="c"> *)</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">System</span>
+
+<span class="c">// askForPerson: Reads person provided by the user from cmdline</span>
+<span class="k">exception</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="t">InvalidInputError</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="t">string</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="f">askForPerson</span> <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="i">counter</span> <span class="o">:</span> (<span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="t">bool</span> <span class="o">*</span> (<span onmouseout="hideTip(event, 'fs3', 7)" onmouseover="showTip(event, 'fs3', 7)" class="t">string</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs7', 8)" onmouseover="showTip(event, 'fs7', 8)" class="t">int</span>)) <span class="o">=</span>
+    <span class="k">try</span>
+        <span onmouseout="hideTip(event, 'fs8', 9)" onmouseover="showTip(event, 'fs8', 9)" class="f">printfn</span> <span class="s">&quot;Enter Person #</span><span class="pf">%d</span><span class="s"> &lt;name&gt; &lt;age&gt;:&quot;</span> <span onmouseout="hideTip(event, 'fs5', 10)" onmouseover="showTip(event, 'fs5', 10)" class="i">counter</span>
+        <span onmouseout="hideTip(event, 'fs9', 11)" onmouseover="showTip(event, 'fs9', 11)" class="t">Console</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs10', 12)" onmouseover="showTip(event, 'fs10', 12)" class="f">ReadLine</span>()
+            <span class="o">|&gt;</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs11', 13)" onmouseover="showTip(event, 'fs11', 13)" class="i">input</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs11', 14)" onmouseover="showTip(event, 'fs11', 14)" class="i">input</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs12', 15)" onmouseover="showTip(event, 'fs12', 15)" class="f">Split</span>())
+            <span class="c">// validate input line contains 2 words</span>
+            <span class="o">|&gt;</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs13', 16)" onmouseover="showTip(event, 'fs13', 16)" class="i">split</span> <span class="k">-&gt;</span>
+                    <span class="k">if</span> <span onmouseout="hideTip(event, 'fs13', 17)" onmouseover="showTip(event, 'fs13', 17)" class="i">split</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs14', 18)" onmouseover="showTip(event, 'fs14', 18)" class="i">Length</span> <span class="o">&lt;&gt;</span> <span class="n">2</span> <span class="k">then</span> <span onmouseout="hideTip(event, 'fs15', 19)" onmouseover="showTip(event, 'fs15', 19)" class="f">raise</span> (<span onmouseout="hideTip(event, 'fs2', 20)" onmouseover="showTip(event, 'fs2', 20)" class="t">InvalidInputError</span>(<span class="s">&quot;Wrong input: expected 2 words separated by space&quot;</span>))
+                    <span class="k">else</span> <span onmouseout="hideTip(event, 'fs13', 21)" onmouseover="showTip(event, 'fs13', 21)" class="i">split</span>
+                )
+            <span class="c">// if so, make a tuple (name :string * age :int)</span>
+            <span class="o">|&gt;</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs13', 22)" onmouseover="showTip(event, 'fs13', 22)" class="i">split</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs13', 23)" onmouseover="showTip(event, 'fs13', 23)" class="i">split</span><span class="o">.</span>[<span class="n">0</span>], <span onmouseout="hideTip(event, 'fs7', 24)" onmouseover="showTip(event, 'fs7', 24)" class="f">int</span> <span onmouseout="hideTip(event, 'fs13', 25)" onmouseover="showTip(event, 'fs13', 25)" class="i">split</span><span class="o">.</span>[<span class="n">1</span>])
+            <span class="c">// check if name is not empty and age is in range</span>
+            <span class="o">|&gt;</span> (<span class="k">fun</span> (<span onmouseout="hideTip(event, 'fs16', 26)" onmouseover="showTip(event, 'fs16', 26)" class="i">name</span>, <span onmouseout="hideTip(event, 'fs17', 27)" onmouseover="showTip(event, 'fs17', 27)" class="i">age</span>) <span class="k">-&gt;</span>
+                    <span class="k">if</span> <span onmouseout="hideTip(event, 'fs18', 28)" onmouseover="showTip(event, 'fs18', 28)" class="t">String</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs19', 29)" onmouseover="showTip(event, 'fs19', 29)" class="f">IsNullOrWhiteSpace</span> <span onmouseout="hideTip(event, 'fs16', 30)" onmouseover="showTip(event, 'fs16', 30)" class="i">name</span> <span class="k">then</span> <span onmouseout="hideTip(event, 'fs15', 31)" onmouseover="showTip(event, 'fs15', 31)" class="f">raise</span> (<span onmouseout="hideTip(event, 'fs2', 32)" onmouseover="showTip(event, 'fs2', 32)" class="t">InvalidInputError</span>(<span class="s">&quot;Wrong input: name cannot be empty&quot;</span>))
+                    <span class="k">elif</span> <span onmouseout="hideTip(event, 'fs17', 33)" onmouseover="showTip(event, 'fs17', 33)" class="i">age</span> <span class="o">&lt;</span> <span class="n">0</span> <span class="o">||</span> <span onmouseout="hideTip(event, 'fs17', 34)" onmouseover="showTip(event, 'fs17', 34)" class="i">age</span> <span class="o">&gt;</span> <span class="n">100</span>         <span class="k">then</span> <span onmouseout="hideTip(event, 'fs15', 35)" onmouseover="showTip(event, 'fs15', 35)" class="f">raise</span> (<span onmouseout="hideTip(event, 'fs2', 36)" onmouseover="showTip(event, 'fs2', 36)" class="t">InvalidInputError</span>(<span class="s">&quot;Wrong input: age must be in range [0, 100]&quot;</span>))
+                    <span class="k">else</span> <span class="k">true</span>, (<span onmouseout="hideTip(event, 'fs16', 37)" onmouseover="showTip(event, 'fs16', 37)" class="i">name</span>, <span onmouseout="hideTip(event, 'fs17', 38)" onmouseover="showTip(event, 'fs17', 38)" class="i">age</span>)
+               )
+
+    <span class="k">with</span> 
+        | _ <span class="k">-&gt;</span>
+            <span onmouseout="hideTip(event, 'fs8', 39)" onmouseover="showTip(event, 'fs8', 39)" class="f">printfn</span> <span class="s">&quot;Stop reading - thank you!</span><span class="e">\n</span><span class="s">&quot;</span> 
+            <span class="k">false</span>, (<span class="s">&quot;&quot;</span>, <span class="n">0</span>)
+
+<span class="c">// readPeopleUntilValid: asking for people while valid input is provided</span>
+<span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs20', 40)" onmouseover="showTip(event, 'fs20', 40)" class="f">readPeopleWhileValid</span> (<span onmouseout="hideTip(event, 'fs5', 41)" onmouseover="showTip(event, 'fs5', 41)" class="i">counter</span> <span class="o">:</span><span onmouseout="hideTip(event, 'fs7', 42)" onmouseover="showTip(event, 'fs7', 42)" class="t">int</span>) (<span onmouseout="hideTip(event, 'fs21', 43)" onmouseover="showTip(event, 'fs21', 43)" class="i">people</span> <span class="o">:</span>(<span onmouseout="hideTip(event, 'fs3', 44)" onmouseover="showTip(event, 'fs3', 44)" class="t">string</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs7', 45)" onmouseover="showTip(event, 'fs7', 45)" class="t">int</span>) <span onmouseout="hideTip(event, 'fs22', 46)" onmouseover="showTip(event, 'fs22', 46)" class="t">list</span>) <span class="o">:</span>(<span onmouseout="hideTip(event, 'fs3', 47)" onmouseover="showTip(event, 'fs3', 47)" class="t">string</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs7', 48)" onmouseover="showTip(event, 'fs7', 48)" class="t">int</span>) <span onmouseout="hideTip(event, 'fs22', 49)" onmouseover="showTip(event, 'fs22', 49)" class="t">list</span> <span class="o">=</span>
+    <span class="k">match</span> <span onmouseout="hideTip(event, 'fs4', 50)" onmouseover="showTip(event, 'fs4', 50)" class="f">askForPerson</span> <span onmouseout="hideTip(event, 'fs5', 51)" onmouseover="showTip(event, 'fs5', 51)" class="i">counter</span> <span class="k">with</span>
+        | <span class="k">false</span>, _      <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs21', 52)" onmouseover="showTip(event, 'fs21', 52)" class="i">people</span>
+        | <span class="k">true</span>, <span onmouseout="hideTip(event, 'fs23', 53)" onmouseover="showTip(event, 'fs23', 53)" class="i">person</span>  <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs20', 54)" onmouseover="showTip(event, 'fs20', 54)" class="f">readPeopleWhileValid</span> (<span onmouseout="hideTip(event, 'fs5', 55)" onmouseover="showTip(event, 'fs5', 55)" class="i">counter</span> <span class="o">+</span> <span class="n">1</span>) (<span onmouseout="hideTip(event, 'fs23', 56)" onmouseover="showTip(event, 'fs23', 56)" class="i">person</span><span class="o">::</span><span onmouseout="hideTip(event, 'fs21', 57)" onmouseover="showTip(event, 'fs21', 57)" class="i">people</span>)
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs24', 58)" onmouseover="showTip(event, 'fs24', 58)" class="f">aduldTeenOrKid</span> <span onmouseout="hideTip(event, 'fs17', 59)" onmouseover="showTip(event, 'fs17', 59)" class="i">age</span> <span class="o">=</span> 
+    <span class="k">if</span> <span onmouseout="hideTip(event, 'fs17', 60)" onmouseover="showTip(event, 'fs17', 60)" class="i">age</span> <span class="o">&lt;</span> <span class="n">13</span> <span class="k">then</span> <span class="s">&quot;is a kid&quot;</span>
+    <span class="k">elif</span> <span onmouseout="hideTip(event, 'fs17', 61)" onmouseover="showTip(event, 'fs17', 61)" class="i">age</span> <span class="o">&lt;</span> <span class="n">20</span> <span class="k">then</span> <span class="s">&quot;is teenage&quot;</span>
+    <span class="k">else</span> <span class="s">&quot;is no longer teenager&quot;</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs25', 62)" onmouseover="showTip(event, 'fs25', 62)" class="f">displayPerson</span> (<span onmouseout="hideTip(event, 'fs16', 63)" onmouseover="showTip(event, 'fs16', 63)" class="i">name</span>, <span onmouseout="hideTip(event, 'fs17', 64)" onmouseover="showTip(event, 'fs17', 64)" class="i">age</span>) <span class="o">=</span>
+    <span onmouseout="hideTip(event, 'fs26', 65)" onmouseover="showTip(event, 'fs26', 65)" class="f">sprintf</span> <span class="s">&quot;</span><span class="pf">%s</span><span class="s"> is </span><span class="pf">%d</span><span class="s"> years old and </span><span class="pf">%s</span><span class="s">,&quot;</span> <span onmouseout="hideTip(event, 'fs16', 66)" onmouseover="showTip(event, 'fs16', 66)" class="i">name</span> <span onmouseout="hideTip(event, 'fs17', 67)" onmouseover="showTip(event, 'fs17', 67)" class="i">age</span> (<span onmouseout="hideTip(event, 'fs24', 68)" onmouseover="showTip(event, 'fs24', 68)" class="f">aduldTeenOrKid</span> <span onmouseout="hideTip(event, 'fs17', 69)" onmouseover="showTip(event, 'fs17', 69)" class="i">age</span>)
+
+[&lt;<span onmouseout="hideTip(event, 'fs27', 70)" onmouseover="showTip(event, 'fs27', 70)" class="t">EntryPoint</span>&gt;]
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs28', 71)" onmouseover="showTip(event, 'fs28', 71)" class="f">main</span> <span onmouseout="hideTip(event, 'fs29', 72)" onmouseover="showTip(event, 'fs29', 72)" class="i">argv</span> <span class="o">=</span> 
+    <span class="c">// Start asking for people, begin with 1st person and empty people list</span>
+    <span onmouseout="hideTip(event, 'fs20', 73)" onmouseover="showTip(event, 'fs20', 73)" class="f">readPeopleWhileValid</span> <span class="n">1</span> []
+    <span class="c">// as we insert people at the begining of the list need to reverse before printing result</span>
+    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs30', 74)" onmouseover="showTip(event, 'fs30', 74)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs31', 75)" onmouseover="showTip(event, 'fs31', 75)" class="f">rev</span>
+    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs30', 76)" onmouseover="showTip(event, 'fs30', 76)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs32', 77)" onmouseover="showTip(event, 'fs32', 77)" class="f">iter</span> (<span onmouseout="hideTip(event, 'fs25', 78)" onmouseover="showTip(event, 'fs25', 78)" class="f">displayPerson</span> <span class="o">&gt;</span><span class="o">&gt;</span> <span onmouseout="hideTip(event, 'fs8', 79)" onmouseover="showTip(event, 'fs8', 79)" class="f">printfn</span> <span class="s">&quot;</span><span class="pf">%s</span><span class="s">&quot;</span>)
+
+    <span onmouseout="hideTip(event, 'fs8', 80)" onmouseover="showTip(event, 'fs8', 80)" class="f">printfn</span> <span class="s">&quot;</span><span class="e">\n</span><span class="s">Press any key to exit...&quot;</span>
+    <span onmouseout="hideTip(event, 'fs9', 81)" onmouseover="showTip(event, 'fs9', 81)" class="t">Console</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs33', 82)" onmouseover="showTip(event, 'fs33', 82)" class="f">ReadKey</span>() <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs34', 83)" onmouseover="showTip(event, 'fs34', 83)" class="f">ignore</span>
+    <span class="n">0</span> <span class="c">// return an integer exit code</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace System</div>
+<div class="tip" id="fs2">exception InvalidInputError of string<br /><br />Full name: Script.InvalidInputError</div>
+<div class="tip" id="fs3">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />Full name: Microsoft.FSharp.Core.Operators.string<br /><br />--------------------<br />type string = String<br /><br />Full name: Microsoft.FSharp.Core.string</div>
+<div class="tip" id="fs4">val askForPerson : counter:int -&gt; bool * (string * int)<br /><br />Full name: Script.askForPerson</div>
+<div class="tip" id="fs5">val counter : int</div>
+<div class="tip" id="fs6">type bool = Boolean<br /><br />Full name: Microsoft.FSharp.Core.bool</div>
+<div class="tip" id="fs7">Multiple items<br />val int : value:&#39;T -&gt; int (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.int<br /><br />--------------------<br />type int = int32<br /><br />Full name: Microsoft.FSharp.Core.int<br /><br />--------------------<br />type int&lt;&#39;Measure&gt; = int<br /><br />Full name: Microsoft.FSharp.Core.int&lt;_&gt;</div>
+<div class="tip" id="fs8">val printfn : format:Printf.TextWriterFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.printfn</div>
+<div class="tip" id="fs9">type Console =<br />&#160;&#160;static member BackgroundColor : ConsoleColor with get, set<br />&#160;&#160;static member Beep : unit -&gt; unit + 1 overload<br />&#160;&#160;static member BufferHeight : int with get, set<br />&#160;&#160;static member BufferWidth : int with get, set<br />&#160;&#160;static member CapsLock : bool<br />&#160;&#160;static member Clear : unit -&gt; unit<br />&#160;&#160;static member CursorLeft : int with get, set<br />&#160;&#160;static member CursorSize : int with get, set<br />&#160;&#160;static member CursorTop : int with get, set<br />&#160;&#160;static member CursorVisible : bool with get, set<br />&#160;&#160;...<br /><br />Full name: System.Console</div>
+<div class="tip" id="fs10">Console.ReadLine() : string</div>
+<div class="tip" id="fs11">val input : string</div>
+<div class="tip" id="fs12">String.Split([&lt;ParamArray&gt;] separator: char []) : string []<br />String.Split(separator: string [], options: StringSplitOptions) : string []<br />String.Split(separator: char [], options: StringSplitOptions) : string []<br />String.Split(separator: char [], count: int) : string []<br />String.Split(separator: string [], count: int, options: StringSplitOptions) : string []<br />String.Split(separator: char [], count: int, options: StringSplitOptions) : string []</div>
+<div class="tip" id="fs13">val split : string []</div>
+<div class="tip" id="fs14">property Array.Length: int</div>
+<div class="tip" id="fs15">val raise : exn:Exception -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.Operators.raise</div>
+<div class="tip" id="fs16">val name : string</div>
+<div class="tip" id="fs17">val age : int</div>
+<div class="tip" id="fs18">Multiple items<br />type String =<br />&#160;&#160;new : value:char -&gt; string + 7 overloads<br />&#160;&#160;member Chars : int -&gt; char<br />&#160;&#160;member Clone : unit -&gt; obj<br />&#160;&#160;member CompareTo : value:obj -&gt; int + 1 overload<br />&#160;&#160;member Contains : value:string -&gt; bool<br />&#160;&#160;member CopyTo : sourceIndex:int * destination:char[] * destinationIndex:int * count:int -&gt; unit<br />&#160;&#160;member EndsWith : value:string -&gt; bool + 2 overloads<br />&#160;&#160;member Equals : obj:obj -&gt; bool + 2 overloads<br />&#160;&#160;member GetEnumerator : unit -&gt; CharEnumerator<br />&#160;&#160;member GetHashCode : unit -&gt; int<br />&#160;&#160;...<br /><br />Full name: System.String<br /><br />--------------------<br />String(value: nativeptr&lt;char&gt;) : unit<br />String(value: nativeptr&lt;sbyte&gt;) : unit<br />String(value: char []) : unit<br />String(c: char, count: int) : unit<br />String(value: nativeptr&lt;char&gt;, startIndex: int, length: int) : unit<br />String(value: nativeptr&lt;sbyte&gt;, startIndex: int, length: int) : unit<br />String(value: char [], startIndex: int, length: int) : unit<br />String(value: nativeptr&lt;sbyte&gt;, startIndex: int, length: int, enc: Text.Encoding) : unit</div>
+<div class="tip" id="fs19">String.IsNullOrWhiteSpace(value: string) : bool</div>
+<div class="tip" id="fs20">val readPeopleWhileValid : counter:int -&gt; people:(string * int) list -&gt; (string * int) list<br /><br />Full name: Script.readPeopleWhileValid</div>
+<div class="tip" id="fs21">val people : (string * int) list</div>
+<div class="tip" id="fs22">type &#39;T list = List&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.list&lt;_&gt;</div>
+<div class="tip" id="fs23">val person : string * int</div>
+<div class="tip" id="fs24">val aduldTeenOrKid : age:int -&gt; string<br /><br />Full name: Script.aduldTeenOrKid</div>
+<div class="tip" id="fs25">val displayPerson : name:string * age:int -&gt; string<br /><br />Full name: Script.displayPerson</div>
+<div class="tip" id="fs26">val sprintf : format:Printf.StringFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.sprintf</div>
+<div class="tip" id="fs27">Multiple items<br />type EntryPointAttribute =<br />&#160;&#160;inherit Attribute<br />&#160;&#160;new : unit -&gt; EntryPointAttribute<br /><br />Full name: Microsoft.FSharp.Core.EntryPointAttribute<br /><br />--------------------<br />new : unit -&gt; EntryPointAttribute</div>
+<div class="tip" id="fs28">val main : argv:string [] -&gt; int<br /><br />Full name: Script.main</div>
+<div class="tip" id="fs29">val argv : string []</div>
+<div class="tip" id="fs30">Multiple items<br />module List<br /><br />from Microsoft.FSharp.Collections<br /><br />--------------------<br />type List&lt;&#39;T&gt; =<br />&#160;&#160;| ( [] )<br />&#160;&#160;| ( :: ) of Head: &#39;T * Tail: &#39;T list<br />&#160;&#160;interface IEnumerable<br />&#160;&#160;interface IEnumerable&lt;&#39;T&gt;<br />&#160;&#160;member Head : &#39;T<br />&#160;&#160;member IsEmpty : bool<br />&#160;&#160;member Item : index:int -&gt; &#39;T with get<br />&#160;&#160;member Length : int<br />&#160;&#160;member Tail : &#39;T list<br />&#160;&#160;static member Cons : head:&#39;T * tail:&#39;T list -&gt; &#39;T list<br />&#160;&#160;static member Empty : &#39;T list<br /><br />Full name: Microsoft.FSharp.Collections.List&lt;_&gt;</div>
+<div class="tip" id="fs31">val rev : list:&#39;T list -&gt; &#39;T list<br /><br />Full name: Microsoft.FSharp.Collections.List.rev</div>
+<div class="tip" id="fs32">val iter : action:(&#39;T -&gt; unit) -&gt; list:&#39;T list -&gt; unit<br /><br />Full name: Microsoft.FSharp.Collections.List.iter</div>
+<div class="tip" id="fs33">Console.ReadKey() : ConsoleKeyInfo<br />Console.ReadKey(intercept: bool) : ConsoleKeyInfo</div>
+<div class="tip" id="fs34">val ignore : value:&#39;T -&gt; unit<br /><br />Full name: Microsoft.FSharp.Core.Operators.ignore</div>
+

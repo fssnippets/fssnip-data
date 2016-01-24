@@ -1,0 +1,46 @@
+(*
+ * Bitmap Primitives Helpers
+ * Partly inspired by http://fssnip.net/si.
+*)
+open System.Drawing
+
+// deserialize a bitmap file
+let fromFile (name : string) = new Bitmap(name)
+
+// serialize a bitmap as png
+let toFile (name : string) (bmp: Bitmap) =
+    bmp.Save(name, Imaging.ImageFormat.Png) |> ignore
+    bmp
+
+// load a bitmap in array of tuples (x,y,Color)
+let toRgbArray (bmp : Bitmap) =
+    [| for y in 0..bmp.Height-1 do
+       for x in 0..bmp.Width-1 -> x,y,bmp.GetPixel(x,y) |]   
+
+// builds a bitmap instance from an array of tuples
+let toBitmap a =
+    let height = (a |> Array.Parallel.map (fun (x,_,_) -> x) |> Array.max) + 1
+    let width = (a |> Array.Parallel.map (fun (_,y,_) -> y) |> Array.max) + 1
+    let bmp = new Bitmap(width, height)
+    a |> Array.Parallel.iter (fun (x,y,c) -> bmp.SetPixel(x,y,c))
+    bmp
+
+// converts an image to gray scale
+let toGrayScale a =
+    a |> Array.Parallel.map (
+        fun (x,y,c : System.Drawing.Color) -> 
+            let gscale = int((float c.R * 0.3) + (float c.G * 0.59) + (float c.B * 0.11))
+            in  x,y,Color.FromArgb(int c.A, gscale, gscale, gscale))
+
+(*
+ * Usage example:
+*)
+let convertImage =
+    use newBitmap =
+        fromFile @"C:/Temp/with-color.jpg"
+        |> toRgbArray
+        |> toGrayScale // or custom in memory manipulation function
+        |> toBitmap
+    use savedBitmap =
+        toFile @"C:/Temp/gray-scale.png" newBitmap
+    ()

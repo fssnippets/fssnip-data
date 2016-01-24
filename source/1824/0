@@ -1,0 +1,37 @@
+open LanguagePrimitives
+
+// A simple trick enables genericity below: In F#, the shift amount
+// takes into account the lowest bits only. Therefore, shifting right by -1
+// results in the maximum shift and the sign bit gets propagated to the whole word.
+
+/// Maximum of zero and the argument for signed integers. A special version using bit manipulation tricks.
+let inline maxi0 x = x &&& ~~~(x >>> -1)
+
+/// Minimum of zero and the argument for signed integers. A special version using bit manipulation tricks.
+let inline mini0 x = x &&& (x >>> -1)
+
+/// Maximum function for signed integers. A special version using bit manipulation tricks.
+/// Has limited numerical range: requires that a - b is representable.
+let inline maxi (a : 'a) (b : 'a) : 'a = maxi0 (a - b) + b
+
+/// Minimum function for signed integers. A special version using bit manipulation tricks.
+/// Has limited numerical range: requires that a - b is representable.
+let inline mini (a : 'a) (b : 'a) : 'a = mini0 (a - b) + b
+
+/// Clamps signed integer x to [a, b] (a <= b). A special version using bit manipulation tricks.
+/// Has limited numerical range: requires that a - b, a - x and b - x are representable.
+let inline clampi (a : 'a) (b : 'a) (x : 'a) : 'a = maxi a (mini b x)
+
+/// Sign function for signed integers that uses bit manipulation tricks.
+let inline signi (x : 'a) : 'a = ((-x >>> -1) &&& GenericOne) + (x >>> -1)
+
+/// Absolute function for signed integers. A special version using bit manipulation tricks.
+/// The smallest signed value cannot be negated; the standard function raises an exception,
+/// whereas we return it unchanged.
+let inline absi (x : 'a) : 'a = let y = x >>> -1 in (x &&& ~~~y) - (x &&& y)
+
+/// Negative indicator function for signed integers. Returns 1 if x < 0, and 0 otherwise.
+let inline negativei x = (x >>> -1) &&& GenericOne
+
+/// Positive indicator function for signed integers. Returns 1 if x > 0, and 0 otherwise.
+let inline positivei x = (-x >>> -1) &&& GenericOne

@@ -1,0 +1,115 @@
+<h2><a name="Simple-event-for-F-use" class="anchor" href="#Simple-event-for-F-use">Simple event for F# use</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// Counter with F#-only event</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="t">SimpleCounter</span>() <span class="o">=</span>
+  <span class="k">let</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">evt</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="t">Event</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="t">int</span><span class="o">&gt;</span>()
+  <span class="k">let</span> <span class="k">mutable</span> <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="v">count</span> <span class="o">=</span> <span class="n">0</span>
+ 
+  <span class="c">/// Increments the counter and triggers </span>
+  <span class="c">/// event after every 10 increments</span>
+  <span class="k">member</span> <span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="i">x</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs7', 7)" onmouseover="showTip(event, 'fs7', 7)" class="f">Increment</span>() <span class="o">=</span>
+    <span onmouseout="hideTip(event, 'fs5', 8)" onmouseover="showTip(event, 'fs5', 8)" class="v">count</span> <span class="o">&lt;-</span> <span onmouseout="hideTip(event, 'fs5', 9)" onmouseover="showTip(event, 'fs5', 9)" class="v">count</span> <span class="o">+</span> <span class="n">1</span>
+    <span class="k">if</span> <span onmouseout="hideTip(event, 'fs5', 10)" onmouseover="showTip(event, 'fs5', 10)" class="v">count</span> <span class="o">%</span> <span class="n">10</span> <span class="o">=</span> <span class="n">0</span> <span class="k">then</span> 
+      <span onmouseout="hideTip(event, 'fs2', 11)" onmouseover="showTip(event, 'fs2', 11)" class="i">evt</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs8', 12)" onmouseover="showTip(event, 'fs8', 12)" class="f">Trigger</span>(<span onmouseout="hideTip(event, 'fs5', 13)" onmouseover="showTip(event, 'fs5', 13)" class="v">count</span>)
+
+  <span class="c">/// Event triggered after every 10 increments</span>
+  <span class="c">/// The value carried by the event is &#39;int&#39;</span>
+  <span class="k">member</span> <span onmouseout="hideTip(event, 'fs6', 14)" onmouseover="showTip(event, 'fs6', 14)" class="i">x</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs9', 15)" onmouseover="showTip(event, 'fs9', 15)" class="i">IncrementedTenTimes</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs2', 16)" onmouseover="showTip(event, 'fs2', 16)" class="i">evt</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs10', 17)" onmouseover="showTip(event, 'fs10', 17)" class="i">Publish</span> 
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="NET-event-compatible-with-C" class="anchor" href="#NET-event-compatible-with-C">.NET event compatible with C#</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// Derived EventArgs type that carries &#39;int&#39; values</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs11', 18)" onmouseover="showTip(event, 'fs11', 18)" class="t">IntEventArgs</span>(<span onmouseout="hideTip(event, 'fs12', 19)" onmouseover="showTip(event, 'fs12', 19)" class="i">count</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs4', 20)" onmouseover="showTip(event, 'fs4', 20)" class="t">int</span>) <span class="o">=</span> 
+  <span class="k">inherit</span> <span onmouseout="hideTip(event, 'fs13', 21)" onmouseover="showTip(event, 'fs13', 21)" class="t">EventArgs</span>()
+  <span class="k">member</span> <span onmouseout="hideTip(event, 'fs14', 22)" onmouseover="showTip(event, 'fs14', 22)" class="i">this</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs15', 23)" onmouseover="showTip(event, 'fs15', 23)" class="i">Count</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs12', 24)" onmouseover="showTip(event, 'fs12', 24)" class="i">count</span>
+
+<span class="c">/// Standard EventHandler delegate for IntEventArgs</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs16', 25)" onmouseover="showTip(event, 'fs16', 25)" class="t">IntEventHandler</span> <span class="o">=</span> <span class="k">delegate</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs17', 26)" onmouseover="showTip(event, 'fs17', 26)" class="t">obj</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs11', 27)" onmouseover="showTip(event, 'fs11', 27)" class="t">IntEventArgs</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs18', 28)" onmouseover="showTip(event, 'fs18', 28)" class="f">unit</span>
+
+<span class="c">/// Counter with .NET compatible event</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs19', 29)" onmouseover="showTip(event, 'fs19', 29)" class="t">DotNetCounter</span>() <span class="o">=</span>
+  <span class="k">let</span> <span onmouseout="hideTip(event, 'fs20', 30)" onmouseover="showTip(event, 'fs20', 30)" class="i">evt</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs3', 31)" onmouseover="showTip(event, 'fs3', 31)" class="t">Event</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs16', 32)" onmouseover="showTip(event, 'fs16', 32)" class="t">IntEventHandler</span>, <span onmouseout="hideTip(event, 'fs11', 33)" onmouseover="showTip(event, 'fs11', 33)" class="t">IntEventArgs</span><span class="o">&gt;</span>()
+  <span class="k">let</span> <span class="k">mutable</span> <span onmouseout="hideTip(event, 'fs5', 34)" onmouseover="showTip(event, 'fs5', 34)" class="v">count</span> <span class="o">=</span> <span class="n">0</span>
+ 
+  <span class="c">/// Increments the counter and triggers </span>
+  <span class="c">/// event after every 10 increments</span>
+  <span class="k">member</span> <span onmouseout="hideTip(event, 'fs21', 35)" onmouseover="showTip(event, 'fs21', 35)" class="i">x</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs22', 36)" onmouseover="showTip(event, 'fs22', 36)" class="f">Increment</span>() <span class="o">=</span>
+    <span onmouseout="hideTip(event, 'fs5', 37)" onmouseover="showTip(event, 'fs5', 37)" class="v">count</span> <span class="o">&lt;-</span> <span onmouseout="hideTip(event, 'fs5', 38)" onmouseover="showTip(event, 'fs5', 38)" class="v">count</span> <span class="o">+</span> <span class="n">1</span>
+    <span class="k">if</span> <span onmouseout="hideTip(event, 'fs5', 39)" onmouseover="showTip(event, 'fs5', 39)" class="v">count</span> <span class="o">%</span> <span class="n">10</span> <span class="o">=</span> <span class="n">0</span> <span class="k">then</span> 
+      <span onmouseout="hideTip(event, 'fs20', 40)" onmouseover="showTip(event, 'fs20', 40)" class="i">evt</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs23', 41)" onmouseover="showTip(event, 'fs23', 41)" class="f">Trigger</span>(<span onmouseout="hideTip(event, 'fs21', 42)" onmouseover="showTip(event, 'fs21', 42)" class="i">x</span>, <span onmouseout="hideTip(event, 'fs11', 43)" onmouseover="showTip(event, 'fs11', 43)" class="t">IntEventArgs</span>(<span onmouseout="hideTip(event, 'fs5', 44)" onmouseover="showTip(event, 'fs5', 44)" class="v">count</span>))
+
+  <span class="c">/// Event triggered after every 10 increments</span>
+  <span class="c">/// (Creates standard .NET event using IntEventHandler delegate)</span>
+  [&lt;<span onmouseout="hideTip(event, 'fs24', 45)" onmouseover="showTip(event, 'fs24', 45)" class="t">CLIEvent</span>&gt;]
+  <span class="k">member</span> <span onmouseout="hideTip(event, 'fs21', 46)" onmouseover="showTip(event, 'fs21', 46)" class="i">x</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs25', 47)" onmouseover="showTip(event, 'fs25', 47)" class="f">IncrementedTenTimes</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs20', 48)" onmouseover="showTip(event, 'fs20', 48)" class="i">evt</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs26', 49)" onmouseover="showTip(event, 'fs26', 49)" class="f">Publish</span> 
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">Multiple items<br />type SimpleCounter =<br />&#160;&#160;new : unit -&gt; SimpleCounter<br />&#160;&#160;member Increment : unit -&gt; unit<br />&#160;&#160;member IncrementedTenTimes : IEvent&lt;int&gt;<br /><br />Full name: Script.SimpleCounter<br /><em><br /><br />&#160;Counter with F#-only event</em><br /><br />--------------------<br />new : unit -&gt; SimpleCounter</div>
+<div class="tip" id="fs2">val evt : Event&lt;int&gt;</div>
+<div class="tip" id="fs3">Multiple items<br />module Event<br /><br />from Microsoft.FSharp.Control<br /><br />--------------------<br />type Event&lt;&#39;T&gt; =<br />&#160;&#160;new : unit -&gt; Event&lt;&#39;T&gt;<br />&#160;&#160;member Trigger : arg:&#39;T -&gt; unit<br />&#160;&#160;member Publish : IEvent&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Control.Event&lt;_&gt;<br /><br />--------------------<br />type Event&lt;&#39;Delegate,&#39;Args (requires delegate and &#39;Delegate :&gt; Delegate)&gt; =<br />&#160;&#160;new : unit -&gt; Event&lt;&#39;Delegate,&#39;Args&gt;<br />&#160;&#160;member Trigger : sender:obj * args:&#39;Args -&gt; unit<br />&#160;&#160;member Publish : IEvent&lt;&#39;Delegate,&#39;Args&gt;<br /><br />Full name: Microsoft.FSharp.Control.Event&lt;_,_&gt;<br /><br />--------------------<br />new : unit -&gt; Event&lt;&#39;T&gt;<br /><br />--------------------<br />new : unit -&gt; Event&lt;&#39;Delegate,&#39;Args&gt;</div>
+<div class="tip" id="fs4">Multiple items<br />val int : value:&#39;T -&gt; int (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.int<br /><br />--------------------<br />type int = int32<br /><br />Full name: Microsoft.FSharp.Core.int<br /><br />--------------------<br />type int&lt;&#39;Measure&gt; = int<br /><br />Full name: Microsoft.FSharp.Core.int&lt;_&gt;</div>
+<div class="tip" id="fs5">val mutable count : int</div>
+<div class="tip" id="fs6">val x : SimpleCounter</div>
+<div class="tip" id="fs7">member SimpleCounter.Increment : unit -&gt; unit<br /><br />Full name: Script.SimpleCounter.Increment<br /><em><br /><br />&#160;Increments the counter and triggers <br />&#160;event after every 10 increments</em></div>
+<div class="tip" id="fs8">member Event.Trigger : arg:&#39;T -&gt; unit</div>
+<div class="tip" id="fs9">member SimpleCounter.IncrementedTenTimes : IEvent&lt;int&gt;<br /><br />Full name: Script.SimpleCounter.IncrementedTenTimes<br /><em><br /><br />&#160;Event triggered after every 10 increments<br />&#160;The value carried by the event is &#39;int&#39;</em></div>
+<div class="tip" id="fs10">property Event.Publish: IEvent&lt;int&gt;</div>
+<div class="tip" id="fs11">Multiple items<br />type IntEventArgs =<br />&#160;&#160;inherit EventArgs<br />&#160;&#160;new : count:int -&gt; IntEventArgs<br />&#160;&#160;member Count : int<br /><br />Full name: Script.IntEventArgs<br /><em><br /><br />&#160;Derived EventArgs type that carries &#39;int&#39; values</em><br /><br />--------------------<br />new : count:int -&gt; IntEventArgs</div>
+<div class="tip" id="fs12">val count : int</div>
+<div class="tip" id="fs13">Multiple items<br />type EventArgs =<br />&#160;&#160;new : unit -&gt; EventArgs<br />&#160;&#160;static val Empty : EventArgs<br /><br />Full name: System.EventArgs<br /><br />--------------------<br />EventArgs() : unit</div>
+<div class="tip" id="fs14">val this : IntEventArgs</div>
+<div class="tip" id="fs15">member IntEventArgs.Count : int<br /><br />Full name: Script.IntEventArgs.Count</div>
+<div class="tip" id="fs16">type IntEventHandler =<br />&#160;&#160;delegate of obj * IntEventArgs -&gt; unit<br /><br />Full name: Script.IntEventHandler<br /><em><br /><br />&#160;Standard EventHandler delegate for IntEventArgs</em></div>
+<div class="tip" id="fs17">type obj = Object<br /><br />Full name: Microsoft.FSharp.Core.obj</div>
+<div class="tip" id="fs18">type unit = Unit<br /><br />Full name: Microsoft.FSharp.Core.unit</div>
+<div class="tip" id="fs19">Multiple items<br />type DotNetCounter =<br />&#160;&#160;new : unit -&gt; DotNetCounter<br />&#160;&#160;member Increment : unit -&gt; unit<br />&#160;&#160;member add_IncrementedTenTimes : IntEventHandler -&gt; unit<br />&#160;&#160;member IncrementedTenTimes : IEvent&lt;IntEventHandler,IntEventArgs&gt;<br />&#160;&#160;member remove_IncrementedTenTimes : IntEventHandler -&gt; unit<br /><br />Full name: Script.DotNetCounter<br /><em><br /><br />&#160;Counter with .NET compatible event</em><br /><br />--------------------<br />new : unit -&gt; DotNetCounter</div>
+<div class="tip" id="fs20">val evt : Event&lt;IntEventHandler,IntEventArgs&gt;</div>
+<div class="tip" id="fs21">val x : DotNetCounter</div>
+<div class="tip" id="fs22">member DotNetCounter.Increment : unit -&gt; unit<br /><br />Full name: Script.DotNetCounter.Increment<br /><em><br /><br />&#160;Increments the counter and triggers <br />&#160;event after every 10 increments</em></div>
+<div class="tip" id="fs23">member Event.Trigger : sender:obj * args:&#39;Args -&gt; unit</div>
+<div class="tip" id="fs24">Multiple items<br />type CLIEventAttribute =<br />&#160;&#160;inherit Attribute<br />&#160;&#160;new : unit -&gt; CLIEventAttribute<br /><br />Full name: Microsoft.FSharp.Core.CLIEventAttribute<br /><br />--------------------<br />new : unit -&gt; CLIEventAttribute</div>
+<div class="tip" id="fs25">member DotNetCounter.IncrementedTenTimes : IEvent&lt;IntEventHandler,IntEventArgs&gt;<br /><br />Full name: Script.DotNetCounter.IncrementedTenTimes<br /><em><br /><br />&#160;Event triggered after every 10 increments<br />&#160;(Creates standard .NET event using IntEventHandler delegate)</em></div>
+<div class="tip" id="fs26">property Event.Publish: IEvent&lt;IntEventHandler,IntEventArgs&gt;</div>
+

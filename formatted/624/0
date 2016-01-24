@@ -1,0 +1,85 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">module</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="t">List</span>
+
+<span class="c">/// Partition a list into two groups. The first contains elements </span>
+<span class="c">/// until an element matching a specified predicate is found and the</span>
+<span class="c">/// second group contains all remaining elements.</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="f">partitionUntil</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="f">p</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="i">input</span> <span class="o">=</span> 
+  <span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="f">loop</span> <span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="i">acc</span> <span class="o">=</span> <span class="k">function</span>
+    | <span onmouseout="hideTip(event, 'fs7', 7)" onmouseover="showTip(event, 'fs7', 7)" class="i">hd</span><span class="o">::</span><span onmouseout="hideTip(event, 'fs8', 8)" onmouseover="showTip(event, 'fs8', 8)" class="i">tl</span> <span class="k">when</span> <span onmouseout="hideTip(event, 'fs3', 9)" onmouseover="showTip(event, 'fs3', 9)" class="f">p</span> <span class="i">hd</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs9', 10)" onmouseover="showTip(event, 'fs9', 10)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs10', 11)" onmouseover="showTip(event, 'fs10', 11)" class="f">rev</span> <span onmouseout="hideTip(event, 'fs6', 12)" onmouseover="showTip(event, 'fs6', 12)" class="i">acc</span>, <span class="i">hd</span><span class="o">::</span><span onmouseout="hideTip(event, 'fs8', 13)" onmouseover="showTip(event, 'fs8', 13)" class="i">tl</span>
+    | <span onmouseout="hideTip(event, 'fs7', 14)" onmouseover="showTip(event, 'fs7', 14)" class="i">hd</span><span class="o">::</span><span onmouseout="hideTip(event, 'fs8', 15)" onmouseover="showTip(event, 'fs8', 15)" class="i">tl</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs5', 16)" onmouseover="showTip(event, 'fs5', 16)" class="f">loop</span> (<span class="i">hd</span><span class="o">::</span><span onmouseout="hideTip(event, 'fs6', 17)" onmouseover="showTip(event, 'fs6', 17)" class="i">acc</span>) <span onmouseout="hideTip(event, 'fs8', 18)" onmouseover="showTip(event, 'fs8', 18)" class="i">tl</span>
+    | [] <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs9', 19)" onmouseover="showTip(event, 'fs9', 19)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs10', 20)" onmouseover="showTip(event, 'fs10', 20)" class="f">rev</span> <span onmouseout="hideTip(event, 'fs6', 21)" onmouseover="showTip(event, 'fs6', 21)" class="i">acc</span>, []
+  <span onmouseout="hideTip(event, 'fs5', 22)" onmouseover="showTip(event, 'fs5', 22)" class="f">loop</span> [] <span onmouseout="hideTip(event, 'fs4', 23)" onmouseover="showTip(event, 'fs4', 23)" class="i">input</span>
+
+
+<span class="c">/// A function that nests items of the input sequence </span>
+<span class="c">/// that do not match a specified predicate &#39;f&#39; under the </span>
+<span class="c">/// last item that matches the predicate. </span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs11', 24)" onmouseover="showTip(event, 'fs11', 24)" class="f">nestUnderLastMatching</span> <span onmouseout="hideTip(event, 'fs12', 25)" onmouseover="showTip(event, 'fs12', 25)" class="f">f</span> <span onmouseout="hideTip(event, 'fs13', 26)" onmouseover="showTip(event, 'fs13', 26)" class="i">input</span> <span class="o">=</span> 
+  <span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs14', 27)" onmouseover="showTip(event, 'fs14', 27)" class="f">loop</span> <span onmouseout="hideTip(event, 'fs13', 28)" onmouseover="showTip(event, 'fs13', 28)" class="i">input</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs15', 29)" onmouseover="showTip(event, 'fs15', 29)" class="i">seq</span> {
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs16', 30)" onmouseover="showTip(event, 'fs16', 30)" class="i">normal</span>, <span onmouseout="hideTip(event, 'fs17', 31)" onmouseover="showTip(event, 'fs17', 31)" class="i">other</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs2', 32)" onmouseover="showTip(event, 'fs2', 32)" class="f">partitionUntil</span> <span onmouseout="hideTip(event, 'fs12', 33)" onmouseover="showTip(event, 'fs12', 33)" class="f">f</span> <span onmouseout="hideTip(event, 'fs13', 34)" onmouseover="showTip(event, 'fs13', 34)" class="i">input</span>
+    <span class="k">match</span> <span onmouseout="hideTip(event, 'fs9', 35)" onmouseover="showTip(event, 'fs9', 35)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs10', 36)" onmouseover="showTip(event, 'fs10', 36)" class="f">rev</span> <span onmouseout="hideTip(event, 'fs16', 37)" onmouseover="showTip(event, 'fs16', 37)" class="i">normal</span> <span class="k">with</span>
+    | <span onmouseout="hideTip(event, 'fs18', 38)" onmouseover="showTip(event, 'fs18', 38)" class="i">last</span><span class="o">::</span><span onmouseout="hideTip(event, 'fs19', 39)" onmouseover="showTip(event, 'fs19', 39)" class="i">prev</span> <span class="k">-&gt;</span>
+        <span class="k">for</span> <span onmouseout="hideTip(event, 'fs20', 40)" onmouseover="showTip(event, 'fs20', 40)" class="i">p</span> <span class="k">in</span> <span onmouseout="hideTip(event, 'fs9', 41)" onmouseover="showTip(event, 'fs9', 41)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs10', 42)" onmouseover="showTip(event, 'fs10', 42)" class="f">rev</span> <span onmouseout="hideTip(event, 'fs19', 43)" onmouseover="showTip(event, 'fs19', 43)" class="i">prev</span> <span class="k">do</span> <span class="k">yield</span> <span onmouseout="hideTip(event, 'fs20', 44)" onmouseover="showTip(event, 'fs20', 44)" class="i">p</span>, []
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs17', 45)" onmouseover="showTip(event, 'fs17', 45)" class="i">other</span>, <span onmouseout="hideTip(event, 'fs21', 46)" onmouseover="showTip(event, 'fs21', 46)" class="i">rest</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs2', 47)" onmouseover="showTip(event, 'fs2', 47)" class="f">partitionUntil</span> (<span onmouseout="hideTip(event, 'fs12', 48)" onmouseover="showTip(event, 'fs12', 48)" class="f">f</span> <span class="o">&gt;</span><span class="o">&gt;</span> <span onmouseout="hideTip(event, 'fs22', 49)" onmouseover="showTip(event, 'fs22', 49)" class="f">not</span>) <span onmouseout="hideTip(event, 'fs17', 50)" onmouseover="showTip(event, 'fs17', 50)" class="i">other</span>
+        <span class="k">yield</span> <span onmouseout="hideTip(event, 'fs18', 51)" onmouseover="showTip(event, 'fs18', 51)" class="i">last</span>, <span onmouseout="hideTip(event, 'fs17', 52)" onmouseover="showTip(event, 'fs17', 52)" class="i">other</span> 
+        <span class="k">yield!</span> <span onmouseout="hideTip(event, 'fs14', 53)" onmouseover="showTip(event, 'fs14', 53)" class="f">loop</span> <span onmouseout="hideTip(event, 'fs21', 54)" onmouseover="showTip(event, 'fs21', 54)" class="i">rest</span>
+    | [] <span class="k">when</span> <span onmouseout="hideTip(event, 'fs17', 55)" onmouseover="showTip(event, 'fs17', 55)" class="i">other</span> <span class="o">=</span> [] <span class="k">-&gt;</span> ()
+    | _ <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs23', 56)" onmouseover="showTip(event, 'fs23', 56)" class="f">invalidArg</span> <span class="s">&quot;&quot;</span> <span class="s">&quot;Should start with true&quot;</span> }
+  <span onmouseout="hideTip(event, 'fs14', 57)" onmouseover="showTip(event, 'fs14', 57)" class="f">loop</span> <span onmouseout="hideTip(event, 'fs13', 58)" onmouseover="showTip(event, 'fs13', 58)" class="i">input</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs9', 59)" onmouseover="showTip(event, 'fs9', 59)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs24', 60)" onmouseover="showTip(event, 'fs24', 60)" class="f">ofSeq</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">Multiple items<br />module List<br /><br />--------------------<br />module List<br /><br />from Microsoft.FSharp.Collections<br /><br />--------------------<br />type List&lt;&#39;T&gt; =<br />&#160;&#160;| ( [] )<br />&#160;&#160;| ( :: ) of Head: &#39;T * Tail: &#39;T list<br />&#160;&#160;interface IEnumerable<br />&#160;&#160;interface IEnumerable&lt;&#39;T&gt;<br />&#160;&#160;member Head : &#39;T<br />&#160;&#160;member IsEmpty : bool<br />&#160;&#160;member Item : index:int -&gt; &#39;T with get<br />&#160;&#160;member Length : int<br />&#160;&#160;member Tail : &#39;T list<br />&#160;&#160;static member Cons : head:&#39;T * tail:&#39;T list -&gt; &#39;T list<br />&#160;&#160;static member Empty : &#39;T list<br /><br />Full name: Microsoft.FSharp.Collections.List&lt;_&gt;</div>
+<div class="tip" id="fs2">val partitionUntil : p:(&#39;a -&gt; bool) -&gt; input:&#39;a list -&gt; &#39;a list * &#39;a list<br /><br />Full name: List.partitionUntil<br /><em><br /><br />&#160;Partition a list into two groups. The first contains elements <br />&#160;until an element matching a specified predicate is found and the<br />&#160;second group contains all remaining elements.</em></div>
+<div class="tip" id="fs3">val p : (&#39;a -&gt; bool)</div>
+<div class="tip" id="fs4">val input : &#39;a list</div>
+<div class="tip" id="fs5">val loop : (&#39;a list -&gt; &#39;a list -&gt; &#39;a list * &#39;a list)</div>
+<div class="tip" id="fs6">val acc : &#39;a list</div>
+<div class="tip" id="fs7">val hd : &#39;a</div>
+<div class="tip" id="fs8">val tl : &#39;a list</div>
+<div class="tip" id="fs9">Multiple items<br />module List<br /><br />from Microsoft.FSharp.Collections<br /><br />--------------------<br />type List&lt;&#39;T&gt; =<br />&#160;&#160;| ( [] )<br />&#160;&#160;| ( :: ) of Head: &#39;T * Tail: &#39;T list<br />&#160;&#160;interface IEnumerable<br />&#160;&#160;interface IEnumerable&lt;&#39;T&gt;<br />&#160;&#160;member Head : &#39;T<br />&#160;&#160;member IsEmpty : bool<br />&#160;&#160;member Item : index:int -&gt; &#39;T with get<br />&#160;&#160;member Length : int<br />&#160;&#160;member Tail : &#39;T list<br />&#160;&#160;static member Cons : head:&#39;T * tail:&#39;T list -&gt; &#39;T list<br />&#160;&#160;static member Empty : &#39;T list<br /><br />Full name: Microsoft.FSharp.Collections.List&lt;_&gt;</div>
+<div class="tip" id="fs10">val rev : list:&#39;T list -&gt; &#39;T list<br /><br />Full name: Microsoft.FSharp.Collections.List.rev</div>
+<div class="tip" id="fs11">val nestUnderLastMatching : f:(&#39;a -&gt; bool) -&gt; input:&#39;a list -&gt; (&#39;a * &#39;a list) list (requires equality)<br /><br />Full name: List.nestUnderLastMatching<br /><em><br /><br />&#160;A function that nests items of the input sequence <br />&#160;that do not match a specified predicate &#39;f&#39; under the <br />&#160;last item that matches the predicate. </em></div>
+<div class="tip" id="fs12">val f : (&#39;a -&gt; bool) (requires equality)</div>
+<div class="tip" id="fs13">val input : &#39;a list (requires equality)</div>
+<div class="tip" id="fs14">val loop : (&#39;a list -&gt; seq&lt;&#39;a * &#39;a list&gt;) (requires equality)</div>
+<div class="tip" id="fs15">Multiple items<br />val seq : sequence:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Core.Operators.seq<br /><br />--------------------<br />type seq&lt;&#39;T&gt; = System.Collections.Generic.IEnumerable&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.seq&lt;_&gt;</div>
+<div class="tip" id="fs16">val normal : &#39;a list (requires equality)</div>
+<div class="tip" id="fs17">val other : &#39;a list (requires equality)</div>
+<div class="tip" id="fs18">val last : &#39;a (requires equality)</div>
+<div class="tip" id="fs19">val prev : &#39;a list (requires equality)</div>
+<div class="tip" id="fs20">val p : &#39;a (requires equality)</div>
+<div class="tip" id="fs21">val rest : &#39;a list (requires equality)</div>
+<div class="tip" id="fs22">val not : value:bool -&gt; bool<br /><br />Full name: Microsoft.FSharp.Core.Operators.not</div>
+<div class="tip" id="fs23">val invalidArg : argumentName:string -&gt; message:string -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.Operators.invalidArg</div>
+<div class="tip" id="fs24">val ofSeq : source:seq&lt;&#39;T&gt; -&gt; &#39;T list<br /><br />Full name: Microsoft.FSharp.Collections.List.ofSeq</div>
+

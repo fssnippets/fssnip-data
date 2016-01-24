@@ -1,0 +1,68 @@
+<h2><a name="WrapPanel-control" class="anchor" href="#WrapPanel-control">WrapPanel control</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">type</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="t">WrapPanel</span>() <span class="o">=</span>
+    <span class="k">inherit</span> <span class="i">Panel</span>()
+    <span class="k">override</span> <span class="i">x</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="f">MeasureOverride</span>(<span class="i">availableSize</span><span class="o">:</span><span class="i">Size</span>) <span class="o">=</span>
+        <span class="k">let</span> <span class="i">childMeasure</span> <span class="o">=</span> <span class="i">Size</span>(<span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="i">Double</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="i">PositiveInfinity</span>, <span onmouseout="hideTip(event, 'fs3', 5)" onmouseover="showTip(event, 'fs3', 5)" class="i">Double</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs4', 6)" onmouseover="showTip(event, 'fs4', 6)" class="i">PositiveInfinity</span>)
+        <span class="k">let</span> _, (<span class="i">width</span>,<span class="i">height</span>) <span class="o">=</span>
+            <span class="i">x</span><span class="o">.</span><span class="i">Children</span> 
+            <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs5', 7)" onmouseover="showTip(event, 'fs5', 7)" class="i">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs6', 8)" onmouseover="showTip(event, 'fs6', 8)" class="i">fold</span> (<span class="k">fun</span> ((<span class="i">x</span>, <span class="i">y</span>), (<span class="i">width</span>, <span class="i">height</span>)) <span class="i">child</span> <span class="k">-&gt;</span>
+                <span class="i">child</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs7', 9)" onmouseover="showTip(event, 'fs7', 9)" class="i">Measure</span>(<span class="i">childMeasure</span>)
+                <span class="k">if</span> <span class="i">child</span><span class="o">.</span><span class="i">DesiredSize</span><span class="o">.</span><span class="i">Width</span> <span class="o">+</span> <span class="i">x</span> <span class="o">&gt;</span> <span class="i">availableSize</span><span class="o">.</span><span class="i">Width</span> 
+                <span class="k">then</span> (<span class="i">child</span><span class="o">.</span><span class="i">DesiredSize</span><span class="o">.</span><span class="i">Width</span>, <span class="n">0.0</span>), (<span onmouseout="hideTip(event, 'fs8', 10)" onmouseover="showTip(event, 'fs8', 10)" class="i">max</span> <span class="i">x</span> <span class="i">width</span>, <span class="i">height</span> <span class="o">+</span> <span class="i">y</span>)
+                <span class="k">else</span> (<span class="i">x</span> <span class="o">+</span> <span class="i">child</span><span class="o">.</span><span class="i">DesiredSize</span><span class="o">.</span><span class="i">Width</span>, <span class="i">y</span>), (<span class="i">width</span>, <span class="i">height</span>)
+            ) ((<span class="n">0.0</span>,<span class="n">0.0</span>),(<span class="n">0.0</span>,<span class="n">0.0</span>))
+        <span class="i">Size</span>(<span class="i">width</span>, <span class="i">height</span>)
+    <span class="k">override</span> <span class="i">x</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs9', 11)" onmouseover="showTip(event, 'fs9', 11)" class="f">ArrangeOverride</span>(<span class="i">finalSize</span><span class="o">:</span><span class="i">Size</span>) <span class="o">=</span>
+        <span class="i">x</span><span class="o">.</span><span class="i">Children</span> 
+        <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs5', 12)" onmouseover="showTip(event, 'fs5', 12)" class="i">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs6', 13)" onmouseover="showTip(event, 'fs6', 13)" class="i">fold</span> (<span class="k">fun</span> (<span class="i">x</span>,<span class="i">y</span>,<span class="i">height</span>) <span class="i">child</span> <span class="k">-&gt;</span>
+            <span class="k">let</span> <span class="i">x</span>,<span class="i">y</span>,<span class="i">height</span> <span class="o">=</span>
+                <span class="k">if</span> <span class="i">child</span><span class="o">.</span><span class="i">DesiredSize</span><span class="o">.</span><span class="i">Width</span> <span class="o">+</span> <span class="i">x</span> <span class="o">&gt;</span> <span class="i">finalSize</span><span class="o">.</span><span class="i">Width</span> 
+                <span class="k">then</span> <span class="n">0.0</span>, <span class="i">y</span> <span class="o">+</span> <span class="i">height</span>, <span class="n">0.0</span>
+                <span class="k">else</span> <span class="i">x</span>, <span class="i">y</span>, <span class="i">height</span>
+            <span class="i">Rect</span>(<span class="i">x</span>, <span class="i">y</span>, <span class="i">child</span><span class="o">.</span><span class="i">DesiredSize</span><span class="o">.</span><span class="i">Width</span>, <span class="i">child</span><span class="o">.</span><span class="i">DesiredSize</span><span class="o">.</span><span class="i">Height</span>)
+            <span class="o">|&gt;</span> <span class="i">child</span><span class="o">.</span><span class="i">Arrange</span>
+            <span class="i">x</span> <span class="o">+</span> <span class="i">child</span><span class="o">.</span><span class="i">DesiredSize</span><span class="o">.</span><span class="i">Width</span>, <span class="i">y</span>, <span onmouseout="hideTip(event, 'fs8', 14)" onmouseover="showTip(event, 'fs8', 14)" class="i">max</span> <span class="i">height</span> <span class="i">child</span><span class="o">.</span><span class="i">DesiredSize</span><span class="o">.</span><span class="i">Height</span>
+        ) (<span class="n">0.0</span>,<span class="n">0.0</span>,<span class="n">0.0</span>) 
+        <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs10', 15)" onmouseover="showTip(event, 'fs10', 15)" class="i">ignore</span>
+        <span class="i">finalSize</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">Multiple items<br />type WrapPanel =<br />&#160;&#160;inherit obj<br />&#160;&#160;new : unit -&gt; WrapPanel<br />&#160;&#160;override ArrangeOverride : finalSize:&#39;a -&gt; &#39;b<br />&#160;&#160;override MeasureOverride : availableSize:&#39;a -&gt; &#39;b<br /><br />Full name: Script.WrapPanel<br /><br />--------------------<br />new : unit -&gt; WrapPanel</div>
+<div class="tip" id="fs2">override WrapPanel.MeasureOverride : availableSize:&#39;a -&gt; &#39;b<br /><br />Full name: Script.WrapPanel.MeasureOverride</div>
+<div class="tip" id="fs3">type Double =<br />&#160;&#160;struct<br />&#160;&#160;&#160;&#160;member CompareTo : value:obj -&gt; int + 1 overload<br />&#160;&#160;&#160;&#160;member Equals : obj:obj -&gt; bool + 1 overload<br />&#160;&#160;&#160;&#160;member GetHashCode : unit -&gt; int<br />&#160;&#160;&#160;&#160;member GetTypeCode : unit -&gt; TypeCode<br />&#160;&#160;&#160;&#160;member ToString : unit -&gt; string + 3 overloads<br />&#160;&#160;&#160;&#160;static val MinValue : float<br />&#160;&#160;&#160;&#160;static val MaxValue : float<br />&#160;&#160;&#160;&#160;static val Epsilon : float<br />&#160;&#160;&#160;&#160;static val NegativeInfinity : float<br />&#160;&#160;&#160;&#160;static val PositiveInfinity : float<br />&#160;&#160;&#160;&#160;...<br />&#160;&#160;end<br /><br />Full name: System.Double</div>
+<div class="tip" id="fs4">field float.PositiveInfinity = Infinity</div>
+<div class="tip" id="fs5">module Seq<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs6">val fold : folder:(&#39;State -&gt; &#39;T -&gt; &#39;State) -&gt; state:&#39;State -&gt; source:seq&lt;&#39;T&gt; -&gt; &#39;State<br /><br />Full name: Microsoft.FSharp.Collections.Seq.fold</div>
+<div class="tip" id="fs7">Multiple items<br />type MeasureAttribute =<br />&#160;&#160;inherit Attribute<br />&#160;&#160;new : unit -&gt; MeasureAttribute<br /><br />Full name: Microsoft.FSharp.Core.MeasureAttribute<br /><br />--------------------<br />new : unit -&gt; MeasureAttribute</div>
+<div class="tip" id="fs8">val max : e1:&#39;T -&gt; e2:&#39;T -&gt; &#39;T (requires comparison)<br /><br />Full name: Microsoft.FSharp.Core.Operators.max</div>
+<div class="tip" id="fs9">override WrapPanel.ArrangeOverride : finalSize:&#39;a -&gt; &#39;b<br /><br />Full name: Script.WrapPanel.ArrangeOverride</div>
+<div class="tip" id="fs10">val ignore : value:&#39;T -&gt; unit<br /><br />Full name: Microsoft.FSharp.Core.Operators.ignore</div>
+

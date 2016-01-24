@@ -1,0 +1,206 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+<span class="l">38: </span>
+<span class="l">39: </span>
+<span class="l">40: </span>
+<span class="l">41: </span>
+<span class="l">42: </span>
+<span class="l">43: </span>
+<span class="l">44: </span>
+<span class="l">45: </span>
+<span class="l">46: </span>
+<span class="l">47: </span>
+<span class="l">48: </span>
+<span class="l">49: </span>
+<span class="l">50: </span>
+<span class="l">51: </span>
+<span class="l">52: </span>
+<span class="l">53: </span>
+<span class="l">54: </span>
+<span class="l">55: </span>
+<span class="l">56: </span>
+<span class="l">57: </span>
+<span class="l">58: </span>
+<span class="l">59: </span>
+<span class="l">60: </span>
+<span class="l">61: </span>
+<span class="l">62: </span>
+<span class="l">63: </span>
+<span class="l">64: </span>
+<span class="l">65: </span>
+<span class="l">66: </span>
+<span class="l">67: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span id="fst1" onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1, document.getElementById('fst1'))" class="omitted">(Opening declarations)</span>
+
+<span class="c">// Based on a code by James Hugard, available here: </span>
+<span class="c">// http://stackoverflow.com/questions/3276357/how-do-i-plot-a-data-series-in-f </span>
+
+<span class="c">// Create a window with Chart control and initializes</span>
+<span class="c">// the chart control using a given function</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="t">Visualiser</span>(<span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="i">title</span>, <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="i">style</span>, <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="f">init_fun</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="t">Chart</span><span class="k">-&gt;</span><span onmouseout="hideTip(event, 'fs7', 7)" onmouseover="showTip(event, 'fs7', 7)" class="t">unit</span>) <span class="o">=</span>
+  <span class="k">inherit</span> <span onmouseout="hideTip(event, 'fs8', 8)" onmouseover="showTip(event, 'fs8', 8)" class="t">Form</span>( <span onmouseout="hideTip(event, 'fs9', 9)" onmouseover="showTip(event, 'fs9', 9)" class="i">Text</span><span class="o">=</span><span class="i">title</span> )
+  <span class="k">let</span> <span onmouseout="hideTip(event, 'fs10', 10)" onmouseover="showTip(event, 'fs10', 10)" class="i">chart</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs6', 11)" onmouseover="showTip(event, 'fs6', 11)" class="t">Chart</span>(<span class="i">Dock</span><span class="o">=</span><span onmouseout="hideTip(event, 'fs11', 12)" onmouseover="showTip(event, 'fs11', 12)" class="t">DockStyle</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs12', 13)" onmouseover="showTip(event, 'fs12', 13)" class="i">Fill</span>)
+  <span class="k">let</span> <span onmouseout="hideTip(event, 'fs13', 14)" onmouseover="showTip(event, 'fs13', 14)" class="i">area</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs14', 15)" onmouseover="showTip(event, 'fs14', 15)" class="t">ChartArea</span>(<span class="i">Name</span><span class="o">=</span><span onmouseout="hideTip(event, 'fs3', 16)" onmouseover="showTip(event, 'fs3', 16)" class="i">title</span>)
+  <span class="k">let</span> <span onmouseout="hideTip(event, 'fs15', 17)" onmouseover="showTip(event, 'fs15', 17)" class="i">series</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs16', 18)" onmouseover="showTip(event, 'fs16', 18)" class="t">Series</span>()
+  <span class="k">do</span> <span onmouseout="hideTip(event, 'fs15', 19)" onmouseover="showTip(event, 'fs15', 19)" class="i">series</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs17', 20)" onmouseover="showTip(event, 'fs17', 20)" class="i">ChartType</span> <span class="o">&lt;-</span> <span onmouseout="hideTip(event, 'fs4', 21)" onmouseover="showTip(event, 'fs4', 21)" class="i">style</span>
+  <span class="k">do</span> <span onmouseout="hideTip(event, 'fs15', 22)" onmouseover="showTip(event, 'fs15', 22)" class="i">series</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs18', 23)" onmouseover="showTip(event, 'fs18', 23)" class="i">ChartArea</span> <span class="o">&lt;-</span> <span onmouseout="hideTip(event, 'fs3', 24)" onmouseover="showTip(event, 'fs3', 24)" class="i">title</span>
+  <span class="k">do</span> <span onmouseout="hideTip(event, 'fs10', 25)" onmouseover="showTip(event, 'fs10', 25)" class="i">chart</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs19', 26)" onmouseover="showTip(event, 'fs19', 26)" class="i">Series</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs20', 27)" onmouseover="showTip(event, 'fs20', 27)" class="f">Add</span>(<span onmouseout="hideTip(event, 'fs15', 28)" onmouseover="showTip(event, 'fs15', 28)" class="i">series</span>)
+  <span class="k">do</span> <span onmouseout="hideTip(event, 'fs10', 29)" onmouseover="showTip(event, 'fs10', 29)" class="i">chart</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs21', 30)" onmouseover="showTip(event, 'fs21', 30)" class="i">ChartAreas</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs22', 31)" onmouseover="showTip(event, 'fs22', 31)" class="f">Add</span>(<span onmouseout="hideTip(event, 'fs13', 32)" onmouseover="showTip(event, 'fs13', 32)" class="i">area</span>)
+  <span class="k">do</span> <span onmouseout="hideTip(event, 'fs5', 33)" onmouseover="showTip(event, 'fs5', 33)" class="f">init_fun</span> <span onmouseout="hideTip(event, 'fs10', 34)" onmouseover="showTip(event, 'fs10', 34)" class="i">chart</span>
+  <span class="k">do</span> <span class="k">base</span><span class="o">.</span><span class="i">Controls</span><span class="o">.</span><span class="f">Add</span>(<span onmouseout="hideTip(event, 'fs10', 35)" onmouseover="showTip(event, 'fs10', 35)" class="i">chart</span>)
+  
+<span class="c">// Visualises a series of float values</span>
+<span class="c">// Returns a Form</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs23', 36)" onmouseover="showTip(event, 'fs23', 36)" class="f">SeqVisualiser</span> <span onmouseout="hideTip(event, 'fs3', 37)" onmouseover="showTip(event, 'fs3', 37)" class="i">title</span> <span onmouseout="hideTip(event, 'fs4', 38)" onmouseover="showTip(event, 'fs4', 38)" class="i">style</span> (<span onmouseout="hideTip(event, 'fs24', 39)" onmouseover="showTip(event, 'fs24', 39)" class="i">xs</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs25', 40)" onmouseover="showTip(event, 'fs25', 40)" class="t">float</span> <span onmouseout="hideTip(event, 'fs26', 41)" onmouseover="showTip(event, 'fs26', 41)" class="t">seq</span>) <span class="o">=</span> 
+  <span class="k">new</span> <span onmouseout="hideTip(event, 'fs2', 42)" onmouseover="showTip(event, 'fs2', 42)" class="t">Visualiser</span>(<span onmouseout="hideTip(event, 'fs3', 43)" onmouseover="showTip(event, 'fs3', 43)" class="i">title</span>,<span onmouseout="hideTip(event, 'fs4', 44)" onmouseover="showTip(event, 'fs4', 44)" class="i">style</span>,<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs10', 45)" onmouseover="showTip(event, 'fs10', 45)" class="i">chart</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs24', 46)" onmouseover="showTip(event, 'fs24', 46)" class="i">xs</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs27', 47)" onmouseover="showTip(event, 'fs27', 47)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs28', 48)" onmouseover="showTip(event, 'fs28', 48)" class="f">iter</span> (<span onmouseout="hideTip(event, 'fs10', 49)" onmouseover="showTip(event, 'fs10', 49)" class="i">chart</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs19', 50)" onmouseover="showTip(event, 'fs19', 50)" class="i">Series</span><span class="o">.</span>[<span class="n">0</span>]<span class="o">.</span><span class="i">Points</span><span class="o">.</span><span class="f">Add</span> <span class="o">&gt;</span><span class="o">&gt;</span> <span onmouseout="hideTip(event, 'fs29', 51)" onmouseover="showTip(event, 'fs29', 51)" class="f">ignore</span>))
+
+<span class="c">// Visualizes a series of float pairs treated as (x,y) coordinats</span>
+<span class="c">// Returns a Form</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs30', 52)" onmouseover="showTip(event, 'fs30', 52)" class="f">PointVisualiser</span> <span onmouseout="hideTip(event, 'fs3', 53)" onmouseover="showTip(event, 'fs3', 53)" class="i">title</span> <span onmouseout="hideTip(event, 'fs4', 54)" onmouseover="showTip(event, 'fs4', 54)" class="i">style</span> <span onmouseout="hideTip(event, 'fs31', 55)" onmouseover="showTip(event, 'fs31', 55)" class="i">xs</span> <span class="o">=</span>
+  <span class="k">new</span> <span onmouseout="hideTip(event, 'fs2', 56)" onmouseover="showTip(event, 'fs2', 56)" class="t">Visualiser</span>(<span onmouseout="hideTip(event, 'fs3', 57)" onmouseover="showTip(event, 'fs3', 57)" class="i">title</span>,<span onmouseout="hideTip(event, 'fs4', 58)" onmouseover="showTip(event, 'fs4', 58)" class="i">style</span>,
+                  <span class="k">fun</span> <span onmouseout="hideTip(event, 'fs10', 59)" onmouseover="showTip(event, 'fs10', 59)" class="i">chart</span> <span class="k">-&gt;</span> 
+                   <span onmouseout="hideTip(event, 'fs31', 60)" onmouseover="showTip(event, 'fs31', 60)" class="i">xs</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs27', 61)" onmouseover="showTip(event, 'fs27', 61)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs28', 62)" onmouseover="showTip(event, 'fs28', 62)" class="f">iter</span> (<span class="k">fun</span> (<span onmouseout="hideTip(event, 'fs32', 63)" onmouseover="showTip(event, 'fs32', 63)" class="i">x</span>,<span onmouseout="hideTip(event, 'fs33', 64)" onmouseover="showTip(event, 'fs33', 64)" class="i">y</span>) <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs10', 65)" onmouseover="showTip(event, 'fs10', 65)" class="i">chart</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs19', 66)" onmouseover="showTip(event, 'fs19', 66)" class="i">Series</span><span class="o">.</span>[<span class="n">0</span>]<span class="o">.</span><span class="i">Points</span><span class="o">.</span><span class="f">AddXY</span>(<span onmouseout="hideTip(event, 'fs32', 67)" onmouseover="showTip(event, 'fs32', 67)" class="i">x</span>,<span onmouseout="hideTip(event, 'fs33', 68)" onmouseover="showTip(event, 'fs33', 68)" class="i">y</span>)<span class="o">|&gt;</span><span onmouseout="hideTip(event, 'fs29', 69)" onmouseover="showTip(event, 'fs29', 69)" class="f">ignore</span>))
+
+<span class="c">// Visualizes a series of float values with labels</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs34', 70)" onmouseover="showTip(event, 'fs34', 70)" class="f">LabelVisualiser3D</span> <span onmouseout="hideTip(event, 'fs3', 71)" onmouseover="showTip(event, 'fs3', 71)" class="i">title</span> <span onmouseout="hideTip(event, 'fs4', 72)" onmouseover="showTip(event, 'fs4', 72)" class="i">style</span> <span onmouseout="hideTip(event, 'fs35', 73)" onmouseover="showTip(event, 'fs35', 73)" class="i">xs</span> <span class="o">=</span>
+  <span class="k">new</span> <span onmouseout="hideTip(event, 'fs2', 74)" onmouseover="showTip(event, 'fs2', 74)" class="t">Visualiser</span>(<span onmouseout="hideTip(event, 'fs3', 75)" onmouseover="showTip(event, 'fs3', 75)" class="i">title</span>,<span onmouseout="hideTip(event, 'fs4', 76)" onmouseover="showTip(event, 'fs4', 76)" class="i">style</span>,
+   <span class="k">fun</span> <span onmouseout="hideTip(event, 'fs10', 77)" onmouseover="showTip(event, 'fs10', 77)" class="i">chart</span> <span class="k">-&gt;</span> 
+       <span onmouseout="hideTip(event, 'fs10', 78)" onmouseover="showTip(event, 'fs10', 78)" class="i">chart</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs21', 79)" onmouseover="showTip(event, 'fs21', 79)" class="i">ChartAreas</span><span class="o">.</span>[<span class="n">0</span>]<span class="o">.</span><span class="i">Area3DStyle</span><span class="o">.</span><span class="i">Enable3D</span> <span class="o">&lt;-</span> <span class="k">true</span>
+       <span onmouseout="hideTip(event, 'fs10', 80)" onmouseover="showTip(event, 'fs10', 80)" class="i">chart</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs21', 81)" onmouseover="showTip(event, 'fs21', 81)" class="i">ChartAreas</span><span class="o">.</span>[<span class="n">0</span>]<span class="o">.</span><span class="i">Area3DStyle</span><span class="o">.</span><span class="i">Perspective</span> <span class="o">&lt;-</span> <span class="n">10</span>
+       <span onmouseout="hideTip(event, 'fs35', 82)" onmouseover="showTip(event, 'fs35', 82)" class="i">xs</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs27', 83)" onmouseover="showTip(event, 'fs27', 83)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs28', 84)" onmouseover="showTip(event, 'fs28', 84)" class="f">iter</span> (<span class="k">fun</span> (<span onmouseout="hideTip(event, 'fs36', 85)" onmouseover="showTip(event, 'fs36', 85)" class="i">y</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs37', 86)" onmouseover="showTip(event, 'fs37', 86)" class="t">string</span>,<span onmouseout="hideTip(event, 'fs32', 87)" onmouseover="showTip(event, 'fs32', 87)" class="i">x</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs25', 88)" onmouseover="showTip(event, 'fs25', 88)" class="t">float</span>) <span class="k">-&gt;</span> 
+                         <span class="k">let</span> <span onmouseout="hideTip(event, 'fs38', 89)" onmouseover="showTip(event, 'fs38', 89)" class="i">pt</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs10', 90)" onmouseover="showTip(event, 'fs10', 90)" class="i">chart</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs19', 91)" onmouseover="showTip(event, 'fs19', 91)" class="i">Series</span><span class="o">.</span>[<span class="n">0</span>]<span class="o">.</span><span class="i">Points</span><span class="o">.</span><span class="f">Add</span>(<span onmouseout="hideTip(event, 'fs32', 92)" onmouseover="showTip(event, 'fs32', 92)" class="i">x</span>)
+                         <span onmouseout="hideTip(event, 'fs38', 93)" onmouseover="showTip(event, 'fs38', 93)" class="i">pt</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs39', 94)" onmouseover="showTip(event, 'fs39', 94)" class="i">Label</span> <span class="o">&lt;-</span> <span onmouseout="hideTip(event, 'fs36', 95)" onmouseover="showTip(event, 'fs36', 95)" class="i">y</span>))
+
+<span class="c">// Plotting sin function</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs40', 96)" onmouseover="showTip(event, 'fs40', 96)" class="i">V1</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs23', 97)" onmouseover="showTip(event, 'fs23', 97)" class="f">SeqVisualiser</span> <span class="s">&quot;Data&quot;</span> (<span onmouseout="hideTip(event, 'fs41', 98)" onmouseover="showTip(event, 'fs41', 98)" class="t">SeriesChartType</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs42', 99)" onmouseover="showTip(event, 'fs42', 99)" class="i">Line</span>) (<span onmouseout="hideTip(event, 'fs26', 100)" onmouseover="showTip(event, 'fs26', 100)" class="i">seq</span> {<span class="o">-</span><span class="n">6.0</span><span class="o">..</span><span class="n">0.01</span><span class="o">..</span><span class="n">6.0</span>}<span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs27', 101)" onmouseover="showTip(event, 'fs27', 101)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs43', 102)" onmouseover="showTip(event, 'fs43', 102)" class="f">map</span> <span onmouseout="hideTip(event, 'fs44', 103)" onmouseover="showTip(event, 'fs44', 103)" class="f">sin</span>)
+<span onmouseout="hideTip(event, 'fs40', 104)" onmouseover="showTip(event, 'fs40', 104)" class="i">V1</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs45', 105)" onmouseover="showTip(event, 'fs45', 105)" class="f">Show</span>()
+
+<span class="c">// Plotting bars with random values</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs46', 106)" onmouseover="showTip(event, 'fs46', 106)" class="i">V2</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs23', 107)" onmouseover="showTip(event, 'fs23', 107)" class="f">SeqVisualiser</span> <span class="s">&quot;Data&quot;</span> <span onmouseout="hideTip(event, 'fs41', 108)" onmouseover="showTip(event, 'fs41', 108)" class="t">SeriesChartType</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs47', 109)" onmouseover="showTip(event, 'fs47', 109)" class="i">Bar</span> 
+           (<span onmouseout="hideTip(event, 'fs26', 110)" onmouseover="showTip(event, 'fs26', 110)" class="i">seq</span> { <span class="k">let</span> <span onmouseout="hideTip(event, 'fs48', 111)" onmouseover="showTip(event, 'fs48', 111)" class="i">R</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs49', 112)" onmouseover="showTip(event, 'fs49', 112)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs50', 113)" onmouseover="showTip(event, 'fs50', 113)" class="t">Random</span>()
+                 <span class="k">for</span> <span onmouseout="hideTip(event, 'fs51', 114)" onmouseover="showTip(event, 'fs51', 114)" class="i">i</span> <span class="k">in</span> [<span class="n">1..</span><span class="n">10</span>] <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs48', 115)" onmouseover="showTip(event, 'fs48', 115)" class="i">R</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs52', 116)" onmouseover="showTip(event, 'fs52', 116)" class="f">NextDouble</span>()<span class="o">*</span><span class="n">3.0</span> })
+<span onmouseout="hideTip(event, 'fs46', 117)" onmouseover="showTip(event, 'fs46', 117)" class="i">V2</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs45', 118)" onmouseover="showTip(event, 'fs45', 118)" class="f">Show</span>()
+ 
+<span class="c">// Plotting a number or random (x,y)-points</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs53', 119)" onmouseover="showTip(event, 'fs53', 119)" class="i">V3</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs30', 120)" onmouseover="showTip(event, 'fs30', 120)" class="f">PointVisualiser</span> <span class="s">&quot;Data&quot;</span> <span onmouseout="hideTip(event, 'fs41', 121)" onmouseover="showTip(event, 'fs41', 121)" class="t">SeriesChartType</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs54', 122)" onmouseover="showTip(event, 'fs54', 122)" class="i">Bubble</span>
+           (<span onmouseout="hideTip(event, 'fs26', 123)" onmouseover="showTip(event, 'fs26', 123)" class="i">seq</span> { <span class="k">let</span> <span onmouseout="hideTip(event, 'fs48', 124)" onmouseover="showTip(event, 'fs48', 124)" class="i">R</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs49', 125)" onmouseover="showTip(event, 'fs49', 125)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs50', 126)" onmouseover="showTip(event, 'fs50', 126)" class="t">Random</span>()
+                  <span class="k">for</span> <span onmouseout="hideTip(event, 'fs51', 127)" onmouseover="showTip(event, 'fs51', 127)" class="i">i</span> <span class="k">in</span> [<span class="n">1..</span><span class="n">10</span>] <span class="k">-&gt;</span> (<span onmouseout="hideTip(event, 'fs48', 128)" onmouseover="showTip(event, 'fs48', 128)" class="i">R</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs52', 129)" onmouseover="showTip(event, 'fs52', 129)" class="f">NextDouble</span>()<span class="o">*</span><span class="n">3.0</span>,<span onmouseout="hideTip(event, 'fs48', 130)" onmouseover="showTip(event, 'fs48', 130)" class="i">R</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs52', 131)" onmouseover="showTip(event, 'fs52', 131)" class="f">NextDouble</span>()<span class="o">*</span><span class="n">3.0</span>) })
+<span onmouseout="hideTip(event, 'fs53', 132)" onmouseover="showTip(event, 'fs53', 132)" class="i">V3</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs45', 133)" onmouseover="showTip(event, 'fs45', 133)" class="f">Show</span>()
+
+<span class="c">// Plotting some statistics about occurence of strings in HTML page</span>
+<span id="fst55" onmouseout="hideTip(event, 'fs55', 134)" onmouseover="showTip(event, 'fs55', 134, document.getElementById('fst55'))" class="omitted">(Opening declarations)</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs56', 135)" onmouseover="showTip(event, 'fs56', 135)" class="f">http</span>(<span onmouseout="hideTip(event, 'fs57', 136)" onmouseover="showTip(event, 'fs57', 136)" class="i">url</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs37', 137)" onmouseover="showTip(event, 'fs37', 137)" class="t">string</span>) <span class="o">=</span> <span id="fst58" onmouseout="hideTip(event, 'fs58', 138)" onmouseover="showTip(event, 'fs58', 138, document.getElementById('fst58'))" class="omitted">(fetch HTML from given URL)</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs59', 139)" onmouseover="showTip(event, 'fs59', 139)" class="i">page</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs56', 140)" onmouseover="showTip(event, 'fs56', 140)" class="f">http</span> <span class="s">&quot;http://osys.ru/&quot;</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs60', 141)" onmouseover="showTip(event, 'fs60', 141)" class="f">count</span> <span onmouseout="hideTip(event, 'fs61', 142)" onmouseover="showTip(event, 'fs61', 142)" class="i">s</span> <span onmouseout="hideTip(event, 'fs62', 143)" onmouseover="showTip(event, 'fs62', 143)" class="i">page</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs63', 144)" onmouseover="showTip(event, 'fs63', 144)" class="t">Regex</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs64', 145)" onmouseover="showTip(event, 'fs64', 145)" class="f">Matches</span>(<span onmouseout="hideTip(event, 'fs62', 146)" onmouseover="showTip(event, 'fs62', 146)" class="i">page</span>,<span onmouseout="hideTip(event, 'fs61', 147)" onmouseover="showTip(event, 'fs61', 147)" class="i">s</span>)<span class="o">.</span><span class="i">Count</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs65', 148)" onmouseover="showTip(event, 'fs65', 148)" class="i">os</span> <span class="o">=</span> [<span class="s">&quot;Windows&quot;</span>;<span class="s">&quot;UNIX&quot;</span>;<span class="s">&quot;Linux&quot;</span>;<span class="s">&quot;DOS&quot;</span>] <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs27', 149)" onmouseover="showTip(event, 'fs27', 149)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs43', 150)" onmouseover="showTip(event, 'fs43', 150)" class="f">map</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs61', 151)" onmouseover="showTip(event, 'fs61', 151)" class="i">s</span> <span class="k">-&gt;</span> (<span onmouseout="hideTip(event, 'fs61', 152)" onmouseover="showTip(event, 'fs61', 152)" class="i">s</span>,<span onmouseout="hideTip(event, 'fs25', 153)" onmouseover="showTip(event, 'fs25', 153)" class="f">float</span>(<span onmouseout="hideTip(event, 'fs60', 154)" onmouseover="showTip(event, 'fs60', 154)" class="f">count</span> <span onmouseout="hideTip(event, 'fs61', 155)" onmouseover="showTip(event, 'fs61', 155)" class="i">s</span> <span onmouseout="hideTip(event, 'fs59', 156)" onmouseover="showTip(event, 'fs59', 156)" class="i">page</span>)))
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs66', 157)" onmouseover="showTip(event, 'fs66', 157)" class="i">V4</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs34', 158)" onmouseover="showTip(event, 'fs34', 158)" class="f">LabelVisualiser3D</span> <span class="s">&quot;OS&quot;</span> <span onmouseout="hideTip(event, 'fs41', 159)" onmouseover="showTip(event, 'fs41', 159)" class="t">SeriesChartType</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs67', 160)" onmouseover="showTip(event, 'fs67', 160)" class="i">Pie</span> <span onmouseout="hideTip(event, 'fs65', 161)" onmouseover="showTip(event, 'fs65', 161)" class="i">os</span>
+<span onmouseout="hideTip(event, 'fs66', 162)" onmouseover="showTip(event, 'fs66', 162)" class="i">V4</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs45', 163)" onmouseover="showTip(event, 'fs45', 163)" class="f">Show</span>()
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">open System.Drawing<br />open System.Windows.Forms<br />#r &quot;System.Windows.Forms.DataVisualization&quot;<br />open System.Windows.Forms.DataVisualization.Charting</div>
+<div class="tip" id="fs2">Multiple items<br />type Visualiser =<br />&#160;&#160;inherit Form<br />&#160;&#160;new : title:string * style:SeriesChartType * init_fun:(Chart -&gt; unit) -&gt; Visualiser<br /><br />Full name: Script.Visualiser<br /><br />--------------------<br />new : title:string * style:SeriesChartType * init_fun:(Chart -&gt; unit) -&gt; Visualiser</div>
+<div class="tip" id="fs3">val title : string</div>
+<div class="tip" id="fs4">val style : SeriesChartType</div>
+<div class="tip" id="fs5">val init_fun : (Chart -&gt; unit)</div>
+<div class="tip" id="fs6">Multiple items<br />type Chart =<br />&#160;&#160;inherit Control<br />&#160;&#160;new : unit -&gt; Chart<br />&#160;&#160;member AlignDataPointsByAxisLabel : unit -&gt; unit + 3 overloads<br />&#160;&#160;member Annotations : AnnotationCollection<br />&#160;&#160;member AntiAliasing : AntiAliasingStyles with get, set<br />&#160;&#160;member ApplyPaletteColors : unit -&gt; unit<br />&#160;&#160;member BackColor : Color with get, set<br />&#160;&#160;member BackGradientStyle : GradientStyle with get, set<br />&#160;&#160;member BackHatchStyle : ChartHatchStyle with get, set<br />&#160;&#160;member BackImage : string with get, set<br />&#160;&#160;member BackImageAlignment : ChartImageAlignmentStyle with get, set<br />&#160;&#160;...<br /><br />Full name: System.Windows.Forms.DataVisualization.Charting.Chart<br /><br />--------------------<br />Chart() : unit</div>
+<div class="tip" id="fs7">type unit = Unit<br /><br />Full name: Microsoft.FSharp.Core.unit</div>
+<div class="tip" id="fs8">Multiple items<br />type Form =<br />&#160;&#160;inherit ContainerControl<br />&#160;&#160;new : unit -&gt; Form<br />&#160;&#160;member AcceptButton : IButtonControl with get, set<br />&#160;&#160;member Activate : unit -&gt; unit<br />&#160;&#160;member ActiveMdiChild : Form<br />&#160;&#160;member AddOwnedForm : ownedForm:Form -&gt; unit<br />&#160;&#160;member AllowTransparency : bool with get, set<br />&#160;&#160;member AutoScale : bool with get, set<br />&#160;&#160;member AutoScaleBaseSize : Size with get, set<br />&#160;&#160;member AutoScroll : bool with get, set<br />&#160;&#160;member AutoSize : bool with get, set<br />&#160;&#160;...<br />&#160;&#160;nested type ControlCollection<br /><br />Full name: System.Windows.Forms.Form<br /><br />--------------------<br />Form() : unit</div>
+<div class="tip" id="fs9">namespace System.Drawing.Text</div>
+<div class="tip" id="fs10">val chart : Chart</div>
+<div class="tip" id="fs11">type DockStyle =<br />&#160;&#160;| None = 0<br />&#160;&#160;| Top = 1<br />&#160;&#160;| Bottom = 2<br />&#160;&#160;| Left = 3<br />&#160;&#160;| Right = 4<br />&#160;&#160;| Fill = 5<br /><br />Full name: System.Windows.Forms.DockStyle</div>
+<div class="tip" id="fs12">field DockStyle.Fill = 5</div>
+<div class="tip" id="fs13">val area : ChartArea</div>
+<div class="tip" id="fs14">Multiple items<br />type ChartArea =<br />&#160;&#160;inherit ChartNamedElement<br />&#160;&#160;new : unit -&gt; ChartArea + 1 overload<br />&#160;&#160;member AlignWithChartArea : string with get, set<br />&#160;&#160;member AlignmentOrientation : AreaAlignmentOrientations with get, set<br />&#160;&#160;member AlignmentStyle : AreaAlignmentStyles with get, set<br />&#160;&#160;member Area3DStyle : ChartArea3DStyle with get, set<br />&#160;&#160;member Axes : Axis[] with get, set<br />&#160;&#160;member AxisX : Axis with get, set<br />&#160;&#160;member AxisX2 : Axis with get, set<br />&#160;&#160;member AxisY : Axis with get, set<br />&#160;&#160;member AxisY2 : Axis with get, set<br />&#160;&#160;...<br /><br />Full name: System.Windows.Forms.DataVisualization.Charting.ChartArea<br /><br />--------------------<br />ChartArea() : unit<br />ChartArea(name: string) : unit</div>
+<div class="tip" id="fs15">val series : Series</div>
+<div class="tip" id="fs16">Multiple items<br />type Series =<br />&#160;&#160;inherit DataPointCustomProperties<br />&#160;&#160;new : unit -&gt; Series + 2 overloads<br />&#160;&#160;member AxisLabel : string with get, set<br />&#160;&#160;member ChartArea : string with get, set<br />&#160;&#160;member ChartType : SeriesChartType with get, set<br />&#160;&#160;member ChartTypeName : string with get, set<br />&#160;&#160;member EmptyPointStyle : DataPointCustomProperties with get, set<br />&#160;&#160;member Enabled : bool with get, set<br />&#160;&#160;member IsXValueIndexed : bool with get, set<br />&#160;&#160;member Legend : string with get, set<br />&#160;&#160;member MarkerStep : int with get, set<br />&#160;&#160;...<br /><br />Full name: System.Windows.Forms.DataVisualization.Charting.Series<br /><br />--------------------<br />Series() : unit<br />Series(name: string) : unit<br />Series(name: string, yValues: int) : unit</div>
+<div class="tip" id="fs17">property Series.ChartType: SeriesChartType</div>
+<div class="tip" id="fs18">property Series.ChartArea: string</div>
+<div class="tip" id="fs19">property Chart.Series: SeriesCollection</div>
+<div class="tip" id="fs20">System.Collections.ObjectModel.Collection.Add(item: Series) : unit<br />SeriesCollection.Add(name: string) : Series</div>
+<div class="tip" id="fs21">property Chart.ChartAreas: ChartAreaCollection</div>
+<div class="tip" id="fs22">System.Collections.ObjectModel.Collection.Add(item: ChartArea) : unit<br />ChartAreaCollection.Add(name: string) : ChartArea</div>
+<div class="tip" id="fs23">val SeqVisualiser : title:string -&gt; style:SeriesChartType -&gt; xs:seq&lt;float&gt; -&gt; Visualiser<br /><br />Full name: Script.SeqVisualiser</div>
+<div class="tip" id="fs24">val xs : seq&lt;float&gt;</div>
+<div class="tip" id="fs25">Multiple items<br />val float : value:&#39;T -&gt; float (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.float<br /><br />--------------------<br />type float = System.Double<br /><br />Full name: Microsoft.FSharp.Core.float<br /><br />--------------------<br />type float&lt;&#39;Measure&gt; = float<br /><br />Full name: Microsoft.FSharp.Core.float&lt;_&gt;</div>
+<div class="tip" id="fs26">Multiple items<br />val seq : sequence:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Core.Operators.seq<br /><br />--------------------<br />type seq&lt;&#39;T&gt; = System.Collections.Generic.IEnumerable&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.seq&lt;_&gt;</div>
+<div class="tip" id="fs27">module Seq<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs28">val iter : action:(&#39;T -&gt; unit) -&gt; source:seq&lt;&#39;T&gt; -&gt; unit<br /><br />Full name: Microsoft.FSharp.Collections.Seq.iter</div>
+<div class="tip" id="fs29">val ignore : value:&#39;T -&gt; unit<br /><br />Full name: Microsoft.FSharp.Core.Operators.ignore</div>
+<div class="tip" id="fs30">val PointVisualiser : title:string -&gt; style:SeriesChartType -&gt; xs:seq&lt;float * float&gt; -&gt; Visualiser<br /><br />Full name: Script.PointVisualiser</div>
+<div class="tip" id="fs31">val xs : seq&lt;float * float&gt;</div>
+<div class="tip" id="fs32">val x : float</div>
+<div class="tip" id="fs33">val y : float</div>
+<div class="tip" id="fs34">val LabelVisualiser3D : title:string -&gt; style:SeriesChartType -&gt; xs:seq&lt;string * float&gt; -&gt; Visualiser<br /><br />Full name: Script.LabelVisualiser3D</div>
+<div class="tip" id="fs35">val xs : seq&lt;string * float&gt;</div>
+<div class="tip" id="fs36">val y : string</div>
+<div class="tip" id="fs37">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />Full name: Microsoft.FSharp.Core.Operators.string<br /><br />--------------------<br />type string = System.String<br /><br />Full name: Microsoft.FSharp.Core.string</div>
+<div class="tip" id="fs38">val pt : DataPoint</div>
+<div class="tip" id="fs39">property DataPointCustomProperties.Label: string</div>
+<div class="tip" id="fs40">val V1 : Visualiser<br /><br />Full name: Script.V1</div>
+<div class="tip" id="fs41">type SeriesChartType =<br />&#160;&#160;| Point = 0<br />&#160;&#160;| FastPoint = 1<br />&#160;&#160;| Bubble = 2<br />&#160;&#160;| Line = 3<br />&#160;&#160;| Spline = 4<br />&#160;&#160;| StepLine = 5<br />&#160;&#160;| FastLine = 6<br />&#160;&#160;| Bar = 7<br />&#160;&#160;| StackedBar = 8<br />&#160;&#160;| StackedBar100 = 9<br />&#160;&#160;...<br /><br />Full name: System.Windows.Forms.DataVisualization.Charting.SeriesChartType</div>
+<div class="tip" id="fs42">field SeriesChartType.Line = 3</div>
+<div class="tip" id="fs43">val map : mapping:(&#39;T -&gt; &#39;U) -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;U&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.map</div>
+<div class="tip" id="fs44">val sin : value:&#39;T -&gt; &#39;T (requires member Sin)<br /><br />Full name: Microsoft.FSharp.Core.Operators.sin</div>
+<div class="tip" id="fs45">Control.Show() : unit<br />Form.Show(owner: IWin32Window) : unit</div>
+<div class="tip" id="fs46">val V2 : Visualiser<br /><br />Full name: Script.V2</div>
+<div class="tip" id="fs47">field SeriesChartType.Bar = 7</div>
+<div class="tip" id="fs48">val R : System.Random</div>
+<div class="tip" id="fs49">namespace System</div>
+<div class="tip" id="fs50">Multiple items<br />type Random =<br />&#160;&#160;new : unit -&gt; Random + 1 overload<br />&#160;&#160;member Next : unit -&gt; int + 2 overloads<br />&#160;&#160;member NextBytes : buffer:byte[] -&gt; unit<br />&#160;&#160;member NextDouble : unit -&gt; float<br /><br />Full name: System.Random<br /><br />--------------------<br />System.Random() : unit<br />System.Random(Seed: int) : unit</div>
+<div class="tip" id="fs51">val i : int</div>
+<div class="tip" id="fs52">System.Random.NextDouble() : float</div>
+<div class="tip" id="fs53">val V3 : Visualiser<br /><br />Full name: Script.V3</div>
+<div class="tip" id="fs54">field SeriesChartType.Bubble = 2</div>
+<div class="tip" id="fs55">open System.IO<br />open System.Text.RegularExpressions</div>
+<div class="tip" id="fs56">val http : url:string -&gt; string<br /><br />Full name: Script.http</div>
+<div class="tip" id="fs57">val url : string</div>
+<div class="tip" id="fs58">let req    = System.Net.WebRequest.Create(url) <br />&#160;&#160;&#160;&#160;use resp   = req.GetResponse()         // note &#39;use&#39; = C# &#39;using&#39;<br />&#160;&#160;&#160;&#160;use stream = resp.GetResponseStream() <br />&#160;&#160;&#160;&#160;use reader = new StreamReader(stream) <br />&#160;&#160;&#160;&#160;let html   = reader.ReadToEnd()<br />&#160;&#160;&#160;&#160;html</div>
+<div class="tip" id="fs59">val page : string<br /><br />Full name: Script.page</div>
+<div class="tip" id="fs60">val count : s:string -&gt; page:string -&gt; int<br /><br />Full name: Script.count</div>
+<div class="tip" id="fs61">val s : string</div>
+<div class="tip" id="fs62">val page : string</div>
+<div class="tip" id="fs63">Multiple items<br />type Regex =<br />&#160;&#160;new : pattern:string -&gt; Regex + 1 overload<br />&#160;&#160;member GetGroupNames : unit -&gt; string[]<br />&#160;&#160;member GetGroupNumbers : unit -&gt; int[]<br />&#160;&#160;member GroupNameFromNumber : i:int -&gt; string<br />&#160;&#160;member GroupNumberFromName : name:string -&gt; int<br />&#160;&#160;member IsMatch : input:string -&gt; bool + 1 overload<br />&#160;&#160;member Match : input:string -&gt; Match + 2 overloads<br />&#160;&#160;member Matches : input:string -&gt; MatchCollection + 1 overload<br />&#160;&#160;member Options : RegexOptions<br />&#160;&#160;member Replace : input:string * replacement:string -&gt; string + 5 overloads<br />&#160;&#160;...<br /><br />Full name: System.Text.RegularExpressions.Regex<br /><br />--------------------<br />Regex(pattern: string) : unit<br />Regex(pattern: string, options: RegexOptions) : unit</div>
+<div class="tip" id="fs64">Regex.Matches(input: string, pattern: string) : MatchCollection<br />Regex.Matches(input: string, pattern: string, options: RegexOptions) : MatchCollection</div>
+<div class="tip" id="fs65">val os : seq&lt;string * float&gt;<br /><br />Full name: Script.os</div>
+<div class="tip" id="fs66">val V4 : Visualiser<br /><br />Full name: Script.V4</div>
+<div class="tip" id="fs67">field SeriesChartType.Pie = 17</div>
+

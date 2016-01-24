@@ -1,0 +1,118 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+<span class="l">38: </span>
+<span class="l">39: </span>
+<span class="l">40: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">Microsoft</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">WindowsAzure</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="i">Storage</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 4)" onmouseover="showTip(event, 'fs1', 4)" class="i">Microsoft</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 5)" onmouseover="showTip(event, 'fs2', 5)" class="i">WindowsAzure</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 6)" onmouseover="showTip(event, 'fs3', 6)" class="i">Storage</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs4', 7)" onmouseover="showTip(event, 'fs4', 7)" class="i">Table</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 8)" onmouseover="showTip(event, 'fs1', 8)" class="i">Microsoft</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 9)" onmouseover="showTip(event, 'fs2', 9)" class="i">WindowsAzure</span><span class="o">.</span><span class="i">ServiceRuntime</span>
+
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs5', 10)" onmouseover="showTip(event, 'fs5', 10)" class="t">Person</span>(<span onmouseout="hideTip(event, 'fs6', 11)" onmouseover="showTip(event, 'fs6', 11)" class="i">partitionKey</span>, <span onmouseout="hideTip(event, 'fs7', 12)" onmouseover="showTip(event, 'fs7', 12)" class="i">rowKey</span>, <span onmouseout="hideTip(event, 'fs8', 13)" onmouseover="showTip(event, 'fs8', 13)" class="i">name</span>) <span class="o">=</span>
+    <span class="k">inherit</span> <span onmouseout="hideTip(event, 'fs9', 14)" onmouseover="showTip(event, 'fs9', 14)" class="t">TableEntity</span>(<span class="i">partitionKey</span>, <span class="i">rowKey</span>)
+    <span class="k">new</span>(<span onmouseout="hideTip(event, 'fs8', 15)" onmouseover="showTip(event, 'fs8', 15)" class="i">name</span>) <span class="o">=</span> <span onmouseout="hideTip(event, 'fs5', 16)" onmouseover="showTip(event, 'fs5', 16)" class="t">Person</span>(<span class="s">&quot;defaultPartition&quot;</span>, <span onmouseout="hideTip(event, 'fs10', 17)" onmouseover="showTip(event, 'fs10', 17)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs11', 18)" onmouseover="showTip(event, 'fs11', 18)" class="t">Guid</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs12', 19)" onmouseover="showTip(event, 'fs12', 19)" class="f">NewGuid</span>()<span class="o">.</span><span class="f">ToString</span>(), <span onmouseout="hideTip(event, 'fs8', 20)" onmouseover="showTip(event, 'fs8', 20)" class="i">name</span>)
+    <span class="k">new</span>() <span class="o">=</span> <span onmouseout="hideTip(event, 'fs5', 21)" onmouseover="showTip(event, 'fs5', 21)" class="t">Person</span>(<span class="s">&quot;&quot;</span>)
+    <span class="k">member</span> <span class="k">val</span> <span class="v">Name</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs8', 22)" onmouseover="showTip(event, 'fs8', 22)" class="v">name</span> <span class="k">with</span> <span class="i">get</span>, <span onmouseout="hideTip(event, 'fs13', 23)" onmouseover="showTip(event, 'fs13', 23)" class="i">set</span>
+
+<span class="c">(*</span>
+<span class="c">    Add this into ServiceDefinition.csdef &lt;WorkerRole&gt;:</span>
+<span class="c">    &lt;ConfigurationSettings&gt;</span>
+<span class="c">      &lt;Setting name=&quot;TableStorageConnectionString&quot; /&gt;</span>
+<span class="c">    &lt;/ConfigurationSettings&gt;</span>
+
+<span class="c">    Add this into ServiceConfiguration.*.csdef &lt;ConfigurationSettings&gt;:</span>
+<span class="c">    &lt;Setting name=&quot;TableStorageConnectionString&quot; value=&quot;UseDevelopmentStorage=true&quot; /&gt;</span>
+<span class="c">*)</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs14', 24)" onmouseover="showTip(event, 'fs14', 24)" class="f">doAction</span> <span onmouseout="hideTip(event, 'fs15', 25)" onmouseover="showTip(event, 'fs15', 25)" class="i">tableName</span> <span onmouseout="hideTip(event, 'fs16', 26)" onmouseover="showTip(event, 'fs16', 26)" class="i">operation</span> <span class="o">=</span> 
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs17', 27)" onmouseover="showTip(event, 'fs17', 27)" class="i">account</span> <span class="o">=</span> 
+        <span class="s">&quot;TableStorageConnectionString&quot;</span>
+        <span class="o">|&gt;</span> <span class="i">RoleEnvironment</span><span class="o">.</span><span class="i">GetConfigurationSettingValue</span> 
+        <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs18', 28)" onmouseover="showTip(event, 'fs18', 28)" class="t">CloudStorageAccount</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs19', 29)" onmouseover="showTip(event, 'fs19', 29)" class="f">Parse</span>
+
+    <span class="c">//memoize this</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs20', 30)" onmouseover="showTip(event, 'fs20', 30)" class="i">client</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs17', 31)" onmouseover="showTip(event, 'fs17', 31)" class="i">account</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs21', 32)" onmouseover="showTip(event, 'fs21', 32)" class="f">CreateCloudTableClient</span>()
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs22', 33)" onmouseover="showTip(event, 'fs22', 33)" class="i">table</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs20', 34)" onmouseover="showTip(event, 'fs20', 34)" class="i">client</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs23', 35)" onmouseover="showTip(event, 'fs23', 35)" class="f">GetTableReference</span>(<span onmouseout="hideTip(event, 'fs15', 36)" onmouseover="showTip(event, 'fs15', 36)" class="i">tableName</span>)
+
+    <span onmouseout="hideTip(event, 'fs24', 37)" onmouseover="showTip(event, 'fs24', 37)" class="i">async</span> {
+        <span class="k">let!</span> <span onmouseout="hideTip(event, 'fs25', 38)" onmouseover="showTip(event, 'fs25', 38)" class="i">created</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs22', 39)" onmouseover="showTip(event, 'fs22', 39)" class="i">table</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs26', 40)" onmouseover="showTip(event, 'fs26', 40)" class="f">CreateIfNotExistsAsync</span>() <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs27', 41)" onmouseover="showTip(event, 'fs27', 41)" class="t">Async</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs28', 42)" onmouseover="showTip(event, 'fs28', 42)" class="f">AwaitTask</span>
+        <span class="k">return!</span> <span onmouseout="hideTip(event, 'fs22', 43)" onmouseover="showTip(event, 'fs22', 43)" class="i">table</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs29', 44)" onmouseover="showTip(event, 'fs29', 44)" class="f">ExecuteAsync</span>(<span onmouseout="hideTip(event, 'fs16', 45)" onmouseover="showTip(event, 'fs16', 45)" class="i">operation</span>) <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs27', 46)" onmouseover="showTip(event, 'fs27', 46)" class="t">Async</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs28', 47)" onmouseover="showTip(event, 'fs28', 47)" class="f">AwaitTask</span>
+    }
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs30', 48)" onmouseover="showTip(event, 'fs30', 48)" class="f">CreatePerson</span>() <span class="o">=</span> 
+    <span onmouseout="hideTip(event, 'fs5', 49)" onmouseover="showTip(event, 'fs5', 49)" class="t">Person</span>(<span class="s">&quot;Tuomas&quot;</span>)
+    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs31', 50)" onmouseover="showTip(event, 'fs31', 50)" class="t">TableOperation</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs32', 51)" onmouseover="showTip(event, 'fs32', 51)" class="f">Insert</span> <span class="c">//Insert, Delete, Replace, etc.</span>
+    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs14', 52)" onmouseover="showTip(event, 'fs14', 52)" class="f">doAction</span> <span class="s">&quot;MyStorageTable&quot;</span>
+    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs27', 53)" onmouseover="showTip(event, 'fs27', 53)" class="t">Async</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs33', 54)" onmouseover="showTip(event, 'fs33', 54)" class="f">RunSynchronously</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace Microsoft</div>
+<div class="tip" id="fs2">namespace Microsoft.WindowsAzure</div>
+<div class="tip" id="fs3">namespace Microsoft.WindowsAzure.Storage</div>
+<div class="tip" id="fs4">namespace Microsoft.WindowsAzure.Storage.Table</div>
+<div class="tip" id="fs5">Multiple items<br />type Person =<br />&#160;&#160;inherit TableEntity<br />&#160;&#160;new : unit -&gt; Person<br />&#160;&#160;new : name:string -&gt; Person<br />&#160;&#160;new : partitionKey:string * rowKey:string * name:string -&gt; Person<br />&#160;&#160;member Name : string<br />&#160;&#160;member Name : string with set<br /><br />Full name: Script.Person<br /><br />--------------------<br />new : unit -&gt; Person<br />new : name:string -&gt; Person<br />new : partitionKey:string * rowKey:string * name:string -&gt; Person</div>
+<div class="tip" id="fs6">val partitionKey : string</div>
+<div class="tip" id="fs7">val rowKey : string</div>
+<div class="tip" id="fs8">val name : string</div>
+<div class="tip" id="fs9">Multiple items<br />type TableEntity =<br />&#160;&#160;new : unit -&gt; TableEntity + 1 overload<br />&#160;&#160;member ETag : string with get, set<br />&#160;&#160;member PartitionKey : string with get, set<br />&#160;&#160;member ReadEntity : properties:IDictionary&lt;string, EntityProperty&gt; * operationContext:OperationContext -&gt; unit<br />&#160;&#160;member RowKey : string with get, set<br />&#160;&#160;member Timestamp : DateTimeOffset with get, set<br />&#160;&#160;member WriteEntity : operationContext:OperationContext -&gt; IDictionary&lt;string, EntityProperty&gt;<br />&#160;&#160;static member DisableCompiledSerializers : bool with get, set<br />&#160;&#160;static member DisablePropertyResolverCache : bool with get, set<br />&#160;&#160;static member ReadUserObject : entity:obj * properties:IDictionary&lt;string, EntityProperty&gt; * operationContext:OperationContext -&gt; unit<br />&#160;&#160;...<br /><br />Full name: Microsoft.WindowsAzure.Storage.Table.TableEntity<br /><br />--------------------<br />TableEntity() : unit<br />TableEntity(partitionKey: string, rowKey: string) : unit</div>
+<div class="tip" id="fs10">namespace System</div>
+<div class="tip" id="fs11">Multiple items<br />type Guid =<br />&#160;&#160;struct<br />&#160;&#160;&#160;&#160;new : b:byte[] -&gt; Guid + 4 overloads<br />&#160;&#160;&#160;&#160;member CompareTo : value:obj -&gt; int + 1 overload<br />&#160;&#160;&#160;&#160;member Equals : o:obj -&gt; bool + 1 overload<br />&#160;&#160;&#160;&#160;member GetHashCode : unit -&gt; int<br />&#160;&#160;&#160;&#160;member ToByteArray : unit -&gt; byte[]<br />&#160;&#160;&#160;&#160;member ToString : unit -&gt; string + 2 overloads<br />&#160;&#160;&#160;&#160;static val Empty : Guid<br />&#160;&#160;&#160;&#160;static member NewGuid : unit -&gt; Guid<br />&#160;&#160;&#160;&#160;static member Parse : input:string -&gt; Guid<br />&#160;&#160;&#160;&#160;static member ParseExact : input:string * format:string -&gt; Guid<br />&#160;&#160;&#160;&#160;...<br />&#160;&#160;end<br /><br />Full name: System.Guid<br /><br />--------------------<br />System.Guid()<br />System.Guid(b: byte []) : unit<br />System.Guid(g: string) : unit<br />System.Guid(a: int, b: int16, c: int16, d: byte []) : unit<br />System.Guid(a: uint32, b: uint16, c: uint16, d: byte, e: byte, f: byte, g: byte, h: byte, i: byte, j: byte, k: byte) : unit<br />System.Guid(a: int, b: int16, c: int16, d: byte, e: byte, f: byte, g: byte, h: byte, i: byte, j: byte, k: byte) : unit</div>
+<div class="tip" id="fs12">System.Guid.NewGuid() : System.Guid</div>
+<div class="tip" id="fs13">val set : elements:seq&lt;&#39;T&gt; -&gt; Set&lt;&#39;T&gt; (requires comparison)<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.set</div>
+<div class="tip" id="fs14">val doAction : tableName:string -&gt; operation:TableOperation -&gt; Async&lt;TableResult&gt;<br /><br />Full name: Script.doAction</div>
+<div class="tip" id="fs15">val tableName : string</div>
+<div class="tip" id="fs16">val operation : TableOperation</div>
+<div class="tip" id="fs17">val account : CloudStorageAccount</div>
+<div class="tip" id="fs18">Multiple items<br />type CloudStorageAccount =<br />&#160;&#160;new : storageCredentials:StorageCredentials * useHttps:bool -&gt; CloudStorageAccount + 4 overloads<br />&#160;&#160;member BlobEndpoint : Uri<br />&#160;&#160;member BlobStorageUri : StorageUri with get, set<br />&#160;&#160;member CreateCloudAnalyticsClient : unit -&gt; CloudAnalyticsClient<br />&#160;&#160;member CreateCloudBlobClient : unit -&gt; CloudBlobClient<br />&#160;&#160;member CreateCloudFileClient : unit -&gt; CloudFileClient<br />&#160;&#160;member CreateCloudQueueClient : unit -&gt; CloudQueueClient<br />&#160;&#160;member CreateCloudTableClient : unit -&gt; CloudTableClient<br />&#160;&#160;member Credentials : StorageCredentials with get, set<br />&#160;&#160;member FileEndpoint : Uri<br />&#160;&#160;...<br /><br />Full name: Microsoft.WindowsAzure.Storage.CloudStorageAccount<br /><br />--------------------<br />CloudStorageAccount(storageCredentials: Auth.StorageCredentials, useHttps: bool) : unit<br />CloudStorageAccount(storageCredentials: Auth.StorageCredentials, endpointSuffix: string, useHttps: bool) : unit<br />CloudStorageAccount(storageCredentials: Auth.StorageCredentials, accountName: string, endpointSuffix: string, useHttps: bool) : unit<br />CloudStorageAccount(storageCredentials: Auth.StorageCredentials, blobEndpoint: System.Uri, queueEndpoint: System.Uri, tableEndpoint: System.Uri, fileEndpoint: System.Uri) : unit<br />CloudStorageAccount(storageCredentials: Auth.StorageCredentials, blobStorageUri: StorageUri, queueStorageUri: StorageUri, tableStorageUri: StorageUri, fileStorageUri: StorageUri) : unit</div>
+<div class="tip" id="fs19">CloudStorageAccount.Parse(connectionString: string) : CloudStorageAccount</div>
+<div class="tip" id="fs20">val client : CloudTableClient</div>
+<div class="tip" id="fs21">CloudStorageAccount.CreateCloudTableClient() : CloudTableClient</div>
+<div class="tip" id="fs22">val table : CloudTable</div>
+<div class="tip" id="fs23">CloudTableClient.GetTableReference(tableName: string) : CloudTable</div>
+<div class="tip" id="fs24">val async : AsyncBuilder<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.async</div>
+<div class="tip" id="fs25">val created : bool</div>
+<div class="tip" id="fs26">CloudTable.CreateIfNotExistsAsync() : System.Threading.Tasks.Task&lt;bool&gt;<br />CloudTable.CreateIfNotExistsAsync(cancellationToken: System.Threading.CancellationToken) : System.Threading.Tasks.Task&lt;bool&gt;<br />CloudTable.CreateIfNotExistsAsync(requestOptions: TableRequestOptions, operationContext: OperationContext) : System.Threading.Tasks.Task&lt;bool&gt;<br />CloudTable.CreateIfNotExistsAsync(requestOptions: TableRequestOptions, operationContext: OperationContext, cancellationToken: System.Threading.CancellationToken) : System.Threading.Tasks.Task&lt;bool&gt;</div>
+<div class="tip" id="fs27">Multiple items<br />type Async<br />static member AsBeginEnd : computation:(&#39;Arg -&gt; Async&lt;&#39;T&gt;) -&gt; (&#39;Arg * AsyncCallback * obj -&gt; IAsyncResult) * (IAsyncResult -&gt; &#39;T) * (IAsyncResult -&gt; unit)<br />static member AwaitEvent : event:IEvent&lt;&#39;Del,&#39;T&gt; * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt; (requires delegate and &#39;Del :&gt; Delegate)<br />static member AwaitIAsyncResult : iar:IAsyncResult * ?millisecondsTimeout:int -&gt; Async&lt;bool&gt;<br />static member AwaitTask : task:Task&lt;&#39;T&gt; -&gt; Async&lt;&#39;T&gt;<br />static member AwaitWaitHandle : waitHandle:WaitHandle * ?millisecondsTimeout:int -&gt; Async&lt;bool&gt;<br />static member CancelDefaultToken : unit -&gt; unit<br />static member Catch : computation:Async&lt;&#39;T&gt; -&gt; Async&lt;Choice&lt;&#39;T,exn&gt;&gt;<br />static member FromBeginEnd : beginAction:(AsyncCallback * obj -&gt; IAsyncResult) * endAction:(IAsyncResult -&gt; &#39;T) * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member FromBeginEnd : arg:&#39;Arg1 * beginAction:(&#39;Arg1 * AsyncCallback * obj -&gt; IAsyncResult) * endAction:(IAsyncResult -&gt; &#39;T) * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member FromBeginEnd : arg1:&#39;Arg1 * arg2:&#39;Arg2 * beginAction:(&#39;Arg1 * &#39;Arg2 * AsyncCallback * obj -&gt; IAsyncResult) * endAction:(IAsyncResult -&gt; &#39;T) * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member FromBeginEnd : arg1:&#39;Arg1 * arg2:&#39;Arg2 * arg3:&#39;Arg3 * beginAction:(&#39;Arg1 * &#39;Arg2 * &#39;Arg3 * AsyncCallback * obj -&gt; IAsyncResult) * endAction:(IAsyncResult -&gt; &#39;T) * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member FromContinuations : callback:((&#39;T -&gt; unit) * (exn -&gt; unit) * (OperationCanceledException -&gt; unit) -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member Ignore : computation:Async&lt;&#39;T&gt; -&gt; Async&lt;unit&gt;<br />static member OnCancel : interruption:(unit -&gt; unit) -&gt; Async&lt;IDisposable&gt;<br />static member Parallel : computations:seq&lt;Async&lt;&#39;T&gt;&gt; -&gt; Async&lt;&#39;T []&gt;<br />static member RunSynchronously : computation:Async&lt;&#39;T&gt; * ?timeout:int * ?cancellationToken:CancellationToken -&gt; &#39;T<br />static member Sleep : millisecondsDueTime:int -&gt; Async&lt;unit&gt;<br />static member Start : computation:Async&lt;unit&gt; * ?cancellationToken:CancellationToken -&gt; unit<br />static member StartAsTask : computation:Async&lt;&#39;T&gt; * ?taskCreationOptions:TaskCreationOptions * ?cancellationToken:CancellationToken -&gt; Task&lt;&#39;T&gt;<br />static member StartChild : computation:Async&lt;&#39;T&gt; * ?millisecondsTimeout:int -&gt; Async&lt;Async&lt;&#39;T&gt;&gt;<br />static member StartChildAsTask : computation:Async&lt;&#39;T&gt; * ?taskCreationOptions:TaskCreationOptions -&gt; Async&lt;Task&lt;&#39;T&gt;&gt;<br />static member StartImmediate : computation:Async&lt;unit&gt; * ?cancellationToken:CancellationToken -&gt; unit<br />static member StartWithContinuations : computation:Async&lt;&#39;T&gt; * continuation:(&#39;T -&gt; unit) * exceptionContinuation:(exn -&gt; unit) * cancellationContinuation:(OperationCanceledException -&gt; unit) * ?cancellationToken:CancellationToken -&gt; unit<br />static member SwitchToContext : syncContext:SynchronizationContext -&gt; Async&lt;unit&gt;<br />static member SwitchToNewThread : unit -&gt; Async&lt;unit&gt;<br />static member SwitchToThreadPool : unit -&gt; Async&lt;unit&gt;<br />static member TryCancelled : computation:Async&lt;&#39;T&gt; * compensation:(OperationCanceledException -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member CancellationToken : Async&lt;CancellationToken&gt;<br />static member DefaultCancellationToken : CancellationToken<br /><br />Full name: Microsoft.FSharp.Control.Async<br /><br />--------------------<br />type Async&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Control.Async&lt;_&gt;</div>
+<div class="tip" id="fs28">static member Async.AwaitTask : task:System.Threading.Tasks.Task&lt;&#39;T&gt; -&gt; Async&lt;&#39;T&gt;</div>
+<div class="tip" id="fs29">CloudTable.ExecuteAsync(operation: TableOperation) : System.Threading.Tasks.Task&lt;TableResult&gt;<br />CloudTable.ExecuteAsync(operation: TableOperation, cancellationToken: System.Threading.CancellationToken) : System.Threading.Tasks.Task&lt;TableResult&gt;<br />CloudTable.ExecuteAsync(operation: TableOperation, requestOptions: TableRequestOptions, operationContext: OperationContext) : System.Threading.Tasks.Task&lt;TableResult&gt;<br />CloudTable.ExecuteAsync(operation: TableOperation, requestOptions: TableRequestOptions, operationContext: OperationContext, cancellationToken: System.Threading.CancellationToken) : System.Threading.Tasks.Task&lt;TableResult&gt;</div>
+<div class="tip" id="fs30">val CreatePerson : unit -&gt; TableResult<br /><br />Full name: Script.CreatePerson</div>
+<div class="tip" id="fs31">type TableOperation =<br />&#160;&#160;static member Delete : entity:ITableEntity -&gt; TableOperation<br />&#160;&#160;static member Insert : entity:ITableEntity -&gt; TableOperation + 1 overload<br />&#160;&#160;static member InsertOrMerge : entity:ITableEntity -&gt; TableOperation<br />&#160;&#160;static member InsertOrReplace : entity:ITableEntity -&gt; TableOperation<br />&#160;&#160;static member Merge : entity:ITableEntity -&gt; TableOperation<br />&#160;&#160;static member Replace : entity:ITableEntity -&gt; TableOperation<br />&#160;&#160;static member Retrieve&lt;&#39;TElement&gt; : partitionKey:string * rowkey:string -&gt; TableOperation + 5 overloads<br /><br />Full name: Microsoft.WindowsAzure.Storage.Table.TableOperation</div>
+<div class="tip" id="fs32">TableOperation.Insert(entity: ITableEntity) : TableOperation<br />TableOperation.Insert(entity: ITableEntity, echoContent: bool) : TableOperation</div>
+<div class="tip" id="fs33">static member Async.RunSynchronously : computation:Async&lt;&#39;T&gt; * ?timeout:int * ?cancellationToken:System.Threading.CancellationToken -&gt; &#39;T</div>
+

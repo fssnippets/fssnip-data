@@ -1,0 +1,102 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">LanguagePrimitives</span>
+
+<span class="c">// A simple trick enables genericity below: In F#, the shift amount</span>
+<span class="c">// takes into account the lowest bits only. Therefore, shifting right by -1</span>
+<span class="c">// results in the maximum shift and the sign bit gets propagated to the whole word.</span>
+
+<span class="c">/// Maximum of zero and the argument for signed integers. A special version using bit manipulation tricks.</span>
+<span class="k">let</span> <span class="k">inline</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="f">maxi0</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="i">x</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs3', 4)" onmouseover="showTip(event, 'fs3', 4)" class="i">x</span> <span class="o">&amp;&amp;&amp;</span> <span class="o">~~~</span>(<span onmouseout="hideTip(event, 'fs3', 5)" onmouseover="showTip(event, 'fs3', 5)" class="i">x</span> <span class="o">&gt;</span><span class="o">&gt;</span><span class="o">&gt;</span> <span class="o">-</span><span class="n">1</span>)
+
+<span class="c">/// Minimum of zero and the argument for signed integers. A special version using bit manipulation tricks.</span>
+<span class="k">let</span> <span class="k">inline</span> <span onmouseout="hideTip(event, 'fs4', 6)" onmouseover="showTip(event, 'fs4', 6)" class="f">mini0</span> <span onmouseout="hideTip(event, 'fs5', 7)" onmouseover="showTip(event, 'fs5', 7)" class="i">x</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs5', 8)" onmouseover="showTip(event, 'fs5', 8)" class="i">x</span> <span class="o">&amp;&amp;&amp;</span> (<span onmouseout="hideTip(event, 'fs5', 9)" onmouseover="showTip(event, 'fs5', 9)" class="i">x</span> <span class="o">&gt;</span><span class="o">&gt;</span><span class="o">&gt;</span> <span class="o">-</span><span class="n">1</span>)
+
+<span class="c">/// Maximum function for signed integers. A special version using bit manipulation tricks.</span>
+<span class="c">/// Has limited numerical range: requires that a - b is representable.</span>
+<span class="k">let</span> <span class="k">inline</span> <span onmouseout="hideTip(event, 'fs6', 10)" onmouseover="showTip(event, 'fs6', 10)" class="f">maxi</span> (<span onmouseout="hideTip(event, 'fs7', 11)" onmouseover="showTip(event, 'fs7', 11)" class="i">a</span> <span class="o">:</span> <span class="o">&#39;</span><span class="i">a</span>) (<span onmouseout="hideTip(event, 'fs8', 12)" onmouseover="showTip(event, 'fs8', 12)" class="i">b</span> <span class="o">:</span> <span class="o">&#39;</span><span class="i">a</span>) <span class="o">:</span> <span class="o">&#39;</span><span class="i">a</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs2', 13)" onmouseover="showTip(event, 'fs2', 13)" class="f">maxi0</span> (<span onmouseout="hideTip(event, 'fs7', 14)" onmouseover="showTip(event, 'fs7', 14)" class="i">a</span> <span class="o">-</span> <span onmouseout="hideTip(event, 'fs8', 15)" onmouseover="showTip(event, 'fs8', 15)" class="i">b</span>) <span class="o">+</span> <span onmouseout="hideTip(event, 'fs8', 16)" onmouseover="showTip(event, 'fs8', 16)" class="i">b</span>
+
+<span class="c">/// Minimum function for signed integers. A special version using bit manipulation tricks.</span>
+<span class="c">/// Has limited numerical range: requires that a - b is representable.</span>
+<span class="k">let</span> <span class="k">inline</span> <span onmouseout="hideTip(event, 'fs9', 17)" onmouseover="showTip(event, 'fs9', 17)" class="f">mini</span> (<span onmouseout="hideTip(event, 'fs10', 18)" onmouseover="showTip(event, 'fs10', 18)" class="i">a</span> <span class="o">:</span> <span class="o">&#39;</span><span class="i">a</span>) (<span onmouseout="hideTip(event, 'fs11', 19)" onmouseover="showTip(event, 'fs11', 19)" class="i">b</span> <span class="o">:</span> <span class="o">&#39;</span><span class="i">a</span>) <span class="o">:</span> <span class="o">&#39;</span><span class="i">a</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs4', 20)" onmouseover="showTip(event, 'fs4', 20)" class="f">mini0</span> (<span onmouseout="hideTip(event, 'fs10', 21)" onmouseover="showTip(event, 'fs10', 21)" class="i">a</span> <span class="o">-</span> <span onmouseout="hideTip(event, 'fs11', 22)" onmouseover="showTip(event, 'fs11', 22)" class="i">b</span>) <span class="o">+</span> <span onmouseout="hideTip(event, 'fs11', 23)" onmouseover="showTip(event, 'fs11', 23)" class="i">b</span>
+
+<span class="c">/// Clamps signed integer x to [a, b] (a &lt;= b). A special version using bit manipulation tricks.</span>
+<span class="c">/// Has limited numerical range: requires that a - b, a - x and b - x are representable.</span>
+<span class="k">let</span> <span class="k">inline</span> <span onmouseout="hideTip(event, 'fs12', 24)" onmouseover="showTip(event, 'fs12', 24)" class="f">clampi</span> (<span onmouseout="hideTip(event, 'fs7', 25)" onmouseover="showTip(event, 'fs7', 25)" class="i">a</span> <span class="o">:</span> <span class="o">&#39;</span><span class="i">a</span>) (<span onmouseout="hideTip(event, 'fs8', 26)" onmouseover="showTip(event, 'fs8', 26)" class="i">b</span> <span class="o">:</span> <span class="o">&#39;</span><span class="i">a</span>) (<span onmouseout="hideTip(event, 'fs13', 27)" onmouseover="showTip(event, 'fs13', 27)" class="i">x</span> <span class="o">:</span> <span class="o">&#39;</span><span class="i">a</span>) <span class="o">:</span> <span class="o">&#39;</span><span class="i">a</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs6', 28)" onmouseover="showTip(event, 'fs6', 28)" class="f">maxi</span> <span onmouseout="hideTip(event, 'fs7', 29)" onmouseover="showTip(event, 'fs7', 29)" class="i">a</span> (<span onmouseout="hideTip(event, 'fs9', 30)" onmouseover="showTip(event, 'fs9', 30)" class="f">mini</span> <span onmouseout="hideTip(event, 'fs8', 31)" onmouseover="showTip(event, 'fs8', 31)" class="i">b</span> <span onmouseout="hideTip(event, 'fs13', 32)" onmouseover="showTip(event, 'fs13', 32)" class="i">x</span>)
+
+<span class="c">/// Sign function for signed integers that uses bit manipulation tricks.</span>
+<span class="k">let</span> <span class="k">inline</span> <span onmouseout="hideTip(event, 'fs14', 33)" onmouseover="showTip(event, 'fs14', 33)" class="f">signi</span> (<span onmouseout="hideTip(event, 'fs15', 34)" onmouseover="showTip(event, 'fs15', 34)" class="i">x</span> <span class="o">:</span> <span class="o">&#39;</span><span class="i">a</span>) <span class="o">:</span> <span class="o">&#39;</span><span class="i">a</span> <span class="o">=</span> ((<span class="o">-</span><span onmouseout="hideTip(event, 'fs15', 35)" onmouseover="showTip(event, 'fs15', 35)" class="i">x</span> <span class="o">&gt;</span><span class="o">&gt;</span><span class="o">&gt;</span> <span class="o">-</span><span class="n">1</span>) <span class="o">&amp;&amp;&amp;</span> <span onmouseout="hideTip(event, 'fs16', 36)" onmouseover="showTip(event, 'fs16', 36)" class="i">GenericOne</span>) <span class="o">+</span> (<span onmouseout="hideTip(event, 'fs15', 37)" onmouseover="showTip(event, 'fs15', 37)" class="i">x</span> <span class="o">&gt;</span><span class="o">&gt;</span><span class="o">&gt;</span> <span class="o">-</span><span class="n">1</span>)
+
+<span class="c">/// Absolute function for signed integers. A special version using bit manipulation tricks.</span>
+<span class="c">/// The smallest signed value cannot be negated; the standard function raises an exception,</span>
+<span class="c">/// whereas we return it unchanged.</span>
+<span class="k">let</span> <span class="k">inline</span> <span onmouseout="hideTip(event, 'fs17', 38)" onmouseover="showTip(event, 'fs17', 38)" class="f">absi</span> (<span onmouseout="hideTip(event, 'fs18', 39)" onmouseover="showTip(event, 'fs18', 39)" class="i">x</span> <span class="o">:</span> <span class="o">&#39;</span><span class="i">a</span>) <span class="o">:</span> <span class="o">&#39;</span><span class="i">a</span> <span class="o">=</span> <span class="k">let</span> <span onmouseout="hideTip(event, 'fs19', 40)" onmouseover="showTip(event, 'fs19', 40)" class="i">y</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs18', 41)" onmouseover="showTip(event, 'fs18', 41)" class="i">x</span> <span class="o">&gt;</span><span class="o">&gt;</span><span class="o">&gt;</span> <span class="o">-</span><span class="n">1</span> <span class="k">in</span> (<span onmouseout="hideTip(event, 'fs18', 42)" onmouseover="showTip(event, 'fs18', 42)" class="i">x</span> <span class="o">&amp;&amp;&amp;</span> <span class="o">~~~</span><span onmouseout="hideTip(event, 'fs19', 43)" onmouseover="showTip(event, 'fs19', 43)" class="i">y</span>) <span class="o">-</span> (<span onmouseout="hideTip(event, 'fs18', 44)" onmouseover="showTip(event, 'fs18', 44)" class="i">x</span> <span class="o">&amp;&amp;&amp;</span> <span onmouseout="hideTip(event, 'fs19', 45)" onmouseover="showTip(event, 'fs19', 45)" class="i">y</span>)
+
+<span class="c">/// Negative indicator function for signed integers. Returns 1 if x &lt; 0, and 0 otherwise.</span>
+<span class="k">let</span> <span class="k">inline</span> <span onmouseout="hideTip(event, 'fs20', 46)" onmouseover="showTip(event, 'fs20', 46)" class="f">negativei</span> <span onmouseout="hideTip(event, 'fs21', 47)" onmouseover="showTip(event, 'fs21', 47)" class="i">x</span> <span class="o">=</span> (<span onmouseout="hideTip(event, 'fs21', 48)" onmouseover="showTip(event, 'fs21', 48)" class="i">x</span> <span class="o">&gt;</span><span class="o">&gt;</span><span class="o">&gt;</span> <span class="o">-</span><span class="n">1</span>) <span class="o">&amp;&amp;&amp;</span> <span onmouseout="hideTip(event, 'fs16', 49)" onmouseover="showTip(event, 'fs16', 49)" class="i">GenericOne</span>
+
+<span class="c">/// Positive indicator function for signed integers. Returns 1 if x &gt; 0, and 0 otherwise.</span>
+<span class="k">let</span> <span class="k">inline</span> <span onmouseout="hideTip(event, 'fs22', 50)" onmouseover="showTip(event, 'fs22', 50)" class="f">positivei</span> <span onmouseout="hideTip(event, 'fs23', 51)" onmouseover="showTip(event, 'fs23', 51)" class="i">x</span> <span class="o">=</span> (<span class="o">-</span><span onmouseout="hideTip(event, 'fs23', 52)" onmouseover="showTip(event, 'fs23', 52)" class="i">x</span> <span class="o">&gt;</span><span class="o">&gt;</span><span class="o">&gt;</span> <span class="o">-</span><span class="n">1</span>) <span class="o">&amp;&amp;&amp;</span> <span onmouseout="hideTip(event, 'fs16', 53)" onmouseover="showTip(event, 'fs16', 53)" class="i">GenericOne</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">module LanguagePrimitives<br /><br />from Microsoft.FSharp.Core</div>
+<div class="tip" id="fs2">val maxi0 : x:&#39;a -&gt; &#39;a (requires member ( &gt;&gt;&gt; ) and member ( &amp;&amp;&amp; ) and member ( ~~~ ))<br /><br />Full name: Script.maxi0<br /><em><br /><br />&#160;Maximum of zero and the argument for signed integers. A special version using bit manipulation tricks.</em></div>
+<div class="tip" id="fs3">val x : &#39;a (requires member ( &gt;&gt;&gt; ) and member ( &amp;&amp;&amp; ) and member ( ~~~ ))</div>
+<div class="tip" id="fs4">val mini0 : x:&#39;a -&gt; &#39;a (requires member ( &gt;&gt;&gt; ) and member ( &amp;&amp;&amp; ))<br /><br />Full name: Script.mini0<br /><em><br /><br />&#160;Minimum of zero and the argument for signed integers. A special version using bit manipulation tricks.</em></div>
+<div class="tip" id="fs5">val x : &#39;a (requires member ( &gt;&gt;&gt; ) and member ( &amp;&amp;&amp; ))</div>
+<div class="tip" id="fs6">val maxi : a:&#39;a -&gt; b:&#39;a -&gt; &#39;a (requires member ( - ) and member ( + ) and member ( &gt;&gt;&gt; ) and member ( &amp;&amp;&amp; ) and member ( ~~~ ))<br /><br />Full name: Script.maxi<br /><em><br /><br />&#160;Maximum function for signed integers. A special version using bit manipulation tricks.<br />&#160;Has limited numerical range: requires that a - b is representable.</em></div>
+<div class="tip" id="fs7">val a : &#39;a (requires member ( - ) and member ( + ) and member ( &gt;&gt;&gt; ) and member ( &amp;&amp;&amp; ) and member ( ~~~ ))</div>
+<div class="tip" id="fs8">val b : &#39;a (requires member ( - ) and member ( + ) and member ( &gt;&gt;&gt; ) and member ( &amp;&amp;&amp; ) and member ( ~~~ ))</div>
+<div class="tip" id="fs9">val mini : a:&#39;a -&gt; b:&#39;a -&gt; &#39;a (requires member ( - ) and member ( + ) and member ( &gt;&gt;&gt; ) and member ( &amp;&amp;&amp; ))<br /><br />Full name: Script.mini<br /><em><br /><br />&#160;Minimum function for signed integers. A special version using bit manipulation tricks.<br />&#160;Has limited numerical range: requires that a - b is representable.</em></div>
+<div class="tip" id="fs10">val a : &#39;a (requires member ( - ) and member ( + ) and member ( &gt;&gt;&gt; ) and member ( &amp;&amp;&amp; ))</div>
+<div class="tip" id="fs11">val b : &#39;a (requires member ( - ) and member ( + ) and member ( &gt;&gt;&gt; ) and member ( &amp;&amp;&amp; ))</div>
+<div class="tip" id="fs12">val clampi : a:&#39;a -&gt; b:&#39;a -&gt; x:&#39;a -&gt; &#39;a (requires member ( - ) and member ( + ) and member ( &gt;&gt;&gt; ) and member ( &amp;&amp;&amp; ) and member ( ~~~ ))<br /><br />Full name: Script.clampi<br /><em><br /><br />&#160;Clamps signed integer x to [a, b] (a &lt;= b). A special version using bit manipulation tricks.<br />&#160;Has limited numerical range: requires that a - b, a - x and b - x are representable.</em></div>
+<div class="tip" id="fs13">val x : &#39;a (requires member ( - ) and member ( + ) and member ( &gt;&gt;&gt; ) and member ( &amp;&amp;&amp; ) and member ( ~~~ ))</div>
+<div class="tip" id="fs14">val signi : x:&#39;a -&gt; &#39;a (requires member ( &gt;&gt;&gt; ) and member ( + ) and member ( &amp;&amp;&amp; ) and member ( ~- ) and member get_One)<br /><br />Full name: Script.signi<br /><em><br /><br />&#160;Sign function for signed integers that uses bit manipulation tricks.</em></div>
+<div class="tip" id="fs15">val x : &#39;a (requires member ( &gt;&gt;&gt; ) and member ( + ) and member ( &amp;&amp;&amp; ) and member ( ~- ) and member get_One)</div>
+<div class="tip" id="fs16">val GenericOne&lt;&#39;T (requires member get_One)&gt; : &#39;T (requires member get_One)<br /><br />Full name: Microsoft.FSharp.Core.LanguagePrimitives.GenericOne</div>
+<div class="tip" id="fs17">val absi : x:&#39;a -&gt; &#39;a (requires member ( &gt;&gt;&gt; ) and member ( - ) and member ( &amp;&amp;&amp; ) and member ( ~~~ ))<br /><br />Full name: Script.absi<br /><em><br /><br />&#160;Absolute function for signed integers. A special version using bit manipulation tricks.<br />&#160;The smallest signed value cannot be negated; the standard function raises an exception,<br />&#160;whereas we return it unchanged.</em></div>
+<div class="tip" id="fs18">val x : &#39;a (requires member ( &gt;&gt;&gt; ) and member ( - ) and member ( &amp;&amp;&amp; ) and member ( ~~~ ))</div>
+<div class="tip" id="fs19">val y : &#39;a (requires member ( &gt;&gt;&gt; ) and member ( - ) and member ( &amp;&amp;&amp; ) and member ( ~~~ ))</div>
+<div class="tip" id="fs20">val negativei : x:&#39;a -&gt; &#39;a (requires member get_One and member ( &gt;&gt;&gt; ) and member ( &amp;&amp;&amp; ))<br /><br />Full name: Script.negativei<br /><em><br /><br />&#160;Negative indicator function for signed integers. Returns 1 if x &lt; 0, and 0 otherwise.</em></div>
+<div class="tip" id="fs21">val x : &#39;a (requires member get_One and member ( &gt;&gt;&gt; ) and member ( &amp;&amp;&amp; ))</div>
+<div class="tip" id="fs22">val positivei : x:&#39;a -&gt; &#39;a (requires member get_One and member ( ~- ) and member ( &amp;&amp;&amp; ) and member ( &gt;&gt;&gt; ))<br /><br />Full name: Script.positivei<br /><em><br /><br />&#160;Positive indicator function for signed integers. Returns 1 if x &gt; 0, and 0 otherwise.</em></div>
+<div class="tip" id="fs23">val x : &#39;a (requires member get_One and member ( ~- ) and member ( &amp;&amp;&amp; ) and member ( &gt;&gt;&gt; ))</div>
+

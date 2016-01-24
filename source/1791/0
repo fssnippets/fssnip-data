@@ -1,0 +1,9 @@
+  let inline tryParse 
+    defaultVal 
+    text 
+    : ^a when ^a : (static member TryParse : string * ^a byref -> bool) 
+    = 
+    let r = ref defaultVal
+    if (^a : (static member TryParse: string * ^a byref -> bool) (text, &r.contents)) 
+    then !r 
+    else defaultVal

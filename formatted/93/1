@@ -1,0 +1,73 @@
+<h2><a name="Tail-recursive-version" class="anchor" href="#Tail-recursive-version">Tail recursive version</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">let</span> <span class="k">inline</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="f">pow</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">b</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="i">e</span> <span class="o">=</span>
+    <span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="f">loop</span> <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="i">acc</span> <span class="o">=</span> <span class="k">function</span>
+    | <span onmouseout="hideTip(event, 'fs3', 6)" onmouseover="showTip(event, 'fs3', 6)" class="i">e</span> <span class="k">when</span> <span onmouseout="hideTip(event, 'fs3', 7)" onmouseover="showTip(event, 'fs3', 7)" class="i">e</span> <span class="o">&lt;</span> <span onmouseout="hideTip(event, 'fs6', 8)" onmouseover="showTip(event, 'fs6', 8)" class="t">LanguagePrimitives</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs7', 9)" onmouseover="showTip(event, 'fs7', 9)" class="i">GenericOne</span><span class="o">&lt;</span>_<span class="o">&gt;</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs5', 10)" onmouseover="showTip(event, 'fs5', 10)" class="i">acc</span>
+    | <span onmouseout="hideTip(event, 'fs3', 11)" onmouseover="showTip(event, 'fs3', 11)" class="i">e</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs4', 12)" onmouseover="showTip(event, 'fs4', 12)" class="f">loop</span> (<span onmouseout="hideTip(event, 'fs2', 13)" onmouseover="showTip(event, 'fs2', 13)" class="i">b</span><span class="o">*</span><span onmouseout="hideTip(event, 'fs5', 14)" onmouseover="showTip(event, 'fs5', 14)" class="i">acc</span>) (<span onmouseout="hideTip(event, 'fs3', 15)" onmouseover="showTip(event, 'fs3', 15)" class="i">e</span><span class="o">-</span><span onmouseout="hideTip(event, 'fs6', 16)" onmouseover="showTip(event, 'fs6', 16)" class="t">LanguagePrimitives</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs7', 17)" onmouseover="showTip(event, 'fs7', 17)" class="i">GenericOne</span><span class="o">&lt;</span>_<span class="o">&gt;</span>)
+    <span onmouseout="hideTip(event, 'fs4', 18)" onmouseover="showTip(event, 'fs4', 18)" class="f">loop</span> <span onmouseout="hideTip(event, 'fs6', 19)" onmouseover="showTip(event, 'fs6', 19)" class="t">LanguagePrimitives</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs7', 20)" onmouseover="showTip(event, 'fs7', 20)" class="i">GenericOne</span> <span onmouseout="hideTip(event, 'fs3', 21)" onmouseover="showTip(event, 'fs3', 21)" class="i">e</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Original-version" class="anchor" href="#Original-version">Original version</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">let</span> <span class="k">inline</span> <span onmouseout="hideTip(event, 'fs8', 22)" onmouseover="showTip(event, 'fs8', 22)" class="f">pow_</span> <span onmouseout="hideTip(event, 'fs2', 23)" onmouseover="showTip(event, 'fs2', 23)" class="i">b</span> <span onmouseout="hideTip(event, 'fs3', 24)" onmouseover="showTip(event, 'fs3', 24)" class="i">e</span> <span class="o">=</span>
+    <span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs9', 25)" onmouseover="showTip(event, 'fs9', 25)" class="f">loop</span> <span class="o">=</span> <span class="k">function</span>
+    | <span onmouseout="hideTip(event, 'fs3', 26)" onmouseover="showTip(event, 'fs3', 26)" class="i">e</span> <span class="k">when</span> <span onmouseout="hideTip(event, 'fs3', 27)" onmouseover="showTip(event, 'fs3', 27)" class="i">e</span> <span class="o">&lt;</span> <span onmouseout="hideTip(event, 'fs6', 28)" onmouseover="showTip(event, 'fs6', 28)" class="t">LanguagePrimitives</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs7', 29)" onmouseover="showTip(event, 'fs7', 29)" class="i">GenericOne</span><span class="o">&lt;</span>_<span class="o">&gt;</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs6', 30)" onmouseover="showTip(event, 'fs6', 30)" class="t">LanguagePrimitives</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs7', 31)" onmouseover="showTip(event, 'fs7', 31)" class="i">GenericOne</span><span class="o">&lt;</span>_<span class="o">&gt;</span>
+    | <span onmouseout="hideTip(event, 'fs3', 32)" onmouseover="showTip(event, 'fs3', 32)" class="i">e</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs2', 33)" onmouseover="showTip(event, 'fs2', 33)" class="i">b</span> <span class="o">*</span> (<span onmouseout="hideTip(event, 'fs9', 34)" onmouseover="showTip(event, 'fs9', 34)" class="f">loop</span> (<span onmouseout="hideTip(event, 'fs3', 35)" onmouseover="showTip(event, 'fs3', 35)" class="i">e</span><span class="o">-</span><span onmouseout="hideTip(event, 'fs6', 36)" onmouseover="showTip(event, 'fs6', 36)" class="t">LanguagePrimitives</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs7', 37)" onmouseover="showTip(event, 'fs7', 37)" class="i">GenericOne</span><span class="o">&lt;</span>_<span class="o">&gt;</span>))
+    <span onmouseout="hideTip(event, 'fs9', 38)" onmouseover="showTip(event, 'fs9', 38)" class="f">loop</span> <span onmouseout="hideTip(event, 'fs3', 39)" onmouseover="showTip(event, 'fs3', 39)" class="i">e</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="console-output" class="anchor" href="#console-output">console output</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">(*</span>
+<span class="c">val inline pow :</span>
+<span class="c">   ^a -&gt;  ^c -&gt;  ^b</span>
+<span class="c">    when ( ^a or  ^b) : (static member ( * ) :  ^a *  ^b -&gt;  ^b) and</span>
+<span class="c">          ^b : (static member get_One : -&gt;  ^b) and</span>
+<span class="c">          ^c : (static member get_One : -&gt;  ^c) and  ^c : comparison and</span>
+<span class="c">         ( ^c or  ^d) : (static member ( - ) :  ^c *  ^d -&gt;  ^c) and</span>
+<span class="c">          ^d : (static member get_One : -&gt;  ^d)</span>
+
+<span class="c">&gt; pow 5 2;;</span>
+<span class="c">val it : int = 25</span>
+<span class="c">&gt; pow 5.0 2;;</span>
+<span class="c">val it : float = 25.0</span>
+<span class="c">&gt; *)</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">val pow : b:&#39;a -&gt; e:&#39;c -&gt; &#39;b (requires member ( * ) and member get_One and member get_One and comparison and member ( - ) and member get_One)<br /><br />Full name: Script.pow</div>
+<div class="tip" id="fs2">val b : &#39;a (requires member ( * ) and member get_One)</div>
+<div class="tip" id="fs3">val e : &#39;c (requires member get_One and comparison and member ( - ) and member get_One)</div>
+<div class="tip" id="fs4">val loop : (&#39;b -&gt; &#39;c -&gt; &#39;b) (requires member get_One and member ( * ) and member get_One and comparison and member ( - ) and member get_One)</div>
+<div class="tip" id="fs5">val acc : &#39;b (requires member get_One and member ( * ))</div>
+<div class="tip" id="fs6">module LanguagePrimitives<br /><br />from Microsoft.FSharp.Core</div>
+<div class="tip" id="fs7">val GenericOne&lt;&#39;T (requires member get_One)&gt; : &#39;T (requires member get_One)<br /><br />Full name: Microsoft.FSharp.Core.LanguagePrimitives.GenericOne</div>
+<div class="tip" id="fs8">val pow_ : b:&#39;a -&gt; e:&#39;c -&gt; &#39;b (requires member ( * ) and member get_One and member get_One and comparison and member ( - ) and member get_One)<br /><br />Full name: Script.pow_</div>
+<div class="tip" id="fs9">val loop : (&#39;c -&gt; &#39;b) (requires member get_One and comparison and member ( - ) and member get_One and member get_One and member ( * ))</div>
+

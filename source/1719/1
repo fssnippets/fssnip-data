@@ -1,0 +1,54 @@
+open System.Collections.Generic
+
+/// A helper function that generates a sequence for the specified range.
+/// (This takes the step and also an operator to use for checking at the end)
+let inline rangeStepImpl (lo:^T) (hi:^T) (step:^T) geq = 
+  { new IEnumerable< ^T > with
+      member x.GetEnumerator() =
+        let current = ref (lo - step)
+        { new IEnumerator< ^T > with
+            member x.Current = current.Value
+          interface System.Collections.IEnumerator with
+            member x.Current = box current.Value
+            member x.MoveNext() = 
+              if geq current.Value hi then false
+              else current.Value <- current.Value + step; true
+            member x.Reset() = current.Value <- lo - step
+          interface System.IDisposable with
+            member x.Dispose() = ()  }
+    interface System.Collections.IEnumerable with
+      member x.GetEnumerator() = (x :?> IEnumerable< ^T >).GetEnumerator() :> _ }
+
+/// A helper function that generates a sequence for the specified range of
+/// int or int64 values. This is notably faster than using `lo .. step .. hi`.
+let inline rangeStep (lo:^T) (step:^T) (hi:^T) = 
+  if lo <= hi then rangeStepImpl lo hi step (>=)
+  else rangeStepImpl lo hi step (<=)
+
+/// A helper function that generates a sequence for the specified range of
+/// int or int64 values. This is notably faster than using `lo .. hi`.
+let inline range (lo:^T) (hi:^T) = 
+  if lo <= hi then rangeStepImpl lo hi LanguagePrimitives.GenericOne (>=)
+  else rangeStepImpl lo hi LanguagePrimitives.GenericOne (<=)
+
+#time
+
+// The following takes about 350-400ms on my machine
+seq { for x in 0 .. 5000000 -> 0 } |> Seq.length
+seq { for x in 0L .. 5000000L -> 0 } |> Seq.length
+seq { for x in 0. .. 5000000. -> 0 } |> Seq.length
+seq { for x in 0 .. 10 .. 50000000 -> 0 } |> Seq.length
+seq { for x in 0L .. 10L .. 50000000L -> 0 } |> Seq.length
+seq { for x in 0. .. 10. .. 50000000. -> 0 } |> Seq.length
+
+// The following takes about 75ms on my machine
+seq { for x in range 0 5000000 -> 0 } |> Seq.length
+seq { for x in range 0L 5000000L -> 0 } |> Seq.length
+seq { for x in range 0. 5000000. -> 0 } |> Seq.length
+seq { for x in rangeStep 0 10 50000000 -> 0 } |> Seq.length
+seq { for x in rangeStep 0L 10L 50000000L -> 0 } |> Seq.length
+seq { for x in rangeStep 0. 10. 50000000. -> 0 } |> Seq.length
+
+// Oh look, I can override the default operators :)
+let inline (..) a b = range a b
+let inline (.. ..) a s b = rangeStep a s b

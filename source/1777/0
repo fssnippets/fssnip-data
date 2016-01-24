@@ -1,0 +1,17 @@
+open System
+open EasyNetQ
+
+// Publish a message via EasyNetQ. If it's not delivered within
+// the TimeSpan given, RabbitMQ will discard it without delivering.
+let expiringPublish<'a when 'a : not struct> (bus : IBus) message (expire : TimeSpan) topic =
+    let dms = bus.Advanced.Container.Resolve<IMessageDeliveryModeStrategy>()
+    let ped = bus.Advanced.Container.Resolve<Producer.IPublishExchangeDeclareStrategy>()
+    let messageType = typeof<'a>
+    let props = MessageProperties(Expiration = (expire.TotalMilliseconds |> int |> string), DeliveryMode = dms.GetDeliveryMode(messageType))
+    let enqMessage = Message<'a>(message, props)
+    let exchange = ped.DeclareExchange(bus.Advanced, messageType, Topology.ExchangeType.Topic)
+    let finalTopic =
+        match topic with
+        | Some t -> t
+        | None -> bus.Advanced.Conventions.TopicNamingConvention.Invoke messageType
+    bus.Advanced.Publish(exchange, finalTopic, false, false, enqMessage)

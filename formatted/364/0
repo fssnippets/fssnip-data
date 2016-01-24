@@ -1,0 +1,40 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">module</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="t">Set</span> <span class="o">=</span> 
+  <span class="c">/// Returns all subset of a specified set. For example, for input [1;2;3],</span>
+  <span class="c">/// the result will be a set containing sets [1;2;3], [1;2], [1;3], [2;3]</span>
+  <span class="c">/// [1], [2], [3] and [].</span>
+  <span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="f">subsets</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="i">s</span> <span class="o">=</span> 
+    <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="f">set</span> [ <span class="c">// Add current set to the set of subsets</span>
+          <span class="k">yield</span> <span onmouseout="hideTip(event, 'fs3', 5)" onmouseover="showTip(event, 'fs3', 5)" class="i">s</span>
+          <span class="c">// Remove each element and generate subset of </span>
+          <span class="c">// that smaller set</span>
+          <span class="k">for</span> <span onmouseout="hideTip(event, 'fs5', 6)" onmouseover="showTip(event, 'fs5', 6)" class="i">e</span> <span class="k">in</span> <span onmouseout="hideTip(event, 'fs3', 7)" onmouseover="showTip(event, 'fs3', 7)" class="i">s</span> <span class="k">do</span>
+            <span class="k">yield!</span> <span onmouseout="hideTip(event, 'fs2', 8)" onmouseover="showTip(event, 'fs2', 8)" class="f">subsets</span> (<span onmouseout="hideTip(event, 'fs1', 9)" onmouseover="showTip(event, 'fs1', 9)" class="t">Set</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs6', 10)" onmouseover="showTip(event, 'fs6', 10)" class="f">remove</span> <span onmouseout="hideTip(event, 'fs5', 11)" onmouseover="showTip(event, 'fs5', 11)" class="i">e</span> <span onmouseout="hideTip(event, 'fs3', 12)" onmouseover="showTip(event, 'fs3', 12)" class="i">s</span>) ]
+
+<span class="c">// Sample usage</span>
+<span onmouseout="hideTip(event, 'fs7', 13)" onmouseover="showTip(event, 'fs7', 13)" class="t">Set</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 14)" onmouseover="showTip(event, 'fs2', 14)" class="f">subsets</span> (<span onmouseout="hideTip(event, 'fs4', 15)" onmouseover="showTip(event, 'fs4', 15)" class="f">set</span> [<span class="n">1</span> <span class="o">..</span> <span class="n">3</span>])
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">Multiple items<br />module Set<br /><br />from Microsoft.FSharp.Collections<br /><br />--------------------<br />type Set&lt;&#39;T (requires comparison)&gt; =<br />&#160;&#160;interface IComparable<br />&#160;&#160;interface IEnumerable<br />&#160;&#160;interface IEnumerable&lt;&#39;T&gt;<br />&#160;&#160;interface ICollection&lt;&#39;T&gt;<br />&#160;&#160;new : elements:seq&lt;&#39;T&gt; -&gt; Set&lt;&#39;T&gt;<br />&#160;&#160;member Add : value:&#39;T -&gt; Set&lt;&#39;T&gt;<br />&#160;&#160;member Contains : value:&#39;T -&gt; bool<br />&#160;&#160;override Equals : obj -&gt; bool<br />&#160;&#160;member IsProperSubsetOf : otherSet:Set&lt;&#39;T&gt; -&gt; bool<br />&#160;&#160;member IsProperSupersetOf : otherSet:Set&lt;&#39;T&gt; -&gt; bool<br />&#160;&#160;...<br /><br />Full name: Microsoft.FSharp.Collections.Set&lt;_&gt;<br /><br />--------------------<br />new : elements:seq&lt;&#39;T&gt; -&gt; Set&lt;&#39;T&gt;</div>
+<div class="tip" id="fs2">val subsets : s:Set&lt;&#39;a&gt; -&gt; Set&lt;Set&lt;&#39;a&gt;&gt; (requires comparison)<br /><br />Full name: Script.Set.subsets<br /><em><br /><br />&#160;Returns all subset of a specified set. For example, for input [1;2;3],<br />&#160;the result will be a set containing sets [1;2;3], [1;2], [1;3], [2;3]<br />&#160;[1], [2], [3] and [].</em></div>
+<div class="tip" id="fs3">val s : Set&lt;&#39;a&gt; (requires comparison)</div>
+<div class="tip" id="fs4">val set : elements:seq&lt;&#39;T&gt; -&gt; Set&lt;&#39;T&gt; (requires comparison)<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.set</div>
+<div class="tip" id="fs5">val e : &#39;a (requires comparison)</div>
+<div class="tip" id="fs6">val remove : value:&#39;T -&gt; set:Set&lt;&#39;T&gt; -&gt; Set&lt;&#39;T&gt; (requires comparison)<br /><br />Full name: Microsoft.FSharp.Collections.Set.remove</div>
+<div class="tip" id="fs7">Multiple items<br />module Set<br /><br />from Script<br /><br />--------------------<br />module Set<br /><br />from Microsoft.FSharp.Collections<br /><br />--------------------<br />type Set&lt;&#39;T (requires comparison)&gt; =<br />&#160;&#160;interface IComparable<br />&#160;&#160;interface IEnumerable<br />&#160;&#160;interface IEnumerable&lt;&#39;T&gt;<br />&#160;&#160;interface ICollection&lt;&#39;T&gt;<br />&#160;&#160;new : elements:seq&lt;&#39;T&gt; -&gt; Set&lt;&#39;T&gt;<br />&#160;&#160;member Add : value:&#39;T -&gt; Set&lt;&#39;T&gt;<br />&#160;&#160;member Contains : value:&#39;T -&gt; bool<br />&#160;&#160;override Equals : obj -&gt; bool<br />&#160;&#160;member IsProperSubsetOf : otherSet:Set&lt;&#39;T&gt; -&gt; bool<br />&#160;&#160;member IsProperSupersetOf : otherSet:Set&lt;&#39;T&gt; -&gt; bool<br />&#160;&#160;...<br /><br />Full name: Microsoft.FSharp.Collections.Set&lt;_&gt;<br /><br />--------------------<br />new : elements:seq&lt;&#39;T&gt; -&gt; Set&lt;&#39;T&gt;</div>
+

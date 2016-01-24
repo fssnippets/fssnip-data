@@ -1,0 +1,41 @@
+    open System
+
+    let isFractional n =
+        n <> (Decimal.Truncate n)
+
+    let correct n =
+        //round after 20th digit after decimal point to fix propagation of floating point errors
+        Decimal.Round(n, 20) 
+
+    let resultAndWhetherItHasFractionalSubResults (n : list<decimal>) = 
+        let result = n.[0] + 13M * n.[1] / n.[2] + n.[3] + 12M * n.[4]  - n.[5] - 11M + n.[6] * n.[7] / n.[8] - 10M
+        let hasFractionalSubResults = isFractional (correct(n.[1] / n.[2])) || isFractional (correct(n.[7] / n.[8]))
+        (correct result, hasFractionalSubResults) //return tuple
+        
+    let ``1st solution in blog post`` = resultAndWhetherItHasFractionalSubResults ([1; 2; 6; 4; 7; 8; 3; 5; 9]  |> List.map (fun n -> n |> decimal))
+
+    // source: http://stackoverflow.com/questions/286427/calculating-permutations-in-f
+    let rec permute list taken = 
+      seq { 
+        if Set.count taken = List.length list 
+            then yield List.empty 
+        else
+            for element in list do
+              if not (Set.contains element taken) then 
+                for permutation in permute list (Set.add element taken)  do
+                  yield element::permutation 
+        } |> List.ofSeq
+    
+    //returns solutions as tuple in the form of ((input, (result, hasFractionalSubResults))
+    let solutions allowFractionalSubResults= 
+        let numbers = [1; 2; 3; 4; 5; 6; 7; 8; 9] |> List.map (fun n -> n |> decimal)
+        permute numbers Set.empty 
+        |> List.map (fun input -> (input, resultAndWhetherItHasFractionalSubResults input)) 
+        |> List.filter (fun (input, (result, hasFractionalSubResults)) -> result = 66M && (allowFractionalSubResults || (not hasFractionalSubResults)))
+
+
+    let ``solutions WITH fractional sub-results`` = solutions  true
+    let ``number of solutions WITH fractional sub-results`` = ``solutions WITH fractional sub-results`` |> List.length
+
+    let ``solutions WITHOUT fractional sub-results`` = solutions  false
+    let ``number of solutions WITHOUT fractional sub-results`` = ``solutions WITHOUT fractional sub-results`` |> List.length

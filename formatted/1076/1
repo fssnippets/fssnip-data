@@ -1,0 +1,204 @@
+<h2><a name="Definition" class="anchor" href="#Definition">Definition</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+<span class="l">38: </span>
+<span class="l">39: </span>
+<span class="l">40: </span>
+<span class="l">41: </span>
+<span class="l">42: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">Reflection</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="f">printw</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="i">width</span> <span class="o">=</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="i">formatCode</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="f">sprintf</span> <span class="s">&quot;%%</span><span class="pf">%d</span><span class="s">s&quot;</span> <span class="o">-</span><span onmouseout="hideTip(event, 'fs4', 7)" onmouseover="showTip(event, 'fs4', 7)" class="i">width</span>
+    <span onmouseout="hideTip(event, 'fs7', 8)" onmouseover="showTip(event, 'fs7', 8)" class="f">printf</span> <span class="o">&lt;|</span> <span onmouseout="hideTip(event, 'fs8', 9)" onmouseover="showTip(event, 'fs8', 9)" class="t">Printf</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs9', 10)" onmouseover="showTip(event, 'fs9', 10)" class="t">TextWriterFormat</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs10', 11)" onmouseover="showTip(event, 'fs10', 11)" class="t">string</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs11', 12)" onmouseover="showTip(event, 'fs11', 12)" class="t">unit</span>, <span onmouseout="hideTip(event, 'fs11', 13)" onmouseover="showTip(event, 'fs11', 13)" class="t">unit</span><span class="o">&gt;</span>(<span onmouseout="hideTip(event, 'fs5', 14)" onmouseover="showTip(event, 'fs5', 14)" class="i">formatCode</span>)
+    
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs12', 15)" onmouseover="showTip(event, 'fs12', 15)" class="f">printMembers</span> <span onmouseout="hideTip(event, 'fs13', 16)" onmouseover="showTip(event, 'fs13', 16)" class="i">header</span> <span onmouseout="hideTip(event, 'fs14', 17)" onmouseover="showTip(event, 'fs14', 17)" class="i">column</span> (<span onmouseout="hideTip(event, 'fs15', 18)" onmouseover="showTip(event, 'fs15', 18)" class="i">ms</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs10', 19)" onmouseover="showTip(event, 'fs10', 19)" class="t">string</span> <span onmouseout="hideTip(event, 'fs16', 20)" onmouseover="showTip(event, 'fs16', 20)" class="t">list</span>) <span class="o">=</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs17', 21)" onmouseover="showTip(event, 'fs17', 21)" class="f">printItems</span> <span onmouseout="hideTip(event, 'fs18', 22)" onmouseover="showTip(event, 'fs18', 22)" class="f">f</span> <span class="o">=</span>
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs19', 23)" onmouseover="showTip(event, 'fs19', 23)" class="f">hasValue</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs20', 24)" onmouseover="showTip(event, 'fs20', 24)" class="f">not</span> <span class="o">&lt;&lt;</span> <span onmouseout="hideTip(event, 'fs1', 25)" onmouseover="showTip(event, 'fs1', 25)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs21', 26)" onmouseover="showTip(event, 'fs21', 26)" class="t">String</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs22', 27)" onmouseover="showTip(event, 'fs22', 27)" class="f">IsNullOrWhiteSpace</span>
+        <span class="k">if</span> <span onmouseout="hideTip(event, 'fs19', 28)" onmouseover="showTip(event, 'fs19', 28)" class="f">hasValue</span> <span onmouseout="hideTip(event, 'fs13', 29)" onmouseover="showTip(event, 'fs13', 29)" class="i">header</span> <span class="k">then</span> <span onmouseout="hideTip(event, 'fs23', 30)" onmouseover="showTip(event, 'fs23', 30)" class="f">printfn</span> <span class="s">&quot;[</span><span class="pf">%s</span><span class="s">]&quot;</span> <span onmouseout="hideTip(event, 'fs13', 31)" onmouseover="showTip(event, 'fs13', 31)" class="i">header</span>
+
+        <span onmouseout="hideTip(event, 'fs24', 32)" onmouseover="showTip(event, 'fs24', 32)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs25', 33)" onmouseover="showTip(event, 'fs25', 33)" class="f">iteri</span> <span onmouseout="hideTip(event, 'fs18', 34)" onmouseover="showTip(event, 'fs18', 34)" class="f">f</span> <span onmouseout="hideTip(event, 'fs15', 35)" onmouseover="showTip(event, 'fs15', 35)" class="i">ms</span>
+        <span onmouseout="hideTip(event, 'fs7', 36)" onmouseover="showTip(event, 'fs7', 36)" class="f">printf</span> <span class="s">&quot;</span><span class="e">\n</span><span class="s"></span><span class="e">\n</span><span class="s">&quot;</span>
+
+    <span class="k">match</span> <span onmouseout="hideTip(event, 'fs15', 37)" onmouseover="showTip(event, 'fs15', 37)" class="i">ms</span> <span class="k">with</span>
+    | [] <span class="k">-&gt;</span> ()
+    | _ <span class="k">when</span> <span onmouseout="hideTip(event, 'fs15', 38)" onmouseover="showTip(event, 'fs15', 38)" class="i">ms</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs26', 39)" onmouseover="showTip(event, 'fs26', 39)" class="i">Length</span> <span class="o">&lt;=</span> <span onmouseout="hideTip(event, 'fs14', 40)" onmouseover="showTip(event, 'fs14', 40)" class="i">column</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs17', 41)" onmouseover="showTip(event, 'fs17', 41)" class="f">printItems</span> (<span class="k">fun</span> _ <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs7', 42)" onmouseover="showTip(event, 'fs7', 42)" class="f">printf</span> <span class="s">&quot;</span><span class="pf">%s</span><span class="s"> &quot;</span>)
+
+    | <span onmouseout="hideTip(event, 'fs27', 43)" onmouseover="showTip(event, 'fs27', 43)" class="i">otherwize</span> <span class="k">-&gt;</span>
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs28', 44)" onmouseover="showTip(event, 'fs28', 44)" class="i">longest</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs15', 45)" onmouseover="showTip(event, 'fs15', 45)" class="i">ms</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs24', 46)" onmouseover="showTip(event, 'fs24', 46)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs29', 47)" onmouseover="showTip(event, 'fs29', 47)" class="f">maxBy</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs30', 48)" onmouseover="showTip(event, 'fs30', 48)" class="i">s</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs30', 49)" onmouseover="showTip(event, 'fs30', 49)" class="i">s</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs31', 50)" onmouseover="showTip(event, 'fs31', 50)" class="i">Length</span>)
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs4', 51)" onmouseover="showTip(event, 'fs4', 51)" class="i">width</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs28', 52)" onmouseover="showTip(event, 'fs28', 52)" class="i">longest</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs31', 53)" onmouseover="showTip(event, 'fs31', 53)" class="i">Length</span> <span class="o">+</span> <span class="n">1</span>
+        <span onmouseout="hideTip(event, 'fs17', 54)" onmouseover="showTip(event, 'fs17', 54)" class="f">printItems</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs32', 55)" onmouseover="showTip(event, 'fs32', 55)" class="i">i</span> <span onmouseout="hideTip(event, 'fs33', 56)" onmouseover="showTip(event, 'fs33', 56)" class="i">item</span> <span class="k">-&gt;</span>
+            <span class="k">if</span> <span onmouseout="hideTip(event, 'fs32', 57)" onmouseover="showTip(event, 'fs32', 57)" class="i">i</span> <span class="o">%</span> <span onmouseout="hideTip(event, 'fs14', 58)" onmouseover="showTip(event, 'fs14', 58)" class="i">column</span> <span class="o">=</span> <span class="n">0</span> <span class="o">&amp;&amp;</span> <span onmouseout="hideTip(event, 'fs32', 59)" onmouseover="showTip(event, 'fs32', 59)" class="i">i</span> <span class="o">&lt;&gt;</span> <span class="n">0</span> <span class="k">then</span> <span onmouseout="hideTip(event, 'fs7', 60)" onmouseover="showTip(event, 'fs7', 60)" class="f">printf</span> <span class="s">&quot;</span><span class="e">\n</span><span class="s">&quot;</span> ;
+            <span onmouseout="hideTip(event, 'fs3', 61)" onmouseover="showTip(event, 'fs3', 61)" class="f">printw</span> <span onmouseout="hideTip(event, 'fs4', 62)" onmouseover="showTip(event, 'fs4', 62)" class="i">width</span> <span onmouseout="hideTip(event, 'fs33', 63)" onmouseover="showTip(event, 'fs33', 63)" class="i">item</span>)
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs34', 64)" onmouseover="showTip(event, 'fs34', 64)" class="f">collectNames</span> (<span onmouseout="hideTip(event, 'fs35', 65)" onmouseover="showTip(event, 'fs35', 65)" class="i">ms</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs36', 66)" onmouseover="showTip(event, 'fs36', 66)" class="t">seq</span><span class="o">&lt;</span>#<span onmouseout="hideTip(event, 'fs37', 67)" onmouseover="showTip(event, 'fs37', 67)" class="t">MemberInfo</span><span class="o">&gt;</span>) <span class="o">=</span>
+    <span onmouseout="hideTip(event, 'fs35', 68)" onmouseover="showTip(event, 'fs35', 68)" class="i">ms</span>
+    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs38', 69)" onmouseover="showTip(event, 'fs38', 69)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs39', 70)" onmouseover="showTip(event, 'fs39', 70)" class="f">map</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs40', 71)" onmouseover="showTip(event, 'fs40', 71)" class="i">m</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs40', 72)" onmouseover="showTip(event, 'fs40', 72)" class="i">m</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs41', 73)" onmouseover="showTip(event, 'fs41', 73)" class="i">Name</span>)
+    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs42', 74)" onmouseover="showTip(event, 'fs42', 74)" class="t">Set</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs43', 75)" onmouseover="showTip(event, 'fs43', 75)" class="f">ofSeq</span>
+    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs42', 76)" onmouseover="showTip(event, 'fs42', 76)" class="t">Set</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs44', 77)" onmouseover="showTip(event, 'fs44', 77)" class="f">toList</span>
+    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs24', 78)" onmouseover="showTip(event, 'fs24', 78)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs45', 79)" onmouseover="showTip(event, 'fs45', 79)" class="f">sort</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs46', 80)" onmouseover="showTip(event, 'fs46', 80)" class="f">dirbase</span> <span onmouseout="hideTip(event, 'fs47', 81)" onmouseover="showTip(event, 'fs47', 81)" class="i">x</span> <span class="o">=</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs48', 82)" onmouseover="showTip(event, 'fs48', 82)" class="i">t</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs47', 83)" onmouseover="showTip(event, 'fs47', 83)" class="i">x</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs49', 84)" onmouseover="showTip(event, 'fs49', 84)" class="f">GetType</span>()
+    <span onmouseout="hideTip(event, 'fs48', 85)" onmouseover="showTip(event, 'fs48', 85)" class="i">t</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs50', 86)" onmouseover="showTip(event, 'fs50', 86)" class="f">GetMembers</span>() <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs34', 87)" onmouseover="showTip(event, 'fs34', 87)" class="f">collectNames</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs51', 88)" onmouseover="showTip(event, 'fs51', 88)" class="f">dir</span> <span onmouseout="hideTip(event, 'fs47', 89)" onmouseover="showTip(event, 'fs47', 89)" class="i">x</span> <span class="o">=</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs52', 90)" onmouseover="showTip(event, 'fs52', 90)" class="f">print</span> <span onmouseout="hideTip(event, 'fs13', 91)" onmouseover="showTip(event, 'fs13', 91)" class="i">header</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs34', 92)" onmouseover="showTip(event, 'fs34', 92)" class="f">collectNames</span> <span class="o">&gt;</span><span class="o">&gt;</span> <span onmouseout="hideTip(event, 'fs12', 93)" onmouseover="showTip(event, 'fs12', 93)" class="f">printMembers</span> <span onmouseout="hideTip(event, 'fs13', 94)" onmouseover="showTip(event, 'fs13', 94)" class="i">header</span> <span class="n">3</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs48', 95)" onmouseover="showTip(event, 'fs48', 95)" class="i">t</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs47', 96)" onmouseover="showTip(event, 'fs47', 96)" class="i">x</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs49', 97)" onmouseover="showTip(event, 'fs49', 97)" class="f">GetType</span>()
+    <span onmouseout="hideTip(event, 'fs48', 98)" onmouseover="showTip(event, 'fs48', 98)" class="i">t</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs53', 99)" onmouseover="showTip(event, 'fs53', 99)" class="f">GetMethods</span>()    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs52', 100)" onmouseover="showTip(event, 'fs52', 100)" class="f">print</span> <span class="s">&quot;Methods&quot;</span>
+    <span onmouseout="hideTip(event, 'fs48', 101)" onmouseover="showTip(event, 'fs48', 101)" class="i">t</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs54', 102)" onmouseover="showTip(event, 'fs54', 102)" class="f">GetProperties</span>() <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs52', 103)" onmouseover="showTip(event, 'fs52', 103)" class="f">print</span> <span class="s">&quot;Properties&quot;</span>
+    <span onmouseout="hideTip(event, 'fs48', 104)" onmouseover="showTip(event, 'fs48', 104)" class="i">t</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs55', 105)" onmouseover="showTip(event, 'fs55', 105)" class="f">GetFields</span>()     <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs52', 106)" onmouseover="showTip(event, 'fs52', 106)" class="f">print</span> <span class="s">&quot;Fields&quot;</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Usage" class="anchor" href="#Usage">Usage</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">// &gt; dir 1;;</span>
+<span class="c">// [Methods]</span>
+<span class="c">// CompareTo   Equals      GetHashCode </span>
+<span class="c">// GetType     GetTypeCode Parse       </span>
+<span class="c">// ToString    TryParse    </span>
+<span class="c">//</span>
+<span class="c">// [Fields]</span>
+<span class="c">// MaxValue MinValue </span>
+<span class="c">//</span>
+<span class="c">// val it : unit = ()</span>
+<span class="c">//</span>
+<span class="c">// &gt; dir [] ;;</span>
+<span class="c">// [Methods]</span>
+<span class="c">// CompareTo         Cons              Equals            </span>
+<span class="c">// GetHashCode       GetType           ToString          </span>
+<span class="c">// get_Empty         get_Head          get_HeadOrDefault </span>
+<span class="c">// get_IsCons        get_IsEmpty       get_Item          </span>
+<span class="c">// get_Length        get_Tag           get_Tail          </span>
+<span class="c">// get_TailOrNull    </span>
+<span class="c">//</span>
+<span class="c">// [Properties]</span>
+<span class="c">// Empty         Head          HeadOrDefault </span>
+<span class="c">// IsCons        IsEmpty       Item          </span>
+<span class="c">// Length        Tag           Tail          </span>
+<span class="c">// TailOrNull    </span>
+<span class="c">//</span>
+<span class="c">// val it : unit = ()</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace System</div>
+<div class="tip" id="fs2">namespace System.Reflection</div>
+<div class="tip" id="fs3">val printw : width:int -&gt; (string -&gt; unit)<br /><br />Full name: Script.printw</div>
+<div class="tip" id="fs4">val width : int</div>
+<div class="tip" id="fs5">val formatCode : string</div>
+<div class="tip" id="fs6">val sprintf : format:Printf.StringFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.sprintf</div>
+<div class="tip" id="fs7">val printf : format:Printf.TextWriterFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.printf</div>
+<div class="tip" id="fs8">module Printf<br /><br />from Microsoft.FSharp.Core</div>
+<div class="tip" id="fs9">type TextWriterFormat&lt;&#39;T,&#39;Result&gt; = Format&lt;&#39;T,System.IO.TextWriter,unit,&#39;Result&gt;<br /><br />Full name: Microsoft.FSharp.Core.PrintfModule.TextWriterFormat&lt;_,_&gt;</div>
+<div class="tip" id="fs10">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />Full name: Microsoft.FSharp.Core.Operators.string<br /><br />--------------------<br />type string = System.String<br /><br />Full name: Microsoft.FSharp.Core.string</div>
+<div class="tip" id="fs11">type unit = Unit<br /><br />Full name: Microsoft.FSharp.Core.unit</div>
+<div class="tip" id="fs12">val printMembers : header:string -&gt; column:int -&gt; ms:string list -&gt; unit<br /><br />Full name: Script.printMembers</div>
+<div class="tip" id="fs13">val header : string</div>
+<div class="tip" id="fs14">val column : int</div>
+<div class="tip" id="fs15">val ms : string list</div>
+<div class="tip" id="fs16">type &#39;T list = List&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.list&lt;_&gt;</div>
+<div class="tip" id="fs17">val printItems : ((int -&gt; string -&gt; unit) -&gt; unit)</div>
+<div class="tip" id="fs18">val f : (int -&gt; string -&gt; unit)</div>
+<div class="tip" id="fs19">val hasValue : (string -&gt; bool)</div>
+<div class="tip" id="fs20">val not : value:bool -&gt; bool<br /><br />Full name: Microsoft.FSharp.Core.Operators.not</div>
+<div class="tip" id="fs21">Multiple items<br />type String =<br />&#160;&#160;new : value:char -&gt; string + 7 overloads<br />&#160;&#160;member Chars : int -&gt; char<br />&#160;&#160;member Clone : unit -&gt; obj<br />&#160;&#160;member CompareTo : value:obj -&gt; int + 1 overload<br />&#160;&#160;member Contains : value:string -&gt; bool<br />&#160;&#160;member CopyTo : sourceIndex:int * destination:char[] * destinationIndex:int * count:int -&gt; unit<br />&#160;&#160;member EndsWith : value:string -&gt; bool + 2 overloads<br />&#160;&#160;member Equals : obj:obj -&gt; bool + 2 overloads<br />&#160;&#160;member GetEnumerator : unit -&gt; CharEnumerator<br />&#160;&#160;member GetHashCode : unit -&gt; int<br />&#160;&#160;...<br /><br />Full name: System.String<br /><br />--------------------<br />System.String(value: nativeptr&lt;char&gt;) : unit<br />System.String(value: nativeptr&lt;sbyte&gt;) : unit<br />System.String(value: char []) : unit<br />System.String(c: char, count: int) : unit<br />System.String(value: nativeptr&lt;char&gt;, startIndex: int, length: int) : unit<br />System.String(value: nativeptr&lt;sbyte&gt;, startIndex: int, length: int) : unit<br />System.String(value: char [], startIndex: int, length: int) : unit<br />System.String(value: nativeptr&lt;sbyte&gt;, startIndex: int, length: int, enc: System.Text.Encoding) : unit</div>
+<div class="tip" id="fs22">System.String.IsNullOrWhiteSpace(value: string) : bool</div>
+<div class="tip" id="fs23">val printfn : format:Printf.TextWriterFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.printfn</div>
+<div class="tip" id="fs24">Multiple items<br />module List<br /><br />from Microsoft.FSharp.Collections<br /><br />--------------------<br />type List&lt;&#39;T&gt; =<br />&#160;&#160;| ( [] )<br />&#160;&#160;| ( :: ) of Head: &#39;T * Tail: &#39;T list<br />&#160;&#160;interface IEnumerable<br />&#160;&#160;interface IEnumerable&lt;&#39;T&gt;<br />&#160;&#160;member Head : &#39;T<br />&#160;&#160;member IsEmpty : bool<br />&#160;&#160;member Item : index:int -&gt; &#39;T with get<br />&#160;&#160;member Length : int<br />&#160;&#160;member Tail : &#39;T list<br />&#160;&#160;static member Cons : head:&#39;T * tail:&#39;T list -&gt; &#39;T list<br />&#160;&#160;static member Empty : &#39;T list<br /><br />Full name: Microsoft.FSharp.Collections.List&lt;_&gt;</div>
+<div class="tip" id="fs25">val iteri : action:(int -&gt; &#39;T -&gt; unit) -&gt; list:&#39;T list -&gt; unit<br /><br />Full name: Microsoft.FSharp.Collections.List.iteri</div>
+<div class="tip" id="fs26">property List.Length: int</div>
+<div class="tip" id="fs27">val otherwize : string list</div>
+<div class="tip" id="fs28">val longest : string</div>
+<div class="tip" id="fs29">val maxBy : projection:(&#39;T -&gt; &#39;U) -&gt; list:&#39;T list -&gt; &#39;T (requires comparison)<br /><br />Full name: Microsoft.FSharp.Collections.List.maxBy</div>
+<div class="tip" id="fs30">val s : string</div>
+<div class="tip" id="fs31">property System.String.Length: int</div>
+<div class="tip" id="fs32">val i : int</div>
+<div class="tip" id="fs33">val item : string</div>
+<div class="tip" id="fs34">val collectNames : ms:seq&lt;#MemberInfo&gt; -&gt; string list<br /><br />Full name: Script.collectNames</div>
+<div class="tip" id="fs35">val ms : seq&lt;#MemberInfo&gt;</div>
+<div class="tip" id="fs36">Multiple items<br />val seq : sequence:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Core.Operators.seq<br /><br />--------------------<br />type seq&lt;&#39;T&gt; = System.Collections.Generic.IEnumerable&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.seq&lt;_&gt;</div>
+<div class="tip" id="fs37">type MemberInfo =<br />&#160;&#160;member DeclaringType : Type<br />&#160;&#160;member Equals : obj:obj -&gt; bool<br />&#160;&#160;member GetCustomAttributes : inherit:bool -&gt; obj[] + 1 overload<br />&#160;&#160;member GetCustomAttributesData : unit -&gt; IList&lt;CustomAttributeData&gt;<br />&#160;&#160;member GetHashCode : unit -&gt; int<br />&#160;&#160;member IsDefined : attributeType:Type * inherit:bool -&gt; bool<br />&#160;&#160;member MemberType : MemberTypes<br />&#160;&#160;member MetadataToken : int<br />&#160;&#160;member Module : Module<br />&#160;&#160;member Name : string<br />&#160;&#160;...<br /><br />Full name: System.Reflection.MemberInfo</div>
+<div class="tip" id="fs38">module Seq<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs39">val map : mapping:(&#39;T -&gt; &#39;U) -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;U&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.map</div>
+<div class="tip" id="fs40">val m : #MemberInfo</div>
+<div class="tip" id="fs41">property MemberInfo.Name: string</div>
+<div class="tip" id="fs42">Multiple items<br />module Set<br /><br />from Microsoft.FSharp.Collections<br /><br />--------------------<br />type Set&lt;&#39;T (requires comparison)&gt; =<br />&#160;&#160;interface IComparable<br />&#160;&#160;interface IEnumerable<br />&#160;&#160;interface IEnumerable&lt;&#39;T&gt;<br />&#160;&#160;interface ICollection&lt;&#39;T&gt;<br />&#160;&#160;new : elements:seq&lt;&#39;T&gt; -&gt; Set&lt;&#39;T&gt;<br />&#160;&#160;member Add : value:&#39;T -&gt; Set&lt;&#39;T&gt;<br />&#160;&#160;member Contains : value:&#39;T -&gt; bool<br />&#160;&#160;override Equals : obj -&gt; bool<br />&#160;&#160;member IsProperSubsetOf : otherSet:Set&lt;&#39;T&gt; -&gt; bool<br />&#160;&#160;member IsProperSupersetOf : otherSet:Set&lt;&#39;T&gt; -&gt; bool<br />&#160;&#160;...<br /><br />Full name: Microsoft.FSharp.Collections.Set&lt;_&gt;<br /><br />--------------------<br />new : elements:seq&lt;&#39;T&gt; -&gt; Set&lt;&#39;T&gt;</div>
+<div class="tip" id="fs43">val ofSeq : elements:seq&lt;&#39;T&gt; -&gt; Set&lt;&#39;T&gt; (requires comparison)<br /><br />Full name: Microsoft.FSharp.Collections.Set.ofSeq</div>
+<div class="tip" id="fs44">val toList : set:Set&lt;&#39;T&gt; -&gt; &#39;T list (requires comparison)<br /><br />Full name: Microsoft.FSharp.Collections.Set.toList</div>
+<div class="tip" id="fs45">val sort : list:&#39;T list -&gt; &#39;T list (requires comparison)<br /><br />Full name: Microsoft.FSharp.Collections.List.sort</div>
+<div class="tip" id="fs46">val dirbase : x:&#39;a -&gt; string list<br /><br />Full name: Script.dirbase</div>
+<div class="tip" id="fs47">val x : &#39;a</div>
+<div class="tip" id="fs48">val t : System.Type</div>
+<div class="tip" id="fs49">System.Object.GetType() : System.Type</div>
+<div class="tip" id="fs50">System.Type.GetMembers() : MemberInfo []<br />System.Type.GetMembers(bindingAttr: BindingFlags) : MemberInfo []</div>
+<div class="tip" id="fs51">val dir : x:&#39;a -&gt; unit<br /><br />Full name: Script.dir</div>
+<div class="tip" id="fs52">val print : (string -&gt; seq&lt;#MemberInfo&gt; -&gt; unit)</div>
+<div class="tip" id="fs53">System.Type.GetMethods() : MethodInfo []<br />System.Type.GetMethods(bindingAttr: BindingFlags) : MethodInfo []</div>
+<div class="tip" id="fs54">System.Type.GetProperties() : PropertyInfo []<br />System.Type.GetProperties(bindingAttr: BindingFlags) : PropertyInfo []</div>
+<div class="tip" id="fs55">System.Type.GetFields() : FieldInfo []<br />System.Type.GetFields(bindingAttr: BindingFlags) : FieldInfo []</div>
+

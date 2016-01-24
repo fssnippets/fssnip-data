@@ -1,0 +1,126 @@
+// [snippet:Sample sudoku board]
+let problem =
+  """ .  .  4 | 8  .  . | .  1  7  
+              |         |          
+      6  7  . | 9  .  . | .  .  .  
+              |         |          
+      5  .  8 | .  3  . | .  .  4  
+      --------+---------+--------  
+      3  .  . | 7  4  . | 1  .  .  
+              |         |          
+      .  6  9 | .  .  . | 7  8  .  
+              |         |          
+      .  .  1 | .  6  9 | .  .  5  
+      --------+---------+--------  
+      1  .  . | .  8  . | 3  .  6  
+              |         |          
+      .  .  . | .  .  6 | .  9  1  
+              |         |          
+      2  4  . | .  .  1 | 5  .  .  
+  """
+// [/snippet]
+// [snippet:Parsing sudoku board and helpers]
+
+/// Returns all possible positions on a Sudoku board
+let positions =
+  seq { for x in 0 .. 8 do
+          for y in 0 .. 8 do 
+            yield x, y }
+
+/// Set of numbers that can appear in a place
+let numbers = set [ 1 .. 9 ]
+
+/// Create 2D array containing 'None' for every blank space and
+/// 'Some n' for every assigned number. We do this by iterating
+/// over lines & over characters and skipping everything that is
+/// not '.' or a valid number
+let task =
+  [ for line in problem.Split('\n') do
+      let parsed =
+        [ for c in line do
+            if c = '.' then yield None
+            elif c >= '0' && c <= '9' then yield Some(int c - 48) ] 
+      if parsed <> [] then yield parsed ]
+  |> array2D
+
+/// We represent the state of the board as a map from indices
+/// (this lets us do recursive backtracking nicely)
+type Sudoku = Map<int * int, int>
+
+/// Turn the 2D array into a 'Sudoku' value
+let state : Sudoku =
+  positions |> Seq.choose (fun (x, y) -> 
+    task.[x, y] |> Option.map (fun v -> (x, y), v))
+  |> Map.ofSeq
+// [/snippet]
+// [snippet:Sudoku solver]
+
+/// Returns the first empty position in the game
+/// (or 'None' when all the positions are filled)
+let findEmpty (state : Sudoku) = 
+  positions |> Seq.tryFind (state.ContainsKey >> not)
+
+/// Returns a list with 3 lists that contain positions 
+/// on the board that have to be unique (that is, horizontal
+/// line, vertical line and the small square)
+let findLines (x, y) = 
+  let xs, ys = x/3*3, y/3*3
+  [ [ for y in 0 .. 8 -> x, y ]
+    [ for x in 0 .. 8 -> x, y ]
+    [ for x in 0 .. 2 do for y in 0 .. 2 do yield xs + x, ys + y ] ]
+
+/// Find numbers that are not used on a 'line'
+let getUnusedOnLine (state:Sudoku) line =   
+  numbers - set (line |> Seq.choose state.TryFind)
+
+/// Recursive sudoku solver. Keeps the current state
+/// in an immutable map to make backtracking easy
+let rec solve (state:Sudoku) =
+  match findEmpty state with
+  | Some pos -> 
+      // If there is an empty place, find all numbers that we can put there
+      let alternatives = 
+        findLines pos |> Seq.map (getUnusedOnLine state) |> Set.intersectMany
+      // Iterate over alternatives, add the number to the current 'pos'
+      // and try calling 'solve' recursively for the rest of the board
+      alternatives |> Seq.tryPick (fun v ->
+        solve (Map.add pos v state))
+  | None -> Some(state)
+// [/snippet]
+// [snippet:Printing the result]
+
+/// Nicely format sudoku board that we get from the solver
+let printState (state:Sudoku) =
+  let newBlock () =
+    [ for i in 0 .. 2 -> String.replicate 9 "-" ]
+    |> String.concat "+" |> printfn "+%s+"
+  newBlock ()
+  for x in 0 .. 8 do 
+    printf "|"
+    for y in 0 .. 8 do
+      match state.TryFind (x, y) with
+      | Some v -> printf " %d " v
+      | _ -> printf ". "
+      if y % 3 = 2 then printf "|"
+    printfn ""
+    if x % 3 = 2 then newBlock()
+    
+// Run the solver and print the result!
+let solved = solve state
+printState solved.Value
+// [/snippet]
+// [snippet:Result for the sample board]
+// +---------+---------+---------+
+// | 9  3  4 | 8  2  5 | 6  1  7 |
+// | 6  7  2 | 9  1  4 | 8  5  3 |
+// | 5  1  8 | 6  3  7 | 9  2  4 |
+// +---------+---------+---------+
+// | 3  2  5 | 7  4  8 | 1  6  9 |
+// | 4  6  9 | 1  5  3 | 7  8  2 |
+// | 7  8  1 | 2  6  9 | 4  3  5 |
+// +---------+---------+---------+
+// | 1  9  7 | 5  8  2 | 3  4  6 |
+// | 8  5  3 | 4  7  6 | 2  9  1 |
+// | 2  4  6 | 3  9  1 | 5  7  8 |
+// +---------+---------+---------+
+// [/snippet]

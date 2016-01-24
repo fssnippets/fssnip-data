@@ -1,0 +1,110 @@
+<h2><a name="Vector-and-matrix-extensions" class="anchor" href="#Vector-and-matrix-extensions">Vector and matrix extensions</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">// Open Math.NET namespaces (you need MathNet.Numerics package)</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">MathNet</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">Numerics</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 3)" onmouseover="showTip(event, 'fs1', 3)" class="i">MathNet</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 4)" onmouseover="showTip(event, 'fs2', 4)" class="i">Numerics</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 5)" onmouseover="showTip(event, 'fs3', 5)" class="i">FSharp</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 6)" onmouseover="showTip(event, 'fs1', 6)" class="i">MathNet</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 7)" onmouseover="showTip(event, 'fs2', 7)" class="i">Numerics</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs4', 8)" onmouseover="showTip(event, 'fs4', 8)" class="i">LinearAlgebra</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs5', 9)" onmouseover="showTip(event, 'fs5', 9)" class="i">Double</span>
+
+<span class="c">// Define type extension for the generic vector type </span>
+<span class="c">// (Here we need to repeat all constraints, so it is a bit ugly)</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs1', 10)" onmouseover="showTip(event, 'fs1', 10)" class="i">MathNet</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 11)" onmouseover="showTip(event, 'fs2', 11)" class="i">Numerics</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs4', 12)" onmouseover="showTip(event, 'fs4', 12)" class="i">LinearAlgebra</span><span class="o">.</span><span class="i">Generic</span><span class="o">.</span>
+    <span onmouseout="hideTip(event, 'fs6', 13)" onmouseover="showTip(event, 'fs6', 13)" class="i">Vector</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span> <span class="k">when</span> <span class="o">&#39;</span><span class="i">T</span> <span class="o">:</span> <span class="k">struct</span> <span class="k">and</span> <span class="o">&#39;</span><span class="i">T</span> <span class="o">:</span> (<span class="k">new</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs7', 14)" onmouseover="showTip(event, 'fs7', 14)" class="i">unit</span> <span class="k">-&gt;</span> <span class="o">&#39;</span><span class="i">T</span>) 
+               <span class="k">and</span> <span class="o">&#39;</span><span class="i">T</span> <span class="o">:&gt;</span> <span onmouseout="hideTip(event, 'fs8', 15)" onmouseover="showTip(event, 'fs8', 15)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs9', 16)" onmouseover="showTip(event, 'fs9', 16)" class="i">IEquatable</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span> <span class="k">and</span> <span class="o">&#39;</span><span class="i">T</span> <span class="o">:&gt;</span> <span onmouseout="hideTip(event, 'fs8', 17)" onmouseover="showTip(event, 'fs8', 17)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs10', 18)" onmouseover="showTip(event, 'fs10', 18)" class="i">IFormattable</span> 
+               <span class="k">and</span> <span class="o">&#39;</span><span class="i">T</span> <span class="o">:&gt;</span> <span onmouseout="hideTip(event, 'fs8', 19)" onmouseover="showTip(event, 'fs8', 19)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs11', 20)" onmouseover="showTip(event, 'fs11', 20)" class="i">ValueType</span><span class="o">&gt;</span> <span class="k">with</span>
+  <span class="c">/// Implements slicing of vector - both arguments are option types</span>
+  <span class="k">member</span> <span class="i">x</span><span class="o">.</span><span class="i">GetSlice</span>(<span class="i">start</span>, <span class="i">finish</span>) <span class="o">=</span> 
+    <span class="k">let</span> <span class="i">start</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs12', 21)" onmouseover="showTip(event, 'fs12', 21)" class="i">defaultArg</span> <span class="i">start</span> <span class="n">0</span>
+    <span class="k">let</span> <span class="i">finish</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs12', 22)" onmouseover="showTip(event, 'fs12', 22)" class="i">defaultArg</span> <span class="i">finish</span> (<span class="i">x</span><span class="o">.</span><span class="i">Count</span> <span class="o">-</span> <span class="n">1</span>)
+    <span class="i">x</span><span class="o">.</span><span class="i">SubVector</span>(<span class="i">start</span>, <span class="i">finish</span> <span class="o">-</span> <span class="i">start</span> <span class="o">+</span> <span class="n">1</span>)
+
+<span class="c">// Define type extension for the generic matrix type</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs1', 23)" onmouseover="showTip(event, 'fs1', 23)" class="i">MathNet</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 24)" onmouseover="showTip(event, 'fs2', 24)" class="i">Numerics</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs4', 25)" onmouseover="showTip(event, 'fs4', 25)" class="i">LinearAlgebra</span><span class="o">.</span><span class="i">Generic</span><span class="o">.</span>
+    <span onmouseout="hideTip(event, 'fs13', 26)" onmouseover="showTip(event, 'fs13', 26)" class="i">Matrix</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span> <span class="k">when</span> <span class="o">&#39;</span><span class="i">T</span> <span class="o">:</span> <span class="k">struct</span> <span class="k">and</span> <span class="o">&#39;</span><span class="i">T</span> <span class="o">:</span> (<span class="k">new</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs7', 27)" onmouseover="showTip(event, 'fs7', 27)" class="i">unit</span> <span class="k">-&gt;</span> <span class="o">&#39;</span><span class="i">T</span>) 
+               <span class="k">and</span> <span class="o">&#39;</span><span class="i">T</span> <span class="o">:&gt;</span> <span onmouseout="hideTip(event, 'fs8', 28)" onmouseover="showTip(event, 'fs8', 28)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs9', 29)" onmouseover="showTip(event, 'fs9', 29)" class="i">IEquatable</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span> <span class="k">and</span> <span class="o">&#39;</span><span class="i">T</span> <span class="o">:&gt;</span> <span onmouseout="hideTip(event, 'fs8', 30)" onmouseover="showTip(event, 'fs8', 30)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs10', 31)" onmouseover="showTip(event, 'fs10', 31)" class="i">IFormattable</span> 
+               <span class="k">and</span> <span class="o">&#39;</span><span class="i">T</span> <span class="o">:&gt;</span> <span onmouseout="hideTip(event, 'fs8', 32)" onmouseover="showTip(event, 'fs8', 32)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs11', 33)" onmouseover="showTip(event, 'fs11', 33)" class="i">ValueType</span><span class="o">&gt;</span> <span class="k">with</span>
+  <span class="c">// Implement slicing for matrices (using rows &amp; columns)</span>
+  <span class="k">member</span> <span class="i">x</span><span class="o">.</span><span class="i">GetSlice</span>(<span class="i">rstart</span>, <span class="i">rfinish</span>, <span class="i">cstart</span>, <span class="i">cfinish</span>) <span class="o">=</span> 
+    <span class="k">let</span> <span class="i">cstart</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs12', 34)" onmouseover="showTip(event, 'fs12', 34)" class="i">defaultArg</span> <span class="i">cstart</span> <span class="n">0</span>
+    <span class="k">let</span> <span class="i">rstart</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs12', 35)" onmouseover="showTip(event, 'fs12', 35)" class="i">defaultArg</span> <span class="i">rstart</span> <span class="n">0</span>
+    <span class="k">let</span> <span class="i">cfinish</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs12', 36)" onmouseover="showTip(event, 'fs12', 36)" class="i">defaultArg</span> <span class="i">cfinish</span> (<span class="i">x</span><span class="o">.</span><span class="i">ColumnCount</span> <span class="o">-</span> <span class="n">1</span>)
+    <span class="k">let</span> <span class="i">rfinish</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs12', 37)" onmouseover="showTip(event, 'fs12', 37)" class="i">defaultArg</span> <span class="i">rfinish</span> (<span class="i">x</span><span class="o">.</span><span class="i">RowCount</span> <span class="o">-</span> <span class="n">1</span>)
+    <span class="i">x</span><span class="o">.</span><span class="i">SubMatrix</span>(<span class="i">rstart</span>, <span class="i">rfinish</span> <span class="o">-</span> <span class="i">rstart</span> <span class="o">+</span> <span class="n">1</span>, <span class="i">cstart</span>, <span class="i">cfinish</span> <span class="o">-</span> <span class="i">cstart</span> <span class="o">+</span> <span class="n">1</span>)
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Examples-of-slicing" class="anchor" href="#Examples-of-slicing">Examples of slicing</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">// Get some slices from a vector</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs14', 38)" onmouseover="showTip(event, 'fs14', 38)" class="i">v</span> <span class="o">=</span> <span class="i">vector</span> [ <span class="n">1.0</span>; <span class="n">2.0</span>; <span class="n">3.0</span> ]
+<span onmouseout="hideTip(event, 'fs14', 39)" onmouseover="showTip(event, 'fs14', 39)" class="i">v</span><span class="o">.</span>[<span class="n">0</span> <span class="o">..</span> <span class="n">1</span>] <span class="c">// elements [1.0; 2.0]</span>
+<span onmouseout="hideTip(event, 'fs14', 40)" onmouseover="showTip(event, 'fs14', 40)" class="i">v</span><span class="o">.</span>[<span class="n">1</span> <span class="o">..</span>]   <span class="c">// elements [2.0; 3.0]</span>
+<span onmouseout="hideTip(event, 'fs14', 41)" onmouseover="showTip(event, 'fs14', 41)" class="i">v</span><span class="o">.</span>[<span class="o">..</span> <span class="n">1</span>]   <span class="c">// elements [1.0; 2.0]</span>
+
+<span class="c">// Example: Get some slices from a matrix</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs15', 42)" onmouseover="showTip(event, 'fs15', 42)" class="i">m</span> <span class="o">=</span> <span class="i">matrix</span> [ [ <span class="n">1.0</span>; <span class="n">2.0</span>; <span class="n">3.0</span> ]
+                 [ <span class="n">4.0</span>; <span class="n">5.0</span>; <span class="n">6.0</span> ] ]
+
+<span onmouseout="hideTip(event, 'fs15', 43)" onmouseover="showTip(event, 'fs15', 43)" class="i">m</span><span class="o">.</span>[<span class="n">0</span> <span class="o">..</span> <span class="n">1</span>, <span class="n">0</span> <span class="o">..</span> <span class="n">1</span>] <span class="c">// get first square 2x2</span>
+<span onmouseout="hideTip(event, 'fs15', 44)" onmouseover="showTip(event, 'fs15', 44)" class="i">m</span><span class="o">.</span>[<span class="n">0</span> <span class="o">..</span> <span class="n">1</span>, <span class="n">2</span> <span class="o">..</span>]   <span class="c">// get the last column</span>
+<span onmouseout="hideTip(event, 'fs15', 45)" onmouseover="showTip(event, 'fs15', 45)" class="i">m</span><span class="o">.</span>[<span class="n">1</span> <span class="o">..</span>, <span class="n">0</span> <span class="o">..</span> <span class="n">2</span>]   <span class="c">// get the last row</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace MathNet</div>
+<div class="tip" id="fs2">namespace MathNet.Numerics</div>
+<div class="tip" id="fs3">namespace Microsoft.FSharp</div>
+<div class="tip" id="fs4">namespace MathNet.Numerics.LinearAlgebra</div>
+<div class="tip" id="fs5">namespace MathNet.Numerics.LinearAlgebra.Double</div>
+<div class="tip" id="fs6">type Vector =<br />&#160;&#160;inherit Vector&lt;float&gt;<br />&#160;&#160;member AbsoluteMaximum : unit -&gt; float<br />&#160;&#160;member AbsoluteMaximumIndex : unit -&gt; int<br />&#160;&#160;member AbsoluteMinimum : unit -&gt; float<br />&#160;&#160;member AbsoluteMinimumIndex : unit -&gt; int<br />&#160;&#160;member CoerceZero : threshold:float -&gt; unit<br />&#160;&#160;member InfinityNorm : unit -&gt; float<br />&#160;&#160;member L1Norm : unit -&gt; float<br />&#160;&#160;member L2Norm : unit -&gt; float<br />&#160;&#160;member MaximumIndex : unit -&gt; int<br />&#160;&#160;member MinimumIndex : unit -&gt; int<br />&#160;&#160;...<br /><br />Full name: MathNet.Numerics.LinearAlgebra.Double.Vector</div>
+<div class="tip" id="fs7">type unit = Unit<br /><br />Full name: Microsoft.FSharp.Core.unit</div>
+<div class="tip" id="fs8">namespace System</div>
+<div class="tip" id="fs9">type IEquatable&lt;&#39;T&gt; =<br />&#160;&#160;member Equals : other:&#39;T -&gt; bool<br /><br />Full name: System.IEquatable&lt;_&gt;</div>
+<div class="tip" id="fs10">type IFormattable =<br />&#160;&#160;member ToString : format:string * formatProvider:IFormatProvider -&gt; string<br /><br />Full name: System.IFormattable</div>
+<div class="tip" id="fs11">type ValueType =<br />&#160;&#160;member Equals : obj:obj -&gt; bool<br />&#160;&#160;member GetHashCode : unit -&gt; int<br />&#160;&#160;member ToString : unit -&gt; string<br /><br />Full name: System.ValueType</div>
+<div class="tip" id="fs12">val defaultArg : arg:&#39;T option -&gt; defaultValue:&#39;T -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.Operators.defaultArg</div>
+<div class="tip" id="fs13">type Matrix =<br />&#160;&#160;inherit Matrix&lt;float&gt;<br />&#160;&#160;member Cholesky : unit -&gt; Cholesky&lt;float&gt;<br />&#160;&#160;member CoerceZero : threshold:float -&gt; unit<br />&#160;&#160;member ColumnAbsoluteSums : unit -&gt; Vector&lt;float&gt;<br />&#160;&#160;member ColumnNorms : norm:float -&gt; Vector&lt;float&gt;<br />&#160;&#160;member ColumnSums : unit -&gt; Vector&lt;float&gt;<br />&#160;&#160;member ConjugateTranspose : unit -&gt; Matrix&lt;float&gt;<br />&#160;&#160;member Evd : ?symmetricity:Symmetricity -&gt; Evd&lt;float&gt;<br />&#160;&#160;member FrobeniusNorm : unit -&gt; float<br />&#160;&#160;member GramSchmidt : unit -&gt; GramSchmidt&lt;float&gt;<br />&#160;&#160;member InfinityNorm : unit -&gt; float<br />&#160;&#160;...<br /><br />Full name: MathNet.Numerics.LinearAlgebra.Double.Matrix</div>
+<div class="tip" id="fs14">val v : obj<br /><br />Full name: Script.v</div>
+<div class="tip" id="fs15">val m : obj<br /><br />Full name: Script.m</div>
+

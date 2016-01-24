@@ -1,0 +1,68 @@
+module Set =
+    open System.Threading.Tasks
+
+    [<Literal>]
+    let private SUB_SET_SIZE = 150
+
+    let ofSortedSeq (sortedItems:seq<_>) =
+        let whenAll a b f =
+            let waitingTask = Task.WhenAll [|a; b|]
+            waitingTask.ContinueWith (fun _ -> f ())
+
+        let rec partialUnion = function
+        | [_:Task<_>] :: _ as original -> original
+        | [[a;b]]        -> [] :: [whenAll a b (fun () -> Set.union a.Result b.Result)] :: []
+        | [a;b]::[]::tl  -> [] :: [whenAll a b (fun () -> Set.union a.Result b.Result)] :: tl
+        | [a;b]::[c]::tl -> [] :: (partialUnion ([whenAll a b (fun () -> Set.union a.Result b.Result); c] :: tl))
+        | _              -> failwith "Unexpected state"
+
+        let rec combinePartialUnion (combined:Task<_>) = function
+        | [] -> combined.Result
+        | [] :: tl -> combinePartialUnion combined tl
+        | (a:Task<_> :: tl1) :: tl2 -> combinePartialUnion (whenAll combined a (fun () -> Set.union combined.Result a.Result)) (tl1 :: tl2)
+
+        let enumerator =
+            sortedItems.GetEnumerator ()
+
+        let rec addNext current counter results =
+            let next =
+                enumerator.Current :: current
+
+            let createSubSet () =
+                Task.Run (fun () -> Set.ofSeq next)
+
+            match enumerator.MoveNext (), results with
+            | false, _                            -> combinePartialUnion (createSubSet ()) results
+            | true, _ when counter < SUB_SET_SIZE -> addNext next (counter+1) results                      
+            | true, []::tl                        -> addNext []   0           ([createSubSet ()]::tl)                 
+            | true, [a]::tl                       -> addNext []   0           (partialUnion ([a;createSubSet ()]::tl))
+            | _                                   -> failwith "Unexpected state"
+
+        if enumerator.MoveNext () 
+            then addNext [] 0 ([[]])
+            else Set.empty
+
+    let ofSeqViaSort (items:seq<_>) =
+        items
+        |> Seq.sort
+        |> fun sorted -> ofSortedSeq sorted
+
+
+module Newtonsoft =
+    open System.Reflection
+    open Newtonsoft.Json
+
+    type private fastFSharpSetHelper<'f when 'f : comparison>() =
+        static member readJson (reader:JsonReader, serializer:JsonSerializer) =
+            serializer.Deserialize<ResizeArray<'f>> (reader)
+            |> Set.ofSortedSeq
+
+    let fastFSharpSetConverter = {
+        new JsonConverter() with
+            override __.CanConvert t                        = t.IsGenericType && t.GetGenericTypeDefinition() = typedefof<Set<_>>
+            override __.CanWrite                            = false
+            override __.WriteJson (_, _, _)                 = raise <| System.NotImplementedException "CanWrite = false"
+            override __.ReadJson (reader, t, _, serializer) =
+                typedefof<fastFSharpSetHelper<_>>.MakeGenericType (t.GetGenericArguments())
+                |> fun converter -> converter.GetMethod ("readJson", BindingFlags.Static ||| BindingFlags.NonPublic)
+                |> fun readJson -> readJson.Invoke (null, [| reader; serializer |]) }

@@ -1,0 +1,32 @@
+open System.Text
+open PdfSharp.Pdf.IO
+open PdfSharp.Pdf.Content
+open PdfSharp.Pdf.Content.Objects
+
+let rec extractText(content:CObject, sb:StringBuilder) =
+   match content with
+   | :? CArray as xs -> for x in xs do extractText(x, sb)
+   | :? CComment -> ()
+   | :? CInteger -> ()
+   | :? CName -> ()
+   | :? CNumber -> ()
+   | :? COperator as op // Tj/TJ = Show text
+      when op.OpCode.OpCodeName = OpCodeName.Tj ||
+            op.OpCode.OpCodeName = OpCodeName.TJ ->
+      for element in op.Operands do extractText(element, sb)
+      sb.Append(" ") |> ignore
+   | :? COperator -> ()
+   | :? CSequence as xs -> for x in xs do extractText(x, sb)
+   | :? CString as s -> sb.Append(s.Value) |> ignore
+   | x -> raise <| System.NotImplementedException(x.ToString())
+
+let readAllText (pdfPath:string) =
+   use document = PdfReader.Open(pdfPath, PdfDocumentOpenMode.ReadOnly)
+   let result = StringBuilder()
+   for page in document.Pages do
+      let content = ContentReader.ReadContent(page)
+      extractText(content, result)
+      result.AppendLine() |> ignore
+   result.ToString()
+
+let text = readAllText @"<path>.pdf"

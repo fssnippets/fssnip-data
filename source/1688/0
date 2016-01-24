@@ -1,0 +1,34 @@
+open System.Net
+
+let rec Retry (f : unit -> 'T) (didSucceed : 'T -> bool) (timesMs : int list) =
+   let rec retry times =
+      match times with
+      | [] ->
+         f()
+      | head::tail ->
+         async { do! Async.Sleep(head) } |> Async.RunSynchronously
+         let result = f()
+         if didSucceed result then
+            result
+         else
+            retry tail
+   retry timesMs
+
+let Demo1() =
+   let rand = new System.Random()
+   Retry (fun () -> rand.NextDouble()) (fun x -> x > 0.5) [1; 2; 4]
+
+type DownloadResult = | Ok | NotOk
+
+let Demo2() =
+   use wc = new WebClient()
+   Retry 
+      (fun () -> 
+         try
+            printf "Downloading..."
+            wc.DownloadFile("www.example.com", "file.txt")
+            Ok
+         with
+         | _ -> NotOk)
+      (fun result -> result = Ok)
+      [1; 2; 4]

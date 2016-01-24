@@ -1,0 +1,360 @@
+<h2><a name="Ninety-Nine-F-Problems-Problems-90-94-Miscellaneous-problems" class="anchor" href="#Ninety-Nine-F-Problems-Problems-90-94-Miscellaneous-problems">Ninety-Nine F# Problems - Problems 90 - 94 - Miscellaneous problems</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// Ninety-Nine F# Problems - Problems 90 - 94</span>
+<span class="c">///</span>
+<span class="c">/// These are F# solutions of Ninety-Nine Haskell Problems </span>
+<span class="c">/// (http://www.haskell.org/haskellwiki/H-99:_Ninety-Nine_Haskell_Problems), </span>
+<span class="c">/// which are themselves translations of Ninety-Nine Lisp Problems</span>
+<span class="c">/// (http://www.ic.unicamp.br/~meidanis/courses/mc336/2006s2/funcional/L-99_Ninety-Nine_Lisp_Problems.html)</span>
+<span class="c">/// and Ninety-Nine Prolog Problems</span>
+<span class="c">/// (https://sites.google.com/site/prologsite/prolog-problems).</span>
+<span class="c">///</span>
+<span class="c">/// If you would like to contribute a solution or fix any bugs, send </span>
+<span class="c">/// an email to paks at kitiara dot org with the subject &quot;99 F# problems&quot;. </span>
+<span class="c">/// I&#39;ll try to update the problem as soon as possible.</span>
+<span class="c">///</span>
+<span class="c">/// The problems have different levels of difficulty. Those marked with a single asterisk (*) </span>
+<span class="c">/// are easy. If you have successfully solved the preceeding problems you should be able to </span>
+<span class="c">/// solve them within a few (say 15) minutes. Problems marked with two asterisks (**) are of </span>
+<span class="c">/// intermediate difficulty. If you are a skilled F# programmer it shouldn&#39;t take you more than </span>
+<span class="c">/// 30-90 minutes to solve them. Problems marked with three asterisks (***) are more difficult. </span>
+<span class="c">/// You may need more time (i.e. a few hours or more) to find a good solution</span>
+<span class="c">///</span>
+<span class="c">/// Though the problems number from 1 to 99, there are some gaps and some additions marked with </span>
+<span class="c">/// letters. There are actually only 88 problems.</span>
+<span class="c">///</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Problem-90-Eight-queens-problem" class="anchor" href="#Problem-90-Eight-queens-problem">(<em></em>) Problem 90 : Eight queens problem</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// This is a classical problem in computer science. The objective is to place eight queens on a </span>
+<span class="c">/// chessboard so that no two queens are attacking each other; i.e., no two queens are in the </span>
+<span class="c">/// same row, the same column, or on the same diagonal.</span>
+<span class="c">///  </span>
+<span class="c">/// Hint: Represent the positions of the queens as a list of numbers 1..N. Example: </span>
+<span class="c">/// [4,2,7,3,6,8,5,1] means that the queen in the first column is in row 4, the queen in the </span>
+<span class="c">/// second column is in row 2, etc. Use the generate-and-test paradigm.</span>
+<span class="c">///  </span>
+<span class="c">/// Example in F#: </span>
+<span class="c">/// </span>
+<span class="c">/// &gt; queens 8 |&gt; Seq.length;;</span>
+<span class="c">/// val it : int = 92</span>
+<span class="c">/// &gt; queens 8 |&gt; Seq.head;;</span>
+<span class="c">/// val it : int list = [1; 5; 8; 6; 3; 7; 2; 4]</span>
+<span class="c">/// &gt; queens 20 |&gt; Seq.head;;</span>
+<span class="c">/// val it : int list =</span>
+<span class="c">///  [1; 3; 5; 2; 4; 13; 15; 12; 18; 20; 17; 9; 16; 19; 8; 10; 7; 14; 6; 11]</span>
+
+<span id="fst1" onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1, document.getElementById('fst1'))" class="omitted">(Solution)</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Problem-91-Knight-s-tour" class="anchor" href="#Problem-91-Knight-s-tour">(<em></em>) Problem 91 : Knight's tour</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+<span class="l">38: </span>
+<span class="l">39: </span>
+<span class="l">40: </span>
+<span class="l">41: </span>
+<span class="l">42: </span>
+<span class="l">43: </span>
+<span class="l">44: </span>
+<span class="l">45: </span>
+<span class="l">46: </span>
+<span class="l">47: </span>
+<span class="l">48: </span>
+<span class="l">49: </span>
+<span class="l">50: </span>
+<span class="l">51: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// Another famous problem is this one: How can a knight jump on an NxN chessboard in such a way </span>
+<span class="c">/// that it visits every square exactly once? A set of solutions is given on the The_Knights_Tour</span>
+<span class="c">/// page.</span>
+<span class="c">///  </span>
+<span class="c">/// Hints: Represent the squares by pairs of their coordinates of the form X/Y, where both X and </span>
+<span class="c">/// Y are integers between 1 and N. (Note that &#39;/&#39; is just a convenient functor, not division!) </span>
+<span class="c">/// Define the relation jump(N,X/Y,U/V) to express the fact that a knight can jump from X/Y to U/V </span>
+<span class="c">/// on a NxN chessboard. And finally, represent the solution of our problem as a list of N*N knight</span>
+<span class="c">/// positions (the knight&#39;s tour).</span>
+<span class="c">///  </span>
+<span class="c">/// There are two variants of this problem: </span>
+<span class="c">/// 1. find a tour ending at a particular square </span>
+<span class="c">/// 2. find a circular tour, ending a knight&#39;s jump from the start (clearly it doesn&#39;t matter where </span>
+<span class="c">///    you start, so choose (1,1))</span>
+<span class="c">///  </span>
+<span class="c">/// Example in F#: </span>
+<span class="c">/// </span>
+<span class="c">/// &gt; knightsTour 8 (1,1) |&gt; Seq.head;;</span>
+<span class="c">/// val it : (int * int) list =</span>
+<span class="c">///   [(4, 3); (6, 4); (5, 6); (4, 8); (3, 6); (5, 5); (6, 3); (4, 4); (2, 3);</span>
+<span class="c">///    (1, 5); (3, 4); (5, 3); (6, 5); (4, 6); (2, 7); (3, 5); (5, 4); (6, 6);</span>
+<span class="c">///    (4, 5); (2, 4); (1, 6); (2, 8); (4, 7); (6, 8); (8, 7); (7, 5); (8, 3);</span>
+<span class="c">///    (7, 1); (5, 2); (3, 1); (1, 2); (3, 3); (4, 1); (2, 2); (1, 4); (2, 6);</span>
+<span class="c">///    (1, 8); (3, 7); (5, 8); (7, 7); (8, 5); (7, 3); (8, 1); (6, 2); (7, 4);</span>
+<span class="c">///    (8, 2); (6, 1); (4, 2); (2, 1); (1, 3); (2, 5); (1, 7); (3, 8); (5, 7);</span>
+<span class="c">///    (7, 8); (8, 6); (6, 7); (8, 8); (7, 6); (8, 4); (7, 2); (5, 1); (3, 2);</span>
+<span class="c">///    (1, 1)]</span>
+<span class="c">///</span>
+<span class="c">/// &gt; endKnightsTour 8 (4,2);;</span>
+<span class="c">/// val it : (int * int) list =</span>
+<span class="c">///   [(4, 2); (2, 1); (1, 3); (3, 2); (1, 1); (2, 3); (1, 5); (2, 7); (4, 8);</span>
+<span class="c">///    (6, 7); (8, 8); (7, 6); (6, 8); (8, 7); (7, 5); (8, 3); (7, 1); (5, 2);</span>
+<span class="c">///    (3, 1); (1, 2); (2, 4); (1, 6); (2, 8); (4, 7); (2, 6); (1, 8); (3, 7);</span>
+<span class="c">///    (5, 8); (7, 7); (8, 5); (7, 3); (8, 1); (6, 2); (4, 1); (2, 2); (1, 4);</span>
+<span class="c">///    (3, 5); (5, 6); (4, 4); (2, 5); (1, 7); (3, 8); (5, 7); (7, 8); (8, 6);</span>
+<span class="c">///    (7, 4); (6, 6); (4, 5); (3, 3); (5, 4); (4, 6); (6, 5); (8, 4); (7, 2);</span>
+<span class="c">///    (6, 4); (4, 3); (5, 1); (6, 3); (8, 2); (6, 1); (5, 3); (3, 4); (5, 5);</span>
+<span class="c">///    (3, 6)]</span>
+<span class="c">///</span>
+<span class="c">/// &gt; closedKnightsTour 8;;</span>
+<span class="c">/// val it : (int * int) list =</span>
+<span class="c">///   [(2, 3); (4, 4); (6, 3); (5, 5); (4, 3); (6, 4); (5, 6); (4, 8); (3, 6);</span>
+<span class="c">///    (1, 5); (3, 4); (5, 3); (6, 5); (4, 6); (2, 7); (3, 5); (5, 4); (6, 6);</span>
+<span class="c">///    (4, 5); (2, 4); (1, 6); (2, 8); (4, 7); (6, 8); (8, 7); (7, 5); (8, 3);</span>
+<span class="c">///    (7, 1); (5, 2); (3, 1); (1, 2); (3, 3); (4, 1); (2, 2); (1, 4); (2, 6);</span>
+<span class="c">///    (1, 8); (3, 7); (5, 8); (7, 7); (8, 5); (7, 3); (8, 1); (6, 2); (7, 4);</span>
+<span class="c">///    (8, 2); (6, 1); (4, 2); (2, 1); (1, 3); (2, 5); (1, 7); (3, 8); (5, 7);</span>
+<span class="c">///    (7, 8); (8, 6); (6, 7); (8, 8); (7, 6); (8, 4); (7, 2); (5, 1); (3, 2);</span>
+<span class="c">///    (1, 1)]</span>
+
+<span id="fst2" onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2, document.getElementById('fst2'))" class="omitted">(Solution)</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Problem-92-Von-Koch-s-conjecture" class="anchor" href="#Problem-92-Von-Koch-s-conjecture">(<em></em>*) Problem 92 : Von Koch's conjecture</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+<span class="l">38: </span>
+<span class="l">39: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// Several years ago I met a mathematician who was intrigued by a problem for which he didn&#39;t</span>
+<span class="c">/// know a solution. His name was Von Koch, and I don&#39;t know whether the problem has been </span>
+<span class="c">/// solved since.</span>
+<span class="c">///  </span>
+<span class="c">///                                         6</span>
+<span class="c">///        (d)   (e)---(f)        (4)   (1)---(7)</span>
+<span class="c">///         |     |              1 |     | 5</span>
+<span class="c">///        (a)---(b)---(c)        (3)---(6)---(2)</span>
+<span class="c">///         |                    2 |  3     4</span>
+<span class="c">///        (g)                    (5)</span>
+<span class="c">///</span>
+<span class="c">/// Anyway the puzzle goes like this: Given a tree with N nodes (and hence N-1 edges). Find a </span>
+<span class="c">/// way to enumerate the nodes from 1 to N and, accordingly, the edges from 1 to N-1 in such </span>
+<span class="c">/// a way, that for each edge K the difference of its node numbers equals to K. The conjecture </span>
+<span class="c">/// is that this is always possible.</span>
+<span class="c">///  </span>
+<span class="c">/// For small trees the problem is easy to solve by hand. However, for larger trees, and 14 is </span>
+<span class="c">/// already very large, it is extremely difficult to find a solution. And remember, we don&#39;t </span>
+<span class="c">/// know for sure whether there is always a solution!</span>
+<span class="c">///  </span>
+<span class="c">/// Write a predicate that calculates a numbering scheme for a given tree. What is the solution</span>
+<span class="c">/// for the larger tree pictured below?</span>
+<span class="c">///</span>
+<span class="c">///     (i) (g)   (d)---(k)         (p)</span>
+<span class="c">///        \ |     |                 |</span>
+<span class="c">///         (a)---(c)---(e)---(q)---(n)</span>
+<span class="c">///        / |     |           |</span>
+<span class="c">///     (h) (b)   (f)         (m)</span>
+<span class="c">///</span>
+<span class="c">/// Example in F#:  </span>
+<span class="c">/// &gt; vonKoch ([&#39;d&#39;;&#39;a&#39;;&#39;g&#39;;&#39;b&#39;;&#39;c&#39;;&#39;e&#39;;&#39;f&#39;],[(&#39;d&#39;, &#39;a&#39;);(&#39;a&#39;, &#39;g&#39;);(&#39;a&#39;, &#39;b&#39;);(&#39;b&#39;, &#39;e&#39;);</span>
+<span class="c">///                (&#39;b&#39;, &#39;c&#39;);(&#39;e&#39;, &#39;f&#39;)]) |&gt; Seq.head;;</span>
+<span class="c">///</span>
+<span class="c">/// val it : int list * (int * int * int) list =</span>
+<span class="c">///   ([4; 3; 5; 6; 2; 1; 7],</span>
+<span class="c">///    [(4, 3, 1); (3, 5, 2); (3, 6, 3); (6, 1, 5); (6, 2, 4); (1, 7, 6)])</span>
+<span class="c">///</span>
+
+<span id="fst3" onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3, document.getElementById('fst3'))" class="omitted">(Solution)</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Problem-93-An-arithmetic-puzzle" class="anchor" href="#Problem-93-An-arithmetic-puzzle">(<em></em>*) Problem 93 : An arithmetic puzzle</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// Given a list of integer numbers, find a correct way of inserting arithmetic signs (operators)</span>
+<span class="c">/// such that the result is a correct equation. Example: With the list of numbers [2,3,5,7,11] we </span>
+<span class="c">/// can form the equations 2-3+5+7 = 11 or 2 = (3*5+7)/11 (and ten others!).</span>
+<span class="c">///  </span>
+<span class="c">/// Division should be interpreted as operating on rationals, and division by zero should be </span>
+<span class="c">/// avoided.</span>
+<span class="c">///  </span>
+<span class="c">/// Example in F#: </span>
+<span class="c">/// </span>
+<span class="c">/// &gt; solutions [2;3;5;7;11] |&gt; List.iter (printfn &quot;%s&quot;);;</span>
+<span class="c">/// 2 = 3 - (5 + (7 - 11))</span>
+<span class="c">/// 2 = 3 - ((5 + 7) - 11)</span>
+<span class="c">/// 2 = (3 - 5) - (7 - 11)</span>
+<span class="c">/// 2 = (3 - (5 + 7)) + 11</span>
+<span class="c">/// 2 = ((3 - 5) - 7) + 11</span>
+<span class="c">/// 2 = ((3 * 5) + 7) / 11</span>
+<span class="c">/// 2 * (3 - 5) = 7 - 11</span>
+<span class="c">/// 2 - (3 - (5 + 7)) = 11</span>
+<span class="c">/// 2 - ((3 - 5) - 7) = 11</span>
+<span class="c">/// (2 - 3) + (5 + 7) = 11</span>
+<span class="c">/// (2 - (3 - 5)) + 7 = 11</span>
+<span class="c">/// ((2 - 3) + 5) + 7 = 11</span>
+<span class="c">/// val it : unit = ()</span>
+<span class="c">///</span>
+
+<span id="fst4" onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4, document.getElementById('fst4'))" class="omitted">(Solution)</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Problem-94-Generate-K-regular-simple-graphs-with-N-nodes" class="anchor" href="#Problem-94-Generate-K-regular-simple-graphs-with-N-nodes">(<em></em>*) Problem 94 : Generate K-regular simple graphs with N nodes</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// In a K-regular graph all nodes have a degree of K; i.e. the number of edges incident in each </span>
+<span class="c">/// node is K. How many (non-isomorphic!) 3-regular graphs with 6 nodes are there?</span>
+
+<span id="fst5" onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5, document.getElementById('fst5'))" class="omitted">(Solution needed)</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">// instead of solving the problem for 8 queens lets solve if for N queens.<br />// To solve the problem we are going to start with an empty board and then we&#39;re going<br />// add queen to it for each row. Elimitating invalid solutions. To do that we need a function<br />// (invalidPosition) that detects if one queen is in conflict with another one. And another <br />// function (validSolution) that would test if the queen that we&#39;re adding is not in <br />// conflict with any queen already on the board. <br />// Also, the solution is going to return a a sequence of solutions instead of a list.<br />// That way we can get one solution realy fast if that is only what we care. For example <br />// getting all the solutions for a 20x20 board would take a long time, but finding <br />// the first solution only takes 5 seconds.<br />// <br /><br />let queens n =<br />&#160;&#160;&#160;&#160;let invalidPosition (x1, y1) (x2, y2) = (x1 = x2) || (y1 = y2) || abs (x1 - x2) = abs (y1 - y2)<br />&#160;&#160;&#160;&#160;let validSolution (queen, board) = board |&gt; Seq.exists (invalidPosition queen) |&gt; not<br />&#160;&#160;&#160;&#160;// With the function &quot;loop&quot;, we&#39;re going to move one column at time, placing queens<br />&#160;&#160;&#160;&#160;// on each row and creating new boards with only valid solutions.<br />&#160;&#160;&#160;&#160;let rec loop boards y =<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;if y = 0 then<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;boards<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;else<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;let boards&#39; = boards <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;|&gt; Seq.collect(fun board -&gt; [1 .. n] |&gt; Seq.map(fun x -&gt; (x,y),board))<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;|&gt; Seq.filter validSolution <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;|&gt; Seq.map(fun (pos, xs) -&gt; pos::xs)<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;loop boards&#39; (y - 1)<br />&#160;&#160;&#160;&#160;loop (Seq.singleton([])) n |&gt; Seq.map (List.rev &gt;&gt; List.map fst)</div>
+<div class="tip" id="fs2">// Wikipedia has a nice article about this problem http://en.wikipedia.org/wiki/Knights_tour<br />//<br />// The way this algorithm works is like this. We create a set (board) with all the positions<br />// in the board that have not being used. Also we have a function (moves) that returns a <br />// list of posible moves from the current position. The variable &#39;validMoves&#39; is the result of<br />// removing all the positions returned by &#39;moves&#39; that are not in the set &#39;board&#39; (positions <br />// that are still available). If validMoves is empty, that means that we can not move <br />// anymore. If at that time the board is empty, we have a solution! Otherwise we remove the <br />// current position from the board add the curent position to the tour and continue to one <br />// of the valid moves.<br />// Now, the trick to make the algorithm converge is to move first to the valid position <br />// that has the less options once we move (Warnsdorff&#39;s rule).<br />// <br /><br />let moves n (x,y) =<br />&#160;&#160;&#160;&#160;[(x + 2, y + 1); (x + 2, y - 1); (x - 2, y + 1); (x - 2, y - 1); (x - 1, y + 2); (x - 1, y - 2); (x + 1, y + 2); (x + 1, y - 2) ] <br />&#160;&#160;&#160;&#160;|&gt; List.filter(fun (x,y) -&gt; x &gt; 0 &amp;&amp; x &lt;= n &amp;&amp; y &gt; 0 &amp;&amp; y &lt;= n)<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<br />let knightsTours n start =<br />&#160;&#160;&#160;&#160;let board = [1 .. n] |&gt; List.collect(fun x -&gt; [1 .. n] |&gt; List.map(fun y -&gt; (x,y))) |&gt; Set.ofList<br />&#160;&#160;&#160;&#160;let rec loop tour board = seq {<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;let validMoves = tour <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;|&gt; List.head // the head of the tour is our current position<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;|&gt; moves n<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;|&gt; List.filter(fun p -&gt; board |&gt; Set.contains p) <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;match validMoves with<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| [] -&gt; if board |&gt; Set.isEmpty then yield tour // we found a solution!<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| _ -&gt; <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;// the call to sortBy is what makes this algorithm converge fast. <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;// We want to go first to the position with the less options<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;// once we move (Warnsdorff&#39;s rule).<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;for p in validMoves |&gt; List.sortBy(moves n &gt;&gt; List.length) do <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;yield! loop (p::tour) &lt;| Set.remove p board<br />&#160;&#160;&#160;&#160;}<br />&#160;&#160;&#160;&#160;loop [start] &lt;| Set.remove start board<br /><br />let closedKnightsTour n =<br />&#160;&#160;&#160;&#160;let start = (1,1)<br />&#160;&#160;&#160;&#160;let finish = moves n start |&gt; Set.ofList<br />&#160;&#160;&#160;&#160;let flip f a b = f b a<br />&#160;&#160;&#160;&#160;// lets find the first solution that ends in a position next to the start<br />&#160;&#160;&#160;&#160;knightsTours n start |&gt; Seq.find(List.head &gt;&gt; flip Set.contains finish)<br /><br />let endKnightsTour n finish =<br />&#160;&#160;&#160;&#160;// just find a tour that starts with finish and reverse it!<br />&#160;&#160;&#160;&#160;knightsTours n finish |&gt; Seq.head |&gt; List.rev</div>
+<div class="tip" id="fs3">// After some searching on the internet I couldn&#39;t find an algorithm for Graceful labeling.<br />// So I decided to go the brute force route. I knew this would work with the first the example<br />// but I wasn&#39;t sure if it would work for the second tree (a tree with 14 Nodes means that we have<br />// 14! (87,178,291,200) posible ways to tag the tree).<br />// Luckly, it did!!<br /><br />// To represent the trees, I decided to use a tuple with a list of nodes and a list of tuples with the edges<br />type &#39;a Graph = &#39;a list * (&#39;a * &#39;a) list<br /><br />// Here are the two examples above using that representation.<br />let g = ([&#39;d&#39;;&#39;a&#39;;&#39;g&#39;;&#39;b&#39;;&#39;c&#39;;&#39;e&#39;;&#39;f&#39;],[(&#39;d&#39;, &#39;a&#39;);(&#39;a&#39;, &#39;g&#39;);(&#39;a&#39;, &#39;b&#39;);(&#39;b&#39;, &#39;e&#39;);(&#39;b&#39;, &#39;c&#39;);(&#39;e&#39;, &#39;f&#39;)])<br /><br />let g&#39; = ([&#39;i&#39;;&#39;h&#39;;&#39;g&#39;;&#39;a&#39;;&#39;b&#39;;&#39;d&#39;;&#39;c&#39;;&#39;f&#39;;&#39;k&#39;;&#39;e&#39;;&#39;q&#39;;&#39;m&#39;;&#39;p&#39;;&#39;n&#39;],[(&#39;i&#39;, &#39;a&#39;);(&#39;h&#39;, &#39;a&#39;);(&#39;a&#39;, &#39;b&#39;);(&#39;a&#39;, &#39;g&#39;);(&#39;a&#39;, &#39;c&#39;);(&#39;c&#39;, &#39;f&#39;);(&#39;c&#39;,&#39;d&#39;);(&#39;d&#39;,&#39;k&#39;);(&#39;c&#39;,&#39;e&#39;);(&#39;e&#39;,&#39;q&#39;);(&#39;q&#39;,&#39;m&#39;);(&#39;q&#39;,&#39;n&#39;);(&#39;n&#39;,&#39;p&#39;)])<br /><br />// Now I knew how to generate permutations in F# from this snippet: http://fssnip.net/48<br />// But the problem was, that implementation was using lists and it would not work to generate the <br />// 87 billion permutations for the 14 node tree. Then I remember the LazyList type in the F#<br />// Power Pack. Now I can generate the permutations in a lazy way and pray that a solution <br />// can be found fast.<br />// Here is the implemetation of using LazyList.<br /><br />#if INTERACTIVE <br />#r &quot;FSharp.PowerPack.dll&quot;<br />#endif<br /><br />open Microsoft.FSharp.Collections<br /><br />// the term interleave x ys returns a  list of all possible ways of inserting <br />// the element x into the list ys.<br />let rec interleave x = function<br />&#160;&#160;&#160;&#160;| LazyList.Nil -&gt; LazyList.ofList [ LazyList.ofList [x]]<br />&#160;&#160;&#160;&#160;| LazyList.Cons(y,ys) -&gt; LazyList.ofSeq (seq { yield LazyList.cons x (LazyList.cons y ys)<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;for zs in interleave x ys do<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;yield LazyList.cons y zs })<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<br />// the function perms returns a lazy list of all permutations of a list.<br />let rec perms = function<br />&#160;&#160;&#160;&#160;| LazyList.Nil -&gt; LazyList.ofList [LazyList.empty]<br />&#160;&#160;&#160;&#160;| LazyList.Cons(x,xs) -&gt; LazyList.concat ( LazyList.map (interleave x) (perms xs))<br /><br />// Now with the problem of generating all the permutations solved. <br />// It&#39;s time to tackle the real problem.<br />let vonKoch (nodes, edges) =<br />&#160;&#160;&#160;&#160;// diff is used to compute the edge difference acording the the map m<br />&#160;&#160;&#160;&#160;let diff (m : Map&lt;_, _&gt;) (a,b) = abs &lt;| m.[a] - m.[b]<br />&#160;&#160;&#160;&#160;let size = nodes |&gt; List.length<br />&#160;&#160;&#160;&#160;let edgSize = edges |&gt; List.length<br />&#160;&#160;&#160;&#160;match nodes with<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| [] -&gt; failwith &quot;Empty graph!!&quot;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| _  when size &lt;&gt; (edgSize + 1) -&gt; // make sure that we have a valid tree<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;failwith &quot;The tree doesn&#39;t have N - 1 egdes. Where N is the number of nodes&quot;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| _  -&gt; <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;seq {<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;for p in perms &lt;| LazyList.ofList [1 .. size] do<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;let sol = LazyList.toList p<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;let m = sol |&gt; List.zip nodes  |&gt; Map.ofList<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;// I&#39;m using Set here to filter out any duplicates. <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;// It&#39;s faster than Seq.distinct<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;let count = edges |&gt; List.map (diff m) |&gt; Set.ofList |&gt; Set.count <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;// if the number of distint differences is equal to the number <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;// of edges, we found a solution!<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;if count = edgSize then <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;yield (sol, edges |&gt; List.map (fun ((a,b) as e) -&gt; m.[a], m.[b], diff m e))<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;}</div>
+<div class="tip" id="fs4">// This is similar to &quot;The countdow problem&quot; on chapter 11 in the book<br />// Programming in Haskell by Graham Hutton<br /><br />// First let&#39;s define our operations. The ToString override is there to help<br />// on printing the solutions later on.<br />type Op = Add | Sub | Mult | Div<br />&#160;&#160;&#160;&#160;with override op.ToString() =<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;match op with<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| Add -&gt; &quot;+&quot;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| Sub -&gt; &quot;-&quot;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| Mult -&gt; &quot;*&quot;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| Div -&gt; &quot;/&quot;<br /><br />// Here we define wich opertaions are valid.<br />// For Add or Sub there is no problem<br />// For Mult we dont want trivial mutiplications by 1. Although the <br />// problem statement is not clear if that is an issue.<br />// For Div we don&#39;t want division by 0, by 1 or fractions<br />let valid op x y =<br />&#160;&#160;&#160;&#160;match op with<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| Add -&gt; true<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| Sub -&gt; true<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| Mult -&gt; x &lt;&gt; 1 &amp;&amp; y &lt;&gt; 1 <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| Div  -&gt; y &lt;&gt; 0 &amp;&amp; y &lt;&gt; 1 &amp;&amp; x % y = 0<br /><br />// this is function applies the operation to the x and y arguments<br />let app op x y =<br />&#160;&#160;&#160;&#160;match op with<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| Add -&gt; x + y<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| Sub -&gt; x - y<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| Mult -&gt; x * y<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| Div -&gt; x / y<br /><br />// Now, we define our expresions. This is how are we going to build the<br />// solutions<br />type Expr = Val of int | App of Op * Expr * Expr<br /><br />// Just for fun, I implemented the fold function for our expresions.<br />// There was no need since we only use it once on the toString function.<br />let foldExpr fval fapp expr =<br />&#160;&#160;&#160;&#160;let rec loop expr cont =<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;match expr with<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| Val n -&gt; cont &lt;| fval n<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| App(op, l, r) -&gt; loop l &lt;| fun ls -&gt; loop r &lt;| fun rs -&gt; cont &lt;| fapp op ls rs<br />&#160;&#160;&#160;&#160;loop expr id<br /><br />// Once we have fold over expresions impelmenting toString is a one-liner.<br />// The code after the fold is just to remove the outher parentesis.<br />let toString exp = <br />&#160;&#160;&#160;&#160;let str = exp |&gt; foldExpr string (fun op l r -&gt; &quot;(&quot; + l + &quot; &quot; + string op + &quot; &quot; + r + &quot;)&quot;)<br />&#160;&#160;&#160;&#160;if str.StartsWith(&quot;(&quot;) then<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;str.Substring(1,str.Length - 2)<br />&#160;&#160;&#160;&#160;else<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;str<br /><br />// The &#39;eval&#39; function returns a sigleton list with the result of the evaluation.<br />// If the expresion is not valid, returns the empty list ([])<br />let rec eval = function<br />&#160;&#160;&#160;&#160;| Val n -&gt; [n]<br />&#160;&#160;&#160;&#160;| App(op, l, r) -&gt; <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;[for x in eval l do<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;for y in eval r do<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;if valid op x y then<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;yield app op x y]<br /><br />// The function &#39;init&#39;, &#39;inits&#39;, &#39;tails&#39; are here to help implement the <br />// function splits and came from haskell<br /><br />// the function inits accepts a list and returns the list without its last item<br />let rec init = function<br />&#160;&#160;&#160;&#160;| [] -&gt; failwith &quot;empty list!&quot;<br />&#160;&#160;&#160;&#160;| [_] -&gt; []<br />&#160;&#160;&#160;&#160;| x::xs -&gt; x :: init xs<br />&#160;&#160;&#160;&#160;<br />// The function inits returns the list of all initial segments<br />// of a list , in order of increasing length.<br />// Example:<br />// &gt; inits [1..4];;<br />// val it : int list list = [[]; [1]; [1; 2]; [1; 2; 3]; [1; 2; 3; 4]]<br />let rec inits = function<br />&#160;&#160;&#160;&#160;| [] -&gt; [[]]<br />&#160;&#160;&#160;&#160;| x::xs -&gt; [ yield []<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;for ys in inits xs do<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;yield x::ys]<br /><br />// the function tails returns the list of initial segments <br />// of its argument list, shortest last<br />// Example:<br />// &gt; tails [1..4];;<br />// val it : int list list = [[1; 2; 3; 4]; [2; 3; 4]; [3; 4]; [4]; []]<br />let rec tails = function<br />&#160;&#160;&#160;&#160;| [] -&gt; [[]]<br />&#160;&#160;&#160;&#160;| x::xs as ls -&gt; <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;[ yield ls<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;for ys in tails xs do<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;yield ys ]<br /><br />// this is what drives the solution to this problem and <br />// came from the haskell solution.<br />// Here is an example of its use:<br />// &gt; splits [1..4];;<br />// val it : (int list * int list) list =<br />//  [([1], [2; 3; 4]); ([1; 2], [3; 4]); ([1; 2; 3], [4])]<br />// As you can see, it returs all the ways we can split a list.<br />let splits xs = List.tail (init (List.zip (inits xs) (tails xs)))<br /><br />// Now that we&#39;re armed with all these functions, we&#39;re ready to tackle the real problem.<br /><br />// The goal of the function expressions is to build all valid expressions and its value given a <br />// list  of numbers. First we split the list in all posible ways (1). Then we take<br />// the left side of the split and build all the valid expresions (2). We do the same for the<br />// right side (3). Now we combine the two expresions with all the operators (4). If the operation<br />// is valid, we add it to the list of expressions (5,6).<br />let rec expressions = function<br />&#160;&#160;&#160;&#160;| [x] -&gt; [(Val x, x)]<br />&#160;&#160;&#160;&#160;| xs  -&gt; [ for xsl, xsr in splits xs do (* 1 *)<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;for (expl, vall) in expressions xsl do (* 2 *)<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;for (expr, valr) in expressions xsr do (* 3 *)<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;for op in [Add; Sub; Mult; Div] do (* 4 *)<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;if valid op vall valr then (* 5 *)<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;yield (App (op, expl, expr) ,app op vall valr) (* 6 *)]<br /><br /><br />// Now that we have a way of generating valid expressions, it&#39;s time to<br />// generate the equaions. Again, we split the list of numbers (1). Then we generate the <br />// list of expressions from the left side of the split (2). Same with the right side (3).<br />// If both expressions have the same value, add it to our soutions (4,5).<br />let equations = function<br />&#160;&#160;&#160;&#160;| []  -&gt; failwith &quot;error: empty list&quot;<br />&#160;&#160;&#160;&#160;| [_] -&gt; failwith &quot;error: singleton list&quot;<br />&#160;&#160;&#160;&#160;| xs  -&gt; [for xsl, xsr in splits xs do (* 1 *)<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;for el, vl in expressions xsl do (* 2 *)<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;for er, vr in expressions xsr do (* 3 *)<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;if vl = vr then (* 4 *)<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;yield (el, er) (* 5 *)]<br /><br />// Go thought the list of equations a pretty-print them.<br />let solutions = equations &gt;&gt; List.map(fun (exp1, exp2) -&gt; toString exp1 + &quot; = &quot; + toString exp2)</div>
+<div class="tip" id="fs5">let solution94 = &quot;your solution here!!&quot;</div>
+

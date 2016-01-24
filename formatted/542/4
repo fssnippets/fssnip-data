@@ -1,0 +1,127 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+<span class="l">38: </span>
+<span class="l">39: </span>
+<span class="l">40: </span>
+<span class="l">41: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">module</span> <span class="t">ip</span> <span class="o">=</span>    
+  <span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">System</span>
+  <span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 2)" onmouseover="showTip(event, 'fs1', 2)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 3)" onmouseover="showTip(event, 'fs2', 3)" class="i">Net</span>
+
+  <span class="k">let</span> <span onmouseout="hideTip(event, 'fs3', 4)" onmouseover="showTip(event, 'fs3', 4)" class="f">intOfIp</span> (<span onmouseout="hideTip(event, 'fs4', 5)" onmouseover="showTip(event, 'fs4', 5)" class="i">s</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs5', 6)" onmouseover="showTip(event, 'fs5', 6)" class="t">string</span>) <span class="o">=</span> 
+    <span onmouseout="hideTip(event, 'fs6', 7)" onmouseover="showTip(event, 'fs6', 7)" class="t">IPAddress</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs7', 8)" onmouseover="showTip(event, 'fs7', 8)" class="f">Parse</span>(<span onmouseout="hideTip(event, 'fs4', 9)" onmouseover="showTip(event, 'fs4', 9)" class="i">s</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs8', 10)" onmouseover="showTip(event, 'fs8', 10)" class="f">Trim</span>())<span class="o">.</span><span class="f">GetAddressBytes</span>() 
+    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs9', 11)" onmouseover="showTip(event, 'fs9', 11)" class="t">Array</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs10', 12)" onmouseover="showTip(event, 'fs10', 12)" class="f">rev</span>
+    <span class="o">|&gt;</span> <span class="k">fun</span> <span onmouseout="hideTip(event, 'fs11', 13)" onmouseover="showTip(event, 'fs11', 13)" class="i">e</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs12', 14)" onmouseover="showTip(event, 'fs12', 14)" class="t">BitConverter</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs13', 15)" onmouseover="showTip(event, 'fs13', 15)" class="f">ToUInt32</span> (<span onmouseout="hideTip(event, 'fs11', 16)" onmouseover="showTip(event, 'fs11', 16)" class="i">e</span>, <span class="n">0</span>)
+    
+  <span class="k">let</span> <span onmouseout="hideTip(event, 'fs14', 17)" onmouseover="showTip(event, 'fs14', 17)" class="f">ipOfInt</span> (<span onmouseout="hideTip(event, 'fs15', 18)" onmouseover="showTip(event, 'fs15', 18)" class="i">d</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs16', 19)" onmouseover="showTip(event, 'fs16', 19)" class="t">uint32</span>) <span class="o">=</span> 
+    <span onmouseout="hideTip(event, 'fs12', 20)" onmouseover="showTip(event, 'fs12', 20)" class="t">BitConverter</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs17', 21)" onmouseover="showTip(event, 'fs17', 21)" class="f">GetBytes</span> <span onmouseout="hideTip(event, 'fs15', 22)" onmouseover="showTip(event, 'fs15', 22)" class="i">d</span>
+    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs9', 23)" onmouseover="showTip(event, 'fs9', 23)" class="t">Array</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs10', 24)" onmouseover="showTip(event, 'fs10', 24)" class="f">rev</span> 
+    <span class="o">|&gt;</span> <span class="k">fun</span> <span onmouseout="hideTip(event, 'fs11', 25)" onmouseover="showTip(event, 'fs11', 25)" class="i">e</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs6', 26)" onmouseover="showTip(event, 'fs6', 26)" class="t">IPAddress</span> <span onmouseout="hideTip(event, 'fs11', 27)" onmouseover="showTip(event, 'fs11', 27)" class="i">e</span>
+    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs5', 28)" onmouseover="showTip(event, 'fs5', 28)" class="f">string</span>
+
+  <span class="k">let</span> <span onmouseout="hideTip(event, 'fs18', 29)" onmouseover="showTip(event, 'fs18', 29)" class="f">slice</span> (<span onmouseout="hideTip(event, 'fs19', 30)" onmouseover="showTip(event, 'fs19', 30)" class="i">d</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs5', 31)" onmouseover="showTip(event, 'fs5', 31)" class="t">string</span>) (<span onmouseout="hideTip(event, 'fs20', 32)" onmouseover="showTip(event, 'fs20', 32)" class="i">iden</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs5', 33)" onmouseover="showTip(event, 'fs5', 33)" class="t">string</span> <span onmouseout="hideTip(event, 'fs21', 34)" onmouseover="showTip(event, 'fs21', 34)" class="t">array</span>) <span class="o">=</span> 
+    <span onmouseout="hideTip(event, 'fs19', 35)" onmouseover="showTip(event, 'fs19', 35)" class="i">d</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs22', 36)" onmouseover="showTip(event, 'fs22', 36)" class="f">Split</span>(<span onmouseout="hideTip(event, 'fs20', 37)" onmouseover="showTip(event, 'fs20', 37)" class="i">iden</span>, <span onmouseout="hideTip(event, 'fs23', 38)" onmouseover="showTip(event, 'fs23', 38)" class="t">StringSplitOptions</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs24', 39)" onmouseover="showTip(event, 'fs24', 39)" class="i">None</span>)
+
+  <span class="k">let</span> <span onmouseout="hideTip(event, 'fs25', 40)" onmouseover="showTip(event, 'fs25', 40)" class="f">ipArrayOfIntRange</span> <span onmouseout="hideTip(event, 'fs26', 41)" onmouseover="showTip(event, 'fs26', 41)" class="i">start</span> <span onmouseout="hideTip(event, 'fs27', 42)" onmouseover="showTip(event, 'fs27', 42)" class="i">finish</span> <span class="o">=</span>
+    [| <span class="k">for</span> <span onmouseout="hideTip(event, 'fs28', 43)" onmouseover="showTip(event, 'fs28', 43)" class="i">i</span> <span class="k">in</span> <span onmouseout="hideTip(event, 'fs26', 44)" onmouseover="showTip(event, 'fs26', 44)" class="i">start</span> <span class="o">..</span> <span onmouseout="hideTip(event, 'fs27', 45)" onmouseover="showTip(event, 'fs27', 45)" class="i">finish</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs14', 46)" onmouseover="showTip(event, 'fs14', 46)" class="f">ipOfInt</span> <span onmouseout="hideTip(event, 'fs28', 47)" onmouseover="showTip(event, 'fs28', 47)" class="i">i</span> |]
+
+  <span class="k">let</span> <span onmouseout="hideTip(event, 'fs29', 48)" onmouseover="showTip(event, 'fs29', 48)" class="f">ipsOfRange</span> (<span onmouseout="hideTip(event, 'fs19', 49)" onmouseover="showTip(event, 'fs19', 49)" class="i">d</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs5', 50)" onmouseover="showTip(event, 'fs5', 50)" class="t">string</span>) <span class="o">=</span> 
+    
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs30', 51)" onmouseover="showTip(event, 'fs30', 51)" class="i">elem</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs18', 52)" onmouseover="showTip(event, 'fs18', 52)" class="f">slice</span> <span onmouseout="hideTip(event, 'fs19', 53)" onmouseover="showTip(event, 'fs19', 53)" class="i">d</span> [|<span class="s">&quot;to&quot;</span>; <span class="s">&quot;-&quot;</span>; <span class="s">&quot;and&quot;</span>|]
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs26', 54)" onmouseover="showTip(event, 'fs26', 54)" class="i">start</span>,<span onmouseout="hideTip(event, 'fs27', 55)" onmouseover="showTip(event, 'fs27', 55)" class="i">finish</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs3', 56)" onmouseover="showTip(event, 'fs3', 56)" class="f">intOfIp</span> <span onmouseout="hideTip(event, 'fs30', 57)" onmouseover="showTip(event, 'fs30', 57)" class="i">elem</span><span class="o">.</span>[<span class="n">0</span>], <span onmouseout="hideTip(event, 'fs3', 58)" onmouseover="showTip(event, 'fs3', 58)" class="f">intOfIp</span> <span onmouseout="hideTip(event, 'fs30', 59)" onmouseover="showTip(event, 'fs30', 59)" class="i">elem</span><span class="o">.</span>[<span class="n">1</span>]
+    
+    <span onmouseout="hideTip(event, 'fs25', 60)" onmouseover="showTip(event, 'fs25', 60)" class="f">ipArrayOfIntRange</span> <span onmouseout="hideTip(event, 'fs26', 61)" onmouseover="showTip(event, 'fs26', 61)" class="i">start</span> <span onmouseout="hideTip(event, 'fs27', 62)" onmouseover="showTip(event, 'fs27', 62)" class="i">finish</span>
+    
+  <span class="c">(* &quot;192.168.1.1/24&quot; -&gt; [&quot;192.168.1.1 .. 192.168.1.254&quot;] *)</span>
+  <span class="k">let</span> <span onmouseout="hideTip(event, 'fs31', 63)" onmouseover="showTip(event, 'fs31', 63)" class="f">ipsOfCidrs</span> (<span onmouseout="hideTip(event, 'fs19', 64)" onmouseover="showTip(event, 'fs19', 64)" class="i">d</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs5', 65)" onmouseover="showTip(event, 'fs5', 65)" class="t">string</span>) <span class="o">=</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs30', 66)" onmouseover="showTip(event, 'fs30', 66)" class="i">elem</span>  <span class="o">=</span> <span onmouseout="hideTip(event, 'fs18', 67)" onmouseover="showTip(event, 'fs18', 67)" class="f">slice</span> <span onmouseout="hideTip(event, 'fs19', 68)" onmouseover="showTip(event, 'fs19', 68)" class="i">d</span> [|<span class="s">&quot;/&quot;</span>|]
+    
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs32', 69)" onmouseover="showTip(event, 'fs32', 69)" class="f">lsn</span> <span onmouseout="hideTip(event, 'fs33', 70)" onmouseover="showTip(event, 'fs33', 70)" class="i">x</span> <span class="o">=</span> (<span class="n">1</span> <span class="o">&lt;&lt;&lt;</span> <span class="n">32</span> <span class="o">-</span> <span onmouseout="hideTip(event, 'fs33', 71)" onmouseover="showTip(event, 'fs33', 71)" class="i">x</span>) <span class="o">-</span> <span class="n">1</span> <span class="o">|&gt;</span> (<span class="o">~~~</span>)    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs16', 72)" onmouseover="showTip(event, 'fs16', 72)" class="f">uint32</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs34', 73)" onmouseover="showTip(event, 'fs34', 73)" class="i">cidr</span>  <span class="o">=</span> <span onmouseout="hideTip(event, 'fs9', 74)" onmouseover="showTip(event, 'fs9', 74)" class="t">Array</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs35', 75)" onmouseover="showTip(event, 'fs35', 75)" class="f">get</span> <span onmouseout="hideTip(event, 'fs30', 76)" onmouseover="showTip(event, 'fs30', 76)" class="i">elem</span> <span class="n">1</span>   <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs36', 77)" onmouseover="showTip(event, 'fs36', 77)" class="f">int</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs37', 78)" onmouseover="showTip(event, 'fs37', 78)" class="i">mask</span>  <span class="o">=</span> <span onmouseout="hideTip(event, 'fs34', 79)" onmouseover="showTip(event, 'fs34', 79)" class="i">cidr</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs36', 80)" onmouseover="showTip(event, 'fs36', 80)" class="f">int</span>        <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs32', 81)" onmouseover="showTip(event, 'fs32', 81)" class="f">lsn</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs38', 82)" onmouseover="showTip(event, 'fs38', 82)" class="i">addr</span>  <span class="o">=</span> <span onmouseout="hideTip(event, 'fs30', 83)" onmouseover="showTip(event, 'fs30', 83)" class="i">elem</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs39', 84)" onmouseover="showTip(event, 'fs39', 84)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs40', 85)" onmouseover="showTip(event, 'fs40', 85)" class="f">head</span>   <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs3', 86)" onmouseover="showTip(event, 'fs3', 86)" class="f">intOfIp</span>  <span class="o">|&gt;</span> (<span class="o">&amp;&amp;&amp;</span>) <span onmouseout="hideTip(event, 'fs37', 87)" onmouseover="showTip(event, 'fs37', 87)" class="i">mask</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs26', 88)" onmouseover="showTip(event, 'fs26', 88)" class="i">start</span>,<span onmouseout="hideTip(event, 'fs27', 89)" onmouseover="showTip(event, 'fs27', 89)" class="i">finish</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs38', 90)" onmouseover="showTip(event, 'fs38', 90)" class="i">addr</span> <span class="o">+</span> <span class="n">1u</span>, <span onmouseout="hideTip(event, 'fs38', 91)" onmouseover="showTip(event, 'fs38', 91)" class="i">addr</span> <span class="o">+</span> <span class="o">~~~</span><span onmouseout="hideTip(event, 'fs37', 92)" onmouseover="showTip(event, 'fs37', 92)" class="i">mask</span> <span class="o">-</span> <span class="n">1u</span>
+
+    <span class="k">if</span> <span onmouseout="hideTip(event, 'fs34', 93)" onmouseover="showTip(event, 'fs34', 93)" class="i">cidr</span> <span class="o">&gt;</span> <span class="n">30</span> <span class="k">then</span> [| <span onmouseout="hideTip(event, 'fs30', 94)" onmouseover="showTip(event, 'fs30', 94)" class="i">elem</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs39', 95)" onmouseover="showTip(event, 'fs39', 95)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs40', 96)" onmouseover="showTip(event, 'fs40', 96)" class="f">head</span> |]
+    <span class="k">else</span>
+      <span onmouseout="hideTip(event, 'fs25', 97)" onmouseover="showTip(event, 'fs25', 97)" class="f">ipArrayOfIntRange</span> <span onmouseout="hideTip(event, 'fs26', 98)" onmouseover="showTip(event, 'fs26', 98)" class="i">start</span> <span onmouseout="hideTip(event, 'fs27', 99)" onmouseover="showTip(event, 'fs27', 99)" class="i">finish</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace System</div>
+<div class="tip" id="fs2">namespace System.Net</div>
+<div class="tip" id="fs3">val intOfIp : s:string -&gt; uint32<br /><br />Full name: Script.ip.intOfIp</div>
+<div class="tip" id="fs4">val s : string</div>
+<div class="tip" id="fs5">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />Full name: Microsoft.FSharp.Core.Operators.string<br /><br />--------------------<br />type string = String<br /><br />Full name: Microsoft.FSharp.Core.string</div>
+<div class="tip" id="fs6">Multiple items<br />type IPAddress =<br />&#160;&#160;new : newAddress:int64 -&gt; IPAddress + 2 overloads<br />&#160;&#160;member Address : int64 with get, set<br />&#160;&#160;member AddressFamily : AddressFamily<br />&#160;&#160;member Equals : comparand:obj -&gt; bool<br />&#160;&#160;member GetAddressBytes : unit -&gt; byte[]<br />&#160;&#160;member GetHashCode : unit -&gt; int<br />&#160;&#160;member IsIPv6LinkLocal : bool<br />&#160;&#160;member IsIPv6Multicast : bool<br />&#160;&#160;member IsIPv6SiteLocal : bool<br />&#160;&#160;member IsIPv6Teredo : bool<br />&#160;&#160;...<br /><br />Full name: System.Net.IPAddress<br /><br />--------------------<br />IPAddress(newAddress: int64) : unit<br />IPAddress(address: byte []) : unit<br />IPAddress(address: byte [], scopeid: int64) : unit</div>
+<div class="tip" id="fs7">IPAddress.Parse(ipString: string) : IPAddress</div>
+<div class="tip" id="fs8">String.Trim() : string<br />String.Trim([&lt;ParamArray&gt;] trimChars: char []) : string</div>
+<div class="tip" id="fs9">type Array =<br />&#160;&#160;member Clone : unit -&gt; obj<br />&#160;&#160;member CopyTo : array:Array * index:int -&gt; unit + 1 overload<br />&#160;&#160;member GetEnumerator : unit -&gt; IEnumerator<br />&#160;&#160;member GetLength : dimension:int -&gt; int<br />&#160;&#160;member GetLongLength : dimension:int -&gt; int64<br />&#160;&#160;member GetLowerBound : dimension:int -&gt; int<br />&#160;&#160;member GetUpperBound : dimension:int -&gt; int<br />&#160;&#160;member GetValue : [&lt;ParamArray&gt;] indices:int[] -&gt; obj + 7 overloads<br />&#160;&#160;member Initialize : unit -&gt; unit<br />&#160;&#160;member IsFixedSize : bool<br />&#160;&#160;...<br /><br />Full name: System.Array</div>
+<div class="tip" id="fs10">val rev : array:&#39;T [] -&gt; &#39;T []<br /><br />Full name: Microsoft.FSharp.Collections.Array.rev</div>
+<div class="tip" id="fs11">val e : byte []</div>
+<div class="tip" id="fs12">type BitConverter =<br />&#160;&#160;static val IsLittleEndian : bool<br />&#160;&#160;static member DoubleToInt64Bits : value:float -&gt; int64<br />&#160;&#160;static member GetBytes : value:bool -&gt; byte[] + 9 overloads<br />&#160;&#160;static member Int64BitsToDouble : value:int64 -&gt; float<br />&#160;&#160;static member ToBoolean : value:byte[] * startIndex:int -&gt; bool<br />&#160;&#160;static member ToChar : value:byte[] * startIndex:int -&gt; char<br />&#160;&#160;static member ToDouble : value:byte[] * startIndex:int -&gt; float<br />&#160;&#160;static member ToInt16 : value:byte[] * startIndex:int -&gt; int16<br />&#160;&#160;static member ToInt32 : value:byte[] * startIndex:int -&gt; int<br />&#160;&#160;static member ToInt64 : value:byte[] * startIndex:int -&gt; int64<br />&#160;&#160;...<br /><br />Full name: System.BitConverter</div>
+<div class="tip" id="fs13">BitConverter.ToUInt32(value: byte [], startIndex: int) : uint32</div>
+<div class="tip" id="fs14">val ipOfInt : d:uint32 -&gt; string<br /><br />Full name: Script.ip.ipOfInt</div>
+<div class="tip" id="fs15">val d : uint32</div>
+<div class="tip" id="fs16">Multiple items<br />val uint32 : value:&#39;T -&gt; uint32 (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.uint32<br /><br />--------------------<br />type uint32 = UInt32<br /><br />Full name: Microsoft.FSharp.Core.uint32</div>
+<div class="tip" id="fs17">BitConverter.GetBytes(value: float) : byte []<br />BitConverter.GetBytes(value: float32) : byte []<br />BitConverter.GetBytes(value: uint64) : byte []<br />BitConverter.GetBytes(value: uint32) : byte []<br />BitConverter.GetBytes(value: uint16) : byte []<br />BitConverter.GetBytes(value: int64) : byte []<br />BitConverter.GetBytes(value: int) : byte []<br />BitConverter.GetBytes(value: int16) : byte []<br />BitConverter.GetBytes(value: char) : byte []<br />BitConverter.GetBytes(value: bool) : byte []</div>
+<div class="tip" id="fs18">val slice : d:string -&gt; iden:string array -&gt; string []<br /><br />Full name: Script.ip.slice</div>
+<div class="tip" id="fs19">val d : string</div>
+<div class="tip" id="fs20">val iden : string array</div>
+<div class="tip" id="fs21">type &#39;T array = &#39;T []<br /><br />Full name: Microsoft.FSharp.Core.array&lt;_&gt;</div>
+<div class="tip" id="fs22">String.Split([&lt;ParamArray&gt;] separator: char []) : string []<br />String.Split(separator: string [], options: StringSplitOptions) : string []<br />String.Split(separator: char [], options: StringSplitOptions) : string []<br />String.Split(separator: char [], count: int) : string []<br />String.Split(separator: string [], count: int, options: StringSplitOptions) : string []<br />String.Split(separator: char [], count: int, options: StringSplitOptions) : string []</div>
+<div class="tip" id="fs23">type StringSplitOptions =<br />&#160;&#160;| None = 0<br />&#160;&#160;| RemoveEmptyEntries = 1<br /><br />Full name: System.StringSplitOptions</div>
+<div class="tip" id="fs24">field StringSplitOptions.None = 0</div>
+<div class="tip" id="fs25">val ipArrayOfIntRange : start:uint32 -&gt; finish:uint32 -&gt; string []<br /><br />Full name: Script.ip.ipArrayOfIntRange</div>
+<div class="tip" id="fs26">val start : uint32</div>
+<div class="tip" id="fs27">val finish : uint32</div>
+<div class="tip" id="fs28">val i : uint32</div>
+<div class="tip" id="fs29">val ipsOfRange : d:string -&gt; string []<br /><br />Full name: Script.ip.ipsOfRange</div>
+<div class="tip" id="fs30">val elem : string []</div>
+<div class="tip" id="fs31">val ipsOfCidrs : d:string -&gt; string []<br /><br />Full name: Script.ip.ipsOfCidrs</div>
+<div class="tip" id="fs32">val lsn : (int -&gt; uint32)</div>
+<div class="tip" id="fs33">val x : int</div>
+<div class="tip" id="fs34">val cidr : int</div>
+<div class="tip" id="fs35">val get : array:&#39;T [] -&gt; index:int -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Collections.Array.get</div>
+<div class="tip" id="fs36">Multiple items<br />val int : value:&#39;T -&gt; int (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.int<br /><br />--------------------<br />type int = int32<br /><br />Full name: Microsoft.FSharp.Core.int<br /><br />--------------------<br />type int&lt;&#39;Measure&gt; = int<br /><br />Full name: Microsoft.FSharp.Core.int&lt;_&gt;</div>
+<div class="tip" id="fs37">val mask : uint32</div>
+<div class="tip" id="fs38">val addr : uint32</div>
+<div class="tip" id="fs39">module Seq<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs40">val head : source:seq&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Collections.Seq.head</div>
+

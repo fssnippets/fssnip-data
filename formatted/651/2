@@ -1,0 +1,543 @@
+<h2><a name="Ninety-Nine-F-Problems-Problems-80-89-Graphs" class="anchor" href="#Ninety-Nine-F-Problems-Problems-80-89-Graphs">Ninety-Nine F# Problems - Problems 80 - 89 - Graphs</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// Ninety-Nine F# Problems - Problems 80 - 89</span>
+<span class="c">///</span>
+<span class="c">/// These are F# solutions of Ninety-Nine Haskell Problems </span>
+<span class="c">/// (http://www.haskell.org/haskellwiki/H-99:_Ninety-Nine_Haskell_Problems), </span>
+<span class="c">/// which are themselves translations of Ninety-Nine Lisp Problems</span>
+<span class="c">/// (http://www.ic.unicamp.br/~meidanis/courses/mc336/2006s2/funcional/L-99_Ninety-Nine_Lisp_Problems.html)</span>
+<span class="c">/// and Ninety-Nine Prolog Problems</span>
+<span class="c">/// (https://sites.google.com/site/prologsite/prolog-problems).</span>
+<span class="c">///</span>
+<span class="c">/// If you would like to contribute a solution or fix any bugs, send </span>
+<span class="c">/// an email to paks at kitiara dot org with the subject &quot;99 F# problems&quot;. </span>
+<span class="c">/// I&#39;ll try to update the problem as soon as possible.</span>
+<span class="c">///</span>
+<span class="c">/// The problems have different levels of difficulty. Those marked with a single asterisk (*) </span>
+<span class="c">/// are easy. If you have successfully solved the preceeding problems you should be able to </span>
+<span class="c">/// solve them within a few (say 15) minutes. Problems marked with two asterisks (**) are of </span>
+<span class="c">/// intermediate difficulty. If you are a skilled F# programmer it shouldn&#39;t take you more than </span>
+<span class="c">/// 30-90 minutes to solve them. Problems marked with three asterisks (***) are more difficult. </span>
+<span class="c">/// You may need more time (i.e. a few hours or more) to find a good solution</span>
+<span class="c">///</span>
+<span class="c">/// Though the problems number from 1 to 99, there are some gaps and some additions marked with </span>
+<span class="c">/// letters. There are actually only 88 problems.</span>
+<span class="c">///</span>
+
+<span class="c">// The solutions to the problems below use there definitions for Grahps</span>
+<span class="k">type</span> <span class="o">&#39;</span><span class="i">a</span> <span class="t">Edge</span> <span class="o">=</span> <span class="o">&#39;</span><span class="i">a</span> <span class="o">*</span> <span class="o">&#39;</span><span class="i">a</span>
+
+<span class="k">type</span> <span class="o">&#39;</span><span class="i">a</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="t">Graph</span> <span class="o">=</span> <span class="o">&#39;</span><span class="i">a</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="t">list</span> <span class="o">*</span> <span class="o">&#39;</span><span class="i">a</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="t">Edge</span> <span onmouseout="hideTip(event, 'fs2', 4)" onmouseover="showTip(event, 'fs2', 4)" class="t">list</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs4', 5)" onmouseover="showTip(event, 'fs4', 5)" class="i">g</span> <span class="o">=</span> ([<span class="s">&#39;b&#39;</span>;<span class="s">&#39;c&#39;</span>;<span class="s">&#39;d&#39;</span>;<span class="s">&#39;f&#39;</span>;<span class="s">&#39;g&#39;</span>;<span class="s">&#39;h&#39;</span>;<span class="s">&#39;k&#39;</span>],[(<span class="s">&#39;b&#39;</span>,<span class="s">&#39;c&#39;</span>);(<span class="s">&#39;b&#39;</span>,<span class="s">&#39;f&#39;</span>);(<span class="s">&#39;c&#39;</span>,<span class="s">&#39;f&#39;</span>);(<span class="s">&#39;f&#39;</span>,<span class="s">&#39;k&#39;</span>);(<span class="s">&#39;g&#39;</span>,<span class="s">&#39;h&#39;</span>)])
+
+<span class="k">type</span> <span class="o">&#39;</span><span class="i">a</span> <span onmouseout="hideTip(event, 'fs5', 6)" onmouseover="showTip(event, 'fs5', 6)" class="t">Node</span> <span class="o">=</span> <span class="o">&#39;</span><span class="i">a</span> <span class="o">*</span> <span class="o">&#39;</span><span class="i">a</span> <span onmouseout="hideTip(event, 'fs2', 7)" onmouseover="showTip(event, 'fs2', 7)" class="t">list</span>
+
+<span class="k">type</span> <span class="o">&#39;</span><span class="i">a</span> <span onmouseout="hideTip(event, 'fs6', 8)" onmouseover="showTip(event, 'fs6', 8)" class="t">AdjacencyGraph</span> <span class="o">=</span> <span class="o">&#39;</span><span class="i">a</span> <span onmouseout="hideTip(event, 'fs5', 9)" onmouseover="showTip(event, 'fs5', 9)" class="t">Node</span> <span onmouseout="hideTip(event, 'fs2', 10)" onmouseover="showTip(event, 'fs2', 10)" class="t">list</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs7', 11)" onmouseover="showTip(event, 'fs7', 11)" class="i">ga</span> <span class="o">=</span> [(<span class="s">&#39;b&#39;</span>,[<span class="s">&#39;c&#39;</span>; <span class="s">&#39;f&#39;</span>]); (<span class="s">&#39;c&#39;</span>,[<span class="s">&#39;b&#39;</span>; <span class="s">&#39;f&#39;</span>]); (<span class="s">&#39;d&#39;</span>,[]); (<span class="s">&#39;f&#39;</span>,[<span class="s">&#39;b&#39;</span>; <span class="s">&#39;c&#39;</span>; <span class="s">&#39;k&#39;</span>]); 
+                                                    (<span class="s">&#39;g&#39;</span>,[<span class="s">&#39;h&#39;</span>]); (<span class="s">&#39;h&#39;</span>,[<span class="s">&#39;g&#39;</span>]); (<span class="s">&#39;k&#39;</span>,[<span class="s">&#39;f&#39;</span>])]
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Problem-80-Conversions" class="anchor" href="#Problem-80-Conversions">(<em></em>*) Problem 80 : Conversions</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// Write predicates to convert between the different graph representations. With these </span>
+<span class="c">/// predicates, all representations are equivalent; i.e. for the following problems you </span>
+<span class="c">/// can always pick freely the most convenient form. The reason this problem is rated </span>
+<span class="c">/// (***) is not because it&#39;s particularly difficult, but because it&#39;s a lot of work to </span>
+<span class="c">/// deal with all the special cases. </span>
+<span class="c">/// </span>
+<span class="c">/// Example in F#:</span>
+<span class="c">/// </span>
+<span class="c">/// &gt; let g = ([&#39;b&#39;;&#39;c&#39;;&#39;d&#39;;&#39;f&#39;;&#39;g&#39;;&#39;h&#39;;&#39;k&#39;],[(&#39;b&#39;,&#39;c&#39;);(&#39;b&#39;,&#39;f&#39;);</span>
+<span class="c">///                                                 (&#39;c&#39;,&#39;f&#39;);(&#39;f&#39;,&#39;k&#39;);(&#39;g&#39;,&#39;h&#39;)]);;</span>
+<span class="c">/// </span>
+<span class="c">/// &gt; graph2AdjacencyGraph g;;</span>
+<span class="c">/// val it : char AdjacencyGraph =</span>
+<span class="c">///   [(&#39;b&#39;, [&#39;f&#39;; &#39;c&#39;]); (&#39;c&#39;, [&#39;f&#39;; &#39;b&#39;]); (&#39;d&#39;, []); (&#39;f&#39;, [&#39;k&#39;; &#39;c&#39;; &#39;b&#39;]);</span>
+<span class="c">///    (&#39;g&#39;, [&#39;h&#39;]); (&#39;h&#39;, [&#39;g&#39;]); (&#39;k&#39;, [&#39;f&#39;])]</span>
+<span class="c">///</span>
+<span class="c">/// &gt; let ga = [(&#39;b&#39;,[&#39;c&#39;; &#39;f&#39;]); (&#39;c&#39;,[&#39;b&#39;; &#39;f&#39;]); (&#39;d&#39;,[]); (&#39;f&#39;,[&#39;b&#39;; &#39;c&#39;; &#39;k&#39;]); </span>
+<span class="c">///                                             (&#39;g&#39;,[&#39;h&#39;]); (&#39;h&#39;,[&#39;g&#39;]); (&#39;k&#39;,[&#39;f&#39;])];;</span>
+<span class="c">/// </span>
+<span class="c">/// &gt; adjacencyGraph2Graph ga;;</span>
+<span class="c">/// val it : char Graph =</span>
+<span class="c">///   ([&#39;b&#39;; &#39;c&#39;; &#39;d&#39;; &#39;f&#39;; &#39;g&#39;; &#39;h&#39;; &#39;k&#39;],</span>
+<span class="c">///    [(&#39;b&#39;, &#39;c&#39;); (&#39;b&#39;, &#39;f&#39;); (&#39;c&#39;, &#39;f&#39;); (&#39;f&#39;, &#39;k&#39;); (&#39;g&#39;, &#39;h&#39;)])</span>
+
+<span id="fst8" onmouseout="hideTip(event, 'fs8', 12)" onmouseover="showTip(event, 'fs8', 12, document.getElementById('fst8'))" class="omitted">(Solution)</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Problem-81-Path-from-one-node-to-another-one" class="anchor" href="#Problem-81-Path-from-one-node-to-another-one">(<em></em>) Problem 81: Path from one node to another one</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// Write a function that, given two nodes a and b in a graph, returns all </span>
+<span class="c">/// the acyclic paths from a to b.</span>
+<span class="c">/// </span>
+<span class="c">/// Example:</span>
+<span class="c">/// </span>
+<span class="c">/// Example in F#:</span>
+<span class="c">/// </span>
+<span class="c">/// &gt; paths 1 4 [(1,[2;3]);(2,[3]);(3,[4]);(4,[2]);(5,[6]);(6,[5])];;</span>
+<span class="c">/// val it : int list list = [[1; 2; 3; 4]; [1; 3; 4]]</span>
+<span class="c">///</span>
+<span class="c">/// &gt; paths 2 6 [(1,[2;3]);(2,[3]);(3,[4]);(4,[2]);(5,[6]);(6,[5])];;</span>
+<span class="c">/// val it : int list list = []</span>
+
+<span id="fst9" onmouseout="hideTip(event, 'fs9', 13)" onmouseover="showTip(event, 'fs9', 13, document.getElementById('fst9'))" class="omitted">(Solution)</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Problem-82-Cycle-from-a-given-node" class="anchor" href="#Problem-82-Cycle-from-a-given-node">(*) Problem 82: Cycle from a given node</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// Write a predicate cycle(G,A,P) to find a closed path (cycle) P starting at a given node</span>
+<span class="c">///  A in the graph G. The predicate should return all cycles via backtracking.</span>
+<span class="c">/// </span>
+<span class="c">/// Example:</span>
+<span class="c">/// </span>
+<span class="c">/// &lt;example in lisp&gt;</span>
+<span class="c">/// Example in F#:</span>
+<span class="c">/// </span>
+<span class="c">/// &gt; cycle 2 [(1,[2;3]);(2,[3]);(3,[4]);(4,[2]);(5,[6]);(6,[5])];;</span>
+<span class="c">/// val it : int list list = [[2; 3; 4; 2]]</span>
+<span class="c">///</span>
+<span class="c">/// &gt; cycle 1 [(1,[2;3]);(2,[3]);(3,[4]);(4,[2]);(5,[6]);(6,[5])];;</span>
+<span class="c">/// val it : int list list = []</span>
+
+<span id="fst10" onmouseout="hideTip(event, 'fs10', 14)" onmouseover="showTip(event, 'fs10', 14, document.getElementById('fst10'))" class="omitted">(Solution)</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Problem-83-Construct-all-spanning-trees" class="anchor" href="#Problem-83-Construct-all-spanning-trees">(<em></em>) Problem 83: Construct all spanning trees</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// Write a predicate s_tree(Graph,Tree) to construct (by backtracking) all spanning trees </span>
+<span class="c">/// of a given graph. With this predicate, find out how many spanning trees there are for </span>
+<span class="c">/// the graph depicted to the left. The data of this example graph can be found in the file</span>
+<span class="c">/// p83.dat. When you have a correct solution for the s_tree/2 predicate, use it to define </span>
+<span class="c">/// two other useful predicates: is_tree(Graph) and is_connected(Graph). Both are </span>
+<span class="c">/// five-minutes tasks!</span>
+<span class="c">/// </span>
+<span class="c">/// Example:</span>
+<span class="c">/// </span>
+<span class="c">/// &lt;example in lisp&gt;</span>
+<span class="c">/// Example in F#:</span>
+
+<span id="fst11" onmouseout="hideTip(event, 'fs11', 15)" onmouseover="showTip(event, 'fs11', 15, document.getElementById('fst11'))" class="omitted">(Solution needed)</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Problem-84-Construct-the-minimal-spanning-tree" class="anchor" href="#Problem-84-Construct-the-minimal-spanning-tree">(<em></em>) Problem 84: Construct the minimal spanning tree</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// Write a predicate ms_tree(Graph,Tree,Sum) to construct the minimal spanning tree of a given</span>
+<span class="c">/// labelled graph. Hint: Use the algorithm of Prim. A small modification of the solution of </span>
+<span class="c">/// P83 does the trick. The data of the example graph to the right can be found in the file p84.dat.</span>
+<span class="c">/// </span>
+<span class="c">/// Example:</span>
+<span class="c">/// </span>
+<span class="c">/// &lt;example in lisp&gt;</span>
+<span class="c">/// </span>
+<span class="c">/// Example in F#: </span>
+<span class="c">/// &gt; let graphW = [(&#39;a&#39;,[&#39;b&#39;; &#39;d&#39;;]); (&#39;b&#39;,[&#39;a&#39;;&#39;c&#39;;&#39;d&#39;;&#39;e&#39;;]); (&#39;c&#39;,[&#39;b&#39;;&#39;e&#39;;]); </span>
+<span class="c">///                 (&#39;d&#39;,[&#39;a&#39;;&#39;b&#39;;&#39;e&#39;;&#39;f&#39;;]); (&#39;e&#39;,[&#39;b&#39;;&#39;c&#39;;&#39;d&#39;;&#39;f&#39;;&#39;g&#39;;]); (&#39;f&#39;,[&#39;d&#39;;&#39;e&#39;;&#39;g&#39;;]); </span>
+<span class="c">///                 (&#39;g&#39;,[&#39;e&#39;;&#39;f&#39;;]); ];;</span>
+<span class="c">/// &gt; let gwF = </span>
+<span class="c">///     let weigthMap = </span>
+<span class="c">///         Map [((&#39;a&#39;,&#39;b&#39;), 7);((&#39;a&#39;,&#39;d&#39;), 5);((&#39;b&#39;,&#39;a&#39;), 7);((&#39;b&#39;,&#39;c&#39;), 8);((&#39;b&#39;,&#39;d&#39;), 9);</span>
+<span class="c">///              ((&#39;b&#39;,&#39;e&#39;), 7);((&#39;c&#39;,&#39;b&#39;), 8);((&#39;c&#39;,&#39;e&#39;), 5);((&#39;d&#39;,&#39;a&#39;), 5);((&#39;d&#39;,&#39;b&#39;), 9);</span>
+<span class="c">///              ((&#39;d&#39;,&#39;e&#39;), 15);((&#39;d&#39;,&#39;f&#39;), 6);((&#39;e&#39;,&#39;b&#39;), 7);((&#39;e&#39;,&#39;c&#39;), 5);((&#39;e&#39;,&#39;d&#39;), 15);</span>
+<span class="c">///              ((&#39;e&#39;,&#39;f&#39;), 8);((&#39;e&#39;,&#39;g&#39;), 9);((&#39;f&#39;,&#39;d&#39;), 6);((&#39;f&#39;,&#39;e&#39;), 8);((&#39;f&#39;,&#39;g&#39;), 11);</span>
+<span class="c">///              ((&#39;g&#39;,&#39;e&#39;), 9);((&#39;g&#39;,&#39;f&#39;), 11);]</span>
+<span class="c">///     fun (a,b) -&gt; weigthMap.[(a,b)];;</span>
+<span class="c">/// </span>
+<span class="c">/// val graphW : (char * char list) list =</span>
+<span class="c">///   [(&#39;a&#39;, [&#39;b&#39;; &#39;d&#39;]); (&#39;b&#39;, [&#39;a&#39;; &#39;c&#39;; &#39;d&#39;; &#39;e&#39;]); (&#39;c&#39;, [&#39;b&#39;; &#39;e&#39;]);</span>
+<span class="c">///    (&#39;d&#39;, [&#39;a&#39;; &#39;b&#39;; &#39;e&#39;; &#39;f&#39;]); (&#39;e&#39;, [&#39;b&#39;; &#39;c&#39;; &#39;d&#39;; &#39;f&#39;; &#39;g&#39;]);</span>
+<span class="c">///    (&#39;f&#39;, [&#39;d&#39;; &#39;e&#39;; &#39;g&#39;]); (&#39;g&#39;, [&#39;e&#39;; &#39;f&#39;])]</span>
+<span class="c">/// val gwF : (char * char -&gt; int)</span>
+<span class="c">/// </span>
+<span class="c">/// &gt; prim gw gwF;;</span>
+<span class="c">/// val it : char Graph =</span>
+<span class="c">///   ([&#39;a&#39;; &#39;d&#39;; &#39;f&#39;; &#39;b&#39;; &#39;e&#39;; &#39;c&#39;; &#39;g&#39;],</span>
+<span class="c">///    [(&#39;a&#39;, &#39;d&#39;); (&#39;d&#39;, &#39;f&#39;); (&#39;a&#39;, &#39;b&#39;); (&#39;b&#39;, &#39;e&#39;); (&#39;e&#39;, &#39;c&#39;); (&#39;e&#39;, &#39;g&#39;)])</span>
+<span class="c">/// </span>
+
+<span id="fst12" onmouseout="hideTip(event, 'fs12', 16)" onmouseover="showTip(event, 'fs12', 16, document.getElementById('fst12'))" class="omitted">(Solution)</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Problem-85-Graph-isomorphism" class="anchor" href="#Problem-85-Graph-isomorphism">(<em></em>) Problem 85: Graph isomorphism</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// Two graphs G1(N1,E1) and G2(N2,E2) are isomorphic if there is a bijection f: N1 -&gt; N2 such</span>
+<span class="c">/// that for any nodes X,Y of N1, X and Y are adjacent if and only if f(X) and f(Y) are adjacent.</span>
+<span class="c">/// </span>
+<span class="c">/// Write a predicate that determines whether two graphs are isomorphic. Hint: Use an open-ended</span>
+<span class="c">/// list to represent the function f.</span>
+<span class="c">/// </span>
+<span class="c">/// Example:</span>
+<span class="c">/// </span>
+<span class="c">/// &lt;example in lisp&gt;</span>
+<span class="c">/// </span>
+<span class="c">/// Example in F#: </span>
+
+<span id="fst13" onmouseout="hideTip(event, 'fs13', 17)" onmouseover="showTip(event, 'fs13', 17, document.getElementById('fst13'))" class="omitted">(Solution needed)</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Problem-86-Node-degree-and-graph-coloration" class="anchor" href="#Problem-86-Node-degree-and-graph-coloration">(<em></em>) Problem 86: Node degree and graph coloration</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// a) Write a predicate degree(Graph,Node,Deg) that determines the degree of a given node.</span>
+<span class="c">/// </span>
+<span class="c">/// b) Write a predicate that generates a list of all nodes of a graph sorted according to </span>
+<span class="c">///    decreasing degree.</span>
+<span class="c">/// </span>
+<span class="c">/// c) Use Welch-Powell&#39;s algorithm to paint the nodes of a graph in such a way that adjacent </span>
+<span class="c">///    nodes have different colors.</span>
+<span class="c">/// </span>
+<span class="c">/// </span>
+<span class="c">/// Example:</span>
+<span class="c">/// </span>
+<span class="c">/// &lt;example in lisp&gt;</span>
+<span class="c">///</span>
+<span class="c">/// Example in F#: </span>
+<span class="c">/// &gt; let graph = [(&#39;a&#39;,[]);(&#39;b&#39;,[&#39;c&#39;]);(&#39;c&#39;,[&#39;b&#39;;&#39;d&#39;;&#39;g&#39;]);(&#39;d&#39;,[&#39;c&#39;;&#39;e&#39;]);(&#39;e&#39;,[&#39;d&#39;;&#39;e&#39;;&#39;f&#39;;&#39;g&#39;]);(&#39;f&#39;,[&#39;e&#39;;&#39;g&#39;]);(&#39;g&#39;,[&#39;c&#39;;&#39;e&#39;;&#39;f&#39;])];;</span>
+<span class="c">/// &gt; degree graph &#39;e&#39;;;</span>
+<span class="c">/// val it : int = 5</span>
+<span class="c">/// &gt; sortByDegree graph;;</span>
+<span class="c">/// val it : char Node list =</span>
+<span class="c">///   [ (&#39;e&#39;,[&#39;d&#39;; &#39;e&#39;; &#39;f&#39;; &#39;g&#39;]);  (&#39;g&#39;,[&#39;c&#39;; &#39;e&#39;; &#39;f&#39;]);</span>
+<span class="c">///     (&#39;c&#39;,[&#39;b&#39;; &#39;d&#39;; &#39;g&#39;]);  (&#39;f&#39;,[&#39;e&#39;; &#39;g&#39;]);  (&#39;d&#39;,[&#39;c&#39;; &#39;e&#39;]);</span>
+<span class="c">///     (&#39;b&#39;,[&#39;c&#39;]);  (&#39;a&#39;,[])]</span>
+<span class="c">/// val it : int = 5</span>
+<span class="c">/// &gt; colorGraph graph;;</span>
+<span class="c">/// val it : (char * int) list =</span>
+<span class="c">///   [(&#39;a&#39;, 0); (&#39;b&#39;, 1); (&#39;c&#39;, 0); (&#39;d&#39;, 1); (&#39;e&#39;, 0); (&#39;f&#39;, 2); (&#39;g&#39;, 1)]</span>
+
+<span id="fst14" onmouseout="hideTip(event, 'fs14', 18)" onmouseover="showTip(event, 'fs14', 18, document.getElementById('fst14'))" class="omitted">(Solution)</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Problem-87-Depth-first-order-graph-traversal-alternative-solution" class="anchor" href="#Problem-87-Depth-first-order-graph-traversal-alternative-solution">(<em></em>) Problem 87: Depth-first order graph traversal (alternative solution)</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// Write a predicate that generates a depth-first order graph traversal sequence. The starting </span>
+<span class="c">/// point should be specified, and the output should be a list of nodes that are reachable from </span>
+<span class="c">/// this starting point (in depth-first order).</span>
+<span class="c">/// </span>
+<span class="c">/// Example:</span>
+<span class="c">/// </span>
+<span class="c">/// &lt;example in lisp&gt;</span>
+<span class="c">/// </span>
+<span class="c">/// Example in F#: </span>
+<span class="c">///</span>
+<span class="c">/// &gt; let gdfo = ([&#39;a&#39;;&#39;b&#39;;&#39;c&#39;;&#39;d&#39;;&#39;e&#39;;&#39;f&#39;;&#39;g&#39;;], </span>
+<span class="c">///               [(&#39;a&#39;,&#39;b&#39;);(&#39;a&#39;,&#39;c&#39;);(&#39;a&#39;,&#39;e&#39;);(&#39;b&#39;,&#39;d&#39;);(&#39;b&#39;,&#39;f&#39;);(&#39;c&#39;,&#39;g&#39;);(&#39;e&#39;,&#39;f&#39;);]) </span>
+<span class="c">///               |&gt; Graph2AdjacencyGraph;;</span>
+<span class="c">/// </span>
+<span class="c">/// val gdfo : char AdjacencyGraph =</span>
+<span class="c">///   [(&#39;a&#39;, [&#39;e&#39;; &#39;c&#39;; &#39;b&#39;]); (&#39;b&#39;, [&#39;f&#39;; &#39;d&#39;; &#39;a&#39;]); (&#39;c&#39;, [&#39;g&#39;; &#39;a&#39;]);</span>
+<span class="c">///    (&#39;d&#39;, [&#39;b&#39;]); (&#39;e&#39;, [&#39;f&#39;; &#39;a&#39;]); (&#39;f&#39;, [&#39;e&#39;; &#39;b&#39;]); (&#39;g&#39;, [&#39;c&#39;])]</span>
+<span class="c">/// </span>
+<span class="c">/// &gt; depthFirstOrder gdfo &#39;a&#39;;;</span>
+<span class="c">/// val it : char list = [&#39;a&#39;; &#39;e&#39;; &#39;f&#39;; &#39;b&#39;; &#39;d&#39;; &#39;c&#39;; &#39;g&#39;]</span>
+
+<span id="fst15" onmouseout="hideTip(event, 'fs15', 19)" onmouseover="showTip(event, 'fs15', 19, document.getElementById('fst15'))" class="omitted">(Solution)</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Problem-88-Connected-components-alternative-solution" class="anchor" href="#Problem-88-Connected-components-alternative-solution">(<em></em>) Problem 88: Connected components (alternative solution)</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// Write a predicate that splits a graph into its connected components.</span>
+<span class="c">/// </span>
+<span class="c">/// Example:</span>
+<span class="c">/// </span>
+<span class="c">/// &lt;example in lisp&gt;</span>
+<span class="c">/// </span>
+<span class="c">/// Example in F#: </span>
+<span class="c">/// &gt; let graph = [(1,[2;3]);(2,[1;3]);(3,[1;2]);(4,[5;6]);(5,[4]);(6,[4])];;</span>
+<span class="c">/// &gt; connectedComponents graph;;</span>
+<span class="c">/// val it : int AdjacencyGraph list =</span>
+<span class="c">///   [[(6, [4]); (5, [4]); (4, [5; 6])];</span>
+<span class="c">///    [(3, [1; 2]); (2, [1; 3]); (1, [2; 3])]]</span>
+<span class="c">/// &gt; </span>
+
+<span id="fst16" onmouseout="hideTip(event, 'fs16', 20)" onmouseover="showTip(event, 'fs16', 20, document.getElementById('fst16'))" class="omitted">(Solution)</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Problem-89-Bipartite-graphs" class="anchor" href="#Problem-89-Bipartite-graphs">(<em></em>) Problem 89: Bipartite graphs</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// Write a predicate that finds out whether a given graph is bipartite.</span>
+<span class="c">/// </span>
+<span class="c">/// Example:</span>
+<span class="c">/// </span>
+<span class="c">/// &lt;example in lisp&gt;</span>
+<span class="c">/// </span>
+<span class="c">/// Example in F#: </span>
+<span class="c">///</span>
+<span class="c">/// &gt; let gdfo = [(&#39;a&#39;, [&#39;b&#39;; &#39;c&#39;; &#39;e&#39;]); (&#39;b&#39;, [&#39;a&#39;; &#39;d&#39;; &#39;f&#39;]); (&#39;c&#39;, [&#39;a&#39;; &#39;g&#39;]);(&#39;d&#39;, [&#39;b&#39;]); </span>
+<span class="c">///               (&#39;e&#39;, [&#39;a&#39;; &#39;f&#39;]); (&#39;f&#39;, [&#39;b&#39;; &#39;e&#39;]); (&#39;g&#39;, [&#39;c&#39;])];;</span>
+<span class="c">/// </span>
+<span class="c">/// val gdfo : (char * char list) list =</span>
+<span class="c">///   [(&#39;a&#39;, [&#39;b&#39;; &#39;c&#39;; &#39;e&#39;]); (&#39;b&#39;, [&#39;a&#39;; &#39;d&#39;; &#39;f&#39;]); (&#39;c&#39;, [&#39;a&#39;; &#39;g&#39;]);</span>
+<span class="c">///    (&#39;d&#39;, [&#39;b&#39;]); (&#39;e&#39;, [&#39;a&#39;; &#39;f&#39;]); (&#39;f&#39;, [&#39;b&#39;; &#39;e&#39;]); (&#39;g&#39;, [&#39;c&#39;])]</span>
+<span class="c">/// </span>
+<span class="c">/// &gt; isBipartite gdfo;;</span>
+<span class="c">/// val it : bool = true</span>
+
+<span id="fst17" onmouseout="hideTip(event, 'fs17', 21)" onmouseover="showTip(event, 'fs17', 21, document.getElementById('fst17'))" class="omitted">(Solution)</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">type &#39;a Graph = &#39;a list * &#39;a Edge list<br /><br />Full name: Script.Graph&lt;_&gt;</div>
+<div class="tip" id="fs2">type &#39;T list = List&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.list&lt;_&gt;</div>
+<div class="tip" id="fs3">type &#39;a Edge = &#39;a * &#39;a<br /><br />Full name: Script.Edge&lt;_&gt;<br /><em><br /><br />&#160;Ninety-Nine F# Problems - Problems 80 - 89<br /><br />&#160;These are F# solutions of Ninety-Nine Haskell Problems <br />&#160;(http://www.haskell.org/haskellwiki/H-99:_Ninety-Nine_Haskell_Problems), <br />&#160;which are themselves translations of Ninety-Nine Lisp Problems<br />&#160;(http://www.ic.unicamp.br/~meidanis/courses/mc336/2006s2/funcional/L-99_Ninety-Nine_Lisp_Problems.html)<br />&#160;and Ninety-Nine Prolog Problems<br />&#160;(https://sites.google.com/site/prologsite/prolog-problems).<br /><br />&#160;If you would like to contribute a solution or fix any bugs, send <br />&#160;an email to paks at kitiara dot org with the subject &quot;99 F# problems&quot;. <br />&#160;I&#39;ll try to update the problem as soon as possible.<br /><br />&#160;The problems have different levels of difficulty. Those marked with a single asterisk (*) <br />&#160;are easy. If you have successfully solved the preceeding problems you should be able to <br />&#160;solve them within a few (say 15) minutes. Problems marked with two asterisks (**) are of <br />&#160;intermediate difficulty. If you are a skilled F# programmer it shouldn&#39;t take you more than <br />&#160;30-90 minutes to solve them. Problems marked with three asterisks (***) are more difficult. <br />&#160;You may need more time (i.e. a few hours or more) to find a good solution<br /><br />&#160;Though the problems number from 1 to 99, there are some gaps and some additions marked with <br />&#160;letters. There are actually only 88 problems.<br /></em></div>
+<div class="tip" id="fs4">val g : char list * (char * char) list<br /><br />Full name: Script.g</div>
+<div class="tip" id="fs5">type &#39;a Node = &#39;a * &#39;a list<br /><br />Full name: Script.Node&lt;_&gt;</div>
+<div class="tip" id="fs6">type &#39;a AdjacencyGraph = &#39;a Node list<br /><br />Full name: Script.AdjacencyGraph&lt;_&gt;</div>
+<div class="tip" id="fs7">val ga : (char * char list) list<br /><br />Full name: Script.ga</div>
+<div class="tip" id="fs8">let graph2AdjacencyGraph ((ns, es) : &#39;a Graph) : &#39;a AdjacencyGraph = <br />&#160;&#160;&#160;&#160;let nodeMap = ns |&gt; List.map(fun n -&gt; n, []) |&gt; Map.ofList<br />&#160;&#160;&#160;&#160;(nodeMap,es) <br />&#160;&#160;&#160;&#160;||&gt; List.fold(fun map (a,b) -&gt; map |&gt; Map.add a (b::map.[a]) |&gt; Map.add b (a::map.[b]))<br />&#160;&#160;&#160;&#160;|&gt; Map.toList<br />&#160;&#160;&#160;&#160;<br />let adjacencyGraph2Graph (ns : &#39;a AdjacencyGraph) : &#39;a Graph= <br />&#160;&#160;&#160;&#160;let sort ((a,b) as e) = if a &gt; b then (b, a) else e<br />&#160;&#160;&#160;&#160;let nodes = ns |&gt; List.map fst<br />&#160;&#160;&#160;&#160;let edges = (Set.empty, ns) <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;||&gt; List.fold(fun set (a,ns) -&gt; (set, ns) ||&gt; List.fold(fun s b -&gt; s |&gt; Set.add (sort (a,b))) ) <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;|&gt; Set.toSeq <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;|&gt; Seq.sort <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;|&gt; Seq.toList<br />&#160;&#160;&#160;&#160;(nodes, edges)</div>
+<div class="tip" id="fs9">let paths start finish (g : &#39;a AdjacencyGraph) = <br />&#160;&#160;&#160;&#160;let map = g |&gt; Map.ofList<br />&#160;&#160;&#160;&#160;let rec loop route visited = [<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;let current = List.head route<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;if current = finish then<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;yield List.rev route<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;else<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;for next in map.[current] do<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;if visited |&gt; Set.contains next |&gt; not then<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;yield! loop (next::route) (Set.add next visited) <br />&#160;&#160;&#160;&#160;]<br />&#160;&#160;&#160;&#160;loop [start] &lt;| Set.singleton start</div>
+<div class="tip" id="fs10">let cycle start (g: &#39;a AdjacencyGraph) = <br />&#160;&#160;&#160;&#160;let map = g |&gt; Map.ofList<br />&#160;&#160;&#160;&#160;let rec loop route visited = [<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;let current = List.head route<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;for next in map.[current] do<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;if next = start then<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;yield List.rev &lt;| next::route<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;if visited |&gt; Set.contains next |&gt; not then<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;yield! loop (next::route) (Set.add next visited) <br />&#160;&#160;&#160;&#160;]<br />&#160;&#160;&#160;&#160;loop [start] &lt;| Set.singleton start</div>
+<div class="tip" id="fs11">let solution83 = &quot;your solution here!!&quot;</div>
+<div class="tip" id="fs12">let prim (s : &#39;a AdjacencyGraph) (weightFunction: (&#39;a Edge -&gt; int)) : &#39;a Graph = <br />&#160;&#160;&#160;&#160;let map = s |&gt; List.map (fun (n,ln) -&gt; n, ln |&gt; List.map(fun m -&gt; ((n,m),weightFunction (n,m)))) |&gt; Map.ofList<br />&#160;&#160;&#160;&#160;let nodes = s |&gt; List.map fst<br />&#160;&#160;&#160;&#160;let emptyGraph = ([],[])<br /><br />&#160;&#160;&#160;&#160;let rec dfs nodes (ns,es) current visited = <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;if nodes |&gt; Set.isEmpty then<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;(List.rev ns, List.rev es)<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;else<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;let (a,b) as edge = ns <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;|&gt; List.collect(fun n -&gt; map.[n] <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;|&gt; List.filter(fun ((n,m),w) -&gt; Set.contains m visited |&gt; not) ) <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;|&gt; List.minBy snd |&gt; fst<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;let nodes&#39; = nodes |&gt; Set.remove b<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;dfs nodes&#39; (b::ns,edge::es) b (Set.add b visited)<br />&#160;&#160;&#160;&#160;match nodes with<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| [] -&gt; emptyGraph<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| n::ns -&gt; dfs (Set ns) ([n],[]) n (Set.singleton n)</div>
+<div class="tip" id="fs13">let solution85 = &quot;your solution here!!&quot;</div>
+<div class="tip" id="fs14">let degree (g: &#39;a AdjacencyGraph) node = <br />&#160;&#160;&#160;&#160;let es = g |&gt; List.find(fst &gt;&gt; (=) node) |&gt; snd<br />&#160;&#160;&#160;&#160;// The degree of a node is the number of edges that go to the node. <br />&#160;&#160;&#160;&#160;// Loops get counted twice.<br />&#160;&#160;&#160;&#160;es |&gt; List.sumBy(fun n -&gt; if n = node then 2 else 1)<br /><br />let sortByDegreeDesc (g : &#39;a AdjacencyGraph) = <br />&#160;&#160;&#160;&#160;// let use this degree function instead of the one above<br />&#160;&#160;&#160;&#160;// since we alredy have all the info we need right here.<br />&#160;&#160;&#160;&#160;let degree (u,adj) = adj |&gt; List.sumBy(fun v -&gt; if v = u then 2 else 1)<br />&#160;&#160;&#160;&#160;g |&gt; List.sortBy(degree) |&gt; List.rev<br /><br />let colorGraph g = <br />&#160;&#160;&#160;&#160;let nodes = sortByDegreeDesc g<br />&#160;&#160;&#160;&#160;let findColor usedColors = <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;let colors = Seq.initInfinite id<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;colors |&gt; Seq.find(fun c -&gt; Set.contains c usedColors |&gt; not)<br />&#160;&#160;&#160;&#160;let rec greedy colorMap nodes =<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;match nodes with<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| [] -&gt; colorMap |&gt; Map.toList<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| (n,ns)::nodes -&gt; <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;let usedColors = ns |&gt; List.filter(fun n -&gt; Map.containsKey n colorMap) |&gt; List.map(fun n -&gt; Map.find n colorMap ) |&gt; Set.ofList<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;let color = findColor usedColors<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;greedy (Map.add n color colorMap) nodes<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<br />&#160;&#160;&#160;&#160;greedy Map.empty nodes</div>
+<div class="tip" id="fs15">type Color = White = 0 | Gray = 1 | Black = 2<br /><br />// The algorithm comes from the book Introduction to Algorithms by Cormen, Leiserson, Rivest and Stein.<br />let depthFirstOrder (g : &#39;a AdjacencyGraph) start = <br />&#160;&#160;&#160;&#160;let nodes = g |&gt; Map.ofList<br />&#160;&#160;&#160;&#160;let color = g |&gt; List.map(fun (v,_) -&gt; v, Color.White) |&gt; Map.ofList |&gt; ref<br />&#160;&#160;&#160;&#160;let pi = ref [start]<br /><br />&#160;&#160;&#160;&#160;let rec dfs u = <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;color := Map.add u Color.Gray !color<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;for v in nodes.[u] do<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;if (!color).[v] = Color.White then<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;pi := (v::!pi)<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;dfs v<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;color := Map.add u Color.Black !color<br /><br />&#160;&#160;&#160;&#160;dfs start<br />&#160;&#160;&#160;&#160;!pi |&gt; List.rev</div>
+<div class="tip" id="fs16">// using problem 87 depthFirstOrder function<br />let connectedComponents (g : &#39;a AdjacencyGraph) =<br />&#160;&#160;&#160;&#160;let nodes = g |&gt; List.map fst |&gt; Set.ofList<br />&#160;&#160;&#160;&#160;let start = g |&gt; List.head |&gt; fst<br />&#160;&#160;&#160;&#160;let rec loop acc g start nodes = <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;let dfst = depthFirstOrder g start |&gt; Set.ofList<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;let nodes&#39; = Set.difference nodes dfst <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;if Set.isEmpty nodes&#39; then<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;g::acc<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;else<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;// once we have the dfst set we can remove those nodes from the graph and<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;// add them to the solution and continue with the remaining nodes<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;let (cg,g&#39;) = g |&gt; List.fold(fun (xs,ys) v -&gt; if Set.contains (fst v) dfst then (v::xs,ys) else (xs,v::ys)) ([],[])<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;let start&#39; = List.head g&#39; |&gt; fst<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;loop (cg::acc) g&#39; start&#39; nodes&#39;<br />&#160;&#160;&#160;&#160;loop [] g start nodes</div>
+<div class="tip" id="fs17">open System.Collections.Generic; // this is where Queue&lt;&#39;T&gt; is defined<br /><br />let isBipartite (g : &#39;a AdjacencyGraph) = <br />&#160;&#160;&#160;&#160;// using the breath-first search algorithm, we can compute the distances<br />&#160;&#160;&#160;&#160;// from the first node to the other the nodes. If all the even distance nodes<br />&#160;&#160;&#160;&#160;// point to odd nodes and viceversa, then the graph is bipartite. This works<br />&#160;&#160;&#160;&#160;// for connected graphs.<br />&#160;&#160;&#160;&#160;// The algorithm comes from the book Introduction to Algorithms by Cormen, Leiserson, Rivest and Stein.<br />&#160;&#160;&#160;&#160;let isBipartite&#39; (g : &#39;a AdjacencyGraph) = <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;let adj = g |&gt; Map.ofList<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;// The Color enum is defined on problem 87<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;let mutable color = g |&gt; List.map(fun (v,_) -&gt; v, Color.White) |&gt; Map.ofList<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;let mutable distances = g |&gt; List.map(fun (v,_) -&gt; v,-1) |&gt; Map.ofList<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;let queue = new Queue&lt;_&gt;()<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;let start = List.head g |&gt; fst<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;color &lt;- Map.add start Color.Gray color<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;distances &lt;- Map.add start 0 distances<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;queue.Enqueue(start)<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;while queue.Count &lt;&gt; 0 do<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;let u = queue.Peek()<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;for v in adj.[u] do<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;if color.[v] = Color.White then<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;color &lt;- Map.add v Color.Gray color<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;distances &lt;- Map.add v (distances.[u] + 1) distances<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;queue.Enqueue(v)<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;queue.Dequeue() |&gt; ignore<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;color &lt;- Map.add u Color.Black color<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;let isEven n = n % 2 = 0<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;let isOdd = isEven &gt;&gt; not<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;let d = distances // this is just so distances can be captured in the closure below.<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;g |&gt; List.forall(fun (v,edges) -&gt; <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;let isOpposite = if d.[v] |&gt; isEven then isOdd else isEven<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;edges |&gt; List.forall(fun e -&gt; d.[e] |&gt; isOpposite))<br /><br />&#160;&#160;&#160;&#160;// split the graph in it&#39;s connected components (problem 88) and test each piece for bipartiteness.<br />&#160;&#160;&#160;&#160;// if all the pieces are bipartite, the graph is bipartite.<br />&#160;&#160;&#160;&#160;g |&gt; connectedComponents |&gt; List.forall isBipartite&#39;</div>
+

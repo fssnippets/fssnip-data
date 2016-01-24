@@ -1,0 +1,55 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">let</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="f">force</span> (<span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">value</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="t">Lazy</span><span class="o">&lt;</span>_<span class="o">&gt;</span>) <span class="o">=</span> <span onmouseout="hideTip(event, 'fs2', 4)" onmouseover="showTip(event, 'fs2', 4)" class="i">value</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs4', 5)" onmouseover="showTip(event, 'fs4', 5)" class="f">Force</span>()
+
+<span class="c">// Infinite Stream</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs5', 6)" onmouseover="showTip(event, 'fs5', 6)" class="t">Stream</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs6', 7)" onmouseover="showTip(event, 'fs6', 7)" class="p">Cons</span> <span class="k">of</span> <span class="o">&#39;</span><span class="i">T</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs3', 8)" onmouseover="showTip(event, 'fs3', 8)" class="t">Lazy</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs5', 9)" onmouseover="showTip(event, 'fs5', 9)" class="t">Stream</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span><span class="o">&gt;</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs7', 10)" onmouseover="showTip(event, 'fs7', 10)" class="f">head</span> (<span onmouseout="hideTip(event, 'fs6', 11)" onmouseover="showTip(event, 'fs6', 11)" class="p">Cons</span> (<span onmouseout="hideTip(event, 'fs8', 12)" onmouseover="showTip(event, 'fs8', 12)" class="i">h</span>, _)) <span class="o">=</span> <span onmouseout="hideTip(event, 'fs8', 13)" onmouseover="showTip(event, 'fs8', 13)" class="i">h</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs9', 14)" onmouseover="showTip(event, 'fs9', 14)" class="f">tail</span> (<span onmouseout="hideTip(event, 'fs6', 15)" onmouseover="showTip(event, 'fs6', 15)" class="p">Cons</span> (_, <span onmouseout="hideTip(event, 'fs10', 16)" onmouseover="showTip(event, 'fs10', 16)" class="i">t</span>)) <span class="o">=</span> <span onmouseout="hideTip(event, 'fs1', 17)" onmouseover="showTip(event, 'fs1', 17)" class="f">force</span> <span onmouseout="hideTip(event, 'fs10', 18)" onmouseover="showTip(event, 'fs10', 18)" class="i">t</span> 
+
+<span class="c">// Lazy fixed-point</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs11', 19)" onmouseover="showTip(event, 'fs11', 19)" class="f">fix</span> <span class="o">:</span> (<span onmouseout="hideTip(event, 'fs3', 20)" onmouseover="showTip(event, 'fs3', 20)" class="t">Lazy</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span> <span class="k">-&gt;</span> <span class="o">&#39;</span><span class="i">T</span>) <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs3', 21)" onmouseover="showTip(event, 'fs3', 21)" class="t">Lazy</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span> <span class="o">=</span> <span class="k">fun</span> <span onmouseout="hideTip(event, 'fs12', 22)" onmouseover="showTip(event, 'fs12', 22)" class="f">f</span> <span class="k">-&gt;</span>
+    <span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs13', 23)" onmouseover="showTip(event, 'fs13', 23)" class="i">x</span> <span class="o">=</span> <span class="k">lazy</span> (<span onmouseout="hideTip(event, 'fs12', 24)" onmouseover="showTip(event, 'fs12', 24)" class="f">f</span> <span onmouseout="hideTip(event, 'fs13', 25)" onmouseover="showTip(event, 'fs13', 25)" class="i">x</span>) <span class="k">in</span> <span onmouseout="hideTip(event, 'fs13', 26)" onmouseover="showTip(event, 'fs13', 26)" class="i">x</span> 
+
+<span class="c">// Examples  </span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs14', 27)" onmouseover="showTip(event, 'fs14', 27)" class="i">ones</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs11', 28)" onmouseover="showTip(event, 'fs11', 28)" class="f">fix</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs15', 29)" onmouseover="showTip(event, 'fs15', 29)" class="i">x</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs6', 30)" onmouseover="showTip(event, 'fs6', 30)" class="p">Cons</span> (<span class="n">1</span>, <span onmouseout="hideTip(event, 'fs15', 31)" onmouseover="showTip(event, 'fs15', 31)" class="i">x</span>))
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs16', 32)" onmouseover="showTip(event, 'fs16', 32)" class="f">map</span> <span onmouseout="hideTip(event, 'fs17', 33)" onmouseover="showTip(event, 'fs17', 33)" class="f">f</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs11', 34)" onmouseover="showTip(event, 'fs11', 34)" class="f">fix</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs18', 35)" onmouseover="showTip(event, 'fs18', 35)" class="i">f&#39;</span> <span onmouseout="hideTip(event, 'fs19', 36)" onmouseover="showTip(event, 'fs19', 36)" class="i">x</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs6', 37)" onmouseover="showTip(event, 'fs6', 37)" class="p">Cons</span> (<span onmouseout="hideTip(event, 'fs17', 38)" onmouseover="showTip(event, 'fs17', 38)" class="f">f</span> (<span onmouseout="hideTip(event, 'fs7', 39)" onmouseover="showTip(event, 'fs7', 39)" class="f">head</span> <span onmouseout="hideTip(event, 'fs19', 40)" onmouseover="showTip(event, 'fs19', 40)" class="i">x</span>), <span class="k">lazy</span>(<span onmouseout="hideTip(event, 'fs1', 41)" onmouseover="showTip(event, 'fs1', 41)" class="f">force</span> <span onmouseout="hideTip(event, 'fs18', 42)" onmouseover="showTip(event, 'fs18', 42)" class="i">f&#39;</span> (<span onmouseout="hideTip(event, 'fs9', 43)" onmouseover="showTip(event, 'fs9', 43)" class="f">tail</span> <span onmouseout="hideTip(event, 'fs19', 44)" onmouseover="showTip(event, 'fs19', 44)" class="i">x</span>)))  )
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs20', 45)" onmouseover="showTip(event, 'fs20', 45)" class="i">nats</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs11', 46)" onmouseover="showTip(event, 'fs11', 46)" class="f">fix</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs15', 47)" onmouseover="showTip(event, 'fs15', 47)" class="i">x</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs6', 48)" onmouseover="showTip(event, 'fs6', 48)" class="p">Cons</span> (<span class="n">1</span>, <span class="k">lazy</span> ( (<span onmouseout="hideTip(event, 'fs1', 49)" onmouseover="showTip(event, 'fs1', 49)" class="f">force</span> (<span onmouseout="hideTip(event, 'fs16', 50)" onmouseover="showTip(event, 'fs16', 50)" class="f">map</span> ((<span class="o">+</span>) <span class="n">1</span>))) (<span onmouseout="hideTip(event, 'fs1', 51)" onmouseover="showTip(event, 'fs1', 51)" class="f">force</span> <span onmouseout="hideTip(event, 'fs15', 52)" onmouseover="showTip(event, 'fs15', 52)" class="i">x</span>)  )))
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">val force : value:Lazy&lt;&#39;a&gt; -&gt; &#39;a<br /><br />Full name: Script.force</div>
+<div class="tip" id="fs2">val value : Lazy&lt;&#39;a&gt;</div>
+<div class="tip" id="fs3">Multiple items<br />active recognizer Lazy: Lazy&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.( |Lazy| )<br /><br />--------------------<br />type Lazy&lt;&#39;T&gt; = System.Lazy&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Control.Lazy&lt;_&gt;</div>
+<div class="tip" id="fs4">member System.Lazy.Force : unit -&gt; &#39;T</div>
+<div class="tip" id="fs5">type Stream&lt;&#39;T&gt; = | Cons of &#39;T * Lazy&lt;Stream&lt;&#39;T&gt;&gt;<br /><br />Full name: Script.Stream&lt;_&gt;</div>
+<div class="tip" id="fs6">union case Stream.Cons: &#39;T * Lazy&lt;Stream&lt;&#39;T&gt;&gt; -&gt; Stream&lt;&#39;T&gt;</div>
+<div class="tip" id="fs7">val head : Stream&lt;&#39;a&gt; -&gt; &#39;a<br /><br />Full name: Script.head</div>
+<div class="tip" id="fs8">val h : &#39;a</div>
+<div class="tip" id="fs9">val tail : Stream&lt;&#39;a&gt; -&gt; Stream&lt;&#39;a&gt;<br /><br />Full name: Script.tail</div>
+<div class="tip" id="fs10">val t : Lazy&lt;Stream&lt;&#39;a&gt;&gt;</div>
+<div class="tip" id="fs11">val fix : f:(Lazy&lt;&#39;T&gt; -&gt; &#39;T) -&gt; Lazy&lt;&#39;T&gt;<br /><br />Full name: Script.fix</div>
+<div class="tip" id="fs12">val f : (Lazy&lt;&#39;T&gt; -&gt; &#39;T)</div>
+<div class="tip" id="fs13">val x : Lazy&lt;&#39;T&gt;</div>
+<div class="tip" id="fs14">val ones : Lazy&lt;Stream&lt;int&gt;&gt;<br /><br />Full name: Script.ones</div>
+<div class="tip" id="fs15">val x : Lazy&lt;Stream&lt;int&gt;&gt;</div>
+<div class="tip" id="fs16">val map : f:(&#39;a -&gt; &#39;b) -&gt; Lazy&lt;(Stream&lt;&#39;a&gt; -&gt; Stream&lt;&#39;b&gt;)&gt;<br /><br />Full name: Script.map</div>
+<div class="tip" id="fs17">val f : (&#39;a -&gt; &#39;b)</div>
+<div class="tip" id="fs18">val f&#39; : Lazy&lt;(Stream&lt;&#39;a&gt; -&gt; Stream&lt;&#39;b&gt;)&gt;</div>
+<div class="tip" id="fs19">val x : Stream&lt;&#39;a&gt;</div>
+<div class="tip" id="fs20">val nats : Lazy&lt;Stream&lt;int&gt;&gt;<br /><br />Full name: Script.nats</div>
+

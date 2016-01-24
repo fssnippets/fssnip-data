@@ -1,0 +1,97 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">//using F# Power Pack</span>
+
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">System</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 2)" onmouseover="showTip(event, 'fs1', 2)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 3)" onmouseover="showTip(event, 'fs2', 3)" class="i">Collections</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 4)" onmouseover="showTip(event, 'fs3', 4)" class="i">Generic</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 5)" onmouseover="showTip(event, 'fs1', 5)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs4', 6)" onmouseover="showTip(event, 'fs4', 6)" class="i">Globalization</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 7)" onmouseover="showTip(event, 'fs1', 7)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs5', 8)" onmouseover="showTip(event, 'fs5', 8)" class="i">IO</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 9)" onmouseover="showTip(event, 'fs1', 9)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs6', 10)" onmouseover="showTip(event, 'fs6', 10)" class="i">Net</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs7', 11)" onmouseover="showTip(event, 'fs7', 11)" class="i">Microsoft</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs8', 12)" onmouseover="showTip(event, 'fs8', 12)" class="i">FSharp</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs9', 13)" onmouseover="showTip(event, 'fs9', 13)" class="i">Control</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs10', 14)" onmouseover="showTip(event, 'fs10', 14)" class="i">WebExtensions</span>
+
+<span class="k">let</span> <span class="k">mutable</span> <span onmouseout="hideTip(event, 'fs11', 15)" onmouseover="showTip(event, 'fs11', 15)" class="v">callresult</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
+<span class="c">//let event = new Event&lt;string&gt;()</span>
+<span class="c">//let eventvalue = event.Publish</span>
+
+<span class="k">let</span> <span class="k">internal</span> <span onmouseout="hideTip(event, 'fs12', 16)" onmouseover="showTip(event, 'fs12', 16)" class="f">fetch</span> (<span onmouseout="hideTip(event, 'fs13', 17)" onmouseover="showTip(event, 'fs13', 17)" class="i">url</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs14', 18)" onmouseover="showTip(event, 'fs14', 18)" class="t">Uri</span>) <span class="o">=</span> 
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs15', 19)" onmouseover="showTip(event, 'fs15', 19)" class="i">req</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs16', 20)" onmouseover="showTip(event, 'fs16', 20)" class="i">WebRequest</span><span class="o">.</span><span class="i">CreateHttp</span> <span onmouseout="hideTip(event, 'fs13', 21)" onmouseover="showTip(event, 'fs13', 21)" class="i">url</span>
+    <span onmouseout="hideTip(event, 'fs15', 22)" onmouseover="showTip(event, 'fs15', 22)" class="i">req</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs17', 23)" onmouseover="showTip(event, 'fs17', 23)" class="i">CookieContainer</span> <span class="o">&lt;-</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs17', 24)" onmouseover="showTip(event, 'fs17', 24)" class="i">CookieContainer</span>()
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs18', 25)" onmouseover="showTip(event, 'fs18', 25)" class="i">asynccall</span> <span class="o">=</span>
+        <span onmouseout="hideTip(event, 'fs19', 26)" onmouseover="showTip(event, 'fs19', 26)" class="i">async</span>{
+            <span class="k">try</span>
+                <span class="k">let!</span> <span onmouseout="hideTip(event, 'fs20', 27)" onmouseover="showTip(event, 'fs20', 27)" class="i">res</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs15', 28)" onmouseover="showTip(event, 'fs15', 28)" class="i">req</span><span class="o">.</span><span class="i">AsyncGetResponse</span>() 
+                <span class="k">use</span> <span onmouseout="hideTip(event, 'fs21', 29)" onmouseover="showTip(event, 'fs21', 29)" class="i">stream</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs20', 30)" onmouseover="showTip(event, 'fs20', 30)" class="i">res</span><span class="o">.</span><span class="i">GetResponseStream</span>()
+                <span class="k">use</span> <span onmouseout="hideTip(event, 'fs22', 31)" onmouseover="showTip(event, 'fs22', 31)" class="i">reader</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs23', 32)" onmouseover="showTip(event, 'fs23', 32)" class="t">StreamReader</span>(<span onmouseout="hideTip(event, 'fs21', 33)" onmouseover="showTip(event, 'fs21', 33)" class="i">stream</span>)
+                <span class="k">let!</span> <span onmouseout="hideTip(event, 'fs24', 34)" onmouseover="showTip(event, 'fs24', 34)" class="i">txt</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs22', 35)" onmouseover="showTip(event, 'fs22', 35)" class="i">reader</span><span class="o">.</span><span class="i">AsyncReadToEnd</span>()
+                <span class="c">//event.Trigger(txt)</span>
+                <span onmouseout="hideTip(event, 'fs11', 36)" onmouseover="showTip(event, 'fs11', 36)" class="v">callresult</span> <span class="o">&lt;-</span> <span onmouseout="hideTip(event, 'fs24', 37)" onmouseover="showTip(event, 'fs24', 37)" class="i">txt</span>
+            <span class="k">with</span>
+                | <span class="o">:?</span> <span onmouseout="hideTip(event, 'fs1', 38)" onmouseover="showTip(event, 'fs1', 38)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs25', 39)" onmouseover="showTip(event, 'fs25', 39)" class="t">Exception</span> <span class="k">as</span> <span onmouseout="hideTip(event, 'fs26', 40)" onmouseover="showTip(event, 'fs26', 40)" class="i">ex</span> <span class="k">-&gt;</span> <span class="c">//for debug</span>
+                    <span onmouseout="hideTip(event, 'fs27', 41)" onmouseover="showTip(event, 'fs27', 41)" class="f">failwith</span>(<span onmouseout="hideTip(event, 'fs26', 42)" onmouseover="showTip(event, 'fs26', 42)" class="i">ex</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs28', 43)" onmouseover="showTip(event, 'fs28', 43)" class="f">ToString</span>()) 
+        }
+    <span onmouseout="hideTip(event, 'fs18', 44)" onmouseover="showTip(event, 'fs18', 44)" class="i">asynccall</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs29', 45)" onmouseover="showTip(event, 'fs29', 45)" class="t">Async</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs30', 46)" onmouseover="showTip(event, 'fs30', 46)" class="f">StartImmediate</span>
+    
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace System</div>
+<div class="tip" id="fs2">namespace System.Collections</div>
+<div class="tip" id="fs3">namespace System.Collections.Generic</div>
+<div class="tip" id="fs4">namespace System.Globalization</div>
+<div class="tip" id="fs5">namespace System.IO</div>
+<div class="tip" id="fs6">namespace System.Net</div>
+<div class="tip" id="fs7">namespace Microsoft</div>
+<div class="tip" id="fs8">namespace Microsoft.FSharp</div>
+<div class="tip" id="fs9">namespace Microsoft.FSharp.Control</div>
+<div class="tip" id="fs10">module WebExtensions<br /><br />from Microsoft.FSharp.Control</div>
+<div class="tip" id="fs11">val mutable callresult : string<br /><br />Full name: Script.callresult</div>
+<div class="tip" id="fs12">val internal fetch : url:Uri -&gt; unit<br /><br />Full name: Script.fetch</div>
+<div class="tip" id="fs13">val url : Uri</div>
+<div class="tip" id="fs14">Multiple items<br />type Uri =<br />&#160;&#160;new : uriString:string -&gt; Uri + 5 overloads<br />&#160;&#160;member AbsolutePath : string<br />&#160;&#160;member AbsoluteUri : string<br />&#160;&#160;member Authority : string<br />&#160;&#160;member DnsSafeHost : string<br />&#160;&#160;member Equals : comparand:obj -&gt; bool<br />&#160;&#160;member Fragment : string<br />&#160;&#160;member GetComponents : components:UriComponents * format:UriFormat -&gt; string<br />&#160;&#160;member GetHashCode : unit -&gt; int<br />&#160;&#160;member GetLeftPart : part:UriPartial -&gt; string<br />&#160;&#160;...<br /><br />Full name: System.Uri<br /><br />--------------------<br />Uri(uriString: string) : unit<br />Uri(uriString: string, uriKind: UriKind) : unit<br />Uri(baseUri: Uri, relativeUri: string) : unit<br />Uri(baseUri: Uri, relativeUri: Uri) : unit</div>
+<div class="tip" id="fs15">val req : obj</div>
+<div class="tip" id="fs16">type WebRequest =<br />&#160;&#160;inherit MarshalByRefObject<br />&#160;&#160;member Abort : unit -&gt; unit<br />&#160;&#160;member AuthenticationLevel : AuthenticationLevel with get, set<br />&#160;&#160;member BeginGetRequestStream : callback:AsyncCallback * state:obj -&gt; IAsyncResult<br />&#160;&#160;member BeginGetResponse : callback:AsyncCallback * state:obj -&gt; IAsyncResult<br />&#160;&#160;member CachePolicy : RequestCachePolicy with get, set<br />&#160;&#160;member ConnectionGroupName : string with get, set<br />&#160;&#160;member ContentLength : int64 with get, set<br />&#160;&#160;member ContentType : string with get, set<br />&#160;&#160;member Credentials : ICredentials with get, set<br />&#160;&#160;member EndGetRequestStream : asyncResult:IAsyncResult -&gt; Stream<br />&#160;&#160;...<br /><br />Full name: System.Net.WebRequest</div>
+<div class="tip" id="fs17">Multiple items<br />type CookieContainer =<br />&#160;&#160;new : unit -&gt; CookieContainer + 2 overloads<br />&#160;&#160;member Add : cookie:Cookie -&gt; unit + 3 overloads<br />&#160;&#160;member Capacity : int with get, set<br />&#160;&#160;member Count : int<br />&#160;&#160;member GetCookieHeader : uri:Uri -&gt; string<br />&#160;&#160;member GetCookies : uri:Uri -&gt; CookieCollection<br />&#160;&#160;member MaxCookieSize : int with get, set<br />&#160;&#160;member PerDomainCapacity : int with get, set<br />&#160;&#160;member SetCookies : uri:Uri * cookieHeader:string -&gt; unit<br />&#160;&#160;static val DefaultCookieLimit : int<br />&#160;&#160;...<br /><br />Full name: System.Net.CookieContainer<br /><br />--------------------<br />CookieContainer() : unit<br />CookieContainer(capacity: int) : unit<br />CookieContainer(capacity: int, perDomainCapacity: int, maxCookieSize: int) : unit</div>
+<div class="tip" id="fs18">val asynccall : Async&lt;unit&gt;</div>
+<div class="tip" id="fs19">val async : AsyncBuilder<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.async</div>
+<div class="tip" id="fs20">val res : obj</div>
+<div class="tip" id="fs21">val stream : IDisposable</div>
+<div class="tip" id="fs22">val reader : StreamReader</div>
+<div class="tip" id="fs23">Multiple items<br />type StreamReader =<br />&#160;&#160;inherit TextReader<br />&#160;&#160;new : stream:Stream -&gt; StreamReader + 9 overloads<br />&#160;&#160;member BaseStream : Stream<br />&#160;&#160;member Close : unit -&gt; unit<br />&#160;&#160;member CurrentEncoding : Encoding<br />&#160;&#160;member DiscardBufferedData : unit -&gt; unit<br />&#160;&#160;member EndOfStream : bool<br />&#160;&#160;member Peek : unit -&gt; int<br />&#160;&#160;member Read : unit -&gt; int + 1 overload<br />&#160;&#160;member ReadLine : unit -&gt; string<br />&#160;&#160;member ReadToEnd : unit -&gt; string<br />&#160;&#160;...<br /><br />Full name: System.IO.StreamReader<br /><br />--------------------<br />StreamReader(stream: Stream) : unit<br />StreamReader(path: string) : unit<br />StreamReader(stream: Stream, detectEncodingFromByteOrderMarks: bool) : unit<br />StreamReader(stream: Stream, encoding: Text.Encoding) : unit<br />StreamReader(path: string, detectEncodingFromByteOrderMarks: bool) : unit<br />StreamReader(path: string, encoding: Text.Encoding) : unit<br />StreamReader(stream: Stream, encoding: Text.Encoding, detectEncodingFromByteOrderMarks: bool) : unit<br />StreamReader(path: string, encoding: Text.Encoding, detectEncodingFromByteOrderMarks: bool) : unit<br />StreamReader(stream: Stream, encoding: Text.Encoding, detectEncodingFromByteOrderMarks: bool, bufferSize: int) : unit<br />StreamReader(path: string, encoding: Text.Encoding, detectEncodingFromByteOrderMarks: bool, bufferSize: int) : unit</div>
+<div class="tip" id="fs24">val txt : string</div>
+<div class="tip" id="fs25">Multiple items<br />type Exception =<br />&#160;&#160;new : unit -&gt; Exception + 2 overloads<br />&#160;&#160;member Data : IDictionary<br />&#160;&#160;member GetBaseException : unit -&gt; Exception<br />&#160;&#160;member GetObjectData : info:SerializationInfo * context:StreamingContext -&gt; unit<br />&#160;&#160;member GetType : unit -&gt; Type<br />&#160;&#160;member HelpLink : string with get, set<br />&#160;&#160;member InnerException : Exception<br />&#160;&#160;member Message : string<br />&#160;&#160;member Source : string with get, set<br />&#160;&#160;member StackTrace : string<br />&#160;&#160;...<br /><br />Full name: System.Exception<br /><br />--------------------<br />Exception() : unit<br />Exception(message: string) : unit<br />Exception(message: string, innerException: exn) : unit</div>
+<div class="tip" id="fs26">val ex : Exception</div>
+<div class="tip" id="fs27">val failwith : message:string -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.Operators.failwith</div>
+<div class="tip" id="fs28">Exception.ToString() : string</div>
+<div class="tip" id="fs29">Multiple items<br />type Async<br />static member AsBeginEnd : computation:(&#39;Arg -&gt; Async&lt;&#39;T&gt;) -&gt; (&#39;Arg * AsyncCallback * obj -&gt; IAsyncResult) * (IAsyncResult -&gt; &#39;T) * (IAsyncResult -&gt; unit)<br />static member AwaitEvent : event:IEvent&lt;&#39;Del,&#39;T&gt; * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt; (requires delegate and &#39;Del :&gt; Delegate)<br />static member AwaitIAsyncResult : iar:IAsyncResult * ?millisecondsTimeout:int -&gt; Async&lt;bool&gt;<br />static member AwaitTask : task:Task&lt;&#39;T&gt; -&gt; Async&lt;&#39;T&gt;<br />static member AwaitWaitHandle : waitHandle:WaitHandle * ?millisecondsTimeout:int -&gt; Async&lt;bool&gt;<br />static member CancelDefaultToken : unit -&gt; unit<br />static member Catch : computation:Async&lt;&#39;T&gt; -&gt; Async&lt;Choice&lt;&#39;T,exn&gt;&gt;<br />static member FromBeginEnd : beginAction:(AsyncCallback * obj -&gt; IAsyncResult) * endAction:(IAsyncResult -&gt; &#39;T) * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member FromBeginEnd : arg:&#39;Arg1 * beginAction:(&#39;Arg1 * AsyncCallback * obj -&gt; IAsyncResult) * endAction:(IAsyncResult -&gt; &#39;T) * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member FromBeginEnd : arg1:&#39;Arg1 * arg2:&#39;Arg2 * beginAction:(&#39;Arg1 * &#39;Arg2 * AsyncCallback * obj -&gt; IAsyncResult) * endAction:(IAsyncResult -&gt; &#39;T) * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member FromBeginEnd : arg1:&#39;Arg1 * arg2:&#39;Arg2 * arg3:&#39;Arg3 * beginAction:(&#39;Arg1 * &#39;Arg2 * &#39;Arg3 * AsyncCallback * obj -&gt; IAsyncResult) * endAction:(IAsyncResult -&gt; &#39;T) * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member FromContinuations : callback:((&#39;T -&gt; unit) * (exn -&gt; unit) * (OperationCanceledException -&gt; unit) -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member Ignore : computation:Async&lt;&#39;T&gt; -&gt; Async&lt;unit&gt;<br />static member OnCancel : interruption:(unit -&gt; unit) -&gt; Async&lt;IDisposable&gt;<br />static member Parallel : computations:seq&lt;Async&lt;&#39;T&gt;&gt; -&gt; Async&lt;&#39;T []&gt;<br />static member RunSynchronously : computation:Async&lt;&#39;T&gt; * ?timeout:int * ?cancellationToken:CancellationToken -&gt; &#39;T<br />static member Sleep : millisecondsDueTime:int -&gt; Async&lt;unit&gt;<br />static member Start : computation:Async&lt;unit&gt; * ?cancellationToken:CancellationToken -&gt; unit<br />static member StartAsTask : computation:Async&lt;&#39;T&gt; * ?taskCreationOptions:TaskCreationOptions * ?cancellationToken:CancellationToken -&gt; Task&lt;&#39;T&gt;<br />static member StartChild : computation:Async&lt;&#39;T&gt; * ?millisecondsTimeout:int -&gt; Async&lt;Async&lt;&#39;T&gt;&gt;<br />static member StartChildAsTask : computation:Async&lt;&#39;T&gt; * ?taskCreationOptions:TaskCreationOptions -&gt; Async&lt;Task&lt;&#39;T&gt;&gt;<br />static member StartImmediate : computation:Async&lt;unit&gt; * ?cancellationToken:CancellationToken -&gt; unit<br />static member StartWithContinuations : computation:Async&lt;&#39;T&gt; * continuation:(&#39;T -&gt; unit) * exceptionContinuation:(exn -&gt; unit) * cancellationContinuation:(OperationCanceledException -&gt; unit) * ?cancellationToken:CancellationToken -&gt; unit<br />static member SwitchToContext : syncContext:SynchronizationContext -&gt; Async&lt;unit&gt;<br />static member SwitchToNewThread : unit -&gt; Async&lt;unit&gt;<br />static member SwitchToThreadPool : unit -&gt; Async&lt;unit&gt;<br />static member TryCancelled : computation:Async&lt;&#39;T&gt; * compensation:(OperationCanceledException -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member CancellationToken : Async&lt;CancellationToken&gt;<br />static member DefaultCancellationToken : CancellationToken<br /><br />Full name: Microsoft.FSharp.Control.Async<br /><br />--------------------<br />type Async&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Control.Async&lt;_&gt;</div>
+<div class="tip" id="fs30">static member Async.StartImmediate : computation:Async&lt;unit&gt; * ?cancellationToken:Threading.CancellationToken -&gt; unit</div>
+

@@ -1,0 +1,99 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">Microsoft</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">FSharp</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="i">Reflection</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="f">toSepFile</span> <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="i">sep</span> <span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="i">header</span> (<span onmouseout="hideTip(event, 'fs7', 7)" onmouseover="showTip(event, 'fs7', 7)" class="i">fileName</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs8', 8)" onmouseover="showTip(event, 'fs8', 8)" class="t">string</span>) (<span onmouseout="hideTip(event, 'fs9', 9)" onmouseover="showTip(event, 'fs9', 9)" class="i">s</span><span class="o">:</span><span class="o">&#39;</span><span class="i">record</span> <span onmouseout="hideTip(event, 'fs10', 10)" onmouseover="showTip(event, 'fs10', 10)" class="t">seq</span>)<span class="o">=</span>
+ 
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs11', 11)" onmouseover="showTip(event, 'fs11', 11)" class="i">schemaType</span><span class="o">=</span><span onmouseout="hideTip(event, 'fs12', 12)" onmouseover="showTip(event, 'fs12', 12)" class="i">typeof</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">record</span><span class="o">&gt;</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs13', 13)" onmouseover="showTip(event, 'fs13', 13)" class="i">fields</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs3', 14)" onmouseover="showTip(event, 'fs3', 14)" class="i">Reflection</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs14', 15)" onmouseover="showTip(event, 'fs14', 15)" class="t">FSharpType</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs15', 16)" onmouseover="showTip(event, 'fs15', 16)" class="f">GetRecordFields</span>(<span onmouseout="hideTip(event, 'fs11', 17)" onmouseover="showTip(event, 'fs11', 17)" class="i">schemaType</span>) 
+
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs16', 18)" onmouseover="showTip(event, 'fs16', 18)" class="f">toStr</span> <span onmouseout="hideTip(event, 'fs17', 19)" onmouseover="showTip(event, 'fs17', 19)" class="i">fields</span> <span class="o">=</span> 
+        <span onmouseout="hideTip(event, 'fs17', 20)" onmouseover="showTip(event, 'fs17', 20)" class="i">fields</span>
+        <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs18', 21)" onmouseover="showTip(event, 'fs18', 21)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs19', 22)" onmouseover="showTip(event, 'fs19', 22)" class="f">fold</span>(<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs20', 23)" onmouseover="showTip(event, 'fs20', 23)" class="i">res</span> <span onmouseout="hideTip(event, 'fs21', 24)" onmouseover="showTip(event, 'fs21', 24)" class="i">field</span><span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs20', 25)" onmouseover="showTip(event, 'fs20', 25)" class="i">res</span><span class="o">+</span><span onmouseout="hideTip(event, 'fs21', 26)" onmouseover="showTip(event, 'fs21', 26)" class="i">field</span><span class="o">+</span><span onmouseout="hideTip(event, 'fs5', 27)" onmouseover="showTip(event, 'fs5', 27)" class="i">sep</span>) <span class="s">&quot;&quot;</span>
+    
+    <span class="k">use</span> <span onmouseout="hideTip(event, 'fs22', 28)" onmouseover="showTip(event, 'fs22', 28)" class="i">w</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs23', 29)" onmouseover="showTip(event, 'fs23', 29)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs24', 30)" onmouseover="showTip(event, 'fs24', 30)" class="i">IO</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs25', 31)" onmouseover="showTip(event, 'fs25', 31)" class="t">StreamWriter</span>(<span onmouseout="hideTip(event, 'fs7', 32)" onmouseover="showTip(event, 'fs7', 32)" class="i">fileName</span>)
+
+    <span class="k">if</span> <span onmouseout="hideTip(event, 'fs6', 33)" onmouseover="showTip(event, 'fs6', 33)" class="i">header</span> <span class="k">then</span> 
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs26', 34)" onmouseover="showTip(event, 'fs26', 34)" class="i">header_str</span><span class="o">=</span> <span onmouseout="hideTip(event, 'fs13', 35)" onmouseover="showTip(event, 'fs13', 35)" class="i">fields</span>
+                        <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs18', 36)" onmouseover="showTip(event, 'fs18', 36)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs27', 37)" onmouseover="showTip(event, 'fs27', 37)" class="f">map</span>(<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs28', 38)" onmouseover="showTip(event, 'fs28', 38)" class="i">field</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs28', 39)" onmouseover="showTip(event, 'fs28', 39)" class="i">field</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs29', 40)" onmouseover="showTip(event, 'fs29', 40)" class="i">Name</span>)
+                        <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs16', 41)" onmouseover="showTip(event, 'fs16', 41)" class="f">toStr</span>
+                    
+        <span onmouseout="hideTip(event, 'fs22', 42)" onmouseover="showTip(event, 'fs22', 42)" class="i">w</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs30', 43)" onmouseover="showTip(event, 'fs30', 43)" class="f">WriteLine</span>(<span onmouseout="hideTip(event, 'fs26', 44)" onmouseover="showTip(event, 'fs26', 44)" class="i">header_str</span>)
+
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs31', 45)" onmouseover="showTip(event, 'fs31', 45)" class="f">elemToStr</span> (<span onmouseout="hideTip(event, 'fs32', 46)" onmouseover="showTip(event, 'fs32', 46)" class="i">elem</span><span class="o">:</span><span class="o">&#39;</span><span class="i">record</span>) <span class="o">=</span> 
+        <span class="c">//for each field get value </span>
+        <span onmouseout="hideTip(event, 'fs13', 47)" onmouseover="showTip(event, 'fs13', 47)" class="i">fields</span>
+        <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs18', 48)" onmouseover="showTip(event, 'fs18', 48)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs27', 49)" onmouseover="showTip(event, 'fs27', 49)" class="f">map</span>(<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs28', 50)" onmouseover="showTip(event, 'fs28', 50)" class="i">field</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs8', 51)" onmouseover="showTip(event, 'fs8', 51)" class="f">string</span> (<span onmouseout="hideTip(event, 'fs33', 52)" onmouseover="showTip(event, 'fs33', 52)" class="t">FSharpValue</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs34', 53)" onmouseover="showTip(event, 'fs34', 53)" class="f">GetRecordField</span>(<span onmouseout="hideTip(event, 'fs32', 54)" onmouseover="showTip(event, 'fs32', 54)" class="i">elem</span>,<span onmouseout="hideTip(event, 'fs28', 55)" onmouseover="showTip(event, 'fs28', 55)" class="i">field</span>)))
+        <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs16', 56)" onmouseover="showTip(event, 'fs16', 56)" class="f">toStr</span>
+   
+    <span onmouseout="hideTip(event, 'fs9', 57)" onmouseover="showTip(event, 'fs9', 57)" class="i">s</span>
+    <span class="o">|&gt;</span><span onmouseout="hideTip(event, 'fs18', 58)" onmouseover="showTip(event, 'fs18', 58)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs27', 59)" onmouseover="showTip(event, 'fs27', 59)" class="f">map</span>(<span onmouseout="hideTip(event, 'fs31', 60)" onmouseover="showTip(event, 'fs31', 60)" class="f">elemToStr</span>)
+    <span class="o">|&gt;</span><span onmouseout="hideTip(event, 'fs18', 61)" onmouseover="showTip(event, 'fs18', 61)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs35', 62)" onmouseover="showTip(event, 'fs35', 62)" class="f">iter</span>(<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs36', 63)" onmouseover="showTip(event, 'fs36', 63)" class="i">elem</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs22', 64)" onmouseover="showTip(event, 'fs22', 64)" class="i">w</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs30', 65)" onmouseover="showTip(event, 'fs30', 65)" class="f">WriteLine</span>(<span onmouseout="hideTip(event, 'fs36', 66)" onmouseover="showTip(event, 'fs36', 66)" class="i">elem</span>))
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace Microsoft</div>
+<div class="tip" id="fs2">namespace Microsoft.FSharp</div>
+<div class="tip" id="fs3">namespace Microsoft.FSharp.Reflection</div>
+<div class="tip" id="fs4">val toSepFile : sep:string -&gt; header:bool -&gt; fileName:string -&gt; s:seq&lt;&#39;record&gt; -&gt; unit<br /><br />Full name: Script.toSepFile</div>
+<div class="tip" id="fs5">val sep : string</div>
+<div class="tip" id="fs6">val header : bool</div>
+<div class="tip" id="fs7">val fileName : string</div>
+<div class="tip" id="fs8">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />Full name: Microsoft.FSharp.Core.Operators.string<br /><br />--------------------<br />type string = System.String<br /><br />Full name: Microsoft.FSharp.Core.string</div>
+<div class="tip" id="fs9">val s : seq&lt;&#39;record&gt;</div>
+<div class="tip" id="fs10">Multiple items<br />val seq : sequence:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Core.Operators.seq<br /><br />--------------------<br />type seq&lt;&#39;T&gt; = System.Collections.Generic.IEnumerable&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.seq&lt;_&gt;</div>
+<div class="tip" id="fs11">val schemaType : System.Type</div>
+<div class="tip" id="fs12">val typeof&lt;&#39;T&gt; : System.Type<br /><br />Full name: Microsoft.FSharp.Core.Operators.typeof</div>
+<div class="tip" id="fs13">val fields : System.Reflection.PropertyInfo []</div>
+<div class="tip" id="fs14">type FSharpType =<br />&#160;&#160;static member GetExceptionFields : exceptionType:Type * ?bindingFlags:BindingFlags -&gt; PropertyInfo []<br />&#160;&#160;static member GetFunctionElements : functionType:Type -&gt; Type * Type<br />&#160;&#160;static member GetRecordFields : recordType:Type * ?bindingFlags:BindingFlags -&gt; PropertyInfo []<br />&#160;&#160;static member GetTupleElements : tupleType:Type -&gt; Type []<br />&#160;&#160;static member GetUnionCases : unionType:Type * ?bindingFlags:BindingFlags -&gt; UnionCaseInfo []<br />&#160;&#160;static member IsExceptionRepresentation : exceptionType:Type * ?bindingFlags:BindingFlags -&gt; bool<br />&#160;&#160;static member IsFunction : typ:Type -&gt; bool<br />&#160;&#160;static member IsModule : typ:Type -&gt; bool<br />&#160;&#160;static member IsRecord : typ:Type * ?bindingFlags:BindingFlags -&gt; bool<br />&#160;&#160;static member IsTuple : typ:Type -&gt; bool<br />&#160;&#160;...<br /><br />Full name: Microsoft.FSharp.Reflection.FSharpType</div>
+<div class="tip" id="fs15">static member FSharpType.GetRecordFields : recordType:System.Type * ?allowAccessToPrivateRepresentation:bool -&gt; System.Reflection.PropertyInfo []<br />static member FSharpType.GetRecordFields : recordType:System.Type * ?bindingFlags:System.Reflection.BindingFlags -&gt; System.Reflection.PropertyInfo []</div>
+<div class="tip" id="fs16">val toStr : (seq&lt;string&gt; -&gt; string)</div>
+<div class="tip" id="fs17">val fields : seq&lt;string&gt;</div>
+<div class="tip" id="fs18">module Seq<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs19">val fold : folder:(&#39;State -&gt; &#39;T -&gt; &#39;State) -&gt; state:&#39;State -&gt; source:seq&lt;&#39;T&gt; -&gt; &#39;State<br /><br />Full name: Microsoft.FSharp.Collections.Seq.fold</div>
+<div class="tip" id="fs20">val res : string</div>
+<div class="tip" id="fs21">val field : string</div>
+<div class="tip" id="fs22">val w : System.IO.StreamWriter</div>
+<div class="tip" id="fs23">namespace System</div>
+<div class="tip" id="fs24">namespace System.IO</div>
+<div class="tip" id="fs25">Multiple items<br />type StreamWriter =<br />&#160;&#160;inherit TextWriter<br />&#160;&#160;new : stream:Stream -&gt; StreamWriter + 6 overloads<br />&#160;&#160;member AutoFlush : bool with get, set<br />&#160;&#160;member BaseStream : Stream<br />&#160;&#160;member Close : unit -&gt; unit<br />&#160;&#160;member Encoding : Encoding<br />&#160;&#160;member Flush : unit -&gt; unit<br />&#160;&#160;member Write : value:char -&gt; unit + 3 overloads<br />&#160;&#160;static val Null : StreamWriter<br /><br />Full name: System.IO.StreamWriter<br /><br />--------------------<br />System.IO.StreamWriter(stream: System.IO.Stream) : unit<br />System.IO.StreamWriter(path: string) : unit<br />System.IO.StreamWriter(stream: System.IO.Stream, encoding: System.Text.Encoding) : unit<br />System.IO.StreamWriter(path: string, append: bool) : unit<br />System.IO.StreamWriter(stream: System.IO.Stream, encoding: System.Text.Encoding, bufferSize: int) : unit<br />System.IO.StreamWriter(path: string, append: bool, encoding: System.Text.Encoding) : unit<br />System.IO.StreamWriter(path: string, append: bool, encoding: System.Text.Encoding, bufferSize: int) : unit</div>
+<div class="tip" id="fs26">val header_str : string</div>
+<div class="tip" id="fs27">val map : mapping:(&#39;T -&gt; &#39;U) -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;U&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.map</div>
+<div class="tip" id="fs28">val field : System.Reflection.PropertyInfo</div>
+<div class="tip" id="fs29">property System.Reflection.MemberInfo.Name: string</div>
+<div class="tip" id="fs30">System.IO.TextWriter.WriteLine() : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />System.IO.TextWriter.WriteLine(value: obj) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />System.IO.TextWriter.WriteLine(value: string) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />System.IO.TextWriter.WriteLine(value: decimal) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />System.IO.TextWriter.WriteLine(value: float) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />System.IO.TextWriter.WriteLine(value: float32) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />System.IO.TextWriter.WriteLine(value: uint64) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />System.IO.TextWriter.WriteLine(value: int64) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />System.IO.TextWriter.WriteLine(value: uint32) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />System.IO.TextWriter.WriteLine(value: int) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em></div>
+<div class="tip" id="fs31">val elemToStr : (&#39;record -&gt; string)</div>
+<div class="tip" id="fs32">val elem : &#39;record</div>
+<div class="tip" id="fs33">type FSharpValue =<br />&#160;&#160;static member GetExceptionFields : exn:obj * ?bindingFlags:BindingFlags -&gt; obj []<br />&#160;&#160;static member GetRecordField : record:obj * info:PropertyInfo -&gt; obj<br />&#160;&#160;static member GetRecordFields : record:obj * ?bindingFlags:BindingFlags -&gt; obj []<br />&#160;&#160;static member GetTupleField : tuple:obj * index:int -&gt; obj<br />&#160;&#160;static member GetTupleFields : tuple:obj -&gt; obj []<br />&#160;&#160;static member GetUnionFields : value:obj * unionType:Type * ?bindingFlags:BindingFlags -&gt; UnionCaseInfo * obj []<br />&#160;&#160;static member MakeFunction : functionType:Type * implementation:(obj -&gt; obj) -&gt; obj<br />&#160;&#160;static member MakeRecord : recordType:Type * values:obj [] * ?bindingFlags:BindingFlags -&gt; obj<br />&#160;&#160;static member MakeTuple : tupleElements:obj [] * tupleType:Type -&gt; obj<br />&#160;&#160;static member MakeUnion : unionCase:UnionCaseInfo * args:obj [] * ?bindingFlags:BindingFlags -&gt; obj<br />&#160;&#160;...<br /><br />Full name: Microsoft.FSharp.Reflection.FSharpValue</div>
+<div class="tip" id="fs34">static member FSharpValue.GetRecordField : record:obj * info:System.Reflection.PropertyInfo -&gt; obj</div>
+<div class="tip" id="fs35">val iter : action:(&#39;T -&gt; unit) -&gt; source:seq&lt;&#39;T&gt; -&gt; unit<br /><br />Full name: Microsoft.FSharp.Collections.Seq.iter</div>
+<div class="tip" id="fs36">val elem : string</div>
+

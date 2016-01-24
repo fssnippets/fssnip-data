@@ -1,0 +1,70 @@
+// Microsoft: DEV207.1x Programming in F#
+// Module 2 assignment solution
+// This code with proper indentation is available: [http://fssnip.net/sG]
+
+(*
+   Please provide person's <name> followed by single space and <age>. Submit with <enter> key. 
+   Name have to be not empty string, age - integer in range [0..100]
+   Invalid input will end reading people and prints result.
+
+   Expected input:
+      <name :string> <age :int>
+
+    Example:
+      John 25
+
+    Hit <enter> key to stop reading people and print result.
+ *)
+open System
+
+// askForPerson: Reads person provided by the user from cmdline
+exception InvalidInputError of string
+let askForPerson counter : (bool * (string * int)) =
+    try
+        printfn "Enter Person #%d <name> <age>:" counter
+        Console.ReadLine()
+            |> (fun input -> input.Split())
+            // validate input line contains 2 words
+            |> (fun split ->
+                    if split.Length <> 2 then raise (InvalidInputError("Wrong input: expected 2 words separated by space"))
+                    else split
+                )
+            // if so, make a tuple (name :string * age :int)
+            |> (fun split -> split.[0], int split.[1])
+            // check if name is not empty and age is in range
+            |> (fun (name, age) ->
+                    if String.IsNullOrWhiteSpace name then raise (InvalidInputError("Wrong input: name cannot be empty"))
+                    elif age < 0 || age > 100         then raise (InvalidInputError("Wrong input: age must be in range [0, 100]"))
+                    else true, (name, age)
+               )
+
+    with 
+        | _ ->
+            printfn "Stop reading - thank you!\n" 
+            false, ("", 0)
+
+// readPeopleUntilValid: asking for people while valid input is provided
+let rec readPeopleWhileValid (counter :int) (people :(string * int) list) :(string * int) list =
+    match askForPerson counter with
+        | false, _      -> people
+        | true, person  -> readPeopleWhileValid (counter + 1) (person::people)
+
+let aduldTeenOrKid age = 
+    if age < 13 then "is a kid"
+    elif age < 20 then "is teenage"
+    else "is no longer teenager"
+
+let displayPerson (name, age) =
+    sprintf "%s is %d years old and %s," name age (aduldTeenOrKid age)
+
+[<EntryPoint>]
+let main argv = 
+    // Start asking for people, begin with 1st person and empty people list
+    readPeopleWhileValid 1 []
+    // as we insert people at the begining of the list need to reverse before printing result
+    |> List.rev
+    |> List.iter (displayPerson >> printfn "%s")
+
+    printfn "\nPress any key to exit..."
+    Console.ReadKey() |> ignore
+    0 // return an integer exit code

@@ -1,0 +1,73 @@
+<h2><a name="Idea-1-Imperative-ala-Matlab-or-R" class="anchor" href="#Idea-1-Imperative-ala-Matlab-or-R">Idea #1: Imperative ala Matlab or R</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+<span class="l">6: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">// (Simple and easy for R/Matlab users, but imperative)</span>
+<span class="i">plot</span><span class="o">.</span><span class="i">Subplot</span>(<span class="n">2</span>, <span class="n">2</span>)
+<span class="i">plot</span><span class="o">.</span><span class="i">Candles</span>(<span class="i">data1</span>)
+<span class="i">plot</span><span class="o">.</span><span class="i">Stock</span>(<span class="i">data2</span>)
+<span class="i">plot</span><span class="o">.</span><span class="i">Stock</span>(<span class="i">data3</span>)
+<span class="i">plot</span><span class="o">.</span><span class="i">Candles</span>(<span class="i">data4</span>)
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Idea-2-Using-custom-operators" class="anchor" href="#Idea-2-Using-custom-operators">Idea #2: Using custom operators</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">// (Short, but the operators are difficult to discover if you </span>
+<span class="c">// don&#39;t know them; Also we may need richer layout combinators)</span>
+(<span class="i">plot</span><span class="o">.</span><span class="i">Candles</span>(<span class="i">data1</span>) <span class="o">&lt;|&gt;</span> <span class="i">plot</span><span class="o">.</span><span class="i">Stock</span>(<span class="i">data2</span>)) <span class="o">&lt;-&gt;</span>
+(<span class="i">plot</span><span class="o">.</span><span class="i">Stock</span>(<span class="i">data3</span>) <span class="o">&lt;|&gt;</span> <span class="i">plot</span><span class="o">.</span><span class="i">Candles</span>(<span class="i">data4</span>))
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Idea-3-Compose-using-lists" class="anchor" href="#Idea-3-Compose-using-lists">Idea #3: Compose using lists</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+<span class="l">6: </span>
+<span class="l">7: </span>
+<span class="l">8: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">// (Longer and a bit ugly because of the indentation, but conceptually </span>
+<span class="c">// simple and we can use comprehensions to generate charts)</span>
+<span class="i">plot</span><span class="o">.</span><span class="i">Subplot</span>
+ ( <span class="n">2</span>, <span class="n">2</span>, 
+   [ <span class="i">plot</span><span class="o">.</span><span class="i">Candles</span>(<span class="i">data1</span>)
+     <span class="i">plot</span><span class="o">.</span><span class="i">Stock</span>(<span class="i">data2</span>)
+     <span class="i">plot</span><span class="o">.</span><span class="i">Stock</span>(<span class="i">data3</span>)
+     <span class="i">plot</span><span class="o">.</span><span class="i">Candles</span>(<span class="i">data4</span>) ])
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Idea-4-Computation-builder-based" class="anchor" href="#Idea-4-Computation-builder-based">Idea #4: Computation builder based</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+<span class="l">6: </span>
+<span class="l">7: </span>
+<span class="l">8: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">// (Uses tricky features, but it looks quite nice and </span>
+<span class="c">// we can use comprehensions (but cannot just write a list))</span>
+<span class="i">plot</span><span class="o">.</span><span class="i">Subplot</span>(<span class="n">2</span>, <span class="n">2</span>) {
+   <span class="k">yield</span> <span class="i">plot</span><span class="o">.</span><span class="i">Candles</span>(<span class="i">data1</span>)
+   <span class="k">yield</span> <span class="i">plot</span><span class="o">.</span><span class="i">Stock</span>(<span class="i">data2</span>)
+   <span class="k">yield</span> <span class="i">plot</span><span class="o">.</span><span class="i">Stock</span>(<span class="i">data3</span>)
+   <span class="k">yield</span> <span class="i">plot</span><span class="o">.</span><span class="i">Candles</span>(<span class="i">data4</span>) 
+}
+</code></pre></td>
+</tr>
+</table>
+

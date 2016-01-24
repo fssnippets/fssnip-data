@@ -1,0 +1,183 @@
+<h2><a name="Implementation-of-the-DSL" class="anchor" href="#Implementation-of-the-DSL">Implementation of the DSL</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// A type that represents a function that test</span>
+<span class="c">/// whether an array contains some pattern at a </span>
+<span class="c">/// specified location. It gets the location to </span>
+<span class="c">/// test &amp; the array as arguments and returns bool.</span>
+<span class="k">type</span> <span class="t">ShapeDetector</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="p">SD</span> <span class="k">of</span> (<span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="t">int</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs2', 3)" onmouseover="showTip(event, 'fs2', 3)" class="t">int</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs2', 4)" onmouseover="showTip(event, 'fs2', 4)" class="t">int</span>[,] <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs3', 5)" onmouseover="showTip(event, 'fs3', 5)" class="t">bool</span>)
+
+<span class="c">/// A primitive that tests whether the value at the</span>
+<span class="c">/// current location contains a value &#39;v&#39;</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs4', 6)" onmouseover="showTip(event, 'fs4', 6)" class="f">equals</span> <span onmouseout="hideTip(event, 'fs5', 7)" onmouseover="showTip(event, 'fs5', 7)" class="i">v</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs1', 8)" onmouseover="showTip(event, 'fs1', 8)" class="p">SD</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs6', 9)" onmouseover="showTip(event, 'fs6', 9)" class="i">x</span> <span onmouseout="hideTip(event, 'fs7', 10)" onmouseover="showTip(event, 'fs7', 10)" class="i">y</span> <span onmouseout="hideTip(event, 'fs8', 11)" onmouseover="showTip(event, 'fs8', 11)" class="i">arr</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs8', 12)" onmouseover="showTip(event, 'fs8', 12)" class="i">arr</span><span class="o">.</span>[<span onmouseout="hideTip(event, 'fs6', 13)" onmouseover="showTip(event, 'fs6', 13)" class="i">x</span>,<span onmouseout="hideTip(event, 'fs7', 14)" onmouseover="showTip(event, 'fs7', 14)" class="i">y</span>] <span class="o">=</span> <span onmouseout="hideTip(event, 'fs5', 15)" onmouseover="showTip(event, 'fs5', 15)" class="i">v</span>)
+
+<span class="c">/// A combinator that takes &#39;ShapeDetector&#39; and </span>
+<span class="c">/// creates a new one that returns &#39;def&#39; when </span>
+<span class="c">/// accessing outside of the array bounds</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs9', 16)" onmouseover="showTip(event, 'fs9', 16)" class="f">border</span> <span onmouseout="hideTip(event, 'fs10', 17)" onmouseover="showTip(event, 'fs10', 17)" class="i">def</span> (<span onmouseout="hideTip(event, 'fs1', 18)" onmouseover="showTip(event, 'fs1', 18)" class="p">SD</span> <span onmouseout="hideTip(event, 'fs11', 19)" onmouseover="showTip(event, 'fs11', 19)" class="f">f</span>) <span class="o">=</span> <span onmouseout="hideTip(event, 'fs1', 20)" onmouseover="showTip(event, 'fs1', 20)" class="p">SD</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs6', 21)" onmouseover="showTip(event, 'fs6', 21)" class="i">x</span> <span onmouseout="hideTip(event, 'fs7', 22)" onmouseover="showTip(event, 'fs7', 22)" class="i">y</span> <span onmouseout="hideTip(event, 'fs8', 23)" onmouseover="showTip(event, 'fs8', 23)" class="i">arr</span> <span class="k">-&gt;</span> 
+  <span class="k">if</span> <span onmouseout="hideTip(event, 'fs6', 24)" onmouseover="showTip(event, 'fs6', 24)" class="i">x</span> <span class="o">&lt;</span> <span class="n">0</span> <span class="o">||</span> <span onmouseout="hideTip(event, 'fs7', 25)" onmouseover="showTip(event, 'fs7', 25)" class="i">y</span> <span class="o">&lt;</span> <span class="n">0</span> <span class="o">||</span> <span onmouseout="hideTip(event, 'fs6', 26)" onmouseover="showTip(event, 'fs6', 26)" class="i">x</span> <span class="o">&gt;</span><span class="o">=</span> <span onmouseout="hideTip(event, 'fs8', 27)" onmouseover="showTip(event, 'fs8', 27)" class="i">arr</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs12', 28)" onmouseover="showTip(event, 'fs12', 28)" class="f">GetLength</span>(<span class="n">0</span>) <span class="o">||</span> <span onmouseout="hideTip(event, 'fs7', 29)" onmouseover="showTip(event, 'fs7', 29)" class="i">y</span> <span class="o">&gt;</span><span class="o">=</span> <span onmouseout="hideTip(event, 'fs8', 30)" onmouseover="showTip(event, 'fs8', 30)" class="i">arr</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs12', 31)" onmouseover="showTip(event, 'fs12', 31)" class="f">GetLength</span>(<span class="n">1</span>) 
+  <span class="k">then</span> <span onmouseout="hideTip(event, 'fs10', 32)" onmouseover="showTip(event, 'fs10', 32)" class="i">def</span> <span class="k">else</span> <span onmouseout="hideTip(event, 'fs11', 33)" onmouseover="showTip(event, 'fs11', 33)" class="f">f</span> <span onmouseout="hideTip(event, 'fs6', 34)" onmouseover="showTip(event, 'fs6', 34)" class="i">x</span> <span onmouseout="hideTip(event, 'fs7', 35)" onmouseover="showTip(event, 'fs7', 35)" class="i">y</span> <span onmouseout="hideTip(event, 'fs8', 36)" onmouseover="showTip(event, 'fs8', 36)" class="i">arr</span>)
+
+<span class="c">/// A combinator that calls a given ShapeDetector</span>
+<span class="c">/// at a location specified by offset dx, dy</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs13', 37)" onmouseover="showTip(event, 'fs13', 37)" class="f">around</span> (<span onmouseout="hideTip(event, 'fs14', 38)" onmouseover="showTip(event, 'fs14', 38)" class="i">dx</span>, <span onmouseout="hideTip(event, 'fs15', 39)" onmouseover="showTip(event, 'fs15', 39)" class="i">dy</span>) (<span onmouseout="hideTip(event, 'fs1', 40)" onmouseover="showTip(event, 'fs1', 40)" class="p">SD</span> <span onmouseout="hideTip(event, 'fs11', 41)" onmouseover="showTip(event, 'fs11', 41)" class="f">f</span>) <span class="o">=</span> <span onmouseout="hideTip(event, 'fs1', 42)" onmouseover="showTip(event, 'fs1', 42)" class="p">SD</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs6', 43)" onmouseover="showTip(event, 'fs6', 43)" class="i">x</span> <span onmouseout="hideTip(event, 'fs7', 44)" onmouseover="showTip(event, 'fs7', 44)" class="i">y</span> <span onmouseout="hideTip(event, 'fs8', 45)" onmouseover="showTip(event, 'fs8', 45)" class="i">arr</span> <span class="k">-&gt;</span>
+  <span onmouseout="hideTip(event, 'fs11', 46)" onmouseover="showTip(event, 'fs11', 46)" class="f">f</span> (<span onmouseout="hideTip(event, 'fs6', 47)" onmouseover="showTip(event, 'fs6', 47)" class="i">x</span> <span class="o">+</span> <span onmouseout="hideTip(event, 'fs14', 48)" onmouseover="showTip(event, 'fs14', 48)" class="i">dx</span>) (<span onmouseout="hideTip(event, 'fs7', 49)" onmouseover="showTip(event, 'fs7', 49)" class="i">y</span> <span class="o">+</span> <span onmouseout="hideTip(event, 'fs15', 50)" onmouseover="showTip(event, 'fs15', 50)" class="i">dy</span>) <span onmouseout="hideTip(event, 'fs8', 51)" onmouseover="showTip(event, 'fs8', 51)" class="i">arr</span>)
+
+<span class="c">/// A combinator that takes a ShapeDetector and</span>
+<span class="c">/// builds a new one, which is rotated by 90 degrees</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs16', 52)" onmouseover="showTip(event, 'fs16', 52)" class="f">rotate</span> (<span onmouseout="hideTip(event, 'fs1', 53)" onmouseover="showTip(event, 'fs1', 53)" class="p">SD</span> <span onmouseout="hideTip(event, 'fs11', 54)" onmouseover="showTip(event, 'fs11', 54)" class="f">f</span>) <span class="o">=</span> <span onmouseout="hideTip(event, 'fs1', 55)" onmouseover="showTip(event, 'fs1', 55)" class="p">SD</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs6', 56)" onmouseover="showTip(event, 'fs6', 56)" class="i">x</span> <span onmouseout="hideTip(event, 'fs7', 57)" onmouseover="showTip(event, 'fs7', 57)" class="i">y</span> <span onmouseout="hideTip(event, 'fs8', 58)" onmouseover="showTip(event, 'fs8', 58)" class="i">arr</span> <span class="k">-&gt;</span>
+  <span onmouseout="hideTip(event, 'fs11', 59)" onmouseover="showTip(event, 'fs11', 59)" class="f">f</span> <span class="o">-</span><span onmouseout="hideTip(event, 'fs7', 60)" onmouseover="showTip(event, 'fs7', 60)" class="i">y</span> <span onmouseout="hideTip(event, 'fs6', 61)" onmouseover="showTip(event, 'fs6', 61)" class="i">x</span> <span onmouseout="hideTip(event, 'fs8', 62)" onmouseover="showTip(event, 'fs8', 62)" class="i">arr</span>)
+
+<span class="c">/// Creates a shape detector that succeeds only</span>
+<span class="c">/// when both of the arguments succeed.</span>
+<span class="k">let</span> (<span class="o">&lt;&amp;&gt;</span>) (<span onmouseout="hideTip(event, 'fs1', 63)" onmouseover="showTip(event, 'fs1', 63)" class="p">SD</span> <span onmouseout="hideTip(event, 'fs17', 64)" onmouseover="showTip(event, 'fs17', 64)" class="f">f1</span>) (<span onmouseout="hideTip(event, 'fs1', 65)" onmouseover="showTip(event, 'fs1', 65)" class="p">SD</span> <span onmouseout="hideTip(event, 'fs18', 66)" onmouseover="showTip(event, 'fs18', 66)" class="f">f2</span>) <span class="o">=</span> <span onmouseout="hideTip(event, 'fs1', 67)" onmouseover="showTip(event, 'fs1', 67)" class="p">SD</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs6', 68)" onmouseover="showTip(event, 'fs6', 68)" class="i">x</span> <span onmouseout="hideTip(event, 'fs7', 69)" onmouseover="showTip(event, 'fs7', 69)" class="i">y</span> <span onmouseout="hideTip(event, 'fs8', 70)" onmouseover="showTip(event, 'fs8', 70)" class="i">arr</span> <span class="k">-&gt;</span>
+  <span onmouseout="hideTip(event, 'fs17', 71)" onmouseover="showTip(event, 'fs17', 71)" class="f">f1</span> <span onmouseout="hideTip(event, 'fs6', 72)" onmouseover="showTip(event, 'fs6', 72)" class="i">x</span> <span onmouseout="hideTip(event, 'fs7', 73)" onmouseover="showTip(event, 'fs7', 73)" class="i">y</span> <span onmouseout="hideTip(event, 'fs8', 74)" onmouseover="showTip(event, 'fs8', 74)" class="i">arr</span> <span class="o">&amp;&amp;</span> <span onmouseout="hideTip(event, 'fs18', 75)" onmouseover="showTip(event, 'fs18', 75)" class="f">f2</span> <span onmouseout="hideTip(event, 'fs6', 76)" onmouseover="showTip(event, 'fs6', 76)" class="i">x</span> <span onmouseout="hideTip(event, 'fs7', 77)" onmouseover="showTip(event, 'fs7', 77)" class="i">y</span> <span onmouseout="hideTip(event, 'fs8', 78)" onmouseover="showTip(event, 'fs8', 78)" class="i">arr</span>)
+
+<span class="c">/// Creates a shape detector that succeeds </span>
+<span class="c">/// when either of the arguments succeed.</span>
+<span class="k">let</span> (<span class="o">&lt;|&gt;</span>) (<span onmouseout="hideTip(event, 'fs1', 79)" onmouseover="showTip(event, 'fs1', 79)" class="p">SD</span> <span onmouseout="hideTip(event, 'fs17', 80)" onmouseover="showTip(event, 'fs17', 80)" class="f">f1</span>) (<span onmouseout="hideTip(event, 'fs1', 81)" onmouseover="showTip(event, 'fs1', 81)" class="p">SD</span> <span onmouseout="hideTip(event, 'fs18', 82)" onmouseover="showTip(event, 'fs18', 82)" class="f">f2</span>) <span class="o">=</span> <span onmouseout="hideTip(event, 'fs1', 83)" onmouseover="showTip(event, 'fs1', 83)" class="p">SD</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs6', 84)" onmouseover="showTip(event, 'fs6', 84)" class="i">x</span> <span onmouseout="hideTip(event, 'fs7', 85)" onmouseover="showTip(event, 'fs7', 85)" class="i">y</span> <span onmouseout="hideTip(event, 'fs8', 86)" onmouseover="showTip(event, 'fs8', 86)" class="i">arr</span> <span class="k">-&gt;</span>
+  <span onmouseout="hideTip(event, 'fs17', 87)" onmouseover="showTip(event, 'fs17', 87)" class="f">f1</span> <span onmouseout="hideTip(event, 'fs6', 88)" onmouseover="showTip(event, 'fs6', 88)" class="i">x</span> <span onmouseout="hideTip(event, 'fs7', 89)" onmouseover="showTip(event, 'fs7', 89)" class="i">y</span> <span onmouseout="hideTip(event, 'fs8', 90)" onmouseover="showTip(event, 'fs8', 90)" class="i">arr</span> <span class="o">||</span> <span onmouseout="hideTip(event, 'fs18', 91)" onmouseover="showTip(event, 'fs18', 91)" class="f">f2</span> <span onmouseout="hideTip(event, 'fs6', 92)" onmouseover="showTip(event, 'fs6', 92)" class="i">x</span> <span onmouseout="hideTip(event, 'fs7', 93)" onmouseover="showTip(event, 'fs7', 93)" class="i">y</span> <span onmouseout="hideTip(event, 'fs8', 94)" onmouseover="showTip(event, 'fs8', 94)" class="i">arr</span>)
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Sample-pattern-detector" class="anchor" href="#Sample-pattern-detector">Sample pattern detector</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">// We want to detect patterns that look like this</span>
+<span class="c">// (with any rotation in any place of an array):</span>
+<span class="c">// </span>
+<span class="c">//   X - -</span>
+<span class="c">//   - X X</span>
+<span class="c">//</span>
+
+<span class="c">// Create a detector that tests if a location</span>
+<span class="c">// contains 1 and returns &#39;false&#39; when out of range</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs19', 95)" onmouseover="showTip(event, 'fs19', 95)" class="i">one</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs9', 96)" onmouseover="showTip(event, 'fs9', 96)" class="f">border</span> <span class="k">false</span> (<span onmouseout="hideTip(event, 'fs4', 97)" onmouseover="showTip(event, 'fs4', 97)" class="f">equals</span> <span class="n">1</span>)
+
+<span class="c">// A shape detector for your pattern</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs20', 98)" onmouseover="showTip(event, 'fs20', 98)" class="i">pattern</span> <span class="o">=</span> 
+  <span onmouseout="hideTip(event, 'fs13', 99)" onmouseover="showTip(event, 'fs13', 99)" class="f">around</span> (<span class="n">0</span>, <span class="n">0</span>) <span onmouseout="hideTip(event, 'fs19', 100)" onmouseover="showTip(event, 'fs19', 100)" class="i">one</span> <span class="o">&lt;&amp;&gt;</span> <span onmouseout="hideTip(event, 'fs13', 101)" onmouseover="showTip(event, 'fs13', 101)" class="f">around</span> (<span class="n">1</span>, <span class="n">0</span>) <span onmouseout="hideTip(event, 'fs19', 102)" onmouseover="showTip(event, 'fs19', 102)" class="i">one</span> <span class="o">&lt;&amp;&gt;</span> 
+  <span onmouseout="hideTip(event, 'fs13', 103)" onmouseover="showTip(event, 'fs13', 103)" class="f">around</span> (<span class="o">-</span><span class="n">1</span>, <span class="n">1</span>) <span onmouseout="hideTip(event, 'fs19', 104)" onmouseover="showTip(event, 'fs19', 104)" class="i">one</span>
+
+<span class="c">// Test pattern with any rotation: Combine </span>
+<span class="c">// 4 possible rotations with logical or.</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs21', 105)" onmouseover="showTip(event, 'fs21', 105)" class="i">any</span> <span class="o">=</span> 
+  <span onmouseout="hideTip(event, 'fs20', 106)" onmouseover="showTip(event, 'fs20', 106)" class="i">pattern</span> <span class="o">&lt;|&gt;</span> <span onmouseout="hideTip(event, 'fs16', 107)" onmouseover="showTip(event, 'fs16', 107)" class="f">rotate</span> <span onmouseout="hideTip(event, 'fs20', 108)" onmouseover="showTip(event, 'fs20', 108)" class="i">pattern</span> <span class="o">&lt;|&gt;</span> 
+  <span onmouseout="hideTip(event, 'fs16', 109)" onmouseover="showTip(event, 'fs16', 109)" class="f">rotate</span> (<span onmouseout="hideTip(event, 'fs16', 110)" onmouseover="showTip(event, 'fs16', 110)" class="f">rotate</span> <span onmouseout="hideTip(event, 'fs20', 111)" onmouseover="showTip(event, 'fs20', 111)" class="i">pattern</span>) <span class="o">&lt;|&gt;</span> 
+  <span onmouseout="hideTip(event, 'fs16', 112)" onmouseover="showTip(event, 'fs16', 112)" class="f">rotate</span> (<span onmouseout="hideTip(event, 'fs16', 113)" onmouseover="showTip(event, 'fs16', 113)" class="f">rotate</span> (<span onmouseout="hideTip(event, 'fs16', 114)" onmouseover="showTip(event, 'fs16', 114)" class="f">rotate</span> <span onmouseout="hideTip(event, 'fs20', 115)" onmouseover="showTip(event, 'fs20', 115)" class="i">pattern</span>))
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Run-the-pattern-detector-on-a-sample-input" class="anchor" href="#Run-the-pattern-detector-on-a-sample-input">Run the pattern detector on a sample input</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">// Create a 2D array as a sample input</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs22', 116)" onmouseover="showTip(event, 'fs22', 116)" class="i">inp</span> <span class="o">=</span> 
+  <span onmouseout="hideTip(event, 'fs23', 117)" onmouseover="showTip(event, 'fs23', 117)" class="f">array2D</span> [ [ <span class="n">0</span>; <span class="n">0</span>; <span class="n">1</span> ]
+            [ <span class="n">0</span>; <span class="n">1</span>; <span class="n">0</span> ]
+            [ <span class="n">0</span>; <span class="n">1</span>; <span class="n">0</span> ] ]
+
+<span class="c">// Get the underlying function and run it</span>
+<span class="c">// for all possible indices in the array</span>
+<span class="k">let</span> (<span onmouseout="hideTip(event, 'fs1', 118)" onmouseover="showTip(event, 'fs1', 118)" class="p">SD</span> <span onmouseout="hideTip(event, 'fs24', 119)" onmouseover="showTip(event, 'fs24', 119)" class="f">f</span>) <span class="o">=</span> <span onmouseout="hideTip(event, 'fs21', 120)" onmouseover="showTip(event, 'fs21', 120)" class="i">any</span>
+<span class="k">for</span> <span onmouseout="hideTip(event, 'fs25', 121)" onmouseover="showTip(event, 'fs25', 121)" class="i">x</span> <span class="k">in</span> <span class="n">0</span> <span class="o">..</span> <span class="n">2</span> <span class="k">do</span>
+  <span class="k">for</span> <span onmouseout="hideTip(event, 'fs26', 122)" onmouseover="showTip(event, 'fs26', 122)" class="i">y</span> <span class="k">in</span> <span class="n">0</span> <span class="o">..</span> <span class="n">2</span> <span class="k">do</span>
+    <span onmouseout="hideTip(event, 'fs27', 123)" onmouseover="showTip(event, 'fs27', 123)" class="f">printfn</span> <span class="s">&quot;</span><span class="pf">%A</span><span class="s"> </span><span class="pf">%A</span><span class="s">&quot;</span> (<span onmouseout="hideTip(event, 'fs25', 124)" onmouseover="showTip(event, 'fs25', 124)" class="i">x</span>, <span onmouseout="hideTip(event, 'fs26', 125)" onmouseover="showTip(event, 'fs26', 125)" class="i">y</span>) (<span onmouseout="hideTip(event, 'fs24', 126)" onmouseover="showTip(event, 'fs24', 126)" class="f">f</span> <span onmouseout="hideTip(event, 'fs25', 127)" onmouseover="showTip(event, 'fs25', 127)" class="i">x</span> <span onmouseout="hideTip(event, 'fs26', 128)" onmouseover="showTip(event, 'fs26', 128)" class="i">y</span> <span onmouseout="hideTip(event, 'fs22', 129)" onmouseover="showTip(event, 'fs22', 129)" class="i">inp</span>)
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">union case ShapeDetector.SD: (int -&gt; int -&gt; int [,] -&gt; bool) -&gt; ShapeDetector</div>
+<div class="tip" id="fs2">Multiple items<br />val int : value:&#39;T -&gt; int (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.int<br /><br />--------------------<br />type int = int32<br /><br />Full name: Microsoft.FSharp.Core.int<br /><br />--------------------<br />type int&lt;&#39;Measure&gt; = int<br /><br />Full name: Microsoft.FSharp.Core.int&lt;_&gt;</div>
+<div class="tip" id="fs3">type bool = System.Boolean<br /><br />Full name: Microsoft.FSharp.Core.bool</div>
+<div class="tip" id="fs4">val equals : v:int -&gt; ShapeDetector<br /><br />Full name: Script.equals<br /><em><br /><br />&#160;A primitive that tests whether the value at the<br />&#160;current location contains a value &#39;v&#39;</em></div>
+<div class="tip" id="fs5">val v : int</div>
+<div class="tip" id="fs6">val x : int</div>
+<div class="tip" id="fs7">val y : int</div>
+<div class="tip" id="fs8">val arr : int [,]</div>
+<div class="tip" id="fs9">val border : def:bool -&gt; ShapeDetector -&gt; ShapeDetector<br /><br />Full name: Script.border<br /><em><br /><br />&#160;A combinator that takes &#39;ShapeDetector&#39; and <br />&#160;creates a new one that returns &#39;def&#39; when <br />&#160;accessing outside of the array bounds</em></div>
+<div class="tip" id="fs10">val def : bool</div>
+<div class="tip" id="fs11">val f : (int -&gt; int -&gt; int [,] -&gt; bool)</div>
+<div class="tip" id="fs12">System.Array.GetLength(dimension: int) : int</div>
+<div class="tip" id="fs13">val around : dx:int * dy:int -&gt; ShapeDetector -&gt; ShapeDetector<br /><br />Full name: Script.around<br /><em><br /><br />&#160;A combinator that calls a given ShapeDetector<br />&#160;at a location specified by offset dx, dy</em></div>
+<div class="tip" id="fs14">val dx : int</div>
+<div class="tip" id="fs15">val dy : int</div>
+<div class="tip" id="fs16">val rotate : ShapeDetector -&gt; ShapeDetector<br /><br />Full name: Script.rotate<br /><em><br /><br />&#160;A combinator that takes a ShapeDetector and<br />&#160;builds a new one, which is rotated by 90 degrees</em></div>
+<div class="tip" id="fs17">val f1 : (int -&gt; int -&gt; int [,] -&gt; bool)</div>
+<div class="tip" id="fs18">val f2 : (int -&gt; int -&gt; int [,] -&gt; bool)</div>
+<div class="tip" id="fs19">val one : ShapeDetector<br /><br />Full name: Script.one</div>
+<div class="tip" id="fs20">val pattern : ShapeDetector<br /><br />Full name: Script.pattern</div>
+<div class="tip" id="fs21">val any : ShapeDetector<br /><br />Full name: Script.any</div>
+<div class="tip" id="fs22">val inp : int [,]<br /><br />Full name: Script.inp</div>
+<div class="tip" id="fs23">val array2D : rows:seq&lt;#seq&lt;&#39;T&gt;&gt; -&gt; &#39;T [,]<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.array2D</div>
+<div class="tip" id="fs24">val f : (int -&gt; int -&gt; int [,] -&gt; bool)<br /><br />Full name: Script.f</div>
+<div class="tip" id="fs25">val x : int32</div>
+<div class="tip" id="fs26">val y : int32</div>
+<div class="tip" id="fs27">val printfn : format:Printf.TextWriterFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.printfn</div>
+

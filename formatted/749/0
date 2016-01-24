@@ -1,0 +1,101 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">System</span><span class="o">.</span><span class="i">ServiceModel</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 2)" onmouseover="showTip(event, 'fs1', 2)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 3)" onmouseover="showTip(event, 'fs2', 3)" class="i">Runtime</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 4)" onmouseover="showTip(event, 'fs3', 4)" class="i">Serialization</span>
+<span class="c">/// Record for LoanInformation</span>
+[&lt;<span class="i">DataContract</span>&gt;]
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs4', 5)" onmouseover="showTip(event, 'fs4', 5)" class="t">LoanInformation</span> <span class="o">=</span>
+    { [&lt;<span class="i">DataMember</span>&gt;] <span class="k">mutable</span> <span onmouseout="hideTip(event, 'fs5', 6)" onmouseover="showTip(event, 'fs5', 6)" class="v">Amount</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs6', 7)" onmouseover="showTip(event, 'fs6', 7)" class="t">double</span>
+      [&lt;<span class="i">DataMember</span>&gt;] <span class="k">mutable</span> <span onmouseout="hideTip(event, 'fs7', 8)" onmouseover="showTip(event, 'fs7', 8)" class="v">InterestRateInPercent</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs6', 9)" onmouseover="showTip(event, 'fs6', 9)" class="t">double</span> 
+      [&lt;<span class="i">DataMember</span>&gt;] <span class="k">mutable</span> <span onmouseout="hideTip(event, 'fs8', 10)" onmouseover="showTip(event, 'fs8', 10)" class="v">TermInMonth</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs9', 11)" onmouseover="showTip(event, 'fs9', 11)" class="t">int</span> }
+
+<span class="c">/// Record for PaymentInformation</span>
+[&lt;<span class="i">DataContract</span>&gt;]
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs10', 12)" onmouseover="showTip(event, 'fs10', 12)" class="t">PaymentInformation</span> <span class="o">=</span>
+    { [&lt;<span class="i">DataMember</span>&gt;] <span class="k">mutable</span> <span onmouseout="hideTip(event, 'fs11', 13)" onmouseover="showTip(event, 'fs11', 13)" class="v">MonthlyPayment</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs6', 14)" onmouseover="showTip(event, 'fs6', 14)" class="t">double</span>
+ 
+      [&lt;<span class="i">DataMember</span>&gt;] <span class="k">mutable</span> <span onmouseout="hideTip(event, 'fs12', 15)" onmouseover="showTip(event, 'fs12', 15)" class="v">TotalPayment</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs6', 16)" onmouseover="showTip(event, 'fs6', 16)" class="t">double</span> }
+
+<span class="c">//[&lt;DataContract&gt;] --&gt; Never add this attribute on Discriminated Union, it won&#39;t work</span>
+<span class="c">/// Discriminated Union</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs13', 17)" onmouseover="showTip(event, 'fs13', 17)" class="t">Suit</span> <span class="o">=</span>
+    | <span onmouseout="hideTip(event, 'fs14', 18)" onmouseover="showTip(event, 'fs14', 18)" class="p">Heart</span>
+    | <span onmouseout="hideTip(event, 'fs15', 19)" onmouseover="showTip(event, 'fs15', 19)" class="p">Diamond</span>
+    | <span onmouseout="hideTip(event, 'fs16', 20)" onmouseover="showTip(event, 'fs16', 20)" class="p">Spade</span>
+    | <span onmouseout="hideTip(event, 'fs17', 21)" onmouseover="showTip(event, 'fs17', 21)" class="p">Club</span>
+
+<span class="c">/// For F#, all the interface method must be given a parameter name: eg. a:LoanInformation</span>
+<span class="c">/// otherwise, you will fail to start the service host</span>
+[&lt;<span class="i">ServiceContract</span>&gt;]
+<span class="k">type</span> <span class="k">public</span> <span onmouseout="hideTip(event, 'fs18', 22)" onmouseover="showTip(event, 'fs18', 22)" class="t">ILoanCadulator</span> <span class="o">=</span>
+    <span class="c">/// Use Record to send and recieve data</span>
+    [&lt;<span class="i">OperationContract</span>&gt;]
+    <span class="k">abstract</span> <span onmouseout="hideTip(event, 'fs19', 23)" onmouseover="showTip(event, 'fs19', 23)" class="f">Calculate</span> <span class="o">:</span> <span class="i">a</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs4', 24)" onmouseover="showTip(event, 'fs4', 24)" class="t">LoanInformation</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs10', 25)" onmouseover="showTip(event, 'fs10', 25)" class="t">PaymentInformation</span>
+    <span class="c">/// Use Tuple to send and recieve data</span>
+    [&lt;<span class="i">OperationContract</span>&gt;]
+    <span class="k">abstract</span> <span onmouseout="hideTip(event, 'fs20', 26)" onmouseover="showTip(event, 'fs20', 26)" class="f">Calculate2</span> <span class="o">:</span> <span class="i">b</span><span class="o">:</span>(<span onmouseout="hideTip(event, 'fs9', 27)" onmouseover="showTip(event, 'fs9', 27)" class="t">int</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs21', 28)" onmouseover="showTip(event, 'fs21', 28)" class="t">string</span>) <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs9', 29)" onmouseover="showTip(event, 'fs9', 29)" class="t">int</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs21', 30)" onmouseover="showTip(event, 'fs21', 30)" class="t">string</span>
+    <span class="c">/// Use Discriminated Union(DU) to send and recieve data</span>
+    [&lt;<span class="i">OperationContract</span>&gt;]
+    <span class="k">abstract</span> <span onmouseout="hideTip(event, 'fs22', 31)" onmouseover="showTip(event, 'fs22', 31)" class="f">Calculate3</span> <span class="o">:</span> <span class="i">c</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs13', 32)" onmouseover="showTip(event, 'fs13', 32)" class="t">Suit</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs13', 33)" onmouseover="showTip(event, 'fs13', 33)" class="t">Suit</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace System</div>
+<div class="tip" id="fs2">namespace System.Runtime</div>
+<div class="tip" id="fs3">namespace System.Runtime.Serialization</div>
+<div class="tip" id="fs4">type LoanInformation =<br />&#160;&#160;{mutable Amount: double;<br />&#160;&#160;&#160;mutable InterestRateInPercent: double;<br />&#160;&#160;&#160;mutable TermInMonth: int;}<br /><br />Full name: Script.LoanInformation<br /><em><br /><br />&#160;Record for LoanInformation</em></div>
+<div class="tip" id="fs5">LoanInformation.Amount: double</div>
+<div class="tip" id="fs6">Multiple items<br />val double : value:&#39;T -&gt; float (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.double<br /><br />--------------------<br />type double = System.Double<br /><br />Full name: Microsoft.FSharp.Core.double</div>
+<div class="tip" id="fs7">LoanInformation.InterestRateInPercent: double</div>
+<div class="tip" id="fs8">LoanInformation.TermInMonth: int</div>
+<div class="tip" id="fs9">Multiple items<br />val int : value:&#39;T -&gt; int (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.int<br /><br />--------------------<br />type int = int32<br /><br />Full name: Microsoft.FSharp.Core.int<br /><br />--------------------<br />type int&lt;&#39;Measure&gt; = int<br /><br />Full name: Microsoft.FSharp.Core.int&lt;_&gt;</div>
+<div class="tip" id="fs10">type PaymentInformation =<br />&#160;&#160;{mutable MonthlyPayment: double;<br />&#160;&#160;&#160;mutable TotalPayment: double;}<br /><br />Full name: Script.PaymentInformation<br /><em><br /><br />&#160;Record for PaymentInformation</em></div>
+<div class="tip" id="fs11">PaymentInformation.MonthlyPayment: double</div>
+<div class="tip" id="fs12">PaymentInformation.TotalPayment: double</div>
+<div class="tip" id="fs13">type Suit =<br />&#160;&#160;| Heart<br />&#160;&#160;| Diamond<br />&#160;&#160;| Spade<br />&#160;&#160;| Club<br /><br />Full name: Script.Suit<br /><em><br /><br />&#160;Discriminated Union</em></div>
+<div class="tip" id="fs14">union case Suit.Heart: Suit</div>
+<div class="tip" id="fs15">union case Suit.Diamond: Suit</div>
+<div class="tip" id="fs16">union case Suit.Spade: Suit</div>
+<div class="tip" id="fs17">union case Suit.Club: Suit</div>
+<div class="tip" id="fs18">type ILoanCadulator =<br />&#160;&#160;interface<br />&#160;&#160;&#160;&#160;abstract member Calculate : a:LoanInformation -&gt; PaymentInformation<br />&#160;&#160;&#160;&#160;abstract member Calculate2 : b:(int * string) -&gt; int * string<br />&#160;&#160;&#160;&#160;abstract member Calculate3 : c:Suit -&gt; Suit<br />&#160;&#160;end<br /><br />Full name: Script.ILoanCadulator<br /><em><br /><br />&#160;For F#, all the interface method must be given a parameter name: eg. a:LoanInformation<br />&#160;otherwise, you will fail to start the service host</em></div>
+<div class="tip" id="fs19">abstract member ILoanCadulator.Calculate : a:LoanInformation -&gt; PaymentInformation<br /><br />Full name: Script.ILoanCadulator.Calculate<br /><em><br /><br />&#160;Use Record to send and recieve data</em></div>
+<div class="tip" id="fs20">abstract member ILoanCadulator.Calculate2 : b:(int * string) -&gt; int * string<br /><br />Full name: Script.ILoanCadulator.Calculate2<br /><em><br /><br />&#160;Use Tuple to send and recieve data</em></div>
+<div class="tip" id="fs21">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />Full name: Microsoft.FSharp.Core.Operators.string<br /><br />--------------------<br />type string = System.String<br /><br />Full name: Microsoft.FSharp.Core.string</div>
+<div class="tip" id="fs22">abstract member ILoanCadulator.Calculate3 : c:Suit -&gt; Suit<br /><br />Full name: Script.ILoanCadulator.Calculate3<br /><em><br /><br />&#160;Use Discriminated Union(DU) to send and recieve data</em></div>
+

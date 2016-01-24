@@ -1,0 +1,78 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">type</span> <span class="t">Token</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="p">END</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="t">Status</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="p">ACCEPT</span> | <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="p">ERROR</span>
+
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="t">ParseState</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="p">Shifting</span> | <span onmouseout="hideTip(event, 'fs7', 7)" onmouseover="showTip(event, 'fs7', 7)" class="p">Reducing</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs8', 8)" onmouseover="showTip(event, 'fs8', 8)" class="f">parse</span> <span onmouseout="hideTip(event, 'fs9', 9)" onmouseover="showTip(event, 'fs9', 9)" class="f">gettoken</span> <span onmouseout="hideTip(event, 'fs10', 10)" onmouseover="showTip(event, 'fs10', 10)" class="f">shift</span> <span onmouseout="hideTip(event, 'fs11', 11)" onmouseover="showTip(event, 'fs11', 11)" class="f">reduce</span> () <span class="o">=</span>
+    <span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs12', 12)" onmouseover="showTip(event, 'fs12', 12)" class="f">read</span>() <span class="o">=</span>
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs13', 13)" onmouseover="showTip(event, 'fs13', 13)" class="i">tok</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs9', 14)" onmouseover="showTip(event, 'fs9', 14)" class="f">gettoken</span>()
+
+        <span class="k">if</span> <span onmouseout="hideTip(event, 'fs13', 15)" onmouseover="showTip(event, 'fs13', 15)" class="i">tok</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs1', 16)" onmouseover="showTip(event, 'fs1', 16)" class="p">END</span> <span class="k">then</span>
+            <span onmouseout="hideTip(event, 'fs3', 17)" onmouseover="showTip(event, 'fs3', 17)" class="p">ACCEPT</span>
+        <span class="k">else</span>
+            <span onmouseout="hideTip(event, 'fs14', 18)" onmouseover="showTip(event, 'fs14', 18)" class="f">update</span> <span onmouseout="hideTip(event, 'fs13', 19)" onmouseover="showTip(event, 'fs13', 19)" class="i">tok</span> <span onmouseout="hideTip(event, 'fs6', 20)" onmouseover="showTip(event, 'fs6', 20)" class="p">Shifting</span>
+
+    <span class="k">and</span> <span onmouseout="hideTip(event, 'fs14', 21)" onmouseover="showTip(event, 'fs14', 21)" class="f">update</span> <span onmouseout="hideTip(event, 'fs13', 22)" onmouseover="showTip(event, 'fs13', 22)" class="i">tok</span> <span onmouseout="hideTip(event, 'fs15', 23)" onmouseover="showTip(event, 'fs15', 23)" class="i">state</span> <span class="o">=</span> 
+        <span class="k">match</span> <span onmouseout="hideTip(event, 'fs15', 24)" onmouseover="showTip(event, 'fs15', 24)" class="i">state</span> <span class="k">with</span>
+        | <span onmouseout="hideTip(event, 'fs6', 25)" onmouseover="showTip(event, 'fs6', 25)" class="p">Shifting</span> <span class="k">-&gt;</span>
+            <span class="k">if</span> <span onmouseout="hideTip(event, 'fs10', 26)" onmouseover="showTip(event, 'fs10', 26)" class="f">shift</span> <span onmouseout="hideTip(event, 'fs13', 27)" onmouseover="showTip(event, 'fs13', 27)" class="i">tok</span> <span class="k">then</span>
+                <span onmouseout="hideTip(event, 'fs12', 28)" onmouseover="showTip(event, 'fs12', 28)" class="f">read</span>()
+            <span class="k">else</span>
+                <span onmouseout="hideTip(event, 'fs14', 29)" onmouseover="showTip(event, 'fs14', 29)" class="f">update</span> <span onmouseout="hideTip(event, 'fs13', 30)" onmouseover="showTip(event, 'fs13', 30)" class="i">tok</span> <span onmouseout="hideTip(event, 'fs7', 31)" onmouseover="showTip(event, 'fs7', 31)" class="p">Reducing</span>
+
+        | <span onmouseout="hideTip(event, 'fs7', 32)" onmouseover="showTip(event, 'fs7', 32)" class="p">Reducing</span> <span class="k">-&gt;</span>
+            <span class="k">if</span> <span onmouseout="hideTip(event, 'fs11', 33)" onmouseover="showTip(event, 'fs11', 33)" class="f">reduce</span> <span onmouseout="hideTip(event, 'fs13', 34)" onmouseover="showTip(event, 'fs13', 34)" class="i">tok</span> <span class="k">then</span>
+                <span onmouseout="hideTip(event, 'fs14', 35)" onmouseover="showTip(event, 'fs14', 35)" class="f">update</span> <span onmouseout="hideTip(event, 'fs13', 36)" onmouseover="showTip(event, 'fs13', 36)" class="i">tok</span> <span onmouseout="hideTip(event, 'fs6', 37)" onmouseover="showTip(event, 'fs6', 37)" class="p">Shifting</span>
+            <span class="k">else</span>
+                <span onmouseout="hideTip(event, 'fs4', 38)" onmouseover="showTip(event, 'fs4', 38)" class="p">ERROR</span>
+    
+    <span onmouseout="hideTip(event, 'fs12', 39)" onmouseover="showTip(event, 'fs12', 39)" class="f">read</span>()
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">union case Token.END: Token</div>
+<div class="tip" id="fs2">type Status =<br />&#160;&#160;| ACCEPT<br />&#160;&#160;| ERROR<br /><br />Full name: Script.Status</div>
+<div class="tip" id="fs3">union case Status.ACCEPT: Status</div>
+<div class="tip" id="fs4">union case Status.ERROR: Status</div>
+<div class="tip" id="fs5">type ParseState =<br />&#160;&#160;| Shifting<br />&#160;&#160;| Reducing<br /><br />Full name: Script.ParseState</div>
+<div class="tip" id="fs6">union case ParseState.Shifting: ParseState</div>
+<div class="tip" id="fs7">union case ParseState.Reducing: ParseState</div>
+<div class="tip" id="fs8">val parse : gettoken:(unit -&gt; Token) -&gt; shift:(Token -&gt; bool) -&gt; reduce:(Token -&gt; bool) -&gt; unit -&gt; Status<br /><br />Full name: Script.parse</div>
+<div class="tip" id="fs9">val gettoken : (unit -&gt; Token)</div>
+<div class="tip" id="fs10">val shift : (Token -&gt; bool)</div>
+<div class="tip" id="fs11">val reduce : (Token -&gt; bool)</div>
+<div class="tip" id="fs12">val read : (unit -&gt; Status)</div>
+<div class="tip" id="fs13">val tok : Token</div>
+<div class="tip" id="fs14">val update : (Token -&gt; ParseState -&gt; Status)</div>
+<div class="tip" id="fs15">val state : ParseState</div>
+

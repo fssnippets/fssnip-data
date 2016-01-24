@@ -1,0 +1,67 @@
+module Configuration =
+    open Nessos.Argu
+    type Config =
+        | [<Mandatory>] Rabbit_Connection of string
+        with 
+            interface IArgParserTemplate with
+                member ec.Usage =
+                    match ec with
+                    | Rabbit_Connection _ -> "specify host name of rabbitmq server"
+
+    let parser = ArgumentParser.Create<Config>()
+
+open System
+open NServiceBus
+
+module Shared =
+    open Configuration
+    let config = parser.Parse()
+    let bus =
+        let bc = BusConfiguration()
+        bc.EndpointName "Here"
+        bc.UseSerialization<JsonSerializer>() |> ignore
+        bc.EnableInstallers()
+        bc.UsePersistence<InMemoryPersistence>() |> ignore
+        bc.UseTransport<RabbitMQTransport>()
+            .DisableCallbackReceiver()
+            .ConnectionString(config.GetResult <@ Rabbit_Connection @>) |> ignore
+        bc.DiscardFailedMessagesInsteadOfSendingToErrorQueue()
+        Bus.Create(bc).Start()
+        
+    type PrintStuff() =
+        member val Message : string = "" with get, set
+        interface ICommand
+
+    type StuffPrinted() =
+        member val Success : bool = false with get, set
+        interface IEvent
+
+module Server =
+    open Shared
+    type PrintHandler(bus : IBus) =
+        interface IHandleMessages<PrintStuff> with
+            member __.Handle(ps) =
+                if not <| ps.Message.Contains "banana" then
+                    printfn "%s" ps.Message
+                    bus.Publish (StuffPrinted(Success = true))
+                else
+                    bus.Publish (StuffPrinted(Success = false))
+
+module Client =
+    open Shared
+    type PrintedHandler() =
+        interface IHandleMessages<StuffPrinted> with
+            member __.Handle(ps) =
+                printfn "Message printed: %b" ps.Success
+
+    let sendPrint message =
+        bus.Send("Here", PrintStuff(Message = message)) |> ignore
+
+Console.ReadLine() |> ignore
+Client.sendPrint "A message"
+Client.sendPrint "And another"
+// This one shouldn't get printed.
+Client.sendPrint "And one with a banana"
+
+Console.ReadLine() |> ignore
+Shared.bus.Dispose()

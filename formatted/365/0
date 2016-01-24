@@ -1,0 +1,193 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+<span class="l">38: </span>
+<span class="l">39: </span>
+<span class="l">40: </span>
+<span class="l">41: </span>
+<span class="l">42: </span>
+<span class="l">43: </span>
+<span class="l">44: </span>
+<span class="l">45: </span>
+<span class="l">46: </span>
+<span class="l">47: </span>
+<span class="l">48: </span>
+<span class="l">49: </span>
+<span class="l">50: </span>
+<span class="l">51: </span>
+<span class="l">52: </span>
+<span class="l">53: </span>
+<span class="l">54: </span>
+<span class="l">55: </span>
+<span class="l">56: </span>
+<span class="l">57: </span>
+<span class="l">58: </span>
+<span class="l">59: </span>
+<span class="l">60: </span>
+<span class="l">61: </span>
+<span class="l">62: </span>
+<span class="l">63: </span>
+<span class="l">64: </span>
+<span class="l">65: </span>
+<span class="l">66: </span>
+<span class="l">67: </span>
+<span class="l">68: </span>
+<span class="l">69: </span>
+<span class="l">70: </span>
+<span class="l">71: </span>
+<span class="l">72: </span>
+<span class="l">73: </span>
+<span class="l">74: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">System</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 2)" onmouseover="showTip(event, 'fs1', 2)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 3)" onmouseover="showTip(event, 'fs2', 3)" class="i">ComponentModel</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 4)" onmouseover="showTip(event, 'fs1', 4)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 5)" onmouseover="showTip(event, 'fs3', 5)" class="i">Threading</span>
+
+<span class="c">/// Executes a computation in a background worker and synchronizes on the result return.  The</span>
+<span class="c">/// computation is started immediately and calling &#39;Value&#39; blocks until the result is ready.</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs4', 6)" onmouseover="showTip(event, 'fs4', 6)" class="t">Future</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">t</span><span class="o">&gt;</span>(<span onmouseout="hideTip(event, 'fs5', 7)" onmouseover="showTip(event, 'fs5', 7)" class="f">f</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs6', 8)" onmouseover="showTip(event, 'fs6', 8)" class="t">unit</span> <span class="k">-&gt;</span> <span class="o">&#39;</span><span class="i">t</span>) <span class="o">=</span>
+    <span class="c">/// Result of the computation on normal exit.</span>
+    <span class="k">let</span> <span class="k">mutable</span> <span onmouseout="hideTip(event, 'fs7', 9)" onmouseover="showTip(event, 'fs7', 9)" class="v">result</span> <span class="o">:</span><span class="o">&#39;</span><span class="i">t</span> <span onmouseout="hideTip(event, 'fs8', 10)" onmouseover="showTip(event, 'fs8', 10)" class="t">option</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs9', 11)" onmouseover="showTip(event, 'fs9', 11)" class="p">None</span>
+    
+    <span class="c">/// Result if an exception was thrown.</span>
+    <span class="k">let</span> <span class="k">mutable</span> <span onmouseout="hideTip(event, 'fs10', 12)" onmouseover="showTip(event, 'fs10', 12)" class="v">ext</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs11', 13)" onmouseover="showTip(event, 'fs11', 13)" class="t">Exception</span> <span onmouseout="hideTip(event, 'fs8', 14)" onmouseover="showTip(event, 'fs8', 14)" class="t">option</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs9', 15)" onmouseover="showTip(event, 'fs9', 15)" class="p">None</span>
+    
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs12', 16)" onmouseover="showTip(event, 'fs12', 16)" class="i">syncRoot</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs13', 17)" onmouseover="showTip(event, 'fs13', 17)" class="t">Object</span>()
+    
+    <span class="c">/// Pulse object used to wait until a result is ready.  ensurePulse() is used so we</span>
+    <span class="c">/// don&#39;t have to create the object if the result is done before it&#39;s needed.</span>
+    <span class="k">let</span> <span class="k">mutable</span> <span onmouseout="hideTip(event, 'fs14', 18)" onmouseover="showTip(event, 'fs14', 18)" class="v">pulse</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs15', 19)" onmouseover="showTip(event, 'fs15', 19)" class="t">ManualResetEvent</span> <span class="o">=</span> <span class="k">null</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs16', 20)" onmouseover="showTip(event, 'fs16', 20)" class="f">ensurePulse</span>() <span class="o">=</span> 
+        <span onmouseout="hideTip(event, 'fs17', 21)" onmouseover="showTip(event, 'fs17', 21)" class="f">lock</span> <span onmouseout="hideTip(event, 'fs12', 22)" onmouseover="showTip(event, 'fs12', 22)" class="i">syncRoot</span> (<span class="k">fun</span> () <span class="k">-&gt;</span>
+            <span class="k">match</span> <span onmouseout="hideTip(event, 'fs14', 23)" onmouseover="showTip(event, 'fs14', 23)" class="v">pulse</span> <span class="k">with</span> 
+            | <span class="k">null</span> <span class="k">-&gt;</span> 
+                <span onmouseout="hideTip(event, 'fs14', 24)" onmouseover="showTip(event, 'fs14', 24)" class="v">pulse</span> <span class="o">&lt;-</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs15', 25)" onmouseover="showTip(event, 'fs15', 25)" class="t">ManualResetEvent</span>(<span class="k">false</span>);
+            | _ <span class="k">-&gt;</span> 
+                ()
+            <span onmouseout="hideTip(event, 'fs14', 26)" onmouseover="showTip(event, 'fs14', 26)" class="v">pulse</span>)
+        
+    <span class="c">/// WARNING: Call once a lock on syncRoot is already held.  Pulses the wait notifier.  Safe if</span>
+    <span class="c">/// called after &#39;pulse&#39; is created but before WaitOne is called.</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs18', 27)" onmouseover="showTip(event, 'fs18', 27)" class="f">notifyWaiters</span>() <span class="o">=</span> <span class="k">if</span> <span onmouseout="hideTip(event, 'fs14', 28)" onmouseover="showTip(event, 'fs14', 28)" class="v">pulse</span> <span class="o">&lt;&gt;</span> <span class="k">null</span> <span class="k">then</span> <span onmouseout="hideTip(event, 'fs14', 29)" onmouseover="showTip(event, 'fs14', 29)" class="v">pulse</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs19', 30)" onmouseover="showTip(event, 'fs19', 30)" class="f">Set</span>() <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs20', 31)" onmouseover="showTip(event, 'fs20', 31)" class="f">ignore</span>
+    
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs21', 32)" onmouseover="showTip(event, 'fs21', 32)" class="i">work</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs22', 33)" onmouseover="showTip(event, 'fs22', 33)" class="t">BackgroundWorker</span>()
+
+    <span class="c">/// On RunWorkerAsync(), run specified function and store result.  All exceptions must be</span>
+    <span class="c">/// trapped.      </span>
+    <span class="k">do</span> <span onmouseout="hideTip(event, 'fs21', 34)" onmouseover="showTip(event, 'fs21', 34)" class="i">work</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs23', 35)" onmouseover="showTip(event, 'fs23', 35)" class="i">DoWork</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs24', 36)" onmouseover="showTip(event, 'fs24', 36)" class="f">Add</span>( <span class="k">fun</span> <span onmouseout="hideTip(event, 'fs25', 37)" onmouseover="showTip(event, 'fs25', 37)" class="i">args</span> <span class="k">-&gt;</span>
+                            <span class="k">try</span> 
+                                <span onmouseout="hideTip(event, 'fs7', 38)" onmouseover="showTip(event, 'fs7', 38)" class="v">result</span> <span class="o">&lt;-</span> <span onmouseout="hideTip(event, 'fs26', 39)" onmouseover="showTip(event, 'fs26', 39)" class="p">Some</span>( <span onmouseout="hideTip(event, 'fs5', 40)" onmouseover="showTip(event, 'fs5', 40)" class="f">f</span>() )
+                            <span class="k">with</span> <span onmouseout="hideTip(event, 'fs27', 41)" onmouseover="showTip(event, 'fs27', 41)" class="i">e</span> <span class="k">-&gt;</span>
+                                <span onmouseout="hideTip(event, 'fs10', 42)" onmouseover="showTip(event, 'fs10', 42)" class="v">ext</span> <span class="o">&lt;-</span> <span onmouseout="hideTip(event, 'fs26', 43)" onmouseover="showTip(event, 'fs26', 43)" class="p">Some</span> <span onmouseout="hideTip(event, 'fs27', 44)" onmouseover="showTip(event, 'fs27', 44)" class="i">e</span>
+                            <span onmouseout="hideTip(event, 'fs17', 45)" onmouseover="showTip(event, 'fs17', 45)" class="f">lock</span> <span onmouseout="hideTip(event, 'fs12', 46)" onmouseover="showTip(event, 'fs12', 46)" class="i">syncRoot</span> ( <span class="k">fun</span> () <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs18', 47)" onmouseover="showTip(event, 'fs18', 47)" class="f">notifyWaiters</span>()) )
+
+    <span class="c">/// Start immediately / automatically.</span>
+    <span class="k">do</span> <span onmouseout="hideTip(event, 'fs21', 48)" onmouseover="showTip(event, 'fs21', 48)" class="i">work</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs28', 49)" onmouseover="showTip(event, 'fs28', 49)" class="f">RunWorkerAsync</span>()
+    
+    <span class="c">/// Returns the value of the computation, blocking if the result isn&#39;t ready yet.</span>
+    <span class="k">member</span> <span onmouseout="hideTip(event, 'fs29', 50)" onmouseover="showTip(event, 'fs29', 50)" class="i">t</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs30', 51)" onmouseover="showTip(event, 'fs30', 51)" class="i">Value</span> <span class="o">=</span>
+        <span class="c">// If available, we can return it right away.</span>
+        <span class="k">match</span> <span onmouseout="hideTip(event, 'fs7', 52)" onmouseover="showTip(event, 'fs7', 52)" class="v">result</span> <span class="k">with</span>
+        | <span onmouseout="hideTip(event, 'fs26', 53)" onmouseover="showTip(event, 'fs26', 53)" class="p">Some</span> <span onmouseout="hideTip(event, 'fs31', 54)" onmouseover="showTip(event, 'fs31', 54)" class="i">x</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs31', 55)" onmouseover="showTip(event, 'fs31', 55)" class="i">x</span>
+        | <span onmouseout="hideTip(event, 'fs9', 56)" onmouseover="showTip(event, 'fs9', 56)" class="p">None</span> <span class="k">when</span> <span onmouseout="hideTip(event, 'fs10', 57)" onmouseover="showTip(event, 'fs10', 57)" class="v">ext</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs32', 58)" onmouseover="showTip(event, 'fs32', 58)" class="i">IsSome</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs33', 59)" onmouseover="showTip(event, 'fs33', 59)" class="f">raise</span> (<span onmouseout="hideTip(event, 'fs34', 60)" onmouseover="showTip(event, 'fs34', 60)" class="t">Option</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs35', 61)" onmouseover="showTip(event, 'fs35', 61)" class="f">get</span> <span onmouseout="hideTip(event, 'fs10', 62)" onmouseover="showTip(event, 'fs10', 62)" class="v">ext</span>)
+        | <span onmouseout="hideTip(event, 'fs9', 63)" onmouseover="showTip(event, 'fs9', 63)" class="p">None</span> <span class="k">-&gt;</span>
+            <span class="k">let</span> <span onmouseout="hideTip(event, 'fs36', 64)" onmouseover="showTip(event, 'fs36', 64)" class="i">p</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs16', 65)" onmouseover="showTip(event, 'fs16', 65)" class="f">ensurePulse</span>()
+            
+            <span class="c">// Check again in case it changed while we were gettting the wait object.</span>
+            <span class="k">match</span> <span onmouseout="hideTip(event, 'fs7', 66)" onmouseover="showTip(event, 'fs7', 66)" class="v">result</span> <span class="k">with</span>
+            | <span onmouseout="hideTip(event, 'fs26', 67)" onmouseover="showTip(event, 'fs26', 67)" class="p">Some</span> <span onmouseout="hideTip(event, 'fs31', 68)" onmouseover="showTip(event, 'fs31', 68)" class="i">x</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs31', 69)" onmouseover="showTip(event, 'fs31', 69)" class="i">x</span>
+            | <span onmouseout="hideTip(event, 'fs9', 70)" onmouseover="showTip(event, 'fs9', 70)" class="p">None</span> <span class="k">-&gt;</span>
+                <span class="c">// Lock-free is ok because if the pulse.Set() method is called between when we</span>
+                <span class="c">// checked &#39;result&#39; and call WaitOne here, WaitOne will return immediately.</span>
+                <span onmouseout="hideTip(event, 'fs36', 71)" onmouseover="showTip(event, 'fs36', 71)" class="i">p</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs37', 72)" onmouseover="showTip(event, 'fs37', 72)" class="f">WaitOne</span>(<span class="n">1000000000</span>) <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs20', 73)" onmouseover="showTip(event, 'fs20', 73)" class="f">ignore</span>
+                <span class="k">match</span> <span onmouseout="hideTip(event, 'fs7', 74)" onmouseover="showTip(event, 'fs7', 74)" class="v">result</span> <span class="k">with</span>
+                | <span onmouseout="hideTip(event, 'fs26', 75)" onmouseover="showTip(event, 'fs26', 75)" class="p">Some</span> <span onmouseout="hideTip(event, 'fs31', 76)" onmouseover="showTip(event, 'fs31', 76)" class="i">x</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs31', 77)" onmouseover="showTip(event, 'fs31', 77)" class="i">x</span>
+                | <span onmouseout="hideTip(event, 'fs9', 78)" onmouseover="showTip(event, 'fs9', 78)" class="p">None</span> <span class="k">-&gt;</span>
+                    <span class="k">if</span> <span onmouseout="hideTip(event, 'fs10', 79)" onmouseover="showTip(event, 'fs10', 79)" class="v">ext</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs32', 80)" onmouseover="showTip(event, 'fs32', 80)" class="i">IsSome</span> <span class="k">then</span> <span onmouseout="hideTip(event, 'fs33', 81)" onmouseover="showTip(event, 'fs33', 81)" class="f">raise</span> (<span onmouseout="hideTip(event, 'fs34', 82)" onmouseover="showTip(event, 'fs34', 82)" class="t">Option</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs35', 83)" onmouseover="showTip(event, 'fs35', 83)" class="f">get</span> <span onmouseout="hideTip(event, 'fs10', 84)" onmouseover="showTip(event, 'fs10', 84)" class="v">ext</span>)
+                    <span class="k">else</span> <span onmouseout="hideTip(event, 'fs38', 85)" onmouseover="showTip(event, 'fs38', 85)" class="f">failwith</span> <span class="s">&quot;Future computation failed.&quot;</span>
+
+    <span class="c">/// Returns true if the computation is finished, false if not.</span>
+    <span class="k">member</span> <span onmouseout="hideTip(event, 'fs29', 86)" onmouseover="showTip(event, 'fs29', 86)" class="i">t</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs39', 87)" onmouseover="showTip(event, 'fs39', 87)" class="i">IsComplete</span> <span class="o">=</span>
+        <span class="k">match</span> <span onmouseout="hideTip(event, 'fs7', 88)" onmouseover="showTip(event, 'fs7', 88)" class="v">result</span> <span class="k">with</span>
+        | <span onmouseout="hideTip(event, 'fs26', 89)" onmouseover="showTip(event, 'fs26', 89)" class="p">Some</span> <span onmouseout="hideTip(event, 'fs31', 90)" onmouseover="showTip(event, 'fs31', 90)" class="i">x</span> <span class="k">-&gt;</span> <span class="k">true</span>
+        | <span onmouseout="hideTip(event, 'fs9', 91)" onmouseover="showTip(event, 'fs9', 91)" class="p">None</span> <span class="k">when</span> <span onmouseout="hideTip(event, 'fs34', 92)" onmouseover="showTip(event, 'fs34', 92)" class="t">Option</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs40', 93)" onmouseover="showTip(event, 'fs40', 93)" class="f">isSome</span> <span onmouseout="hideTip(event, 'fs10', 94)" onmouseover="showTip(event, 'fs10', 94)" class="v">ext</span> <span class="k">-&gt;</span> <span class="k">true</span>
+        | <span onmouseout="hideTip(event, 'fs9', 95)" onmouseover="showTip(event, 'fs9', 95)" class="p">None</span> <span class="k">-&gt;</span> <span class="k">false</span>
+    
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace System</div>
+<div class="tip" id="fs2">namespace System.ComponentModel</div>
+<div class="tip" id="fs3">namespace System.Threading</div>
+<div class="tip" id="fs4">Multiple items<br />type Future&lt;&#39;t&gt; =<br />&#160;&#160;new : f:(unit -&gt; &#39;t) -&gt; Future&lt;&#39;t&gt;<br />&#160;&#160;member IsComplete : bool<br />&#160;&#160;member Value : &#39;t<br /><br />Full name: Script.Future&lt;_&gt;<br /><em><br /><br />&#160;Executes a computation in a background worker and synchronizes on the result return.  The<br />&#160;computation is started immediately and calling &#39;Value&#39; blocks until the result is ready.</em><br /><br />--------------------<br />new : f:(unit -&gt; &#39;t) -&gt; Future&lt;&#39;t&gt;</div>
+<div class="tip" id="fs5">val f : (unit -&gt; &#39;t)</div>
+<div class="tip" id="fs6">type unit = Unit<br /><br />Full name: Microsoft.FSharp.Core.unit</div>
+<div class="tip" id="fs7">val mutable result : &#39;t option<br /><em><br /><br />&#160;Result of the computation on normal exit.</em></div>
+<div class="tip" id="fs8">type &#39;T option = Option&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Core.option&lt;_&gt;</div>
+<div class="tip" id="fs9">union case Option.None: Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs10">val mutable ext : Exception option<br /><em><br /><br />&#160;Result if an exception was thrown.</em></div>
+<div class="tip" id="fs11">Multiple items<br />type Exception =<br />&#160;&#160;new : unit -&gt; Exception + 2 overloads<br />&#160;&#160;member Data : IDictionary<br />&#160;&#160;member GetBaseException : unit -&gt; Exception<br />&#160;&#160;member GetObjectData : info:SerializationInfo * context:StreamingContext -&gt; unit<br />&#160;&#160;member GetType : unit -&gt; Type<br />&#160;&#160;member HelpLink : string with get, set<br />&#160;&#160;member InnerException : Exception<br />&#160;&#160;member Message : string<br />&#160;&#160;member Source : string with get, set<br />&#160;&#160;member StackTrace : string<br />&#160;&#160;...<br /><br />Full name: System.Exception<br /><br />--------------------<br />Exception() : unit<br />Exception(message: string) : unit<br />Exception(message: string, innerException: exn) : unit</div>
+<div class="tip" id="fs12">val syncRoot : Object</div>
+<div class="tip" id="fs13">Multiple items<br />type Object =<br />&#160;&#160;new : unit -&gt; obj<br />&#160;&#160;member Equals : obj:obj -&gt; bool<br />&#160;&#160;member GetHashCode : unit -&gt; int<br />&#160;&#160;member GetType : unit -&gt; Type<br />&#160;&#160;member ToString : unit -&gt; string<br />&#160;&#160;static member Equals : objA:obj * objB:obj -&gt; bool<br />&#160;&#160;static member ReferenceEquals : objA:obj * objB:obj -&gt; bool<br /><br />Full name: System.Object<br /><br />--------------------<br />Object() : unit</div>
+<div class="tip" id="fs14">val mutable pulse : ManualResetEvent<br /><em><br /><br />&#160;Pulse object used to wait until a result is ready.  ensurePulse() is used so we<br />&#160;don&#39;t have to create the object if the result is done before it&#39;s needed.</em></div>
+<div class="tip" id="fs15">Multiple items<br />type ManualResetEvent =<br />&#160;&#160;inherit EventWaitHandle<br />&#160;&#160;new : initialState:bool -&gt; ManualResetEvent<br /><br />Full name: System.Threading.ManualResetEvent<br /><br />--------------------<br />ManualResetEvent(initialState: bool) : unit</div>
+<div class="tip" id="fs16">val ensurePulse : (unit -&gt; ManualResetEvent)</div>
+<div class="tip" id="fs17">val lock : lockObject:&#39;Lock -&gt; action:(unit -&gt; &#39;T) -&gt; &#39;T (requires reference type)<br /><br />Full name: Microsoft.FSharp.Core.Operators.lock</div>
+<div class="tip" id="fs18">val notifyWaiters : (unit -&gt; unit)<br /><em><br /><br />&#160;WARNING: Call once a lock on syncRoot is already held.  Pulses the wait notifier.  Safe if<br />&#160;called after &#39;pulse&#39; is created but before WaitOne is called.</em></div>
+<div class="tip" id="fs19">EventWaitHandle.Set() : bool</div>
+<div class="tip" id="fs20">val ignore : value:&#39;T -&gt; unit<br /><br />Full name: Microsoft.FSharp.Core.Operators.ignore</div>
+<div class="tip" id="fs21">val work : BackgroundWorker</div>
+<div class="tip" id="fs22">Multiple items<br />type BackgroundWorker =<br />&#160;&#160;inherit Component<br />&#160;&#160;new : unit -&gt; BackgroundWorker<br />&#160;&#160;member CancelAsync : unit -&gt; unit<br />&#160;&#160;member CancellationPending : bool<br />&#160;&#160;member IsBusy : bool<br />&#160;&#160;member ReportProgress : percentProgress:int -&gt; unit + 1 overload<br />&#160;&#160;member RunWorkerAsync : unit -&gt; unit + 1 overload<br />&#160;&#160;member WorkerReportsProgress : bool with get, set<br />&#160;&#160;member WorkerSupportsCancellation : bool with get, set<br />&#160;&#160;event DoWork : DoWorkEventHandler<br />&#160;&#160;event ProgressChanged : ProgressChangedEventHandler<br />&#160;&#160;...<br /><br />Full name: System.ComponentModel.BackgroundWorker<br /><br />--------------------<br />BackgroundWorker() : unit</div>
+<div class="tip" id="fs23">event BackgroundWorker.DoWork: IEvent&lt;DoWorkEventHandler,DoWorkEventArgs&gt;</div>
+<div class="tip" id="fs24">member IObservable.Add : callback:(&#39;T -&gt; unit) -&gt; unit</div>
+<div class="tip" id="fs25">val args : DoWorkEventArgs</div>
+<div class="tip" id="fs26">union case Option.Some: Value: &#39;T -&gt; Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs27">val e : exn</div>
+<div class="tip" id="fs28">BackgroundWorker.RunWorkerAsync() : unit<br />BackgroundWorker.RunWorkerAsync(argument: obj) : unit</div>
+<div class="tip" id="fs29">val t : Future&lt;&#39;t&gt;</div>
+<div class="tip" id="fs30">member Future.Value : &#39;t<br /><br />Full name: Script.Future`1.Value<br /><em><br /><br />&#160;On RunWorkerAsync(), run specified function and store result.  All exceptions must be<br />&#160;trapped.      <br />&#160;Start immediately / automatically.<br />&#160;Returns the value of the computation, blocking if the result isn&#39;t ready yet.</em></div>
+<div class="tip" id="fs31">val x : &#39;t</div>
+<div class="tip" id="fs32">property Option.IsSome: bool</div>
+<div class="tip" id="fs33">val raise : exn:Exception -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.Operators.raise</div>
+<div class="tip" id="fs34">module Option<br /><br />from Microsoft.FSharp.Core</div>
+<div class="tip" id="fs35">val get : option:&#39;T option -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.Option.get</div>
+<div class="tip" id="fs36">val p : ManualResetEvent</div>
+<div class="tip" id="fs37">WaitHandle.WaitOne() : bool<br />WaitHandle.WaitOne(timeout: TimeSpan) : bool<br />WaitHandle.WaitOne(millisecondsTimeout: int) : bool<br />WaitHandle.WaitOne(timeout: TimeSpan, exitContext: bool) : bool<br />WaitHandle.WaitOne(millisecondsTimeout: int, exitContext: bool) : bool</div>
+<div class="tip" id="fs38">val failwith : message:string -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.Operators.failwith</div>
+<div class="tip" id="fs39">member Future.IsComplete : bool<br /><br />Full name: Script.Future`1.IsComplete<br /><em><br /><br />&#160;Returns true if the computation is finished, false if not.</em></div>
+<div class="tip" id="fs40">val isSome : option:&#39;T option -&gt; bool<br /><br />Full name: Microsoft.FSharp.Core.Option.isSome</div>
+

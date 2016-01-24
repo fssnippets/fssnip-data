@@ -1,0 +1,77 @@
+let americanSoundex (x : string) = 
+    let toString (xs : char list) = new System.String(xs |> Array.ofList)
+    let _americanSoundex =
+        let toUpper (x : string) = x.ToUpper()
+        let toArray (x : string) = x.ToCharArray()
+
+        let f1 ch = 
+            match ch with
+            | 'H' | 'W' -> false
+            | _ -> true
+
+        let f2 ch =
+            match ch with
+            | 'B' | 'F' | 'P' | 'V' -> '1'
+            | 'C' | 'G' | 'J' | 'K' | 'Q' | 'S' | 'X' | 'Z' -> '2'
+            | 'D' | 'T' -> '3'
+            | 'L' -> '4'        
+            | 'M' | 'N' -> '5'
+            | 'R' -> '6'
+            | _ -> ch
+
+        let rec f3 xs =
+            match xs with
+            | h0 :: h1 :: t -> h0 :: f3 (if (h0 = h1) then t else (h1 :: t))
+            | h :: _ -> [h]
+            | _ -> []
+
+        let f4 ch = 
+            match ch with
+            | 'A' | 'E' | 'I' | 'O' | 'U' | 'Y' -> false
+            | _ -> true
+
+        let f5 ch first =
+            if ('0' <= ch && ch <= '9') then first
+            else ch
+
+        let f6 xs =
+            let len = List.length xs
+            seq{for i = 0 to 3 - len do yield '0'} 
+                |> Seq.append (xs |> Seq.take (System.Math.Min(4, len)))
+                |> Seq.toList
+
+        let a = x |> toUpper |> toArray |> Array.toList
+        let b = a |> List.filter f1 //1
+        let c = b |> List.map f2 //2
+        let d = c |> f3 //3
+        let e = d |> List.tail |> List.filter f4 //4
+        let f = f5 (d |> List.head) (a |> List.head) :: e //5
+        f6 f //6
+    
+    if (x.Length > 0) then toString(_americanSoundex) 
+    else "0000"
+
+["Robert"; "Rupert"; "Robbert"; "Rubin"; 
+ "Beer"; "Bear"; "Bearer"; 
+ "Smith"; "Smyth";
+ "Ashcraft"; "Ashcroft";
+  "Tymczak"; "Pfister"] 
+ |> List.map (fun x -> (x, americanSoundex x)) |> List.iter (fun (x, y) -> printfn "%-8s = %s" x y)
+
+(*
+
+Robert   = R163
+Rupert   = R163
+Robbert  = R163
+Rubin    = R150
+Beer     = B600
+Bear     = B600
+Bearer   = B660
+Smith    = S530
+Smyth    = S530
+Ashcraft = A261
+Ashcroft = A261
+Tymczak  = T522
+Pfister  = P236
+
+*)

@@ -1,0 +1,112 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+<span class="l">38: </span>
+<span class="l">39: </span>
+<span class="l">40: </span>
+<span class="l">41: </span>
+<span class="l">42: </span>
+<span class="l">43: </span>
+<span class="l">44: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">// Note that this is incorrect. </span>
+
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">System</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 2)" onmouseover="showTip(event, 'fs1', 2)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 3)" onmouseover="showTip(event, 'fs2', 3)" class="i">Linq</span>
+
+<span class="k">module</span> <span onmouseout="hideTip(event, 'fs3', 4)" onmouseover="showTip(event, 'fs3', 4)" class="t">Seq</span> <span class="o">=</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs4', 5)" onmouseover="showTip(event, 'fs4', 5)" class="f">catchExceptions</span> <span onmouseout="hideTip(event, 'fs5', 6)" onmouseover="showTip(event, 'fs5', 6)" class="f">handler</span> (<span onmouseout="hideTip(event, 'fs6', 7)" onmouseover="showTip(event, 'fs6', 7)" class="i">sequence</span><span class="o">:</span> _ <span onmouseout="hideTip(event, 'fs7', 8)" onmouseover="showTip(event, 'fs7', 8)" class="t">seq</span>) <span class="o">=</span>
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs8', 9)" onmouseover="showTip(event, 'fs8', 9)" class="i">e</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs6', 10)" onmouseover="showTip(event, 'fs6', 10)" class="i">sequence</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs9', 11)" onmouseover="showTip(event, 'fs9', 11)" class="f">GetEnumerator</span>()
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs10', 12)" onmouseover="showTip(event, 'fs10', 12)" class="f">evaluateNext</span> () <span class="o">=</span> 
+            <span class="k">try</span> <span onmouseout="hideTip(event, 'fs11', 13)" onmouseover="showTip(event, 'fs11', 13)" class="p">Some</span> (<span onmouseout="hideTip(event, 'fs8', 14)" onmouseover="showTip(event, 'fs8', 14)" class="i">e</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs12', 15)" onmouseover="showTip(event, 'fs12', 15)" class="i">Current</span>)
+            <span class="k">with</span> <span onmouseout="hideTip(event, 'fs13', 16)" onmouseover="showTip(event, 'fs13', 16)" class="i">ex</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs5', 17)" onmouseover="showTip(event, 'fs5', 17)" class="f">handler</span> <span onmouseout="hideTip(event, 'fs13', 18)" onmouseover="showTip(event, 'fs13', 18)" class="i">ex</span> 
+        <span onmouseout="hideTip(event, 'fs7', 19)" onmouseover="showTip(event, 'fs7', 19)" class="i">seq</span> { <span class="k">while</span> <span onmouseout="hideTip(event, 'fs8', 20)" onmouseover="showTip(event, 'fs8', 20)" class="i">e</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs14', 21)" onmouseover="showTip(event, 'fs14', 21)" class="f">MoveNext</span>() <span class="k">do</span>
+                  <span class="k">match</span> <span onmouseout="hideTip(event, 'fs10', 22)" onmouseover="showTip(event, 'fs10', 22)" class="f">evaluateNext</span>() <span class="k">with</span>
+                  | <span onmouseout="hideTip(event, 'fs11', 23)" onmouseover="showTip(event, 'fs11', 23)" class="p">Some</span> (<span onmouseout="hideTip(event, 'fs15', 24)" onmouseover="showTip(event, 'fs15', 24)" class="i">item</span>) <span class="k">-&gt;</span> <span class="k">yield</span> <span onmouseout="hideTip(event, 'fs15', 25)" onmouseover="showTip(event, 'fs15', 25)" class="i">item</span> 
+                  | <span onmouseout="hideTip(event, 'fs16', 26)" onmouseover="showTip(event, 'fs16', 26)" class="p">None</span> <span class="k">-&gt;</span> () }
+
+<span class="c">// Won&#39;t work because e.MoveNext() is actually where the exception would be thrown.</span>
+<span class="c">// So I tried:</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs17', 27)" onmouseover="showTip(event, 'fs17', 27)" class="f">catchExceptions</span> <span onmouseout="hideTip(event, 'fs18', 28)" onmouseover="showTip(event, 'fs18', 28)" class="f">handler</span> (<span onmouseout="hideTip(event, 'fs6', 29)" onmouseover="showTip(event, 'fs6', 29)" class="i">sequence</span><span class="o">:</span> _ <span onmouseout="hideTip(event, 'fs7', 30)" onmouseover="showTip(event, 'fs7', 30)" class="t">seq</span>) <span class="o">=</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs8', 31)" onmouseover="showTip(event, 'fs8', 31)" class="i">e</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs6', 32)" onmouseover="showTip(event, 'fs6', 32)" class="i">sequence</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs9', 33)" onmouseover="showTip(event, 'fs9', 33)" class="f">GetEnumerator</span>()
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs19', 34)" onmouseover="showTip(event, 'fs19', 34)" class="f">safeMoveNext</span>() <span class="o">=</span> 
+        <span class="k">try</span>
+            <span onmouseout="hideTip(event, 'fs8', 35)" onmouseover="showTip(event, 'fs8', 35)" class="i">e</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs14', 36)" onmouseover="showTip(event, 'fs14', 36)" class="f">MoveNext</span>() 
+        <span class="k">with</span> <span onmouseout="hideTip(event, 'fs13', 37)" onmouseover="showTip(event, 'fs13', 37)" class="i">ex</span> <span class="k">-&gt;</span> 
+            <span onmouseout="hideTip(event, 'fs18', 38)" onmouseover="showTip(event, 'fs18', 38)" class="f">handler</span> <span onmouseout="hideTip(event, 'fs13', 39)" onmouseover="showTip(event, 'fs13', 39)" class="i">ex</span>
+            <span class="k">true</span>
+    <span onmouseout="hideTip(event, 'fs7', 40)" onmouseover="showTip(event, 'fs7', 40)" class="i">seq</span> { 
+        <span class="k">while</span> <span onmouseout="hideTip(event, 'fs19', 41)" onmouseover="showTip(event, 'fs19', 41)" class="f">safeMoveNext</span>() <span class="k">do</span>
+            <span class="k">yield</span> <span onmouseout="hideTip(event, 'fs8', 42)" onmouseover="showTip(event, 'fs8', 42)" class="i">e</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs12', 43)" onmouseover="showTip(event, 'fs12', 43)" class="i">Current</span>
+    }
+
+<span class="c">// This is closer, but also doesn&#39;t work.  </span>
+<span class="c">// It turns out that if F#&#39;s seq e.MoveNext() implementation throws an exception </span>
+<span class="c">// it does not advance to the next element.  This makes it effectively call </span>
+<span class="c">// the handler over and over ad infinitum. </span>
+
+<span class="c">// I haven&#39;t been able to find anything about what IEnumerator should do in </span>
+<span class="c">// this case, so it&#39;s not really a bug. A bit disappointing that you have to make</span>
+<span class="c">// sure all exceptions are handled up front when you parallelize though.</span>
+
+<span class="c">// Ah well, better luck next time :)</span>
+
+ 
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace System</div>
+<div class="tip" id="fs2">namespace System.Linq</div>
+<div class="tip" id="fs3">module Seq<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs4">val catchExceptions : handler:(exn -&gt; &#39;a option) -&gt; sequence:seq&lt;&#39;a&gt; -&gt; seq&lt;&#39;a&gt;<br /><br />Full name: Script.Seq.catchExceptions</div>
+<div class="tip" id="fs5">val handler : (exn -&gt; &#39;a option)</div>
+<div class="tip" id="fs6">val sequence : seq&lt;&#39;a&gt;</div>
+<div class="tip" id="fs7">Multiple items<br />val seq : sequence:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Core.Operators.seq<br /><br />--------------------<br />type seq&lt;&#39;T&gt; = Collections.Generic.IEnumerable&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.seq&lt;_&gt;</div>
+<div class="tip" id="fs8">val e : Collections.Generic.IEnumerator&lt;&#39;a&gt;</div>
+<div class="tip" id="fs9">Collections.Generic.IEnumerable.GetEnumerator() : Collections.Generic.IEnumerator&lt;&#39;a&gt;</div>
+<div class="tip" id="fs10">val evaluateNext : (unit -&gt; &#39;a option)</div>
+<div class="tip" id="fs11">union case Option.Some: Value: &#39;T -&gt; Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs12">property Collections.Generic.IEnumerator.Current: &#39;a</div>
+<div class="tip" id="fs13">val ex : exn</div>
+<div class="tip" id="fs14">Collections.IEnumerator.MoveNext() : bool</div>
+<div class="tip" id="fs15">val item : &#39;a</div>
+<div class="tip" id="fs16">union case Option.None: Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs17">val catchExceptions : handler:(exn -&gt; unit) -&gt; sequence:seq&lt;&#39;a&gt; -&gt; seq&lt;&#39;a&gt;<br /><br />Full name: Script.catchExceptions</div>
+<div class="tip" id="fs18">val handler : (exn -&gt; unit)</div>
+<div class="tip" id="fs19">val safeMoveNext : (unit -&gt; bool)</div>
+

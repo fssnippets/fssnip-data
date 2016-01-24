@@ -1,0 +1,103 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+<span class="l">38: </span>
+<span class="l">39: </span>
+<span class="l">40: </span>
+<span class="l">41: </span>
+<span class="l">42: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">//Example solver for x + y = z</span>
+
+<span class="c">//Input parameters</span>
+<span class="k">type</span> <span class="t">Equation</span> <span class="o">=</span>
+   { <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">X</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="t">int</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="t">option</span>;
+     <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="i">Y</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs2', 5)" onmouseover="showTip(event, 'fs2', 5)" class="t">int</span> <span onmouseout="hideTip(event, 'fs3', 6)" onmouseover="showTip(event, 'fs3', 6)" class="t">option</span>;
+     <span onmouseout="hideTip(event, 'fs5', 7)" onmouseover="showTip(event, 'fs5', 7)" class="i">Z</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs2', 8)" onmouseover="showTip(event, 'fs2', 8)" class="t">int</span> <span onmouseout="hideTip(event, 'fs3', 9)" onmouseover="showTip(event, 'fs3', 9)" class="t">option</span>; }
+
+<span class="c">//Input values</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs6', 10)" onmouseover="showTip(event, 'fs6', 10)" class="i">equation</span> <span class="o">=</span>
+  { <span onmouseout="hideTip(event, 'fs1', 11)" onmouseover="showTip(event, 'fs1', 11)" class="i">X</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs7', 12)" onmouseover="showTip(event, 'fs7', 12)" class="p">None</span>;
+    <span onmouseout="hideTip(event, 'fs4', 13)" onmouseover="showTip(event, 'fs4', 13)" class="i">Y</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs7', 14)" onmouseover="showTip(event, 'fs7', 14)" class="p">None</span>;
+    <span onmouseout="hideTip(event, 'fs5', 15)" onmouseover="showTip(event, 'fs5', 15)" class="i">Z</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs7', 16)" onmouseover="showTip(event, 'fs7', 16)" class="p">None</span>; }
+
+<span class="c">//Each manipulation of x + y = z with all cases for too much or not enough provided information provided</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs8', 17)" onmouseover="showTip(event, 'fs8', 17)" class="f">solveUnknown</span> <span onmouseout="hideTip(event, 'fs9', 18)" onmouseover="showTip(event, 'fs9', 18)" class="i">eq</span> <span class="o">=</span>
+    <span class="k">match</span> <span onmouseout="hideTip(event, 'fs9', 19)" onmouseover="showTip(event, 'fs9', 19)" class="i">eq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs1', 20)" onmouseover="showTip(event, 'fs1', 20)" class="i">X</span> <span class="k">with</span> 
+    | <span onmouseout="hideTip(event, 'fs10', 21)" onmouseover="showTip(event, 'fs10', 21)" class="p">Some</span> <span onmouseout="hideTip(event, 'fs11', 22)" onmouseover="showTip(event, 'fs11', 22)" class="i">x</span> <span class="k">-&gt;</span>
+      <span class="k">match</span> <span onmouseout="hideTip(event, 'fs9', 23)" onmouseover="showTip(event, 'fs9', 23)" class="i">eq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs4', 24)" onmouseover="showTip(event, 'fs4', 24)" class="i">Y</span> <span class="k">with</span>
+      | <span onmouseout="hideTip(event, 'fs10', 25)" onmouseover="showTip(event, 'fs10', 25)" class="p">Some</span> <span onmouseout="hideTip(event, 'fs12', 26)" onmouseover="showTip(event, 'fs12', 26)" class="i">y</span> <span class="k">-&gt;</span>
+        <span class="k">match</span> <span onmouseout="hideTip(event, 'fs9', 27)" onmouseover="showTip(event, 'fs9', 27)" class="i">eq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs5', 28)" onmouseover="showTip(event, 'fs5', 28)" class="i">Z</span> <span class="k">with</span>
+        | <span onmouseout="hideTip(event, 'fs10', 29)" onmouseover="showTip(event, 'fs10', 29)" class="p">Some</span> <span onmouseout="hideTip(event, 'fs13', 30)" onmouseover="showTip(event, 'fs13', 30)" class="i">z</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs14', 31)" onmouseover="showTip(event, 'fs14', 31)" class="f">printfn</span> <span class="s">&quot;Too much info was provided&quot;</span>
+        | <span onmouseout="hideTip(event, 'fs7', 32)" onmouseover="showTip(event, 'fs7', 32)" class="p">None</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs14', 33)" onmouseover="showTip(event, 'fs14', 33)" class="f">printfn</span> <span class="s">&quot;x + y = </span><span class="pf">%d</span><span class="s">&quot;</span> (<span onmouseout="hideTip(event, 'fs11', 34)" onmouseover="showTip(event, 'fs11', 34)" class="i">x</span> <span class="o">+</span> <span onmouseout="hideTip(event, 'fs12', 35)" onmouseover="showTip(event, 'fs12', 35)" class="i">y</span>)
+      | <span onmouseout="hideTip(event, 'fs7', 36)" onmouseover="showTip(event, 'fs7', 36)" class="p">None</span> <span class="k">-&gt;</span> 
+        <span class="k">match</span> <span onmouseout="hideTip(event, 'fs9', 37)" onmouseover="showTip(event, 'fs9', 37)" class="i">eq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs5', 38)" onmouseover="showTip(event, 'fs5', 38)" class="i">Z</span> <span class="k">with</span>
+        | <span onmouseout="hideTip(event, 'fs10', 39)" onmouseover="showTip(event, 'fs10', 39)" class="p">Some</span> <span onmouseout="hideTip(event, 'fs13', 40)" onmouseover="showTip(event, 'fs13', 40)" class="i">z</span> <span class="k">-&gt;</span>
+          <span onmouseout="hideTip(event, 'fs14', 41)" onmouseover="showTip(event, 'fs14', 41)" class="f">printfn</span> <span class="s">&quot;z - x = </span><span class="pf">%d</span><span class="s">&quot;</span> (<span onmouseout="hideTip(event, 'fs13', 42)" onmouseover="showTip(event, 'fs13', 42)" class="i">z</span> <span class="o">-</span> <span onmouseout="hideTip(event, 'fs11', 43)" onmouseover="showTip(event, 'fs11', 43)" class="i">x</span>)
+        | <span onmouseout="hideTip(event, 'fs7', 44)" onmouseover="showTip(event, 'fs7', 44)" class="p">None</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs14', 45)" onmouseover="showTip(event, 'fs14', 45)" class="f">printfn</span> <span class="s">&quot;only x(</span><span class="pf">%d</span><span class="s">) was provided&quot;</span> <span onmouseout="hideTip(event, 'fs11', 46)" onmouseover="showTip(event, 'fs11', 46)" class="i">x</span>
+    | <span onmouseout="hideTip(event, 'fs7', 47)" onmouseover="showTip(event, 'fs7', 47)" class="p">None</span> <span class="k">-&gt;</span> 
+      <span class="k">match</span> <span onmouseout="hideTip(event, 'fs9', 48)" onmouseover="showTip(event, 'fs9', 48)" class="i">eq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs4', 49)" onmouseover="showTip(event, 'fs4', 49)" class="i">Y</span> <span class="k">with</span>
+      | <span onmouseout="hideTip(event, 'fs10', 50)" onmouseover="showTip(event, 'fs10', 50)" class="p">Some</span> <span onmouseout="hideTip(event, 'fs12', 51)" onmouseover="showTip(event, 'fs12', 51)" class="i">y</span> <span class="k">-&gt;</span> 
+        <span class="k">match</span> <span onmouseout="hideTip(event, 'fs9', 52)" onmouseover="showTip(event, 'fs9', 52)" class="i">eq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs5', 53)" onmouseover="showTip(event, 'fs5', 53)" class="i">Z</span> <span class="k">with</span>
+        | <span onmouseout="hideTip(event, 'fs10', 54)" onmouseover="showTip(event, 'fs10', 54)" class="p">Some</span> <span onmouseout="hideTip(event, 'fs13', 55)" onmouseover="showTip(event, 'fs13', 55)" class="i">z</span> <span class="k">-&gt;</span> 
+          <span onmouseout="hideTip(event, 'fs14', 56)" onmouseover="showTip(event, 'fs14', 56)" class="f">printfn</span> <span class="s">&quot;z - y = </span><span class="pf">%d</span><span class="s">&quot;</span> (<span onmouseout="hideTip(event, 'fs13', 57)" onmouseover="showTip(event, 'fs13', 57)" class="i">z</span> <span class="o">-</span> <span onmouseout="hideTip(event, 'fs12', 58)" onmouseover="showTip(event, 'fs12', 58)" class="i">y</span>)
+        | <span onmouseout="hideTip(event, 'fs7', 59)" onmouseover="showTip(event, 'fs7', 59)" class="p">None</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs14', 60)" onmouseover="showTip(event, 'fs14', 60)" class="f">printfn</span> <span class="s">&quot; only y(</span><span class="pf">%d</span><span class="s">) was provided&quot;</span> <span onmouseout="hideTip(event, 'fs12', 61)" onmouseover="showTip(event, 'fs12', 61)" class="i">y</span>
+      | <span onmouseout="hideTip(event, 'fs7', 62)" onmouseover="showTip(event, 'fs7', 62)" class="p">None</span> <span class="k">-&gt;</span>
+        <span class="k">match</span> <span onmouseout="hideTip(event, 'fs9', 63)" onmouseover="showTip(event, 'fs9', 63)" class="i">eq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs5', 64)" onmouseover="showTip(event, 'fs5', 64)" class="i">Z</span> <span class="k">with</span>
+        | <span onmouseout="hideTip(event, 'fs10', 65)" onmouseover="showTip(event, 'fs10', 65)" class="p">Some</span> <span onmouseout="hideTip(event, 'fs13', 66)" onmouseover="showTip(event, 'fs13', 66)" class="i">z</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs14', 67)" onmouseover="showTip(event, 'fs14', 67)" class="f">printfn</span> <span class="s">&quot;only z(</span><span class="pf">%d</span><span class="s">) was provided&quot;</span> <span onmouseout="hideTip(event, 'fs13', 68)" onmouseover="showTip(event, 'fs13', 68)" class="i">z</span>
+        | <span onmouseout="hideTip(event, 'fs7', 69)" onmouseover="showTip(event, 'fs7', 69)" class="p">None</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs14', 70)" onmouseover="showTip(event, 'fs14', 70)" class="f">printfn</span> <span class="s">&quot;no info was given&quot;</span>;;
+
+<span class="c">//Execute the equation</span>
+<span onmouseout="hideTip(event, 'fs8', 71)" onmouseover="showTip(event, 'fs8', 71)" class="f">solveUnknown</span> <span onmouseout="hideTip(event, 'fs6', 72)" onmouseover="showTip(event, 'fs6', 72)" class="i">equation</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">Equation.X: int option</div>
+<div class="tip" id="fs2">Multiple items<br />val int : value:&#39;T -&gt; int (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.int<br /><br />--------------------<br />type int = int32<br /><br />Full name: Microsoft.FSharp.Core.int<br /><br />--------------------<br />type int&lt;&#39;Measure&gt; = int<br /><br />Full name: Microsoft.FSharp.Core.int&lt;_&gt;</div>
+<div class="tip" id="fs3">type &#39;T option = Option&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Core.option&lt;_&gt;</div>
+<div class="tip" id="fs4">Equation.Y: int option</div>
+<div class="tip" id="fs5">Equation.Z: int option</div>
+<div class="tip" id="fs6">val equation : Equation<br /><br />Full name: Script.equation</div>
+<div class="tip" id="fs7">union case Option.None: Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs8">val solveUnknown : eq:Equation -&gt; unit<br /><br />Full name: Script.solveUnknown</div>
+<div class="tip" id="fs9">val eq : Equation</div>
+<div class="tip" id="fs10">union case Option.Some: Value: &#39;T -&gt; Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs11">val x : int</div>
+<div class="tip" id="fs12">val y : int</div>
+<div class="tip" id="fs13">val z : int</div>
+<div class="tip" id="fs14">val printfn : format:Printf.TextWriterFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.printfn</div>
+

@@ -1,0 +1,128 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+<span class="l">38: </span>
+<span class="l">39: </span>
+<span class="l">40: </span>
+<span class="l">41: </span>
+<span class="l">42: </span>
+<span class="l">43: </span>
+<span class="l">44: </span>
+<span class="l">45: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">Collections</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="i">Generic</span>
+
+<span class="c">/// The agent handles two kind of messages - the &#39;Start&#39; message is sent</span>
+<span class="c">/// when the caller wants to start a new work item. The &#39;Finished&#39; message</span>
+<span class="c">/// is sent (by the agent itself) when one work item is completed.</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="t">LimitAgentMessage</span> <span class="o">=</span> 
+  | <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="p">Start</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="t">Async</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs7', 7)" onmouseover="showTip(event, 'fs7', 7)" class="t">unit</span><span class="o">&gt;</span>
+  | <span onmouseout="hideTip(event, 'fs8', 8)" onmouseover="showTip(event, 'fs8', 8)" class="p">Finished</span>
+
+<span class="c">/// A function that takes the limit - the maximal number of operations it</span>
+<span class="c">/// will run in parallel - and returns an agent that accepts new</span>
+<span class="c">/// tasks via the &#39;Start&#39; message </span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs9', 9)" onmouseover="showTip(event, 'fs9', 9)" class="f">threadingLimitAgent</span> <span onmouseout="hideTip(event, 'fs10', 10)" onmouseover="showTip(event, 'fs10', 10)" class="i">limit</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs11', 11)" onmouseover="showTip(event, 'fs11', 11)" class="t">MailboxProcessor</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs12', 12)" onmouseover="showTip(event, 'fs12', 12)" class="f">Start</span>(<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs13', 13)" onmouseover="showTip(event, 'fs13', 13)" class="i">inbox</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs14', 14)" onmouseover="showTip(event, 'fs14', 14)" class="i">async</span> {
+  <span class="c">// Keep number of items running &amp; queue of items to run later</span>
+  <span class="c">// NOTE: We keep an explicit queue, so that we can e.g. start dropping </span>
+  <span class="c">// items if there are too many requests (or do something else)</span>
+  <span class="c">// NOTE: The loop is only accessed from one thread at each time</span>
+  <span class="c">// so we can just use non-thread-safe queue &amp; mutation</span>
+  <span class="k">let</span> <span onmouseout="hideTip(event, 'fs15', 15)" onmouseover="showTip(event, 'fs15', 15)" class="i">queue</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs16', 16)" onmouseover="showTip(event, 'fs16', 16)" class="t">Queue</span><span class="o">&lt;</span>_<span class="o">&gt;</span>()
+  <span class="k">let</span> <span onmouseout="hideTip(event, 'fs17', 17)" onmouseover="showTip(event, 'fs17', 17)" class="v">count</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs18', 18)" onmouseover="showTip(event, 'fs18', 18)" class="f">ref</span> <span class="n">0</span>
+  <span class="k">while</span> <span class="k">true</span> <span class="k">do</span>
+    <span class="k">let!</span> <span onmouseout="hideTip(event, 'fs19', 19)" onmouseover="showTip(event, 'fs19', 19)" class="i">msg</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs13', 20)" onmouseover="showTip(event, 'fs13', 20)" class="i">inbox</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs20', 21)" onmouseover="showTip(event, 'fs20', 21)" class="f">Receive</span>() 
+    <span class="c">// When we receive Start, add the work to the queue</span>
+    <span class="c">// When we receive Finished, do count--</span>
+    <span class="k">match</span> <span onmouseout="hideTip(event, 'fs19', 22)" onmouseover="showTip(event, 'fs19', 22)" class="i">msg</span> <span class="k">with</span> 
+    | <span onmouseout="hideTip(event, 'fs5', 23)" onmouseover="showTip(event, 'fs5', 23)" class="p">Start</span> <span onmouseout="hideTip(event, 'fs21', 24)" onmouseover="showTip(event, 'fs21', 24)" class="i">work</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs15', 25)" onmouseover="showTip(event, 'fs15', 25)" class="i">queue</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs22', 26)" onmouseover="showTip(event, 'fs22', 26)" class="f">Enqueue</span>(<span onmouseout="hideTip(event, 'fs21', 27)" onmouseover="showTip(event, 'fs21', 27)" class="i">work</span>)
+    | <span onmouseout="hideTip(event, 'fs8', 28)" onmouseover="showTip(event, 'fs8', 28)" class="p">Finished</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs23', 29)" onmouseover="showTip(event, 'fs23', 29)" class="f">decr</span> <span onmouseout="hideTip(event, 'fs17', 30)" onmouseover="showTip(event, 'fs17', 30)" class="v">count</span>
+    <span class="c">// After something happened, we check if we can</span>
+    <span class="c">// start a next task from the queue</span>
+    <span class="k">if</span> <span onmouseout="hideTip(event, 'fs17', 31)" onmouseover="showTip(event, 'fs17', 31)" class="v">count</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs24', 32)" onmouseover="showTip(event, 'fs24', 32)" class="i">Value</span> <span class="o">&lt;</span> <span onmouseout="hideTip(event, 'fs10', 33)" onmouseover="showTip(event, 'fs10', 33)" class="i">limit</span> <span class="o">&amp;&amp;</span> <span onmouseout="hideTip(event, 'fs15', 34)" onmouseover="showTip(event, 'fs15', 34)" class="i">queue</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs25', 35)" onmouseover="showTip(event, 'fs25', 35)" class="i">Count</span> <span class="o">&gt;</span> <span class="n">0</span> <span class="k">then</span>
+      <span onmouseout="hideTip(event, 'fs26', 36)" onmouseover="showTip(event, 'fs26', 36)" class="f">incr</span> <span onmouseout="hideTip(event, 'fs17', 37)" onmouseover="showTip(event, 'fs17', 37)" class="v">count</span>
+      <span class="k">let</span> <span onmouseout="hideTip(event, 'fs21', 38)" onmouseover="showTip(event, 'fs21', 38)" class="i">work</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs15', 39)" onmouseover="showTip(event, 'fs15', 39)" class="i">queue</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs27', 40)" onmouseover="showTip(event, 'fs27', 40)" class="f">Dequeue</span>()
+      <span class="c">// Start it in a thread pool (on background)</span>
+      <span onmouseout="hideTip(event, 'fs6', 41)" onmouseover="showTip(event, 'fs6', 41)" class="t">Async</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs28', 42)" onmouseover="showTip(event, 'fs28', 42)" class="f">Start</span>(<span onmouseout="hideTip(event, 'fs14', 43)" onmouseover="showTip(event, 'fs14', 43)" class="i">async</span> { 
+        <span class="k">do!</span> <span onmouseout="hideTip(event, 'fs21', 44)" onmouseover="showTip(event, 'fs21', 44)" class="i">work</span>
+        <span onmouseout="hideTip(event, 'fs13', 45)" onmouseover="showTip(event, 'fs13', 45)" class="i">inbox</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs29', 46)" onmouseover="showTip(event, 'fs29', 46)" class="f">Post</span>(<span onmouseout="hideTip(event, 'fs8', 47)" onmouseover="showTip(event, 'fs8', 47)" class="p">Finished</span>) }) })
+
+<span class="c">// Create an agent that can run at most 2 tasks in parallel</span>
+<span class="c">// and send 10 work items that take 1 second to the queue </span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs30', 48)" onmouseover="showTip(event, 'fs30', 48)" class="i">agent</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs9', 49)" onmouseover="showTip(event, 'fs9', 49)" class="f">threadingLimitAgent</span> <span class="n">2</span>
+<span class="k">for</span> <span onmouseout="hideTip(event, 'fs31', 50)" onmouseover="showTip(event, 'fs31', 50)" class="i">i</span> <span class="k">in</span> <span class="n">0</span> <span class="o">..</span> <span class="n">10</span> <span class="k">do</span>
+  <span onmouseout="hideTip(event, 'fs30', 51)" onmouseover="showTip(event, 'fs30', 51)" class="i">agent</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs29', 52)" onmouseover="showTip(event, 'fs29', 52)" class="f">Post</span>(<span onmouseout="hideTip(event, 'fs5', 53)" onmouseover="showTip(event, 'fs5', 53)" class="p">Start</span>(<span onmouseout="hideTip(event, 'fs14', 54)" onmouseover="showTip(event, 'fs14', 54)" class="i">async</span> {
+    <span class="k">do!</span> <span onmouseout="hideTip(event, 'fs6', 55)" onmouseover="showTip(event, 'fs6', 55)" class="t">Async</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs32', 56)" onmouseover="showTip(event, 'fs32', 56)" class="f">Sleep</span>(<span class="n">1000</span>)
+    <span onmouseout="hideTip(event, 'fs33', 57)" onmouseover="showTip(event, 'fs33', 57)" class="f">printfn</span> <span class="s">&quot;Finished: </span><span class="pf">%d</span><span class="s">&quot;</span> <span onmouseout="hideTip(event, 'fs31', 58)" onmouseover="showTip(event, 'fs31', 58)" class="i">i</span>
+  }))
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace System</div>
+<div class="tip" id="fs2">namespace System.Collections</div>
+<div class="tip" id="fs3">namespace System.Collections.Generic</div>
+<div class="tip" id="fs4">type LimitAgentMessage =<br />&#160;&#160;| Start of Async&lt;unit&gt;<br />&#160;&#160;| Finished<br /><br />Full name: Script.LimitAgentMessage<br /><em><br /><br />&#160;The agent handles two kind of messages - the &#39;Start&#39; message is sent<br />&#160;when the caller wants to start a new work item. The &#39;Finished&#39; message<br />&#160;is sent (by the agent itself) when one work item is completed.</em></div>
+<div class="tip" id="fs5">union case LimitAgentMessage.Start: Async&lt;unit&gt; -&gt; LimitAgentMessage</div>
+<div class="tip" id="fs6">Multiple items<br />type Async<br />static member AsBeginEnd : computation:(&#39;Arg -&gt; Async&lt;&#39;T&gt;) -&gt; (&#39;Arg * AsyncCallback * obj -&gt; IAsyncResult) * (IAsyncResult -&gt; &#39;T) * (IAsyncResult -&gt; unit)<br />static member AwaitEvent : event:IEvent&lt;&#39;Del,&#39;T&gt; * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt; (requires delegate and &#39;Del :&gt; Delegate)<br />static member AwaitIAsyncResult : iar:IAsyncResult * ?millisecondsTimeout:int -&gt; Async&lt;bool&gt;<br />static member AwaitTask : task:Task&lt;&#39;T&gt; -&gt; Async&lt;&#39;T&gt;<br />static member AwaitWaitHandle : waitHandle:WaitHandle * ?millisecondsTimeout:int -&gt; Async&lt;bool&gt;<br />static member CancelDefaultToken : unit -&gt; unit<br />static member Catch : computation:Async&lt;&#39;T&gt; -&gt; Async&lt;Choice&lt;&#39;T,exn&gt;&gt;<br />static member FromBeginEnd : beginAction:(AsyncCallback * obj -&gt; IAsyncResult) * endAction:(IAsyncResult -&gt; &#39;T) * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member FromBeginEnd : arg:&#39;Arg1 * beginAction:(&#39;Arg1 * AsyncCallback * obj -&gt; IAsyncResult) * endAction:(IAsyncResult -&gt; &#39;T) * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member FromBeginEnd : arg1:&#39;Arg1 * arg2:&#39;Arg2 * beginAction:(&#39;Arg1 * &#39;Arg2 * AsyncCallback * obj -&gt; IAsyncResult) * endAction:(IAsyncResult -&gt; &#39;T) * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member FromBeginEnd : arg1:&#39;Arg1 * arg2:&#39;Arg2 * arg3:&#39;Arg3 * beginAction:(&#39;Arg1 * &#39;Arg2 * &#39;Arg3 * AsyncCallback * obj -&gt; IAsyncResult) * endAction:(IAsyncResult -&gt; &#39;T) * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member FromContinuations : callback:((&#39;T -&gt; unit) * (exn -&gt; unit) * (OperationCanceledException -&gt; unit) -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member Ignore : computation:Async&lt;&#39;T&gt; -&gt; Async&lt;unit&gt;<br />static member OnCancel : interruption:(unit -&gt; unit) -&gt; Async&lt;IDisposable&gt;<br />static member Parallel : computations:seq&lt;Async&lt;&#39;T&gt;&gt; -&gt; Async&lt;&#39;T []&gt;<br />static member RunSynchronously : computation:Async&lt;&#39;T&gt; * ?timeout:int * ?cancellationToken:CancellationToken -&gt; &#39;T<br />static member Sleep : millisecondsDueTime:int -&gt; Async&lt;unit&gt;<br />static member Start : computation:Async&lt;unit&gt; * ?cancellationToken:CancellationToken -&gt; unit<br />static member StartAsTask : computation:Async&lt;&#39;T&gt; * ?taskCreationOptions:TaskCreationOptions * ?cancellationToken:CancellationToken -&gt; Task&lt;&#39;T&gt;<br />static member StartChild : computation:Async&lt;&#39;T&gt; * ?millisecondsTimeout:int -&gt; Async&lt;Async&lt;&#39;T&gt;&gt;<br />static member StartChildAsTask : computation:Async&lt;&#39;T&gt; * ?taskCreationOptions:TaskCreationOptions -&gt; Async&lt;Task&lt;&#39;T&gt;&gt;<br />static member StartImmediate : computation:Async&lt;unit&gt; * ?cancellationToken:CancellationToken -&gt; unit<br />static member StartWithContinuations : computation:Async&lt;&#39;T&gt; * continuation:(&#39;T -&gt; unit) * exceptionContinuation:(exn -&gt; unit) * cancellationContinuation:(OperationCanceledException -&gt; unit) * ?cancellationToken:CancellationToken -&gt; unit<br />static member SwitchToContext : syncContext:SynchronizationContext -&gt; Async&lt;unit&gt;<br />static member SwitchToNewThread : unit -&gt; Async&lt;unit&gt;<br />static member SwitchToThreadPool : unit -&gt; Async&lt;unit&gt;<br />static member TryCancelled : computation:Async&lt;&#39;T&gt; * compensation:(OperationCanceledException -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member CancellationToken : Async&lt;CancellationToken&gt;<br />static member DefaultCancellationToken : CancellationToken<br /><br />Full name: Microsoft.FSharp.Control.Async<br /><br />--------------------<br />type Async&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Control.Async&lt;_&gt;</div>
+<div class="tip" id="fs7">type unit = Unit<br /><br />Full name: Microsoft.FSharp.Core.unit</div>
+<div class="tip" id="fs8">union case LimitAgentMessage.Finished: LimitAgentMessage</div>
+<div class="tip" id="fs9">val threadingLimitAgent : limit:int -&gt; MailboxProcessor&lt;LimitAgentMessage&gt;<br /><br />Full name: Script.threadingLimitAgent<br /><em><br /><br />&#160;A function that takes the limit - the maximal number of operations it<br />&#160;will run in parallel - and returns an agent that accepts new<br />&#160;tasks via the &#39;Start&#39; message </em></div>
+<div class="tip" id="fs10">val limit : int</div>
+<div class="tip" id="fs11">Multiple items<br />type MailboxProcessor&lt;&#39;Msg&gt; =<br />&#160;&#160;interface IDisposable<br />&#160;&#160;new : body:(MailboxProcessor&lt;&#39;Msg&gt; -&gt; Async&lt;unit&gt;) * ?cancellationToken:CancellationToken -&gt; MailboxProcessor&lt;&#39;Msg&gt;<br />&#160;&#160;member Post : message:&#39;Msg -&gt; unit<br />&#160;&#160;member PostAndAsyncReply : buildMessage:(AsyncReplyChannel&lt;&#39;Reply&gt; -&gt; &#39;Msg) * ?timeout:int -&gt; Async&lt;&#39;Reply&gt;<br />&#160;&#160;member PostAndReply : buildMessage:(AsyncReplyChannel&lt;&#39;Reply&gt; -&gt; &#39;Msg) * ?timeout:int -&gt; &#39;Reply<br />&#160;&#160;member PostAndTryAsyncReply : buildMessage:(AsyncReplyChannel&lt;&#39;Reply&gt; -&gt; &#39;Msg) * ?timeout:int -&gt; Async&lt;&#39;Reply option&gt;<br />&#160;&#160;member Receive : ?timeout:int -&gt; Async&lt;&#39;Msg&gt;<br />&#160;&#160;member Scan : scanner:(&#39;Msg -&gt; Async&lt;&#39;T&gt; option) * ?timeout:int -&gt; Async&lt;&#39;T&gt;<br />&#160;&#160;member Start : unit -&gt; unit<br />&#160;&#160;member TryPostAndReply : buildMessage:(AsyncReplyChannel&lt;&#39;Reply&gt; -&gt; &#39;Msg) * ?timeout:int -&gt; &#39;Reply option<br />&#160;&#160;...<br /><br />Full name: Microsoft.FSharp.Control.MailboxProcessor&lt;_&gt;<br /><br />--------------------<br />new : body:(MailboxProcessor&lt;&#39;Msg&gt; -&gt; Async&lt;unit&gt;) * ?cancellationToken:System.Threading.CancellationToken -&gt; MailboxProcessor&lt;&#39;Msg&gt;</div>
+<div class="tip" id="fs12">static member MailboxProcessor.Start : body:(MailboxProcessor&lt;&#39;Msg&gt; -&gt; Async&lt;unit&gt;) * ?cancellationToken:System.Threading.CancellationToken -&gt; MailboxProcessor&lt;&#39;Msg&gt;</div>
+<div class="tip" id="fs13">val inbox : MailboxProcessor&lt;LimitAgentMessage&gt;</div>
+<div class="tip" id="fs14">val async : AsyncBuilder<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.async</div>
+<div class="tip" id="fs15">val queue : Queue&lt;Async&lt;unit&gt;&gt;</div>
+<div class="tip" id="fs16">Multiple items<br />type Queue&lt;&#39;T&gt; =<br />&#160;&#160;new : unit -&gt; Queue&lt;&#39;T&gt; + 2 overloads<br />&#160;&#160;member Clear : unit -&gt; unit<br />&#160;&#160;member Contains : item:&#39;T -&gt; bool<br />&#160;&#160;member CopyTo : array:&#39;T[] * arrayIndex:int -&gt; unit<br />&#160;&#160;member Count : int<br />&#160;&#160;member Dequeue : unit -&gt; &#39;T<br />&#160;&#160;member Enqueue : item:&#39;T -&gt; unit<br />&#160;&#160;member GetEnumerator : unit -&gt; Enumerator&lt;&#39;T&gt;<br />&#160;&#160;member Peek : unit -&gt; &#39;T<br />&#160;&#160;member ToArray : unit -&gt; &#39;T[]<br />&#160;&#160;...<br />&#160;&#160;nested type Enumerator<br /><br />Full name: System.Collections.Generic.Queue&lt;_&gt;<br /><br />--------------------<br />Queue() : unit<br />Queue(capacity: int) : unit<br />Queue(collection: IEnumerable&lt;&#39;T&gt;) : unit</div>
+<div class="tip" id="fs17">val count : int ref</div>
+<div class="tip" id="fs18">Multiple items<br />val ref : value:&#39;T -&gt; &#39;T ref<br /><br />Full name: Microsoft.FSharp.Core.Operators.ref<br /><br />--------------------<br />type &#39;T ref = Ref&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Core.ref&lt;_&gt;</div>
+<div class="tip" id="fs19">val msg : LimitAgentMessage</div>
+<div class="tip" id="fs20">member MailboxProcessor.Receive : ?timeout:int -&gt; Async&lt;&#39;Msg&gt;</div>
+<div class="tip" id="fs21">val work : Async&lt;unit&gt;</div>
+<div class="tip" id="fs22">Queue.Enqueue(item: Async&lt;unit&gt;) : unit</div>
+<div class="tip" id="fs23">val decr : cell:int ref -&gt; unit<br /><br />Full name: Microsoft.FSharp.Core.Operators.decr</div>
+<div class="tip" id="fs24">property Ref.Value: int</div>
+<div class="tip" id="fs25">property Queue.Count: int</div>
+<div class="tip" id="fs26">val incr : cell:int ref -&gt; unit<br /><br />Full name: Microsoft.FSharp.Core.Operators.incr</div>
+<div class="tip" id="fs27">Queue.Dequeue() : Async&lt;unit&gt;</div>
+<div class="tip" id="fs28">static member Async.Start : computation:Async&lt;unit&gt; * ?cancellationToken:System.Threading.CancellationToken -&gt; unit</div>
+<div class="tip" id="fs29">member MailboxProcessor.Post : message:&#39;Msg -&gt; unit</div>
+<div class="tip" id="fs30">val agent : MailboxProcessor&lt;LimitAgentMessage&gt;<br /><br />Full name: Script.agent</div>
+<div class="tip" id="fs31">val i : int32</div>
+<div class="tip" id="fs32">static member Async.Sleep : millisecondsDueTime:int -&gt; Async&lt;unit&gt;</div>
+<div class="tip" id="fs33">val printfn : format:Printf.TextWriterFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.printfn</div>
+

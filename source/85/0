@@ -1,0 +1,32 @@
+open System.IO
+open System.Security.Cryptography
+open System.Text
+open System.Diagnostics.Contracts
+
+let private DeCryptStringWith (crypted:string) (key:string) (iv:string) = 
+    let enc = new ASCIIEncoding()
+    let algo = Rijndael.Create()
+    if(crypted.Length < 5) then failwith("Crypted string length has to be over 5 chars.")
+    use decrypted = new MemoryStream()
+    use decode = new FromBase64Transform()
+    let errdesc = "Failure when decrypting the string " + crypted.[0..3] + "...\r\n"
+    try
+        use decryptor = algo.CreateDecryptor(enc.GetBytes(key), enc.GetBytes(iv))
+        use tmpcrypt = new CryptoStream(decrypted, decryptor, CryptoStreamMode.Write)
+        use decodestream = new CryptoStream(tmpcrypt, decode, CryptoStreamMode.Write)
+        let cryptedbytes = enc.GetBytes(crypted);
+        decodestream.Write(cryptedbytes, 0, cryptedbytes.Length);
+        decodestream.Close() // lazy, has to close explicitly before use. using is not enough.
+    with
+        | :? CryptographicException as ex -> failwith(errdesc + ex.ToString())
+        | :? System.FormatException as ex -> failwith(errdesc + ex.ToString())
+    enc.GetString(decrypted.ToArray())
+
+
+
+//I recommend to get key and iv from registry and then make one more method like:
+let internal DeCryptString crypted =
+    let key = GetRegistryValue("rgbKey").ToString()
+    let iv = GetRegistryValue("rgbIV").ToString()
+    DeCryptStringWith crypted key iv
+

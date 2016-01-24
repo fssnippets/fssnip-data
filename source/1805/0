@@ -1,0 +1,11 @@
+    // Make the supplied sequence appear circular but with
+    // at most 'n' elements, n = -1 elicits infinite repetition.
+    let circular n s =
+        let rec circularize s = 
+            seq {
+                yield! s
+                yield! circularize s
+                }
+        match n with
+        | -1 -> circularize s
+        | _  -> circularize s |> Seq.truncate n

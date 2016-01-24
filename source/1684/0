@@ -1,0 +1,49 @@
+// This snippet has been shared from Fun3D web site.
+// You can run it in your web browser at: www.fun3d.net!
+let countOfDisks = 64
+
+let initialState = [for x in 1..countOfDisks do yield x], List.empty, List.empty 
+
+let bottDiskSize = 4.
+let cylHeight = 4.0
+let diskSize size = size * bottDiskSize / float(countOfDisks)
+let diskHeight = cylHeight / float(countOfDisks)
+let diskPosition pos = pos * diskHeight
+let cyl = 
+    Fun.cylinder
+    |> Fun.scale (0.2, 0.2, cylHeight)
+    |> Fun.move (0.0, 0.0, cylHeight / 2.) 
+    |> Fun.color 0xffff00
+
+let bottDisk = 
+//    Fun.empty
+    Fun.cylinder
+    |> Fun.scale (bottDiskSize, bottDiskSize, 0.1)
+    |> Fun.move (0.0, 0.0, - 0.05) 
+    |> Fun.color 0xff00ff
+
+let disk pos size = 
+    let size = float(size)
+    Fun.cylinder
+    |> Fun.scale (diskSize size, diskSize size, diskHeight)
+    |> Fun.move (0.0, 0.0, diskPosition pos + (diskHeight/2.)) 
+
+let tower towerState position =  
+    towerState
+    |> List.rev
+    |> List.mapi (fun i v -> float(i),v)
+    |> List.fold (fun s (pos,size) -> s $ disk pos size ) (bottDisk $ cyl) 
+    |> Fun.move (position, 0.0, 0.0)
+
+let  renderState state =
+     let tower1,tower2, tower3 = state
+     let towers = tower tower1 (-bottDiskSize - 0.1) $
+                  tower tower2 0. $
+                  tower tower3 (bottDiskSize + 0.1)
+     towers |> Fun.rotate (-90.0,0.0,0.0)
+            |> Fun.move (0.0, -cylHeight/2., 0.0)
+
+renderState initialState 
+
+ 
+

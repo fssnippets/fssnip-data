@@ -1,0 +1,77 @@
+<h2><a name="Active-pattern" class="anchor" href="#Active-pattern">Active pattern</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+<span class="l">6: </span>
+<span class="l">7: </span>
+<span class="l">8: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">let</span> (|<span class="p">HttpException</span>|_|) (<span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">ex</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="t">Exception</span>) <span class="o">=</span>
+    <span class="k">match</span> <span onmouseout="hideTip(event, 'fs1', 3)" onmouseover="showTip(event, 'fs1', 3)" class="i">ex</span> <span class="k">with</span>
+    | <span class="o">:?</span> <span onmouseout="hideTip(event, 'fs3', 4)" onmouseover="showTip(event, 'fs3', 4)" class="t">WebException</span> <span class="k">as</span> <span onmouseout="hideTip(event, 'fs4', 5)" onmouseover="showTip(event, 'fs4', 5)" class="i">webException</span> <span class="k">-&gt;</span>
+        <span class="k">match</span> <span onmouseout="hideTip(event, 'fs4', 6)" onmouseover="showTip(event, 'fs4', 6)" class="i">webException</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs5', 7)" onmouseover="showTip(event, 'fs5', 7)" class="i">Response</span> <span class="k">with</span>
+        | <span class="o">:?</span> <span onmouseout="hideTip(event, 'fs6', 8)" onmouseover="showTip(event, 'fs6', 8)" class="t">HttpWebResponse</span> <span class="k">as</span> <span onmouseout="hideTip(event, 'fs7', 9)" onmouseover="showTip(event, 'fs7', 9)" class="i">response</span> <span class="k">-&gt;</span>
+            <span onmouseout="hideTip(event, 'fs8', 10)" onmouseover="showTip(event, 'fs8', 10)" class="p">Some</span> <span onmouseout="hideTip(event, 'fs7', 11)" onmouseover="showTip(event, 'fs7', 11)" class="i">response</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs9', 12)" onmouseover="showTip(event, 'fs9', 12)" class="i">StatusCode</span>
+        | _ <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs10', 13)" onmouseover="showTip(event, 'fs10', 13)" class="p">None</span>
+    | _ <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs10', 14)" onmouseover="showTip(event, 'fs10', 14)" class="p">None</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Example-usage" class="anchor" href="#Example-usage">Example usage</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">let</span> <span onmouseout="hideTip(event, 'fs11', 15)" onmouseover="showTip(event, 'fs11', 15)" class="f">fetch</span> <span onmouseout="hideTip(event, 'fs12', 16)" onmouseover="showTip(event, 'fs12', 16)" class="i">url</span> <span class="o">=</span> 
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs13', 17)" onmouseover="showTip(event, 'fs13', 17)" class="i">webClient</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs14', 18)" onmouseover="showTip(event, 'fs14', 18)" class="t">WebClient</span>()
+    <span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs15', 19)" onmouseover="showTip(event, 'fs15', 19)" class="f">get</span> (<span onmouseout="hideTip(event, 'fs12', 20)" onmouseover="showTip(event, 'fs12', 20)" class="i">url</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs16', 21)" onmouseover="showTip(event, 'fs16', 21)" class="t">string</span>) <span class="o">=</span>
+        <span class="k">try</span>
+            <span onmouseout="hideTip(event, 'fs8', 22)" onmouseover="showTip(event, 'fs8', 22)" class="p">Some</span> (<span onmouseout="hideTip(event, 'fs13', 23)" onmouseover="showTip(event, 'fs13', 23)" class="i">webClient</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs17', 24)" onmouseover="showTip(event, 'fs17', 24)" class="f">DownloadString</span>(<span onmouseout="hideTip(event, 'fs12', 25)" onmouseover="showTip(event, 'fs12', 25)" class="i">url</span>))
+        <span class="k">with</span>
+            | <span onmouseout="hideTip(event, 'fs18', 26)" onmouseover="showTip(event, 'fs18', 26)" class="p">HttpException</span> <span onmouseout="hideTip(event, 'fs19', 27)" onmouseover="showTip(event, 'fs19', 27)" class="t">HttpStatusCode</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs20', 28)" onmouseover="showTip(event, 'fs20', 28)" class="i">Unauthorized</span> <span class="k">-&gt;</span>
+                <span onmouseout="hideTip(event, 'fs13', 29)" onmouseover="showTip(event, 'fs13', 29)" class="i">webClient</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs21', 30)" onmouseover="showTip(event, 'fs21', 30)" class="i">Credentials</span> <span class="o">&lt;-</span> <span onmouseout="hideTip(event, 'fs22', 31)" onmouseover="showTip(event, 'fs22', 31)" class="i">getBetterCredentials</span>
+                <span onmouseout="hideTip(event, 'fs15', 32)" onmouseover="showTip(event, 'fs15', 32)" class="f">get</span> <span onmouseout="hideTip(event, 'fs12', 33)" onmouseover="showTip(event, 'fs12', 33)" class="i">url</span>
+            | <span onmouseout="hideTip(event, 'fs18', 34)" onmouseover="showTip(event, 'fs18', 34)" class="p">HttpException</span> <span onmouseout="hideTip(event, 'fs23', 35)" onmouseover="showTip(event, 'fs23', 35)" class="i">statusCode</span> <span class="k">-&gt;</span>
+                <span onmouseout="hideTip(event, 'fs24', 36)" onmouseover="showTip(event, 'fs24', 36)" class="f">printfn</span> <span class="s">&quot;Failed, server said: </span><span class="pf">%A</span><span class="s">&quot;</span> <span onmouseout="hideTip(event, 'fs23', 37)" onmouseover="showTip(event, 'fs23', 37)" class="i">statusCode</span>
+                <span onmouseout="hideTip(event, 'fs10', 38)" onmouseover="showTip(event, 'fs10', 38)" class="p">None</span>
+    <span onmouseout="hideTip(event, 'fs15', 39)" onmouseover="showTip(event, 'fs15', 39)" class="f">get</span> <span onmouseout="hideTip(event, 'fs12', 40)" onmouseover="showTip(event, 'fs12', 40)" class="i">url</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">val ex : Exception</div>
+<div class="tip" id="fs2">Multiple items<br />type Exception =<br />&#160;&#160;new : unit -&gt; Exception + 2 overloads<br />&#160;&#160;member Data : IDictionary<br />&#160;&#160;member GetBaseException : unit -&gt; Exception<br />&#160;&#160;member GetObjectData : info:SerializationInfo * context:StreamingContext -&gt; unit<br />&#160;&#160;member GetType : unit -&gt; Type<br />&#160;&#160;member HelpLink : string with get, set<br />&#160;&#160;member InnerException : Exception<br />&#160;&#160;member Message : string<br />&#160;&#160;member Source : string with get, set<br />&#160;&#160;member StackTrace : string<br />&#160;&#160;...<br /><br />Full name: System.Exception<br /><br />--------------------<br />Exception() : unit<br />Exception(message: string) : unit<br />Exception(message: string, innerException: exn) : unit</div>
+<div class="tip" id="fs3">Multiple items<br />type WebException =<br />&#160;&#160;inherit InvalidOperationException<br />&#160;&#160;new : unit -&gt; WebException + 4 overloads<br />&#160;&#160;member GetObjectData : serializationInfo:SerializationInfo * streamingContext:StreamingContext -&gt; unit<br />&#160;&#160;member Response : WebResponse<br />&#160;&#160;member Status : WebExceptionStatus<br /><br />Full name: System.Net.WebException<br /><br />--------------------<br />WebException() : unit<br />WebException(message: string) : unit<br />WebException(message: string, innerException: exn) : unit<br />WebException(message: string, status: WebExceptionStatus) : unit<br />WebException(message: string, innerException: exn, status: WebExceptionStatus, response: WebResponse) : unit</div>
+<div class="tip" id="fs4">val webException : WebException</div>
+<div class="tip" id="fs5">property WebException.Response: WebResponse</div>
+<div class="tip" id="fs6">type HttpWebResponse =<br />&#160;&#160;inherit WebResponse<br />&#160;&#160;member CharacterSet : string<br />&#160;&#160;member Close : unit -&gt; unit<br />&#160;&#160;member ContentEncoding : string<br />&#160;&#160;member ContentLength : int64<br />&#160;&#160;member ContentType : string<br />&#160;&#160;member Cookies : CookieCollection with get, set<br />&#160;&#160;member GetResponseHeader : headerName:string -&gt; string<br />&#160;&#160;member GetResponseStream : unit -&gt; Stream<br />&#160;&#160;member Headers : WebHeaderCollection<br />&#160;&#160;member IsMutuallyAuthenticated : bool<br />&#160;&#160;...<br /><br />Full name: System.Net.HttpWebResponse</div>
+<div class="tip" id="fs7">val response : HttpWebResponse</div>
+<div class="tip" id="fs8">union case Option.Some: Value: &#39;T -&gt; Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs9">property HttpWebResponse.StatusCode: HttpStatusCode</div>
+<div class="tip" id="fs10">union case Option.None: Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs11">val fetch : url:string -&gt; string option<br /><br />Full name: Script.fetch</div>
+<div class="tip" id="fs12">val url : string</div>
+<div class="tip" id="fs13">val webClient : WebClient</div>
+<div class="tip" id="fs14">Multiple items<br />type WebClient =<br />&#160;&#160;inherit Component<br />&#160;&#160;new : unit -&gt; WebClient<br />&#160;&#160;member BaseAddress : string with get, set<br />&#160;&#160;member CachePolicy : RequestCachePolicy with get, set<br />&#160;&#160;member CancelAsync : unit -&gt; unit<br />&#160;&#160;member Credentials : ICredentials with get, set<br />&#160;&#160;member DownloadData : address:string -&gt; byte[] + 1 overload<br />&#160;&#160;member DownloadDataAsync : address:Uri -&gt; unit + 1 overload<br />&#160;&#160;member DownloadFile : address:string * fileName:string -&gt; unit + 1 overload<br />&#160;&#160;member DownloadFileAsync : address:Uri * fileName:string -&gt; unit + 1 overload<br />&#160;&#160;member DownloadString : address:string -&gt; string + 1 overload<br />&#160;&#160;...<br /><br />Full name: System.Net.WebClient<br /><br />--------------------<br />WebClient() : unit</div>
+<div class="tip" id="fs15">val get : (string -&gt; string option)</div>
+<div class="tip" id="fs16">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />Full name: Microsoft.FSharp.Core.Operators.string<br /><br />--------------------<br />type string = String<br /><br />Full name: Microsoft.FSharp.Core.string</div>
+<div class="tip" id="fs17">WebClient.DownloadString(address: Uri) : string<br />WebClient.DownloadString(address: string) : string</div>
+<div class="tip" id="fs18">active recognizer HttpException: Exception -&gt; HttpStatusCode option<br /><br />Full name: Script.( |HttpException|_| )</div>
+<div class="tip" id="fs19">type HttpStatusCode =<br />&#160;&#160;| Continue = 100<br />&#160;&#160;| SwitchingProtocols = 101<br />&#160;&#160;| OK = 200<br />&#160;&#160;| Created = 201<br />&#160;&#160;| Accepted = 202<br />&#160;&#160;| NonAuthoritativeInformation = 203<br />&#160;&#160;| NoContent = 204<br />&#160;&#160;| ResetContent = 205<br />&#160;&#160;| PartialContent = 206<br />&#160;&#160;| MultipleChoices = 300<br />&#160;&#160;...<br /><br />Full name: System.Net.HttpStatusCode</div>
+<div class="tip" id="fs20">field HttpStatusCode.Unauthorized = 401</div>
+<div class="tip" id="fs21">property WebClient.Credentials: ICredentials</div>
+<div class="tip" id="fs22">val getBetterCredentials : NetworkCredential<br /><br />Full name: Script.getBetterCredentials</div>
+<div class="tip" id="fs23">val statusCode : HttpStatusCode</div>
+<div class="tip" id="fs24">val printfn : format:Printf.TextWriterFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.printfn</div>
+

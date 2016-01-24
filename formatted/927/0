@@ -1,0 +1,81 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">type</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="t">SQLite</span>() <span class="o">=</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">dbexist</span> <span class="o">=</span> <span class="i">File</span><span class="o">.</span><span class="i">Exists</span>(<span class="i">NSettings</span><span class="o">.</span><span class="i">dbpath</span>)
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="i">connSetting</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="f">sprintf</span> <span class="s">&quot;Data Source=</span><span class="pf">%s</span><span class="s">;Version=3;New=</span><span class="pf">%s</span><span class="s">;Compress=True;&quot;</span> 
+                        <span class="o">&lt;|</span> <span class="i">NSettings</span><span class="o">.</span><span class="i">dbpath</span> 
+                        <span class="o">&lt;|</span> <span class="k">if</span> (<span onmouseout="hideTip(event, 'fs2', 5)" onmouseover="showTip(event, 'fs2', 5)" class="i">dbexist</span>) <span class="k">then</span> <span class="s">&quot;False&quot;</span> <span class="k">else</span> <span class="s">&quot;True&quot;</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs5', 6)" onmouseover="showTip(event, 'fs5', 6)" class="f">openConn</span>() <span class="o">=</span>
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs6', 7)" onmouseover="showTip(event, 'fs6', 7)" class="i">conn</span> <span class="o">=</span> <span class="k">new</span> <span class="i">SQLiteConnection</span>(<span onmouseout="hideTip(event, 'fs3', 8)" onmouseover="showTip(event, 'fs3', 8)" class="i">connSetting</span>)
+        <span onmouseout="hideTip(event, 'fs6', 9)" onmouseover="showTip(event, 'fs6', 9)" class="i">conn</span><span class="o">.</span><span class="i">Open</span>()
+        <span onmouseout="hideTip(event, 'fs6', 10)" onmouseover="showTip(event, 'fs6', 10)" class="i">conn</span> <span class="o">:&gt;</span> <span class="i">IDbConnection</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs7', 11)" onmouseover="showTip(event, 'fs7', 11)" class="i">connMgr</span> <span class="o">=</span> <span class="i">Sql</span><span class="o">.</span><span class="i">withNewConnection</span> <span onmouseout="hideTip(event, 'fs5', 12)" onmouseover="showTip(event, 'fs5', 12)" class="i">openConn</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs8', 13)" onmouseover="showTip(event, 'fs8', 13)" class="f">exec</span> <span onmouseout="hideTip(event, 'fs9', 14)" onmouseover="showTip(event, 'fs9', 14)" class="i">a</span> <span class="o">=</span> <span class="i">Sql</span><span class="o">.</span><span class="i">execNonQuery</span>(<span onmouseout="hideTip(event, 'fs7', 15)" onmouseover="showTip(event, 'fs7', 15)" class="i">connMgr</span>) <span onmouseout="hideTip(event, 'fs9', 16)" onmouseover="showTip(event, 'fs9', 16)" class="i">a</span> [] <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs10', 17)" onmouseover="showTip(event, 'fs10', 17)" class="f">ignore</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs11', 18)" onmouseover="showTip(event, 'fs11', 18)" class="i">P</span> <span class="o">=</span> <span class="i">Sql</span><span class="o">.</span><span class="i">Parameter</span><span class="o">.</span><span class="i">make</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs12', 19)" onmouseover="showTip(event, 'fs12', 19)" class="f">getNode</span> (<span onmouseout="hideTip(event, 'fs13', 20)" onmouseover="showTip(event, 'fs13', 20)" class="i">dr</span><span class="o">:</span> <span class="i">IDataRecord</span>) <span class="o">=</span>
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs14', 21)" onmouseover="showTip(event, 'fs14', 21)" class="i">date</span>, <span onmouseout="hideTip(event, 'fs15', 22)" onmouseover="showTip(event, 'fs15', 22)" class="i">value</span> <span class="o">=</span>   (<span onmouseout="hideTip(event, 'fs13', 23)" onmouseover="showTip(event, 'fs13', 23)" class="i">dr</span><span class="o">?</span><span class="i">date</span>)<span class="o">.</span><span class="i">Value</span> 
+                            (<span onmouseout="hideTip(event, 'fs13', 24)" onmouseover="showTip(event, 'fs13', 24)" class="i">dr</span><span class="o">?</span><span onmouseout="hideTip(event, 'fs15', 25)" onmouseover="showTip(event, 'fs15', 25)" class="i">value</span>)<span class="o">.</span><span class="i">Value</span>
+        <span class="k">new</span> <span class="i">dbNode</span>(<span onmouseout="hideTip(event, 'fs14', 26)" onmouseover="showTip(event, 'fs14', 26)" class="i">date</span>, <span onmouseout="hideTip(event, 'fs15', 27)" onmouseover="showTip(event, 'fs15', 27)" class="i">value</span>)
+    <span class="k">do</span>
+        <span class="k">if</span> <span onmouseout="hideTip(event, 'fs16', 28)" onmouseover="showTip(event, 'fs16', 28)" class="f">not</span> <span onmouseout="hideTip(event, 'fs2', 29)" onmouseover="showTip(event, 'fs2', 29)" class="i">dbexist</span> <span class="k">then</span>
+            <span onmouseout="hideTip(event, 'fs8', 30)" onmouseover="showTip(event, 'fs8', 30)" class="f">exec</span> <span class="s">&quot;CREATE TABLE </span><span class="e">\&quot;</span><span class="s">archive</span><span class="e">\&quot;</span><span class="s"> ( </span><span class="e">\&quot;</span><span class="s">date</span><span class="e">\&quot;</span><span class="s"> INTEGER, </span><span class="e">\&quot;</span><span class="s">value</span><span class="e">\&quot;</span><span class="s"> INTEGER)&quot;</span>
+            <span onmouseout="hideTip(event, 'fs8', 31)" onmouseover="showTip(event, 'fs8', 31)" class="f">exec</span> <span class="s">&quot;CREATE TABLE </span><span class="e">\&quot;</span><span class="s">instant</span><span class="e">\&quot;</span><span class="s"> ( </span><span class="e">\&quot;</span><span class="s">date</span><span class="e">\&quot;</span><span class="s"> INTEGER, </span><span class="e">\&quot;</span><span class="s">value</span><span class="e">\&quot;</span><span class="s"> INTEGER)&quot;</span>
+    <span class="k">member</span> <span onmouseout="hideTip(event, 'fs17', 32)" onmouseover="showTip(event, 'fs17', 32)" class="i">X</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs18', 33)" onmouseover="showTip(event, 'fs18', 33)" class="f">execute</span> <span onmouseout="hideTip(event, 'fs19', 34)" onmouseover="showTip(event, 'fs19', 34)" class="i">q</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs8', 35)" onmouseover="showTip(event, 'fs8', 35)" class="f">exec</span> <span onmouseout="hideTip(event, 'fs19', 36)" onmouseover="showTip(event, 'fs19', 36)" class="i">q</span>
+    <span class="k">member</span> <span onmouseout="hideTip(event, 'fs17', 37)" onmouseover="showTip(event, 'fs17', 37)" class="i">X</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs20', 38)" onmouseover="showTip(event, 'fs20', 38)" class="f">query</span> <span onmouseout="hideTip(event, 'fs21', 39)" onmouseover="showTip(event, 'fs21', 39)" class="i">q</span> <span class="o">=</span>
+        <span class="i">Sql</span><span class="o">.</span><span class="i">execReader</span>(<span onmouseout="hideTip(event, 'fs7', 40)" onmouseover="showTip(event, 'fs7', 40)" class="i">connMgr</span>) <span onmouseout="hideTip(event, 'fs21', 41)" onmouseover="showTip(event, 'fs21', 41)" class="i">q</span> []
+        <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs22', 42)" onmouseover="showTip(event, 'fs22', 42)" class="i">Seq</span><span class="o">.</span><span class="i">ofDataReader</span>
+        <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs22', 43)" onmouseover="showTip(event, 'fs22', 43)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs23', 44)" onmouseover="showTip(event, 'fs23', 44)" class="f">map</span> <span onmouseout="hideTip(event, 'fs12', 45)" onmouseover="showTip(event, 'fs12', 45)" class="f">getNode</span>
+        <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs22', 46)" onmouseover="showTip(event, 'fs22', 46)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs24', 47)" onmouseover="showTip(event, 'fs24', 47)" class="f">toArray</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">Multiple items<br />type SQLite =<br />&#160;&#160;new : unit -&gt; SQLite<br />&#160;&#160;member execute : q:&#39;c -&gt; unit<br />&#160;&#160;member query : q:&#39;a -&gt; &#39;b []<br /><br />Full name: Script.SQLite<br /><br />--------------------<br />new : unit -&gt; SQLite</div>
+<div class="tip" id="fs2">val dbexist : bool</div>
+<div class="tip" id="fs3">val connSetting : string</div>
+<div class="tip" id="fs4">val sprintf : format:Printf.StringFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.sprintf</div>
+<div class="tip" id="fs5">val openConn : (unit -&gt; &#39;a)</div>
+<div class="tip" id="fs6">val conn : obj</div>
+<div class="tip" id="fs7">val connMgr : obj</div>
+<div class="tip" id="fs8">val exec : (&#39;a -&gt; unit)</div>
+<div class="tip" id="fs9">val a : &#39;a</div>
+<div class="tip" id="fs10">val ignore : value:&#39;T -&gt; unit<br /><br />Full name: Microsoft.FSharp.Core.Operators.ignore</div>
+<div class="tip" id="fs11">val P : obj</div>
+<div class="tip" id="fs12">val getNode : (obj -&gt; &#39;a)</div>
+<div class="tip" id="fs13">val dr : obj</div>
+<div class="tip" id="fs14">val date : obj</div>
+<div class="tip" id="fs15">val value : obj</div>
+<div class="tip" id="fs16">val not : value:bool -&gt; bool<br /><br />Full name: Microsoft.FSharp.Core.Operators.not</div>
+<div class="tip" id="fs17">val X : SQLite</div>
+<div class="tip" id="fs18">member SQLite.execute : q:&#39;c -&gt; unit<br /><br />Full name: Script.SQLite.execute</div>
+<div class="tip" id="fs19">val q : &#39;c</div>
+<div class="tip" id="fs20">member SQLite.query : q:&#39;a -&gt; &#39;b []<br /><br />Full name: Script.SQLite.query</div>
+<div class="tip" id="fs21">val q : &#39;a</div>
+<div class="tip" id="fs22">module Seq<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs23">val map : mapping:(&#39;T -&gt; &#39;U) -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;U&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.map</div>
+<div class="tip" id="fs24">val toArray : source:seq&lt;&#39;T&gt; -&gt; &#39;T []<br /><br />Full name: Microsoft.FSharp.Collections.Seq.toArray</div>
+

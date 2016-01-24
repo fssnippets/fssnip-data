@@ -1,0 +1,18 @@
+let random = new System.Random()
+let mutable score = 0
+let startTime = System.DateTime.Now
+
+for i = 1 to 10 do
+   let multiplier = random.Next(10)
+   let answer = multiplier * i
+   printfn "%d x %d = " i multiplier
+   let input = System.Convert.ToInt32(System.Console.ReadLine())
+   if input = answer then
+      score <- score + 1
+
+let finishTime = System.DateTime.Now
+let time = finishTime.Subtract(startTime).ToString()
+
+System.Console.ForegroundColor = System.ConsoleColor.Green
+printfn "Score: %d" score
+printfn "Time Taken: %s" time

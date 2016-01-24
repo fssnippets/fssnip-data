@@ -1,0 +1,50 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">module</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="t">Program</span>
+
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="i">IO</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="f">EnumerateDirectoryFilesInfo</span> <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="i">root</span> <span class="o">=</span> 
+    <span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="f">traverse</span> (<span onmouseout="hideTip(event, 'fs7', 7)" onmouseover="showTip(event, 'fs7', 7)" class="i">d</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs8', 8)" onmouseover="showTip(event, 'fs8', 8)" class="t">DirectoryInfo</span>) <span class="o">=</span> 
+        <span onmouseout="hideTip(event, 'fs9', 9)" onmouseover="showTip(event, 'fs9', 9)" class="i">seq</span> {   <span class="k">for</span> <span onmouseout="hideTip(event, 'fs10', 10)" onmouseover="showTip(event, 'fs10', 10)" class="i">f</span> <span class="k">in</span> <span onmouseout="hideTip(event, 'fs7', 11)" onmouseover="showTip(event, 'fs7', 11)" class="i">d</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs11', 12)" onmouseover="showTip(event, 'fs11', 12)" class="f">GetFiles</span>() <span class="k">do</span>
+                    <span class="k">yield</span> <span onmouseout="hideTip(event, 'fs10', 13)" onmouseover="showTip(event, 'fs10', 13)" class="i">f</span>
+                <span class="k">for</span> <span onmouseout="hideTip(event, 'fs12', 14)" onmouseover="showTip(event, 'fs12', 14)" class="i">dd</span> <span class="k">in</span> <span onmouseout="hideTip(event, 'fs7', 15)" onmouseover="showTip(event, 'fs7', 15)" class="i">d</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs13', 16)" onmouseover="showTip(event, 'fs13', 16)" class="f">GetDirectories</span>() <span class="k">do</span>
+                    <span class="k">yield!</span> <span onmouseout="hideTip(event, 'fs6', 17)" onmouseover="showTip(event, 'fs6', 17)" class="f">traverse</span> <span onmouseout="hideTip(event, 'fs12', 18)" onmouseover="showTip(event, 'fs12', 18)" class="i">dd</span>              }
+    <span onmouseout="hideTip(event, 'fs6', 19)" onmouseover="showTip(event, 'fs6', 19)" class="f">traverse</span> (<span onmouseout="hideTip(event, 'fs8', 20)" onmouseover="showTip(event, 'fs8', 20)" class="t">DirectoryInfo</span>( <span onmouseout="hideTip(event, 'fs5', 21)" onmouseover="showTip(event, 'fs5', 21)" class="i">root</span> ))
+    
+<span onmouseout="hideTip(event, 'fs4', 22)" onmouseover="showTip(event, 'fs4', 22)" class="f">EnumerateDirectoryFilesInfo</span> <span class="s">@&quot;C:\Temp\Input&quot;</span>
+<span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs14', 23)" onmouseover="showTip(event, 'fs14', 23)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs15', 24)" onmouseover="showTip(event, 'fs15', 24)" class="f">iter</span>( <span class="k">fun</span> <span onmouseout="hideTip(event, 'fs10', 25)" onmouseover="showTip(event, 'fs10', 25)" class="i">f</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs16', 26)" onmouseover="showTip(event, 'fs16', 26)" class="f">printfn</span> <span class="s">&quot;</span><span class="pf">%s</span><span class="s">&quot;</span> <span onmouseout="hideTip(event, 'fs10', 27)" onmouseover="showTip(event, 'fs10', 27)" class="i">f</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs17', 28)" onmouseover="showTip(event, 'fs17', 28)" class="i">FullName</span> )
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">module Program</div>
+<div class="tip" id="fs2">namespace System</div>
+<div class="tip" id="fs3">namespace System.IO</div>
+<div class="tip" id="fs4">val EnumerateDirectoryFilesInfo : root:string -&gt; seq&lt;FileInfo&gt;<br /><br />Full name: Program.EnumerateDirectoryFilesInfo</div>
+<div class="tip" id="fs5">val root : string</div>
+<div class="tip" id="fs6">val traverse : (DirectoryInfo -&gt; seq&lt;FileInfo&gt;)</div>
+<div class="tip" id="fs7">val d : DirectoryInfo</div>
+<div class="tip" id="fs8">Multiple items<br />type DirectoryInfo =<br />&#160;&#160;inherit FileSystemInfo<br />&#160;&#160;new : path:string -&gt; DirectoryInfo<br />&#160;&#160;member Create : unit -&gt; unit + 1 overload<br />&#160;&#160;member CreateSubdirectory : path:string -&gt; DirectoryInfo + 1 overload<br />&#160;&#160;member Delete : unit -&gt; unit + 1 overload<br />&#160;&#160;member EnumerateDirectories : unit -&gt; IEnumerable&lt;DirectoryInfo&gt; + 2 overloads<br />&#160;&#160;member EnumerateFileSystemInfos : unit -&gt; IEnumerable&lt;FileSystemInfo&gt; + 2 overloads<br />&#160;&#160;member EnumerateFiles : unit -&gt; IEnumerable&lt;FileInfo&gt; + 2 overloads<br />&#160;&#160;member Exists : bool<br />&#160;&#160;member GetAccessControl : unit -&gt; DirectorySecurity + 1 overload<br />&#160;&#160;member GetDirectories : unit -&gt; DirectoryInfo[] + 2 overloads<br />&#160;&#160;...<br /><br />Full name: System.IO.DirectoryInfo<br /><br />--------------------<br />DirectoryInfo(path: string) : unit</div>
+<div class="tip" id="fs9">Multiple items<br />val seq : sequence:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Core.Operators.seq<br /><br />--------------------<br />type seq&lt;&#39;T&gt; = System.Collections.Generic.IEnumerable&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.seq&lt;_&gt;</div>
+<div class="tip" id="fs10">val f : FileInfo</div>
+<div class="tip" id="fs11">DirectoryInfo.GetFiles() : FileInfo []<br />DirectoryInfo.GetFiles(searchPattern: string) : FileInfo []<br />DirectoryInfo.GetFiles(searchPattern: string, searchOption: SearchOption) : FileInfo []</div>
+<div class="tip" id="fs12">val dd : DirectoryInfo</div>
+<div class="tip" id="fs13">DirectoryInfo.GetDirectories() : DirectoryInfo []<br />DirectoryInfo.GetDirectories(searchPattern: string) : DirectoryInfo []<br />DirectoryInfo.GetDirectories(searchPattern: string, searchOption: SearchOption) : DirectoryInfo []</div>
+<div class="tip" id="fs14">module Seq<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs15">val iter : action:(&#39;T -&gt; unit) -&gt; source:seq&lt;&#39;T&gt; -&gt; unit<br /><br />Full name: Microsoft.FSharp.Collections.Seq.iter</div>
+<div class="tip" id="fs16">val printfn : format:Printf.TextWriterFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.printfn</div>
+<div class="tip" id="fs17">property FileSystemInfo.FullName: string</div>
+

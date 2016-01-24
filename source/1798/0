@@ -1,0 +1,20 @@
+open System
+open System.Text
+open System.Security.Cryptography
+
+let bytesToHex (bytes:byte[]) =
+    let builder = new StringBuilder(bytes.Length * 2)  
+    for i = 0 to (bytes.Length - 1) do
+        builder.AppendFormat("{0:X2}", bytes.[i]) |> ignore
+    builder.ToString()
+    
+let keyGen byteCount =
+    use rng = new RNGCryptoServiceProvider()
+    let bytes = Array.zeroCreate<byte> byteCount
+    rng.GetBytes(bytes);
+    bytesToHex bytes
+
+let validationKey = keyGen 64
+let decryptionKey = keyGen 32
+
+printfn "<machineKey validationKey=\"%s\" decryptionKey=\"%s\" validation=\"SHA1\" />" validationKey decryptionKey

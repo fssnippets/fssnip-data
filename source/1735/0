@@ -1,0 +1,54 @@
+(*
+Currently, the general rules for indentation in F# is that the code on 
+the next line should be indented further than the thing that determines 
+its starting point on the previous line.
+
+There are a number of cases where this quite annoyingly means that you 
+have to indent things very far (or, to avoid that, add lots of 
+unnecessary line breaks). One example is when you have nesting in a 
+method call. For example:
+*)
+Chart.Geo(growth)
+|> Chart.WithOptions(Options(colorAxis=ColorAxis(values=[| -100;0;100;200;1000 |], colors=[| "#77D53D";"#D1C855";"#E8A958";"#EA4C41";"#930700" |])))
+(*
+Now, there is almost no way to make this code snippet look decent. I would
+want to write something like this:
+*)
+Chart.Geo(growth)
+|> Chart.WithOptions(Options(colorAxis=ColorAxis(values=[| -100;0;100;200;1000 |], 
+    colors=[| "#77D53D";"#D1C855";"#E8A958";"#EA4C41";"#930700" |])))
+(*
+But this is not allowed, because "colors" should start after the opening
+parenthesis of ColorAxis, so I would need 50 spaces! To make the number of
+spaces smaller, you can add additional newline (to get the "ColorAxis" more to
+the left), but this looks pretty bad:
+*)
+Chart.Geo(growth)
+|> Chart.WithOptions
+    (Options
+      (colorAxis =
+        ColorAxis
+          (values=[| -100;0;100;200;1000 |], 
+           colors=[| "#77D53D";"#D1C855";"#E8A958";"#EA4C41";"#930700" |])))
+(*
+Another example is very similar, but with list expressions. 
+I want to write:
+*)
+let pop2010 = series [ for c in wb.Countries -> 
+  c.Name => c.Indicators.``CO2 emissions (kt)``.[2010]]
+(*
+This actually works, but it gives warning. Again, it wants me to indent the
+second line so that it is after "for", but then I'm not saving pretty much
+anything by the newline. Or, I can introduce lots of additional newlines 
+and write:
+*)
+let pop2010 =
+  series
+    [ for c in wb.Countries -> 
+        c.Name => c.Indicators.``CO2 emissions (kt)``.[2010]]
+(*
+I think that in situations like these, the rules should be relaxed. 
+In particular, we should not require new line to be intended further 
+than the "starting thing" on the previous line. Just further than the 
+previous line.
+*)

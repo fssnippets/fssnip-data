@@ -1,0 +1,53 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">//#r &quot;System.CoreEx&quot; //for interactive and scripts</span>
+<span class="c">//#r &quot;System.Reactive.dll&quot; </span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">System</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 2)" onmouseover="showTip(event, 'fs1', 2)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 3)" onmouseover="showTip(event, 'fs2', 3)" class="i">Collections</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 4)" onmouseover="showTip(event, 'fs3', 4)" class="i">Generic</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs4', 5)" onmouseover="showTip(event, 'fs4', 5)" class="i">observable</span> <span class="o">=</span> <span class="k">new</span> <span class="i">Subject</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs5', 6)" onmouseover="showTip(event, 'fs5', 6)" class="i">int</span><span class="o">&gt;</span>()
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs6', 7)" onmouseover="showTip(event, 'fs6', 7)" class="i">mySubscribe</span> <span class="o">=</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs7', 8)" onmouseover="showTip(event, 'fs7', 8)" class="i">interested</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs4', 9)" onmouseover="showTip(event, 'fs4', 9)" class="i">observable</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs8', 10)" onmouseover="showTip(event, 'fs8', 10)" class="t">Observable</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs9', 11)" onmouseover="showTip(event, 'fs9', 11)" class="f">filter</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs10', 12)" onmouseover="showTip(event, 'fs10', 12)" class="i">x</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs10', 13)" onmouseover="showTip(event, 'fs10', 13)" class="i">x</span><span class="o">%</span><span class="n">2</span><span class="o">=</span><span class="n">0</span>)
+    <span onmouseout="hideTip(event, 'fs7', 14)" onmouseover="showTip(event, 'fs7', 14)" class="i">interested</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs11', 15)" onmouseover="showTip(event, 'fs11', 15)" class="f">Subscribe</span>(<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs12', 16)" onmouseover="showTip(event, 'fs12', 16)" class="i">i</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs13', 17)" onmouseover="showTip(event, 'fs13', 17)" class="t">Console</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs14', 18)" onmouseover="showTip(event, 'fs14', 18)" class="f">WriteLine</span>(<span class="s">&quot;Hello &quot;</span> <span class="o">+</span> <span onmouseout="hideTip(event, 'fs12', 19)" onmouseover="showTip(event, 'fs12', 19)" class="i">i</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs15', 20)" onmouseover="showTip(event, 'fs15', 20)" class="f">ToString</span>()))
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs16', 21)" onmouseover="showTip(event, 'fs16', 21)" class="i">myYields</span> <span class="o">=</span>
+    <span onmouseout="hideTip(event, 'fs4', 22)" onmouseover="showTip(event, 'fs4', 22)" class="i">observable</span><span class="o">.</span><span class="i">OnNext</span>(<span class="n">1</span>)
+    <span onmouseout="hideTip(event, 'fs4', 23)" onmouseover="showTip(event, 'fs4', 23)" class="i">observable</span><span class="o">.</span><span class="i">OnNext</span>(<span class="n">2</span>)
+    <span onmouseout="hideTip(event, 'fs4', 24)" onmouseover="showTip(event, 'fs4', 24)" class="i">observable</span><span class="o">.</span><span class="i">OnNext</span>(<span class="n">3</span>)
+    <span onmouseout="hideTip(event, 'fs4', 25)" onmouseover="showTip(event, 'fs4', 25)" class="i">observable</span><span class="o">.</span><span class="i">OnNext</span>(<span class="n">4</span>)
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace System</div>
+<div class="tip" id="fs2">namespace System.Collections</div>
+<div class="tip" id="fs3">namespace System.Collections.Generic</div>
+<div class="tip" id="fs4">val observable : IObservable&lt;int&gt;<br /><br />Full name: Script.observable</div>
+<div class="tip" id="fs5">Multiple items<br />val int : value:&#39;T -&gt; int (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.int<br /><br />--------------------<br />type int = int32<br /><br />Full name: Microsoft.FSharp.Core.int<br /><br />--------------------<br />type int&lt;&#39;Measure&gt; = int<br /><br />Full name: Microsoft.FSharp.Core.int&lt;_&gt;</div>
+<div class="tip" id="fs6">val mySubscribe : IDisposable<br /><br />Full name: Script.mySubscribe</div>
+<div class="tip" id="fs7">val interested : IObservable&lt;int&gt;</div>
+<div class="tip" id="fs8">module Observable<br /><br />from Microsoft.FSharp.Control</div>
+<div class="tip" id="fs9">val filter : predicate:(&#39;T -&gt; bool) -&gt; source:IObservable&lt;&#39;T&gt; -&gt; IObservable&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Control.Observable.filter</div>
+<div class="tip" id="fs10">val x : int</div>
+<div class="tip" id="fs11">(extension) IObservable.Subscribe&lt;&#39;T&gt;() : IDisposable<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />member IObservable.Subscribe : callback:(&#39;T -&gt; unit) -&gt; IDisposable<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />(extension) IObservable.Subscribe&lt;&#39;T&gt;(onNext: Action&lt;&#39;T&gt;) : IDisposable<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />(extension) IObservable.Subscribe&lt;&#39;T&gt;(token: Threading.CancellationToken) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />IObservable.Subscribe(observer: IObserver&lt;int&gt;) : IDisposable<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />(extension) IObservable.Subscribe&lt;&#39;T&gt;(onNext: Action&lt;&#39;T&gt;, onError: Action&lt;exn&gt;) : IDisposable<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />(extension) IObservable.Subscribe&lt;&#39;T&gt;(onNext: Action&lt;&#39;T&gt;, onCompleted: Action) : IDisposable<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />(extension) IObservable.Subscribe&lt;&#39;T&gt;(observer: IObserver&lt;&#39;T&gt;, token: Threading.CancellationToken) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />(extension) IObservable.Subscribe&lt;&#39;T&gt;(onNext: Action&lt;&#39;T&gt;, token: Threading.CancellationToken) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />(extension) IObservable.Subscribe&lt;&#39;T&gt;(onNext: Action&lt;&#39;T&gt;, onError: Action&lt;exn&gt;, onCompleted: Action) : IDisposable<br />&#160;&#160;&#160;<em>(+0 other overloads)</em></div>
+<div class="tip" id="fs12">val i : int</div>
+<div class="tip" id="fs13">type Console =<br />&#160;&#160;static member BackgroundColor : ConsoleColor with get, set<br />&#160;&#160;static member Beep : unit -&gt; unit + 1 overload<br />&#160;&#160;static member BufferHeight : int with get, set<br />&#160;&#160;static member BufferWidth : int with get, set<br />&#160;&#160;static member CapsLock : bool<br />&#160;&#160;static member Clear : unit -&gt; unit<br />&#160;&#160;static member CursorLeft : int with get, set<br />&#160;&#160;static member CursorSize : int with get, set<br />&#160;&#160;static member CursorTop : int with get, set<br />&#160;&#160;static member CursorVisible : bool with get, set<br />&#160;&#160;...<br /><br />Full name: System.Console</div>
+<div class="tip" id="fs14">Console.WriteLine() : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.WriteLine(value: string) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.WriteLine(value: obj) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.WriteLine(value: uint64) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.WriteLine(value: int64) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.WriteLine(value: uint32) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.WriteLine(value: int) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.WriteLine(value: float32) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.WriteLine(value: float) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.WriteLine(value: decimal) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em></div>
+<div class="tip" id="fs15">Int32.ToString() : string<br />Int32.ToString(provider: IFormatProvider) : string<br />Int32.ToString(format: string) : string<br />Int32.ToString(format: string, provider: IFormatProvider) : string</div>
+<div class="tip" id="fs16">val myYields : obj<br /><br />Full name: Script.myYields</div>
+

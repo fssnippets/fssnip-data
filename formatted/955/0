@@ -1,0 +1,117 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+<span class="l">38: </span>
+<span class="l">39: </span>
+<span class="l">40: </span>
+<span class="l">41: </span>
+<span class="l">42: </span>
+<span class="l">43: </span>
+<span class="l">44: </span>
+<span class="l">45: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">module</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="t">DirectoryExtensions</span>
+
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">System</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs2', 3)" onmouseover="showTip(event, 'fs2', 3)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 4)" onmouseover="showTip(event, 'fs3', 4)" class="i">IO</span>
+
+<span class="c">/// As System.IO.Directory.EnumerateFiles() but ignoring any files</span>
+<span class="c">/// or directories which cannot be accessed, eg. because of </span>
+<span class="c">/// permissions.</span>
+<span class="c">///</span>
+<span class="c">/// Always recurses into subdirectories.</span>
+<span class="c">///</span>
+<span class="k">let</span> <span class="k">public</span> <span onmouseout="hideTip(event, 'fs4', 5)" onmouseover="showTip(event, 'fs4', 5)" class="f">SafeEnumerateFiles</span>(<span onmouseout="hideTip(event, 'fs5', 6)" onmouseover="showTip(event, 'fs5', 6)" class="i">path</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs6', 7)" onmouseover="showTip(event, 'fs6', 7)" class="t">string</span>, <span onmouseout="hideTip(event, 'fs7', 8)" onmouseover="showTip(event, 'fs7', 8)" class="i">searchPattern</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs6', 9)" onmouseover="showTip(event, 'fs6', 9)" class="t">string</span>) <span class="o">=</span>
+    <span class="c">// Attempts to list the directories below the specified path, and fails silently (empty result) if permission denied.</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs8', 10)" onmouseover="showTip(event, 'fs8', 10)" class="f">tryEnumerateDirs</span> <span onmouseout="hideTip(event, 'fs5', 11)" onmouseover="showTip(event, 'fs5', 11)" class="i">path</span> <span class="o">=</span>
+        <span class="k">try</span>
+            <span onmouseout="hideTip(event, 'fs9', 12)" onmouseover="showTip(event, 'fs9', 12)" class="t">Directory</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs10', 13)" onmouseover="showTip(event, 'fs10', 13)" class="f">EnumerateDirectories</span>(<span onmouseout="hideTip(event, 'fs5', 14)" onmouseover="showTip(event, 'fs5', 14)" class="i">path</span>)
+        <span class="k">with</span>
+            <span class="c">// Silently fail if we don&#39;t have access to list subdirs:</span>
+            | <span class="o">:?</span> <span onmouseout="hideTip(event, 'fs2', 15)" onmouseover="showTip(event, 'fs2', 15)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs11', 16)" onmouseover="showTip(event, 'fs11', 16)" class="t">UnauthorizedAccessException</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs12', 17)" onmouseover="showTip(event, 'fs12', 17)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs13', 18)" onmouseover="showTip(event, 'fs13', 18)" class="i">empty</span>
+
+    <span class="c">// Attempts to list the files the specified path, and fails silently (empty result) if permission denied.</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs14', 19)" onmouseover="showTip(event, 'fs14', 19)" class="f">tryEnumerateFiles</span> <span onmouseout="hideTip(event, 'fs5', 20)" onmouseover="showTip(event, 'fs5', 20)" class="i">path</span> <span onmouseout="hideTip(event, 'fs15', 21)" onmouseover="showTip(event, 'fs15', 21)" class="i">namePattern</span> <span class="o">=</span>
+        <span class="k">try</span>
+            <span onmouseout="hideTip(event, 'fs9', 22)" onmouseover="showTip(event, 'fs9', 22)" class="t">Directory</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs16', 23)" onmouseover="showTip(event, 'fs16', 23)" class="f">EnumerateFiles</span>(<span onmouseout="hideTip(event, 'fs5', 24)" onmouseover="showTip(event, 'fs5', 24)" class="i">path</span>, <span onmouseout="hideTip(event, 'fs15', 25)" onmouseover="showTip(event, 'fs15', 25)" class="i">namePattern</span>)
+        <span class="k">with</span>
+            <span class="c">// Silently fail if we don&#39;t have access to list files:</span>
+            | <span class="o">:?</span> <span onmouseout="hideTip(event, 'fs2', 26)" onmouseover="showTip(event, 'fs2', 26)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs11', 27)" onmouseover="showTip(event, 'fs11', 27)" class="t">UnauthorizedAccessException</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs12', 28)" onmouseover="showTip(event, 'fs12', 28)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs13', 29)" onmouseover="showTip(event, 'fs13', 29)" class="i">empty</span>
+
+    <span class="c">// Lists all directories below (and including) the specified directory.</span>
+    <span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs17', 30)" onmouseover="showTip(event, 'fs17', 30)" class="f">dirsUnder</span> (<span onmouseout="hideTip(event, 'fs18', 31)" onmouseover="showTip(event, 'fs18', 31)" class="i">basePath</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs6', 32)" onmouseover="showTip(event, 'fs6', 32)" class="t">string</span>) <span class="o">:</span> <span onmouseout="hideTip(event, 'fs19', 33)" onmouseover="showTip(event, 'fs19', 33)" class="t">seq</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs6', 34)" onmouseover="showTip(event, 'fs6', 34)" class="t">string</span><span class="o">&gt;</span> <span class="o">=</span>
+        <span onmouseout="hideTip(event, 'fs19', 35)" onmouseover="showTip(event, 'fs19', 35)" class="i">seq</span> {
+            <span class="k">yield!</span> [|<span onmouseout="hideTip(event, 'fs18', 36)" onmouseover="showTip(event, 'fs18', 36)" class="i">basePath</span>|]
+            <span class="k">for</span> <span onmouseout="hideTip(event, 'fs20', 37)" onmouseover="showTip(event, 'fs20', 37)" class="i">subDir</span> <span class="k">in</span> <span onmouseout="hideTip(event, 'fs8', 38)" onmouseover="showTip(event, 'fs8', 38)" class="f">tryEnumerateDirs</span>(<span onmouseout="hideTip(event, 'fs18', 39)" onmouseover="showTip(event, 'fs18', 39)" class="i">basePath</span>) <span class="k">do</span>
+                <span class="k">yield!</span> <span onmouseout="hideTip(event, 'fs17', 40)" onmouseover="showTip(event, 'fs17', 40)" class="f">dirsUnder</span> <span onmouseout="hideTip(event, 'fs20', 41)" onmouseover="showTip(event, 'fs20', 41)" class="i">subDir</span>
+        }
+
+    <span onmouseout="hideTip(event, 'fs17', 42)" onmouseover="showTip(event, 'fs17', 42)" class="f">dirsUnder</span> <span onmouseout="hideTip(event, 'fs5', 43)" onmouseover="showTip(event, 'fs5', 43)" class="i">path</span>
+    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs12', 44)" onmouseover="showTip(event, 'fs12', 44)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs21', 45)" onmouseover="showTip(event, 'fs21', 45)" class="f">map</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs5', 46)" onmouseover="showTip(event, 'fs5', 46)" class="i">path</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs14', 47)" onmouseover="showTip(event, 'fs14', 47)" class="f">tryEnumerateFiles</span> <span onmouseout="hideTip(event, 'fs5', 48)" onmouseover="showTip(event, 'fs5', 48)" class="i">path</span> <span onmouseout="hideTip(event, 'fs7', 49)" onmouseover="showTip(event, 'fs7', 49)" class="i">searchPattern</span>) 
+    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs12', 50)" onmouseover="showTip(event, 'fs12', 50)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs22', 51)" onmouseover="showTip(event, 'fs22', 51)" class="f">concat</span>
+
+<span class="c">// Usage examples:</span>
+<span class="c">//</span>
+<span class="c">// F#: SafeEnumerateFiles(@&quot;x:\mybigdir&quot;, &quot;*.*&quot;) |&gt; Seq.length</span>
+<span class="c">//</span>
+<span class="c">// C#: Console.WriteLine(DirectoryExtensions.SafeEnumerateFiles(@&quot;x:\mybigdir&quot;, @&quot;*.*&quot;).Count());</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">module DirectoryExtensions</div>
+<div class="tip" id="fs2">namespace System</div>
+<div class="tip" id="fs3">namespace System.IO</div>
+<div class="tip" id="fs4">val SafeEnumerateFiles : path:string * searchPattern:string -&gt; seq&lt;string&gt;<br /><br />Full name: DirectoryExtensions.SafeEnumerateFiles<br /><em><br /><br />&#160;As System.IO.Directory.EnumerateFiles() but ignoring any files<br />&#160;or directories which cannot be accessed, eg. because of <br />&#160;permissions.<br /><br />&#160;Always recurses into subdirectories.<br /></em></div>
+<div class="tip" id="fs5">val path : string</div>
+<div class="tip" id="fs6">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />Full name: Microsoft.FSharp.Core.Operators.string<br /><br />--------------------<br />type string = String<br /><br />Full name: Microsoft.FSharp.Core.string</div>
+<div class="tip" id="fs7">val searchPattern : string</div>
+<div class="tip" id="fs8">val tryEnumerateDirs : (string -&gt; Collections.Generic.IEnumerable&lt;string&gt;)</div>
+<div class="tip" id="fs9">type Directory =<br />&#160;&#160;static member CreateDirectory : path:string -&gt; DirectoryInfo + 1 overload<br />&#160;&#160;static member Delete : path:string -&gt; unit + 1 overload<br />&#160;&#160;static member EnumerateDirectories : path:string -&gt; IEnumerable&lt;string&gt; + 2 overloads<br />&#160;&#160;static member EnumerateFileSystemEntries : path:string -&gt; IEnumerable&lt;string&gt; + 2 overloads<br />&#160;&#160;static member EnumerateFiles : path:string -&gt; IEnumerable&lt;string&gt; + 2 overloads<br />&#160;&#160;static member Exists : path:string -&gt; bool<br />&#160;&#160;static member GetAccessControl : path:string -&gt; DirectorySecurity + 1 overload<br />&#160;&#160;static member GetCreationTime : path:string -&gt; DateTime<br />&#160;&#160;static member GetCreationTimeUtc : path:string -&gt; DateTime<br />&#160;&#160;static member GetCurrentDirectory : unit -&gt; string<br />&#160;&#160;...<br /><br />Full name: System.IO.Directory</div>
+<div class="tip" id="fs10">Directory.EnumerateDirectories(path: string) : Collections.Generic.IEnumerable&lt;string&gt;<br />Directory.EnumerateDirectories(path: string, searchPattern: string) : Collections.Generic.IEnumerable&lt;string&gt;<br />Directory.EnumerateDirectories(path: string, searchPattern: string, searchOption: SearchOption) : Collections.Generic.IEnumerable&lt;string&gt;</div>
+<div class="tip" id="fs11">Multiple items<br />type UnauthorizedAccessException =<br />&#160;&#160;inherit SystemException<br />&#160;&#160;new : unit -&gt; UnauthorizedAccessException + 2 overloads<br /><br />Full name: System.UnauthorizedAccessException<br /><br />--------------------<br />UnauthorizedAccessException() : unit<br />UnauthorizedAccessException(message: string) : unit<br />UnauthorizedAccessException(message: string, inner: exn) : unit</div>
+<div class="tip" id="fs12">module Seq<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs13">val empty&lt;&#39;T&gt; : seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.empty</div>
+<div class="tip" id="fs14">val tryEnumerateFiles : (string -&gt; string -&gt; Collections.Generic.IEnumerable&lt;string&gt;)</div>
+<div class="tip" id="fs15">val namePattern : string</div>
+<div class="tip" id="fs16">Directory.EnumerateFiles(path: string) : Collections.Generic.IEnumerable&lt;string&gt;<br />Directory.EnumerateFiles(path: string, searchPattern: string) : Collections.Generic.IEnumerable&lt;string&gt;<br />Directory.EnumerateFiles(path: string, searchPattern: string, searchOption: SearchOption) : Collections.Generic.IEnumerable&lt;string&gt;</div>
+<div class="tip" id="fs17">val dirsUnder : (string -&gt; seq&lt;string&gt;)</div>
+<div class="tip" id="fs18">val basePath : string</div>
+<div class="tip" id="fs19">Multiple items<br />val seq : sequence:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Core.Operators.seq<br /><br />--------------------<br />type seq&lt;&#39;T&gt; = Collections.Generic.IEnumerable&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.seq&lt;_&gt;</div>
+<div class="tip" id="fs20">val subDir : string</div>
+<div class="tip" id="fs21">val map : mapping:(&#39;T -&gt; &#39;U) -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;U&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.map</div>
+<div class="tip" id="fs22">val concat : sources:seq&lt;#seq&lt;&#39;T&gt;&gt; -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.concat</div>
+

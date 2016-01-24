@@ -1,0 +1,105 @@
+<h2><a name="Extending-the-Fold-function-in-terms-of-itself" class="anchor" href="#Extending-the-Fold-function-in-terms-of-itself">Extending the Fold function in terms of itself</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">module</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="t">List</span> <span class="o">=</span>
+
+    <span class="c">//Executes a fold operation within a list returning a two-dimension tuple with</span>
+    <span class="c">//the first element being the result of the fold and the second being the count of the</span>
+    <span class="c">//processed elements.</span>
+    <span class="k">let</span> <span class="k">public</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="f">foldc</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="f">fold</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="i">first</span> <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="i">source</span>  <span class="o">=</span>
+       <span onmouseout="hideTip(event, 'fs5', 6)" onmouseover="showTip(event, 'fs5', 6)" class="i">source</span> 
+       <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs1', 7)" onmouseover="showTip(event, 'fs1', 7)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs6', 8)" onmouseover="showTip(event, 'fs6', 8)" class="f">fold</span>(<span class="k">fun</span> (<span onmouseout="hideTip(event, 'fs7', 9)" onmouseover="showTip(event, 'fs7', 9)" class="i">prev</span>,<span onmouseout="hideTip(event, 'fs8', 10)" onmouseover="showTip(event, 'fs8', 10)" class="i">count</span>) <span onmouseout="hideTip(event, 'fs9', 11)" onmouseover="showTip(event, 'fs9', 11)" class="i">c</span> <span class="k">-&gt;</span> (<span onmouseout="hideTip(event, 'fs3', 12)" onmouseover="showTip(event, 'fs3', 12)" class="f">fold</span> <span onmouseout="hideTip(event, 'fs7', 13)" onmouseover="showTip(event, 'fs7', 13)" class="i">prev</span> <span onmouseout="hideTip(event, 'fs9', 14)" onmouseover="showTip(event, 'fs9', 14)" class="i">c</span>,<span onmouseout="hideTip(event, 'fs8', 15)" onmouseover="showTip(event, 'fs8', 15)" class="i">count</span> <span class="o">+</span> <span class="n">1</span>)) (<span onmouseout="hideTip(event, 'fs4', 16)" onmouseover="showTip(event, 'fs4', 16)" class="i">first</span>,<span class="n">0</span>)
+
+    <span class="c">//Executes a fold operation within a list passing as parameter of the folder function </span>
+    <span class="c">//the zero based index of each element.</span>
+    <span class="k">let</span> <span class="k">public</span> <span onmouseout="hideTip(event, 'fs10', 17)" onmouseover="showTip(event, 'fs10', 17)" class="f">foldi</span> <span onmouseout="hideTip(event, 'fs11', 18)" onmouseover="showTip(event, 'fs11', 18)" class="f">fold</span> <span onmouseout="hideTip(event, 'fs4', 19)" onmouseover="showTip(event, 'fs4', 19)" class="i">first</span> <span onmouseout="hideTip(event, 'fs5', 20)" onmouseover="showTip(event, 'fs5', 20)" class="i">source</span>  <span class="o">=</span>
+       <span onmouseout="hideTip(event, 'fs5', 21)" onmouseover="showTip(event, 'fs5', 21)" class="i">source</span> 
+       <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs1', 22)" onmouseover="showTip(event, 'fs1', 22)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs6', 23)" onmouseover="showTip(event, 'fs6', 23)" class="f">fold</span>(<span class="k">fun</span> (<span onmouseout="hideTip(event, 'fs7', 24)" onmouseover="showTip(event, 'fs7', 24)" class="i">prev</span>,<span onmouseout="hideTip(event, 'fs12', 25)" onmouseover="showTip(event, 'fs12', 25)" class="i">i</span>) <span onmouseout="hideTip(event, 'fs9', 26)" onmouseover="showTip(event, 'fs9', 26)" class="i">c</span> <span class="k">-&gt;</span> (<span onmouseout="hideTip(event, 'fs11', 27)" onmouseover="showTip(event, 'fs11', 27)" class="f">fold</span> <span onmouseout="hideTip(event, 'fs12', 28)" onmouseover="showTip(event, 'fs12', 28)" class="i">i</span> <span onmouseout="hideTip(event, 'fs7', 29)" onmouseover="showTip(event, 'fs7', 29)" class="i">prev</span> <span onmouseout="hideTip(event, 'fs9', 30)" onmouseover="showTip(event, 'fs9', 30)" class="i">c</span>,<span onmouseout="hideTip(event, 'fs12', 31)" onmouseover="showTip(event, 'fs12', 31)" class="i">i</span> <span class="o">+</span> <span class="n">1</span>)) (<span onmouseout="hideTip(event, 'fs4', 32)" onmouseover="showTip(event, 'fs4', 32)" class="i">first</span>,<span class="n">0</span>)
+       <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs13', 33)" onmouseover="showTip(event, 'fs13', 33)" class="f">fst</span>
+
+    <span class="c">//Executes a fold operation within a list passing as parameter of the folder function </span>
+    <span class="c">//the zero based index of each element and returning a two-dimension tuple with</span>
+    <span class="c">//the first element being the result of the fold and the second being the count of the</span>
+    <span class="c">//processed elements.</span>
+    <span class="k">let</span> <span class="k">public</span> <span onmouseout="hideTip(event, 'fs14', 34)" onmouseover="showTip(event, 'fs14', 34)" class="f">foldic</span> <span onmouseout="hideTip(event, 'fs11', 35)" onmouseover="showTip(event, 'fs11', 35)" class="f">fold</span> <span onmouseout="hideTip(event, 'fs4', 36)" onmouseover="showTip(event, 'fs4', 36)" class="i">first</span> <span onmouseout="hideTip(event, 'fs5', 37)" onmouseover="showTip(event, 'fs5', 37)" class="i">source</span>  <span class="o">=</span>
+        <span onmouseout="hideTip(event, 'fs5', 38)" onmouseover="showTip(event, 'fs5', 38)" class="i">source</span> 
+        <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs1', 39)" onmouseover="showTip(event, 'fs1', 39)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs6', 40)" onmouseover="showTip(event, 'fs6', 40)" class="f">fold</span>(<span class="k">fun</span> (<span onmouseout="hideTip(event, 'fs7', 41)" onmouseover="showTip(event, 'fs7', 41)" class="i">prev</span>,<span onmouseout="hideTip(event, 'fs12', 42)" onmouseover="showTip(event, 'fs12', 42)" class="i">i</span>) <span onmouseout="hideTip(event, 'fs9', 43)" onmouseover="showTip(event, 'fs9', 43)" class="i">c</span> <span class="k">-&gt;</span> (<span onmouseout="hideTip(event, 'fs11', 44)" onmouseover="showTip(event, 'fs11', 44)" class="f">fold</span> <span onmouseout="hideTip(event, 'fs12', 45)" onmouseover="showTip(event, 'fs12', 45)" class="i">i</span> <span onmouseout="hideTip(event, 'fs7', 46)" onmouseover="showTip(event, 'fs7', 46)" class="i">prev</span> <span onmouseout="hideTip(event, 'fs9', 47)" onmouseover="showTip(event, 'fs9', 47)" class="i">c</span>, <span onmouseout="hideTip(event, 'fs12', 48)" onmouseover="showTip(event, 'fs12', 48)" class="i">i</span> <span class="o">+</span> <span class="n">1</span>)) (<span onmouseout="hideTip(event, 'fs4', 49)" onmouseover="showTip(event, 'fs4', 49)" class="i">first</span>,<span class="n">0</span>)
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Examples" class="anchor" href="#Examples">Examples</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">let</span> <span onmouseout="hideTip(event, 'fs15', 50)" onmouseover="showTip(event, 'fs15', 50)" class="i">foldc_result</span> <span class="o">=</span> [<span class="n">1</span> <span class="o">..</span> <span class="n">9</span>] 
+                   <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs16', 51)" onmouseover="showTip(event, 'fs16', 51)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 52)" onmouseover="showTip(event, 'fs2', 52)" class="f">foldc</span> (<span class="o">+</span>) <span class="n">0</span>
+                   <span class="c">//(45,9)</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs17', 53)" onmouseover="showTip(event, 'fs17', 53)" class="i">foldi_result</span> <span class="o">=</span> [<span class="n">1</span> <span class="o">..</span> <span class="n">9</span>] 
+                   <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs16', 54)" onmouseover="showTip(event, 'fs16', 54)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs10', 55)" onmouseover="showTip(event, 'fs10', 55)" class="f">foldi</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs12', 56)" onmouseover="showTip(event, 'fs12', 56)" class="i">i</span> (<span onmouseout="hideTip(event, 'fs18', 57)" onmouseover="showTip(event, 'fs18', 57)" class="i">s1</span>,<span onmouseout="hideTip(event, 'fs19', 58)" onmouseover="showTip(event, 'fs19', 58)" class="i">s2</span>) <span onmouseout="hideTip(event, 'fs20', 59)" onmouseover="showTip(event, 'fs20', 59)" class="i">c</span> <span class="k">-&gt;</span> (<span onmouseout="hideTip(event, 'fs18', 60)" onmouseover="showTip(event, 'fs18', 60)" class="i">s1</span> <span class="o">+</span> (<span class="n">2.0</span> <span class="o">**</span> <span onmouseout="hideTip(event, 'fs21', 61)" onmouseover="showTip(event, 'fs21', 61)" class="f">float</span> <span onmouseout="hideTip(event, 'fs20', 62)" onmouseover="showTip(event, 'fs20', 62)" class="i">c</span>), 
+                                                      <span onmouseout="hideTip(event, 'fs19', 63)" onmouseover="showTip(event, 'fs19', 63)" class="i">s2</span> <span class="o">+</span> (<span class="n">2.0</span> <span class="o">**</span> <span onmouseout="hideTip(event, 'fs21', 64)" onmouseover="showTip(event, 'fs21', 64)" class="f">float</span> <span onmouseout="hideTip(event, 'fs12', 65)" onmouseover="showTip(event, 'fs12', 65)" class="i">i</span>))) (<span class="n">0.0</span>,<span class="n">0.0</span>) 
+                   <span class="c">//(1022.0, 511.0)</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs22', 66)" onmouseover="showTip(event, 'fs22', 66)" class="i">foldic_result</span> <span class="o">=</span> [<span class="n">1</span> <span class="o">..</span> <span class="n">9</span>] 
+                   <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs16', 67)" onmouseover="showTip(event, 'fs16', 67)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs14', 68)" onmouseover="showTip(event, 'fs14', 68)" class="f">foldic</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs12', 69)" onmouseover="showTip(event, 'fs12', 69)" class="i">i</span> (<span onmouseout="hideTip(event, 'fs18', 70)" onmouseover="showTip(event, 'fs18', 70)" class="i">s1</span>,<span onmouseout="hideTip(event, 'fs19', 71)" onmouseover="showTip(event, 'fs19', 71)" class="i">s2</span>) <span onmouseout="hideTip(event, 'fs20', 72)" onmouseover="showTip(event, 'fs20', 72)" class="i">c</span> <span class="k">-&gt;</span> (<span onmouseout="hideTip(event, 'fs18', 73)" onmouseover="showTip(event, 'fs18', 73)" class="i">s1</span> <span class="o">+</span> (<span class="n">2.0</span> <span class="o">**</span> <span onmouseout="hideTip(event, 'fs21', 74)" onmouseover="showTip(event, 'fs21', 74)" class="f">float</span> <span onmouseout="hideTip(event, 'fs20', 75)" onmouseover="showTip(event, 'fs20', 75)" class="i">c</span>), 
+                                                       <span onmouseout="hideTip(event, 'fs19', 76)" onmouseover="showTip(event, 'fs19', 76)" class="i">s2</span> <span class="o">+</span> (<span class="n">2.0</span> <span class="o">**</span> <span onmouseout="hideTip(event, 'fs21', 77)" onmouseover="showTip(event, 'fs21', 77)" class="f">float</span> <span onmouseout="hideTip(event, 'fs12', 78)" onmouseover="showTip(event, 'fs12', 78)" class="i">i</span>))) (<span class="n">0.0</span>,<span class="n">0.0</span>) 
+                    <span class="c">//(1022.0, 511.0,9)        </span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">Multiple items<br />module List<br /><br />from Microsoft.FSharp.Collections<br /><br />--------------------<br />type List&lt;&#39;T&gt; =<br />&#160;&#160;| ( [] )<br />&#160;&#160;| ( :: ) of Head: &#39;T * Tail: &#39;T list<br />&#160;&#160;interface IEnumerable<br />&#160;&#160;interface IEnumerable&lt;&#39;T&gt;<br />&#160;&#160;member Head : &#39;T<br />&#160;&#160;member IsEmpty : bool<br />&#160;&#160;member Item : index:int -&gt; &#39;T with get<br />&#160;&#160;member Length : int<br />&#160;&#160;member Tail : &#39;T list<br />&#160;&#160;static member Cons : head:&#39;T * tail:&#39;T list -&gt; &#39;T list<br />&#160;&#160;static member Empty : &#39;T list<br /><br />Full name: Microsoft.FSharp.Collections.List&lt;_&gt;</div>
+<div class="tip" id="fs2">val foldc : fold:(&#39;a -&gt; &#39;b -&gt; &#39;a) -&gt; first:&#39;a -&gt; source:&#39;b list -&gt; &#39;a * int<br /><br />Full name: Script.List.foldc</div>
+<div class="tip" id="fs3">val fold : (&#39;a -&gt; &#39;b -&gt; &#39;a)</div>
+<div class="tip" id="fs4">val first : &#39;a</div>
+<div class="tip" id="fs5">val source : &#39;b list</div>
+<div class="tip" id="fs6">val fold : folder:(&#39;State -&gt; &#39;T -&gt; &#39;State) -&gt; state:&#39;State -&gt; list:&#39;T list -&gt; &#39;State<br /><br />Full name: Microsoft.FSharp.Collections.List.fold</div>
+<div class="tip" id="fs7">val prev : &#39;a</div>
+<div class="tip" id="fs8">val count : int</div>
+<div class="tip" id="fs9">val c : &#39;b</div>
+<div class="tip" id="fs10">val foldi : fold:(int -&gt; &#39;a -&gt; &#39;b -&gt; &#39;a) -&gt; first:&#39;a -&gt; source:&#39;b list -&gt; &#39;a<br /><br />Full name: Script.List.foldi</div>
+<div class="tip" id="fs11">val fold : (int -&gt; &#39;a -&gt; &#39;b -&gt; &#39;a)</div>
+<div class="tip" id="fs12">val i : int</div>
+<div class="tip" id="fs13">val fst : tuple:(&#39;T1 * &#39;T2) -&gt; &#39;T1<br /><br />Full name: Microsoft.FSharp.Core.Operators.fst</div>
+<div class="tip" id="fs14">val foldic : fold:(int -&gt; &#39;a -&gt; &#39;b -&gt; &#39;a) -&gt; first:&#39;a -&gt; source:&#39;b list -&gt; &#39;a * int<br /><br />Full name: Script.List.foldic</div>
+<div class="tip" id="fs15">val foldc_result : int * int<br /><br />Full name: Script.foldc_result</div>
+<div class="tip" id="fs16">Multiple items<br />module List<br /><br />from Script<br /><br />--------------------<br />module List<br /><br />from Microsoft.FSharp.Collections<br /><br />--------------------<br />type List&lt;&#39;T&gt; =<br />&#160;&#160;| ( [] )<br />&#160;&#160;| ( :: ) of Head: &#39;T * Tail: &#39;T list<br />&#160;&#160;interface IEnumerable<br />&#160;&#160;interface IEnumerable&lt;&#39;T&gt;<br />&#160;&#160;member Head : &#39;T<br />&#160;&#160;member IsEmpty : bool<br />&#160;&#160;member Item : index:int -&gt; &#39;T with get<br />&#160;&#160;member Length : int<br />&#160;&#160;member Tail : &#39;T list<br />&#160;&#160;static member Cons : head:&#39;T * tail:&#39;T list -&gt; &#39;T list<br />&#160;&#160;static member Empty : &#39;T list<br /><br />Full name: Microsoft.FSharp.Collections.List&lt;_&gt;</div>
+<div class="tip" id="fs17">val foldi_result : float * float<br /><br />Full name: Script.foldi_result</div>
+<div class="tip" id="fs18">val s1 : float</div>
+<div class="tip" id="fs19">val s2 : float</div>
+<div class="tip" id="fs20">val c : int</div>
+<div class="tip" id="fs21">Multiple items<br />val float : value:&#39;T -&gt; float (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.float<br /><br />--------------------<br />type float = System.Double<br /><br />Full name: Microsoft.FSharp.Core.float<br /><br />--------------------<br />type float&lt;&#39;Measure&gt; = float<br /><br />Full name: Microsoft.FSharp.Core.float&lt;_&gt;</div>
+<div class="tip" id="fs22">val foldic_result : (float * float) * int<br /><br />Full name: Script.foldic_result</div>
+

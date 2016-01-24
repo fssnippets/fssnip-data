@@ -1,0 +1,59 @@
+#r "Microsoft.SqlServer.ConnectionInfo" 
+#r "Microsoft.SqlServer.Smo" 
+#r "Microsoft.SqlServer.SmoExtended.dll"
+#r "Microsoft.SqlServer.Management.Sdk.Sfc"
+
+// Based on this script shown here:
+// https://www.mssqltips.com/sqlservertip/1910/transfer-sql-server-database-schema-objects-and-data-with-smo/
+
+open System
+open Microsoft.SqlServer.Management.Smo
+open Microsoft.SqlServer.Management.Common
+
+let serverWithConnection (serverName : string) =
+    let server = Server(serverName)
+    server.ConnectionContext.LoginSecure <- true
+    server.ConnectionContext.Connect()
+    server
+
+let sourceServer = serverWithConnection("RKNVIDW01")
+let sourceDatabase = sourceServer.Databases.["Demo"]
+
+let destServer = serverWithConnection("NZ-JEREMYH-WKS")
+let destDatabase = Database(destServer, "DemoCopy")
+
+if [| for database in destServer.Databases -> database.Name |] 
+   |> Array.exists (fun databaseName -> databaseName = "DemoCopy") then
+    let existingDestDatabase = destServer.Databases.["DemoCopy"]
+    existingDestDatabase.Drop()
+    destDatabase.Create()
+else
+    destDatabase.Create()
+
+let transferDatabase = 
+    Transfer(sourceDatabase, 
+        CopyAllObjects = true, 
+        CopyAllSchemas = true, 
+        CopyAllUserDefinedDataTypes = true, 
+        CopyAllTables = true, 
+        CopyData = true, 
+        CopyAllStoredProcedures = true,
+        DestinationServer = destServer.Name,
+        DestinationDatabase = destDatabase.Name)
+
+transferDatabase.DataTransferEvent.Add(fun args ->
+    Console.ForegroundColor <- ConsoleColor.Green
+    Console.Write("[" + args.DataTransferEventType.ToString() + "] ")
+    Console.ResetColor()
+    Console.WriteLine(" : " + args.Message))
+
+transferDatabase.DiscoveryProgress.Add(fun args ->
+    Console.WriteLine("[" + args.Current.Value + "]" ))
+
+transferDatabase.ScriptingProgress.Add(fun args ->
+    Console.WriteLine("[" + args.Current.Value + "]"))
+
+transferDatabase.ScriptingError.Add(fun args ->
+    Console.WriteLine("[" + args.Current.Value + "]"))
+
+transferDatabase.TransferData()

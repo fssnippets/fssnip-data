@@ -1,0 +1,46 @@
+open System.Numerics
+// optional
+open MathNet.Numerics
+
+module NumericLiteralG = 
+    type GenericNumber = GenericNumber with
+        static member instance (GenericNumber, x:int32, _:int8) = fun () -> int8 x
+        static member instance (GenericNumber, x:int32, _:uint8) = fun () -> uint8 x
+        static member instance (GenericNumber, x:int32, _:int16) = fun () -> int16 x
+        static member instance (GenericNumber, x:int32, _:uint16) = fun () -> uint16 x
+        static member instance (GenericNumber, x:int32, _:int32) = fun () -> x
+        static member instance (GenericNumber, x:int32, _:uint32) = fun () -> uint32 x
+        static member instance (GenericNumber, x:int32, _:int64) = fun () -> int64 x
+        static member instance (GenericNumber, x:int32, _:uint64) = fun () -> uint64 x
+        static member instance (GenericNumber, x:int32, _:float32) = fun () -> float32 x
+        static member instance (GenericNumber, x:int32, _:float) = fun () -> float x
+        static member instance (GenericNumber, x:int32, _:bigint) = fun () -> bigint x
+        static member instance (GenericNumber, x:int32, _:decimal) = fun () -> decimal x
+        static member instance (GenericNumber, x:int32, _:Complex) = fun () -> Complex.op_Implicit x
+        static member instance (GenericNumber, x:int64, _:int64) = fun () -> int64 x
+        static member instance (GenericNumber, x:int64, _:uint64) = fun () -> uint64 x
+        static member instance (GenericNumber, x:int64, _:float32) = fun () -> float32 x
+        static member instance (GenericNumber, x:int64, _:float) = fun () -> float x
+        static member instance (GenericNumber, x:int64, _:bigint) = fun () -> bigint x
+        static member instance (GenericNumber, x:int64, _:decimal) = fun () -> decimal x
+        static member instance (GenericNumber, x:int64, _:Complex) = fun () -> Complex.op_Implicit x
+        static member instance (GenericNumber, x:string, _:float32) = fun () -> float32 x
+        static member instance (GenericNumber, x:string, _:float) = fun () -> float x
+        static member instance (GenericNumber, x:string, _:bigint) = fun () -> bigint.Parse x
+        static member instance (GenericNumber, x:string, _:decimal) = fun () -> decimal x
+        static member instance (GenericNumber, x:string, _:Complex) = fun () -> Complex(float x, 0.0)
+        // MathNet.Numerics
+        static member instance (GenericNumber, x:int32, _:Complex32) = fun () -> Complex32.op_Implicit x
+        static member instance (GenericNumber, x:int32, _:bignum) = fun () -> bignum.FromInt x
+        static member instance (GenericNumber, x:int64, _:Complex32) = fun () -> Complex32.op_Implicit x
+        static member instance (GenericNumber, x:int64, _:bignum) = fun () -> bignum.FromBigInt (bigint x)
+        static member instance (GenericNumber, x:string, _:Complex32) = fun () -> Complex32(float32 x, 0.0f)
+        static member instance (GenericNumber, x:string, _:bignum) = fun () -> bignum.FromBigInt (bigint.Parse x)
+
+    let inline genericNumber num = Inline.instance (GenericNumber, num) ()
+
+    let inline FromZero () = LanguagePrimitives.GenericZero
+    let inline FromOne () = LanguagePrimitives.GenericOne
+    let inline FromInt32 n = genericNumber n
+    let inline FromInt64 n = genericNumber n
+    let inline FromString n = genericNumber n

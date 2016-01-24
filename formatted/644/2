@@ -1,0 +1,449 @@
+<h2><a name="Ninety-Nine-F-Problems-Problems-11-20-List-continued" class="anchor" href="#Ninety-Nine-F-Problems-Problems-11-20-List-continued">Ninety-Nine F# Problems - Problems 11 - 20 - List, continued</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// These are F# solutions of Ninety-Nine Haskell Problems </span>
+<span class="c">/// (http://www.haskell.org/haskellwiki/H-99:_Ninety-Nine_Haskell_Problems), </span>
+<span class="c">/// which are themselves translations of Ninety-Nine Lisp Problems</span>
+<span class="c">/// (http://www.ic.unicamp.br/~meidanis/courses/mc336/2006s2/funcional/L-99_Ninety-Nine_Lisp_Problems.html)</span>
+<span class="c">/// and Ninety-Nine Prolog Problems</span>
+<span class="c">/// (https://sites.google.com/site/prologsite/prolog-problems).</span>
+<span class="c">///</span>
+<span class="c">/// If you would like to contribute a solution or fix any bugs, send </span>
+<span class="c">/// an email to paks at kitiara dot org with the subject &quot;99 F# problems&quot;. </span>
+<span class="c">/// I&#39;ll try to update the problem as soon as possible.</span>
+<span class="c">///</span>
+<span class="c">/// The problems have different levels of difficulty. Those marked with a single asterisk (*) </span>
+<span class="c">/// are easy. If you have successfully solved the preceeding problems you should be able to </span>
+<span class="c">/// solve them within a few (say 15) minutes. Problems marked with two asterisks (**) are of </span>
+<span class="c">/// intermediate difficulty. If you are a skilled F# programmer it shouldn&#39;t take you more than </span>
+<span class="c">/// 30-90 minutes to solve them. Problems marked with three asterisks (***) are more difficult. </span>
+<span class="c">/// You may need more time (i.e. a few hours or more) to find a good solution</span>
+<span class="c">///</span>
+<span class="c">/// Though the problems number from 1 to 99, there are some gaps and some additions marked with </span>
+<span class="c">/// letters. There are actually only 88 problems.</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Problem-11-Modified-run-length-encoding" class="anchor" href="#Problem-11-Modified-run-length-encoding">(*) Problem 11 :  Modified run-length encoding.</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// Modify the result of problem 10 in such a way that if an element has no duplicates it </span>
+<span class="c">/// is simply copied into the result list. Only elements with duplicates are transferred as</span>
+<span class="c">/// (N E) lists.</span>
+<span class="c">///  </span>
+<span class="c">/// Example: </span>
+<span class="c">/// * (encode-modified &#39;(a a a a b c c a a d e e e e))</span>
+<span class="c">/// ((4 A) B (2 C) (2 A) D (4 E))</span>
+<span class="c">///  </span>
+<span class="c">/// Example in F#: </span>
+<span class="c">/// </span>
+<span class="c">/// &gt; encodeModified &lt;| List.ofSeq &quot;aaaabccaadeeee&quot;</span>
+<span class="c">/// val it : char Encoding list =</span>
+<span class="c">///   [Multiple (4,&#39;a&#39;); Single &#39;b&#39;; Multiple (2,&#39;c&#39;); Multiple (2,&#39;a&#39;);</span>
+<span class="c">///    Single &#39;d&#39;; Multiple (4,&#39;e&#39;)]</span>
+
+<span class="k">type</span> <span class="o">&#39;</span><span class="i">a</span> <span class="t">Encoding</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="p">Multiple</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="t">int</span> <span class="o">*</span> <span class="o">&#39;</span><span class="i">a</span> | <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="p">Single</span> <span class="k">of</span> <span class="o">&#39;</span><span class="i">a</span>
+
+<span id="fst4" onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4, document.getElementById('fst4'))" class="omitted">(Solution)</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Problem-12-Decode-a-run-length-encoded-list" class="anchor" href="#Problem-12-Decode-a-run-length-encoded-list">(<em></em>) Problem 12 : Decode a run-length encoded list.</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// Given a run-length code list generated as specified in problem 11. Construct its </span>
+<span class="c">/// uncompressed version.</span>
+<span class="c">///  </span>
+<span class="c">/// Example in F#: </span>
+<span class="c">/// </span>
+<span class="c">/// &gt; decodeModified </span>
+<span class="c">///     [Multiple (4,&#39;a&#39;);Single &#39;b&#39;;Multiple (2,&#39;c&#39;);</span>
+<span class="c">///      Multiple (2,&#39;a&#39;);Single &#39;d&#39;;Multiple (4,&#39;e&#39;)];;</span>
+<span class="c">/// val it : char list =</span>
+<span class="c">///   [&#39;a&#39;; &#39;a&#39;; &#39;a&#39;; &#39;a&#39;; &#39;b&#39;; &#39;c&#39;; &#39;c&#39;; &#39;a&#39;; &#39;a&#39;; &#39;d&#39;; &#39;e&#39;; &#39;e&#39;; &#39;e&#39;; &#39;e&#39;]</span>
+
+<span id="fst5" onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5, document.getElementById('fst5'))" class="omitted">(Solution)</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Problem-13-Run-length-encoding-of-a-list-direct-solution" class="anchor" href="#Problem-13-Run-length-encoding-of-a-list-direct-solution">(<em></em>) Problem 13 : Run-length encoding of a list (direct solution).</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// Implement the so-called run-length encoding data compression method directly. I.e. </span>
+<span class="c">/// don&#39;t explicitly create the sublists containing the duplicates, as in problem 9, </span>
+<span class="c">/// but only count them. As in problem P11, simplify the result list by replacing the </span>
+<span class="c">/// singleton lists (1 X) by X.</span>
+<span class="c">///  </span>
+<span class="c">/// Example: </span>
+<span class="c">/// * (encode-direct &#39;(a a a a b c c a a d e e e e))</span>
+<span class="c">/// ((4 A) B (2 C) (2 A) D (4 E))</span>
+<span class="c">///  </span>
+<span class="c">/// Example in F#: </span>
+<span class="c">/// </span>
+<span class="c">/// &gt; encodeDirect &lt;| List.ofSeq &quot;aaaabccaadeeee&quot;</span>
+<span class="c">/// val it : char Encoding list =</span>
+<span class="c">///   [Multiple (4,&#39;a&#39;); Single &#39;b&#39;; Multiple (2,&#39;c&#39;); Multiple (2,&#39;a&#39;);</span>
+<span class="c">///    Single &#39;d&#39;; Multiple (4,&#39;e&#39;)]</span>
+
+<span id="fst6" onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6, document.getElementById('fst6'))" class="omitted">(Solution)</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Problem-14-Duplicate-the-elements-of-a-list" class="anchor" href="#Problem-14-Duplicate-the-elements-of-a-list">(*) Problem 14 : Duplicate the elements of a list.</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// Example: </span>
+<span class="c">/// * (dupli &#39;(a b c c d))</span>
+<span class="c">/// (A A B B C C C C D D)</span>
+<span class="c">///  </span>
+<span class="c">/// Example in F#: </span>
+<span class="c">/// </span>
+<span class="c">/// &gt; dupli [1; 2; 3]</span>
+<span class="c">/// [1;1;2;2;3;3]</span>
+
+<span id="fst7" onmouseout="hideTip(event, 'fs7', 7)" onmouseover="showTip(event, 'fs7', 7, document.getElementById('fst7'))" class="omitted">(Solution 1)</span>
+
+<span id="fst8" onmouseout="hideTip(event, 'fs8', 8)" onmouseover="showTip(event, 'fs8', 8, document.getElementById('fst8'))" class="omitted">(Solution 2)</span>
+
+<span id="fst9" onmouseout="hideTip(event, 'fs9', 9)" onmouseover="showTip(event, 'fs9', 9, document.getElementById('fst9'))" class="omitted">(Solution 3)</span>
+
+<span id="fst10" onmouseout="hideTip(event, 'fs10', 10)" onmouseover="showTip(event, 'fs10', 10, document.getElementById('fst10'))" class="omitted">(Solution 4)</span>
+
+<span id="fst11" onmouseout="hideTip(event, 'fs11', 11)" onmouseover="showTip(event, 'fs11', 11, document.getElementById('fst11'))" class="omitted">(Solution 5)</span>
+
+<span id="fst12" onmouseout="hideTip(event, 'fs12', 12)" onmouseover="showTip(event, 'fs12', 12, document.getElementById('fst12'))" class="omitted">(Solution 6)</span>
+
+<span id="fst13" onmouseout="hideTip(event, 'fs13', 13)" onmouseover="showTip(event, 'fs13', 13, document.getElementById('fst13'))" class="omitted">(Solution 7)</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Problem-15-Replicate-the-elements-of-a-list-a-given-number-of-times" class="anchor" href="#Problem-15-Replicate-the-elements-of-a-list-a-given-number-of-times">(<em></em>) Problem 15 : Replicate the elements of a list a given number of times.</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// Example: </span>
+<span class="c">/// * (repli &#39;(a b c) 3)</span>
+<span class="c">/// (A A A B B B C C C)</span>
+<span class="c">///  </span>
+<span class="c">/// Example in F#: </span>
+<span class="c">/// </span>
+<span class="c">/// &gt; repli (List.ofSeq &quot;abc&quot;) 3</span>
+<span class="c">/// val it : char list = [&#39;a&#39;; &#39;a&#39;; &#39;a&#39;; &#39;b&#39;; &#39;b&#39;; &#39;b&#39;; &#39;c&#39;; &#39;c&#39;; &#39;c&#39;]</span>
+
+<span id="fst14" onmouseout="hideTip(event, 'fs14', 14)" onmouseover="showTip(event, 'fs14', 14, document.getElementById('fst14'))" class="omitted">(Solution 1)</span>
+
+<span id="fst15" onmouseout="hideTip(event, 'fs15', 15)" onmouseover="showTip(event, 'fs15', 15, document.getElementById('fst15'))" class="omitted">(Solution 2)</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Problem-16-Drop-every-N-th-element-from-a-list" class="anchor" href="#Problem-16-Drop-every-N-th-element-from-a-list">(<em></em>) Problem 16 : Drop every N'th element from a list.</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// Example: </span>
+<span class="c">/// * (drop &#39;(a b c d e f g h i k) 3)</span>
+<span class="c">/// (A B D E G H K)</span>
+<span class="c">///  </span>
+<span class="c">/// Example in F#: </span>
+<span class="c">/// </span>
+<span class="c">/// &gt; dropEvery (List.ofSeq &quot;abcdefghik&quot;) 3;;</span>
+<span class="c">/// val it : char list = [&#39;a&#39;; &#39;b&#39;; &#39;d&#39;; &#39;e&#39;; &#39;g&#39;; &#39;h&#39;; &#39;k&#39;]</span>
+
+<span id="fst16" onmouseout="hideTip(event, 'fs16', 16)" onmouseover="showTip(event, 'fs16', 16, document.getElementById('fst16'))" class="omitted">(Solution 1)</span>
+
+<span id="fst17" onmouseout="hideTip(event, 'fs17', 17)" onmouseover="showTip(event, 'fs17', 17, document.getElementById('fst17'))" class="omitted">(Solution 2)</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Problem-17-Split-a-list-into-two-parts-the-length-of-the-first-part-is-given" class="anchor" href="#Problem-17-Split-a-list-into-two-parts-the-length-of-the-first-part-is-given">(*) Problem 17 : Split a list into two parts; the length of the first part is given.</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// Do not use any predefined predicates. </span>
+<span class="c">/// </span>
+<span class="c">/// Example: </span>
+<span class="c">/// * (split &#39;(a b c d e f g h i k) 3)</span>
+<span class="c">/// ( (A B C) (D E F G H I K))</span>
+<span class="c">///  </span>
+<span class="c">/// Example in F#: </span>
+<span class="c">/// </span>
+<span class="c">/// &gt; split (List.ofSeq &quot;abcdefghik&quot;) 3</span>
+<span class="c">/// val it : char list * char list =</span>
+<span class="c">///   ([&#39;a&#39;; &#39;b&#39;; &#39;c&#39;], [&#39;d&#39;; &#39;e&#39;; &#39;f&#39;; &#39;g&#39;; &#39;h&#39;; &#39;i&#39;; &#39;k&#39;])</span>
+
+<span id="fst18" onmouseout="hideTip(event, 'fs18', 18)" onmouseover="showTip(event, 'fs18', 18, document.getElementById('fst18'))" class="omitted">(Solution)</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Problem-18-Extract-a-slice-from-a-list" class="anchor" href="#Problem-18-Extract-a-slice-from-a-list">(<em></em>) Problem 18 : Extract a slice from a list.</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// Given two indices, i and k, the slice is the list containing the elements between the </span>
+<span class="c">/// i&#39;th and k&#39;th element of the original list (both limits included). Start counting the </span>
+<span class="c">/// elements with 1.</span>
+<span class="c">///  </span>
+<span class="c">/// Example: </span>
+<span class="c">/// * (slice &#39;(a b c d e f g h i k) 3 7)</span>
+<span class="c">/// (C D E F G)</span>
+<span class="c">///  </span>
+<span class="c">/// Example in F#: </span>
+<span class="c">/// </span>
+<span class="c">/// &gt; slice [&#39;a&#39;;&#39;b&#39;;&#39;c&#39;;&#39;d&#39;;&#39;e&#39;;&#39;f&#39;;&#39;g&#39;;&#39;h&#39;;&#39;i&#39;;&#39;k&#39;] 3 7;;</span>
+<span class="c">/// val it : char list = [&#39;c&#39;; &#39;d&#39;; &#39;e&#39;; &#39;f&#39;; &#39;g&#39;]</span>
+
+<span id="fst19" onmouseout="hideTip(event, 'fs19', 19)" onmouseover="showTip(event, 'fs19', 19, document.getElementById('fst19'))" class="omitted">(Solution 1)</span>
+
+<span id="fst20" onmouseout="hideTip(event, 'fs20', 20)" onmouseover="showTip(event, 'fs20', 20, document.getElementById('fst20'))" class="omitted">(Solution 2)</span>
+
+<span id="fst21" onmouseout="hideTip(event, 'fs21', 21)" onmouseover="showTip(event, 'fs21', 21, document.getElementById('fst21'))" class="omitted">(Solution 3)</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Problem-19-Rotate-a-list-N-places-to-the-left" class="anchor" href="#Problem-19-Rotate-a-list-N-places-to-the-left">(<em></em>) Problem 19 : Rotate a list N places to the left.</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// Hint: Use the predefined functions length and (@) </span>
+<span class="c">/// </span>
+<span class="c">/// Examples: </span>
+<span class="c">/// * (rotate &#39;(a b c d e f g h) 3)</span>
+<span class="c">/// (D E F G H A B C)</span>
+<span class="c">/// </span>
+<span class="c">/// * (rotate &#39;(a b c d e f g h) -2)</span>
+<span class="c">/// (G H A B C D E F)</span>
+<span class="c">///  </span>
+<span class="c">/// Examples in F#: </span>
+<span class="c">/// </span>
+<span class="c">/// &gt; rotate [&#39;a&#39;;&#39;b&#39;;&#39;c&#39;;&#39;d&#39;;&#39;e&#39;;&#39;f&#39;;&#39;g&#39;;&#39;h&#39;] 3;;</span>
+<span class="c">/// val it : char list = [&#39;d&#39;; &#39;e&#39;; &#39;f&#39;; &#39;g&#39;; &#39;h&#39;; &#39;a&#39;; &#39;b&#39;; &#39;c&#39;]</span>
+<span class="c">///  </span>
+<span class="c">/// &gt; rotate [&#39;a&#39;;&#39;b&#39;;&#39;c&#39;;&#39;d&#39;;&#39;e&#39;;&#39;f&#39;;&#39;g&#39;;&#39;h&#39;] (-2);;</span>
+<span class="c">/// val it : char list = [&#39;g&#39;; &#39;h&#39;; &#39;a&#39;; &#39;b&#39;; &#39;c&#39;; &#39;d&#39;; &#39;e&#39;; &#39;f&#39;]</span>
+
+<span id="fst22" onmouseout="hideTip(event, 'fs22', 22)" onmouseover="showTip(event, 'fs22', 22, document.getElementById('fst22'))" class="omitted">(Solution 1)</span>
+
+<span id="fst23" onmouseout="hideTip(event, 'fs23', 23)" onmouseover="showTip(event, 'fs23', 23, document.getElementById('fst23'))" class="omitted">(Solution 2)</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Problem-20-Remove-the-K-th-element-from-a-list" class="anchor" href="#Problem-20-Remove-the-K-th-element-from-a-list">(*) Problem 20 : Remove the K'th element from a list.</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// Example in Prolog: </span>
+<span class="c">/// ?- remove_at(X,[a,b,c,d],2,R).</span>
+<span class="c">/// X = b</span>
+<span class="c">/// R = [a,c,d]</span>
+<span class="c">///  </span>
+<span class="c">/// Example in Lisp: </span>
+<span class="c">/// * (remove-at &#39;(a b c d) 2)</span>
+<span class="c">/// (A C D)</span>
+<span class="c">///  </span>
+<span class="c">/// (Note that this only returns the residue list, while the Prolog version also returns </span>
+<span class="c">/// the deleted element.)</span>
+<span class="c">///  </span>
+<span class="c">/// Example in F#: </span>
+<span class="c">/// </span>
+<span class="c">/// &gt; removeAt 1 &lt;| List.ofSeq &quot;abcd&quot;;;</span>
+<span class="c">/// val it : char * char list = (&#39;b&#39;, [&#39;a&#39;; &#39;c&#39;; &#39;d&#39;])</span>
+
+<span id="fst24" onmouseout="hideTip(event, 'fs24', 24)" onmouseover="showTip(event, 'fs24', 24, document.getElementById('fst24'))" class="omitted">(Solution 1)</span>
+
+<span id="fst25" onmouseout="hideTip(event, 'fs25', 25)" onmouseover="showTip(event, 'fs25', 25, document.getElementById('fst25'))" class="omitted">(Solution 2)</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">union case Encoding.Multiple: int * &#39;a -&gt; &#39;a Encoding</div>
+<div class="tip" id="fs2">Multiple items<br />val int : value:&#39;T -&gt; int (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.int<br /><br />--------------------<br />type int = int32<br /><br />Full name: Microsoft.FSharp.Core.int<br /><br />--------------------<br />type int&lt;&#39;Measure&gt; = int<br /><br />Full name: Microsoft.FSharp.Core.int&lt;_&gt;</div>
+<div class="tip" id="fs3">union case Encoding.Single: &#39;a -&gt; &#39;a Encoding</div>
+<div class="tip" id="fs4">/// From problem 9 <br />let pack xs = <br />&#160;&#160;&#160;&#160;let collect x = function<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| [] -&gt; failwith &quot;empty list you fool!&quot;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| []::xss -&gt; [x]::xss<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| (y::xs)::xss as acc -&gt; <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;if x = y then<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;(x::y::xs)::xss<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;else<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;[x]::acc<br />&#160;&#160;&#160;&#160;List.foldBack collect xs [[]]<br /><br />let encodeModified xs = xs |&gt; pack |&gt; List.map (Seq.countBy id &gt;&gt; Seq.head &gt;&gt; fun(x,n)-&gt; if n = 1 then Single x else Multiple (n,x))</div>
+<div class="tip" id="fs5">let decodeModified xs = <br />&#160;&#160;&#160;&#160;let expand = function<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| Single x -&gt; [x]<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| Multiple (n,x) -&gt; List.replicate n x<br />&#160;&#160;&#160;&#160;xs |&gt; List.collect expand</div>
+<div class="tip" id="fs6">let encodeDirect xs = <br />&#160;&#160;&#160;&#160;let collect x = function<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| [] -&gt; [Single x]<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| Single y::xs when x = y -&gt; Multiple(2, x)::xs<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| Single _::_ as xs -&gt; Single x::xs<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| Multiple(n,y)::xs when y = x -&gt; Multiple(n + 1, x)::xs<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| xs -&gt; Single x::xs<br />&#160;&#160;&#160;&#160;List.foldBack collect xs []</div>
+<div class="tip" id="fs7">let dupli xs = xs |&gt; List.map (fun x -&gt; [x; x]) |&gt; List.concat</div>
+<div class="tip" id="fs8">let rec dupli&#39; = function<br />&#160;&#160;&#160;&#160;| [] -&gt; []<br />&#160;&#160;&#160;&#160;| x::xs -&gt; x::x::dupli&#39; xs</div>
+<div class="tip" id="fs9">let dupli&#39;&#39; xs = [ for x in xs do yield x; yield x ]</div>
+<div class="tip" id="fs10">let dupli&#39;&#39;&#39; xs = xs |&gt; List.collect (fun x -&gt; [x; x])</div>
+<div class="tip" id="fs11">let dupli&#39;&#39;&#39;&#39; xs = (xs,[]) ||&gt; List.foldBack(fun x xs -&gt; x::x::xs)</div>
+<div class="tip" id="fs12">let dupli&#39;&#39;&#39;&#39;&#39; xs = ([], xs) ||&gt; List.fold(fun xs x -&gt; xs @ [x; x])</div>
+<div class="tip" id="fs13">let dupli&#39;&#39;&#39;&#39;&#39;&#39; xs = xs |&gt; List.collect (List.replicate 2)</div>
+<div class="tip" id="fs14">let repli xs n = xs |&gt; List.collect (List.replicate n)</div>
+<div class="tip" id="fs15">let repli&#39; xs n= <br />&#160;&#160;&#160;&#160;[ for x in xs do <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;for i=1 to n do<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;yield x ]</div>
+<div class="tip" id="fs16">let dropEvery xs n = xs |&gt; List.mapi (fun i x -&gt; (i + 1,x)) |&gt; List.filter(fun (i,_) -&gt; i % n &lt;&gt; 0) |&gt; List.map snd</div>
+<div class="tip" id="fs17">let dropEvery&#39; xs n =<br />&#160;&#160;&#160;&#160;let rec drop xs count =<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;match xs,count with<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| [], _ -&gt; []<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| _::xs, 1 -&gt; drop xs n<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| x::xs, _ -&gt; x::drop xs (count - 1) <br />&#160;&#160;&#160;&#160;drop xs n</div>
+<div class="tip" id="fs18">let split xs n = <br />&#160;&#160;&#160;&#160;let rec take n xs =<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;match xs,n with<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| _,0 -&gt; []<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| [],_ -&gt; []<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| x::xs,n -&gt; x::take (n-1) xs<br />&#160;&#160;&#160;&#160;let rec drop n xs =<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;match xs,n with<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| xs,0 -&gt; xs<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| [],_ -&gt; []<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| _::xs,n -&gt; drop (n-1) xs<br />&#160;&#160;&#160;&#160;take n xs, drop n xs</div>
+<div class="tip" id="fs19">let slice xs s e =<br />&#160;&#160;&#160;&#160;let rec take n xs =<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;match xs,n with<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| _,0 -&gt; []<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| [],_ -&gt; []<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| x::xs,n -&gt; x::take (n-1) xs<br />&#160;&#160;&#160;&#160;let rec drop n xs =<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;match xs,n with<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| xs,0 -&gt; xs<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| [],_ -&gt; []<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| _::xs,n -&gt; drop (n-1) xs<br />&#160;&#160;&#160;&#160;let diff = e - s<br />&#160;&#160;&#160;&#160;xs |&gt; drop (s - 1) |&gt; take (diff + 1)</div>
+<div class="tip" id="fs20">let slice&#39; xs s e = [ for (x,j) in Seq.zip xs [1..e] do<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;if s &lt;= j then<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;yield x ]</div>
+<div class="tip" id="fs21">let slice&#39;&#39; xs s e = xs |&gt; Seq.zip (seq {1 .. e}) |&gt; Seq.filter(fst &gt;&gt; (&lt;=) s) |&gt; Seq.map snd</div>
+<div class="tip" id="fs22">// using problem 17<br />let rotate xs n =<br />&#160;&#160;&#160;&#160;let at = let ln = List.length xs in abs &lt;| (ln + n) % ln<br />&#160;&#160;&#160;&#160;let st,nd = split xs at<br />&#160;&#160;&#160;&#160;nd @ st</div>
+<div class="tip" id="fs23">let rec rotate&#39; xs n =<br />&#160;&#160;&#160;&#160;match xs, n with<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| [], _ -&gt; []<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| xs, 0 -&gt; xs<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| x::xs, n when n &gt; 0 -&gt; rotate&#39; (xs @ [x]) (n - 1)<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| xs, n -&gt; rotate&#39; xs (List.length xs + n)</div>
+<div class="tip" id="fs24">let removeAt n xs = <br />&#160;&#160;&#160;&#160;let rec rmAt acc xs n =<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;match xs, n with<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| [], _ -&gt; failwith &quot;empty list you fool!&quot;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| x::xs, 0 -&gt; (x, (List.rev acc) @ xs)<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;| x::xs, n -&gt; rmAt (x::acc) xs (n - 1)<br />&#160;&#160;&#160;&#160;rmAt [] xs n</div>
+<div class="tip" id="fs25">// using problem 17<br />let removeAt&#39; n xs = <br />&#160;&#160;&#160;&#160;let front,back = split xs n<br />&#160;&#160;&#160;&#160;List.head back, front @ List.tail back</div>
+

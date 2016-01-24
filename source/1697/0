@@ -1,0 +1,51 @@
+open ExtCore.Control
+
+let succeed = Choice1Of2
+let fail = Choice2Of2
+let guard cond err = if cond then succeed () else fail err
+
+[<Measure>] type GBP 
+
+type VendingMachineState =
+    { Items : Map<string, int * float<GBP>>
+      Funds : float<GBP> }
+
+type VendingMachineError =
+    | InvalidCashAmount of float<GBP>
+    | UnknownItem of string
+    | OutOfStock of string
+    | InsufficientFunds of float<GBP>
+
+let findItem item vendingMachine =
+    match vendingMachine.Items |> Map.tryFind item with
+    | Some result -> succeed result
+    | None        -> fail (UnknownItem item) 
+
+let payIn cash vendingMachine = choice {
+    do! guard (cash > 0.0<GBP>) (InvalidCashAmount cash)
+    return { vendingMachine with Funds = vendingMachine.Funds + cash } }
+
+let vend item vendingMachine = choice {
+    let! (quantity, price) = findItem item vendingMachine
+    do! guard (quantity > 0) (OutOfStock item)
+    do! guard (vendingMachine.Funds >= price) (InsufficientFunds <| price - vendingMachine.Funds)
+    return (item,
+        { vendingMachine with
+            Funds = vendingMachine.Funds - price 
+            Items = vendingMachine.Items |> Map.add item (quantity - 1, price) }) }
+
+let vendingMachine = 
+    { Items =
+        [("Candy bar", (4, 1.20<GBP>))
+         ("Coke"     , (0, 0.80<GBP>))
+         ("Crisps"   , (2, 0.55<GBP>))]
+        |> Map.ofList
+      Funds = 0.60<GBP> }
+
+// note : vending machine is immutable: each of the transactions starts with the same initial state
+// defined above and returns a new vending machine state (or error)
+vendingMachine |> payIn 2.0<GBP> |> printfn "%A"
+vendingMachine |> vend "Crisps" |> printfn "%A"
+vendingMachine |> vend "Coke" |> printfn "%A"
+vendingMachine |> vend "Diet coke" |> printfn "%A"
+vendingMachine |> vend "Candy bar" |> printfn "%A"

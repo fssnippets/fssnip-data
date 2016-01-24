@@ -1,0 +1,1 @@
+let fibonacci = Seq.unfold(fun (x,y) -> Some(x, (x + y, x))) (0,1)

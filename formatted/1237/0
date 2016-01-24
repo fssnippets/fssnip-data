@@ -1,0 +1,78 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">(* A way to trigger events given a DateTime instance and a trigger behavior.</span>
+<span class="c">   It allows you to trigger something every month for example *)</span>
+
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">System</span>
+
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="t">TriggerBehavior</span> <span class="o">=</span> 
+| <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="p">OneTime</span>
+| <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="p">EveryMinute</span>
+| <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="p">EveryHour</span>
+| <span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="p">EveryDay</span>
+| <span onmouseout="hideTip(event, 'fs7', 7)" onmouseover="showTip(event, 'fs7', 7)" class="p">EveryWeek</span>
+| <span onmouseout="hideTip(event, 'fs8', 8)" onmouseover="showTip(event, 'fs8', 8)" class="p">EveryMonth</span>
+| <span onmouseout="hideTip(event, 'fs9', 9)" onmouseover="showTip(event, 'fs9', 9)" class="p">EveryYear</span>
+
+<span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs10', 10)" onmouseover="showTip(event, 'fs10', 10)" class="f">Check</span> (<span onmouseout="hideTip(event, 'fs11', 11)" onmouseover="showTip(event, 'fs11', 11)" class="i">time</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs12', 12)" onmouseover="showTip(event, 'fs12', 12)" class="t">DateTime</span>, <span onmouseout="hideTip(event, 'fs13', 13)" onmouseover="showTip(event, 'fs13', 13)" class="i">triggerBehavior</span>) <span class="o">=</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs14', 14)" onmouseover="showTip(event, 'fs14', 14)" class="i">now</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs12', 15)" onmouseover="showTip(event, 'fs12', 15)" class="t">DateTime</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs15', 16)" onmouseover="showTip(event, 'fs15', 16)" class="i">Now</span>    
+    <span class="k">match</span> <span onmouseout="hideTip(event, 'fs13', 17)" onmouseover="showTip(event, 'fs13', 17)" class="i">triggerBehavior</span> <span class="k">with</span>
+    | <span onmouseout="hideTip(event, 'fs4', 18)" onmouseover="showTip(event, 'fs4', 18)" class="p">EveryMinute</span> <span class="k">-&gt;</span> <span class="k">true</span>
+    | <span onmouseout="hideTip(event, 'fs5', 19)" onmouseover="showTip(event, 'fs5', 19)" class="p">EveryHour</span> <span class="k">when</span> <span onmouseout="hideTip(event, 'fs14', 20)" onmouseover="showTip(event, 'fs14', 20)" class="i">now</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs16', 21)" onmouseover="showTip(event, 'fs16', 21)" class="i">Minute</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs11', 22)" onmouseover="showTip(event, 'fs11', 22)" class="i">time</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs16', 23)" onmouseover="showTip(event, 'fs16', 23)" class="i">Minute</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs10', 24)" onmouseover="showTip(event, 'fs10', 24)" class="f">Check</span>(<span onmouseout="hideTip(event, 'fs11', 25)" onmouseover="showTip(event, 'fs11', 25)" class="i">time</span>, <span onmouseout="hideTip(event, 'fs4', 26)" onmouseover="showTip(event, 'fs4', 26)" class="p">EveryMinute</span>)
+    | <span onmouseout="hideTip(event, 'fs6', 27)" onmouseover="showTip(event, 'fs6', 27)" class="p">EveryDay</span> <span class="k">when</span> <span onmouseout="hideTip(event, 'fs14', 28)" onmouseover="showTip(event, 'fs14', 28)" class="i">now</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs17', 29)" onmouseover="showTip(event, 'fs17', 29)" class="i">Hour</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs11', 30)" onmouseover="showTip(event, 'fs11', 30)" class="i">time</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs17', 31)" onmouseover="showTip(event, 'fs17', 31)" class="i">Hour</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs10', 32)" onmouseover="showTip(event, 'fs10', 32)" class="f">Check</span>(<span onmouseout="hideTip(event, 'fs11', 33)" onmouseover="showTip(event, 'fs11', 33)" class="i">time</span>, <span onmouseout="hideTip(event, 'fs5', 34)" onmouseover="showTip(event, 'fs5', 34)" class="p">EveryHour</span>)
+    | <span onmouseout="hideTip(event, 'fs7', 35)" onmouseover="showTip(event, 'fs7', 35)" class="p">EveryWeek</span> <span class="k">when</span> <span onmouseout="hideTip(event, 'fs14', 36)" onmouseover="showTip(event, 'fs14', 36)" class="i">now</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs18', 37)" onmouseover="showTip(event, 'fs18', 37)" class="i">DayOfWeek</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs11', 38)" onmouseover="showTip(event, 'fs11', 38)" class="i">time</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs18', 39)" onmouseover="showTip(event, 'fs18', 39)" class="i">DayOfWeek</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs10', 40)" onmouseover="showTip(event, 'fs10', 40)" class="f">Check</span>(<span onmouseout="hideTip(event, 'fs11', 41)" onmouseover="showTip(event, 'fs11', 41)" class="i">time</span>, <span onmouseout="hideTip(event, 'fs6', 42)" onmouseover="showTip(event, 'fs6', 42)" class="p">EveryDay</span>)
+    | <span onmouseout="hideTip(event, 'fs8', 43)" onmouseover="showTip(event, 'fs8', 43)" class="p">EveryMonth</span> <span class="k">when</span> <span onmouseout="hideTip(event, 'fs14', 44)" onmouseover="showTip(event, 'fs14', 44)" class="i">now</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs19', 45)" onmouseover="showTip(event, 'fs19', 45)" class="i">Day</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs11', 46)" onmouseover="showTip(event, 'fs11', 46)" class="i">time</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs19', 47)" onmouseover="showTip(event, 'fs19', 47)" class="i">Day</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs10', 48)" onmouseover="showTip(event, 'fs10', 48)" class="f">Check</span>(<span onmouseout="hideTip(event, 'fs11', 49)" onmouseover="showTip(event, 'fs11', 49)" class="i">time</span>, <span onmouseout="hideTip(event, 'fs6', 50)" onmouseover="showTip(event, 'fs6', 50)" class="p">EveryDay</span>)
+    | <span onmouseout="hideTip(event, 'fs9', 51)" onmouseover="showTip(event, 'fs9', 51)" class="p">EveryYear</span> <span class="k">when</span> <span onmouseout="hideTip(event, 'fs14', 52)" onmouseover="showTip(event, 'fs14', 52)" class="i">now</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs20', 53)" onmouseover="showTip(event, 'fs20', 53)" class="i">Month</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs11', 54)" onmouseover="showTip(event, 'fs11', 54)" class="i">time</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs20', 55)" onmouseover="showTip(event, 'fs20', 55)" class="i">Month</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs10', 56)" onmouseover="showTip(event, 'fs10', 56)" class="f">Check</span>(<span onmouseout="hideTip(event, 'fs11', 57)" onmouseover="showTip(event, 'fs11', 57)" class="i">time</span>, <span onmouseout="hideTip(event, 'fs8', 58)" onmouseover="showTip(event, 'fs8', 58)" class="p">EveryMonth</span>)
+    | <span onmouseout="hideTip(event, 'fs3', 59)" onmouseover="showTip(event, 'fs3', 59)" class="p">OneTime</span> <span class="k">when</span> <span onmouseout="hideTip(event, 'fs21', 60)" onmouseover="showTip(event, 'fs21', 60)" class="f">abs</span>((<span onmouseout="hideTip(event, 'fs14', 61)" onmouseover="showTip(event, 'fs14', 61)" class="i">now</span> <span class="o">-</span> <span onmouseout="hideTip(event, 'fs11', 62)" onmouseover="showTip(event, 'fs11', 62)" class="i">time</span>)<span class="o">.</span><span class="i">TotalMinutes</span>) <span class="o">&lt;=</span> <span class="n">1.0</span> <span class="k">-&gt;</span> <span class="k">true</span>
+    | _ <span class="k">-&gt;</span> <span class="k">false</span>
+   
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace System</div>
+<div class="tip" id="fs2">type TriggerBehavior =<br />&#160;&#160;| OneTime<br />&#160;&#160;| EveryMinute<br />&#160;&#160;| EveryHour<br />&#160;&#160;| EveryDay<br />&#160;&#160;| EveryWeek<br />&#160;&#160;| EveryMonth<br />&#160;&#160;| EveryYear<br /><br />Full name: Script.TriggerBehavior</div>
+<div class="tip" id="fs3">union case TriggerBehavior.OneTime: TriggerBehavior</div>
+<div class="tip" id="fs4">union case TriggerBehavior.EveryMinute: TriggerBehavior</div>
+<div class="tip" id="fs5">union case TriggerBehavior.EveryHour: TriggerBehavior</div>
+<div class="tip" id="fs6">union case TriggerBehavior.EveryDay: TriggerBehavior</div>
+<div class="tip" id="fs7">union case TriggerBehavior.EveryWeek: TriggerBehavior</div>
+<div class="tip" id="fs8">union case TriggerBehavior.EveryMonth: TriggerBehavior</div>
+<div class="tip" id="fs9">union case TriggerBehavior.EveryYear: TriggerBehavior</div>
+<div class="tip" id="fs10">val Check : time:DateTime * triggerBehavior:TriggerBehavior -&gt; bool<br /><br />Full name: Script.Check</div>
+<div class="tip" id="fs11">val time : DateTime</div>
+<div class="tip" id="fs12">Multiple items<br />type DateTime =<br />&#160;&#160;struct<br />&#160;&#160;&#160;&#160;new : ticks:int64 -&gt; DateTime + 10 overloads<br />&#160;&#160;&#160;&#160;member Add : value:TimeSpan -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddDays : value:float -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddHours : value:float -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddMilliseconds : value:float -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddMinutes : value:float -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddMonths : months:int -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddSeconds : value:float -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddTicks : value:int64 -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddYears : value:int -&gt; DateTime<br />&#160;&#160;&#160;&#160;...<br />&#160;&#160;end<br /><br />Full name: System.DateTime<br /><br />--------------------<br />DateTime()<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />DateTime(ticks: int64) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />DateTime(ticks: int64, kind: DateTimeKind) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />DateTime(year: int, month: int, day: int) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />DateTime(year: int, month: int, day: int, calendar: Globalization.Calendar) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />DateTime(year: int, month: int, day: int, hour: int, minute: int, second: int) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />DateTime(year: int, month: int, day: int, hour: int, minute: int, second: int, kind: DateTimeKind) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />DateTime(year: int, month: int, day: int, hour: int, minute: int, second: int, calendar: Globalization.Calendar) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />DateTime(year: int, month: int, day: int, hour: int, minute: int, second: int, millisecond: int) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />DateTime(year: int, month: int, day: int, hour: int, minute: int, second: int, millisecond: int, kind: DateTimeKind) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em></div>
+<div class="tip" id="fs13">val triggerBehavior : TriggerBehavior</div>
+<div class="tip" id="fs14">val now : DateTime</div>
+<div class="tip" id="fs15">property DateTime.Now: DateTime</div>
+<div class="tip" id="fs16">property DateTime.Minute: int</div>
+<div class="tip" id="fs17">property DateTime.Hour: int</div>
+<div class="tip" id="fs18">property DateTime.DayOfWeek: DayOfWeek</div>
+<div class="tip" id="fs19">property DateTime.Day: int</div>
+<div class="tip" id="fs20">property DateTime.Month: int</div>
+<div class="tip" id="fs21">val abs : value:&#39;T -&gt; &#39;T (requires member Abs)<br /><br />Full name: Microsoft.FSharp.Core.Operators.abs</div>
+

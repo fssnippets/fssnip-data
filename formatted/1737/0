@@ -1,0 +1,120 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="prep">#r</span> <span class="s">&quot;C:\\git\\bitbucket\\folder-generator\\packages\\Microsoft.Web.Administration.7.0.0.0\\lib\\net20\\Microsoft.Web.Administration.dll&quot;</span>
+
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">System</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">Microsoft</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="i">Web</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="i">Administration</span>
+                    
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="i">siteName</span> <span class="o">=</span> <span class="s">&quot;doms-wicked-site&quot;</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="f">name</span>(<span onmouseout="hideTip(event, 'fs7', 7)" onmouseover="showTip(event, 'fs7', 7)" class="i">siteType</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs8', 8)" onmouseover="showTip(event, 'fs8', 8)" class="t">string</span>) <span class="o">=</span> 
+    <span onmouseout="hideTip(event, 'fs9', 9)" onmouseover="showTip(event, 'fs9', 9)" class="t">String</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs10', 10)" onmouseover="showTip(event, 'fs10', 10)" class="f">Format</span>(<span class="s">&quot;{0}_{1}&quot;</span>, <span onmouseout="hideTip(event, 'fs5', 11)" onmouseover="showTip(event, 'fs5', 11)" class="i">siteName</span>, <span onmouseout="hideTip(event, 'fs7', 12)" onmouseover="showTip(event, 'fs7', 12)" class="i">siteType</span>)
+        
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs11', 13)" onmouseover="showTip(event, 'fs11', 13)" class="i">serverManager</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs12', 14)" onmouseover="showTip(event, 'fs12', 14)" class="t">ServerManager</span>()
+        
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs13', 15)" onmouseover="showTip(event, 'fs13', 15)" class="f">createSite</span>(<span onmouseout="hideTip(event, 'fs14', 16)" onmouseover="showTip(event, 'fs14', 16)" class="i">siteName</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs8', 17)" onmouseover="showTip(event, 'fs8', 17)" class="t">string</span>) <span class="o">=</span> 
+    <span onmouseout="hideTip(event, 'fs11', 18)" onmouseover="showTip(event, 'fs11', 18)" class="i">serverManager</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs15', 19)" onmouseover="showTip(event, 'fs15', 19)" class="i">Sites</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs16', 20)" onmouseover="showTip(event, 'fs16', 20)" class="f">Add</span>(<span onmouseout="hideTip(event, 'fs14', 21)" onmouseover="showTip(event, 'fs14', 21)" class="i">siteName</span>, <span onmouseout="hideTip(event, 'fs9', 22)" onmouseover="showTip(event, 'fs9', 22)" class="t">String</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs10', 23)" onmouseover="showTip(event, 'fs10', 23)" class="f">Format</span>(<span class="s">@&quot;C:\Sites\{0}&quot;</span>, <span onmouseout="hideTip(event, 'fs14', 24)" onmouseover="showTip(event, 'fs14', 24)" class="i">siteName</span>), <span class="n">80</span>)
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs17', 25)" onmouseover="showTip(event, 'fs17', 25)" class="f">applicationPool</span>(<span onmouseout="hideTip(event, 'fs18', 26)" onmouseover="showTip(event, 'fs18', 26)" class="i">poolName</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs8', 27)" onmouseover="showTip(event, 'fs8', 27)" class="t">string</span>) <span class="o">=</span> 
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs19', 28)" onmouseover="showTip(event, 'fs19', 28)" class="i">livePool</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs20', 29)" onmouseover="showTip(event, 'fs20', 29)" class="t">ApplicationPool</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs11', 30)" onmouseover="showTip(event, 'fs11', 30)" class="i">serverManager</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs21', 31)" onmouseover="showTip(event, 'fs21', 31)" class="i">ApplicationPools</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs22', 32)" onmouseover="showTip(event, 'fs22', 32)" class="f">Add</span>(<span onmouseout="hideTip(event, 'fs18', 33)" onmouseover="showTip(event, 'fs18', 33)" class="i">poolName</span>)
+    <span onmouseout="hideTip(event, 'fs19', 34)" onmouseover="showTip(event, 'fs19', 34)" class="i">livePool</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs23', 35)" onmouseover="showTip(event, 'fs23', 35)" class="i">Enable32BitAppOnWin64</span> <span class="o">&lt;-</span> <span class="k">true</span>;
+    <span onmouseout="hideTip(event, 'fs19', 36)" onmouseover="showTip(event, 'fs19', 36)" class="i">livePool</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs24', 37)" onmouseover="showTip(event, 'fs24', 37)" class="i">ManagedRuntimeVersion</span> <span class="o">&lt;-</span> <span class="s">&quot;v4.0&quot;</span>;            
+    <span onmouseout="hideTip(event, 'fs19', 38)" onmouseover="showTip(event, 'fs19', 38)" class="i">livePool</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs25', 39)" onmouseover="showTip(event, 'fs25', 39)" class="f">site</span>(<span onmouseout="hideTip(event, 'fs14', 40)" onmouseover="showTip(event, 'fs14', 40)" class="i">siteName</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs8', 41)" onmouseover="showTip(event, 'fs8', 41)" class="t">string</span>, <span onmouseout="hideTip(event, 'fs18', 42)" onmouseover="showTip(event, 'fs18', 42)" class="i">poolName</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs8', 43)" onmouseover="showTip(event, 'fs8', 43)" class="t">string</span>) <span class="o">=</span> 
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs26', 44)" onmouseover="showTip(event, 'fs26', 44)" class="i">liveSite</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs27', 45)" onmouseover="showTip(event, 'fs27', 45)" class="t">Site</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs13', 46)" onmouseover="showTip(event, 'fs13', 46)" class="f">createSite</span>(<span onmouseout="hideTip(event, 'fs14', 47)" onmouseover="showTip(event, 'fs14', 47)" class="i">siteName</span>)
+    <span onmouseout="hideTip(event, 'fs26', 48)" onmouseover="showTip(event, 'fs26', 48)" class="i">liveSite</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs28', 49)" onmouseover="showTip(event, 'fs28', 49)" class="i">ServerAutoStart</span> <span class="o">&lt;-</span> <span class="k">true</span>
+    <span onmouseout="hideTip(event, 'fs26', 50)" onmouseover="showTip(event, 'fs26', 50)" class="i">liveSite</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs29', 51)" onmouseover="showTip(event, 'fs29', 51)" class="i">ApplicationDefaults</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs30', 52)" onmouseover="showTip(event, 'fs30', 52)" class="i">ApplicationPoolName</span> <span class="o">&lt;-</span> <span onmouseout="hideTip(event, 'fs18', 53)" onmouseover="showTip(event, 'fs18', 53)" class="i">poolName</span>       
+    <span onmouseout="hideTip(event, 'fs26', 54)" onmouseover="showTip(event, 'fs26', 54)" class="i">liveSite</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs31', 55)" onmouseover="showTip(event, 'fs31', 55)" class="i">TraceFailedRequestsLogging</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs32', 56)" onmouseover="showTip(event, 'fs32', 56)" class="i">Enabled</span> <span class="o">&lt;-</span> <span class="k">true</span>;
+    <span onmouseout="hideTip(event, 'fs26', 57)" onmouseover="showTip(event, 'fs26', 57)" class="i">liveSite</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs31', 58)" onmouseover="showTip(event, 'fs31', 58)" class="i">TraceFailedRequestsLogging</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs33', 59)" onmouseover="showTip(event, 'fs33', 59)" class="i">Directory</span> <span class="o">&lt;-</span> <span onmouseout="hideTip(event, 'fs9', 60)" onmouseover="showTip(event, 'fs9', 60)" class="t">String</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs10', 61)" onmouseover="showTip(event, 'fs10', 61)" class="f">Format</span>(<span class="s">@&quot;C:\IISLogs\{0}&quot;</span>, <span onmouseout="hideTip(event, 'fs14', 62)" onmouseover="showTip(event, 'fs14', 62)" class="i">siteName</span>)
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs34', 63)" onmouseover="showTip(event, 'fs34', 63)" class="i">liveName</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs6', 64)" onmouseover="showTip(event, 'fs6', 64)" class="f">name</span>(<span class="s">&quot;live&quot;</span>)
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs35', 65)" onmouseover="showTip(event, 'fs35', 65)" class="i">livePool</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs17', 66)" onmouseover="showTip(event, 'fs17', 66)" class="f">applicationPool</span>(<span onmouseout="hideTip(event, 'fs34', 67)" onmouseover="showTip(event, 'fs34', 67)" class="i">liveName</span>)            
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs36', 68)" onmouseover="showTip(event, 'fs36', 68)" class="i">liveSite</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs25', 69)" onmouseover="showTip(event, 'fs25', 69)" class="f">site</span>(<span onmouseout="hideTip(event, 'fs34', 70)" onmouseover="showTip(event, 'fs34', 70)" class="i">liveName</span>, <span onmouseout="hideTip(event, 'fs35', 71)" onmouseover="showTip(event, 'fs35', 71)" class="i">livePool</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs37', 72)" onmouseover="showTip(event, 'fs37', 72)" class="i">Name</span>)
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs38', 73)" onmouseover="showTip(event, 'fs38', 73)" class="i">accName</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs6', 74)" onmouseover="showTip(event, 'fs6', 74)" class="f">name</span>(<span class="s">&quot;acc&quot;</span>)
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs39', 75)" onmouseover="showTip(event, 'fs39', 75)" class="i">accPool</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs17', 76)" onmouseover="showTip(event, 'fs17', 76)" class="f">applicationPool</span>(<span onmouseout="hideTip(event, 'fs38', 77)" onmouseover="showTip(event, 'fs38', 77)" class="i">accName</span>)            
+<span onmouseout="hideTip(event, 'fs25', 78)" onmouseover="showTip(event, 'fs25', 78)" class="f">site</span>(<span onmouseout="hideTip(event, 'fs38', 79)" onmouseover="showTip(event, 'fs38', 79)" class="i">accName</span>, <span onmouseout="hideTip(event, 'fs39', 80)" onmouseover="showTip(event, 'fs39', 80)" class="i">accPool</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs37', 81)" onmouseover="showTip(event, 'fs37', 81)" class="i">Name</span>) <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs40', 82)" onmouseover="showTip(event, 'fs40', 82)" class="f">ignore</span>
+        
+<span onmouseout="hideTip(event, 'fs11', 83)" onmouseover="showTip(event, 'fs11', 83)" class="i">serverManager</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs41', 84)" onmouseover="showTip(event, 'fs41', 84)" class="f">CommitChanges</span>()   
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace System</div>
+<div class="tip" id="fs2">namespace Microsoft</div>
+<div class="tip" id="fs3">namespace Microsoft.Web</div>
+<div class="tip" id="fs4">namespace Microsoft.Web.Administration</div>
+<div class="tip" id="fs5">val siteName : string<br /><br />Full name: Script.siteName</div>
+<div class="tip" id="fs6">val name : siteType:string -&gt; string<br /><br />Full name: Script.name</div>
+<div class="tip" id="fs7">val siteType : string</div>
+<div class="tip" id="fs8">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />Full name: Microsoft.FSharp.Core.Operators.string<br /><br />--------------------<br />type string = String<br /><br />Full name: Microsoft.FSharp.Core.string</div>
+<div class="tip" id="fs9">Multiple items<br />type String =<br />&#160;&#160;new : value:char -&gt; string + 7 overloads<br />&#160;&#160;member Chars : int -&gt; char<br />&#160;&#160;member Clone : unit -&gt; obj<br />&#160;&#160;member CompareTo : value:obj -&gt; int + 1 overload<br />&#160;&#160;member Contains : value:string -&gt; bool<br />&#160;&#160;member CopyTo : sourceIndex:int * destination:char[] * destinationIndex:int * count:int -&gt; unit<br />&#160;&#160;member EndsWith : value:string -&gt; bool + 2 overloads<br />&#160;&#160;member Equals : obj:obj -&gt; bool + 2 overloads<br />&#160;&#160;member GetEnumerator : unit -&gt; CharEnumerator<br />&#160;&#160;member GetHashCode : unit -&gt; int<br />&#160;&#160;...<br /><br />Full name: System.String<br /><br />--------------------<br />String(value: nativeptr&lt;char&gt;) : unit<br />String(value: nativeptr&lt;sbyte&gt;) : unit<br />String(value: char []) : unit<br />String(c: char, count: int) : unit<br />String(value: nativeptr&lt;char&gt;, startIndex: int, length: int) : unit<br />String(value: nativeptr&lt;sbyte&gt;, startIndex: int, length: int) : unit<br />String(value: char [], startIndex: int, length: int) : unit<br />String(value: nativeptr&lt;sbyte&gt;, startIndex: int, length: int, enc: Text.Encoding) : unit</div>
+<div class="tip" id="fs10">String.Format(format: string, [&lt;ParamArray&gt;] args: obj []) : string<br />String.Format(format: string, arg0: obj) : string<br />String.Format(provider: IFormatProvider, format: string, [&lt;ParamArray&gt;] args: obj []) : string<br />String.Format(format: string, arg0: obj, arg1: obj) : string<br />String.Format(format: string, arg0: obj, arg1: obj, arg2: obj) : string</div>
+<div class="tip" id="fs11">val serverManager : ServerManager<br /><br />Full name: Script.serverManager</div>
+<div class="tip" id="fs12">Multiple items<br />type ServerManager =<br />&#160;&#160;new : unit -&gt; ServerManager + 2 overloads<br />&#160;&#160;member ApplicationDefaults : ApplicationDefaults<br />&#160;&#160;member ApplicationPoolDefaults : ApplicationPoolDefaults<br />&#160;&#160;member ApplicationPools : ApplicationPoolCollection<br />&#160;&#160;member CommitChanges : unit -&gt; unit<br />&#160;&#160;member Dispose : unit -&gt; unit<br />&#160;&#160;member GetAdministrationConfiguration : unit -&gt; Configuration + 1 overload<br />&#160;&#160;member GetApplicationHostConfiguration : unit -&gt; Configuration<br />&#160;&#160;member GetMetadata : metadataType:string -&gt; obj<br />&#160;&#160;member GetRedirectionConfiguration : unit -&gt; Configuration<br />&#160;&#160;...<br /><br />Full name: Microsoft.Web.Administration.ServerManager<br /><br />--------------------<br />ServerManager() : unit<br />ServerManager(applicationHostConfigurationPath: string) : unit<br />ServerManager(readOnly: bool, applicationHostConfigurationPath: string) : unit</div>
+<div class="tip" id="fs13">val createSite : siteName:string -&gt; Site<br /><br />Full name: Script.createSite</div>
+<div class="tip" id="fs14">val siteName : string</div>
+<div class="tip" id="fs15">property ServerManager.Sites: SiteCollection</div>
+<div class="tip" id="fs16">ConfigurationElementCollectionBase.Add(element: Site) : Site<br />SiteCollection.Add(name: string, physicalPath: string, port: int) : Site<br />SiteCollection.Add(name: string, bindingInformation: string, physicalPath: string, certificateHash: byte []) : Site<br />SiteCollection.Add(name: string, bindingProtocol: string, bindingInformation: string, physicalPath: string) : Site</div>
+<div class="tip" id="fs17">val applicationPool : poolName:string -&gt; ApplicationPool<br /><br />Full name: Script.applicationPool</div>
+<div class="tip" id="fs18">val poolName : string</div>
+<div class="tip" id="fs19">val livePool : ApplicationPool</div>
+<div class="tip" id="fs20">type ApplicationPool =<br />&#160;&#160;inherit ConfigurationElement<br />&#160;&#160;member AutoStart : bool with get, set<br />&#160;&#160;member Cpu : ApplicationPoolCpu<br />&#160;&#160;member Enable32BitAppOnWin64 : bool with get, set<br />&#160;&#160;member Failure : ApplicationPoolFailure<br />&#160;&#160;member ManagedPipelineMode : ManagedPipelineMode with get, set<br />&#160;&#160;member ManagedRuntimeVersion : string with get, set<br />&#160;&#160;member Name : string with get, set<br />&#160;&#160;member ProcessModel : ApplicationPoolProcessModel<br />&#160;&#160;member QueueLength : int64 with get, set<br />&#160;&#160;member Recycle : unit -&gt; ObjectState<br />&#160;&#160;...<br /><br />Full name: Microsoft.Web.Administration.ApplicationPool</div>
+<div class="tip" id="fs21">property ServerManager.ApplicationPools: ApplicationPoolCollection</div>
+<div class="tip" id="fs22">ConfigurationElementCollectionBase.Add(element: ApplicationPool) : ApplicationPool<br />ApplicationPoolCollection.Add(name: string) : ApplicationPool</div>
+<div class="tip" id="fs23">property ApplicationPool.Enable32BitAppOnWin64: bool</div>
+<div class="tip" id="fs24">property ApplicationPool.ManagedRuntimeVersion: string</div>
+<div class="tip" id="fs25">val site : siteName:string * poolName:string -&gt; unit<br /><br />Full name: Script.site</div>
+<div class="tip" id="fs26">val liveSite : Site</div>
+<div class="tip" id="fs27">type Site =<br />&#160;&#160;inherit ConfigurationElement<br />&#160;&#160;member ApplicationDefaults : ApplicationDefaults<br />&#160;&#160;member Applications : ApplicationCollection<br />&#160;&#160;member Bindings : BindingCollection<br />&#160;&#160;member GetWebConfiguration : unit -&gt; Configuration<br />&#160;&#160;member Id : int64 with get, set<br />&#160;&#160;member Limits : SiteLimits<br />&#160;&#160;member LogFile : SiteLogFile<br />&#160;&#160;member Name : string with get, set<br />&#160;&#160;member ServerAutoStart : bool with get, set<br />&#160;&#160;member Start : unit -&gt; ObjectState<br />&#160;&#160;...<br /><br />Full name: Microsoft.Web.Administration.Site</div>
+<div class="tip" id="fs28">property Site.ServerAutoStart: bool</div>
+<div class="tip" id="fs29">property Site.ApplicationDefaults: ApplicationDefaults</div>
+<div class="tip" id="fs30">property ApplicationDefaults.ApplicationPoolName: string</div>
+<div class="tip" id="fs31">property Site.TraceFailedRequestsLogging: SiteTraceFailedRequestsLogging</div>
+<div class="tip" id="fs32">property SiteTraceFailedRequestsLogging.Enabled: bool</div>
+<div class="tip" id="fs33">property SiteTraceFailedRequestsLogging.Directory: string</div>
+<div class="tip" id="fs34">val liveName : string<br /><br />Full name: Script.liveName</div>
+<div class="tip" id="fs35">val livePool : ApplicationPool<br /><br />Full name: Script.livePool</div>
+<div class="tip" id="fs36">val liveSite : unit<br /><br />Full name: Script.liveSite</div>
+<div class="tip" id="fs37">property ApplicationPool.Name: string</div>
+<div class="tip" id="fs38">val accName : string<br /><br />Full name: Script.accName</div>
+<div class="tip" id="fs39">val accPool : ApplicationPool<br /><br />Full name: Script.accPool</div>
+<div class="tip" id="fs40">val ignore : value:&#39;T -&gt; unit<br /><br />Full name: Microsoft.FSharp.Core.Operators.ignore</div>
+<div class="tip" id="fs41">ServerManager.CommitChanges() : unit</div>
+

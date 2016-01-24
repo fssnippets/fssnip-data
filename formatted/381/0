@@ -1,0 +1,49 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">Windows</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 3)" onmouseover="showTip(event, 'fs1', 3)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 4)" onmouseover="showTip(event, 'fs2', 4)" class="i">Windows</span><span class="o">.</span><span class="i">Controls</span>
+
+<span class="c">// Example ported from http://www.silverlightshow.net/items/Attached-Properties-in-Silverlight.aspx</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs3', 5)" onmouseover="showTip(event, 'fs3', 5)" class="t">TabPanel</span>() <span class="o">=</span> 
+   <span class="k">inherit</span> <span class="i">StackPanel</span>()  
+   <span class="c">/// Register the attached property</span>
+   <span class="k">static</span> <span class="k">member</span> <span onmouseout="hideTip(event, 'fs4', 6)" onmouseover="showTip(event, 'fs4', 6)" class="i">TabStopProperty</span> <span class="o">=</span> 
+       <span class="i">DependencyProperty</span><span class="o">.</span><span class="i">RegisterAttached</span>(<span class="s">&quot;TabStop&quot;</span>, <span onmouseout="hideTip(event, 'fs5', 7)" onmouseover="showTip(event, 'fs5', 7)" class="i">typeof</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs6', 8)" onmouseover="showTip(event, 'fs6', 8)" class="i">bool</span><span class="o">&gt;</span>, <span onmouseout="hideTip(event, 'fs5', 9)" onmouseover="showTip(event, 'fs5', 9)" class="i">typeof</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs3', 10)" onmouseover="showTip(event, 'fs3', 10)" class="i">TabPanel</span><span class="o">&gt;</span>, <span class="k">null</span>) 
+   <span class="c">/// Set the property</span>
+   <span class="k">static</span> <span class="k">member</span> <span onmouseout="hideTip(event, 'fs7', 11)" onmouseover="showTip(event, 'fs7', 11)" class="f">SetTabStop</span> (<span class="i">element</span><span class="o">:</span><span class="i">UIElement</span>) (<span class="i">value</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs8', 12)" onmouseover="showTip(event, 'fs8', 12)" class="t">obj</span>) <span class="o">=</span>
+       <span class="k">let</span> _, <span class="i">boolValue</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs6', 13)" onmouseover="showTip(event, 'fs6', 13)" class="i">bool</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs9', 14)" onmouseover="showTip(event, 'fs9', 14)" class="i">TryParse</span> (<span onmouseout="hideTip(event, 'fs10', 15)" onmouseover="showTip(event, 'fs10', 15)" class="i">string</span> <span class="i">value</span>)
+       <span class="i">element</span><span class="o">.</span><span class="i">SetValue</span>(<span onmouseout="hideTip(event, 'fs3', 16)" onmouseover="showTip(event, 'fs3', 16)" class="i">TabPanel</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs11', 17)" onmouseover="showTip(event, 'fs11', 17)" class="i">TabStopProperty</span>, <span class="i">boolValue</span>)
+   <span class="c">/// Get the property</span>
+   <span class="k">static</span> <span class="k">member</span> <span onmouseout="hideTip(event, 'fs12', 18)" onmouseover="showTip(event, 'fs12', 18)" class="f">GetTabStop</span> (<span class="i">element</span><span class="o">:</span><span class="i">UIElement</span>) <span class="o">=</span> 
+       <span class="i">element</span><span class="o">.</span><span class="i">GetValue</span> <span onmouseout="hideTip(event, 'fs3', 19)" onmouseover="showTip(event, 'fs3', 19)" class="i">TabPanel</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs11', 20)" onmouseover="showTip(event, 'fs11', 20)" class="i">TabStopProperty</span>                                            
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace System</div>
+<div class="tip" id="fs2">namespace System.Windows</div>
+<div class="tip" id="fs3">Multiple items<br />type TabPanel =<br />&#160;&#160;inherit obj<br />&#160;&#160;new : unit -&gt; TabPanel<br />&#160;&#160;static member GetTabStop : element:&#39;a -&gt; &#39;b<br />&#160;&#160;static member SetTabStop : element:&#39;a -&gt; value:obj -&gt; &#39;b<br />&#160;&#160;static member TabStopProperty : &#39;a<br /><br />Full name: Script.TabPanel<br /><br />--------------------<br />new : unit -&gt; TabPanel</div>
+<div class="tip" id="fs4">static member TabPanel.TabStopProperty : &#39;a<br /><br />Full name: Script.TabPanel.TabStopProperty<br /><em><br /><br />&#160;Register the attached property</em></div>
+<div class="tip" id="fs5">val typeof&lt;&#39;T&gt; : System.Type<br /><br />Full name: Microsoft.FSharp.Core.Operators.typeof</div>
+<div class="tip" id="fs6">type bool = System.Boolean<br /><br />Full name: Microsoft.FSharp.Core.bool</div>
+<div class="tip" id="fs7">static member TabPanel.SetTabStop : element:&#39;a -&gt; value:obj -&gt; &#39;b<br /><br />Full name: Script.TabPanel.SetTabStop<br /><em><br /><br />&#160;Set the property</em></div>
+<div class="tip" id="fs8">type obj = System.Object<br /><br />Full name: Microsoft.FSharp.Core.obj</div>
+<div class="tip" id="fs9">System.Boolean.TryParse(value: string, result: byref&lt;bool&gt;) : bool</div>
+<div class="tip" id="fs10">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />Full name: Microsoft.FSharp.Core.Operators.string<br /><br />--------------------<br />type string = System.String<br /><br />Full name: Microsoft.FSharp.Core.string</div>
+<div class="tip" id="fs11">property TabPanel.TabStopProperty: &#39;a<br /><em><br /><br />&#160;Register the attached property</em></div>
+<div class="tip" id="fs12">static member TabPanel.GetTabStop : element:&#39;a -&gt; &#39;b<br /><br />Full name: Script.TabPanel.GetTabStop<br /><em><br /><br />&#160;Get the property</em></div>
+

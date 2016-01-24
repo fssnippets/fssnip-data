@@ -1,0 +1,79 @@
+#I @"<path to Xwt.dll>"
+#r @"Xwt.dll"
+
+open Xwt
+open Xwt.Drawing
+open System.IO
+open System.Net
+
+type CustomCanvas (onDraw) =
+   inherit Canvas()
+   override this.OnDraw(ctx, rect) = 
+      base.OnDraw(ctx, rect)      
+      onDraw ctx
+
+Application.Initialize (ToolkitType.Gtk);
+
+/// Bird type
+type Bird = { X:float; Y:float; VY:float; IsAlive:bool }
+/// Respond to flap command
+let flap (bird:Bird) = { bird with VY = - System.Math.PI }
+/// Applies gravity to bird
+let gravity (bird:Bird) = { bird with VY = bird.VY + 0.1 }
+/// Applies physics to bird
+let physics (bird:Bird) = { bird with Y = bird.Y + bird.VY }
+/// Updates bird with gravity & physics
+let update = gravity >> physics
+ 
+/// Generates the level's tube positions
+let generateLevel n =
+   let rand = System.Random()
+   [for i in 1..n -> 50+(i*150), 32+rand.Next(160)]
+
+/// Loads an image from a file or url
+let load (file:string) (url:string) =
+   let path = Path.Combine(__SOURCE_DIRECTORY__, file)
+   if File.Exists path then Image.FromFile path
+   else
+      let request = HttpWebRequest.Create(url)
+      use response = request.GetResponse()
+      use stream = response.GetResponseStream()
+      Image.FromStream(stream)
+
+let bg = load "bg.png" "http://flappycreator.com/default/bg.png"
+let ground = load "ground.png" "http://flappycreator.com/default/ground.png"
+let tube1 = load "tube1.png" "http://flappycreator.com/default/tube1.png"
+let tube2 = load "tube2.png" "http://flappycreator.com/default/tube2.png"
+let bird_sing = load "bird_sing.png" "http://flappycreator.com/default/bird_sing.png"
+
+let level = generateLevel 10
+let scroll = ref 0
+let flappy = ref { X = 30.0; Y = 150.0; VY = 0.0; IsAlive=true }
+let flapMe () = if (!flappy).IsAlive then flappy := flap !flappy
+
+let onDraw (ctx:Context) =
+   let draw image (x:int,y:int) = ctx.DrawImage(image,float x,float y)
+   draw bg  (0,0)
+   draw bird_sing (int (!flappy).X, int (!flappy).Y)
+   let drawTube (x,y) =      
+      draw tube1 (x - !scroll, y - 320)
+      draw tube2 (x - !scroll, y + 100)
+   for (x,y) in level do drawTube (x,y)
+   draw ground (0,340)
+      
+let w = new Window(Title="Flap me", Width=288.0, Height=440.0)
+w.Padding <- WidgetSpacing()
+let canvas = new CustomCanvas(onDraw)
+canvas.KeyPressed.Add (fun args -> if args.Key = Key.Space then flapMe())
+canvas.ButtonPressed.Add (fun args -> flapMe())
+canvas.CanGetFocus <- true
+canvas.SetFocus()
+w.Content <- canvas
+w.Show ()
+w.Closed.Add(fun e -> Application.Exit())
+let invalidate () = 
+   incr scroll 
+   flappy := update !flappy 
+   canvas.QueueDraw()
+Application.TimeoutInvoke(15, fun () -> invalidate(); true)
+Application.Run ()

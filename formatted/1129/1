@@ -1,0 +1,80 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="prep">#r</span> <span class="s">&quot;System.Xml.Linq.dll&quot;</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">System</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 2)" onmouseover="showTip(event, 'fs1', 2)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 3)" onmouseover="showTip(event, 'fs2', 3)" class="i">Xml</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 4)" onmouseover="showTip(event, 'fs3', 4)" class="i">Linq</span>
+
+<span class="c">// University enrollment in different countries of the world</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs4', 5)" onmouseover="showTip(event, 'fs4', 5)" class="i">url</span> <span class="o">=</span> <span class="s">&quot;http://api.worldbank.org/countries/indicators/SE.TER.ENRR?per_page=500&amp;date=2005:2005&quot;</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs5', 6)" onmouseover="showTip(event, 'fs5', 6)" class="i">doc</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs6', 7)" onmouseover="showTip(event, 'fs6', 7)" class="t">XDocument</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs7', 8)" onmouseover="showTip(event, 'fs7', 8)" class="f">Load</span>(<span onmouseout="hideTip(event, 'fs4', 9)" onmouseover="showTip(event, 'fs4', 9)" class="i">url</span>)
+
+<span class="c">/// Creataes XML name using the WorldBank namespace</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs8', 10)" onmouseover="showTip(event, 'fs8', 10)" class="f">wb</span> <span onmouseout="hideTip(event, 'fs9', 11)" onmouseover="showTip(event, 'fs9', 11)" class="i">name</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs10', 12)" onmouseover="showTip(event, 'fs10', 12)" class="t">XName</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs11', 13)" onmouseover="showTip(event, 'fs11', 13)" class="f">Get</span>(<span onmouseout="hideTip(event, 'fs9', 14)" onmouseover="showTip(event, 'fs9', 14)" class="i">name</span>, <span class="s">&quot;http://www.worldbank.org&quot;</span>)
+
+<span class="k">let</span> (<span class="o">?</span>) (<span onmouseout="hideTip(event, 'fs12', 15)" onmouseover="showTip(event, 'fs12', 15)" class="i">pt</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs13', 16)" onmouseover="showTip(event, 'fs13', 16)" class="t">XElement</span>) (<span onmouseout="hideTip(event, 'fs9', 17)" onmouseover="showTip(event, 'fs9', 17)" class="i">name</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs14', 18)" onmouseover="showTip(event, 'fs14', 18)" class="t">string</span>) <span class="o">:</span> <span class="o">&#39;</span><span class="i">R</span> <span class="o">=</span>
+  <span class="k">let</span> <span onmouseout="hideTip(event, 'fs15', 19)" onmouseover="showTip(event, 'fs15', 19)" class="i">value</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs12', 20)" onmouseover="showTip(event, 'fs12', 20)" class="i">pt</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs16', 21)" onmouseover="showTip(event, 'fs16', 21)" class="f">Element</span>(<span onmouseout="hideTip(event, 'fs8', 22)" onmouseover="showTip(event, 'fs8', 22)" class="f">wb</span> <span onmouseout="hideTip(event, 'fs9', 23)" onmouseover="showTip(event, 'fs9', 23)" class="i">name</span>)<span class="o">.</span><span class="i">Value</span>
+  <span class="k">try</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs17', 24)" onmouseover="showTip(event, 'fs17', 24)" class="i">conv</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs1', 25)" onmouseover="showTip(event, 'fs1', 25)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs18', 26)" onmouseover="showTip(event, 'fs18', 26)" class="t">Convert</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs19', 27)" onmouseover="showTip(event, 'fs19', 27)" class="f">ChangeType</span>(<span onmouseout="hideTip(event, 'fs15', 28)" onmouseover="showTip(event, 'fs15', 28)" class="i">value</span>, <span onmouseout="hideTip(event, 'fs20', 29)" onmouseover="showTip(event, 'fs20', 29)" class="i">typeof</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">R</span><span class="o">&gt;</span>)
+    <span onmouseout="hideTip(event, 'fs21', 30)" onmouseover="showTip(event, 'fs21', 30)" class="f">unbox</span> <span onmouseout="hideTip(event, 'fs17', 31)" onmouseover="showTip(event, 'fs17', 31)" class="i">conv</span>
+  <span class="k">with</span> _ <span class="k">-&gt;</span>
+    <span onmouseout="hideTip(event, 'fs22', 32)" onmouseover="showTip(event, 'fs22', 32)" class="t">Unchecked</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs23', 33)" onmouseover="showTip(event, 'fs23', 33)" class="i">defaultof</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">R</span><span class="o">&gt;</span>
+
+
+<span class="k">for</span> <span onmouseout="hideTip(event, 'fs12', 34)" onmouseover="showTip(event, 'fs12', 34)" class="i">pt</span> <span class="k">in</span> <span onmouseout="hideTip(event, 'fs5', 35)" onmouseover="showTip(event, 'fs5', 35)" class="i">doc</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs24', 36)" onmouseover="showTip(event, 'fs24', 36)" class="i">Root</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs25', 37)" onmouseover="showTip(event, 'fs25', 37)" class="f">Elements</span>(<span onmouseout="hideTip(event, 'fs8', 38)" onmouseover="showTip(event, 'fs8', 38)" class="f">wb</span> <span class="s">&quot;data&quot;</span>) <span class="k">do</span>
+  <span class="k">let</span> <span onmouseout="hideTip(event, 'fs9', 39)" onmouseover="showTip(event, 'fs9', 39)" class="i">name</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs12', 40)" onmouseover="showTip(event, 'fs12', 40)" class="i">pt</span><span class="o">?</span><span class="i">country</span>
+  <span class="k">let</span> <span onmouseout="hideTip(event, 'fs26', 41)" onmouseover="showTip(event, 'fs26', 41)" class="i">value</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs12', 42)" onmouseover="showTip(event, 'fs12', 42)" class="i">pt</span><span class="o">?</span><span onmouseout="hideTip(event, 'fs26', 43)" onmouseover="showTip(event, 'fs26', 43)" class="i">value</span>
+  <span onmouseout="hideTip(event, 'fs27', 44)" onmouseover="showTip(event, 'fs27', 44)" class="f">printfn</span> <span class="s">&quot;</span><span class="pf">%s</span><span class="s"> (</span><span class="pf">%f</span><span class="s">)&quot;</span> <span onmouseout="hideTip(event, 'fs9', 45)" onmouseover="showTip(event, 'fs9', 45)" class="i">name</span> <span onmouseout="hideTip(event, 'fs26', 46)" onmouseover="showTip(event, 'fs26', 46)" class="i">value</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace System</div>
+<div class="tip" id="fs2">namespace System.Xml</div>
+<div class="tip" id="fs3">namespace System.Xml.Linq</div>
+<div class="tip" id="fs4">val url : string<br /><br />Full name: Script.url</div>
+<div class="tip" id="fs5">val doc : XDocument<br /><br />Full name: Script.doc</div>
+<div class="tip" id="fs6">Multiple items<br />type XDocument =<br />&#160;&#160;inherit XContainer<br />&#160;&#160;new : unit -&gt; XDocument + 3 overloads<br />&#160;&#160;member Declaration : XDeclaration with get, set<br />&#160;&#160;member DocumentType : XDocumentType<br />&#160;&#160;member NodeType : XmlNodeType<br />&#160;&#160;member Root : XElement<br />&#160;&#160;member Save : fileName:string -&gt; unit + 6 overloads<br />&#160;&#160;member WriteTo : writer:XmlWriter -&gt; unit<br />&#160;&#160;static member Load : uri:string -&gt; XDocument + 7 overloads<br />&#160;&#160;static member Parse : text:string -&gt; XDocument + 1 overload<br /><br />Full name: System.Xml.Linq.XDocument<br /><br />--------------------<br />XDocument() : unit<br />XDocument([&lt;ParamArray&gt;] content: obj []) : unit<br />XDocument(other: XDocument) : unit<br />XDocument(declaration: XDeclaration, [&lt;ParamArray&gt;] content: obj []) : unit</div>
+<div class="tip" id="fs7">XDocument.Load(reader: Xml.XmlReader) : XDocument<br />XDocument.Load(textReader: IO.TextReader) : XDocument<br />XDocument.Load(stream: IO.Stream) : XDocument<br />XDocument.Load(uri: string) : XDocument<br />XDocument.Load(reader: Xml.XmlReader, options: LoadOptions) : XDocument<br />XDocument.Load(textReader: IO.TextReader, options: LoadOptions) : XDocument<br />XDocument.Load(stream: IO.Stream, options: LoadOptions) : XDocument<br />XDocument.Load(uri: string, options: LoadOptions) : XDocument</div>
+<div class="tip" id="fs8">val wb : name:string -&gt; XName<br /><br />Full name: Script.wb<br /><em><br /><br />&#160;Creataes XML name using the WorldBank namespace</em></div>
+<div class="tip" id="fs9">val name : string</div>
+<div class="tip" id="fs10">type XName =<br />&#160;&#160;member Equals : obj:obj -&gt; bool<br />&#160;&#160;member GetHashCode : unit -&gt; int<br />&#160;&#160;member LocalName : string<br />&#160;&#160;member Namespace : XNamespace<br />&#160;&#160;member NamespaceName : string<br />&#160;&#160;member ToString : unit -&gt; string<br />&#160;&#160;static member Get : expandedName:string -&gt; XName + 1 overload<br /><br />Full name: System.Xml.Linq.XName</div>
+<div class="tip" id="fs11">XName.Get(expandedName: string) : XName<br />XName.Get(localName: string, namespaceName: string) : XName</div>
+<div class="tip" id="fs12">val pt : XElement</div>
+<div class="tip" id="fs13">Multiple items<br />type XElement =<br />&#160;&#160;inherit XContainer<br />&#160;&#160;new : name:XName -&gt; XElement + 4 overloads<br />&#160;&#160;member AncestorsAndSelf : unit -&gt; IEnumerable&lt;XElement&gt; + 1 overload<br />&#160;&#160;member Attribute : name:XName -&gt; XAttribute<br />&#160;&#160;member Attributes : unit -&gt; IEnumerable&lt;XAttribute&gt; + 1 overload<br />&#160;&#160;member DescendantNodesAndSelf : unit -&gt; IEnumerable&lt;XNode&gt;<br />&#160;&#160;member DescendantsAndSelf : unit -&gt; IEnumerable&lt;XElement&gt; + 1 overload<br />&#160;&#160;member FirstAttribute : XAttribute<br />&#160;&#160;member GetDefaultNamespace : unit -&gt; XNamespace<br />&#160;&#160;member GetNamespaceOfPrefix : prefix:string -&gt; XNamespace<br />&#160;&#160;member GetPrefixOfNamespace : ns:XNamespace -&gt; string<br />&#160;&#160;...<br /><br />Full name: System.Xml.Linq.XElement<br /><br />--------------------<br />XElement(name: XName) : unit<br />XElement(other: XElement) : unit<br />XElement(other: XStreamingElement) : unit<br />XElement(name: XName, content: obj) : unit<br />XElement(name: XName, [&lt;ParamArray&gt;] content: obj []) : unit</div>
+<div class="tip" id="fs14">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />Full name: Microsoft.FSharp.Core.Operators.string<br /><br />--------------------<br />type string = String<br /><br />Full name: Microsoft.FSharp.Core.string</div>
+<div class="tip" id="fs15">val value : string</div>
+<div class="tip" id="fs16">XContainer.Element(name: XName) : XElement</div>
+<div class="tip" id="fs17">val conv : obj</div>
+<div class="tip" id="fs18">type Convert =<br />&#160;&#160;static val DBNull : obj<br />&#160;&#160;static member ChangeType : value:obj * typeCode:TypeCode -&gt; obj + 3 overloads<br />&#160;&#160;static member FromBase64CharArray : inArray:char[] * offset:int * length:int -&gt; byte[]<br />&#160;&#160;static member FromBase64String : s:string -&gt; byte[]<br />&#160;&#160;static member GetTypeCode : value:obj -&gt; TypeCode<br />&#160;&#160;static member IsDBNull : value:obj -&gt; bool<br />&#160;&#160;static member ToBase64CharArray : inArray:byte[] * offsetIn:int * length:int * outArray:char[] * offsetOut:int -&gt; int + 1 overload<br />&#160;&#160;static member ToBase64String : inArray:byte[] -&gt; string + 3 overloads<br />&#160;&#160;static member ToBoolean : value:obj -&gt; bool + 17 overloads<br />&#160;&#160;static member ToByte : value:obj -&gt; byte + 18 overloads<br />&#160;&#160;...<br /><br />Full name: System.Convert</div>
+<div class="tip" id="fs19">Convert.ChangeType(value: obj, conversionType: Type) : obj<br />Convert.ChangeType(value: obj, typeCode: TypeCode) : obj<br />Convert.ChangeType(value: obj, conversionType: Type, provider: IFormatProvider) : obj<br />Convert.ChangeType(value: obj, typeCode: TypeCode, provider: IFormatProvider) : obj</div>
+<div class="tip" id="fs20">val typeof&lt;&#39;T&gt; : Type<br /><br />Full name: Microsoft.FSharp.Core.Operators.typeof</div>
+<div class="tip" id="fs21">val unbox : value:obj -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.Operators.unbox</div>
+<div class="tip" id="fs22">module Unchecked<br /><br />from Microsoft.FSharp.Core.Operators</div>
+<div class="tip" id="fs23">val defaultof&lt;&#39;T&gt; : &#39;T<br /><br />Full name: Microsoft.FSharp.Core.Operators.Unchecked.defaultof</div>
+<div class="tip" id="fs24">property XDocument.Root: XElement</div>
+<div class="tip" id="fs25">XContainer.Elements() : Collections.Generic.IEnumerable&lt;XElement&gt;<br />XContainer.Elements(name: XName) : Collections.Generic.IEnumerable&lt;XElement&gt;</div>
+<div class="tip" id="fs26">val value : float</div>
+<div class="tip" id="fs27">val printfn : format:Printf.TextWriterFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.printfn</div>
+

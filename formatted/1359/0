@@ -1,0 +1,192 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+<span class="l">38: </span>
+<span class="l">39: </span>
+<span class="l">40: </span>
+<span class="l">41: </span>
+<span class="l">42: </span>
+<span class="l">43: </span>
+<span class="l">44: </span>
+<span class="l">45: </span>
+<span class="l">46: </span>
+<span class="l">47: </span>
+<span class="l">48: </span>
+<span class="l">49: </span>
+<span class="l">50: </span>
+<span class="l">51: </span>
+<span class="l">52: </span>
+<span class="l">53: </span>
+<span class="l">54: </span>
+<span class="l">55: </span>
+<span class="l">56: </span>
+<span class="l">57: </span>
+<span class="l">58: </span>
+<span class="l">59: </span>
+<span class="l">60: </span>
+<span class="l">61: </span>
+<span class="l">62: </span>
+<span class="l">63: </span>
+<span class="l">64: </span>
+<span class="l">65: </span>
+<span class="l">66: </span>
+<span class="l">67: </span>
+<span class="l">68: </span>
+<span class="l">69: </span>
+<span class="l">70: </span>
+<span class="l">71: </span>
+<span class="l">72: </span>
+<span class="l">73: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">module</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="t">AsyncEither</span>
+
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="t">AsyncEither</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">a</span>, <span class="o">&#39;</span><span class="i">b</span><span class="o">&gt;</span> <span class="o">=</span>
+    <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="t">Async</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="t">Choice</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">a</span>, <span class="o">&#39;</span><span class="i">b</span><span class="o">&gt;</span><span class="o">&gt;</span>
+
+<span class="k">let</span> <span class="k">inline</span> <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="f">bind</span> (<span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="i">m</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs2', 7)" onmouseover="showTip(event, 'fs2', 7)" class="t">AsyncEither</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">a</span>, <span class="o">&#39;</span><span class="i">b</span><span class="o">&gt;</span>) (<span onmouseout="hideTip(event, 'fs7', 8)" onmouseover="showTip(event, 'fs7', 8)" class="f">f</span> <span class="o">:</span> <span class="o">&#39;</span><span class="i">a</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs2', 9)" onmouseover="showTip(event, 'fs2', 9)" class="t">AsyncEither</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">c</span>, <span class="o">&#39;</span><span class="i">b</span><span class="o">&gt;</span>) <span class="o">:</span> <span onmouseout="hideTip(event, 'fs2', 10)" onmouseover="showTip(event, 'fs2', 10)" class="t">AsyncEither</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">c</span>, <span class="o">&#39;</span><span class="i">b</span><span class="o">&gt;</span> <span class="o">=</span>
+    <span onmouseout="hideTip(event, 'fs8', 11)" onmouseover="showTip(event, 'fs8', 11)" class="i">async</span> {
+        <span class="k">let!</span> <span onmouseout="hideTip(event, 'fs9', 12)" onmouseover="showTip(event, 'fs9', 12)" class="i">c</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs6', 13)" onmouseover="showTip(event, 'fs6', 13)" class="i">m</span>
+        <span class="k">match</span> <span onmouseout="hideTip(event, 'fs9', 14)" onmouseover="showTip(event, 'fs9', 14)" class="i">c</span> <span class="k">with</span>
+        | <span onmouseout="hideTip(event, 'fs10', 15)" onmouseover="showTip(event, 'fs10', 15)" class="p">Choice1Of2</span> <span onmouseout="hideTip(event, 'fs11', 16)" onmouseover="showTip(event, 'fs11', 16)" class="i">data</span> <span class="k">-&gt;</span>
+            <span class="k">return!</span> <span onmouseout="hideTip(event, 'fs7', 17)" onmouseover="showTip(event, 'fs7', 17)" class="f">f</span> <span onmouseout="hideTip(event, 'fs11', 18)" onmouseover="showTip(event, 'fs11', 18)" class="i">data</span>
+        | <span onmouseout="hideTip(event, 'fs12', 19)" onmouseover="showTip(event, 'fs12', 19)" class="p">Choice2Of2</span> <span onmouseout="hideTip(event, 'fs13', 20)" onmouseover="showTip(event, 'fs13', 20)" class="i">error</span> <span class="k">-&gt;</span>
+            <span class="k">return</span> <span onmouseout="hideTip(event, 'fs12', 21)" onmouseover="showTip(event, 'fs12', 21)" class="p">Choice2Of2</span> <span onmouseout="hideTip(event, 'fs13', 22)" onmouseover="showTip(event, 'fs13', 22)" class="i">error</span>
+    }
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs14', 23)" onmouseover="showTip(event, 'fs14', 23)" class="f">returnM</span> <span onmouseout="hideTip(event, 'fs15', 24)" onmouseover="showTip(event, 'fs15', 24)" class="i">m</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs2', 25)" onmouseover="showTip(event, 'fs2', 25)" class="t">AsyncEither</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">a</span>, <span class="o">&#39;</span><span class="i">b</span><span class="o">&gt;</span> <span class="o">=</span>
+    <span onmouseout="hideTip(event, 'fs8', 26)" onmouseover="showTip(event, 'fs8', 26)" class="i">async</span> { <span class="k">return</span> <span onmouseout="hideTip(event, 'fs10', 27)" onmouseover="showTip(event, 'fs10', 27)" class="p">Choice1Of2</span> <span onmouseout="hideTip(event, 'fs15', 28)" onmouseover="showTip(event, 'fs15', 28)" class="i">m</span> }
+
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs16', 29)" onmouseover="showTip(event, 'fs16', 29)" class="t">AsyncEitherBuilder</span> () <span class="o">=</span>
+    <span class="k">member</span> <span onmouseout="hideTip(event, 'fs17', 30)" onmouseover="showTip(event, 'fs17', 30)" class="i">x</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs18', 31)" onmouseover="showTip(event, 'fs18', 31)" class="f">Return</span> <span onmouseout="hideTip(event, 'fs19', 32)" onmouseover="showTip(event, 'fs19', 32)" class="i">m</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs14', 33)" onmouseover="showTip(event, 'fs14', 33)" class="f">returnM</span> <span onmouseout="hideTip(event, 'fs19', 34)" onmouseover="showTip(event, 'fs19', 34)" class="i">m</span>
+    <span class="k">member</span> <span onmouseout="hideTip(event, 'fs17', 35)" onmouseover="showTip(event, 'fs17', 35)" class="i">x</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs20', 36)" onmouseover="showTip(event, 'fs20', 36)" class="f">Bind</span> (<span onmouseout="hideTip(event, 'fs21', 37)" onmouseover="showTip(event, 'fs21', 37)" class="i">m</span>, <span onmouseout="hideTip(event, 'fs22', 38)" onmouseover="showTip(event, 'fs22', 38)" class="f">f</span>) <span class="o">=</span> <span onmouseout="hideTip(event, 'fs5', 39)" onmouseover="showTip(event, 'fs5', 39)" class="f">bind</span> <span onmouseout="hideTip(event, 'fs21', 40)" onmouseover="showTip(event, 'fs21', 40)" class="i">m</span> <span onmouseout="hideTip(event, 'fs22', 41)" onmouseover="showTip(event, 'fs22', 41)" class="f">f</span>
+    <span class="k">member</span> <span onmouseout="hideTip(event, 'fs17', 42)" onmouseover="showTip(event, 'fs17', 42)" class="i">x</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs23', 43)" onmouseover="showTip(event, 'fs23', 43)" class="f">ReturnFrom</span> <span onmouseout="hideTip(event, 'fs15', 44)" onmouseover="showTip(event, 'fs15', 44)" class="i">m</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs15', 45)" onmouseover="showTip(event, 'fs15', 45)" class="i">m</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs24', 46)" onmouseover="showTip(event, 'fs24', 46)" class="i">asyncChoose</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs16', 47)" onmouseover="showTip(event, 'fs16', 47)" class="t">AsyncEitherBuilder</span>()
+
+<span class="c">// example</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs25', 48)" onmouseover="showTip(event, 'fs25', 48)" class="f">remoteCall</span> <span onmouseout="hideTip(event, 'fs26', 49)" onmouseover="showTip(event, 'fs26', 49)" class="i">request</span> <span class="o">=</span>
+    <span onmouseout="hideTip(event, 'fs8', 50)" onmouseover="showTip(event, 'fs8', 50)" class="i">async</span> {
+        <span class="k">do!</span> <span onmouseout="hideTip(event, 'fs3', 51)" onmouseover="showTip(event, 'fs3', 51)" class="t">Async</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs27', 52)" onmouseover="showTip(event, 'fs27', 52)" class="f">Sleep</span> <span class="n">100</span>                
+        <span class="k">return</span> <span onmouseout="hideTip(event, 'fs10', 53)" onmouseover="showTip(event, 'fs10', 53)" class="p">Choice1Of2</span> <span onmouseout="hideTip(event, 'fs26', 54)" onmouseover="showTip(event, 'fs26', 54)" class="i">request</span>
+    }
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs28', 55)" onmouseover="showTip(event, 'fs28', 55)" class="f">failedCall</span> <span onmouseout="hideTip(event, 'fs29', 56)" onmouseover="showTip(event, 'fs29', 56)" class="i">request</span> <span class="o">=</span>
+    <span onmouseout="hideTip(event, 'fs8', 57)" onmouseover="showTip(event, 'fs8', 57)" class="i">async</span> {
+        <span class="k">do!</span> <span onmouseout="hideTip(event, 'fs3', 58)" onmouseover="showTip(event, 'fs3', 58)" class="t">Async</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs27', 59)" onmouseover="showTip(event, 'fs27', 59)" class="f">Sleep</span> <span class="n">100</span>
+        <span class="k">return</span> <span onmouseout="hideTip(event, 'fs12', 60)" onmouseover="showTip(event, 'fs12', 60)" class="p">Choice2Of2</span> (<span onmouseout="hideTip(event, 'fs30', 61)" onmouseover="showTip(event, 'fs30', 61)" class="t">exn</span> (<span class="s">&quot;I failed! :( - &quot;</span> <span class="o">+</span> <span onmouseout="hideTip(event, 'fs29', 62)" onmouseover="showTip(event, 'fs29', 62)" class="i">request</span>))
+    }
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs31', 63)" onmouseover="showTip(event, 'fs31', 63)" class="f">chainedSuccess</span> <span onmouseout="hideTip(event, 'fs32', 64)" onmouseover="showTip(event, 'fs32', 64)" class="i">message</span> <span class="o">=</span>
+    <span onmouseout="hideTip(event, 'fs24', 65)" onmouseover="showTip(event, 'fs24', 65)" class="i">asyncChoose</span> {
+        <span class="k">let!</span> <span onmouseout="hideTip(event, 'fs33', 66)" onmouseover="showTip(event, 'fs33', 66)" class="i">firstCall</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs25', 67)" onmouseover="showTip(event, 'fs25', 67)" class="f">remoteCall</span> <span onmouseout="hideTip(event, 'fs32', 68)" onmouseover="showTip(event, 'fs32', 68)" class="i">message</span>
+        <span class="k">let!</span> <span onmouseout="hideTip(event, 'fs34', 69)" onmouseover="showTip(event, 'fs34', 69)" class="i">secondCall</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs25', 70)" onmouseover="showTip(event, 'fs25', 70)" class="f">remoteCall</span> (<span onmouseout="hideTip(event, 'fs33', 71)" onmouseover="showTip(event, 'fs33', 71)" class="i">firstCall</span> <span class="o">+</span> <span class="s">&quot; second&quot;</span>)
+        
+        <span class="k">return</span> <span onmouseout="hideTip(event, 'fs34', 72)" onmouseover="showTip(event, 'fs34', 72)" class="i">secondCall</span> }
+    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs3', 73)" onmouseover="showTip(event, 'fs3', 73)" class="t">Async</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs35', 74)" onmouseover="showTip(event, 'fs35', 74)" class="f">RunSynchronously</span>
+    <span class="o">|&gt;</span> <span class="k">function</span>
+       | <span onmouseout="hideTip(event, 'fs10', 75)" onmouseover="showTip(event, 'fs10', 75)" class="p">Choice1Of2</span> <span onmouseout="hideTip(event, 'fs36', 76)" onmouseover="showTip(event, 'fs36', 76)" class="i">response</span> <span class="k">-&gt;</span>
+            <span onmouseout="hideTip(event, 'fs37', 77)" onmouseover="showTip(event, 'fs37', 77)" class="f">sprintf</span> <span class="s">&quot;Yay, I worked: </span><span class="pf">%s</span><span class="s">&quot;</span> <span onmouseout="hideTip(event, 'fs36', 78)" onmouseover="showTip(event, 'fs36', 78)" class="i">response</span>
+       | <span onmouseout="hideTip(event, 'fs12', 79)" onmouseover="showTip(event, 'fs12', 79)" class="p">Choice2Of2</span> <span onmouseout="hideTip(event, 'fs38', 80)" onmouseover="showTip(event, 'fs38', 80)" class="i">e</span> <span class="k">-&gt;</span>
+            <span onmouseout="hideTip(event, 'fs37', 81)" onmouseover="showTip(event, 'fs37', 81)" class="f">sprintf</span> <span class="s">&quot;Boo, a failure: </span><span class="pf">%A</span><span class="s">&quot;</span> <span onmouseout="hideTip(event, 'fs38', 82)" onmouseover="showTip(event, 'fs38', 82)" class="i">e</span>
+
+<span class="c">//&gt; chainedSuccess &quot;hello world&quot;;;</span>
+<span class="c">//&gt; val it : string = &quot;Yay, I worked: hello world second&quot;</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs39', 83)" onmouseover="showTip(event, 'fs39', 83)" class="f">withFail</span> <span onmouseout="hideTip(event, 'fs32', 84)" onmouseover="showTip(event, 'fs32', 84)" class="i">message</span> <span class="o">=</span>
+    <span onmouseout="hideTip(event, 'fs24', 85)" onmouseover="showTip(event, 'fs24', 85)" class="i">asyncChoose</span> {
+        <span class="k">let!</span> <span onmouseout="hideTip(event, 'fs40', 86)" onmouseover="showTip(event, 'fs40', 86)" class="i">failure</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs28', 87)" onmouseover="showTip(event, 'fs28', 87)" class="f">failedCall</span> <span onmouseout="hideTip(event, 'fs32', 88)" onmouseover="showTip(event, 'fs32', 88)" class="i">message</span>
+        <span class="k">let!</span> <span onmouseout="hideTip(event, 'fs33', 89)" onmouseover="showTip(event, 'fs33', 89)" class="i">firstCall</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs25', 90)" onmouseover="showTip(event, 'fs25', 90)" class="f">remoteCall</span> <span onmouseout="hideTip(event, 'fs40', 91)" onmouseover="showTip(event, 'fs40', 91)" class="i">failure</span>
+        <span class="k">let!</span> <span onmouseout="hideTip(event, 'fs34', 92)" onmouseover="showTip(event, 'fs34', 92)" class="i">secondCall</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs25', 93)" onmouseover="showTip(event, 'fs25', 93)" class="f">remoteCall</span> (<span onmouseout="hideTip(event, 'fs33', 94)" onmouseover="showTip(event, 'fs33', 94)" class="i">firstCall</span> <span class="o">+</span> <span class="s">&quot; second&quot;</span>)
+        
+        <span class="k">return</span> <span onmouseout="hideTip(event, 'fs34', 95)" onmouseover="showTip(event, 'fs34', 95)" class="i">secondCall</span> }
+    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs3', 96)" onmouseover="showTip(event, 'fs3', 96)" class="t">Async</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs35', 97)" onmouseover="showTip(event, 'fs35', 97)" class="f">RunSynchronously</span>
+    <span class="o">|&gt;</span> <span class="k">function</span>
+       | <span onmouseout="hideTip(event, 'fs10', 98)" onmouseover="showTip(event, 'fs10', 98)" class="p">Choice1Of2</span> <span onmouseout="hideTip(event, 'fs36', 99)" onmouseover="showTip(event, 'fs36', 99)" class="i">response</span> <span class="k">-&gt;</span>
+            <span onmouseout="hideTip(event, 'fs37', 100)" onmouseover="showTip(event, 'fs37', 100)" class="f">sprintf</span> <span class="s">&quot;Yay, I worked: </span><span class="pf">%s</span><span class="s">&quot;</span> <span onmouseout="hideTip(event, 'fs36', 101)" onmouseover="showTip(event, 'fs36', 101)" class="i">response</span>
+       | <span onmouseout="hideTip(event, 'fs12', 102)" onmouseover="showTip(event, 'fs12', 102)" class="p">Choice2Of2</span> <span onmouseout="hideTip(event, 'fs41', 103)" onmouseover="showTip(event, 'fs41', 103)" class="i">e</span> <span class="k">-&gt;</span>
+            <span onmouseout="hideTip(event, 'fs37', 104)" onmouseover="showTip(event, 'fs37', 104)" class="f">sprintf</span> <span class="s">&quot;Boo, a failure: </span><span class="pf">%A</span><span class="s">&quot;</span> <span onmouseout="hideTip(event, 'fs41', 105)" onmouseover="showTip(event, 'fs41', 105)" class="i">e</span>
+
+<span class="c">//&gt; withFail &quot;hello world&quot;;;</span>
+<span class="c">//&gt; val it : string =</span>
+<span class="c">//  &quot;Boo, a failure: System.Exception: I failed! :( - hello world&quot;</span>
+<span class="c">// The second two remote calls are never made.</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">module AsyncEither</div>
+<div class="tip" id="fs2">type AsyncEither&lt;&#39;a,&#39;b&gt; = Async&lt;Choice&lt;&#39;a,&#39;b&gt;&gt;<br /><br />Full name: AsyncEither.AsyncEither&lt;_,_&gt;</div>
+<div class="tip" id="fs3">Multiple items<br />type Async<br />static member AsBeginEnd : computation:(&#39;Arg -&gt; Async&lt;&#39;T&gt;) -&gt; (&#39;Arg * AsyncCallback * obj -&gt; IAsyncResult) * (IAsyncResult -&gt; &#39;T) * (IAsyncResult -&gt; unit)<br />static member AwaitEvent : event:IEvent&lt;&#39;Del,&#39;T&gt; * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt; (requires delegate and &#39;Del :&gt; Delegate)<br />static member AwaitIAsyncResult : iar:IAsyncResult * ?millisecondsTimeout:int -&gt; Async&lt;bool&gt;<br />static member AwaitTask : task:Task&lt;&#39;T&gt; -&gt; Async&lt;&#39;T&gt;<br />static member AwaitWaitHandle : waitHandle:WaitHandle * ?millisecondsTimeout:int -&gt; Async&lt;bool&gt;<br />static member CancelDefaultToken : unit -&gt; unit<br />static member Catch : computation:Async&lt;&#39;T&gt; -&gt; Async&lt;Choice&lt;&#39;T,exn&gt;&gt;<br />static member FromBeginEnd : beginAction:(AsyncCallback * obj -&gt; IAsyncResult) * endAction:(IAsyncResult -&gt; &#39;T) * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member FromBeginEnd : arg:&#39;Arg1 * beginAction:(&#39;Arg1 * AsyncCallback * obj -&gt; IAsyncResult) * endAction:(IAsyncResult -&gt; &#39;T) * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member FromBeginEnd : arg1:&#39;Arg1 * arg2:&#39;Arg2 * beginAction:(&#39;Arg1 * &#39;Arg2 * AsyncCallback * obj -&gt; IAsyncResult) * endAction:(IAsyncResult -&gt; &#39;T) * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member FromBeginEnd : arg1:&#39;Arg1 * arg2:&#39;Arg2 * arg3:&#39;Arg3 * beginAction:(&#39;Arg1 * &#39;Arg2 * &#39;Arg3 * AsyncCallback * obj -&gt; IAsyncResult) * endAction:(IAsyncResult -&gt; &#39;T) * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member FromContinuations : callback:((&#39;T -&gt; unit) * (exn -&gt; unit) * (OperationCanceledException -&gt; unit) -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member Ignore : computation:Async&lt;&#39;T&gt; -&gt; Async&lt;unit&gt;<br />static member OnCancel : interruption:(unit -&gt; unit) -&gt; Async&lt;IDisposable&gt;<br />static member Parallel : computations:seq&lt;Async&lt;&#39;T&gt;&gt; -&gt; Async&lt;&#39;T []&gt;<br />static member RunSynchronously : computation:Async&lt;&#39;T&gt; * ?timeout:int * ?cancellationToken:CancellationToken -&gt; &#39;T<br />static member Sleep : millisecondsDueTime:int -&gt; Async&lt;unit&gt;<br />static member Start : computation:Async&lt;unit&gt; * ?cancellationToken:CancellationToken -&gt; unit<br />static member StartAsTask : computation:Async&lt;&#39;T&gt; * ?taskCreationOptions:TaskCreationOptions * ?cancellationToken:CancellationToken -&gt; Task&lt;&#39;T&gt;<br />static member StartChild : computation:Async&lt;&#39;T&gt; * ?millisecondsTimeout:int -&gt; Async&lt;Async&lt;&#39;T&gt;&gt;<br />static member StartChildAsTask : computation:Async&lt;&#39;T&gt; * ?taskCreationOptions:TaskCreationOptions -&gt; Async&lt;Task&lt;&#39;T&gt;&gt;<br />static member StartImmediate : computation:Async&lt;unit&gt; * ?cancellationToken:CancellationToken -&gt; unit<br />static member StartWithContinuations : computation:Async&lt;&#39;T&gt; * continuation:(&#39;T -&gt; unit) * exceptionContinuation:(exn -&gt; unit) * cancellationContinuation:(OperationCanceledException -&gt; unit) * ?cancellationToken:CancellationToken -&gt; unit<br />static member SwitchToContext : syncContext:SynchronizationContext -&gt; Async&lt;unit&gt;<br />static member SwitchToNewThread : unit -&gt; Async&lt;unit&gt;<br />static member SwitchToThreadPool : unit -&gt; Async&lt;unit&gt;<br />static member TryCancelled : computation:Async&lt;&#39;T&gt; * compensation:(OperationCanceledException -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member CancellationToken : Async&lt;CancellationToken&gt;<br />static member DefaultCancellationToken : CancellationToken<br /><br />Full name: Microsoft.FSharp.Control.Async<br /><br />--------------------<br />type Async&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Control.Async&lt;_&gt;</div>
+<div class="tip" id="fs4">Multiple items<br />type Choice&lt;&#39;T1,&#39;T2&gt; =<br />&#160;&#160;| Choice1Of2 of &#39;T1<br />&#160;&#160;| Choice2Of2 of &#39;T2<br /><br />Full name: Microsoft.FSharp.Core.Choice&lt;_,_&gt;<br /><br />--------------------<br />type Choice&lt;&#39;T1,&#39;T2,&#39;T3&gt; =<br />&#160;&#160;| Choice1Of3 of &#39;T1<br />&#160;&#160;| Choice2Of3 of &#39;T2<br />&#160;&#160;| Choice3Of3 of &#39;T3<br /><br />Full name: Microsoft.FSharp.Core.Choice&lt;_,_,_&gt;<br /><br />--------------------<br />type Choice&lt;&#39;T1,&#39;T2,&#39;T3,&#39;T4&gt; =<br />&#160;&#160;| Choice1Of4 of &#39;T1<br />&#160;&#160;| Choice2Of4 of &#39;T2<br />&#160;&#160;| Choice3Of4 of &#39;T3<br />&#160;&#160;| Choice4Of4 of &#39;T4<br /><br />Full name: Microsoft.FSharp.Core.Choice&lt;_,_,_,_&gt;<br /><br />--------------------<br />type Choice&lt;&#39;T1,&#39;T2,&#39;T3,&#39;T4,&#39;T5&gt; =<br />&#160;&#160;| Choice1Of5 of &#39;T1<br />&#160;&#160;| Choice2Of5 of &#39;T2<br />&#160;&#160;| Choice3Of5 of &#39;T3<br />&#160;&#160;| Choice4Of5 of &#39;T4<br />&#160;&#160;| Choice5Of5 of &#39;T5<br /><br />Full name: Microsoft.FSharp.Core.Choice&lt;_,_,_,_,_&gt;<br /><br />--------------------<br />type Choice&lt;&#39;T1,&#39;T2,&#39;T3,&#39;T4,&#39;T5,&#39;T6&gt; =<br />&#160;&#160;| Choice1Of6 of &#39;T1<br />&#160;&#160;| Choice2Of6 of &#39;T2<br />&#160;&#160;| Choice3Of6 of &#39;T3<br />&#160;&#160;| Choice4Of6 of &#39;T4<br />&#160;&#160;| Choice5Of6 of &#39;T5<br />&#160;&#160;| Choice6Of6 of &#39;T6<br /><br />Full name: Microsoft.FSharp.Core.Choice&lt;_,_,_,_,_,_&gt;<br /><br />--------------------<br />type Choice&lt;&#39;T1,&#39;T2,&#39;T3,&#39;T4,&#39;T5,&#39;T6,&#39;T7&gt; =<br />&#160;&#160;| Choice1Of7 of &#39;T1<br />&#160;&#160;| Choice2Of7 of &#39;T2<br />&#160;&#160;| Choice3Of7 of &#39;T3<br />&#160;&#160;| Choice4Of7 of &#39;T4<br />&#160;&#160;| Choice5Of7 of &#39;T5<br />&#160;&#160;| Choice6Of7 of &#39;T6<br />&#160;&#160;| Choice7Of7 of &#39;T7<br /><br />Full name: Microsoft.FSharp.Core.Choice&lt;_,_,_,_,_,_,_&gt;</div>
+<div class="tip" id="fs5">val bind : m:AsyncEither&lt;&#39;a,&#39;b&gt; -&gt; f:(&#39;a -&gt; AsyncEither&lt;&#39;c,&#39;b&gt;) -&gt; AsyncEither&lt;&#39;c,&#39;b&gt;<br /><br />Full name: AsyncEither.bind</div>
+<div class="tip" id="fs6">val m : AsyncEither&lt;&#39;a,&#39;b&gt;</div>
+<div class="tip" id="fs7">val f : (&#39;a -&gt; AsyncEither&lt;&#39;c,&#39;b&gt;)</div>
+<div class="tip" id="fs8">val async : AsyncBuilder<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.async</div>
+<div class="tip" id="fs9">val c : Choice&lt;&#39;a,&#39;b&gt;</div>
+<div class="tip" id="fs10">union case Choice.Choice1Of2: &#39;T1 -&gt; Choice&lt;&#39;T1,&#39;T2&gt;</div>
+<div class="tip" id="fs11">val data : &#39;a</div>
+<div class="tip" id="fs12">union case Choice.Choice2Of2: &#39;T2 -&gt; Choice&lt;&#39;T1,&#39;T2&gt;</div>
+<div class="tip" id="fs13">val error : &#39;b</div>
+<div class="tip" id="fs14">val returnM : m:&#39;a -&gt; AsyncEither&lt;&#39;a,&#39;b&gt;<br /><br />Full name: AsyncEither.returnM</div>
+<div class="tip" id="fs15">val m : &#39;a</div>
+<div class="tip" id="fs16">Multiple items<br />type AsyncEitherBuilder =<br />&#160;&#160;new : unit -&gt; AsyncEitherBuilder<br />&#160;&#160;member Bind : m:AsyncEither&lt;&#39;b,&#39;c&gt; * f:(&#39;b -&gt; AsyncEither&lt;&#39;d,&#39;c&gt;) -&gt; AsyncEither&lt;&#39;d,&#39;c&gt;<br />&#160;&#160;member Return : m:&#39;e -&gt; AsyncEither&lt;&#39;e,&#39;f&gt;<br />&#160;&#160;member ReturnFrom : m:&#39;a -&gt; &#39;a<br /><br />Full name: AsyncEither.AsyncEitherBuilder<br /><br />--------------------<br />new : unit -&gt; AsyncEitherBuilder</div>
+<div class="tip" id="fs17">val x : AsyncEitherBuilder</div>
+<div class="tip" id="fs18">member AsyncEitherBuilder.Return : m:&#39;e -&gt; AsyncEither&lt;&#39;e,&#39;f&gt;<br /><br />Full name: AsyncEither.AsyncEitherBuilder.Return</div>
+<div class="tip" id="fs19">val m : &#39;e</div>
+<div class="tip" id="fs20">member AsyncEitherBuilder.Bind : m:AsyncEither&lt;&#39;b,&#39;c&gt; * f:(&#39;b -&gt; AsyncEither&lt;&#39;d,&#39;c&gt;) -&gt; AsyncEither&lt;&#39;d,&#39;c&gt;<br /><br />Full name: AsyncEither.AsyncEitherBuilder.Bind</div>
+<div class="tip" id="fs21">val m : AsyncEither&lt;&#39;b,&#39;c&gt;</div>
+<div class="tip" id="fs22">val f : (&#39;b -&gt; AsyncEither&lt;&#39;d,&#39;c&gt;)</div>
+<div class="tip" id="fs23">member AsyncEitherBuilder.ReturnFrom : m:&#39;a -&gt; &#39;a<br /><br />Full name: AsyncEither.AsyncEitherBuilder.ReturnFrom</div>
+<div class="tip" id="fs24">val asyncChoose : AsyncEitherBuilder<br /><br />Full name: AsyncEither.asyncChoose</div>
+<div class="tip" id="fs25">val remoteCall : request:&#39;a -&gt; Async&lt;Choice&lt;&#39;a,&#39;b&gt;&gt;<br /><br />Full name: AsyncEither.remoteCall</div>
+<div class="tip" id="fs26">val request : &#39;a</div>
+<div class="tip" id="fs27">static member Async.Sleep : millisecondsDueTime:int -&gt; Async&lt;unit&gt;</div>
+<div class="tip" id="fs28">val failedCall : request:string -&gt; Async&lt;Choice&lt;&#39;a,System.Exception&gt;&gt;<br /><br />Full name: AsyncEither.failedCall</div>
+<div class="tip" id="fs29">val request : string</div>
+<div class="tip" id="fs30">type exn = System.Exception<br /><br />Full name: Microsoft.FSharp.Core.exn</div>
+<div class="tip" id="fs31">val chainedSuccess : message:string -&gt; string<br /><br />Full name: AsyncEither.chainedSuccess</div>
+<div class="tip" id="fs32">val message : string</div>
+<div class="tip" id="fs33">val firstCall : string</div>
+<div class="tip" id="fs34">val secondCall : string</div>
+<div class="tip" id="fs35">static member Async.RunSynchronously : computation:Async&lt;&#39;T&gt; * ?timeout:int * ?cancellationToken:System.Threading.CancellationToken -&gt; &#39;T</div>
+<div class="tip" id="fs36">val response : string</div>
+<div class="tip" id="fs37">val sprintf : format:Printf.StringFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.sprintf</div>
+<div class="tip" id="fs38">val e : obj</div>
+<div class="tip" id="fs39">val withFail : message:string -&gt; string<br /><br />Full name: AsyncEither.withFail</div>
+<div class="tip" id="fs40">val failure : string</div>
+<div class="tip" id="fs41">val e : System.Exception</div>
+

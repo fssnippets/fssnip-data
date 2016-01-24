@@ -1,0 +1,514 @@
+// #################################################################################################
+// Author: Jeff Webster
+// Date:   2015/06/05
+// #################################################################################################
+//
+//
+// #################################################################################################
+// Generic Result Success / Fail handling -- much taken from http://fsharpforfunandprofit.com/rop
+// #################################################################################################
+// -------------------------------------------------------------------------------------------------
+// Typesafe way of capturing how program can fail
+// -------------------------------------------------------------------------------------------------
+type Failures = 
+   | Debug
+   | InvalidListSize
+   | InvalidValue of char
+   | InvalidSuit of char
+   | InvalidCardSyntax
+   | HandHasInvalidCards
+   | HandHasDuplicates
+   | MultiFail of list<Failures>
+
+// -------------------------------------------------------------------------------------------------
+// Convert Failures to a human-readable string
+// -------------------------------------------------------------------------------------------------
+let rec explainFailure failType = 
+   match failType with
+   | Debug -> "Debug Fail"
+   | InvalidListSize -> "Invalid List Size"
+   | InvalidValue v -> sprintf "Invalid Value of '%c'" v
+   | InvalidSuit s -> sprintf "Invalid Suit of '%c'" s
+   | InvalidCardSyntax -> "Invalid Card Syntax"
+   | HandHasInvalidCards -> "Hand has one or more invalid cards"
+   | HandHasDuplicates -> "Hand has one or more duplicate cards"
+   | MultiFail list -> (String.concat ", " (list |> List.map explainFailure))
+
+// -------------------------------------------------------------------------------------------------
+// Result is either Success of a type, or a Fail of a specific Failures type
+// -------------------------------------------------------------------------------------------------
+type Result<'TEntity> = 
+   | Success of 'TEntity
+   | Fail of Failures
+
+// -------------------------------------------------------------------------------------------------
+// Either return the underlying type of a Result.Success or failwith if Result.Failure
+// -------------------------------------------------------------------------------------------------
+let getSuccess result = 
+   match result with
+   | Success s -> s
+   | Fail _ -> failwith "Expecting result to be a success"
+
+// -------------------------------------------------------------------------------------------------
+// Return if the given Result is a Success or not
+// -------------------------------------------------------------------------------------------------
+let isSuccessful result = 
+   match result with
+   | Success _ -> true
+   | Fail _ -> false
+
+// -------------------------------------------------------------------------------------------------
+// Convert a 2-Tuple of Results into a Result of a 2-Tuple.  Fails propagate.
+//   ex: (Success 2, Success 5) -> Success (2,5)
+//   ex: (Fail FailType, Success "foo") -> Fail FailType
+//   ex: (Fail FailType, Fail FailType') -> MultiFail [Fail FailType; Fail FailType']
+// -------------------------------------------------------------------------------------------------
+let merge2TupleResult (result1, result2) = 
+   match (result1, result2) with
+   | (Success r1, Success r2) -> Success(r1, r2)
+   | (Success _, Fail r2) -> Fail r2
+   | (Fail r1, Success _) -> Fail r1
+   | (Fail r1, Fail r2) -> Fail(MultiFail [ r1; r2 ])
+
+//
+//
+// #################################################################################################
+// Miscellaneous helper / utility functions
+// #################################################################################################
+// -------------------------------------------------------------------------------------------------
+// Sometimes I like C#'s not equal...  Sorry F# purists! :)
+// -------------------------------------------------------------------------------------------------
+let (!=) item1 item2 = not (item1 = item2)
+
+// -------------------------------------------------------------------------------------------------
+// Convert a list to a 5-Tuple if it has 5 elements or Fail with InvalidListSize
+// -------------------------------------------------------------------------------------------------
+let to5Tuple list = 
+   match list with
+   | i1 :: i2 :: i3 :: i4 :: i5 :: [] -> Success(i1, i2, i3, i4, i5)
+   | _ -> Fail InvalidListSize
+
+// -------------------------------------------------------------------------------------------------
+// Convert a 5-Tuple to a list
+// -------------------------------------------------------------------------------------------------
+let toList (i1, i2, i3, i4, i5) = [ i1; i2; i3; i4; i5 ]
+
+//
+//
+// #################################################################################################
+// Values as an isolated concept
+// #################################################################################################
+// -------------------------------------------------------------------------------------------------
+// Value is simply an enum ranking the values, as well as giving a name with which to code
+// -------------------------------------------------------------------------------------------------
+type Value = 
+   | Two = 2
+   | Three = 3
+   | Four = 4
+   | Five = 5
+   | Six = 6
+   | Seven = 7
+   | Eight = 8
+   | Nine = 9
+   | Ten = 10
+   | Jack = 11
+   | Queen = 12
+   | King = 13
+   | Ace = 14
+
+// -------------------------------------------------------------------------------------------------
+// Convert the given uppercase char into a Value or Fail with an InvalidValue
+// -------------------------------------------------------------------------------------------------
+let parseValue charValue = 
+   match charValue with
+   | '2' -> Success Value.Two
+   | '3' -> Success Value.Three
+   | '4' -> Success Value.Four
+   | '5' -> Success Value.Five
+   | '6' -> Success Value.Six
+   | '7' -> Success Value.Seven
+   | '8' -> Success Value.Eight
+   | '9' -> Success Value.Nine
+   | 'T' -> Success Value.Ten
+   | 'J' -> Success Value.Jack
+   | 'Q' -> Success Value.Queen
+   | 'K' -> Success Value.King
+   | 'A' -> Success Value.Ace
+   | other -> Fail(InvalidValue other)
+
+// -------------------------------------------------------------------------------------------------
+// Return if the second value is exactly one more than the first value
+// -------------------------------------------------------------------------------------------------
+let isNextValue (val1 : Value) val2 = int val2 = int val1 + 1
+
+//
+//
+// #################################################################################################
+// Suits as an isolated concept
+// #################################################################################################
+type Suit = 
+   | Clubs
+   | Spades
+   | Hearts
+   | Diamonds
+
+// -------------------------------------------------------------------------------------------------
+// Convert the given uppercase char into a Suit or Fail with an InvalidSuit
+// -------------------------------------------------------------------------------------------------
+let parseSuit charSuit = 
+   match charSuit with
+   | 'C' -> Success Suit.Clubs
+   | 'S' -> Success Suit.Spades
+   | 'H' -> Success Suit.Hearts
+   | 'D' -> Success Suit.Diamonds
+   | other -> Fail(InvalidSuit other)
+
+//
+//
+// #################################################################################################
+// Card is a 2-Tuple of Value and Suit
+// #################################################################################################
+type Card = Value * Suit
+
+// -------------------------------------------------------------------------------------------------
+// Convert the given string into a Card or Fail with InvalidCardSyntax
+// -------------------------------------------------------------------------------------------------
+let parseCard (strCard : string) = 
+   let chars = strCard.ToUpper().ToCharArray()
+   match chars with
+   // proceed if there are two chars in the array
+   | [| charValue; charSuit |] -> 
+      let value = parseValue charValue
+      let suit = parseSuit charSuit
+      merge2TupleResult (value, suit)
+   // otherwise fail with bad syntax
+   | _ -> Fail InvalidCardSyntax
+
+//
+//
+// #################################################################################################
+// Hand is a 5-Tuple of Cards
+// #################################################################################################
+type Hand = Card * Card * Card * Card * Card
+
+// -------------------------------------------------------------------------------------------------
+// Convert the given string into a Hand or Fail with HandHasInvalidCards or HandHasDuplicates
+// -------------------------------------------------------------------------------------------------
+let parseHand (strHand : string) = 
+   let cards = Array.toList (strHand.Split([| ' ' |]))
+   let parsed = List.map parseCard cards |> List.sort
+   // early exit for existence of an invalid card
+   if parsed |> List.exists (fun item -> not (isSuccessful item)) then Fail HandHasInvalidCards
+   // all cards are individually valid -- fail if there duplicate valid cards
+   else 
+      let areDups = 
+         parsed
+         |> List.toSeq
+         |> Seq.pairwise
+         |> Seq.exists (fun (i1, i2) -> i1 = i2)
+      if areDups then Fail HandHasDuplicates
+      // all valid and unique -- pull types out of inner Successes and return a Successful Hand
+      else 
+         parsed
+         |> List.map getSuccess
+         |> to5Tuple
+
+//
+//
+// #################################################################################################
+// Hand anaylsis -- uses "scoring" from http://www.pokerlistings.com/poker-hand-ranking
+// #################################################################################################
+type HandScore = 
+   | HighCard = 1
+   | OnePair = 2
+   | TwoPair = 3
+   | ThreeKind = 4
+   | Straight = 5
+   | Flush = 6
+   | FullHouse = 7
+   | FourKind = 8
+   | StraightFlush = 9
+   | RoyalFlush = 10
+
+// -------------------------------------------------------------------------------------------------
+// Return whether or not the given hand is a straight (sequential values)
+//   Assumes the hand is valid and already sorted by Value ascending (such as from parseHand)
+// -------------------------------------------------------------------------------------------------
+let isStraight hand = 
+   hand
+   |> toList
+   |> List.toSeq
+   |> Seq.pairwise
+   |> Seq.forall (fun ((v1, _), (v2, _)) -> isNextValue v1 v2)
+
+// -------------------------------------------------------------------------------------------------
+// Return whether or not the given hand is a flush (single suit)
+//   Assumes the hand is valid (such as from parseHand)
+// -------------------------------------------------------------------------------------------------
+let isFlush hand = 
+   hand
+   |> toList
+   |> List.toSeq
+   |> Seq.pairwise
+   |> Seq.forall (fun ((_, s1), (_, s2)) -> s1 = s2)
+
+// -------------------------------------------------------------------------------------------------
+// Return a list of counts of Values in the hand, descending by count, values ignored.
+//   ex: Four of a Kind will be [4;1]
+//   ex: Full House will be [3;2]
+//   ex: Two Pair will be [2;2;1]
+//   ex: High Card will be [1;1;1;1;1]
+// -------------------------------------------------------------------------------------------------
+let getValueCounts hand = 
+   hand
+   |> toList
+   |> List.toSeq
+   |> Seq.countBy (fun (v, _) -> v) // count by values, suits don't matter
+   |> Seq.map (fun (_, count) -> count) // drop the key -- we only want the counts
+   |> Seq.toList
+   |> List.sort
+   |> List.rev
+
+// -------------------------------------------------------------------------------------------------
+// Determine the correct HandScore for the given hand.
+//   Assumes the hand is valid and already sorted by Value ascending (such as from parseHand)
+//   Algorithm is to determine three properties of the hand:
+//     1) It is a straight (T/F)
+//     2) It is a flush (T/F)
+//     3) We have a list of the value counts
+//   We can correctly score the hand by matching these properties
+// -------------------------------------------------------------------------------------------------
+let scoreHand hand = 
+   // gather hand properties
+   let isStraight = isStraight hand
+   let isFlush = isFlush hand
+   let valueCounts = getValueCounts hand
+   // match pattern of properties to determine HandScore
+   match (isStraight, isFlush, valueCounts) with
+   // matches with straight and/or flush
+   | (true, true, _) -> 
+      let (_, _, _, _, (value, _)) = hand
+      if value = Value.Ace then HandScore.RoyalFlush
+      else HandScore.StraightFlush
+   | (false, true, _) -> HandScore.Flush
+   | (true, false, _) -> HandScore.Straight
+   // matches based on count only
+   | (false, false, [ 4; 1 ]) -> HandScore.FourKind
+   | (false, false, [ 3; 2 ]) -> HandScore.FullHouse
+   | (false, false, [ 3; 1; 1 ]) -> HandScore.ThreeKind
+   | (false, false, [ 2; 2; 1 ]) -> HandScore.TwoPair
+   | (false, false, [ 2; 1; 1; 1 ]) -> HandScore.OnePair
+   | (false, false, _) -> HandScore.HighCard
+
+//
+//
+// #################################################################################################
+// Testing
+// #################################################################################################
+// -------------------------------------------------------------------------------------------------
+// Basic test simply compares expected to actual and prints the result and meta info
+// -------------------------------------------------------------------------------------------------
+let test compareOp desc expecting actual = 
+   let result = 
+      if compareOp expecting actual then "(OK)"
+      else "FAIL"
+   printfn "%s %s" result desc
+
+// -------------------------------------------------------------------------------------------------
+// Partial application for common testing types
+// -------------------------------------------------------------------------------------------------
+let assertEq desc = test (=) desc
+let assertTrue desc = assertEq desc true
+let assertFalse desc = assertEq desc false
+
+// -------------------------------------------------------------------------------------------------
+// Partial application for testing a Fail with explanations on printout
+// -------------------------------------------------------------------------------------------------
+let assertFail desc failType value = 
+   let descWithExplanation = desc + ": " + (explainFailure failType)
+   test (fun exp act -> (Fail exp) = act) descWithExplanation failType value
+
+// -------------------------------------------------------------------------------------------------
+// Partial application for testing a failwith with explanations on printout
+// -------------------------------------------------------------------------------------------------
+let assertFailWith desc op expFailType = 
+   try 
+      op() |> ignore
+   with Failure msg -> assertEq desc expFailType msg
+
+// -------------------------------------------------------------------------------------------------
+// Tests for the Results section of code
+// -------------------------------------------------------------------------------------------------
+let doResultTests() = 
+   // getSuccess
+   assertEq "getSuccess valid" 5 (getSuccess (Success 5))
+   assertFailWith "getSuccess failure" (fun () -> getSuccess (Fail InvalidListSize)) 
+      "Expecting result to be a success"
+   // isSuccessful
+   assertTrue "isSuccessful true" (isSuccessful (Success 5))
+   assertFalse "isSuccessful false" (isSuccessful (Fail InvalidCardSyntax))
+   // merge2TupleResult
+   assertEq "merge2TupleResult Success,Success" (Success(1, 2)) 
+      (merge2TupleResult (Success 1, Success 2))
+   assertFail "merge2TupleResult Success,Fail" Debug (merge2TupleResult (Success 1, Fail Debug))
+   assertFail "merge2TupleResult Fail,Success" Debug (merge2TupleResult (Fail Debug, Success 2))
+   assertFail "merge2TupleResult Fail,Fail" (MultiFail [ Debug; Debug ]) 
+      (merge2TupleResult (Fail Debug, Fail Debug))
+
+// -------------------------------------------------------------------------------------------------
+// Tests for the Utility section of code
+// -------------------------------------------------------------------------------------------------
+let doUtilityTests() = 
+   // != operator
+   assertFalse "not false" (3 != 3)
+   assertTrue "not true" (1 != 3)
+   // to5Tuple
+   assertEq "to5Tuple success" (Success(1, 2, 3, 4, 5)) (to5Tuple [ 1; 2; 3; 4; 5 ])
+   assertFail "to5Tuple tooSmall" InvalidListSize (to5Tuple [ 1; 2; 3 ])
+   assertFail "to5Tuple tooBig" InvalidListSize (to5Tuple [ 1; 2; 3; 4; 5; 6 ])
+   // toList
+   assertEq "toList" [ 1; 2; 3; 4; 5 ] (toList (1, 2, 3, 4, 5))
+
+// -------------------------------------------------------------------------------------------------
+// Tests for the Value section of code
+// -------------------------------------------------------------------------------------------------
+let doValueTests() = 
+   // parseValue
+   assertEq "parseValue valid num" (Success Value.Eight) (parseValue '8')
+   assertEq "parseValue valid UCASE" (Success Value.Jack) (parseValue 'J')
+   assertFail "parseValue invalid lcase" (InvalidValue 'j') (parseValue 'j')
+   // isNextValue
+   assertTrue "isNextValue correct" (isNextValue Value.Six Value.Seven)
+   assertFalse "isNextValue backwards" (isNextValue Value.Seven Value.Six)
+   assertFalse "isNextValue invalid" (isNextValue Value.Ace Value.Three)
+
+// -------------------------------------------------------------------------------------------------
+// Tests for the Suit section of code
+// -------------------------------------------------------------------------------------------------
+let doSuitTests() = 
+   assertEq "parseSuit valid UCASE" (Success Suit.Hearts) (parseSuit 'H')
+   assertFail "parseSuit" (InvalidSuit 'h') (parseSuit 'h')
+
+// -------------------------------------------------------------------------------------------------
+// Tests for the Card section of code
+// -------------------------------------------------------------------------------------------------
+let doCardTests() = 
+   // helper functions
+   let cardPass description (card, str) = 
+      assertEq ("parseCard " + description) (Success card) (parseCard str)
+   let cardFail failType card = assertFail "parseCard fail" failType (parseCard card)
+   // tests
+   cardPass "UCASE" ((Value.Jack, Suit.Clubs), "JC")
+   cardPass "lcase" ((Value.Queen, Suit.Spades), "qs")
+   cardFail (InvalidValue 'Z') "zc"
+   cardFail (InvalidSuit '8') "q8"
+   cardFail (MultiFail [ InvalidValue 'Z'
+                         InvalidSuit 'X' ]) "zx"
+   cardFail InvalidCardSyntax "qqqqq"
+
+// -------------------------------------------------------------------------------------------------
+// Tests for the Hand section of code
+// -------------------------------------------------------------------------------------------------
+let doHandTests() = 
+   // helper functions
+   let handPass description hand str = 
+      assertEq ("parseHand " + description) (Success hand) (parseHand str)
+   let handFail failType str = assertFail ("parseHand ") failType (parseHand str)
+   let expected = 
+      (Value.Two, Suit.Clubs), (Value.Two, Suit.Diamonds), (Value.Three, Suit.Clubs), 
+      (Value.Three, Suit.Spades), (Value.Three, Suit.Hearts)
+   handPass "success" expected "2c 2d 3c 3s 3h"
+   handPass "sorted" expected "3h 3c 2d 3s 2c"
+   handFail HandHasInvalidCards "zz 2c 3c 4c 5c"
+   handFail HandHasDuplicates "2c 3c 4c 5c 2c"
+
+// -------------------------------------------------------------------------------------------------
+// Tests for the Score section of code
+// -------------------------------------------------------------------------------------------------
+let doScoreTests() = 
+   let sendHandTo op hand = 
+      hand
+      |> parseHand
+      |> getSuccess
+      |> op
+   // isStraight
+   assertTrue "isStraight true" ("3h 4d 5c 6s 7h" |> (sendHandTo isStraight))
+   assertFalse "isStraight false" ("3h 4d Qc 6s 7h" |> (sendHandTo isStraight))
+   // isFlush
+   assertTrue "isFlush true" ("3h 4h 5h 6h 7h" |> (sendHandTo isFlush))
+   assertFalse "isFlush false" ("3h 4d Qh 6h 7h" |> (sendHandTo isFlush))
+   // getValueCounts
+   assertEq "getValueCounts high card" [ 1; 1; 1; 1; 1 ] 
+      ("3h 4h 5h 6h 7h" |> (sendHandTo getValueCounts))
+   assertEq "getValueCounts one pair" [ 2; 1; 1; 1 ] 
+      ("3h 3c 5h 6h 7h" |> (sendHandTo getValueCounts))
+   assertEq "getValueCounts two pair" [ 2; 2; 1 ] ("3h 3c 5h 5c 7h" |> (sendHandTo getValueCounts))
+   assertEq "getValueCounts three of a kind" [ 3; 1; 1 ] 
+      ("3h 3c 3d 5h 7h" |> (sendHandTo getValueCounts))
+   assertEq "getValueCounts full house" [ 3; 2 ] ("3h 3c 3d 5h 5c" |> (sendHandTo getValueCounts))
+   assertEq "getValueCounts four of a kind" [ 4; 1 ] 
+      ("3h 3c 3d 3s 5c" |> (sendHandTo getValueCounts))
+   // scoreHand
+   assertEq "scoreHand high card" HandScore.HighCard ("3h 4h 5d Qh 7h" |> (sendHandTo scoreHand))
+   assertEq "scoreHand pair" HandScore.OnePair ("3h 4h 5d 5h 7h" |> (sendHandTo scoreHand))
+   assertEq "scoreHand two pair" HandScore.TwoPair ("3h 5h 5d Qh Qs" |> (sendHandTo scoreHand))
+   assertEq "scoreHand three kind" HandScore.ThreeKind ("3h 4h 4d 4s 7h" |> (sendHandTo scoreHand))
+   assertEq "scoreHand straight" HandScore.Straight ("3h 4h 5d 6h 7h" |> (sendHandTo scoreHand))
+   assertEq "scoreHand flush" HandScore.Flush ("3h 4h 5h Qh 7h" |> (sendHandTo scoreHand))
+   assertEq "scoreHand full house" HandScore.FullHouse ("3h 3d 3c Qh Qc" |> (sendHandTo scoreHand))
+   assertEq "scoreHand four kind" HandScore.FourKind ("3h 4h 3d 3c 3s" |> (sendHandTo scoreHand))
+   assertEq "scoreHand straight flush" HandScore.StraightFlush 
+      ("9h Th Jh Qh Kh" |> (sendHandTo scoreHand))
+   assertEq "scoreHand royal flush" HandScore.RoyalFlush 
+      ("Ah Kh Qh Jh Th" |> (sendHandTo scoreHand))
+
+// -------------------------------------------------------------------------------------------------
+// Run all tests
+// -------------------------------------------------------------------------------------------------
+let runTests() = 
+   doResultTests()
+   doUtilityTests()
+   doValueTests()
+   doCardTests()
+   doHandTests()
+   doScoreTests()
+
+// -------------------------------------------------------------------------------------------------
+// Show program execution syntax
+// -------------------------------------------------------------------------------------------------
+let showSyntax() = 
+   printfn "Usage: FsPoker test"
+   printfn "-- run and show all unit test outputs"
+   printfn ""
+   printfn "Usage: FsPoker <cards in hand>"
+   printfn "-- analyze the given hand and show its score"
+   printfn "-- each card is in the format of VS where"
+   printfn "     V is a card value:  2, 3, 4, 5, 6, 7, 8, 9, T, J, Q, K, A"
+   printfn "     S is a suit: C, D, H, S"
+   printfn "   There are 5 cards, case insensitive, and each is separated by a space"
+   printfn "   Ex: 2H 3C 9S tD ah"
+
+//
+//
+// #################################################################################################
+// The main program
+// #################################################################################################
+[<EntryPoint>]
+let main argv = 
+   match argv with
+   | [||] -> showSyntax()
+   | [| "test" |] -> runTests()
+   | _ -> 
+      let strHand = 
+         argv
+         |> Array.toSeq
+         |> String.concat " "
+      
+      let parsed = parseHand strHand
+      match parsed with
+      | Success s -> 
+         let score = scoreHand s
+         printfn "%s parsed as %A" strHand ( s |> toList |> List.map (fun (v,s) -> (sprintf "%A of %A" v s ) ) )
+         printfn "%s identified as %A and received a score of %i" strHand score (int score)
+      | Fail failType -> printfn "%s had problems: %s" strHand (explainFailure failType)
+   0 // return an integer exit code

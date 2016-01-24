@@ -1,0 +1,45 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">NodaTime</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">FsCheck</span>
+
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="t">NodaGen</span> <span class="o">=</span>
+    <span class="k">static</span> <span class="k">member</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="f">Instant</span> () <span class="o">=</span>
+        <span class="i">Arb</span><span class="o">.</span><span class="i">generate</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="i">DateTime</span><span class="o">&gt;</span>
+        <span class="o">|&gt;</span> <span class="i">Gen</span><span class="o">.</span><span class="i">map</span> (<span class="k">fun</span> <span class="i">dt</span> <span class="k">-&gt;</span> <span class="i">dt</span><span class="o">.</span><span class="i">ToUniversalTime</span>())
+        <span class="o">|&gt;</span> <span class="i">Gen</span><span class="o">.</span><span class="i">map</span> (<span class="k">fun</span> <span class="i">dt</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs7', 7)" onmouseover="showTip(event, 'fs7', 7)" class="i">Instant</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs8', 8)" onmouseover="showTip(event, 'fs8', 8)" class="i">FromDateTimeUtc</span> <span class="i">dt</span>)
+        <span class="o">|&gt;</span> <span class="i">Arb</span><span class="o">.</span><span class="i">fromGen</span>
+
+<span class="c">// If using NUnit...</span>
+<span class="c">// [&lt;SetUp&gt;]</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs9', 9)" onmouseover="showTip(event, 'fs9', 9)" class="f">setup</span> () <span class="o">=</span>
+    <span class="k">do</span> <span class="i">Arb</span><span class="o">.</span><span class="i">register</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs3', 10)" onmouseover="showTip(event, 'fs3', 10)" class="i">NodaGen</span><span class="o">&gt;</span>() <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs10', 11)" onmouseover="showTip(event, 'fs10', 11)" class="f">ignore</span>        
+     
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace NodaTime</div>
+<div class="tip" id="fs2">namespace FsCheck</div>
+<div class="tip" id="fs3">type NodaGen =<br />&#160;&#160;static member Instant : unit -&gt; &#39;a<br /><br />Full name: Script.NodaGen</div>
+<div class="tip" id="fs4">Multiple items<br />static member NodaGen.Instant : unit -&gt; &#39;a<br /><br />Full name: Script.NodaGen.Instant<br /><br />--------------------<br />type Instant =<br />&#160;&#160;struct<br />&#160;&#160;&#160;&#160;new : ticks:int64 -&gt; Instant<br />&#160;&#160;&#160;&#160;member CompareTo : other:Instant -&gt; int<br />&#160;&#160;&#160;&#160;member Equals : obj:obj -&gt; bool + 1 overload<br />&#160;&#160;&#160;&#160;member GetHashCode : unit -&gt; int<br />&#160;&#160;&#160;&#160;member InUtc : unit -&gt; ZonedDateTime<br />&#160;&#160;&#160;&#160;member InZone : zone:DateTimeZone -&gt; ZonedDateTime + 1 overload<br />&#160;&#160;&#160;&#160;member Minus : other:Instant -&gt; Duration + 1 overload<br />&#160;&#160;&#160;&#160;member Plus : duration:Duration -&gt; Instant<br />&#160;&#160;&#160;&#160;member PlusTicks : ticksToAdd:int64 -&gt; Instant<br />&#160;&#160;&#160;&#160;member Ticks : int64<br />&#160;&#160;&#160;&#160;...<br />&#160;&#160;end<br /><br />Full name: NodaTime.Instant<br /><br />--------------------<br />Instant()<br />Instant(ticks: int64) : unit</div>
+<div class="tip" id="fs5">namespace System</div>
+<div class="tip" id="fs6">Multiple items<br />type DateTime =<br />&#160;&#160;struct<br />&#160;&#160;&#160;&#160;new : ticks:int64 -&gt; DateTime + 10 overloads<br />&#160;&#160;&#160;&#160;member Add : value:TimeSpan -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddDays : value:float -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddHours : value:float -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddMilliseconds : value:float -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddMinutes : value:float -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddMonths : months:int -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddSeconds : value:float -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddTicks : value:int64 -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddYears : value:int -&gt; DateTime<br />&#160;&#160;&#160;&#160;...<br />&#160;&#160;end<br /><br />Full name: System.DateTime<br /><br />--------------------<br />System.DateTime()<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />System.DateTime(ticks: int64) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />System.DateTime(ticks: int64, kind: System.DateTimeKind) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />System.DateTime(year: int, month: int, day: int) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />System.DateTime(year: int, month: int, day: int, calendar: System.Globalization.Calendar) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />System.DateTime(year: int, month: int, day: int, hour: int, minute: int, second: int) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />System.DateTime(year: int, month: int, day: int, hour: int, minute: int, second: int, kind: System.DateTimeKind) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />System.DateTime(year: int, month: int, day: int, hour: int, minute: int, second: int, calendar: System.Globalization.Calendar) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />System.DateTime(year: int, month: int, day: int, hour: int, minute: int, second: int, millisecond: int) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />System.DateTime(year: int, month: int, day: int, hour: int, minute: int, second: int, millisecond: int, kind: System.DateTimeKind) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em></div>
+<div class="tip" id="fs7">Multiple items<br />type Instant =<br />&#160;&#160;struct<br />&#160;&#160;&#160;&#160;new : ticks:int64 -&gt; Instant<br />&#160;&#160;&#160;&#160;member CompareTo : other:Instant -&gt; int<br />&#160;&#160;&#160;&#160;member Equals : obj:obj -&gt; bool + 1 overload<br />&#160;&#160;&#160;&#160;member GetHashCode : unit -&gt; int<br />&#160;&#160;&#160;&#160;member InUtc : unit -&gt; ZonedDateTime<br />&#160;&#160;&#160;&#160;member InZone : zone:DateTimeZone -&gt; ZonedDateTime + 1 overload<br />&#160;&#160;&#160;&#160;member Minus : other:Instant -&gt; Duration + 1 overload<br />&#160;&#160;&#160;&#160;member Plus : duration:Duration -&gt; Instant<br />&#160;&#160;&#160;&#160;member PlusTicks : ticksToAdd:int64 -&gt; Instant<br />&#160;&#160;&#160;&#160;member Ticks : int64<br />&#160;&#160;&#160;&#160;...<br />&#160;&#160;end<br /><br />Full name: NodaTime.Instant<br /><br />--------------------<br />Instant()<br />Instant(ticks: int64) : unit</div>
+<div class="tip" id="fs8">Instant.FromDateTimeUtc(dateTime: System.DateTime) : Instant</div>
+<div class="tip" id="fs9">val setup : unit -&gt; unit<br /><br />Full name: Script.setup</div>
+<div class="tip" id="fs10">val ignore : value:&#39;T -&gt; unit<br /><br />Full name: Microsoft.FSharp.Core.Operators.ignore</div>
+

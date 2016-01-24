@@ -1,0 +1,111 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+<span class="l">38: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">type</span> <span class="t">Key</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="t">int</span>
+
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="t">BTree</span> <span class="o">=</span> 
+    | <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="p">Node</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="t">Key</span> <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="t">list</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs2', 6)" onmouseover="showTip(event, 'fs2', 6)" class="t">BTree</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs2', 7)" onmouseover="showTip(event, 'fs2', 7)" class="t">BTree</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs2', 8)" onmouseover="showTip(event, 'fs2', 8)" class="t">BTree</span> 
+    | <span onmouseout="hideTip(event, 'fs6', 9)" onmouseover="showTip(event, 'fs6', 9)" class="p">Empty</span>
+
+<span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs7', 10)" onmouseover="showTip(event, 'fs7', 10)" class="f">findKey</span> (<span onmouseout="hideTip(event, 'fs8', 11)" onmouseover="showTip(event, 'fs8', 11)" class="i">targetKey</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs4', 12)" onmouseover="showTip(event, 'fs4', 12)" class="t">Key</span>) (<span onmouseout="hideTip(event, 'fs9', 13)" onmouseover="showTip(event, 'fs9', 13)" class="i">bTree</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs2', 14)" onmouseover="showTip(event, 'fs2', 14)" class="t">BTree</span>) <span class="o">=</span> 
+    <span class="k">match</span> <span onmouseout="hideTip(event, 'fs9', 15)" onmouseover="showTip(event, 'fs9', 15)" class="i">bTree</span> <span class="k">with</span>
+        | <span onmouseout="hideTip(event, 'fs3', 16)" onmouseover="showTip(event, 'fs3', 16)" class="p">Node</span> (<span onmouseout="hideTip(event, 'fs10', 17)" onmouseover="showTip(event, 'fs10', 17)" class="i">keyList</span>, <span onmouseout="hideTip(event, 'fs11', 18)" onmouseover="showTip(event, 'fs11', 18)" class="i">lessTree</span>, <span onmouseout="hideTip(event, 'fs12', 19)" onmouseover="showTip(event, 'fs12', 19)" class="i">betweenTree</span>, <span onmouseout="hideTip(event, 'fs13', 20)" onmouseover="showTip(event, 'fs13', 20)" class="i">greaterTree</span>) <span class="k">-&gt;</span>
+            <span class="k">let</span> <span onmouseout="hideTip(event, 'fs14', 21)" onmouseover="showTip(event, 'fs14', 21)" class="i">minKey</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs15', 22)" onmouseover="showTip(event, 'fs15', 22)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs16', 23)" onmouseover="showTip(event, 'fs16', 23)" class="f">min</span> <span onmouseout="hideTip(event, 'fs10', 24)" onmouseover="showTip(event, 'fs10', 24)" class="i">keyList</span>
+            <span class="k">let</span> <span onmouseout="hideTip(event, 'fs17', 25)" onmouseover="showTip(event, 'fs17', 25)" class="i">maxKey</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs15', 26)" onmouseover="showTip(event, 'fs15', 26)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs18', 27)" onmouseover="showTip(event, 'fs18', 27)" class="f">max</span> <span onmouseout="hideTip(event, 'fs10', 28)" onmouseover="showTip(event, 'fs10', 28)" class="i">keyList</span>
+            
+            <span class="k">let</span> <span onmouseout="hideTip(event, 'fs19', 29)" onmouseover="showTip(event, 'fs19', 29)" class="f">extractor</span> <span onmouseout="hideTip(event, 'fs20', 30)" onmouseover="showTip(event, 'fs20', 30)" class="i">item</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs20', 31)" onmouseover="showTip(event, 'fs20', 31)" class="i">item</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs8', 32)" onmouseover="showTip(event, 'fs8', 32)" class="i">targetKey</span>;
+
+            <span class="k">if</span> <span onmouseout="hideTip(event, 'fs8', 33)" onmouseover="showTip(event, 'fs8', 33)" class="i">targetKey</span> <span class="o">&lt;</span> <span onmouseout="hideTip(event, 'fs14', 34)" onmouseover="showTip(event, 'fs14', 34)" class="i">minKey</span> <span class="k">then</span>
+                <span onmouseout="hideTip(event, 'fs7', 35)" onmouseover="showTip(event, 'fs7', 35)" class="f">findKey</span> <span onmouseout="hideTip(event, 'fs8', 36)" onmouseover="showTip(event, 'fs8', 36)" class="i">targetKey</span> <span onmouseout="hideTip(event, 'fs11', 37)" onmouseover="showTip(event, 'fs11', 37)" class="i">lessTree</span>
+
+            <span class="k">else</span> <span class="k">if</span> <span onmouseout="hideTip(event, 'fs8', 38)" onmouseover="showTip(event, 'fs8', 38)" class="i">targetKey</span> <span class="o">&gt;</span> <span onmouseout="hideTip(event, 'fs17', 39)" onmouseover="showTip(event, 'fs17', 39)" class="i">maxKey</span> <span class="k">then</span>
+                <span onmouseout="hideTip(event, 'fs7', 40)" onmouseover="showTip(event, 'fs7', 40)" class="f">findKey</span> <span onmouseout="hideTip(event, 'fs8', 41)" onmouseover="showTip(event, 'fs8', 41)" class="i">targetKey</span> <span onmouseout="hideTip(event, 'fs13', 42)" onmouseover="showTip(event, 'fs13', 42)" class="i">greaterTree</span>
+
+            <span class="k">else</span> <span class="k">if</span> (<span onmouseout="hideTip(event, 'fs15', 43)" onmouseover="showTip(event, 'fs15', 43)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs21', 44)" onmouseover="showTip(event, 'fs21', 44)" class="f">exists</span> <span onmouseout="hideTip(event, 'fs19', 45)" onmouseover="showTip(event, 'fs19', 45)" class="f">extractor</span> <span onmouseout="hideTip(event, 'fs10', 46)" onmouseover="showTip(event, 'fs10', 46)" class="i">keyList</span>) <span class="k">then</span>
+                <span class="k">let</span> <span onmouseout="hideTip(event, 'fs22', 47)" onmouseover="showTip(event, 'fs22', 47)" class="i">foundElement</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs15', 48)" onmouseover="showTip(event, 'fs15', 48)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs23', 49)" onmouseover="showTip(event, 'fs23', 49)" class="f">find</span> <span onmouseout="hideTip(event, 'fs19', 50)" onmouseover="showTip(event, 'fs19', 50)" class="f">extractor</span> <span onmouseout="hideTip(event, 'fs10', 51)" onmouseover="showTip(event, 'fs10', 51)" class="i">keyList</span>
+                <span onmouseout="hideTip(event, 'fs24', 52)" onmouseover="showTip(event, 'fs24', 52)" class="p">Some</span>(<span onmouseout="hideTip(event, 'fs22', 53)" onmouseover="showTip(event, 'fs22', 53)" class="i">foundElement</span>)
+            
+            <span class="k">else</span> 
+                <span onmouseout="hideTip(event, 'fs7', 54)" onmouseover="showTip(event, 'fs7', 54)" class="f">findKey</span> <span onmouseout="hideTip(event, 'fs8', 55)" onmouseover="showTip(event, 'fs8', 55)" class="i">targetKey</span> <span onmouseout="hideTip(event, 'fs12', 56)" onmouseover="showTip(event, 'fs12', 56)" class="i">betweenTree</span>
+
+        | <span onmouseout="hideTip(event, 'fs6', 57)" onmouseover="showTip(event, 'fs6', 57)" class="p">Empty</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs25', 58)" onmouseover="showTip(event, 'fs25', 58)" class="p">None</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs26', 59)" onmouseover="showTip(event, 'fs26', 59)" class="i">lessTree</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs3', 60)" onmouseover="showTip(event, 'fs3', 60)" class="p">Node</span>(([<span class="o">-</span><span class="n">12</span>; <span class="o">-</span><span class="n">3</span>; <span class="n">0</span>], <span onmouseout="hideTip(event, 'fs6', 61)" onmouseover="showTip(event, 'fs6', 61)" class="p">Empty</span>, <span onmouseout="hideTip(event, 'fs6', 62)" onmouseover="showTip(event, 'fs6', 62)" class="p">Empty</span>, <span onmouseout="hideTip(event, 'fs6', 63)" onmouseover="showTip(event, 'fs6', 63)" class="p">Empty</span>))
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs27', 64)" onmouseover="showTip(event, 'fs27', 64)" class="i">greaterTree</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs3', 65)" onmouseover="showTip(event, 'fs3', 65)" class="p">Node</span>(([<span class="n">100</span>; <span class="n">200</span>; <span class="n">300</span>], <span onmouseout="hideTip(event, 'fs6', 66)" onmouseover="showTip(event, 'fs6', 66)" class="p">Empty</span>, <span onmouseout="hideTip(event, 'fs6', 67)" onmouseover="showTip(event, 'fs6', 67)" class="p">Empty</span>, <span onmouseout="hideTip(event, 'fs6', 68)" onmouseover="showTip(event, 'fs6', 68)" class="p">Empty</span>))
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs28', 69)" onmouseover="showTip(event, 'fs28', 69)" class="i">middleTree</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs3', 70)" onmouseover="showTip(event, 'fs3', 70)" class="p">Node</span>(([<span class="n">3</span>], <span onmouseout="hideTip(event, 'fs6', 71)" onmouseover="showTip(event, 'fs6', 71)" class="p">Empty</span>, <span onmouseout="hideTip(event, 'fs6', 72)" onmouseover="showTip(event, 'fs6', 72)" class="p">Empty</span>, <span onmouseout="hideTip(event, 'fs6', 73)" onmouseover="showTip(event, 'fs6', 73)" class="p">Empty</span>))
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs29', 74)" onmouseover="showTip(event, 'fs29', 74)" class="i">tree</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs3', 75)" onmouseover="showTip(event, 'fs3', 75)" class="p">Node</span>(([<span class="n">1</span>; <span class="n">2</span>; <span class="n">4</span>], <span onmouseout="hideTip(event, 'fs26', 76)" onmouseover="showTip(event, 'fs26', 76)" class="i">lessTree</span>, <span onmouseout="hideTip(event, 'fs28', 77)" onmouseover="showTip(event, 'fs28', 77)" class="i">middleTree</span>, <span onmouseout="hideTip(event, 'fs27', 78)" onmouseover="showTip(event, 'fs27', 78)" class="i">greaterTree</span>))
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs30', 79)" onmouseover="showTip(event, 'fs30', 79)" class="i">key</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs7', 80)" onmouseover="showTip(event, 'fs7', 80)" class="f">findKey</span> <span class="n">3</span> <span onmouseout="hideTip(event, 'fs29', 81)" onmouseover="showTip(event, 'fs29', 81)" class="i">tree</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">Multiple items<br />val int : value:&#39;T -&gt; int (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.int<br /><br />--------------------<br />type int = int32<br /><br />Full name: Microsoft.FSharp.Core.int<br /><br />--------------------<br />type int&lt;&#39;Measure&gt; = int<br /><br />Full name: Microsoft.FSharp.Core.int&lt;_&gt;</div>
+<div class="tip" id="fs2">type BTree =<br />&#160;&#160;| Node of Key list * BTree * BTree * BTree<br />&#160;&#160;| Empty<br /><br />Full name: Script.BTree</div>
+<div class="tip" id="fs3">union case BTree.Node: Key list * BTree * BTree * BTree -&gt; BTree</div>
+<div class="tip" id="fs4">type Key = int<br /><br />Full name: Script.Key</div>
+<div class="tip" id="fs5">type &#39;T list = List&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.list&lt;_&gt;</div>
+<div class="tip" id="fs6">union case BTree.Empty: BTree</div>
+<div class="tip" id="fs7">val findKey : targetKey:Key -&gt; bTree:BTree -&gt; Key option<br /><br />Full name: Script.findKey</div>
+<div class="tip" id="fs8">val targetKey : Key</div>
+<div class="tip" id="fs9">val bTree : BTree</div>
+<div class="tip" id="fs10">val keyList : Key list</div>
+<div class="tip" id="fs11">val lessTree : BTree</div>
+<div class="tip" id="fs12">val betweenTree : BTree</div>
+<div class="tip" id="fs13">val greaterTree : BTree</div>
+<div class="tip" id="fs14">val minKey : Key</div>
+<div class="tip" id="fs15">Multiple items<br />module List<br /><br />from Microsoft.FSharp.Collections<br /><br />--------------------<br />type List&lt;&#39;T&gt; =<br />&#160;&#160;| ( [] )<br />&#160;&#160;| ( :: ) of Head: &#39;T * Tail: &#39;T list<br />&#160;&#160;interface IEnumerable<br />&#160;&#160;interface IEnumerable&lt;&#39;T&gt;<br />&#160;&#160;member Head : &#39;T<br />&#160;&#160;member IsEmpty : bool<br />&#160;&#160;member Item : index:int -&gt; &#39;T with get<br />&#160;&#160;member Length : int<br />&#160;&#160;member Tail : &#39;T list<br />&#160;&#160;static member Cons : head:&#39;T * tail:&#39;T list -&gt; &#39;T list<br />&#160;&#160;static member Empty : &#39;T list<br /><br />Full name: Microsoft.FSharp.Collections.List&lt;_&gt;</div>
+<div class="tip" id="fs16">val min : list:&#39;T list -&gt; &#39;T (requires comparison)<br /><br />Full name: Microsoft.FSharp.Collections.List.min</div>
+<div class="tip" id="fs17">val maxKey : Key</div>
+<div class="tip" id="fs18">val max : list:&#39;T list -&gt; &#39;T (requires comparison)<br /><br />Full name: Microsoft.FSharp.Collections.List.max</div>
+<div class="tip" id="fs19">val extractor : (Key -&gt; bool)</div>
+<div class="tip" id="fs20">val item : Key</div>
+<div class="tip" id="fs21">val exists : predicate:(&#39;T -&gt; bool) -&gt; list:&#39;T list -&gt; bool<br /><br />Full name: Microsoft.FSharp.Collections.List.exists</div>
+<div class="tip" id="fs22">val foundElement : Key</div>
+<div class="tip" id="fs23">val find : predicate:(&#39;T -&gt; bool) -&gt; list:&#39;T list -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Collections.List.find</div>
+<div class="tip" id="fs24">union case Option.Some: Value: &#39;T -&gt; Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs25">union case Option.None: Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs26">val lessTree : BTree<br /><br />Full name: Script.lessTree</div>
+<div class="tip" id="fs27">val greaterTree : BTree<br /><br />Full name: Script.greaterTree</div>
+<div class="tip" id="fs28">val middleTree : BTree<br /><br />Full name: Script.middleTree</div>
+<div class="tip" id="fs29">val tree : BTree<br /><br />Full name: Script.tree</div>
+<div class="tip" id="fs30">val key : Key option<br /><br />Full name: Script.key</div>
+

@@ -1,0 +1,111 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+<span class="l">38: </span>
+<span class="l">39: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">System</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">Quartz</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs2', 3)" onmouseover="showTip(event, 'fs2', 3)" class="i">Quartz</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 4)" onmouseover="showTip(event, 'fs3', 4)" class="i">Impl</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs4', 5)" onmouseover="showTip(event, 'fs4', 5)" class="i">schedulerFactory</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs5', 6)" onmouseover="showTip(event, 'fs5', 6)" class="t">StdSchedulerFactory</span>()
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs6', 7)" onmouseover="showTip(event, 'fs6', 7)" class="i">scheduler</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs4', 8)" onmouseover="showTip(event, 'fs4', 8)" class="i">schedulerFactory</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs7', 9)" onmouseover="showTip(event, 'fs7', 9)" class="f">GetScheduler</span>()
+<span onmouseout="hideTip(event, 'fs6', 10)" onmouseover="showTip(event, 'fs6', 10)" class="i">scheduler</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs8', 11)" onmouseover="showTip(event, 'fs8', 11)" class="f">Start</span>()
+
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs9', 12)" onmouseover="showTip(event, 'fs9', 12)" class="t">Job</span> () <span class="o">=</span>
+
+    <span class="k">interface</span> <span onmouseout="hideTip(event, 'fs10', 13)" onmouseover="showTip(event, 'fs10', 13)" class="t">IJob</span> <span class="k">with</span>
+
+        <span class="k">member</span> <span onmouseout="hideTip(event, 'fs11', 14)" onmouseover="showTip(event, 'fs11', 14)" class="i">x</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs12', 15)" onmouseover="showTip(event, 'fs12', 15)" class="f">Execute</span>(<span onmouseout="hideTip(event, 'fs13', 16)" onmouseover="showTip(event, 'fs13', 16)" class="i">context</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs14', 17)" onmouseover="showTip(event, 'fs14', 17)" class="t">IJobExecutionContext</span>) <span class="o">=</span>
+            <span onmouseout="hideTip(event, 'fs15', 18)" onmouseover="showTip(event, 'fs15', 18)" class="t">Console</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs16', 19)" onmouseover="showTip(event, 'fs16', 19)" class="f">WriteLine</span>(<span onmouseout="hideTip(event, 'fs17', 20)" onmouseover="showTip(event, 'fs17', 20)" class="t">DateTime</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs18', 21)" onmouseover="showTip(event, 'fs18', 21)" class="i">Now</span>)
+
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs19', 22)" onmouseover="showTip(event, 'fs19', 22)" class="i">job</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs20', 23)" onmouseover="showTip(event, 'fs20', 23)" class="t">JobBuilder</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs21', 24)" onmouseover="showTip(event, 'fs21', 24)" class="f">Create</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs9', 25)" onmouseover="showTip(event, 'fs9', 25)" class="t">Job</span><span class="o">&gt;</span>()<span class="o">.</span><span class="f">Build</span>()
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs22', 26)" onmouseover="showTip(event, 'fs22', 26)" class="i">trigger</span> <span class="o">=</span>
+    <span onmouseout="hideTip(event, 'fs23', 27)" onmouseover="showTip(event, 'fs23', 27)" class="t">TriggerBuilder</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs24', 28)" onmouseover="showTip(event, 'fs24', 28)" class="f">Create</span>()
+        <span class="o">.</span><span class="f">WithSimpleSchedule</span>(<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs25', 29)" onmouseover="showTip(event, 'fs25', 29)" class="i">x</span> <span class="k">-&gt;</span>
+            <span onmouseout="hideTip(event, 'fs25', 30)" onmouseover="showTip(event, 'fs25', 30)" class="i">x</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs26', 31)" onmouseover="showTip(event, 'fs26', 31)" class="f">WithIntervalInSeconds</span>(<span class="n">1</span>)<span class="o">.</span><span class="f">RepeatForever</span>() <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs27', 32)" onmouseover="showTip(event, 'fs27', 32)" class="f">ignore</span>)
+        <span class="o">.</span><span class="f">Build</span>()
+
+<span onmouseout="hideTip(event, 'fs6', 33)" onmouseover="showTip(event, 'fs6', 33)" class="i">scheduler</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs28', 34)" onmouseover="showTip(event, 'fs28', 34)" class="f">ScheduleJob</span>(<span onmouseout="hideTip(event, 'fs19', 35)" onmouseover="showTip(event, 'fs19', 35)" class="i">job</span>, <span onmouseout="hideTip(event, 'fs22', 36)" onmouseover="showTip(event, 'fs22', 36)" class="i">trigger</span>) <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs27', 37)" onmouseover="showTip(event, 'fs27', 37)" class="f">ignore</span>
+<span class="c">//scheduler.Shutdown()</span>
+
+<span class="c">// Output:</span>
+<span class="c">// 09/10/2012 11:08:03</span>
+<span class="c">// 09/10/2012 11:08:04</span>
+<span class="c">// 09/10/2012 11:08:05</span>
+<span class="c">// 09/10/2012 11:08:06</span>
+<span class="c">// 09/10/2012 11:08:07</span>
+<span class="c">// 09/10/2012 11:08:08</span>
+<span class="c">// 09/10/2012 11:08:09</span>
+<span class="c">// 09/10/2012 11:08:10</span>
+<span class="c">// 09/10/2012 11:08:11</span>
+<span class="c">// 09/10/2012 11:08:12</span>
+<span class="c">// ...</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace System</div>
+<div class="tip" id="fs2">namespace Quartz</div>
+<div class="tip" id="fs3">namespace Quartz.Impl</div>
+<div class="tip" id="fs4">val schedulerFactory : StdSchedulerFactory<br /><br />Full name: Script.schedulerFactory</div>
+<div class="tip" id="fs5">Multiple items<br />type StdSchedulerFactory =<br />&#160;&#160;new : unit -&gt; StdSchedulerFactory + 1 overload<br />&#160;&#160;member AllSchedulers : ICollection&lt;IScheduler&gt;<br />&#160;&#160;member GetScheduler : unit -&gt; IScheduler + 1 overload<br />&#160;&#160;member Initialize : unit -&gt; unit + 1 overload<br />&#160;&#160;static val ConfigurationSectionName : string<br />&#160;&#160;static val PropertiesFile : string<br />&#160;&#160;static val PropertySchedulerInstanceName : string<br />&#160;&#160;static val PropertySchedulerInstanceId : string<br />&#160;&#160;static val PropertySchedulerInstanceIdGeneratorPrefix : string<br />&#160;&#160;static val PropertySchedulerInstanceIdGeneratorType : string<br />&#160;&#160;...<br /><br />Full name: Quartz.Impl.StdSchedulerFactory<br /><br />--------------------<br />StdSchedulerFactory() : unit<br />StdSchedulerFactory(props: Collections.Specialized.NameValueCollection) : unit</div>
+<div class="tip" id="fs6">val scheduler : IScheduler<br /><br />Full name: Script.scheduler</div>
+<div class="tip" id="fs7">StdSchedulerFactory.GetScheduler() : IScheduler<br />StdSchedulerFactory.GetScheduler(schedName: string) : IScheduler</div>
+<div class="tip" id="fs8">IScheduler.Start() : unit</div>
+<div class="tip" id="fs9">Multiple items<br />namespace Quartz.Job<br /><br />--------------------<br />type Job =<br />&#160;&#160;interface IJob<br />&#160;&#160;new : unit -&gt; Job<br /><br />Full name: Script.Job<br /><br />--------------------<br />new : unit -&gt; Job</div>
+<div class="tip" id="fs10">type IJob =<br />&#160;&#160;member Execute : context:IJobExecutionContext -&gt; unit<br /><br />Full name: Quartz.IJob</div>
+<div class="tip" id="fs11">val x : Job</div>
+<div class="tip" id="fs12">override Job.Execute : context:IJobExecutionContext -&gt; unit<br /><br />Full name: Script.Job.Execute</div>
+<div class="tip" id="fs13">val context : IJobExecutionContext</div>
+<div class="tip" id="fs14">type IJobExecutionContext =<br />&#160;&#160;member Calendar : ICalendar<br />&#160;&#160;member FireInstanceId : string<br />&#160;&#160;member FireTimeUtc : Nullable&lt;DateTimeOffset&gt;<br />&#160;&#160;member Get : key:obj -&gt; obj<br />&#160;&#160;member JobDetail : IJobDetail<br />&#160;&#160;member JobInstance : IJob<br />&#160;&#160;member JobRunTime : TimeSpan<br />&#160;&#160;member MergedJobDataMap : JobDataMap<br />&#160;&#160;member NextFireTimeUtc : Nullable&lt;DateTimeOffset&gt;<br />&#160;&#160;member PreviousFireTimeUtc : Nullable&lt;DateTimeOffset&gt;<br />&#160;&#160;...<br /><br />Full name: Quartz.IJobExecutionContext</div>
+<div class="tip" id="fs15">type Console =<br />&#160;&#160;static member BackgroundColor : ConsoleColor with get, set<br />&#160;&#160;static member Beep : unit -&gt; unit + 1 overload<br />&#160;&#160;static member BufferHeight : int with get, set<br />&#160;&#160;static member BufferWidth : int with get, set<br />&#160;&#160;static member CapsLock : bool<br />&#160;&#160;static member Clear : unit -&gt; unit<br />&#160;&#160;static member CursorLeft : int with get, set<br />&#160;&#160;static member CursorSize : int with get, set<br />&#160;&#160;static member CursorTop : int with get, set<br />&#160;&#160;static member CursorVisible : bool with get, set<br />&#160;&#160;...<br /><br />Full name: System.Console</div>
+<div class="tip" id="fs16">Console.WriteLine() : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.WriteLine(value: string) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.WriteLine(value: obj) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.WriteLine(value: uint64) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.WriteLine(value: int64) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.WriteLine(value: uint32) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.WriteLine(value: int) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.WriteLine(value: float32) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.WriteLine(value: float) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.WriteLine(value: decimal) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em></div>
+<div class="tip" id="fs17">Multiple items<br />type DateTime =<br />&#160;&#160;struct<br />&#160;&#160;&#160;&#160;new : ticks:int64 -&gt; DateTime + 10 overloads<br />&#160;&#160;&#160;&#160;member Add : value:TimeSpan -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddDays : value:float -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddHours : value:float -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddMilliseconds : value:float -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddMinutes : value:float -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddMonths : months:int -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddSeconds : value:float -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddTicks : value:int64 -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddYears : value:int -&gt; DateTime<br />&#160;&#160;&#160;&#160;...<br />&#160;&#160;end<br /><br />Full name: System.DateTime<br /><br />--------------------<br />DateTime()<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />DateTime(ticks: int64) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />DateTime(ticks: int64, kind: DateTimeKind) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />DateTime(year: int, month: int, day: int) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />DateTime(year: int, month: int, day: int, calendar: Globalization.Calendar) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />DateTime(year: int, month: int, day: int, hour: int, minute: int, second: int) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />DateTime(year: int, month: int, day: int, hour: int, minute: int, second: int, kind: DateTimeKind) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />DateTime(year: int, month: int, day: int, hour: int, minute: int, second: int, calendar: Globalization.Calendar) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />DateTime(year: int, month: int, day: int, hour: int, minute: int, second: int, millisecond: int) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />DateTime(year: int, month: int, day: int, hour: int, minute: int, second: int, millisecond: int, kind: DateTimeKind) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em></div>
+<div class="tip" id="fs18">property DateTime.Now: DateTime</div>
+<div class="tip" id="fs19">val job : IJobDetail<br /><br />Full name: Script.job</div>
+<div class="tip" id="fs20">type JobBuilder =<br />&#160;&#160;member Build : unit -&gt; IJobDetail<br />&#160;&#160;member OfType&lt;&#39;T&gt; : unit -&gt; JobBuilder + 1 overload<br />&#160;&#160;member RequestRecovery : unit -&gt; JobBuilder + 1 overload<br />&#160;&#160;member SetJobData : newJobDataMap:JobDataMap -&gt; JobBuilder<br />&#160;&#160;member StoreDurably : unit -&gt; JobBuilder + 1 overload<br />&#160;&#160;member UsingJobData : newJobDataMap:JobDataMap -&gt; JobBuilder + 6 overloads<br />&#160;&#160;member WithDescription : description:string -&gt; JobBuilder<br />&#160;&#160;member WithIdentity : name:string -&gt; JobBuilder + 2 overloads<br />&#160;&#160;static member Create : unit -&gt; JobBuilder + 2 overloads<br /><br />Full name: Quartz.JobBuilder</div>
+<div class="tip" id="fs21">JobBuilder.Create&lt;&#39;T (requires &#39;T :&gt; IJob)&gt;() : JobBuilder<br />JobBuilder.Create() : JobBuilder<br />JobBuilder.Create(jobType: Type) : JobBuilder</div>
+<div class="tip" id="fs22">val trigger : ITrigger<br /><br />Full name: Script.trigger</div>
+<div class="tip" id="fs23">type TriggerBuilder =<br />&#160;&#160;member Build : unit -&gt; ITrigger<br />&#160;&#160;member EndAt : endTimeUtc:Nullable&lt;DateTimeOffset&gt; -&gt; TriggerBuilder<br />&#160;&#160;member ForJob : jobKey:JobKey -&gt; TriggerBuilder + 3 overloads<br />&#160;&#160;member ModifiedByCalendar : calendarName:string -&gt; TriggerBuilder<br />&#160;&#160;member StartAt : startTimeUtc:DateTimeOffset -&gt; TriggerBuilder<br />&#160;&#160;member StartNow : unit -&gt; TriggerBuilder<br />&#160;&#160;member UsingJobData : newJobDataMap:JobDataMap -&gt; TriggerBuilder + 7 overloads<br />&#160;&#160;member WithDescription : description:string -&gt; TriggerBuilder<br />&#160;&#160;member WithIdentity : name:string -&gt; TriggerBuilder + 2 overloads<br />&#160;&#160;member WithPriority : priority:int -&gt; TriggerBuilder<br />&#160;&#160;...<br /><br />Full name: Quartz.TriggerBuilder</div>
+<div class="tip" id="fs24">TriggerBuilder.Create() : TriggerBuilder</div>
+<div class="tip" id="fs25">val x : SimpleScheduleBuilder</div>
+<div class="tip" id="fs26">SimpleScheduleBuilder.WithIntervalInSeconds(seconds: int) : SimpleScheduleBuilder</div>
+<div class="tip" id="fs27">val ignore : value:&#39;T -&gt; unit<br /><br />Full name: Microsoft.FSharp.Core.Operators.ignore</div>
+<div class="tip" id="fs28">IScheduler.ScheduleJob(trigger: ITrigger) : DateTimeOffset<br />IScheduler.ScheduleJob(jobDetail: IJobDetail, trigger: ITrigger) : DateTimeOffset<br />IScheduler.ScheduleJob(jobDetail: IJobDetail, triggersForJob: Collection.ISet&lt;ITrigger&gt;, replace: bool) : unit</div>
+

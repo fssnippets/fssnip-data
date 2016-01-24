@@ -1,0 +1,117 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+<span class="l">38: </span>
+<span class="l">39: </span>
+<span class="l">40: </span>
+<span class="l">41: </span>
+<span class="l">42: </span>
+<span class="l">43: </span>
+<span class="l">44: </span>
+<span class="l">45: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">Cassandra</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">System</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="i">cluster</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs1', 4)" onmouseover="showTip(event, 'fs1', 4)" class="i">Cassandra</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs4', 5)" onmouseover="showTip(event, 'fs4', 5)" class="t">Cluster</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs5', 6)" onmouseover="showTip(event, 'fs5', 6)" class="f">Builder</span>()<span class="o">.</span><span class="f">AddContactPoint</span>(<span class="s">&quot;127.0.0.1&quot;</span>)<span class="o">.</span><span class="f">Build</span>();
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs6', 7)" onmouseover="showTip(event, 'fs6', 7)" class="i">session</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs3', 8)" onmouseover="showTip(event, 'fs3', 8)" class="i">cluster</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs7', 9)" onmouseover="showTip(event, 'fs7', 9)" class="f">Connect</span>(<span class="s">&quot;demo&quot;</span>);
+
+<span onmouseout="hideTip(event, 'fs6', 10)" onmouseover="showTip(event, 'fs6', 10)" class="i">session</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs8', 11)" onmouseover="showTip(event, 'fs8', 11)" class="f">Execute</span>(<span class="s">@&quot;</span>
+<span class="s">    CREATE KEYSPACE IF NOT EXISTS inventory</span>
+<span class="s">    WITH replication = {&#39;class&#39;: &#39;SimpleStrategy&#39;, &#39;replication_factor&#39;: 2};</span>
+<span class="s">&quot;</span>)
+
+<span onmouseout="hideTip(event, 'fs6', 12)" onmouseover="showTip(event, 'fs6', 12)" class="i">session</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs8', 13)" onmouseover="showTip(event, 'fs8', 13)" class="f">Execute</span>(<span class="s">@&quot;USE inventory;&quot;</span>)
+
+<span onmouseout="hideTip(event, 'fs6', 14)" onmouseover="showTip(event, 'fs6', 14)" class="i">session</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs8', 15)" onmouseover="showTip(event, 'fs8', 15)" class="f">Execute</span>(<span class="s">@&quot;</span>
+
+<span class="s">CREATE TABLE IF NOT EXISTS products ( </span>
+<span class="s">	product_id text,</span>
+<span class="s">	sku text,</span>
+<span class="s">	title text,</span>
+<span class="s">	price_in_pence int,</span>
+<span class="s">	categories list&lt;text&gt;,</span>
+<span class="s">	stock int,</span>
+<span class="s">	PRIMARY KEY (product_id, sku) </span>
+<span class="s">);</span>
+
+<span class="s">&quot;</span>)
+
+<span onmouseout="hideTip(event, 'fs6', 16)" onmouseover="showTip(event, 'fs6', 16)" class="i">session</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs8', 17)" onmouseover="showTip(event, 'fs8', 17)" class="f">Execute</span>(<span class="s">@&quot;</span>
+<span class="s">insert into Products (product_id, sku, title, price_in_pence, categories, stock) values (</span>
+<span class="s">  &#39;1&#39;, &#39;sku&#39;, &#39;egg&#39;, 466, [&#39;food&#39;, &#39;good food&#39;], 7  </span>
+<span class="s">);</span>
+<span class="s">&quot;</span>)
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs9', 18)" onmouseover="showTip(event, 'fs9', 18)" class="i">results</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs6', 19)" onmouseover="showTip(event, 'fs6', 19)" class="i">session</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs8', 20)" onmouseover="showTip(event, 'fs8', 20)" class="f">Execute</span>(<span class="s">&quot;select * from products&quot;</span>) 
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs10', 21)" onmouseover="showTip(event, 'fs10', 21)" class="f">printOut</span>(<span onmouseout="hideTip(event, 'fs11', 22)" onmouseover="showTip(event, 'fs11', 22)" class="i">row</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs12', 23)" onmouseover="showTip(event, 'fs12', 23)" class="t">Row</span>) <span class="o">=</span> 
+    <span onmouseout="hideTip(event, 'fs13', 24)" onmouseover="showTip(event, 'fs13', 24)" class="t">Console</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs14', 25)" onmouseover="showTip(event, 'fs14', 25)" class="f">WriteLine</span>(<span onmouseout="hideTip(event, 'fs11', 26)" onmouseover="showTip(event, 'fs11', 26)" class="i">row</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs15', 27)" onmouseover="showTip(event, 'fs15', 27)" class="f">GetValue</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs16', 28)" onmouseover="showTip(event, 'fs16', 28)" class="t">string</span><span class="o">&gt;</span>(<span class="s">&quot;title&quot;</span>))
+    ()
+
+<span onmouseout="hideTip(event, 'fs9', 29)" onmouseover="showTip(event, 'fs9', 29)" class="i">results</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs17', 30)" onmouseover="showTip(event, 'fs17', 30)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs18', 31)" onmouseover="showTip(event, 'fs18', 31)" class="f">iter</span> <span onmouseout="hideTip(event, 'fs10', 32)" onmouseover="showTip(event, 'fs10', 32)" class="f">printOut</span>
+
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs19', 33)" onmouseover="showTip(event, 'fs19', 33)" class="i">boundQuery</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs6', 34)" onmouseover="showTip(event, 'fs6', 34)" class="i">session</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs20', 35)" onmouseover="showTip(event, 'fs20', 35)" class="f">Prepare</span>(<span class="s">&quot;select * from products where product_id=?&quot;</span>)
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs21', 36)" onmouseover="showTip(event, 'fs21', 36)" class="i">boundStatement</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs19', 37)" onmouseover="showTip(event, 'fs19', 37)" class="i">boundQuery</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs22', 38)" onmouseover="showTip(event, 'fs22', 38)" class="f">Bind</span>(<span class="s">&quot;1&quot;</span>)
+<span onmouseout="hideTip(event, 'fs6', 39)" onmouseover="showTip(event, 'fs6', 39)" class="i">session</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs8', 40)" onmouseover="showTip(event, 'fs8', 40)" class="f">Execute</span>(<span onmouseout="hideTip(event, 'fs21', 41)" onmouseover="showTip(event, 'fs21', 41)" class="i">boundStatement</span>) <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs17', 42)" onmouseover="showTip(event, 'fs17', 42)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs18', 43)" onmouseover="showTip(event, 'fs18', 43)" class="f">iter</span> <span onmouseout="hideTip(event, 'fs10', 44)" onmouseover="showTip(event, 'fs10', 44)" class="f">printOut</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace Cassandra</div>
+<div class="tip" id="fs2">namespace System</div>
+<div class="tip" id="fs3">val cluster : Cluster<br /><br />Full name: Script.cluster</div>
+<div class="tip" id="fs4">type Cluster =<br />&#160;&#160;member AllHosts : unit -&gt; ICollection&lt;Host&gt;<br />&#160;&#160;member Configuration : Configuration with get, set<br />&#160;&#160;member Connect : unit -&gt; ISession + 1 overload<br />&#160;&#160;member ConnectAndCreateDefaultKeyspaceIfNotExists : ?replication:Dictionary&lt;string, string&gt; * ?durableWrites:bool -&gt; ISession<br />&#160;&#160;member Dispose : unit -&gt; unit<br />&#160;&#160;member GetHost : address:IPEndPoint -&gt; Host<br />&#160;&#160;member GetReplicas : partitionKey:byte[] -&gt; ICollection&lt;Host&gt; + 1 overload<br />&#160;&#160;member Metadata : Metadata<br />&#160;&#160;member RefreshSchema : ?keyspace:string * ?table:string -&gt; bool<br />&#160;&#160;member Shutdown : ?timeoutMs:int -&gt; unit<br />&#160;&#160;...<br /><br />Full name: Cassandra.Cluster</div>
+<div class="tip" id="fs5">Cluster.Builder() : Builder</div>
+<div class="tip" id="fs6">val session : ISession<br /><br />Full name: Script.session</div>
+<div class="tip" id="fs7">Cluster.Connect() : ISession<br />Cluster.Connect(keyspace: string) : ISession</div>
+<div class="tip" id="fs8">ISession.Execute(cqlQuery: string) : RowSet<br />ISession.Execute(statement: IStatement) : RowSet<br />ISession.Execute(cqlQuery: string, pageSize: int) : RowSet<br />ISession.Execute(cqlQuery: string, consistency: ConsistencyLevel) : RowSet</div>
+<div class="tip" id="fs9">val results : RowSet<br /><br />Full name: Script.results</div>
+<div class="tip" id="fs10">val printOut : row:Row -&gt; unit<br /><br />Full name: Script.printOut</div>
+<div class="tip" id="fs11">val row : Row</div>
+<div class="tip" id="fs12">Multiple items<br />type Row =<br />&#160;&#160;new : unit -&gt; Row + 1 overload<br />&#160;&#160;member GetColumn : name:string -&gt; CqlColumn<br />&#160;&#160;member GetEnumerator : unit -&gt; IEnumerator&lt;obj&gt;<br />&#160;&#160;member GetValue&lt;&#39;T&gt; : index:int -&gt; &#39;T + 3 overloads<br />&#160;&#160;member IsNull : name:string -&gt; bool + 1 overload<br />&#160;&#160;member Item : int -&gt; obj<br />&#160;&#160;member Item : string -&gt; obj<br />&#160;&#160;member Length : int<br /><br />Full name: Cassandra.Row<br /><br />--------------------<br />Row() : unit</div>
+<div class="tip" id="fs13">type Console =<br />&#160;&#160;static member BackgroundColor : ConsoleColor with get, set<br />&#160;&#160;static member Beep : unit -&gt; unit + 1 overload<br />&#160;&#160;static member BufferHeight : int with get, set<br />&#160;&#160;static member BufferWidth : int with get, set<br />&#160;&#160;static member CapsLock : bool<br />&#160;&#160;static member Clear : unit -&gt; unit<br />&#160;&#160;static member CursorLeft : int with get, set<br />&#160;&#160;static member CursorSize : int with get, set<br />&#160;&#160;static member CursorTop : int with get, set<br />&#160;&#160;static member CursorVisible : bool with get, set<br />&#160;&#160;...<br /><br />Full name: System.Console</div>
+<div class="tip" id="fs14">Console.WriteLine() : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.WriteLine(value: string) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.WriteLine(value: obj) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.WriteLine(value: uint64) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.WriteLine(value: int64) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.WriteLine(value: uint32) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.WriteLine(value: int) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.WriteLine(value: float32) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.WriteLine(value: float) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.WriteLine(value: decimal) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em></div>
+<div class="tip" id="fs15">Row.GetValue&lt;&#39;T&gt;(name: string) : &#39;T<br />Row.GetValue&lt;&#39;T&gt;(index: int) : &#39;T<br />Row.GetValue(type: Type, name: string) : obj<br />Row.GetValue(type: Type, index: int) : obj</div>
+<div class="tip" id="fs16">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />Full name: Microsoft.FSharp.Core.Operators.string<br /><br />--------------------<br />type string = String<br /><br />Full name: Microsoft.FSharp.Core.string</div>
+<div class="tip" id="fs17">module Seq<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs18">val iter : action:(&#39;T -&gt; unit) -&gt; source:seq&lt;&#39;T&gt; -&gt; unit<br /><br />Full name: Microsoft.FSharp.Collections.Seq.iter</div>
+<div class="tip" id="fs19">val boundQuery : PreparedStatement<br /><br />Full name: Script.boundQuery</div>
+<div class="tip" id="fs20">ISession.Prepare(cqlQuery: string) : PreparedStatement<br />ISession.Prepare(cqlQuery: string, customPayload: Collections.Generic.IDictionary&lt;string,byte []&gt;) : PreparedStatement</div>
+<div class="tip" id="fs21">val boundStatement : BoundStatement<br /><br />Full name: Script.boundStatement</div>
+<div class="tip" id="fs22">PreparedStatement.Bind([&lt;ParamArray&gt;] values: obj []) : BoundStatement</div>
+

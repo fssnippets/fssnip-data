@@ -1,0 +1,94 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">type</span> <span class="t">AccountState</span> <span class="o">=</span> 
+    | <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="p">Overdrawn</span>
+    | <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="p">Silver</span>
+    | <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="p">Gold</span>
+[&lt;<span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="t">Measure</span>&gt;] <span class="k">type</span> <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="t">USD</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="t">Account</span><span class="o">&lt;</span>[&lt;<span onmouseout="hideTip(event, 'fs4', 7)" onmouseover="showTip(event, 'fs4', 7)" class="t">Measure</span>&gt;] <span class="o">&#39;</span><span class="i">u</span><span class="o">&gt;</span>() <span class="o">=</span>
+    <span class="k">let</span> <span class="k">mutable</span> <span onmouseout="hideTip(event, 'fs7', 8)" onmouseover="showTip(event, 'fs7', 8)" class="v">balance</span> <span class="o">=</span> <span class="n">0.0</span><span class="o">&lt;</span>_<span class="o">&gt;</span>   
+    <span class="k">member</span> <span onmouseout="hideTip(event, 'fs8', 9)" onmouseover="showTip(event, 'fs8', 9)" class="i">this</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs9', 10)" onmouseover="showTip(event, 'fs9', 10)" class="i">State</span>
+        <span class="k">with</span> <span class="i">get</span>() <span class="o">=</span> 
+            <span class="k">match</span> <span onmouseout="hideTip(event, 'fs7', 11)" onmouseover="showTip(event, 'fs7', 11)" class="v">balance</span> <span class="k">with</span>
+            | _ <span class="k">when</span> <span onmouseout="hideTip(event, 'fs7', 12)" onmouseover="showTip(event, 'fs7', 12)" class="v">balance</span> <span class="o">&lt;=</span> <span class="n">0.0</span><span class="o">&lt;</span>_<span class="o">&gt;</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs1', 13)" onmouseover="showTip(event, 'fs1', 13)" class="p">Overdrawn</span>
+            | _ <span class="k">when</span> <span onmouseout="hideTip(event, 'fs7', 14)" onmouseover="showTip(event, 'fs7', 14)" class="v">balance</span> <span class="o">&gt;</span> <span class="n">0.0</span><span class="o">&lt;</span>_<span class="o">&gt;</span> <span class="o">&amp;&amp;</span> <span onmouseout="hideTip(event, 'fs7', 15)" onmouseover="showTip(event, 'fs7', 15)" class="v">balance</span> <span class="o">&lt;</span> <span class="n">10000.0</span><span class="o">&lt;</span>_<span class="o">&gt;</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs2', 16)" onmouseover="showTip(event, 'fs2', 16)" class="p">Silver</span>
+            | _ <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs3', 17)" onmouseover="showTip(event, 'fs3', 17)" class="p">Gold</span>
+    <span class="k">member</span> <span onmouseout="hideTip(event, 'fs8', 18)" onmouseover="showTip(event, 'fs8', 18)" class="i">this</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs10', 19)" onmouseover="showTip(event, 'fs10', 19)" class="f">PayInterest</span>() <span class="o">=</span> 
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs11', 20)" onmouseover="showTip(event, 'fs11', 20)" class="i">interest</span> <span class="o">=</span> 
+            <span class="k">match</span> <span onmouseout="hideTip(event, 'fs8', 21)" onmouseover="showTip(event, 'fs8', 21)" class="i">this</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs12', 22)" onmouseover="showTip(event, 'fs12', 22)" class="i">State</span> <span class="k">with</span>
+                | <span onmouseout="hideTip(event, 'fs1', 23)" onmouseover="showTip(event, 'fs1', 23)" class="p">Overdrawn</span> <span class="k">-&gt;</span> <span class="n">0.</span>
+                | <span onmouseout="hideTip(event, 'fs2', 24)" onmouseover="showTip(event, 'fs2', 24)" class="p">Silver</span> <span class="k">-&gt;</span> <span class="n">0.01</span>
+                | <span onmouseout="hideTip(event, 'fs3', 25)" onmouseover="showTip(event, 'fs3', 25)" class="p">Gold</span> <span class="k">-&gt;</span> <span class="n">0.02</span>
+        <span onmouseout="hideTip(event, 'fs11', 26)" onmouseover="showTip(event, 'fs11', 26)" class="i">interest</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs7', 27)" onmouseover="showTip(event, 'fs7', 27)" class="v">balance</span>
+    <span class="k">member</span> <span onmouseout="hideTip(event, 'fs8', 28)" onmouseover="showTip(event, 'fs8', 28)" class="i">this</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs13', 29)" onmouseover="showTip(event, 'fs13', 29)" class="f">Deposit</span>(<span onmouseout="hideTip(event, 'fs14', 30)" onmouseover="showTip(event, 'fs14', 30)" class="i">x</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs15', 31)" onmouseover="showTip(event, 'fs15', 31)" class="t">float</span><span class="o">&lt;</span>_<span class="o">&gt;</span>) <span class="o">=</span>  
+        <span class="k">let</span> (<span onmouseout="hideTip(event, 'fs16', 32)" onmouseover="showTip(event, 'fs16', 32)" class="i">a</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs15', 33)" onmouseover="showTip(event, 'fs15', 33)" class="t">float</span><span class="o">&lt;</span>_<span class="o">&gt;</span>) <span class="o">=</span> <span onmouseout="hideTip(event, 'fs14', 34)" onmouseover="showTip(event, 'fs14', 34)" class="i">x</span>
+        <span onmouseout="hideTip(event, 'fs7', 35)" onmouseover="showTip(event, 'fs7', 35)" class="v">balance</span> <span class="o">&lt;-</span> <span onmouseout="hideTip(event, 'fs7', 36)" onmouseover="showTip(event, 'fs7', 36)" class="v">balance</span> <span class="o">+</span> <span onmouseout="hideTip(event, 'fs16', 37)" onmouseover="showTip(event, 'fs16', 37)" class="i">a</span>
+    <span class="k">member</span> <span onmouseout="hideTip(event, 'fs8', 38)" onmouseover="showTip(event, 'fs8', 38)" class="i">this</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs17', 39)" onmouseover="showTip(event, 'fs17', 39)" class="f">Withdraw</span>(<span onmouseout="hideTip(event, 'fs14', 40)" onmouseover="showTip(event, 'fs14', 40)" class="i">x</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs15', 41)" onmouseover="showTip(event, 'fs15', 41)" class="t">float</span><span class="o">&lt;</span>_<span class="o">&gt;</span>) <span class="o">=</span> <span onmouseout="hideTip(event, 'fs7', 42)" onmouseover="showTip(event, 'fs7', 42)" class="v">balance</span> <span class="o">&lt;-</span> <span onmouseout="hideTip(event, 'fs7', 43)" onmouseover="showTip(event, 'fs7', 43)" class="v">balance</span> <span class="o">-</span> <span onmouseout="hideTip(event, 'fs14', 44)" onmouseover="showTip(event, 'fs14', 44)" class="i">x</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs18', 45)" onmouseover="showTip(event, 'fs18', 45)" class="f">state</span>() <span class="o">=</span> 
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs19', 46)" onmouseover="showTip(event, 'fs19', 46)" class="i">account</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs6', 47)" onmouseover="showTip(event, 'fs6', 47)" class="t">Account</span>()
+
+    <span onmouseout="hideTip(event, 'fs19', 48)" onmouseover="showTip(event, 'fs19', 48)" class="i">account</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs20', 49)" onmouseover="showTip(event, 'fs20', 49)" class="f">Deposit</span>(<span class="n">10000.</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs5', 50)" onmouseover="showTip(event, 'fs5', 50)" class="t">USD</span><span class="o">&gt;</span>)
+    <span onmouseout="hideTip(event, 'fs21', 51)" onmouseover="showTip(event, 'fs21', 51)" class="f">printfn</span> <span class="s">&quot;interest = </span><span class="pf">%A</span><span class="s">&quot;</span> (<span onmouseout="hideTip(event, 'fs19', 52)" onmouseover="showTip(event, 'fs19', 52)" class="i">account</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs22', 53)" onmouseover="showTip(event, 'fs22', 53)" class="f">PayInterest</span>())
+
+    <span onmouseout="hideTip(event, 'fs19', 54)" onmouseover="showTip(event, 'fs19', 54)" class="i">account</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs23', 55)" onmouseover="showTip(event, 'fs23', 55)" class="f">Withdraw</span>(<span class="n">20000.</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs5', 56)" onmouseover="showTip(event, 'fs5', 56)" class="t">USD</span><span class="o">&gt;</span>)
+    <span onmouseout="hideTip(event, 'fs21', 57)" onmouseover="showTip(event, 'fs21', 57)" class="f">printfn</span> <span class="s">&quot;interest = </span><span class="pf">%A</span><span class="s">&quot;</span> (<span onmouseout="hideTip(event, 'fs19', 58)" onmouseover="showTip(event, 'fs19', 58)" class="i">account</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs22', 59)" onmouseover="showTip(event, 'fs22', 59)" class="f">PayInterest</span>())
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">union case AccountState.Overdrawn: AccountState</div>
+<div class="tip" id="fs2">union case AccountState.Silver: AccountState</div>
+<div class="tip" id="fs3">union case AccountState.Gold: AccountState</div>
+<div class="tip" id="fs4">Multiple items<br />type MeasureAttribute =<br />&#160;&#160;inherit Attribute<br />&#160;&#160;new : unit -&gt; MeasureAttribute<br /><br />Full name: Microsoft.FSharp.Core.MeasureAttribute<br /><br />--------------------<br />new : unit -&gt; MeasureAttribute</div>
+<div class="tip" id="fs5">[&lt;Measure&gt;]<br />type USD<br /><br />Full name: Script.USD</div>
+<div class="tip" id="fs6">Multiple items<br />type Account&lt;&#39;u&gt; =<br />&#160;&#160;new : unit -&gt; Account&lt;&#39;u&gt;<br />&#160;&#160;member Deposit : x:float&lt;USD&gt; -&gt; unit<br />&#160;&#160;member PayInterest : unit -&gt; float&lt;USD&gt;<br />&#160;&#160;member Withdraw : x:float&lt;USD&gt; -&gt; unit<br />&#160;&#160;member State : AccountState<br /><br />Full name: Script.Account&lt;_&gt;<br /><br />--------------------<br />new : unit -&gt; Account&lt;&#39;u&gt;</div>
+<div class="tip" id="fs7">val mutable balance : float&lt;USD&gt;</div>
+<div class="tip" id="fs8">val this : Account&lt;&#39;u&gt;</div>
+<div class="tip" id="fs9">member Account.State : AccountState<br /><br />Full name: Script.Account.State</div>
+<div class="tip" id="fs10">member Account.PayInterest : unit -&gt; float&lt;USD&gt;<br /><br />Full name: Script.Account.PayInterest</div>
+<div class="tip" id="fs11">val interest : float</div>
+<div class="tip" id="fs12">property Account.State: AccountState</div>
+<div class="tip" id="fs13">member Account.Deposit : x:float&lt;USD&gt; -&gt; unit<br /><br />Full name: Script.Account.Deposit</div>
+<div class="tip" id="fs14">val x : float&lt;USD&gt;</div>
+<div class="tip" id="fs15">Multiple items<br />val float : value:&#39;T -&gt; float (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.float<br /><br />--------------------<br />type float = System.Double<br /><br />Full name: Microsoft.FSharp.Core.float<br /><br />--------------------<br />type float&lt;&#39;Measure&gt; = float<br /><br />Full name: Microsoft.FSharp.Core.float&lt;_&gt;</div>
+<div class="tip" id="fs16">val a : float&lt;USD&gt;</div>
+<div class="tip" id="fs17">member Account.Withdraw : x:float&lt;USD&gt; -&gt; unit<br /><br />Full name: Script.Account.Withdraw</div>
+<div class="tip" id="fs18">val state : unit -&gt; unit<br /><br />Full name: Script.state</div>
+<div class="tip" id="fs19">val account : Account&lt;1&gt;</div>
+<div class="tip" id="fs20">member Account.Deposit : x:float&lt;USD&gt; -&gt; unit</div>
+<div class="tip" id="fs21">val printfn : format:Printf.TextWriterFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.printfn</div>
+<div class="tip" id="fs22">member Account.PayInterest : unit -&gt; float&lt;USD&gt;</div>
+<div class="tip" id="fs23">member Account.Withdraw : x:float&lt;USD&gt; -&gt; unit</div>
+

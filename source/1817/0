@@ -1,0 +1,140 @@
+type Position = 
+| Position of x : int * y : int 
+with
+    member this.ToTuple() = 
+        match this with
+        | Position(x, y) -> x, y
+
+let smallest (items : Position Set) func =
+        items
+        |> Set.toSeq
+        |> Seq.map(fun x -> x.ToTuple() |> func)
+        |> Seq.sort
+        |> Seq.tryHead
+
+let greatest (items : Position Set) func =
+        items
+        |> Set.toSeq
+        |> Seq.map(fun x -> x.ToTuple() |> func)
+        |> Seq.sort
+        |> Seq.rev
+        |> Seq.tryHead
+
+type Board = 
+    { State : Position Set }
+with
+    member this.Draw (viewHeight : int) (viewWidth : int) =
+        let lines = [0..(viewHeight - 1)]
+        let cols = [0..(viewWidth - 1)]
+        seq { 
+            for lineNo in lines do
+                for columnNo in cols do 
+                    if this.State |> Set.contains (Position(columnNo, lineNo)) then
+                        yield "O"
+                    else
+                        yield "x"
+                yield "\n"
+        } |> String.concat ""
+    
+    member this.GetHeight() = 
+        match greatest this.State snd with
+        | Some x -> x + 1
+        | None -> 0
+    member this.GetWidth() =
+        match greatest this.State fst with
+        | Some x -> x + 1
+        | None -> 0
+        
+    override this.ToString() =
+        this.Draw (this.GetHeight() + 3) (this.GetWidth() + 3)
+let create state =
+    { State = state }
+
+let neighborCount (position : Position) board =
+    let x, y = position.ToTuple()
+    let isAt xa ya =
+        if board.State |> Set.contains (Position ((x + xa), (y + ya))) then
+            1
+        else 
+            0
+    (isAt -1 -1) + (isAt 0 -1) + (isAt 1 -1) +
+    (isAt -1  0) +             + (isAt 1  0) +
+    (isAt -1  1) + (isAt 0  1) + (isAt 1  1) 
+let stepBoard board = 
+    if board.State.IsEmpty then
+        board
+    else
+        let minX = (smallest board.State fst).Value
+        let minY = (smallest board.State snd).Value
+        let maxX = (greatest board.State fst).Value
+        let maxY = (greatest board.State snd).Value
+
+        let newState =
+            seq {
+                for x in [(minX - 1)..(maxX + 1)] do
+                    for y in [(minY - 1)..(maxY + 1)] do
+                        let pos = Position(x, y)
+                        let dotHere = board.State |> Set.contains pos
+                        let neighborCount = (board |> neighborCount pos)
+                        if dotHere && (neighborCount = 2) then
+                            yield pos
+                        else if neighborCount = 3 then
+                            yield pos
+                        
+            }
+            |> Set.ofSeq
+        create newState
+
+
+let loadBoard (value : string) : Board = 
+    let lines = 
+        value.Split([|"\r\n"; "\n"|], System.StringSplitOptions.None)
+        |> Array.map(fun x -> x.Trim())
+        |> Array.filter(fun x -> x <> "")
+    let width = (lines |> Seq.head).Length
+    let height = lines.Length
+    for line in lines do
+        if line.Length <> width then
+            failwith "grid does not have a uniform width"
+    let state = 
+        lines
+        |> Seq.mapi(fun lineNo line ->
+            line |> Seq.mapi(fun columnNo item ->
+                if item = 'O' then
+                    Some(Position(columnNo, lineNo))
+                else
+                    None))
+        |> Seq.concat
+        |> Seq.choose id
+        |> Set.ofSeq
+    create state
+
+let stepAndPrint board = 
+    let board = board |> stepBoard
+    printfn "%s" (board.ToString())
+    board
+let sndp = stepAndPrint
+
+let board = 
+    (loadBoard 
+    """
+    xOxOxx
+    xxOOxx
+    xxOxxx""")
+
+let t = new System.Timers.Timer(300.0)
+
+let mutable mutboard = board
+let mutable printHeight = 0
+let mutable printWidth = 0
+t.Elapsed.Add(fun _ -> 
+    let board = stepBoard mutboard
+    let h = board.GetHeight()
+    let w = board.GetWidth()
+    if h > printHeight then
+        printHeight <- h
+    if w > printWidth then
+        printWidth <- w
+    printfn "%s" (board.Draw printHeight printWidth)
+    mutboard <- board)
+t.Start()

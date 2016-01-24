@@ -1,0 +1,1 @@
+let time f x = System.Diagnostics.Stopwatch.StartNew() |> (fun sw -> (f x, sw.Elapsed))

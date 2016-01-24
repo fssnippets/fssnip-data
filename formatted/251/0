@@ -1,0 +1,80 @@
+<h2><a name="Declaration-of-the-using-combinator" class="anchor" href="#Declaration-of-the-using-combinator">Declaration of the using combinator</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">System</span>
+
+<span class="k">module</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="t">Event</span> <span class="o">=</span> 
+  <span class="c">/// Generates new values using the specified function &#39;f&#39; (just like</span>
+  <span class="c">/// &#39;Event.map&#39;), but automatically diposes of the previous value when </span>
+  <span class="c">/// a new value is generated.</span>
+  <span class="k">let</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="f">using</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="f">f</span> <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="i">evt</span> <span class="o">=</span> 
+    <span onmouseout="hideTip(event, 'fs5', 6)" onmouseover="showTip(event, 'fs5', 6)" class="i">evt</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs2', 7)" onmouseover="showTip(event, 'fs2', 7)" class="t">Event</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs6', 8)" onmouseover="showTip(event, 'fs6', 8)" class="f">scan</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs7', 9)" onmouseover="showTip(event, 'fs7', 9)" class="i">st</span> <span onmouseout="hideTip(event, 'fs8', 10)" onmouseover="showTip(event, 'fs8', 10)" class="i">inp</span> <span class="k">-&gt;</span>
+      <span class="c">// Dipose of the previous value if it is not &#39;null&#39;</span>
+      <span class="k">if</span> <span onmouseout="hideTip(event, 'fs7', 11)" onmouseover="showTip(event, 'fs7', 11)" class="i">st</span> <span class="o">&lt;&gt;</span> <span onmouseout="hideTip(event, 'fs9', 12)" onmouseover="showTip(event, 'fs9', 12)" class="t">Unchecked</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs10', 13)" onmouseover="showTip(event, 'fs10', 13)" class="i">defaultof</span><span class="o">&lt;</span>_<span class="o">&gt;</span> <span class="k">then</span> 
+        (<span onmouseout="hideTip(event, 'fs7', 14)" onmouseover="showTip(event, 'fs7', 14)" class="i">st</span> <span class="o">:&gt;</span> <span onmouseout="hideTip(event, 'fs11', 15)" onmouseover="showTip(event, 'fs11', 15)" class="t">IDisposable</span>)<span class="o">.</span><span class="f">Dispose</span>()
+      <span onmouseout="hideTip(event, 'fs4', 16)" onmouseover="showTip(event, 'fs4', 16)" class="f">f</span> <span onmouseout="hideTip(event, 'fs8', 17)" onmouseover="showTip(event, 'fs8', 17)" class="i">inp</span> ) <span onmouseout="hideTip(event, 'fs9', 18)" onmouseover="showTip(event, 'fs9', 18)" class="t">Unchecked</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs10', 19)" onmouseover="showTip(event, 'fs10', 19)" class="i">defaultof</span><span class="o">&lt;</span>_<span class="o">&gt;</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Windows-Forms-example" class="anchor" href="#Windows-Forms-example">Windows Forms example</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 20)" onmouseover="showTip(event, 'fs1', 20)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs12', 21)" onmouseover="showTip(event, 'fs12', 21)" class="i">Drawing</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 22)" onmouseover="showTip(event, 'fs1', 22)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs13', 23)" onmouseover="showTip(event, 'fs13', 23)" class="i">Windows</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs14', 24)" onmouseover="showTip(event, 'fs14', 24)" class="i">Forms</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs15', 25)" onmouseover="showTip(event, 'fs15', 25)" class="i">colors</span> <span class="o">=</span> <span id="fst16" onmouseout="hideTip(event, 'fs16', 26)" onmouseover="showTip(event, 'fs16', 26, document.getElementById('fst16'))" class="omitted">(...)</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs17', 27)" onmouseover="showTip(event, 'fs17', 27)" class="i">frm</span> <span class="o">=</span> <span id="fst18" onmouseout="hideTip(event, 'fs18', 28)" onmouseover="showTip(event, 'fs18', 28, document.getElementById('fst18'))" class="omitted">(...)</span>
+
+<span class="c">// Turns colors into brushes, but automatically disposes </span>
+<span class="c">// of the previous brush when creating a new one</span>
+<span onmouseout="hideTip(event, 'fs15', 29)" onmouseover="showTip(event, 'fs15', 29)" class="i">colors</span> 
+  <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs19', 30)" onmouseover="showTip(event, 'fs19', 30)" class="t">Event</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 31)" onmouseover="showTip(event, 'fs3', 31)" class="f">using</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs20', 32)" onmouseover="showTip(event, 'fs20', 32)" class="i">clr</span> <span class="k">-&gt;</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs21', 33)" onmouseover="showTip(event, 'fs21', 33)" class="t">SolidBrush</span>(<span onmouseout="hideTip(event, 'fs20', 34)" onmouseover="showTip(event, 'fs20', 34)" class="i">clr</span>))
+  <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs19', 35)" onmouseover="showTip(event, 'fs19', 35)" class="t">Event</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs22', 36)" onmouseover="showTip(event, 'fs22', 36)" class="f">add</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs23', 37)" onmouseover="showTip(event, 'fs23', 37)" class="i">br</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs17', 38)" onmouseover="showTip(event, 'fs17', 38)" class="i">frm</span><span class="o">.</span><span class="i">BackBrush</span> <span class="o">&lt;-</span> <span onmouseout="hideTip(event, 'fs23', 39)" onmouseover="showTip(event, 'fs23', 39)" class="i">br</span>)
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace System</div>
+<div class="tip" id="fs2">Multiple items<br />module Event<br /><br />from Microsoft.FSharp.Control<br /><br />--------------------<br />type Event&lt;&#39;T&gt; =<br />&#160;&#160;new : unit -&gt; Event&lt;&#39;T&gt;<br />&#160;&#160;member Trigger : arg:&#39;T -&gt; unit<br />&#160;&#160;member Publish : IEvent&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Control.Event&lt;_&gt;<br /><br />--------------------<br />type Event&lt;&#39;Delegate,&#39;Args (requires delegate and &#39;Delegate :&gt; Delegate)&gt; =<br />&#160;&#160;new : unit -&gt; Event&lt;&#39;Delegate,&#39;Args&gt;<br />&#160;&#160;member Trigger : sender:obj * args:&#39;Args -&gt; unit<br />&#160;&#160;member Publish : IEvent&lt;&#39;Delegate,&#39;Args&gt;<br /><br />Full name: Microsoft.FSharp.Control.Event&lt;_,_&gt;<br /><br />--------------------<br />new : unit -&gt; Event&lt;&#39;T&gt;<br /><br />--------------------<br />new : unit -&gt; Event&lt;&#39;Delegate,&#39;Args&gt;</div>
+<div class="tip" id="fs3">val using : f:(&#39;a -&gt; &#39;b) -&gt; evt:IEvent&lt;&#39;c,&#39;a&gt; -&gt; IEvent&lt;&#39;b&gt; (requires equality and &#39;b :&gt; IDisposable and delegate and &#39;c :&gt; Delegate)<br /><br />Full name: Script.Event.using<br /><em><br /><br />&#160;Generates new values using the specified function &#39;f&#39; (just like<br />&#160;&#39;Event.map&#39;), but automatically diposes of the previous value when <br />&#160;a new value is generated.</em></div>
+<div class="tip" id="fs4">val f : (&#39;a -&gt; &#39;b) (requires equality and &#39;b :&gt; IDisposable)</div>
+<div class="tip" id="fs5">val evt : IEvent&lt;&#39;c,&#39;a&gt; (requires delegate and &#39;c :&gt; Delegate)</div>
+<div class="tip" id="fs6">val scan : collector:(&#39;U -&gt; &#39;T -&gt; &#39;U) -&gt; state:&#39;U -&gt; sourceEvent:IEvent&lt;&#39;Del,&#39;T&gt; -&gt; IEvent&lt;&#39;U&gt; (requires delegate and &#39;Del :&gt; Delegate)<br /><br />Full name: Microsoft.FSharp.Control.Event.scan</div>
+<div class="tip" id="fs7">val st : &#39;b (requires equality and &#39;b :&gt; IDisposable)</div>
+<div class="tip" id="fs8">val inp : &#39;a</div>
+<div class="tip" id="fs9">module Unchecked<br /><br />from Microsoft.FSharp.Core.Operators</div>
+<div class="tip" id="fs10">val defaultof&lt;&#39;T&gt; : &#39;T<br /><br />Full name: Microsoft.FSharp.Core.Operators.Unchecked.defaultof</div>
+<div class="tip" id="fs11">type IDisposable =<br />&#160;&#160;member Dispose : unit -&gt; unit<br /><br />Full name: System.IDisposable</div>
+<div class="tip" id="fs12">namespace System.Drawing</div>
+<div class="tip" id="fs13">namespace System.Windows</div>
+<div class="tip" id="fs14">namespace System.Windows.Forms</div>
+<div class="tip" id="fs15">val colors : IEvent&lt;Color&gt;<br /><br />Full name: Script.colors</div>
+<div class="tip" id="fs16">failwith &quot;Not implemented&quot; : IEvent&lt;Color&gt;</div>
+<div class="tip" id="fs17">val frm : Form<br /><br />Full name: Script.frm</div>
+<div class="tip" id="fs18">failwith &quot;Not implemented&quot; : Form</div>
+<div class="tip" id="fs19">Multiple items<br />module Event<br /><br />from Script<br /><br />--------------------<br />module Event<br /><br />from Microsoft.FSharp.Control<br /><br />--------------------<br />type Event&lt;&#39;T&gt; =<br />&#160;&#160;new : unit -&gt; Event&lt;&#39;T&gt;<br />&#160;&#160;member Trigger : arg:&#39;T -&gt; unit<br />&#160;&#160;member Publish : IEvent&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Control.Event&lt;_&gt;<br /><br />--------------------<br />type Event&lt;&#39;Delegate,&#39;Args (requires delegate and &#39;Delegate :&gt; Delegate)&gt; =<br />&#160;&#160;new : unit -&gt; Event&lt;&#39;Delegate,&#39;Args&gt;<br />&#160;&#160;member Trigger : sender:obj * args:&#39;Args -&gt; unit<br />&#160;&#160;member Publish : IEvent&lt;&#39;Delegate,&#39;Args&gt;<br /><br />Full name: Microsoft.FSharp.Control.Event&lt;_,_&gt;<br /><br />--------------------<br />new : unit -&gt; Event&lt;&#39;T&gt;<br /><br />--------------------<br />new : unit -&gt; Event&lt;&#39;Delegate,&#39;Args&gt;</div>
+<div class="tip" id="fs20">val clr : Color</div>
+<div class="tip" id="fs21">Multiple items<br />type SolidBrush =<br />&#160;&#160;inherit Brush<br />&#160;&#160;new : color:Color -&gt; SolidBrush<br />&#160;&#160;member Clone : unit -&gt; obj<br />&#160;&#160;member Color : Color with get, set<br /><br />Full name: System.Drawing.SolidBrush<br /><br />--------------------<br />SolidBrush(color: Color) : unit</div>
+<div class="tip" id="fs22">val add : callback:(&#39;T -&gt; unit) -&gt; sourceEvent:IEvent&lt;&#39;Del,&#39;T&gt; -&gt; unit (requires delegate and &#39;Del :&gt; Delegate)<br /><br />Full name: Microsoft.FSharp.Control.Event.add</div>
+<div class="tip" id="fs23">val br : SolidBrush</div>
+

@@ -1,0 +1,35 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// Takes an array and splits it to arrays of arrays</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="f">slice</span> (<span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">myArray</span> <span class="o">:</span> _[]) <span class="o">=</span> 
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="i">chunkSize</span> <span class="o">=</span> <span class="n">800</span>
+    <span class="k">match</span> <span onmouseout="hideTip(event, 'fs2', 4)" onmouseover="showTip(event, 'fs2', 4)" class="i">myArray</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs4', 5)" onmouseover="showTip(event, 'fs4', 5)" class="i">Length</span> <span class="o">&lt;=</span> <span onmouseout="hideTip(event, 'fs3', 6)" onmouseover="showTip(event, 'fs3', 6)" class="i">chunkSize</span> <span class="k">with</span>
+    | <span class="k">true</span> <span class="k">-&gt;</span> [|<span onmouseout="hideTip(event, 'fs2', 7)" onmouseover="showTip(event, 'fs2', 7)" class="i">myArray</span>|]
+    | <span class="k">false</span> <span class="k">-&gt;</span> 
+        <span onmouseout="hideTip(event, 'fs2', 8)" onmouseover="showTip(event, 'fs2', 8)" class="i">myArray</span>
+        <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs5', 9)" onmouseover="showTip(event, 'fs5', 9)" class="t">Array</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs6', 10)" onmouseover="showTip(event, 'fs6', 10)" class="f">mapi</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs7', 11)" onmouseover="showTip(event, 'fs7', 11)" class="i">i</span> <span onmouseout="hideTip(event, 'fs8', 12)" onmouseover="showTip(event, 'fs8', 12)" class="i">x</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs7', 13)" onmouseover="showTip(event, 'fs7', 13)" class="i">i</span>,<span onmouseout="hideTip(event, 'fs8', 14)" onmouseover="showTip(event, 'fs8', 14)" class="i">x</span>)
+        <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs5', 15)" onmouseover="showTip(event, 'fs5', 15)" class="i">Array</span><span class="o">.</span><span class="i">groupBy</span> (<span class="k">fun</span> (<span onmouseout="hideTip(event, 'fs7', 16)" onmouseover="showTip(event, 'fs7', 16)" class="i">i</span>,<span class="i">x</span>) <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs7', 17)" onmouseover="showTip(event, 'fs7', 17)" class="i">i</span> <span class="o">/</span> <span onmouseout="hideTip(event, 'fs3', 18)" onmouseover="showTip(event, 'fs3', 18)" class="i">chunkSize</span>)
+        <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs5', 19)" onmouseover="showTip(event, 'fs5', 19)" class="t">Array</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs9', 20)" onmouseover="showTip(event, 'fs9', 20)" class="f">map</span> (<span onmouseout="hideTip(event, 'fs10', 21)" onmouseover="showTip(event, 'fs10', 21)" class="f">snd</span> <span class="o">&gt;</span><span class="o">&gt;</span> <span onmouseout="hideTip(event, 'fs5', 22)" onmouseover="showTip(event, 'fs5', 22)" class="t">Array</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs9', 23)" onmouseover="showTip(event, 'fs9', 23)" class="f">map</span> <span onmouseout="hideTip(event, 'fs10', 24)" onmouseover="showTip(event, 'fs10', 24)" class="f">snd</span>)
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">val slice : myArray:&#39;a [] -&gt; &#39;a [] []<br /><br />Full name: Script.slice<br /><em><br /><br />&#160;Takes an array and splits it to arrays of arrays</em></div>
+<div class="tip" id="fs2">val myArray : &#39;a []</div>
+<div class="tip" id="fs3">val chunkSize : int</div>
+<div class="tip" id="fs4">property System.Array.Length: int</div>
+<div class="tip" id="fs5">module Array<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs6">val mapi : mapping:(int -&gt; &#39;T -&gt; &#39;U) -&gt; array:&#39;T [] -&gt; &#39;U []<br /><br />Full name: Microsoft.FSharp.Collections.Array.mapi</div>
+<div class="tip" id="fs7">val i : int</div>
+<div class="tip" id="fs8">val x : &#39;a</div>
+<div class="tip" id="fs9">val map : mapping:(&#39;T -&gt; &#39;U) -&gt; array:&#39;T [] -&gt; &#39;U []<br /><br />Full name: Microsoft.FSharp.Collections.Array.map</div>
+<div class="tip" id="fs10">val snd : tuple:(&#39;T1 * &#39;T2) -&gt; &#39;T2<br /><br />Full name: Microsoft.FSharp.Core.Operators.snd</div>
+

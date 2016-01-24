@@ -1,0 +1,60 @@
+type Fix<'x> = {fix: unit -> 'x * ('x -> unit)}
+
+module Fix =
+  let fix xF x2x =
+    let (x, xT) = xF.fix ()
+    xT (x2x x)
+    x
+  let (<&>) xF yF =
+    {fix = fun () ->
+       let (x, xT) = xF.fix ()
+       let (y, yT) = yF.fix ()
+       ((x, y), fun (x', y') -> xT x' ; yT y')}
+
+type Delay<'x> = {mutable delay: Choice<unit -> 'x, 'x>}
+
+module Delay =
+  let delay u2x = {delay = Choice1Of2 u2x}
+  let force d = match d.delay with
+                 | Choice2Of2 x -> x
+                 | Choice1Of2 u2x ->
+                   let x = u2x ()
+                   d.delay <- Choice2Of2 x
+                   x
+  let bind x2yD xD =
+    delay <| fun () ->
+      force xD |> x2yD |> force
+  let Y = {fix = fun () ->
+             let xD = {delay = Choice1Of2 (fun _ -> failwith "Delay.Y")}
+             (xD, fun xD' -> xD.delay <- xD'.delay)}
+
+module Seq =
+  let Y = {fix = fun () ->
+             let xsR = ref (Seq.delay (fun _ -> failwith "Seq.Y"))
+             let xs = Seq.delay (fun () -> !xsR)
+             (xs, fun xs' -> xsR := xs')}
+
+type Maybe<'x> = Delay<option<'x>>
+
+module Maybe =
+  let result x = Delay.delay <| fun () -> Some x
+  let bind x2yM xM =
+    xM
+    |> Delay.bind (fun xO ->
+       Delay.delay <| fun () ->
+       xO
+       |> Option.bind (fun x ->
+          x2yM x |> Delay.force))
+  let mfix (xF: Fix<'x>) (x2xM: 'x -> Maybe<'x>) : Maybe<'x> =
+    Delay.delay <| fun () ->
+      let (x, xT) = xF.fix ()
+      let xM = x2xM x
+      match Delay.force xM with
+       | None -> None
+       | Some x' -> xT x' ; Some x'
+
+do Maybe.mfix Seq.Y (fun xs -> Maybe.result (Seq.append (Seq.singleton 1) xs))
+   |> Maybe.bind (fun xs ->
+      Maybe.result (Seq.map (~-) xs))
+   |> Delay.force
+   |> printfn "%A"

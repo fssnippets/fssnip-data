@@ -1,0 +1,56 @@
+// Learn more about F# at http://fsharp.org
+// See the 'F# Tutorial' project for more help.
+
+open System
+open System.Linq
+open FSharp.Data
+open FSharp.Data.Sql
+
+[<Literal>]
+let connStr = "User ID=elezium;Password=xyz;Host=192.168.1.137;Port=3306;Database=test;"
+
+[<Literal>]
+let resolutionFolder = @"C:\Program Files (x86)\MySQL\MySQL Connector Net 6.9.7\Assemblies\v4.5"
+
+type HR = SqlDataProvider< ConnectionString=connStr, DatabaseVendor=Common.DatabaseProviderTypes.MYSQL, ResolutionPath=resolutionFolder >
+
+let ctx = HR.GetDataContext()
+
+type contact = 
+   { FirstName : string
+     LastName : string
+     Email : string }
+   
+
+let allContacts = 
+   query { 
+      for c in ctx.``[test].[contacts]`` do
+         select (c.FirstName, c.LastName, c.Email)
+   }
+   |> Seq.map (fun x -> 
+      let (f, l, e) = x
+      { FirstName = f; LastName = l; Email = e } )
+   |> Seq.toList
+
+let numberOfContacts =
+   query {
+      for c in ctx.``[test].[contacts]`` do
+         count
+   } 
+
+
+let displayContact l =
+   l |> List.iter (fun x ->
+      printf "[ %s ] " x.FirstName
+      printf "[ %s ]" x.LastName
+      printfn "[%s ]" x.Email      
+      )
+   printfn "---------------"
+   printfn "# of contacts %i" numberOfContacts
+
+
+[<EntryPoint>]
+let main argv =     
+    displayContact allContacts
+    Console.ReadKey() |> ignore
+    0 // return an integer exit code

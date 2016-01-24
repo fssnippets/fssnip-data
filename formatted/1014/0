@@ -1,0 +1,92 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">type</span> <span class="t">Church</span> <span class="o">=</span>
+    <span class="k">abstract</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="f">Apply</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span> <span class="o">:</span> (<span class="o">&#39;</span><span class="i">T</span> <span class="k">-&gt;</span> <span class="o">&#39;</span><span class="i">T</span>) <span class="o">*</span> <span class="o">&#39;</span><span class="i">T</span> <span class="k">-&gt;</span> <span class="o">&#39;</span><span class="i">T</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">zero</span> <span class="o">=</span> 
+    { 
+        <span class="k">new</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="t">Church</span> <span class="k">with</span>
+            <span class="k">member</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="i">self</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="f">Apply</span>(<span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="f">f</span>, <span onmouseout="hideTip(event, 'fs7', 7)" onmouseover="showTip(event, 'fs7', 7)" class="i">x</span>) <span class="o">=</span> <span onmouseout="hideTip(event, 'fs7', 8)" onmouseover="showTip(event, 'fs7', 8)" class="i">x</span> 
+    }
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs8', 9)" onmouseover="showTip(event, 'fs8', 9)" class="f">succ</span> (<span onmouseout="hideTip(event, 'fs9', 10)" onmouseover="showTip(event, 'fs9', 10)" class="i">nat</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs3', 11)" onmouseover="showTip(event, 'fs3', 11)" class="t">Church</span>) <span class="o">=</span> 
+    { 
+        <span class="k">new</span> <span onmouseout="hideTip(event, 'fs3', 12)" onmouseover="showTip(event, 'fs3', 12)" class="t">Church</span> <span class="k">with</span>
+            <span class="k">member</span> <span onmouseout="hideTip(event, 'fs4', 13)" onmouseover="showTip(event, 'fs4', 13)" class="i">self</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs5', 14)" onmouseover="showTip(event, 'fs5', 14)" class="f">Apply</span>(<span onmouseout="hideTip(event, 'fs6', 15)" onmouseover="showTip(event, 'fs6', 15)" class="f">f</span>, <span onmouseout="hideTip(event, 'fs7', 16)" onmouseover="showTip(event, 'fs7', 16)" class="i">x</span>) <span class="o">=</span> <span onmouseout="hideTip(event, 'fs6', 17)" onmouseover="showTip(event, 'fs6', 17)" class="f">f</span> <span class="o">&lt;|</span> <span onmouseout="hideTip(event, 'fs9', 18)" onmouseover="showTip(event, 'fs9', 18)" class="i">nat</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs5', 19)" onmouseover="showTip(event, 'fs5', 19)" class="f">Apply</span>(<span onmouseout="hideTip(event, 'fs6', 20)" onmouseover="showTip(event, 'fs6', 20)" class="f">f</span>, <span onmouseout="hideTip(event, 'fs7', 21)" onmouseover="showTip(event, 'fs7', 21)" class="i">x</span>) 
+    }
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs10', 22)" onmouseover="showTip(event, 'fs10', 22)" class="i">one</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs8', 23)" onmouseover="showTip(event, 'fs8', 23)" class="f">succ</span> <span onmouseout="hideTip(event, 'fs2', 24)" onmouseover="showTip(event, 'fs2', 24)" class="i">zero</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs11', 25)" onmouseover="showTip(event, 'fs11', 25)" class="i">two</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs8', 26)" onmouseover="showTip(event, 'fs8', 26)" class="f">succ</span> <span onmouseout="hideTip(event, 'fs10', 27)" onmouseover="showTip(event, 'fs10', 27)" class="i">one</span>
+
+<span class="k">let</span> (<span class="o">&lt;+&gt;</span>) (<span onmouseout="hideTip(event, 'fs12', 28)" onmouseover="showTip(event, 'fs12', 28)" class="i">first</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs3', 29)" onmouseover="showTip(event, 'fs3', 29)" class="t">Church</span>) (<span onmouseout="hideTip(event, 'fs13', 30)" onmouseover="showTip(event, 'fs13', 30)" class="i">second</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs3', 31)" onmouseover="showTip(event, 'fs3', 31)" class="t">Church</span>) <span class="o">=</span> 
+    <span onmouseout="hideTip(event, 'fs12', 32)" onmouseover="showTip(event, 'fs12', 32)" class="i">first</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs5', 33)" onmouseover="showTip(event, 'fs5', 33)" class="f">Apply</span>(<span onmouseout="hideTip(event, 'fs8', 34)" onmouseover="showTip(event, 'fs8', 34)" class="f">succ</span>, <span onmouseout="hideTip(event, 'fs13', 35)" onmouseover="showTip(event, 'fs13', 35)" class="i">second</span>) 
+<span class="k">let</span> (<span class="o">&lt;*&gt;</span>) (<span onmouseout="hideTip(event, 'fs12', 36)" onmouseover="showTip(event, 'fs12', 36)" class="i">first</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs3', 37)" onmouseover="showTip(event, 'fs3', 37)" class="t">Church</span>) (<span onmouseout="hideTip(event, 'fs13', 38)" onmouseover="showTip(event, 'fs13', 38)" class="i">second</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs3', 39)" onmouseover="showTip(event, 'fs3', 39)" class="t">Church</span>) <span class="o">=</span> 
+    <span onmouseout="hideTip(event, 'fs12', 40)" onmouseover="showTip(event, 'fs12', 40)" class="i">first</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs5', 41)" onmouseover="showTip(event, 'fs5', 41)" class="f">Apply</span>((<span class="o">&lt;+&gt;</span>) <span onmouseout="hideTip(event, 'fs13', 42)" onmouseover="showTip(event, 'fs13', 42)" class="i">second</span>, <span onmouseout="hideTip(event, 'fs2', 43)" onmouseover="showTip(event, 'fs2', 43)" class="i">zero</span>) 
+<span class="k">let</span> (<span class="o">&lt;^&gt;</span>) (<span onmouseout="hideTip(event, 'fs12', 44)" onmouseover="showTip(event, 'fs12', 44)" class="i">first</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs3', 45)" onmouseover="showTip(event, 'fs3', 45)" class="t">Church</span>) (<span onmouseout="hideTip(event, 'fs13', 46)" onmouseover="showTip(event, 'fs13', 46)" class="i">second</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs3', 47)" onmouseover="showTip(event, 'fs3', 47)" class="t">Church</span>) <span class="o">=</span> 
+    <span onmouseout="hideTip(event, 'fs13', 48)" onmouseover="showTip(event, 'fs13', 48)" class="i">second</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs5', 49)" onmouseover="showTip(event, 'fs5', 49)" class="f">Apply</span>((<span class="o">&lt;*&gt;</span>) <span onmouseout="hideTip(event, 'fs12', 50)" onmouseover="showTip(event, 'fs12', 50)" class="i">first</span>, <span onmouseout="hideTip(event, 'fs10', 51)" onmouseover="showTip(event, 'fs10', 51)" class="i">one</span>) 
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs14', 52)" onmouseover="showTip(event, 'fs14', 52)" class="f">toInt</span> (<span onmouseout="hideTip(event, 'fs9', 53)" onmouseover="showTip(event, 'fs9', 53)" class="i">nat</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs3', 54)" onmouseover="showTip(event, 'fs3', 54)" class="t">Church</span>) <span class="o">=</span> 
+    <span onmouseout="hideTip(event, 'fs9', 55)" onmouseover="showTip(event, 'fs9', 55)" class="i">nat</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs5', 56)" onmouseover="showTip(event, 'fs5', 56)" class="f">Apply</span>((<span class="o">+</span>)<span class="n">1</span>, <span class="n">0</span>)  
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs15', 57)" onmouseover="showTip(event, 'fs15', 57)" class="i">three</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs11', 58)" onmouseover="showTip(event, 'fs11', 58)" class="i">two</span> <span class="o">&lt;+&gt;</span> <span onmouseout="hideTip(event, 'fs10', 59)" onmouseover="showTip(event, 'fs10', 59)" class="i">one</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs16', 60)" onmouseover="showTip(event, 'fs16', 60)" class="i">six</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs15', 61)" onmouseover="showTip(event, 'fs15', 61)" class="i">three</span> <span class="o">&lt;*&gt;</span> <span onmouseout="hideTip(event, 'fs11', 62)" onmouseover="showTip(event, 'fs11', 62)" class="i">two</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs17', 63)" onmouseover="showTip(event, 'fs17', 63)" class="i">eight</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs11', 64)" onmouseover="showTip(event, 'fs11', 64)" class="i">two</span> <span class="o">&lt;^&gt;</span> <span onmouseout="hideTip(event, 'fs15', 65)" onmouseover="showTip(event, 'fs15', 65)" class="i">three</span>
+   
+<span onmouseout="hideTip(event, 'fs15', 66)" onmouseover="showTip(event, 'fs15', 66)" class="i">three</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs14', 67)" onmouseover="showTip(event, 'fs14', 67)" class="f">toInt</span> <span class="c">// 3</span>
+<span onmouseout="hideTip(event, 'fs16', 68)" onmouseover="showTip(event, 'fs16', 68)" class="i">six</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs14', 69)" onmouseover="showTip(event, 'fs14', 69)" class="f">toInt</span> <span class="c">// 6</span>
+<span onmouseout="hideTip(event, 'fs17', 70)" onmouseover="showTip(event, 'fs17', 70)" class="i">eight</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs14', 71)" onmouseover="showTip(event, 'fs14', 71)" class="f">toInt</span> <span class="c">// 8</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">abstract member Church.Apply : (&#39;T -&gt; &#39;T) * &#39;T -&gt; &#39;T<br /><br />Full name: Script.Church.Apply</div>
+<div class="tip" id="fs2">val zero : Church<br /><br />Full name: Script.zero</div>
+<div class="tip" id="fs3">type Church =<br />&#160;&#160;interface<br />&#160;&#160;&#160;&#160;abstract member Apply : (&#39;T -&gt; &#39;T) * &#39;T -&gt; &#39;T<br />&#160;&#160;end<br /><br />Full name: Script.Church</div>
+<div class="tip" id="fs4">val self : Church</div>
+<div class="tip" id="fs5">abstract member Church.Apply : (&#39;T -&gt; &#39;T) * &#39;T -&gt; &#39;T</div>
+<div class="tip" id="fs6">val f : (&#39;a -&gt; &#39;a)</div>
+<div class="tip" id="fs7">val x : &#39;a</div>
+<div class="tip" id="fs8">val succ : nat:Church -&gt; Church<br /><br />Full name: Script.succ</div>
+<div class="tip" id="fs9">val nat : Church</div>
+<div class="tip" id="fs10">val one : Church<br /><br />Full name: Script.one</div>
+<div class="tip" id="fs11">val two : Church<br /><br />Full name: Script.two</div>
+<div class="tip" id="fs12">val first : Church</div>
+<div class="tip" id="fs13">val second : Church</div>
+<div class="tip" id="fs14">val toInt : nat:Church -&gt; int<br /><br />Full name: Script.toInt</div>
+<div class="tip" id="fs15">val three : Church<br /><br />Full name: Script.three</div>
+<div class="tip" id="fs16">val six : Church<br /><br />Full name: Script.six</div>
+<div class="tip" id="fs17">val eight : Church<br /><br />Full name: Script.eight</div>
+

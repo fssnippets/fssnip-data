@@ -1,0 +1,22 @@
+type Peano = Zero | Succ of Peano
+    with
+        static member op_Explicit(source: Peano) : int =
+            let rec desugar = 
+                function
+                | Zero -> 0
+                | (Succ x) -> 1 + desugar x
+            desugar source
+        override this.ToString() =       
+            sprintf "%d" (int this)
+
+let rec add a b =
+    match a, b with
+    | Zero, b -> b
+    | Succ a, b -> Succ (add a b)
+
+(*
+ * Examples:
+*)
+let five = add (Succ(Succ(Succ(Zero)))) (Succ(Succ(Zero)))
+let fiveAsInt = int five
+let report = sprintf "the result is %s" (five.ToString())

@@ -1,0 +1,29 @@
+type 'a Tree = 
+    | Empty 
+    | Branch of 'a * 'a Tree * 'a Tree
+
+
+
+let tree1 = Branch ('a', Branch ('b', Branch ('d', Empty, Empty),
+                               Branch ('e', Empty, Empty)),
+                         Branch ('c', Empty,
+                               Branch ('f', Branch ('g', Empty, Empty),
+                                           Empty))) 
+
+
+
+// based on Chris Okasaki's 'Breadth-first numbering: Lessons from a Small
+// Exercise in Algorithm Design', translated to f#
+// http://www.cs.tufts.edu/~nr/cs257/archive/chris-okasaki/breadth-first.pdf
+
+let rec breadthFirst2 =
+    function
+    | []                                ->  []
+    | Empty::trees                      ->  breadthFirst2 trees
+    | Branch (x, left, right) :: trees  ->  x :: breadthFirst2 [yield! trees; yield left; yield right]
+
+let breadthFirst tr = breadthFirst2 [tr]
+
+
+
+printfn "%A" (breadthFirst tree1)

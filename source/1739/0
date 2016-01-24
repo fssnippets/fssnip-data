@@ -1,0 +1,68 @@
+module Epic.TypeProvider
+
+open ProviderImplementation.ProvidedTypes
+open Microsoft.FSharp.Core.CompilerServices
+open System.Reflection
+open EpicCon
+open System.Collections.Generic
+
+exception ItemDefException of string * string
+
+type IItem = interface end
+
+type ItemStore() = 
+    let mutable properties = new Dictionary<string,obj>()
+    interface IItem
+
+    member this.Properties with get() = properties
+
+    override this.Equals other =
+        match other with
+          | (:? ItemStore as y) -> if this.Properties.Count <> y.Properties.Count then false 
+                                   else
+                                        this.Properties
+                                          |> Seq.zip y.Properties
+                                          |> Seq.forall (fun (a,b) -> a.Key = b.Key && a.Equals b)
+                
+          | _ -> false    
+
+
+module Extensions =
+    type IItem with
+        member this.GetProperty propertyName = (this :?> ItemStore).Properties.[propertyName]
+        member this.HasProperty propertyName = (this :?> ItemStore).Properties.ContainsKey propertyName
+        member this.SetProperty propertyName value = (this :?> ItemStore).Properties.[propertyName] <- value; this
+
+[<TypeProvider>]
+type EpicItemTypeProvider (config : TypeProviderConfig) as this =
+    inherit TypeProviderForNamespaces ()
+
+    let ns = "Epic.TypeProvider.Provided"
+    let asm = Assembly.GetExecutingAssembly()
+
+    let myType = ProvidedTypeDefinition(asm, ns, "MyType", Some typeof<obj>)
+    
+    do    
+        myType.DefineStaticParameters(parameters = [ ProvidedStaticParameter("INI",typeof<string>) ; ProvidedStaticParameter("Item",typeof<int>)],
+                                        instantiationFunction = (fun typename parametervalues -> 
+                                            let ini = string parametervalues.[0]
+                                            let item = parametervalues.[1] :?> int
+                                            let itemrep = getTWRGUC ini item
+                                            let itemtype = ProvidedTypeDefinition(asm,ns,(ini + "_" + item.ToString()),Some typeof<IItem>)
+
+                                            if itemrep.ContainsKey("ERROR") then raise (ItemDefException (ini,item.ToString()))
+                                            else
+                                                let twrguc = itemrep.Item("TWRGUC").Split(',')
+
+                                                if twrguc.[5] = "R" || twrguc.[5] = "W" || twrguc.[5] ="B" then
+                                                    let datprop = ProvidedProperty("DAT",typeof<float>,IsStatic = false,GetterCode = (fun args -> <@@ (%%args.[0]: IItem).GetProperty propertyName @@>)) //complains about GetProperty not being not being defined
+                                                    itemtype.AddMember(datprop)
+                                            itemtype
+                                            ))
+   
+    do
+        this.AddNamespace(ns,[myType])
+
+
+[<assembly:TypeProviderAssembly>]
+do ()

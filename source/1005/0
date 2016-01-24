@@ -1,0 +1,1 @@
+Seq.isEmpty.GetType

@@ -1,0 +1,90 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">// Miss Grant&#39;s Controller as an Internal DSL in F#</span>
+<span class="c">// See Domain-Specific Languages: An Introductory Example by Martin Fowler</span>
+<span class="c">// http://www.informit.com/articles/article.aspx?p=1592379&amp;seqNum=3</span>
+
+<span id="fst1" onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1, document.getElementById('fst1'))" class="omitted">Semantic model type definitions</span>
+
+<span id="fst2" onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2, document.getElementById('fst2'))" class="omitted">Internal DSL helper functions</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="i">doorClosed</span> <span class="o">=</span>    <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="f">event</span> <span class="s">&quot;D1CL&quot;</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="i">drawerOpened</span> <span class="o">=</span>  <span onmouseout="hideTip(event, 'fs4', 6)" onmouseover="showTip(event, 'fs4', 6)" class="f">event</span> <span class="s">&quot;D2OP&quot;</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs6', 7)" onmouseover="showTip(event, 'fs6', 7)" class="i">lightOn</span> <span class="o">=</span>       <span onmouseout="hideTip(event, 'fs4', 8)" onmouseover="showTip(event, 'fs4', 8)" class="f">event</span> <span class="s">&quot;L1ON&quot;</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs7', 9)" onmouseover="showTip(event, 'fs7', 9)" class="i">doorOpened</span> <span class="o">=</span>    <span onmouseout="hideTip(event, 'fs4', 10)" onmouseover="showTip(event, 'fs4', 10)" class="f">event</span> <span class="s">&quot;D1OP&quot;</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs8', 11)" onmouseover="showTip(event, 'fs8', 11)" class="i">panelClosed</span> <span class="o">=</span>   <span onmouseout="hideTip(event, 'fs4', 12)" onmouseover="showTip(event, 'fs4', 12)" class="f">event</span> <span class="s">&quot;PNCL&quot;</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs9', 13)" onmouseover="showTip(event, 'fs9', 13)" class="i">unlockPanel</span> <span class="o">=</span>   <span onmouseout="hideTip(event, 'fs10', 14)" onmouseover="showTip(event, 'fs10', 14)" class="f">command</span> <span class="s">&quot;PNUL&quot;</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs11', 15)" onmouseover="showTip(event, 'fs11', 15)" class="i">lockPanel</span> <span class="o">=</span>     <span onmouseout="hideTip(event, 'fs10', 16)" onmouseover="showTip(event, 'fs10', 16)" class="f">command</span> <span class="s">&quot;PNLK&quot;</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs12', 17)" onmouseover="showTip(event, 'fs12', 17)" class="i">lockDoor</span> <span class="o">=</span>      <span onmouseout="hideTip(event, 'fs10', 18)" onmouseover="showTip(event, 'fs10', 18)" class="f">command</span> <span class="s">&quot;D1LK&quot;</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs13', 19)" onmouseover="showTip(event, 'fs13', 19)" class="i">unlockDoor</span> <span class="o">=</span>    <span onmouseout="hideTip(event, 'fs10', 20)" onmouseover="showTip(event, 'fs10', 20)" class="f">command</span> <span class="s">&quot;D1UL&quot;</span>
+
+<span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs14', 21)" onmouseover="showTip(event, 'fs14', 21)" class="f">idle</span> () <span class="o">=</span> 
+    <span onmouseout="hideTip(event, 'fs15', 22)" onmouseover="showTip(event, 'fs15', 22)" class="f">state</span>
+        [<span onmouseout="hideTip(event, 'fs13', 23)" onmouseover="showTip(event, 'fs13', 23)" class="i">unlockDoor</span>; <span onmouseout="hideTip(event, 'fs11', 24)" onmouseover="showTip(event, 'fs11', 24)" class="i">lockPanel</span>]
+        [<span onmouseout="hideTip(event, 'fs3', 25)" onmouseover="showTip(event, 'fs3', 25)" class="i">doorClosed</span> <span class="o">=&gt;</span> <span onmouseout="hideTip(event, 'fs16', 26)" onmouseover="showTip(event, 'fs16', 26)" class="f">active</span>]
+<span class="k">and</span> <span onmouseout="hideTip(event, 'fs16', 27)" onmouseover="showTip(event, 'fs16', 27)" class="f">active</span> () <span class="o">=</span>
+    <span onmouseout="hideTip(event, 'fs15', 28)" onmouseover="showTip(event, 'fs15', 28)" class="f">state</span> [] [<span onmouseout="hideTip(event, 'fs6', 29)" onmouseover="showTip(event, 'fs6', 29)" class="i">lightOn</span> <span class="o">=&gt;</span> <span onmouseout="hideTip(event, 'fs17', 30)" onmouseover="showTip(event, 'fs17', 30)" class="f">waitingForDrawer</span>]
+<span class="k">and</span> <span onmouseout="hideTip(event, 'fs18', 31)" onmouseover="showTip(event, 'fs18', 31)" class="f">waitingForLight</span> () <span class="o">=</span>
+    <span onmouseout="hideTip(event, 'fs15', 32)" onmouseover="showTip(event, 'fs15', 32)" class="f">state</span> [] [<span onmouseout="hideTip(event, 'fs6', 33)" onmouseover="showTip(event, 'fs6', 33)" class="i">lightOn</span> <span class="o">=&gt;</span> <span onmouseout="hideTip(event, 'fs19', 34)" onmouseover="showTip(event, 'fs19', 34)" class="f">unlockedPanel</span>]
+<span class="k">and</span> <span onmouseout="hideTip(event, 'fs17', 35)" onmouseover="showTip(event, 'fs17', 35)" class="f">waitingForDrawer</span> () <span class="o">=</span>
+    <span onmouseout="hideTip(event, 'fs15', 36)" onmouseover="showTip(event, 'fs15', 36)" class="f">state</span> [] [<span onmouseout="hideTip(event, 'fs5', 37)" onmouseover="showTip(event, 'fs5', 37)" class="i">drawerOpened</span> <span class="o">=&gt;</span> <span onmouseout="hideTip(event, 'fs19', 38)" onmouseover="showTip(event, 'fs19', 38)" class="f">unlockedPanel</span>]
+<span class="k">and</span> <span onmouseout="hideTip(event, 'fs19', 39)" onmouseover="showTip(event, 'fs19', 39)" class="f">unlockedPanel</span> () <span class="o">=</span>
+    <span onmouseout="hideTip(event, 'fs15', 40)" onmouseover="showTip(event, 'fs15', 40)" class="f">state</span>
+        [<span onmouseout="hideTip(event, 'fs9', 41)" onmouseover="showTip(event, 'fs9', 41)" class="i">unlockPanel</span>; <span onmouseout="hideTip(event, 'fs12', 42)" onmouseover="showTip(event, 'fs12', 42)" class="i">lockDoor</span>]
+        [<span onmouseout="hideTip(event, 'fs8', 43)" onmouseover="showTip(event, 'fs8', 43)" class="i">panelClosed</span> <span class="o">=&gt;</span> <span onmouseout="hideTip(event, 'fs14', 44)" onmouseover="showTip(event, 'fs14', 44)" class="f">idle</span>]
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">type code = string<br />type event = Event of code<br />type command = Command of code<br />type transition = Transition of event * (unit -&gt; state)<br />and  state = State of command seq * transition seq</div>
+<div class="tip" id="fs2">let event = Event<br />let command = Command<br />let state actions transitions = State(actions,transitions)<br />let (=&gt;) event state = Transition(event,state)</div>
+<div class="tip" id="fs3">val doorClosed : event<br /><br />Full name: Script.doorClosed</div>
+<div class="tip" id="fs4">Multiple items<br />val event : arg0:code -&gt; event<br /><br />Full name: Script.event<br /><br />--------------------<br />type event = | Event of code<br /><br />Full name: Script.event</div>
+<div class="tip" id="fs5">val drawerOpened : event<br /><br />Full name: Script.drawerOpened</div>
+<div class="tip" id="fs6">val lightOn : event<br /><br />Full name: Script.lightOn</div>
+<div class="tip" id="fs7">val doorOpened : event<br /><br />Full name: Script.doorOpened</div>
+<div class="tip" id="fs8">val panelClosed : event<br /><br />Full name: Script.panelClosed</div>
+<div class="tip" id="fs9">val unlockPanel : command<br /><br />Full name: Script.unlockPanel</div>
+<div class="tip" id="fs10">Multiple items<br />val command : arg0:code -&gt; command<br /><br />Full name: Script.command<br /><br />--------------------<br />type command = | Command of code<br /><br />Full name: Script.command</div>
+<div class="tip" id="fs11">val lockPanel : command<br /><br />Full name: Script.lockPanel</div>
+<div class="tip" id="fs12">val lockDoor : command<br /><br />Full name: Script.lockDoor</div>
+<div class="tip" id="fs13">val unlockDoor : command<br /><br />Full name: Script.unlockDoor</div>
+<div class="tip" id="fs14">val idle : unit -&gt; state<br /><br />Full name: Script.idle</div>
+<div class="tip" id="fs15">Multiple items<br />val state : actions:seq&lt;command&gt; -&gt; transitions:seq&lt;transition&gt; -&gt; state<br /><br />Full name: Script.state<br /><br />--------------------<br />type state = | State of seq&lt;command&gt; * seq&lt;transition&gt;<br /><br />Full name: Script.state</div>
+<div class="tip" id="fs16">val active : unit -&gt; state<br /><br />Full name: Script.active</div>
+<div class="tip" id="fs17">val waitingForDrawer : unit -&gt; state<br /><br />Full name: Script.waitingForDrawer</div>
+<div class="tip" id="fs18">val waitingForLight : unit -&gt; state<br /><br />Full name: Script.waitingForLight</div>
+<div class="tip" id="fs19">val unlockedPanel : unit -&gt; state<br /><br />Full name: Script.unlockedPanel</div>
+

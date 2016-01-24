@@ -1,0 +1,56 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">// Consider two distinct interfaces</span>
+<span class="k">type</span> <span class="t">IA</span> <span class="o">=</span> <span class="k">interface</span> <span class="k">end</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="t">IB</span> <span class="o">=</span> <span class="k">interface</span> <span class="k">end</span>
+
+<span class="c">// And two classes that implement both of the interfaces</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="t">First</span>() <span class="o">=</span> 
+  <span class="k">interface</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="t">IA</span>
+  <span class="k">interface</span> <span onmouseout="hideTip(event, 'fs1', 4)" onmouseover="showTip(event, 'fs1', 4)" class="t">IB</span>
+
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs4', 5)" onmouseover="showTip(event, 'fs4', 5)" class="t">Second</span>() <span class="o">=</span> 
+  <span class="k">interface</span> <span onmouseout="hideTip(event, 'fs3', 6)" onmouseover="showTip(event, 'fs3', 6)" class="t">IA</span>
+  <span class="k">interface</span> <span onmouseout="hideTip(event, 'fs1', 7)" onmouseover="showTip(event, 'fs1', 7)" class="t">IB</span>
+
+<span class="c">// Now, what implicit upcast should the compiler insert here?</span>
+<span class="c">// The return type could be either IA, IB or obj, but there is </span>
+<span class="c">// no _unique_ solution.</span>
+<span class="c">//</span>
+<span class="c">// (This is an error in F# and it cannot be easily fixed by </span>
+<span class="c">// trying to identify the most specific common supertype, because</span>
+<span class="c">// there is no single common supertype)</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs5', 8)" onmouseover="showTip(event, 'fs5', 8)" class="i">test</span> <span class="o">=</span> 
+  <span class="k">if</span> <span class="n">1</span> <span class="o">=</span> <span class="n">1</span> <span class="k">then</span> <span onmouseout="hideTip(event, 'fs2', 9)" onmouseover="showTip(event, 'fs2', 9)" class="t">First</span>()
+  <span class="k">else</span> <span onmouseout="hideTip(event, 'fs4', 10)" onmouseover="showTip(event, 'fs4', 10)" class="t">Second</span>()
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">type IB<br /><br />Full name: Script.IB</div>
+<div class="tip" id="fs2">Multiple items<br />type First =<br />&#160;&#160;interface IB<br />&#160;&#160;interface IA<br />&#160;&#160;new : unit -&gt; First<br /><br />Full name: Script.First<br /><br />--------------------<br />new : unit -&gt; First</div>
+<div class="tip" id="fs3">type IA<br /><br />Full name: Script.IA</div>
+<div class="tip" id="fs4">Multiple items<br />type Second =<br />&#160;&#160;interface IB<br />&#160;&#160;interface IA<br />&#160;&#160;new : unit -&gt; Second<br /><br />Full name: Script.Second<br /><br />--------------------<br />new : unit -&gt; Second</div>
+<div class="tip" id="fs5">val test : First<br /><br />Full name: Script.test</div>
+

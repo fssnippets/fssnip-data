@@ -1,0 +1,275 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">  1: </span>
+<span class="l">  2: </span>
+<span class="l">  3: </span>
+<span class="l">  4: </span>
+<span class="l">  5: </span>
+<span class="l">  6: </span>
+<span class="l">  7: </span>
+<span class="l">  8: </span>
+<span class="l">  9: </span>
+<span class="l"> 10: </span>
+<span class="l"> 11: </span>
+<span class="l"> 12: </span>
+<span class="l"> 13: </span>
+<span class="l"> 14: </span>
+<span class="l"> 15: </span>
+<span class="l"> 16: </span>
+<span class="l"> 17: </span>
+<span class="l"> 18: </span>
+<span class="l"> 19: </span>
+<span class="l"> 20: </span>
+<span class="l"> 21: </span>
+<span class="l"> 22: </span>
+<span class="l"> 23: </span>
+<span class="l"> 24: </span>
+<span class="l"> 25: </span>
+<span class="l"> 26: </span>
+<span class="l"> 27: </span>
+<span class="l"> 28: </span>
+<span class="l"> 29: </span>
+<span class="l"> 30: </span>
+<span class="l"> 31: </span>
+<span class="l"> 32: </span>
+<span class="l"> 33: </span>
+<span class="l"> 34: </span>
+<span class="l"> 35: </span>
+<span class="l"> 36: </span>
+<span class="l"> 37: </span>
+<span class="l"> 38: </span>
+<span class="l"> 39: </span>
+<span class="l"> 40: </span>
+<span class="l"> 41: </span>
+<span class="l"> 42: </span>
+<span class="l"> 43: </span>
+<span class="l"> 44: </span>
+<span class="l"> 45: </span>
+<span class="l"> 46: </span>
+<span class="l"> 47: </span>
+<span class="l"> 48: </span>
+<span class="l"> 49: </span>
+<span class="l"> 50: </span>
+<span class="l"> 51: </span>
+<span class="l"> 52: </span>
+<span class="l"> 53: </span>
+<span class="l"> 54: </span>
+<span class="l"> 55: </span>
+<span class="l"> 56: </span>
+<span class="l"> 57: </span>
+<span class="l"> 58: </span>
+<span class="l"> 59: </span>
+<span class="l"> 60: </span>
+<span class="l"> 61: </span>
+<span class="l"> 62: </span>
+<span class="l"> 63: </span>
+<span class="l"> 64: </span>
+<span class="l"> 65: </span>
+<span class="l"> 66: </span>
+<span class="l"> 67: </span>
+<span class="l"> 68: </span>
+<span class="l"> 69: </span>
+<span class="l"> 70: </span>
+<span class="l"> 71: </span>
+<span class="l"> 72: </span>
+<span class="l"> 73: </span>
+<span class="l"> 74: </span>
+<span class="l"> 75: </span>
+<span class="l"> 76: </span>
+<span class="l"> 77: </span>
+<span class="l"> 78: </span>
+<span class="l"> 79: </span>
+<span class="l"> 80: </span>
+<span class="l"> 81: </span>
+<span class="l"> 82: </span>
+<span class="l"> 83: </span>
+<span class="l"> 84: </span>
+<span class="l"> 85: </span>
+<span class="l"> 86: </span>
+<span class="l"> 87: </span>
+<span class="l"> 88: </span>
+<span class="l"> 89: </span>
+<span class="l"> 90: </span>
+<span class="l"> 91: </span>
+<span class="l"> 92: </span>
+<span class="l"> 93: </span>
+<span class="l"> 94: </span>
+<span class="l"> 95: </span>
+<span class="l"> 96: </span>
+<span class="l"> 97: </span>
+<span class="l"> 98: </span>
+<span class="l"> 99: </span>
+<span class="l">100: </span>
+<span class="l">101: </span>
+<span class="l">102: </span>
+<span class="l">103: </span>
+<span class="l">104: </span>
+<span class="l">105: </span>
+<span class="l">106: </span>
+<span class="l">107: </span>
+<span class="l">108: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">(*Bayesian Monte Carlo of Let&#39;s Make a Deal</span>
+<span class="c">This code illustrates Bayes&#39; Theorem in action on the Let&#39;s Make a Deal problem, which several authors </span>
+<span class="c">have used to illustrate Bayes&#39; Theorem. (It&#39;s easy to search the internet for further explanation.) </span>
+<span class="c">Run with the audit option to audit up to the first 100 games. Running without audit is faster and can </span>
+<span class="c">simulate a couple billion games.*)</span>
+<span class="c">//module game =</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="t">game</span>(<span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">doorWithPrize</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="t">int</span>, <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="i">fstChoice</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs3', 5)" onmouseover="showTip(event, 'fs3', 5)" class="t">int</span>, <span onmouseout="hideTip(event, 'fs5', 6)" onmouseover="showTip(event, 'fs5', 6)" class="i">revealedDoor</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs3', 7)" onmouseover="showTip(event, 'fs3', 7)" class="t">int</span>) <span class="o">=</span> 
+    <span class="k">member</span> <span onmouseout="hideTip(event, 'fs6', 8)" onmouseover="showTip(event, 'fs6', 8)" class="i">x</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs7', 9)" onmouseover="showTip(event, 'fs7', 9)" class="i">winFstChoice</span> <span class="o">=</span> (<span onmouseout="hideTip(event, 'fs2', 10)" onmouseover="showTip(event, 'fs2', 10)" class="i">doorWithPrize</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs4', 11)" onmouseover="showTip(event, 'fs4', 11)" class="i">fstChoice</span>)
+    <span class="k">member</span> <span onmouseout="hideTip(event, 'fs6', 12)" onmouseover="showTip(event, 'fs6', 12)" class="i">x</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs8', 13)" onmouseover="showTip(event, 'fs8', 13)" class="i">winSwitch</span> <span class="o">=</span> (<span onmouseout="hideTip(event, 'fs9', 14)" onmouseover="showTip(event, 'fs9', 14)" class="f">not</span>(<span onmouseout="hideTip(event, 'fs2', 15)" onmouseover="showTip(event, 'fs2', 15)" class="i">doorWithPrize</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs4', 16)" onmouseover="showTip(event, 'fs4', 16)" class="i">fstChoice</span>)<span class="o">&amp;&amp;</span>(<span onmouseout="hideTip(event, 'fs9', 17)" onmouseover="showTip(event, 'fs9', 17)" class="f">not</span>(<span onmouseout="hideTip(event, 'fs2', 18)" onmouseover="showTip(event, 'fs2', 18)" class="i">doorWithPrize</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs5', 19)" onmouseover="showTip(event, 'fs5', 19)" class="i">revealedDoor</span>)))
+    <span class="k">member</span> <span onmouseout="hideTip(event, 'fs6', 20)" onmouseover="showTip(event, 'fs6', 20)" class="i">x</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs10', 21)" onmouseover="showTip(event, 'fs10', 21)" class="i">revealed</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs5', 22)" onmouseover="showTip(event, 'fs5', 22)" class="i">revealedDoor</span>
+    <span class="k">member</span> <span onmouseout="hideTip(event, 'fs6', 23)" onmouseover="showTip(event, 'fs6', 23)" class="i">x</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs11', 24)" onmouseover="showTip(event, 'fs11', 24)" class="i">ToString</span> <span class="o">=</span> <span class="s">&quot;Prize Door: &quot;</span> <span class="o">+</span> <span onmouseout="hideTip(event, 'fs2', 25)" onmouseover="showTip(event, 'fs2', 25)" class="i">doorWithPrize</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs12', 26)" onmouseover="showTip(event, 'fs12', 26)" class="f">ToString</span>() <span class="o">+</span> <span class="s">&quot;;  &quot;</span> 
+                            <span class="o">+</span> <span class="s">&quot;First Choice: &quot;</span> <span class="o">+</span> <span onmouseout="hideTip(event, 'fs4', 27)" onmouseover="showTip(event, 'fs4', 27)" class="i">fstChoice</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs12', 28)" onmouseover="showTip(event, 'fs12', 28)" class="f">ToString</span>() <span class="o">+</span> <span class="s">&quot;;  &quot;</span> 
+                            <span class="o">+</span> <span class="s">&quot;Revealed Door: &quot;</span> <span class="o">+</span> <span onmouseout="hideTip(event, 'fs5', 29)" onmouseover="showTip(event, 'fs5', 29)" class="i">revealedDoor</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs12', 30)" onmouseover="showTip(event, 'fs12', 30)" class="f">ToString</span>() <span class="o">+</span> <span class="s">&quot;;  &quot;</span> 
+                            <span class="o">+</span> <span class="s">&quot;Wins 1st Choice: &quot;</span> <span class="o">+</span> <span onmouseout="hideTip(event, 'fs6', 31)" onmouseover="showTip(event, 'fs6', 31)" class="i">x</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs13', 32)" onmouseover="showTip(event, 'fs13', 32)" class="i">winFstChoice</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs14', 33)" onmouseover="showTip(event, 'fs14', 33)" class="f">ToString</span>() <span class="o">+</span> <span class="s">&quot;;  &quot;</span> 
+                            <span class="o">+</span> <span class="s">&quot;Wins Switch: &quot;</span> <span class="o">+</span> <span onmouseout="hideTip(event, 'fs6', 34)" onmouseover="showTip(event, 'fs6', 34)" class="i">x</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs15', 35)" onmouseover="showTip(event, 'fs15', 35)" class="i">winSwitch</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs14', 36)" onmouseover="showTip(event, 'fs14', 36)" class="f">ToString</span>()
+
+<span class="k">module</span> <span onmouseout="hideTip(event, 'fs16', 37)" onmouseover="showTip(event, 'fs16', 37)" class="t">games</span> <span class="o">=</span>
+    <span class="k">open</span> <span onmouseout="hideTip(event, 'fs17', 38)" onmouseover="showTip(event, 'fs17', 38)" class="i">System</span>
+
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs18', 39)" onmouseover="showTip(event, 'fs18', 39)" class="i">seedRnd</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs19', 40)" onmouseover="showTip(event, 'fs19', 40)" class="t">Random</span>()
+
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs20', 41)" onmouseover="showTip(event, 'fs20', 41)" class="f">rndReveal</span> <span onmouseout="hideTip(event, 'fs2', 42)" onmouseover="showTip(event, 'fs2', 42)" class="i">doorWithPrize</span>  <span class="o">=</span>
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs21', 43)" onmouseover="showTip(event, 'fs21', 43)" class="i">rnd</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs18', 44)" onmouseover="showTip(event, 'fs18', 44)" class="i">seedRnd</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs22', 45)" onmouseover="showTip(event, 'fs22', 45)" class="f">Next</span>(<span class="n">1</span>,<span class="n">3</span>)
+        <span class="k">match</span> <span onmouseout="hideTip(event, 'fs2', 46)" onmouseover="showTip(event, 'fs2', 46)" class="i">doorWithPrize</span> <span class="k">with</span>
+        |<span class="n">1</span> <span class="k">-&gt;</span> (<span onmouseout="hideTip(event, 'fs21', 47)" onmouseover="showTip(event, 'fs21', 47)" class="i">rnd</span> <span class="o">+</span> <span class="n">1</span>)
+        |<span class="n">2</span> <span class="k">-&gt;</span> <span class="k">if</span> <span onmouseout="hideTip(event, 'fs21', 48)" onmouseover="showTip(event, 'fs21', 48)" class="i">rnd</span> <span class="o">=</span> <span class="n">1</span> <span class="k">then</span> <span class="n">1</span>
+              <span class="k">else</span> <span class="n">3</span>  
+        |_ <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs21', 49)" onmouseover="showTip(event, 'fs21', 49)" class="i">rnd</span>
+
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs23', 50)" onmouseover="showTip(event, 'fs23', 50)" class="f">forcedReveal</span> <span onmouseout="hideTip(event, 'fs2', 51)" onmouseover="showTip(event, 'fs2', 51)" class="i">doorWithPrize</span> <span onmouseout="hideTip(event, 'fs4', 52)" onmouseover="showTip(event, 'fs4', 52)" class="i">fstChoice</span> <span class="o">=</span> 
+        <span class="k">match</span> (<span onmouseout="hideTip(event, 'fs2', 53)" onmouseover="showTip(event, 'fs2', 53)" class="i">doorWithPrize</span> <span class="o">+</span> <span onmouseout="hideTip(event, 'fs4', 54)" onmouseover="showTip(event, 'fs4', 54)" class="i">fstChoice</span>) <span class="k">with</span>
+        |<span class="n">3</span> <span class="k">-&gt;</span> <span class="n">3</span> 
+        |<span class="n">4</span> <span class="k">-&gt;</span> <span class="n">2</span>  
+        |_ <span class="k">-&gt;</span> <span class="n">1</span>
+
+    <span class="c">///&lt;summary&gt;Generate games and audit up to the first 100. Once the number of games gets into 10s of  </span>
+    <span class="c">///millions the audit option becomesnoticeably slower.&lt;/summary&gt;</span>
+    <span class="c">///&lt;param name=&quot;number&quot;&gt;number of games to simulate&lt;/param&gt;</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs24', 55)" onmouseover="showTip(event, 'fs24', 55)" class="f">gamesAudit</span> <span onmouseout="hideTip(event, 'fs25', 56)" onmouseover="showTip(event, 'fs25', 56)" class="i">number</span> <span class="o">=</span> 
+        <span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs26', 57)" onmouseover="showTip(event, 'fs26', 57)" class="f">recGames</span> <span onmouseout="hideTip(event, 'fs27', 58)" onmouseover="showTip(event, 'fs27', 58)" class="i">acc</span> <span onmouseout="hideTip(event, 'fs28', 59)" onmouseover="showTip(event, 'fs28', 59)" class="i">winsFst</span> <span onmouseout="hideTip(event, 'fs29', 60)" onmouseover="showTip(event, 'fs29', 60)" class="i">winsSwitch</span> <span onmouseout="hideTip(event, 'fs30', 61)" onmouseover="showTip(event, 'fs30', 61)" class="i">audit</span> <span class="o">=</span>
+             <span class="k">let</span> <span onmouseout="hideTip(event, 'fs2', 62)" onmouseover="showTip(event, 'fs2', 62)" class="i">doorWithPrize</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs18', 63)" onmouseover="showTip(event, 'fs18', 63)" class="i">seedRnd</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs22', 64)" onmouseover="showTip(event, 'fs22', 64)" class="f">Next</span>(<span class="n">1</span>,<span class="n">4</span>)
+             <span class="k">let</span> <span onmouseout="hideTip(event, 'fs4', 65)" onmouseover="showTip(event, 'fs4', 65)" class="i">fstChoice</span> <span class="o">=</span>  <span onmouseout="hideTip(event, 'fs18', 66)" onmouseover="showTip(event, 'fs18', 66)" class="i">seedRnd</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs22', 67)" onmouseover="showTip(event, 'fs22', 67)" class="f">Next</span>(<span class="n">1</span>,<span class="n">4</span>)
+             <span class="k">let</span> <span onmouseout="hideTip(event, 'fs5', 68)" onmouseover="showTip(event, 'fs5', 68)" class="i">revealedDoor</span> <span class="o">=</span>
+                <span class="k">if</span> (<span onmouseout="hideTip(event, 'fs2', 69)" onmouseover="showTip(event, 'fs2', 69)" class="i">doorWithPrize</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs4', 70)" onmouseover="showTip(event, 'fs4', 70)" class="i">fstChoice</span>) <span class="k">then</span> <span onmouseout="hideTip(event, 'fs20', 71)" onmouseover="showTip(event, 'fs20', 71)" class="f">rndReveal</span> <span onmouseout="hideTip(event, 'fs2', 72)" onmouseover="showTip(event, 'fs2', 72)" class="i">doorWithPrize</span>
+                <span class="k">else</span> <span onmouseout="hideTip(event, 'fs23', 73)" onmouseover="showTip(event, 'fs23', 73)" class="f">forcedReveal</span> <span onmouseout="hideTip(event, 'fs2', 74)" onmouseover="showTip(event, 'fs2', 74)" class="i">doorWithPrize</span> <span onmouseout="hideTip(event, 'fs4', 75)" onmouseover="showTip(event, 'fs4', 75)" class="i">fstChoice</span>
+             <span class="k">let</span> <span onmouseout="hideTip(event, 'fs31', 76)" onmouseover="showTip(event, 'fs31', 76)" class="i">myGame</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs1', 77)" onmouseover="showTip(event, 'fs1', 77)" class="t">game</span>(<span onmouseout="hideTip(event, 'fs2', 78)" onmouseover="showTip(event, 'fs2', 78)" class="i">doorWithPrize</span>, <span onmouseout="hideTip(event, 'fs4', 79)" onmouseover="showTip(event, 'fs4', 79)" class="i">fstChoice</span>, <span onmouseout="hideTip(event, 'fs5', 80)" onmouseover="showTip(event, 'fs5', 80)" class="i">revealedDoor</span>)
+             <span class="k">let</span> <span onmouseout="hideTip(event, 'fs32', 81)" onmouseover="showTip(event, 'fs32', 81)" class="i">newAudit</span> <span class="o">=</span>
+                <span class="k">if</span> (<span onmouseout="hideTip(event, 'fs33', 82)" onmouseover="showTip(event, 'fs33', 82)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs34', 83)" onmouseover="showTip(event, 'fs34', 83)" class="f">length</span> <span onmouseout="hideTip(event, 'fs30', 84)" onmouseover="showTip(event, 'fs30', 84)" class="i">audit</span>) <span class="o">&lt;</span> <span class="n">100</span> <span class="k">then</span> (<span onmouseout="hideTip(event, 'fs33', 85)" onmouseover="showTip(event, 'fs33', 85)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs35', 86)" onmouseover="showTip(event, 'fs35', 86)" class="f">append</span> <span onmouseout="hideTip(event, 'fs30', 87)" onmouseover="showTip(event, 'fs30', 87)" class="i">audit</span> [<span onmouseout="hideTip(event, 'fs31', 88)" onmouseover="showTip(event, 'fs31', 88)" class="i">myGame</span>])
+                <span class="k">else</span> <span onmouseout="hideTip(event, 'fs30', 89)" onmouseover="showTip(event, 'fs30', 89)" class="i">audit</span>
+             <span class="k">if</span> <span onmouseout="hideTip(event, 'fs27', 90)" onmouseover="showTip(event, 'fs27', 90)" class="i">acc</span> <span class="o">=</span> <span class="n">0</span> <span class="k">then</span> (<span onmouseout="hideTip(event, 'fs28', 91)" onmouseover="showTip(event, 'fs28', 91)" class="i">winsFst</span>, <span onmouseout="hideTip(event, 'fs29', 92)" onmouseover="showTip(event, 'fs29', 92)" class="i">winsSwitch</span>), <span onmouseout="hideTip(event, 'fs30', 93)" onmouseover="showTip(event, 'fs30', 93)" class="i">audit</span>
+             <span class="k">else</span> <span class="k">if</span> <span onmouseout="hideTip(event, 'fs31', 94)" onmouseover="showTip(event, 'fs31', 94)" class="i">myGame</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs13', 95)" onmouseover="showTip(event, 'fs13', 95)" class="i">winFstChoice</span> <span class="k">then</span> <span onmouseout="hideTip(event, 'fs26', 96)" onmouseover="showTip(event, 'fs26', 96)" class="f">recGames</span> (<span onmouseout="hideTip(event, 'fs27', 97)" onmouseover="showTip(event, 'fs27', 97)" class="i">acc</span> <span class="o">-</span> <span class="n">1</span>) (<span onmouseout="hideTip(event, 'fs28', 98)" onmouseover="showTip(event, 'fs28', 98)" class="i">winsFst</span> <span class="o">+</span> <span class="n">1</span>) <span onmouseout="hideTip(event, 'fs29', 99)" onmouseover="showTip(event, 'fs29', 99)" class="i">winsSwitch</span> <span onmouseout="hideTip(event, 'fs32', 100)" onmouseover="showTip(event, 'fs32', 100)" class="i">newAudit</span>
+                  <span class="k">else</span> <span onmouseout="hideTip(event, 'fs26', 101)" onmouseover="showTip(event, 'fs26', 101)" class="f">recGames</span> (<span onmouseout="hideTip(event, 'fs27', 102)" onmouseover="showTip(event, 'fs27', 102)" class="i">acc</span> <span class="o">-</span> <span class="n">1</span>) <span onmouseout="hideTip(event, 'fs28', 103)" onmouseover="showTip(event, 'fs28', 103)" class="i">winsFst</span> (<span onmouseout="hideTip(event, 'fs29', 104)" onmouseover="showTip(event, 'fs29', 104)" class="i">winsSwitch</span> <span class="o">+</span> <span class="n">1</span>)  <span onmouseout="hideTip(event, 'fs32', 105)" onmouseover="showTip(event, 'fs32', 105)" class="i">newAudit</span>   
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs36', 106)" onmouseover="showTip(event, 'fs36', 106)" class="i">auditedGames</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs26', 107)" onmouseover="showTip(event, 'fs26', 107)" class="f">recGames</span> <span onmouseout="hideTip(event, 'fs25', 108)" onmouseover="showTip(event, 'fs25', 108)" class="i">number</span> <span class="n">0</span> <span class="n">0</span> <span onmouseout="hideTip(event, 'fs33', 109)" onmouseover="showTip(event, 'fs33', 109)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs37', 110)" onmouseover="showTip(event, 'fs37', 110)" class="i">Empty</span>
+
+        <span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs38', 111)" onmouseover="showTip(event, 'fs38', 111)" class="f">writeAudit</span> <span onmouseout="hideTip(event, 'fs30', 112)" onmouseover="showTip(event, 'fs30', 112)" class="i">audit</span> <span class="o">=</span>
+            <span class="k">match</span> <span onmouseout="hideTip(event, 'fs30', 113)" onmouseover="showTip(event, 'fs30', 113)" class="i">audit</span> <span class="k">with</span>
+            |<span onmouseout="hideTip(event, 'fs31', 114)" onmouseover="showTip(event, 'fs31', 114)" class="i">myGame</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs1', 115)" onmouseover="showTip(event, 'fs1', 115)" class="t">game</span><span class="o">::</span><span onmouseout="hideTip(event, 'fs39', 116)" onmouseover="showTip(event, 'fs39', 116)" class="i">tl</span> <span class="k">-&gt;</span> 
+                <span onmouseout="hideTip(event, 'fs40', 117)" onmouseover="showTip(event, 'fs40', 117)" class="t">Console</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs41', 118)" onmouseover="showTip(event, 'fs41', 118)" class="f">WriteLine</span>(<span class="i">myGame</span><span class="o">.</span><span class="i">ToString</span>)
+                <span onmouseout="hideTip(event, 'fs38', 119)" onmouseover="showTip(event, 'fs38', 119)" class="f">writeAudit</span> <span onmouseout="hideTip(event, 'fs39', 120)" onmouseover="showTip(event, 'fs39', 120)" class="i">tl</span>
+            |_ <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs42', 121)" onmouseover="showTip(event, 'fs42', 121)" class="f">ignore</span>
+
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs43', 122)" onmouseover="showTip(event, 'fs43', 122)" class="i">newAudit</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs33', 123)" onmouseover="showTip(event, 'fs33', 123)" class="t">List</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs1', 124)" onmouseover="showTip(event, 'fs1', 124)" class="t">game</span><span class="o">&gt;</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs44', 125)" onmouseover="showTip(event, 'fs44', 125)" class="f">snd</span> <span onmouseout="hideTip(event, 'fs36', 126)" onmouseover="showTip(event, 'fs36', 126)" class="i">auditedGames</span>
+        <span onmouseout="hideTip(event, 'fs38', 127)" onmouseover="showTip(event, 'fs38', 127)" class="f">writeAudit</span> <span onmouseout="hideTip(event, 'fs43', 128)" onmouseover="showTip(event, 'fs43', 128)" class="i">newAudit</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs42', 129)" onmouseover="showTip(event, 'fs42', 129)" class="f">ignore</span>
+        <span class="k">if</span> (<span onmouseout="hideTip(event, 'fs45', 130)" onmouseover="showTip(event, 'fs45', 130)" class="f">fst</span>(<span onmouseout="hideTip(event, 'fs45', 131)" onmouseover="showTip(event, 'fs45', 131)" class="f">fst</span>(<span onmouseout="hideTip(event, 'fs36', 132)" onmouseover="showTip(event, 'fs36', 132)" class="i">auditedGames</span>)) <span class="o">+</span> <span onmouseout="hideTip(event, 'fs44', 133)" onmouseover="showTip(event, 'fs44', 133)" class="f">snd</span>(<span onmouseout="hideTip(event, 'fs45', 134)" onmouseover="showTip(event, 'fs45', 134)" class="f">fst</span>(<span onmouseout="hideTip(event, 'fs36', 135)" onmouseover="showTip(event, 'fs36', 135)" class="i">auditedGames</span>)) <span class="o">&gt;</span> <span class="n">100</span>) <span class="k">then</span> <span onmouseout="hideTip(event, 'fs40', 136)" onmouseover="showTip(event, 'fs40', 136)" class="t">Console</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs41', 137)" onmouseover="showTip(event, 'fs41', 137)" class="f">WriteLine</span>(<span class="s">&quot;first 100 games audited&quot;</span>)
+        <span onmouseout="hideTip(event, 'fs45', 138)" onmouseover="showTip(event, 'fs45', 138)" class="f">fst</span>(<span onmouseout="hideTip(event, 'fs36', 139)" onmouseover="showTip(event, 'fs36', 139)" class="i">auditedGames</span>)
+
+    <span class="c">///&lt;summary&gt;Bare-bones generation of games. Once the number of games gets into 10s of millions this </span>
+    <span class="c">///is noticeably faster than generation with the audit option.&lt;/summary&gt;</span>
+    <span class="c">///&lt;param name=&quot;number&quot;&gt;number of games to simulate&lt;/param&gt; </span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs46', 140)" onmouseover="showTip(event, 'fs46', 140)" class="f">games</span> <span onmouseout="hideTip(event, 'fs25', 141)" onmouseover="showTip(event, 'fs25', 141)" class="i">number</span> <span class="o">=</span> 
+        <span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs47', 142)" onmouseover="showTip(event, 'fs47', 142)" class="f">recGames</span> <span onmouseout="hideTip(event, 'fs27', 143)" onmouseover="showTip(event, 'fs27', 143)" class="i">acc</span> <span onmouseout="hideTip(event, 'fs28', 144)" onmouseover="showTip(event, 'fs28', 144)" class="i">winsFst</span> <span onmouseout="hideTip(event, 'fs29', 145)" onmouseover="showTip(event, 'fs29', 145)" class="i">winsSwitch</span> <span class="o">=</span>
+             <span class="k">let</span> <span onmouseout="hideTip(event, 'fs2', 146)" onmouseover="showTip(event, 'fs2', 146)" class="i">doorWithPrize</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs18', 147)" onmouseover="showTip(event, 'fs18', 147)" class="i">seedRnd</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs22', 148)" onmouseover="showTip(event, 'fs22', 148)" class="f">Next</span>(<span class="n">1</span>,<span class="n">4</span>)
+             <span class="k">let</span> <span onmouseout="hideTip(event, 'fs4', 149)" onmouseover="showTip(event, 'fs4', 149)" class="i">fstChoice</span> <span class="o">=</span>  <span onmouseout="hideTip(event, 'fs18', 150)" onmouseover="showTip(event, 'fs18', 150)" class="i">seedRnd</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs22', 151)" onmouseover="showTip(event, 'fs22', 151)" class="f">Next</span>(<span class="n">1</span>,<span class="n">4</span>)
+             <span class="c">(*The following source statement illustrates the essence of this problem as an example of  </span>
+<span class="c">             Bayes&#39; Theorem. There are two posterior situations , in one case there are two possible  </span>
+<span class="c">             succeeding events, each with one-half probability. In the other case only one succeeding </span>
+<span class="c">             event is possible with 100% probability.*)</span>
+             <span class="k">let</span> <span onmouseout="hideTip(event, 'fs5', 152)" onmouseover="showTip(event, 'fs5', 152)" class="i">revealedDoor</span> <span class="o">=</span>
+                <span class="k">if</span> (<span onmouseout="hideTip(event, 'fs2', 153)" onmouseover="showTip(event, 'fs2', 153)" class="i">doorWithPrize</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs4', 154)" onmouseover="showTip(event, 'fs4', 154)" class="i">fstChoice</span>) <span class="k">then</span> <span onmouseout="hideTip(event, 'fs20', 155)" onmouseover="showTip(event, 'fs20', 155)" class="f">rndReveal</span> <span onmouseout="hideTip(event, 'fs2', 156)" onmouseover="showTip(event, 'fs2', 156)" class="i">doorWithPrize</span>
+                <span class="k">else</span> <span onmouseout="hideTip(event, 'fs23', 157)" onmouseover="showTip(event, 'fs23', 157)" class="f">forcedReveal</span> <span onmouseout="hideTip(event, 'fs2', 158)" onmouseover="showTip(event, 'fs2', 158)" class="i">doorWithPrize</span> <span onmouseout="hideTip(event, 'fs4', 159)" onmouseover="showTip(event, 'fs4', 159)" class="i">fstChoice</span>
+             <span class="c">//strangely (on my 32-bit system), measuring large runs with StopWatch it is faster to  </span>
+             <span class="c">//instantiate myGame and query the member &quot;winFstChoice&quot; than do the direct </span>
+             <span class="c">//&quot;doorWithPrize = fstChoice&quot; comparison </span>
+             <span class="k">let</span> <span onmouseout="hideTip(event, 'fs31', 160)" onmouseover="showTip(event, 'fs31', 160)" class="i">myGame</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs1', 161)" onmouseover="showTip(event, 'fs1', 161)" class="t">game</span>(<span onmouseout="hideTip(event, 'fs2', 162)" onmouseover="showTip(event, 'fs2', 162)" class="i">doorWithPrize</span>, <span onmouseout="hideTip(event, 'fs4', 163)" onmouseover="showTip(event, 'fs4', 163)" class="i">fstChoice</span>, <span onmouseout="hideTip(event, 'fs5', 164)" onmouseover="showTip(event, 'fs5', 164)" class="i">revealedDoor</span>)
+             <span class="k">if</span> <span onmouseout="hideTip(event, 'fs27', 165)" onmouseover="showTip(event, 'fs27', 165)" class="i">acc</span> <span class="o">=</span> <span class="n">0</span> <span class="k">then</span> <span onmouseout="hideTip(event, 'fs28', 166)" onmouseover="showTip(event, 'fs28', 166)" class="i">winsFst</span>, <span onmouseout="hideTip(event, 'fs29', 167)" onmouseover="showTip(event, 'fs29', 167)" class="i">winsSwitch</span>
+             <span class="k">else</span> <span class="k">if</span> <span onmouseout="hideTip(event, 'fs31', 168)" onmouseover="showTip(event, 'fs31', 168)" class="i">myGame</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs13', 169)" onmouseover="showTip(event, 'fs13', 169)" class="i">winFstChoice</span> <span class="k">then</span> <span onmouseout="hideTip(event, 'fs47', 170)" onmouseover="showTip(event, 'fs47', 170)" class="f">recGames</span> (<span onmouseout="hideTip(event, 'fs27', 171)" onmouseover="showTip(event, 'fs27', 171)" class="i">acc</span> <span class="o">-</span> <span class="n">1</span>) (<span onmouseout="hideTip(event, 'fs28', 172)" onmouseover="showTip(event, 'fs28', 172)" class="i">winsFst</span> <span class="o">+</span> <span class="n">1</span>) <span onmouseout="hideTip(event, 'fs29', 173)" onmouseover="showTip(event, 'fs29', 173)" class="i">winsSwitch</span> 
+                  <span class="k">else</span> <span onmouseout="hideTip(event, 'fs47', 174)" onmouseover="showTip(event, 'fs47', 174)" class="f">recGames</span> (<span onmouseout="hideTip(event, 'fs27', 175)" onmouseover="showTip(event, 'fs27', 175)" class="i">acc</span> <span class="o">-</span> <span class="n">1</span>) <span onmouseout="hideTip(event, 'fs28', 176)" onmouseover="showTip(event, 'fs28', 176)" class="i">winsFst</span> (<span onmouseout="hideTip(event, 'fs29', 177)" onmouseover="showTip(event, 'fs29', 177)" class="i">winsSwitch</span> <span class="o">+</span> <span class="n">1</span>)     
+        <span onmouseout="hideTip(event, 'fs47', 178)" onmouseover="showTip(event, 'fs47', 178)" class="f">recGames</span> <span onmouseout="hideTip(event, 'fs25', 179)" onmouseover="showTip(event, 'fs25', 179)" class="i">number</span> <span class="n">0</span> <span class="n">0</span>
+
+    [&lt;<span onmouseout="hideTip(event, 'fs48', 180)" onmouseover="showTip(event, 'fs48', 180)" class="t">EntryPoint</span>&gt;]
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs49', 181)" onmouseover="showTip(event, 'fs49', 181)" class="f">main</span> <span onmouseout="hideTip(event, 'fs50', 182)" onmouseover="showTip(event, 'fs50', 182)" class="i">argv</span> <span class="o">=</span> 
+         <span onmouseout="hideTip(event, 'fs40', 183)" onmouseover="showTip(event, 'fs40', 183)" class="t">Console</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs41', 184)" onmouseover="showTip(event, 'fs41', 184)" class="f">WriteLine</span> (<span class="s">&quot;&quot;</span>)
+         <span onmouseout="hideTip(event, 'fs40', 185)" onmouseover="showTip(event, 'fs40', 185)" class="t">Console</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs41', 186)" onmouseover="showTip(event, 'fs41', 186)" class="f">WriteLine</span> (<span class="s">&quot;P(A|B) = P(B|A)P(A) / P(B) //memorize this!&quot;</span>)
+         <span onmouseout="hideTip(event, 'fs40', 187)" onmouseover="showTip(event, 'fs40', 187)" class="t">Console</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs41', 188)" onmouseover="showTip(event, 'fs41', 188)" class="f">WriteLine</span> (<span class="s">&quot;&quot;</span>)
+
+         <span class="k">if</span> <span onmouseout="hideTip(event, 'fs50', 189)" onmouseover="showTip(event, 'fs50', 189)" class="i">argv</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs51', 190)" onmouseover="showTip(event, 'fs51', 190)" class="i">Length</span>  <span class="o">=</span> <span class="n">0</span> <span class="k">then</span> <span onmouseout="hideTip(event, 'fs40', 191)" onmouseover="showTip(event, 'fs40', 191)" class="t">Console</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs41', 192)" onmouseover="showTip(event, 'fs41', 192)" class="f">WriteLine</span> (<span class="s">&quot;Enter the number of games to simulate between 0 and 2147483647&quot;</span>)
+         <span class="k">else</span>
+
+            <span class="k">let</span> <span onmouseout="hideTip(event, 'fs52', 193)" onmouseover="showTip(event, 'fs52', 193)" class="i">myGames</span> <span class="o">=</span> 
+                <span class="k">if</span> <span onmouseout="hideTip(event, 'fs50', 194)" onmouseover="showTip(event, 'fs50', 194)" class="i">argv</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs51', 195)" onmouseover="showTip(event, 'fs51', 195)" class="i">Length</span> <span class="o">&gt;</span> <span class="n">1</span> <span class="o">&amp;&amp;</span> <span onmouseout="hideTip(event, 'fs50', 196)" onmouseover="showTip(event, 'fs50', 196)" class="i">argv</span><span class="o">.</span>[<span class="n">1</span>]<span class="o">.</span><span class="f">ToLower</span>() <span class="o">=</span> <span class="s">&quot;audit&quot;</span> <span class="k">then</span> <span onmouseout="hideTip(event, 'fs24', 197)" onmouseover="showTip(event, 'fs24', 197)" class="f">gamesAudit</span> (<span onmouseout="hideTip(event, 'fs53', 198)" onmouseover="showTip(event, 'fs53', 198)" class="t">Int32</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs54', 199)" onmouseover="showTip(event, 'fs54', 199)" class="f">Parse</span> <span onmouseout="hideTip(event, 'fs50', 200)" onmouseover="showTip(event, 'fs50', 200)" class="i">argv</span><span class="o">.</span>[<span class="n">0</span>])
+                <span class="k">else</span> <span onmouseout="hideTip(event, 'fs46', 201)" onmouseover="showTip(event, 'fs46', 201)" class="f">games</span> (<span onmouseout="hideTip(event, 'fs53', 202)" onmouseover="showTip(event, 'fs53', 202)" class="t">Int32</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs54', 203)" onmouseover="showTip(event, 'fs54', 203)" class="f">Parse</span> <span onmouseout="hideTip(event, 'fs50', 204)" onmouseover="showTip(event, 'fs50', 204)" class="i">argv</span><span class="o">.</span>[<span class="n">0</span>])
+
+            <span onmouseout="hideTip(event, 'fs40', 205)" onmouseover="showTip(event, 'fs40', 205)" class="t">Console</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs41', 206)" onmouseover="showTip(event, 'fs41', 206)" class="f">WriteLine</span> ((<span onmouseout="hideTip(event, 'fs53', 207)" onmouseover="showTip(event, 'fs53', 207)" class="t">Int32</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs54', 208)" onmouseover="showTip(event, 'fs54', 208)" class="f">Parse</span> <span onmouseout="hideTip(event, 'fs50', 209)" onmouseover="showTip(event, 'fs50', 209)" class="i">argv</span><span class="o">.</span>[<span class="n">0</span>])<span class="o">.</span><span class="f">ToString</span>(<span class="s">&quot;#,##0&quot;</span>) <span class="o">+</span> <span class="s">&quot; games played&quot;</span>)
+            <span onmouseout="hideTip(event, 'fs40', 210)" onmouseover="showTip(event, 'fs40', 210)" class="t">Console</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs41', 211)" onmouseover="showTip(event, 'fs41', 211)" class="f">WriteLine</span> (<span class="s">&quot;Wins with first choice: &quot;</span> <span class="o">+</span> <span onmouseout="hideTip(event, 'fs45', 212)" onmouseover="showTip(event, 'fs45', 212)" class="f">fst</span>(<span onmouseout="hideTip(event, 'fs52', 213)" onmouseover="showTip(event, 'fs52', 213)" class="i">myGames</span>)<span class="o">.</span><span class="f">ToString</span>(<span class="s">&quot;#,##0&quot;</span>) <span class="o">+</span> <span class="s">&quot;;  &quot;</span> 
+                <span class="o">+</span> <span class="s">&quot;Wins switching: &quot;</span> <span class="o">+</span> <span onmouseout="hideTip(event, 'fs44', 214)" onmouseover="showTip(event, 'fs44', 214)" class="f">snd</span>(<span onmouseout="hideTip(event, 'fs52', 215)" onmouseover="showTip(event, 'fs52', 215)" class="i">myGames</span>)<span class="o">.</span><span class="f">ToString</span>(<span class="s">&quot;#,##0&quot;</span>))
+         
+         <span onmouseout="hideTip(event, 'fs40', 216)" onmouseover="showTip(event, 'fs40', 216)" class="t">Console</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs41', 217)" onmouseover="showTip(event, 'fs41', 217)" class="f">WriteLine</span> (<span class="s">&quot;&quot;</span>)
+         <span class="n">0</span> 
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">Multiple items<br />type game =<br />&#160;&#160;new : doorWithPrize:int * fstChoice:int * revealedDoor:int -&gt; game<br />&#160;&#160;member ToString : string<br />&#160;&#160;member revealed : int<br />&#160;&#160;member winFstChoice : bool<br />&#160;&#160;member winSwitch : bool<br /><br />Full name: Script.game<br /><br />--------------------<br />new : doorWithPrize:int * fstChoice:int * revealedDoor:int -&gt; game</div>
+<div class="tip" id="fs2">val doorWithPrize : int</div>
+<div class="tip" id="fs3">Multiple items<br />val int : value:&#39;T -&gt; int (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.int<br /><br />--------------------<br />type int = int32<br /><br />Full name: Microsoft.FSharp.Core.int<br /><br />--------------------<br />type int&lt;&#39;Measure&gt; = int<br /><br />Full name: Microsoft.FSharp.Core.int&lt;_&gt;</div>
+<div class="tip" id="fs4">val fstChoice : int</div>
+<div class="tip" id="fs5">val revealedDoor : int</div>
+<div class="tip" id="fs6">val x : game</div>
+<div class="tip" id="fs7">member game.winFstChoice : bool<br /><br />Full name: Script.game.winFstChoice</div>
+<div class="tip" id="fs8">member game.winSwitch : bool<br /><br />Full name: Script.game.winSwitch</div>
+<div class="tip" id="fs9">val not : value:bool -&gt; bool<br /><br />Full name: Microsoft.FSharp.Core.Operators.not</div>
+<div class="tip" id="fs10">member game.revealed : int<br /><br />Full name: Script.game.revealed</div>
+<div class="tip" id="fs11">member game.ToString : string<br /><br />Full name: Script.game.ToString</div>
+<div class="tip" id="fs12">System.Int32.ToString() : string<br />System.Int32.ToString(provider: System.IFormatProvider) : string<br />System.Int32.ToString(format: string) : string<br />System.Int32.ToString(format: string, provider: System.IFormatProvider) : string</div>
+<div class="tip" id="fs13">property game.winFstChoice: bool</div>
+<div class="tip" id="fs14">System.Boolean.ToString() : string<br />System.Boolean.ToString(provider: System.IFormatProvider) : string</div>
+<div class="tip" id="fs15">property game.winSwitch: bool</div>
+<div class="tip" id="fs16">module games<br /><br />from Script</div>
+<div class="tip" id="fs17">namespace System</div>
+<div class="tip" id="fs18">val seedRnd : Random<br /><br />Full name: Script.games.seedRnd</div>
+<div class="tip" id="fs19">Multiple items<br />type Random =<br />&#160;&#160;new : unit -&gt; Random + 1 overload<br />&#160;&#160;member Next : unit -&gt; int + 2 overloads<br />&#160;&#160;member NextBytes : buffer:byte[] -&gt; unit<br />&#160;&#160;member NextDouble : unit -&gt; float<br /><br />Full name: System.Random<br /><br />--------------------<br />Random() : unit<br />Random(Seed: int) : unit</div>
+<div class="tip" id="fs20">val rndReveal : doorWithPrize:int -&gt; int<br /><br />Full name: Script.games.rndReveal</div>
+<div class="tip" id="fs21">val rnd : int</div>
+<div class="tip" id="fs22">Random.Next() : int<br />Random.Next(maxValue: int) : int<br />Random.Next(minValue: int, maxValue: int) : int</div>
+<div class="tip" id="fs23">val forcedReveal : doorWithPrize:int -&gt; fstChoice:int -&gt; int<br /><br />Full name: Script.games.forcedReveal</div>
+<div class="tip" id="fs24">val gamesAudit : number:int -&gt; int * int<br /><br />Full name: Script.games.gamesAudit<br /><em><br /><br />&lt;summary&gt;Generate games and audit up to the first 100. Once the number of games gets into 10s of  <br />millions the audit option becomesnoticeably slower.&lt;/summary&gt;<br />&lt;param name=&quot;number&quot;&gt;number of games to simulate&lt;/param&gt;</em></div>
+<div class="tip" id="fs25">val number : int</div>
+<div class="tip" id="fs26">val recGames : (int -&gt; int -&gt; int -&gt; game list -&gt; (int * int) * game list)</div>
+<div class="tip" id="fs27">val acc : int</div>
+<div class="tip" id="fs28">val winsFst : int</div>
+<div class="tip" id="fs29">val winsSwitch : int</div>
+<div class="tip" id="fs30">val audit : game list</div>
+<div class="tip" id="fs31">val myGame : game</div>
+<div class="tip" id="fs32">val newAudit : game list</div>
+<div class="tip" id="fs33">Multiple items<br />module List<br /><br />from Microsoft.FSharp.Collections<br /><br />--------------------<br />type List&lt;&#39;T&gt; =<br />&#160;&#160;| ( [] )<br />&#160;&#160;| ( :: ) of Head: &#39;T * Tail: &#39;T list<br />&#160;&#160;interface IEnumerable<br />&#160;&#160;interface IEnumerable&lt;&#39;T&gt;<br />&#160;&#160;member Head : &#39;T<br />&#160;&#160;member IsEmpty : bool<br />&#160;&#160;member Item : index:int -&gt; &#39;T with get<br />&#160;&#160;member Length : int<br />&#160;&#160;member Tail : &#39;T list<br />&#160;&#160;static member Cons : head:&#39;T * tail:&#39;T list -&gt; &#39;T list<br />&#160;&#160;static member Empty : &#39;T list<br /><br />Full name: Microsoft.FSharp.Collections.List&lt;_&gt;</div>
+<div class="tip" id="fs34">val length : list:&#39;T list -&gt; int<br /><br />Full name: Microsoft.FSharp.Collections.List.length</div>
+<div class="tip" id="fs35">val append : list1:&#39;T list -&gt; list2:&#39;T list -&gt; &#39;T list<br /><br />Full name: Microsoft.FSharp.Collections.List.append</div>
+<div class="tip" id="fs36">val auditedGames : (int * int) * game list</div>
+<div class="tip" id="fs37">property List.Empty: &#39;T list</div>
+<div class="tip" id="fs38">val writeAudit : (game list -&gt; &#39;a -&gt; unit)</div>
+<div class="tip" id="fs39">val tl : game list</div>
+<div class="tip" id="fs40">type Console =<br />&#160;&#160;static member BackgroundColor : ConsoleColor with get, set<br />&#160;&#160;static member Beep : unit -&gt; unit + 1 overload<br />&#160;&#160;static member BufferHeight : int with get, set<br />&#160;&#160;static member BufferWidth : int with get, set<br />&#160;&#160;static member CapsLock : bool<br />&#160;&#160;static member Clear : unit -&gt; unit<br />&#160;&#160;static member CursorLeft : int with get, set<br />&#160;&#160;static member CursorSize : int with get, set<br />&#160;&#160;static member CursorTop : int with get, set<br />&#160;&#160;static member CursorVisible : bool with get, set<br />&#160;&#160;...<br /><br />Full name: System.Console</div>
+<div class="tip" id="fs41">Console.WriteLine() : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.WriteLine(value: string) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.WriteLine(value: obj) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.WriteLine(value: uint64) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.WriteLine(value: int64) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.WriteLine(value: uint32) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.WriteLine(value: int) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.WriteLine(value: float32) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.WriteLine(value: float) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Console.WriteLine(value: decimal) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em></div>
+<div class="tip" id="fs42">val ignore : value:&#39;T -&gt; unit<br /><br />Full name: Microsoft.FSharp.Core.Operators.ignore</div>
+<div class="tip" id="fs43">val newAudit : List&lt;game&gt;</div>
+<div class="tip" id="fs44">val snd : tuple:(&#39;T1 * &#39;T2) -&gt; &#39;T2<br /><br />Full name: Microsoft.FSharp.Core.Operators.snd</div>
+<div class="tip" id="fs45">val fst : tuple:(&#39;T1 * &#39;T2) -&gt; &#39;T1<br /><br />Full name: Microsoft.FSharp.Core.Operators.fst</div>
+<div class="tip" id="fs46">val games : number:int -&gt; int * int<br /><br />Full name: Script.games.games<br /><em><br /><br />&lt;summary&gt;Bare-bones generation of games. Once the number of games gets into 10s of millions this <br />is noticeably faster than generation with the audit option.&lt;/summary&gt;<br />&lt;param name=&quot;number&quot;&gt;number of games to simulate&lt;/param&gt; </em></div>
+<div class="tip" id="fs47">val recGames : (int -&gt; int -&gt; int -&gt; int * int)</div>
+<div class="tip" id="fs48">Multiple items<br />type EntryPointAttribute =<br />&#160;&#160;inherit Attribute<br />&#160;&#160;new : unit -&gt; EntryPointAttribute<br /><br />Full name: Microsoft.FSharp.Core.EntryPointAttribute<br /><br />--------------------<br />new : unit -&gt; EntryPointAttribute</div>
+<div class="tip" id="fs49">val main : argv:string [] -&gt; int<br /><br />Full name: Script.games.main</div>
+<div class="tip" id="fs50">val argv : string []</div>
+<div class="tip" id="fs51">property Array.Length: int</div>
+<div class="tip" id="fs52">val myGames : int * int</div>
+<div class="tip" id="fs53">type Int32 =<br />&#160;&#160;struct<br />&#160;&#160;&#160;&#160;member CompareTo : value:obj -&gt; int + 1 overload<br />&#160;&#160;&#160;&#160;member Equals : obj:obj -&gt; bool + 1 overload<br />&#160;&#160;&#160;&#160;member GetHashCode : unit -&gt; int<br />&#160;&#160;&#160;&#160;member GetTypeCode : unit -&gt; TypeCode<br />&#160;&#160;&#160;&#160;member ToString : unit -&gt; string + 3 overloads<br />&#160;&#160;&#160;&#160;static val MaxValue : int<br />&#160;&#160;&#160;&#160;static val MinValue : int<br />&#160;&#160;&#160;&#160;static member Parse : s:string -&gt; int + 3 overloads<br />&#160;&#160;&#160;&#160;static member TryParse : s:string * result:int -&gt; bool + 1 overload<br />&#160;&#160;end<br /><br />Full name: System.Int32</div>
+<div class="tip" id="fs54">Int32.Parse(s: string) : int<br />Int32.Parse(s: string, provider: IFormatProvider) : int<br />Int32.Parse(s: string, style: Globalization.NumberStyles) : int<br />Int32.Parse(s: string, style: Globalization.NumberStyles, provider: IFormatProvider) : int</div>
+

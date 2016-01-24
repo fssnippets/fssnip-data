@@ -1,0 +1,436 @@
+<h1><a name="Understanding-the-world-with-F" class="anchor" href="#Understanding-the-world-with-F">Understanding the world with F#</a></h1>
+<p>These days, you can get access to data about almost anything you like. But to turn the
+raw data into useful information is a challenge. You need to link data from different
+sources (that are rarely polished), understand the data set and build useful visualizations
+that help explaining the data.</p>
+<p>This is becoming an important task for increasing number of companies, but for the purpose
+of this article, we'll work for the public good and become data journalists. Our aim
+is to understand US government debt during the 20th century and see how different presidents
+contributed to the debt.</p>
+<h2><a name="F-for-data-science" class="anchor" href="#F-for-data-science">F# for data science</a></h2>
+<p>Why are we choosing F# for working with data? Firstly, F# is succinct and has a great
+interactive programming mode, so we can easily run our analysis as we write it. Secondly,
+F# has great data science libraries. After creating a new "F# Tutorial" project, you can
+import all of them by installing NuGet package <code>FsLab</code>.</p>
+<p>We'll write our code interactively, so let's open <code>Tutorial.fsx</code> and load the FsLab package:</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+<span class="l">6: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="prep">#load</span> <span class="s">&quot;packages/FsLab.0.0.1-beta/lib/FsLab.fsx&quot;</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">System</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">FSharp</span><span class="o">.</span><span class="i">Charting</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs2', 3)" onmouseover="showTip(event, 'fs2', 3)" class="i">FSharp</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 4)" onmouseover="showTip(event, 'fs3', 4)" class="i">Data</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs2', 5)" onmouseover="showTip(event, 'fs2', 5)" class="i">FSharp</span><span class="o">.</span><span class="i">DataFrame</span>
+<span class="k">open</span> <span class="i">RProvider</span>
+</code></pre></td>
+</tr>
+</table>
+<p>You'll need to update the number in the <code>#load</code> command. The next lines open the namespaces
+of four F# projects that we'll use in this article:</p>
+<ul>
+<li><strong>F# Charting</strong> is a simple library for visualization and charting based on .NET charting API</li>
+<li>
+<strong>Deedle</strong> is a data frame and time series manipulation library that we'll need to combine data 
+from different sources and to get basic idea about the data structure
+</li>
+<li>
+<strong>F# Data</strong> is a library of type providers that we'll use to get information about US presidents
+and to read US debt data from a CSV file
+</li>
+<li>
+<strong>R type provider</strong> makes it possible to interoperate with statistical system named R, 
+which implements advanced statistical and visualization tools used by professional statisticians
+</li>
+</ul>
+<h2><a name="Reading-government-debt-data" class="anchor" href="#Reading-government-debt-data">Reading government debt data</a></h2>
+<p>To plot the US government debts during different presidencies, we need to combine two
+data sources. The easy part is getting historical debt data - we use a CSV file downloaded
+from <a href="http://www.usgovernmentspending.com">usgovernmentspending.com</a>. The F# Data library
+also makes it easy to get data from the World Bank, but sadly, World Bank does not have
+historical US data. Reading CSV file is equally easy though:</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">type</span> <span onmouseout="hideTip(event, 'fs4', 6)" onmouseover="showTip(event, 'fs4', 6)" class="t">UsDebt</span> <span class="o">=</span> <span class="i">CsvProvider</span><span class="o">&lt;</span><span class="s">&quot;C:\Data\us-debt.csv&quot;</span><span class="o">&gt;</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs5', 7)" onmouseover="showTip(event, 'fs5', 7)" class="i">csv</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs4', 8)" onmouseover="showTip(event, 'fs4', 8)" class="i">UsDebt</span><span class="o">.</span><span class="i">Load</span>(<span class="s">&quot;C:\Data\us-debt.csv&quot;</span>)
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs6', 9)" onmouseover="showTip(event, 'fs6', 9)" class="i">debtSeries</span> <span class="o">=</span> 
+  <span class="i">series</span> [ <span class="k">for</span> <span class="i">row</span> <span class="k">in</span> <span onmouseout="hideTip(event, 'fs5', 10)" onmouseover="showTip(event, 'fs5', 10)" class="i">csv</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs7', 11)" onmouseover="showTip(event, 'fs7', 11)" class="i">Data</span> <span class="k">-&gt;</span>
+             <span class="i">row</span><span class="o">.</span><span class="i">Year</span>, <span class="i">row</span><span class="o">.</span><span class="i">``Debt (percent GDP)``</span> ] 
+</code></pre></td>
+</tr>
+</table>
+<p>The snippet uses CSV type provider to read the file. The type provider looks at a
+sample CSV file (specified on the first line) and generates a type <code>UsDebt</code> that
+can be used to read CSV files with the same structure. This means that when loading
+the data on the second line, we could use a live URL for the CSV file rather than
+a local copy.</p>
+<p>The next line shows the benefit of the type provider - when iterating over rows,
+the <code>row</code> value has properties based on the names of columns in the sample CSV file.
+This means that <code>``Debt (percent GDP)``</code> is statically checked. The compiler would
+warn us if we typed the column name incorrectly (and IntelliSense shows it as an
+ordinary property). The double-backtick notation is just an F# way of wrapping arbitrary
+characters (like spaces) in a property name.</p>
+<p>Finally, the notation <code>series [ .. ]</code> turns tha data into a Deedle time series
+that we can turn into a data frame and plot:</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">let</span> <span onmouseout="hideTip(event, 'fs8', 12)" onmouseover="showTip(event, 'fs8', 12)" class="i">debt</span> <span class="o">=</span> <span class="i">Frame</span><span class="o">.</span><span class="i">ofColumns</span> [ <span class="s">&quot;Debt&quot;</span> <span class="o">=&gt;</span> <span onmouseout="hideTip(event, 'fs6', 13)" onmouseover="showTip(event, 'fs6', 13)" class="i">debtSeries</span> ] 
+<span class="i">Chart</span><span class="o">.</span><span class="i">Line</span>(<span onmouseout="hideTip(event, 'fs8', 14)" onmouseover="showTip(event, 'fs8', 14)" class="i">debt</span><span class="o">?</span><span class="i">Debt</span>)
+</code></pre></td>
+</tr>
+</table>
+<p>The first line creates a data frame with single column named "Debt". A data frame
+is a bit like database table - a 2D data structure with index (here years) and
+multiple columns. We started with just a single column, but will add more later.</p>
+<p>Once we have data in a data frame, we can use <code>debt?Debt</code> to get a specified
+column. By passing the series to <code>Chart.Line</code> we get a chart that looks like this:</p>
+<div style="text-align:center">
+<img src="debt-by-year.png" style="width:612px;margin-left:auto;margin-right:auto" />
+</div>
+<h2><a name="Listing-US-presidents" class="anchor" href="#Listing-US-presidents">Listing US presidents</a></h2>
+<p>To get information about US presidents, you could go to Wikipedia and spend the next
+5 minutes typing the data. Not a big deal, but it does not scale! Instead, we'll use
+another type provider and get the data from Freebase. Freebase is a collaboratively
+created knowledge base - a bit like Wikipedia, but with well-defined data schema.</p>
+<p>The F# type provider for Freebase exposes the data as F# types with properties, so
+we can start at the root and look at <code>Society</code>, <code>Government</code> and <code>US Presidents</code>:</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">let</span> <span onmouseout="hideTip(event, 'fs9', 15)" onmouseover="showTip(event, 'fs9', 15)" class="i">fb</span> <span class="o">=</span> <span class="i">FreebaseData</span><span class="o">.</span><span class="i">GetDataContext</span>()
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs10', 16)" onmouseover="showTip(event, 'fs10', 16)" class="i">presidentInfos</span> <span class="o">=</span> 
+  <span onmouseout="hideTip(event, 'fs11', 17)" onmouseover="showTip(event, 'fs11', 17)" class="i">query</span> { <span class="k">for</span> <span onmouseout="hideTip(event, 'fs12', 18)" onmouseover="showTip(event, 'fs12', 18)" class="i">p</span> <span class="k">in</span> <span onmouseout="hideTip(event, 'fs9', 19)" onmouseover="showTip(event, 'fs9', 19)" class="i">fb</span><span class="o">.</span><span class="i">Society</span><span class="o">.</span><span class="i">Government</span><span class="o">.</span><span class="i">``US Presidents``</span> <span class="k">do</span>
+          <span onmouseout="hideTip(event, 'fs13', 20)" onmouseover="showTip(event, 'fs13', 20)" class="k">sortBy</span> (<span onmouseout="hideTip(event, 'fs14', 21)" onmouseover="showTip(event, 'fs14', 21)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs15', 22)" onmouseover="showTip(event, 'fs15', 22)" class="f">max</span> <span onmouseout="hideTip(event, 'fs12', 23)" onmouseover="showTip(event, 'fs12', 23)" class="i">p</span><span class="o">.</span><span class="i">``President number``</span>)
+          <span onmouseout="hideTip(event, 'fs16', 24)" onmouseover="showTip(event, 'fs16', 24)" class="k">skip</span> <span class="n">23</span> }
+</code></pre></td>
+</tr>
+</table>
+<p>The code uses F# implementation of LINQ to order the presidents by their number and
+skip the first 23. This gives us William McKinley whose presidency started in 1897
+as the first one. As usual in LINQ, the query is executed on the servere-side (by
+Freebase). The next step is to find the start and end year of the terms in the office.</p>
+<p>Each object in the <code>presidentInfos</code> has a type representing US politician, which
+has the <code>Government Position Held</code> property. This means that we can iterate over
+all their official positions, find the one titled "President" and then get the
+<code>From</code> and <code>To</code> values:</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">let</span> <span onmouseout="hideTip(event, 'fs17', 25)" onmouseover="showTip(event, 'fs17', 25)" class="i">presidentTerms</span> <span class="o">=</span>
+  [ <span class="k">for</span> <span onmouseout="hideTip(event, 'fs18', 26)" onmouseover="showTip(event, 'fs18', 26)" class="i">pres</span> <span class="k">in</span> <span onmouseout="hideTip(event, 'fs10', 27)" onmouseover="showTip(event, 'fs10', 27)" class="i">presidentInfos</span> <span class="k">do</span>
+    <span class="k">for</span> <span onmouseout="hideTip(event, 'fs19', 28)" onmouseover="showTip(event, 'fs19', 28)" class="i">pos</span> <span class="k">in</span> <span onmouseout="hideTip(event, 'fs18', 29)" onmouseover="showTip(event, 'fs18', 29)" class="i">pres</span><span class="o">.</span><span class="i">``Government Positions Held``</span> <span class="k">do</span>
+    <span class="k">if</span> <span onmouseout="hideTip(event, 'fs20', 30)" onmouseover="showTip(event, 'fs20', 30)" class="f">string</span> <span onmouseout="hideTip(event, 'fs19', 31)" onmouseover="showTip(event, 'fs19', 31)" class="i">pos</span><span class="o">.</span><span class="i">``Basic title``</span> <span class="o">=</span> <span class="s">&quot;President&quot;</span> <span class="k">then</span>
+      <span class="c">// Get start and end year of the position</span>
+      <span class="k">let</span> <span onmouseout="hideTip(event, 'fs21', 32)" onmouseover="showTip(event, 'fs21', 32)" class="i">starty</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs22', 33)" onmouseover="showTip(event, 'fs22', 33)" class="t">DateTime</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs23', 34)" onmouseover="showTip(event, 'fs23', 34)" class="f">Parse</span>(<span onmouseout="hideTip(event, 'fs19', 35)" onmouseover="showTip(event, 'fs19', 35)" class="i">pos</span><span class="o">.</span><span class="i">From</span>)<span class="o">.</span><span class="i">Year</span>
+      <span class="k">let</span> <span onmouseout="hideTip(event, 'fs24', 36)" onmouseover="showTip(event, 'fs24', 36)" class="i">endy</span> <span class="o">=</span> <span class="k">if</span> <span onmouseout="hideTip(event, 'fs19', 37)" onmouseover="showTip(event, 'fs19', 37)" class="i">pos</span><span class="o">.</span><span class="i">To</span> <span class="o">=</span> <span class="k">null</span> <span class="k">then</span> <span class="n">2013</span> <span class="k">else</span>
+                   <span onmouseout="hideTip(event, 'fs22', 38)" onmouseover="showTip(event, 'fs22', 38)" class="t">DateTime</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs23', 39)" onmouseover="showTip(event, 'fs23', 39)" class="f">Parse</span>(<span onmouseout="hideTip(event, 'fs19', 40)" onmouseover="showTip(event, 'fs19', 40)" class="i">pos</span><span class="o">.</span><span class="i">To</span>)<span class="o">.</span><span class="i">Year</span>
+      <span class="c">// Return three element tuple with the info</span>
+      <span class="k">yield</span> (<span onmouseout="hideTip(event, 'fs18', 41)" onmouseover="showTip(event, 'fs18', 41)" class="i">pres</span><span class="o">.</span><span class="i">Name</span>, <span onmouseout="hideTip(event, 'fs21', 42)" onmouseover="showTip(event, 'fs21', 42)" class="i">starty</span>, <span onmouseout="hideTip(event, 'fs24', 43)" onmouseover="showTip(event, 'fs24', 43)" class="i">endy</span>) ]
+</code></pre></td>
+</tr>
+</table>
+<p>The code uses F# sequence expressions, which are quite similar to C# iterators.
+When we have a president and a position, we can get the years of <code>From</code> and <code>To</code>
+values. The only difficulty is that <code>To</code> is <code>null</code> for the current president -
+so we simply return 2013.</p>
+<p>Now we have the data as an ordinary F# list, but we need to turn it into a Deedle
+data frame, so that we can combine it with the debt numbers:</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">let</span> <span onmouseout="hideTip(event, 'fs25', 44)" onmouseover="showTip(event, 'fs25', 44)" class="i">presidents</span> <span class="o">=</span>
+  <span onmouseout="hideTip(event, 'fs17', 45)" onmouseover="showTip(event, 'fs17', 45)" class="i">presidentTerms</span>
+  <span class="o">|&gt;</span> <span class="i">Frame</span><span class="o">.</span><span class="i">ofRecords</span>
+  <span class="o">|&gt;</span> <span class="i">Frame</span><span class="o">.</span><span class="i">indexColsWith</span> [<span class="s">&quot;President&quot;</span>; <span class="s">&quot;Start&quot;</span>; <span class="s">&quot;End&quot;</span>]
+</code></pre></td>
+</tr>
+</table>
+<p>The function <code>Frame.ofRecords</code> takes a collection of any .NET objects
+and creates data frame with columns based on the properties of the type.
+We get a data frame with <code>Item1</code>, <code>Item2</code> and <code>Item3</code>. The last line
+renames the columns to more useful names. Here, we also use the pipelining
+operator <code>|&gt;</code>, which is used to apply multiple operations in a sequence.</p>
+<p>If you now type <code>presidents</code> in F# Interactive, you'll see a nicely formatted
+table with the last 20 US presidents and their start and end years.</p>
+<h2><a name="Analysing-debt-change" class="anchor" href="#Analysing-debt-change">Analysing debt change</a></h2>
+<p>Before going furter, let's do a quick analysis to find out how the government debt
+changed during the terms of different presidents. To do the calculation, we take
+the data frame <code>presidents</code> and add debt at the end of the term.</p>
+<p>The data frame provides a powereful "joining" operation that can align data from
+different data frames. To use it, we need to create a data frame like <code>presidents</code>
+which has the end of the office year as the index (the index of the frame created
+previously is just the number of the row):</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">let</span> <span onmouseout="hideTip(event, 'fs26', 46)" onmouseover="showTip(event, 'fs26', 46)" class="i">byEnd</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs25', 47)" onmouseover="showTip(event, 'fs25', 47)" class="i">presidents</span> <span class="o">|&gt;</span> <span class="i">Frame</span><span class="o">.</span><span class="i">indexRowsInt</span> <span class="s">&quot;End&quot;</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs27', 48)" onmouseover="showTip(event, 'fs27', 48)" class="i">endDebt</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs26', 49)" onmouseover="showTip(event, 'fs26', 49)" class="i">byEnd</span><span class="o">.</span><span class="i">Join</span>(<span onmouseout="hideTip(event, 'fs8', 50)" onmouseover="showTip(event, 'fs8', 50)" class="i">debt</span>, <span class="i">JoinKind</span><span class="o">.</span><span class="i">Left</span>)
+</code></pre></td>
+</tr>
+</table>
+<p>The data frame <code>byEnd</code> is indexed by years and so we can now use <code>Join</code> to add
+<code>debt</code> data to the frame. The <code>JoinKind.Left</code> parameter specifies that we want to
+find a debt value for each key (presidency end year) in the left data frame.
+The result <code>endDebt</code> is a data frame containing all presidents (column <code>President</code>)
+together with the debt at the end of their presidency (column <code>Debt</code>).</p>
+<p>Now we add one more column that represents the difference between the debt at the
+of the presidency and the debt at the beginning. This is done by getting the
+<code>endDebt?Debt</code> series and using an operation that calls a specified function for each
+pair of consecutive values:</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span onmouseout="hideTip(event, 'fs27', 51)" onmouseover="showTip(event, 'fs27', 51)" class="i">endDebt</span><span class="o">?</span><span class="i">Difference</span> <span class="o">&lt;-</span>
+  <span onmouseout="hideTip(event, 'fs27', 52)" onmouseover="showTip(event, 'fs27', 52)" class="i">endDebt</span><span class="o">?</span><span class="i">Debt</span> <span class="o">|&gt;</span> <span class="i">Series</span><span class="o">.</span><span class="i">pairwiseWith</span> (<span class="k">fun</span> _ (<span class="i">prev</span>, <span class="i">curr</span>) <span class="k">-&gt;</span> <span class="i">curr</span> <span class="o">-</span> <span class="i">prev</span>)
+</code></pre></td>
+</tr>
+</table>
+<p>The data frame structure is mostly immutable, with the only exception - it is possible
+to add and remove columns. The above line adds a column <code>Difference</code> that is calculated
+by subtracting the previous debt value from the current debt value. If you now evaluate
+<code>endDebt</code> in F# interactive (select it and hit Alt+Enter or type <code>endDebt;;</code> in the console)
+you will see the following table:</p>
+<div style="height:300px;overflow-y:scroll">
+<table class="table table-bordered table-striped">
+<thead style="font-weight:bold">
+<tr>
+  <td></td><td>President             </td><td>Start </td><td>End  </td><td>Debt   </td><td>Difference         </td>
+</tr></thead><tbody><tr>
+  <td>1901</td><td>William McKinley     </td><td>1897 </td><td>1901</td><td> 18.60</td><td>  &lt;missing&gt;</td>
+</tr><tr>
+  <td>1909</td><td>Theodore Roosevelt   </td><td>1901 </td><td>1909</td><td> 18.65</td><td>  0.050          </td>
+</tr><tr>
+  <td>1913</td><td>William Howard Taft  </td><td>1909 </td><td>1913</td><td> 18.73</td><td>  0.080          </td>
+</tr><tr>
+  <td>1921</td><td>Woodrow Wilson       </td><td>1913 </td><td>1921</td><td> 45.10</td><td>  26.37          </td>
+</tr><tr>
+  <td>1923</td><td>Warren G. Harding    </td><td>1921 </td><td>1923</td><td> 38.95</td><td>  -6.15          </td>
+</tr><tr>
+  <td>1929</td><td>Calvin Coolidge      </td><td>1923 </td><td>1929</td><td> 32.25</td><td>  -6.7           </td>
+</tr><tr>
+  <td>1933</td><td>Herbert Hoover       </td><td>1929 </td><td>1933</td><td> 73.77</td><td>  41.52          </td>
+</tr><tr>
+  <td>1945</td><td>Franklin D. Roosevelt</td><td>1933 </td><td>1945</td><td> 124.1</td><td>6 50.39          </td>
+</tr><tr>
+  <td>1953</td><td>Harry S. Truman      </td><td>1945 </td><td>1953</td><td> 79.03</td><td>  -45.1          </td>
+</tr><tr>
+  <td>1961</td><td>Dwight D. Eisenhower </td><td>1953 </td><td>1961</td><td> 67.49</td><td>  -11.5          </td>
+</tr><tr>
+  <td>1963</td><td>John F. Kennedy      </td><td>1961 </td><td>1963</td><td> 64.00</td><td>  -3.49          </td>
+</tr><tr>
+  <td>1969</td><td>Lyndon B. Johnson    </td><td>1963 </td><td>1969</td><td> 50.72</td><td>  -13.2          </td>
+</tr><tr>
+  <td>1974</td><td>Richard Nixon        </td><td>1969 </td><td>1974</td><td> 46.01</td><td>  -4.71          </td>
+</tr><tr>
+  <td>1977</td><td>Gerald Ford          </td><td>1974 </td><td>1977</td><td> 47.55</td><td>  1.54           </td>
+</tr><tr>
+  <td>1981</td><td>Jimmy Carter         </td><td>1977 </td><td>1981</td><td> 43.46</td><td>  -4.09          </td>
+</tr><tr>
+  <td>1989</td><td>Ronald Reagan        </td><td>1981 </td><td>1989</td><td> 66.89</td><td>  23.43          </td>
+</tr><tr>
+  <td>1993</td><td>George H. W. Bush    </td><td>1989 </td><td>1993</td><td> 80.52</td><td>  13.63          </td>
+</tr><tr>
+  <td>2001</td><td>Bill Clinton         </td><td>1993 </td><td>2001</td><td> 71.17</td><td>  -9.35</td>
+</tr><tr>
+  <td>2009</td><td>George W. Bush       </td><td>2001 </td><td>2009</td><td> 104.47</td><td> 33.3 </td>
+</tr><tr>
+  <td>2013</td><td>Barack Obama         </td><td>2009 </td><td>2013</td><td> 124.84</td><td> 20.37</td>
+</tr></tbody>
+</table>
+</div>
+<p>One of the main benefits of using the Doodle library is that we do not explicitly
+align the data. This is done automatically based on the index. For example, the
+library knows that <code>Difference</code> column starts from the second value (because we do
+not have the previous debt for McKinley).</p>
+<h2><a name="Plotting-debt-by-president" class="anchor" href="#Plotting-debt-by-president">Plotting debt by president</a></h2>
+<p>Our next step is to visualize the combined data. We want to draw a chart similar
+to the one earlier, but with differently coloured areas, depending on who was the
+president during the term. We'll also add a label, showing the president's name
+and election year.</p>
+<p>To do this, we build a data frame that contains the debt for each year, but adds
+the name of the current president in a separate column. This means that we want
+to repeat the president's name for each year in the office. Once we have this, we
+can group the data and create a chart for each group.</p>
+<p>First, we need to use <code>Join</code> again. This time, we use the <code>Start</code> column as the
+index for each president and then use left join on the <code>debt</code> data frame. This means
+that we want to find the current president for every year since 1900:</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">let</span> <span onmouseout="hideTip(event, 'fs28', 53)" onmouseover="showTip(event, 'fs28', 53)" class="i">byStart</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs25', 54)" onmouseover="showTip(event, 'fs25', 54)" class="i">presidents</span> <span class="o">|&gt;</span> <span class="i">Frame</span><span class="o">.</span><span class="i">indexRowsInt</span> <span class="s">&quot;Start&quot;</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs29', 55)" onmouseover="showTip(event, 'fs29', 55)" class="i">aligned</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs8', 56)" onmouseover="showTip(event, 'fs8', 56)" class="i">debt</span><span class="o">.</span><span class="i">Join</span>(<span onmouseout="hideTip(event, 'fs28', 57)" onmouseover="showTip(event, 'fs28', 57)" class="i">byStart</span>, <span class="i">JoinKind</span><span class="o">.</span><span class="i">Left</span>, <span class="i">Lookup</span><span class="o">.</span><span class="i">NearestSmaller</span>)
+</code></pre></td>
+</tr>
+</table>
+<p>The data frame <code>byStart</code> only contains values for years when the president was
+elected. By specifying <code>Lookup.NearestSmaller</code>, we tell the <code>Join</code> operation that
+it should find the president at the exact year, or at the nearest smaller year
+(when we have debt for a given year, the president is the most recently elected
+president).</p>
+<p>This means that <code>aligned</code> now has debt and a current president (together with
+his or her start and end years) for each year. To build a nicer chart, we make
+one more step - we create a series that contains the name of the president together
+with their start year (as a string) to make the chart labels more useful:</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">let</span> <span onmouseout="hideTip(event, 'fs30', 58)" onmouseover="showTip(event, 'fs30', 58)" class="i">infos</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs29', 59)" onmouseover="showTip(event, 'fs29', 59)" class="i">aligned</span><span class="o">.</span><span class="i">Rows</span> <span class="o">|&gt;</span> <span class="i">Series</span><span class="o">.</span><span class="i">map</span> (<span class="k">fun</span> _ <span class="i">row</span> <span class="k">-&gt;</span>
+  <span onmouseout="hideTip(event, 'fs31', 60)" onmouseover="showTip(event, 'fs31', 60)" class="i">sprintf</span> <span class="s">&quot;%s (%d)&quot;</span> (<span class="i">row</span><span class="o">.</span><span class="i">GetAs</span> <span class="s">&quot;President&quot;</span>) (<span class="i">row</span><span class="o">.</span><span class="i">GetAs</span> <span class="s">&quot;Start&quot;</span>))
+</code></pre></td>
+</tr>
+</table>
+<p>The snippet uses <code>aligned.Rows</code> to get all the rows from the data frame as a series
+(containing individual rows as nested series). Then it formats each row into a string
+containing the name and the start. The <code>GetAs</code> method is used to get column of a
+specified type and cast it to an appropriate type (here, the type is determined by
+the format strings <code>%s</code> and <code>%d</code>, because <code>sprintf</code> is fully type checked).</p>
+<p>The last step is to turn the <code>aligned</code> data frame into chunks (or groups) based on
+the current president and then draw a chart for each chunk. Because the data is ordered,
+we can use <code>Series.chunkWhile</code> which creates consecutive chunks of a time series.
+The chunks are determined by a predicate on keys (years):</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">let</span> <span onmouseout="hideTip(event, 'fs32', 61)" onmouseover="showTip(event, 'fs32', 61)" class="i">chunked</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs29', 62)" onmouseover="showTip(event, 'fs29', 62)" class="i">aligned</span><span class="o">?</span><span class="i">Debt</span> <span class="o">|&gt;</span> <span class="i">Series</span><span class="o">.</span><span class="i">chunkWhile</span>(<span class="k">fun</span> <span class="i">y1</span> <span class="i">y2</span> <span class="k">-&gt;</span> 
+  <span onmouseout="hideTip(event, 'fs30', 63)" onmouseover="showTip(event, 'fs30', 63)" class="i">infos</span><span class="o">.</span>[<span class="i">y1</span>] <span class="o">=</span> <span onmouseout="hideTip(event, 'fs30', 64)" onmouseover="showTip(event, 'fs30', 64)" class="i">infos</span><span class="o">.</span>[<span class="i">y2</span>])
+</code></pre></td>
+</tr>
+</table>
+<p>In our example, the predicate checks that the president for the first year of the
+chunk (<code>y1</code>) is the same as the president for the last year of the chunk (<code>y2</code>).
+This means that we group the debt values (obtained using <code>aligned?Debt</code>) into chunks
+that have the same president. For each chunk, we get a series with debts during the
+presidency. Now we have everything we need to plot the data:</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span onmouseout="hideTip(event, 'fs32', 65)" onmouseover="showTip(event, 'fs32', 65)" class="i">chunked</span> 
+<span class="o">|&gt;</span> <span class="i">Series</span><span class="o">.</span><span class="i">observations</span>
+<span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs14', 66)" onmouseover="showTip(event, 'fs14', 66)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs33', 67)" onmouseover="showTip(event, 'fs33', 67)" class="f">map</span> (<span class="k">fun</span> (<span onmouseout="hideTip(event, 'fs34', 68)" onmouseover="showTip(event, 'fs34', 68)" class="i">startYear</span>, <span onmouseout="hideTip(event, 'fs35', 69)" onmouseover="showTip(event, 'fs35', 69)" class="i">chunkDebts</span>) <span class="k">-&gt;</span> 
+    <span class="i">Chart</span><span class="o">.</span><span class="i">Area</span>(<span onmouseout="hideTip(event, 'fs35', 70)" onmouseover="showTip(event, 'fs35', 70)" class="i">chunkDebts</span>, <span class="i">Name</span><span class="o">=</span><span onmouseout="hideTip(event, 'fs30', 71)" onmouseover="showTip(event, 'fs30', 71)" class="i">infos</span><span class="o">.</span>[<span onmouseout="hideTip(event, 'fs34', 72)" onmouseover="showTip(event, 'fs34', 72)" class="i">startYear</span>]))
+<span class="o">|&gt;</span> <span class="i">Chart</span><span class="o">.</span><span class="i">Combine</span>
+</code></pre></td>
+</tr>
+</table>
+<p>The snippet takes all observations from the chunked series as tuples and iterates
+over them using standard <code>Seq.map</code> function. Each observation has <code>startYear</code> of the
+chunk together with a series <code>chunkDebts</code>. We turn each chunk into an area chart
+with the corresponding president's name as a label. Finally, all charts are combined
+into a single one (using <code>Chart.Combine</code>), which gives us the following result:</p>
+<div style="text-align:center">
+<img src="debt-by-president-area.png" style="width:702px;margin-left:auto;margin-right:auto" />
+</div>
+<h2><a name="Visualizing-data-using-R" class="anchor" href="#Visualizing-data-using-R">Visualizing data using R</a></h2>
+<p>Aside from using great F# and .NET libraries, we can also interoperate with a wide
+range of other non-.NET systems. In our last example, we have a quick look at the statistical
+system R. This is an environment used by many professional data scientists - thanks
+to the R type provider, we can easily call it from F# and get access to the powerful
+libraries and visualization tools available in R.</p>
+<p>The installed R packages are automatically mapped to F# namespaces, so we start by
+opening the <code>base</code> and <code>ggplot2</code> packages:</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span class="i">RProvider</span><span class="o">.</span><span class="i">``base``</span>
+<span class="k">open</span> <span class="i">RProvider</span><span class="o">.</span><span class="i">ggplot2</span>
+</code></pre></td>
+</tr>
+</table>
+<p>The <code>ggplot2</code> package is a popular visualization and data exploration library. We can
+use it to quickly build a chart similar to the one from the previous section. To do this,
+we need to construct a dictionary with parameters and then call <code>R.qplot</code> (to build
+the chart) followed by <code>R.print</code> (to display it):</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+<span class="l">6: </span>
+<span class="l">7: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="i">namedParams</span> [
+  <span class="s">&quot;x&quot;</span>, <span onmouseout="hideTip(event, 'fs36', 73)" onmouseover="showTip(event, 'fs36', 73)" class="i">box</span> <span onmouseout="hideTip(event, 'fs29', 74)" onmouseover="showTip(event, 'fs29', 74)" class="i">aligned</span><span class="o">.</span><span class="i">RowKeys</span>
+  <span class="s">&quot;y&quot;</span>, <span onmouseout="hideTip(event, 'fs36', 75)" onmouseover="showTip(event, 'fs36', 75)" class="i">box</span> (<span class="i">Series</span><span class="o">.</span><span class="i">values</span> <span onmouseout="hideTip(event, 'fs29', 76)" onmouseover="showTip(event, 'fs29', 76)" class="i">aligned</span><span class="o">?</span><span class="i">Debt</span>)
+  <span class="s">&quot;colour&quot;</span>, <span onmouseout="hideTip(event, 'fs36', 77)" onmouseover="showTip(event, 'fs36', 77)" class="i">box</span> (<span class="i">Series</span><span class="o">.</span><span class="i">values</span> <span onmouseout="hideTip(event, 'fs30', 78)" onmouseover="showTip(event, 'fs30', 78)" class="i">infos</span>) 
+  <span class="s">&quot;geom&quot;</span>,  <span onmouseout="hideTip(event, 'fs36', 79)" onmouseover="showTip(event, 'fs36', 79)" class="i">box</span> [| <span class="s">&quot;line&quot;</span>; <span class="s">&quot;point&quot;</span> |] ]
+<span class="o">|&gt;</span> <span class="i">R</span><span class="o">.</span><span class="i">qplot</span>
+<span class="o">|&gt;</span> <span class="i">R</span><span class="o">.</span><span class="i">print</span>
+</code></pre></td>
+</tr>
+</table>
+<p>The <code>namedParams</code> function is used to build a dictionary of arguments for functions
+with variable number of parameters. Here, we specify <code>x</code> and <code>y</code> data series (years and
+corresponding debts, respectively) and we set <code>colour</code> parameter to the series with
+president names (so that the colour is determined by the president). We also instruct
+the function to plot the data as a combination of "line" and "point" geometries, which
+gives us the following result:</p>
+<div style="text-align:center">
+<img src="debt-by-president-r.png" style="width:705px;margin-left:auto;margin-right:auto" />
+</div>
+<h2><a name="Summary" class="anchor" href="#Summary">Summary</a></h2>
+<p>With a bit of more work, we could turn our analysis into a newspaper article. The only
+missing piece is breaking the data down by the political parties. If you play with the
+Freebase type provider, you'll soon discover that there is a <code>Party</code> property on the object
+representing presidents, so you can get the</p>
+<p><code>p.Party</code></p>
+<div class="tip" id="fs1">namespace System</div>
+<div class="tip" id="fs2">namespace Microsoft.FSharp</div>
+<div class="tip" id="fs3">namespace Microsoft.FSharp.Data</div>
+<div class="tip" id="fs4">type UsDebt = obj<br /><br />Full name: Script.UsDebt</div>
+<div class="tip" id="fs5">val csv : obj<br /><br />Full name: Script.csv</div>
+<div class="tip" id="fs6">val debtSeries : obj<br /><br />Full name: Script.debtSeries</div>
+<div class="tip" id="fs7">Multiple items<br />namespace System.Data<br /><br />--------------------<br />namespace Microsoft.FSharp.Data</div>
+<div class="tip" id="fs8">val debt : obj<br /><br />Full name: Script.debt</div>
+<div class="tip" id="fs9">val fb : obj<br /><br />Full name: Script.fb</div>
+<div class="tip" id="fs10">val presidentInfos : Linq.IQueryable&lt;obj&gt;<br /><br />Full name: Script.presidentInfos</div>
+<div class="tip" id="fs11">val query : Linq.QueryBuilder<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.query</div>
+<div class="tip" id="fs12">val p : obj</div>
+<div class="tip" id="fs13">custom operation: sortBy (&#39;Key)<br /><br />Calls Linq.QueryBuilder.SortBy </div>
+<div class="tip" id="fs14">module Seq<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs15">val max : source:seq&lt;&#39;T&gt; -&gt; &#39;T (requires comparison)<br /><br />Full name: Microsoft.FSharp.Collections.Seq.max</div>
+<div class="tip" id="fs16">custom operation: skip (int)<br /><br />Calls Linq.QueryBuilder.Skip </div>
+<div class="tip" id="fs17">val presidentTerms : (obj * int * int) list<br /><br />Full name: Script.presidentTerms</div>
+<div class="tip" id="fs18">val pres : obj</div>
+<div class="tip" id="fs19">val pos : obj</div>
+<div class="tip" id="fs20">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />Full name: Microsoft.FSharp.Core.Operators.string<br /><br />--------------------<br />type string = String<br /><br />Full name: Microsoft.FSharp.Core.string</div>
+<div class="tip" id="fs21">val starty : int</div>
+<div class="tip" id="fs22">Multiple items<br />type DateTime =<br />&#160;&#160;struct<br />&#160;&#160;&#160;&#160;new : ticks:int64 -&gt; DateTime + 10 overloads<br />&#160;&#160;&#160;&#160;member Add : value:TimeSpan -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddDays : value:float -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddHours : value:float -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddMilliseconds : value:float -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddMinutes : value:float -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddMonths : months:int -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddSeconds : value:float -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddTicks : value:int64 -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddYears : value:int -&gt; DateTime<br />&#160;&#160;&#160;&#160;...<br />&#160;&#160;end<br /><br />Full name: System.DateTime<br /><br />--------------------<br />DateTime()<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />DateTime(ticks: int64) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />DateTime(ticks: int64, kind: DateTimeKind) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />DateTime(year: int, month: int, day: int) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />DateTime(year: int, month: int, day: int, calendar: Globalization.Calendar) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />DateTime(year: int, month: int, day: int, hour: int, minute: int, second: int) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />DateTime(year: int, month: int, day: int, hour: int, minute: int, second: int, kind: DateTimeKind) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />DateTime(year: int, month: int, day: int, hour: int, minute: int, second: int, calendar: Globalization.Calendar) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />DateTime(year: int, month: int, day: int, hour: int, minute: int, second: int, millisecond: int) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />DateTime(year: int, month: int, day: int, hour: int, minute: int, second: int, millisecond: int, kind: DateTimeKind) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em></div>
+<div class="tip" id="fs23">DateTime.Parse(s: string) : DateTime<br />DateTime.Parse(s: string, provider: IFormatProvider) : DateTime<br />DateTime.Parse(s: string, provider: IFormatProvider, styles: Globalization.DateTimeStyles) : DateTime</div>
+<div class="tip" id="fs24">val endy : int</div>
+<div class="tip" id="fs25">val presidents : obj<br /><br />Full name: Script.presidents</div>
+<div class="tip" id="fs26">val byEnd : obj<br /><br />Full name: Script.byEnd</div>
+<div class="tip" id="fs27">val endDebt : obj<br /><br />Full name: Script.endDebt</div>
+<div class="tip" id="fs28">val byStart : &#39;a<br /><br />Full name: Script.byStart</div>
+<div class="tip" id="fs29">val aligned : &#39;a (requires member ( ? ))<br /><br />Full name: Script.aligned</div>
+<div class="tip" id="fs30">val infos : &#39;a<br /><br />Full name: Script.infos</div>
+<div class="tip" id="fs31">val sprintf : format:Printf.StringFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.sprintf</div>
+<div class="tip" id="fs32">val chunked : &#39;a<br /><br />Full name: Script.chunked</div>
+<div class="tip" id="fs33">val map : mapping:(&#39;T -&gt; &#39;U) -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;U&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.map</div>
+<div class="tip" id="fs34">val startYear : &#39;a</div>
+<div class="tip" id="fs35">val chunkDebts : &#39;a</div>
+<div class="tip" id="fs36">val box : value:&#39;T -&gt; obj<br /><br />Full name: Microsoft.FSharp.Core.Operators.box</div>
+

@@ -1,0 +1,34 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">//#r &quot;Microsoft.TeamFoundation.Client&quot;</span>
+<span class="c">//#r &quot;Microsoft.TeamFoundation.VersionControl.Client&quot;</span>
+<span class="c">//#r &quot;Microsoft.TeamFoundation.VersionControl.Common&quot;</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">Microsoft</span><span class="o">.</span><span class="i">TeamFoundation</span><span class="o">.</span><span class="i">Client</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 2)" onmouseover="showTip(event, 'fs1', 2)" class="i">Microsoft</span><span class="o">.</span><span class="i">TeamFoundation</span><span class="o">.</span><span class="i">VersionControl</span><span class="o">.</span><span class="i">Client</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs2', 3)" onmouseover="showTip(event, 'fs2', 3)" class="f">tfsCheckOut</span> <span onmouseout="hideTip(event, 'fs3', 4)" onmouseover="showTip(event, 'fs3', 4)" class="i">filename</span> <span class="o">=</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs4', 5)" onmouseover="showTip(event, 'fs4', 5)" class="i">workspaceInfo</span> <span class="o">=</span> <span class="i">Workstation</span><span class="o">.</span><span class="i">Current</span><span class="o">.</span><span class="i">GetLocalWorkspaceInfo</span> <span onmouseout="hideTip(event, 'fs3', 6)" onmouseover="showTip(event, 'fs3', 6)" class="i">filename</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs5', 7)" onmouseover="showTip(event, 'fs5', 7)" class="i">workspace</span> <span class="o">=</span> <span class="i">RegisteredTfsConnections</span><span class="o">.</span><span class="i">GetProjectCollections</span>()<span class="o">.</span><span class="i">First</span>()
+                    <span class="o">|&gt;</span> <span class="i">TfsTeamProjectCollectionFactory</span><span class="o">.</span><span class="i">GetTeamProjectCollection</span>
+                    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs4', 8)" onmouseover="showTip(event, 'fs4', 8)" class="i">workspaceInfo</span><span class="o">.</span><span class="i">GetWorkspace</span>
+    <span onmouseout="hideTip(event, 'fs5', 9)" onmouseover="showTip(event, 'fs5', 9)" class="i">workspace</span><span class="o">.</span><span class="i">PendEdit</span> <span onmouseout="hideTip(event, 'fs3', 10)" onmouseover="showTip(event, 'fs3', 10)" class="i">filename</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace Microsoft</div>
+<div class="tip" id="fs2">val tfsCheckOut : filename:&#39;a -&gt; &#39;b<br /><br />Full name: Script.tfsCheckOut</div>
+<div class="tip" id="fs3">val filename : &#39;a</div>
+<div class="tip" id="fs4">val workspaceInfo : obj</div>
+<div class="tip" id="fs5">val workspace : obj</div>
+

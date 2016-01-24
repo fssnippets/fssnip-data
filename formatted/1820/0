@@ -1,0 +1,61 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">FSharp</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">Data</span>
+<span class="k">open</span> <span class="i">XPlot</span><span class="o">.</span><span class="i">GoogleCharts</span>
+<span class="k">open</span> <span class="i">Deedle</span>
+
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="t">N</span><span class="o">=</span><span class="i">HtmlProvider</span><span class="o">&lt;</span><span class="s">&quot;https://www.nuget.org/packages/FSharp.Data&quot;</span><span class="o">&gt;</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="i">packages</span> <span class="o">=</span> [<span class="s">&quot;FSharp.Data&quot;</span>]
+[ <span class="k">for</span> <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="i">pkg</span> <span class="k">in</span> <span onmouseout="hideTip(event, 'fs4', 6)" onmouseover="showTip(event, 'fs4', 6)" class="i">packages</span> <span class="k">-&gt;</span>
+  <span class="k">let</span> <span onmouseout="hideTip(event, 'fs6', 7)" onmouseover="showTip(event, 'fs6', 7)" class="i">data</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs3', 8)" onmouseover="showTip(event, 'fs3', 8)" class="i">N</span><span class="o">.</span><span class="i">Load</span>(<span class="s">&quot;https://www.nuget.org/packages/&quot;</span> <span class="o">+</span> <span onmouseout="hideTip(event, 'fs5', 9)" onmouseover="showTip(event, 'fs5', 9)" class="i">pkg</span>)
+  [<span class="k">for</span> <span onmouseout="hideTip(event, 'fs7', 10)" onmouseover="showTip(event, 'fs7', 10)" class="i">r</span> <span class="k">in</span> <span onmouseout="hideTip(event, 'fs6', 11)" onmouseover="showTip(event, 'fs6', 11)" class="i">data</span><span class="o">.</span><span class="i">Tables</span><span class="o">.</span><span class="i">``Version History``</span><span class="o">.</span><span class="i">Rows</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs7', 12)" onmouseover="showTip(event, 'fs7', 12)" class="i">r</span><span class="o">.</span><span class="i">``Last updated``</span>, <span onmouseout="hideTip(event, 'fs7', 13)" onmouseover="showTip(event, 'fs7', 13)" class="i">r</span><span class="o">.</span><span class="i">Downloads</span>]
+  <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs8', 14)" onmouseover="showTip(event, 'fs8', 14)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs9', 15)" onmouseover="showTip(event, 'fs9', 15)" class="f">groupBy</span> <span onmouseout="hideTip(event, 'fs10', 16)" onmouseover="showTip(event, 'fs10', 16)" class="f">fst</span>
+  <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs8', 17)" onmouseover="showTip(event, 'fs8', 17)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs11', 18)" onmouseover="showTip(event, 'fs11', 18)" class="f">map</span> (<span class="k">fun</span> (<span onmouseout="hideTip(event, 'fs12', 19)" onmouseover="showTip(event, 'fs12', 19)" class="i">k</span>, <span onmouseout="hideTip(event, 'fs13', 20)" onmouseover="showTip(event, 'fs13', 20)" class="i">v</span>) <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs12', 21)" onmouseover="showTip(event, 'fs12', 21)" class="i">k</span>, <span onmouseout="hideTip(event, 'fs14', 22)" onmouseover="showTip(event, 'fs14', 22)" class="f">float</span>(<span onmouseout="hideTip(event, 'fs8', 23)" onmouseover="showTip(event, 'fs8', 23)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs15', 24)" onmouseover="showTip(event, 'fs15', 24)" class="f">sumBy</span> <span onmouseout="hideTip(event, 'fs16', 25)" onmouseover="showTip(event, 'fs16', 25)" class="f">snd</span> <span onmouseout="hideTip(event, 'fs13', 26)" onmouseover="showTip(event, 'fs13', 26)" class="i">v</span>))
+  <span class="o">|&gt;</span> <span class="i">series</span>
+  <span class="o">|&gt;</span> <span class="i">Series</span><span class="o">.</span><span class="i">sortByKey</span>
+  <span class="o">|&gt;</span> <span class="i">Stats</span><span class="o">.</span><span class="i">expandingSum</span> ]
+<span class="o">|&gt;</span> <span class="i">Chart</span><span class="o">.</span><span class="i">Line</span>
+<span class="o">|&gt;</span> <span class="i">Chart</span><span class="o">.</span><span class="i">WithLabels</span> <span onmouseout="hideTip(event, 'fs4', 27)" onmouseover="showTip(event, 'fs4', 27)" class="i">packages</span>
+<span class="o">|&gt;</span> <span class="i">Chart</span><span class="o">.</span><span class="i">WithOptions</span>(<span class="i">Options</span>(<span class="i">trendlines</span><span class="o">=</span>[| 
+     <span class="i">Trendline</span>(<span class="i">``type``</span><span class="o">=</span><span class="s">&quot;polynomial&quot;</span>,<span class="i">lineWidth</span><span class="o">=</span><span class="n">4</span>,<span class="i">opacity</span><span class="o">=</span><span class="n">0.3</span>) |]))
+<span class="o">|&gt;</span> <span class="i">Chart</span><span class="o">.</span><span class="i">WithTitle</span> <span class="s">&quot;F# Data downloads (aggregated)&quot;</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace Microsoft.FSharp</div>
+<div class="tip" id="fs2">namespace Microsoft.FSharp.Data</div>
+<div class="tip" id="fs3">type N = obj<br /><br />Full name: Script.N</div>
+<div class="tip" id="fs4">val packages : string list<br /><br />Full name: Script.packages</div>
+<div class="tip" id="fs5">val pkg : string</div>
+<div class="tip" id="fs6">val data : obj</div>
+<div class="tip" id="fs7">val r : obj</div>
+<div class="tip" id="fs8">module Seq<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs9">val groupBy : projection:(&#39;T -&gt; &#39;Key) -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;Key * seq&lt;&#39;T&gt;&gt; (requires equality)<br /><br />Full name: Microsoft.FSharp.Collections.Seq.groupBy</div>
+<div class="tip" id="fs10">val fst : tuple:(&#39;T1 * &#39;T2) -&gt; &#39;T1<br /><br />Full name: Microsoft.FSharp.Core.Operators.fst</div>
+<div class="tip" id="fs11">val map : mapping:(&#39;T -&gt; &#39;U) -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;U&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.map</div>
+<div class="tip" id="fs12">val k : obj</div>
+<div class="tip" id="fs13">val v : seq&lt;obj * int&gt;</div>
+<div class="tip" id="fs14">Multiple items<br />val float : value:&#39;T -&gt; float (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.float<br /><br />--------------------<br />type float = System.Double<br /><br />Full name: Microsoft.FSharp.Core.float<br /><br />--------------------<br />type float&lt;&#39;Measure&gt; = float<br /><br />Full name: Microsoft.FSharp.Core.float&lt;_&gt;</div>
+<div class="tip" id="fs15">val sumBy : projection:(&#39;T -&gt; &#39;U) -&gt; source:seq&lt;&#39;T&gt; -&gt; &#39;U (requires member ( + ) and member get_Zero)<br /><br />Full name: Microsoft.FSharp.Collections.Seq.sumBy</div>
+<div class="tip" id="fs16">val snd : tuple:(&#39;T1 * &#39;T2) -&gt; &#39;T2<br /><br />Full name: Microsoft.FSharp.Core.Operators.snd</div>
+

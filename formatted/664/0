@@ -1,0 +1,57 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">FileHelpers</span>  
+[&lt; <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="t">DelimitedRecord</span>(<span class="s">&quot;,&quot;</span>)&gt;]
+[&lt;<span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="t">IgnoreFirst</span>(<span class="n">1</span>)&gt;] 
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="t">CsvRecord</span> <span class="o">=</span>
+    <span class="k">class</span>
+        <span class="k">val</span> <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="i">field1</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="t">string</span>
+        <span class="k">val</span> <span onmouseout="hideTip(event, 'fs7', 7)" onmouseover="showTip(event, 'fs7', 7)" class="i">field2</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs8', 8)" onmouseover="showTip(event, 'fs8', 8)" class="t">int</span>
+        <span class="k">val</span> <span onmouseout="hideTip(event, 'fs9', 9)" onmouseover="showTip(event, 'fs9', 9)" class="i">field3</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs6', 10)" onmouseover="showTip(event, 'fs6', 10)" class="t">string</span>
+    <span class="k">end</span>
+ 
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs10', 11)" onmouseover="showTip(event, 'fs10', 11)" class="i">engine</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs11', 12)" onmouseover="showTip(event, 'fs11', 12)" class="t">FileHelperEngine</span>(<span onmouseout="hideTip(event, 'fs12', 13)" onmouseover="showTip(event, 'fs12', 13)" class="i">typeof</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs4', 14)" onmouseover="showTip(event, 'fs4', 14)" class="t">CsvRecord</span><span class="o">&gt;</span>)
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs13', 15)" onmouseover="showTip(event, 'fs13', 15)" class="i">res</span> <span class="o">=</span> 
+   <span class="k">try</span>
+      <span onmouseout="hideTip(event, 'fs10', 16)" onmouseover="showTip(event, 'fs10', 16)" class="i">engine</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs14', 17)" onmouseover="showTip(event, 'fs14', 17)" class="f">ReadFile</span>(<span class="s">&quot;test.csv&quot;</span>)
+   <span class="k">with</span>
+      | <span class="o">:?</span> <span onmouseout="hideTip(event, 'fs1', 18)" onmouseover="showTip(event, 'fs1', 18)" class="i">FileHelpers</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs15', 19)" onmouseover="showTip(event, 'fs15', 19)" class="t">FileHelpersException</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs16', 20)" onmouseover="showTip(event, 'fs16', 20)" class="t">Array</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs17', 21)" onmouseover="showTip(event, 'fs17', 21)" class="i">empty</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs18', 22)" onmouseover="showTip(event, 'fs18', 22)" class="t">obj</span><span class="o">&gt;</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace FileHelpers</div>
+<div class="tip" id="fs2">Multiple items<br />type DelimitedRecordAttribute =<br />&#160;&#160;inherit TypedRecordAttribute<br />&#160;&#160;new : delimiter:string -&gt; DelimitedRecordAttribute<br />&#160;&#160;member Separator : string with get, set<br /><br />Full name: FileHelpers.DelimitedRecordAttribute<br /><br />--------------------<br />DelimitedRecordAttribute(delimiter: string) : unit</div>
+<div class="tip" id="fs3">Multiple items<br />type IgnoreFirstAttribute =<br />&#160;&#160;inherit Attribute<br />&#160;&#160;new : unit -&gt; IgnoreFirstAttribute + 1 overload<br />&#160;&#160;member NumberOfLines : int with get, set<br /><br />Full name: FileHelpers.IgnoreFirstAttribute<br /><br />--------------------<br />IgnoreFirstAttribute() : unit<br />IgnoreFirstAttribute(numberOfLines: int) : unit</div>
+<div class="tip" id="fs4">type CsvRecord =<br />&#160;&#160;val field1: string<br />&#160;&#160;val field2: int<br />&#160;&#160;val field3: string<br /><br />Full name: Script.CsvRecord</div>
+<div class="tip" id="fs5">CsvRecord.field1: string</div>
+<div class="tip" id="fs6">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />Full name: Microsoft.FSharp.Core.Operators.string<br /><br />--------------------<br />type string = System.String<br /><br />Full name: Microsoft.FSharp.Core.string</div>
+<div class="tip" id="fs7">CsvRecord.field2: int</div>
+<div class="tip" id="fs8">Multiple items<br />val int : value:&#39;T -&gt; int (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.int<br /><br />--------------------<br />type int = int32<br /><br />Full name: Microsoft.FSharp.Core.int<br /><br />--------------------<br />type int&lt;&#39;Measure&gt; = int<br /><br />Full name: Microsoft.FSharp.Core.int&lt;_&gt;</div>
+<div class="tip" id="fs9">CsvRecord.field3: string</div>
+<div class="tip" id="fs10">val engine : FileHelperEngine<br /><br />Full name: Script.engine</div>
+<div class="tip" id="fs11">Multiple items<br />type FileHelperEngine =<br />&#160;&#160;inherit FileHelperEngine&lt;obj&gt;<br />&#160;&#160;new : recordType:Type -&gt; FileHelperEngine + 1 overload<br /><br />Full name: FileHelpers.FileHelperEngine<br /><br />--------------------<br />type FileHelperEngine&lt;&#39;T (requires reference type)&gt; =<br />&#160;&#160;inherit EventEngineBase&lt;&#39;T&gt;<br />&#160;&#160;new : unit -&gt; FileHelperEngine&lt;&#39;T&gt; + 1 overload<br />&#160;&#160;member AppendToFile : fileName:string * record:&#39;T -&gt; unit + 1 overload<br />&#160;&#160;member ReadFile : fileName:string -&gt; &#39;T[] + 1 overload<br />&#160;&#160;member ReadFileAsDT : fileName:string -&gt; DataTable + 1 overload<br />&#160;&#160;member ReadFileAsList : fileName:string -&gt; List&lt;&#39;T&gt; + 1 overload<br />&#160;&#160;member ReadStream : reader:TextReader -&gt; &#39;T[] + 1 overload<br />&#160;&#160;member ReadStreamAsDT : reader:TextReader -&gt; DataTable + 1 overload<br />&#160;&#160;member ReadStreamAsList : reader:TextReader * maxRecords:int -&gt; List&lt;&#39;T&gt;<br />&#160;&#160;member ReadString : source:string -&gt; &#39;T[] + 1 overload<br />&#160;&#160;member ReadStringAsDT : source:string -&gt; DataTable + 1 overload<br />&#160;&#160;...<br /><br />Full name: FileHelpers.FileHelperEngine&lt;_&gt;<br /><br />--------------------<br />FileHelperEngine(recordType: System.Type) : unit<br />FileHelperEngine(recordType: System.Type, encoding: System.Text.Encoding) : unit<br /><br />--------------------<br />FileHelperEngine() : unit<br />FileHelperEngine(encoding: System.Text.Encoding) : unit</div>
+<div class="tip" id="fs12">val typeof&lt;&#39;T&gt; : System.Type<br /><br />Full name: Microsoft.FSharp.Core.Operators.typeof</div>
+<div class="tip" id="fs13">val res : obj []<br /><br />Full name: Script.res</div>
+<div class="tip" id="fs14">FileHelperEngine.ReadFile(fileName: string) : obj []<br />FileHelperEngine.ReadFile(fileName: string, maxRecords: int) : obj []</div>
+<div class="tip" id="fs15">Multiple items<br />type FileHelpersException =<br />&#160;&#160;inherit Exception<br />&#160;&#160;new : message:string -&gt; FileHelpersException + 2 overloads<br /><br />Full name: FileHelpers.FileHelpersException<br /><br />--------------------<br />FileHelpersException(message: string) : unit<br />FileHelpersException(message: string, innerEx: exn) : unit<br />FileHelpersException(line: int, column: int, message: string) : unit</div>
+<div class="tip" id="fs16">module Array<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs17">val empty&lt;&#39;T&gt; : &#39;T []<br /><br />Full name: Microsoft.FSharp.Collections.Array.empty</div>
+<div class="tip" id="fs18">type obj = System.Object<br /><br />Full name: Microsoft.FSharp.Core.obj</div>
+

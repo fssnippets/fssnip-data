@@ -1,0 +1,256 @@
+<h2><a name="Implementation-of-the-structural-XML-parser" class="anchor" href="#Implementation-of-the-structural-XML-parser">Implementation of the structural XML parser</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+<span class="l">38: </span>
+<span class="l">39: </span>
+<span class="l">40: </span>
+<span class="l">41: </span>
+<span class="l">42: </span>
+<span class="l">43: </span>
+<span class="l">44: </span>
+<span class="l">45: </span>
+<span class="l">46: </span>
+<span class="l">47: </span>
+<span class="l">48: </span>
+<span class="l">49: </span>
+<span class="l">50: </span>
+<span class="l">51: </span>
+<span class="l">52: </span>
+<span class="l">53: </span>
+<span class="l">54: </span>
+<span class="l">55: </span>
+<span class="l">56: </span>
+<span class="l">57: </span>
+<span class="l">58: </span>
+<span class="l">59: </span>
+<span class="l">60: </span>
+<span class="l">61: </span>
+<span class="l">62: </span>
+<span class="l">63: </span>
+<span class="l">64: </span>
+<span class="l">65: </span>
+<span class="l">66: </span>
+<span class="l">67: </span>
+<span class="l">68: </span>
+<span class="l">69: </span>
+<span class="l">70: </span>
+<span class="l">71: </span>
+<span class="l">72: </span>
+<span class="l">73: </span>
+<span class="l">74: </span>
+<span class="l">75: </span>
+<span class="l">76: </span>
+<span class="l">77: </span>
+<span class="l">78: </span>
+<span class="l">79: </span>
+<span class="l">80: </span>
+<span class="l">81: </span>
+<span class="l">82: </span>
+<span class="l">83: </span>
+<span class="l">84: </span>
+<span class="l">85: </span>
+<span class="l">86: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">// Simple API for working with XML based on matching data </span>
+<span class="c">// to a structure defined using F# discriminated unions</span>
+<span class="prep">#r</span> <span class="s">&quot;System.Xml.Linq.dll&quot;</span>
+
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">System</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 2)" onmouseover="showTip(event, 'fs1', 2)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 3)" onmouseover="showTip(event, 'fs2', 3)" class="i">Net</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 4)" onmouseover="showTip(event, 'fs1', 4)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 5)" onmouseover="showTip(event, 'fs3', 5)" class="i">Xml</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs4', 6)" onmouseover="showTip(event, 'fs4', 6)" class="i">Linq</span>
+
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs5', 7)" onmouseover="showTip(event, 'fs5', 7)" class="i">Microsoft</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs6', 8)" onmouseover="showTip(event, 'fs6', 8)" class="i">FSharp</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs7', 9)" onmouseover="showTip(event, 'fs7', 9)" class="i">Reflection</span>
+
+<span class="k">module</span> <span class="t">Internal</span> <span class="o">=</span> 
+  <span class="c">// Type to hold a generic method (for easy access using reflection)</span>
+  <span class="k">type</span> <span onmouseout="hideTip(event, 'fs8', 10)" onmouseover="showTip(event, 'fs8', 10)" class="t">Helper</span> <span class="o">=</span> 
+    <span class="k">static</span> <span class="k">member</span> <span onmouseout="hideTip(event, 'fs9', 11)" onmouseover="showTip(event, 'fs9', 11)" class="f">CastList</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span>(<span onmouseout="hideTip(event, 'fs10', 12)" onmouseover="showTip(event, 'fs10', 12)" class="i">input</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs1', 13)" onmouseover="showTip(event, 'fs1', 13)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs11', 14)" onmouseover="showTip(event, 'fs11', 14)" class="i">Collections</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs12', 15)" onmouseover="showTip(event, 'fs12', 15)" class="t">IEnumerable</span>) <span class="o">=</span>
+      <span onmouseout="hideTip(event, 'fs10', 16)" onmouseover="showTip(event, 'fs10', 16)" class="i">input</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs13', 17)" onmouseover="showTip(event, 'fs13', 17)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs14', 18)" onmouseover="showTip(event, 'fs14', 18)" class="f">cast</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs15', 19)" onmouseover="showTip(event, 'fs15', 19)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs16', 20)" onmouseover="showTip(event, 'fs16', 20)" class="f">ofSeq</span>  
+
+  <span class="c">/// Converts any &#39;IEnumerable&#39; to a list &#39;list&lt;#type&gt;&#39; where</span>
+  <span class="c">/// type is specified as an argument System.Type</span>
+  <span class="k">let</span> <span onmouseout="hideTip(event, 'fs17', 21)" onmouseover="showTip(event, 'fs17', 21)" class="f">castList</span> <span onmouseout="hideTip(event, 'fs18', 22)" onmouseover="showTip(event, 'fs18', 22)" class="i">typ</span> <span onmouseout="hideTip(event, 'fs19', 23)" onmouseover="showTip(event, 'fs19', 23)" class="i">input</span> <span class="o">=</span> 
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs20', 24)" onmouseover="showTip(event, 'fs20', 24)" class="i">mi</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs21', 25)" onmouseover="showTip(event, 'fs21', 25)" class="i">typeof</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs8', 26)" onmouseover="showTip(event, 'fs8', 26)" class="t">Helper</span><span class="o">&gt;</span><span class="o">.</span><span class="f">GetMethod</span>(<span class="s">&quot;CastList&quot;</span>)<span class="o">.</span><span class="f">MakeGenericMethod</span> [| <span onmouseout="hideTip(event, 'fs18', 27)" onmouseover="showTip(event, 'fs18', 27)" class="i">typ</span> |]
+    <span onmouseout="hideTip(event, 'fs20', 28)" onmouseover="showTip(event, 'fs20', 28)" class="i">mi</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs22', 29)" onmouseover="showTip(event, 'fs22', 29)" class="f">Invoke</span>(<span class="k">null</span>, [| <span onmouseout="hideTip(event, 'fs19', 30)" onmouseover="showTip(event, 'fs19', 30)" class="i">input</span> |])
+
+
+<span class="c">/// Provides an easy access to XML data</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs23', 31)" onmouseover="showTip(event, 'fs23', 31)" class="t">StructuralXml</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span> <span class="k">private</span> (<span onmouseout="hideTip(event, 'fs24', 32)" onmouseover="showTip(event, 'fs24', 32)" class="i">url</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs25', 33)" onmouseover="showTip(event, 'fs25', 33)" class="t">string</span>, <span onmouseout="hideTip(event, 'fs26', 34)" onmouseover="showTip(event, 'fs26', 34)" class="i">ns</span>, <span onmouseout="hideTip(event, 'fs27', 35)" onmouseover="showTip(event, 'fs27', 35)" class="i">lowerCase</span>) <span class="o">=</span> 
+
+  <span class="c">/// A name resolver that turns member name into XName</span>
+  <span class="c">/// depending on the class configuration (namespace, lowerCase flag)</span>
+  <span class="k">let</span> <span onmouseout="hideTip(event, 'fs28', 36)" onmouseover="showTip(event, 'fs28', 36)" class="f">resolveName</span> (<span onmouseout="hideTip(event, 'fs29', 37)" onmouseover="showTip(event, 'fs29', 37)" class="i">str</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs25', 38)" onmouseover="showTip(event, 'fs25', 38)" class="t">string</span>) <span class="o">=</span> 
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs29', 39)" onmouseover="showTip(event, 'fs29', 39)" class="i">str</span> <span class="o">=</span> <span class="k">if</span> <span onmouseout="hideTip(event, 'fs27', 40)" onmouseover="showTip(event, 'fs27', 40)" class="i">lowerCase</span> <span class="k">then</span> <span onmouseout="hideTip(event, 'fs29', 41)" onmouseover="showTip(event, 'fs29', 41)" class="i">str</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs30', 42)" onmouseover="showTip(event, 'fs30', 42)" class="f">ToLower</span>() <span class="k">else</span> <span onmouseout="hideTip(event, 'fs29', 43)" onmouseover="showTip(event, 'fs29', 43)" class="i">str</span>
+    <span class="k">match</span> <span onmouseout="hideTip(event, 'fs26', 44)" onmouseover="showTip(event, 'fs26', 44)" class="i">ns</span> <span class="k">with</span> 
+    | <span onmouseout="hideTip(event, 'fs31', 45)" onmouseover="showTip(event, 'fs31', 45)" class="p">Some</span>(<span onmouseout="hideTip(event, 'fs32', 46)" onmouseover="showTip(event, 'fs32', 46)" class="i">ns</span>) <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs33', 47)" onmouseover="showTip(event, 'fs33', 47)" class="t">XName</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs34', 48)" onmouseover="showTip(event, 'fs34', 48)" class="f">Get</span>(<span onmouseout="hideTip(event, 'fs29', 49)" onmouseover="showTip(event, 'fs29', 49)" class="i">str</span>, <span onmouseout="hideTip(event, 'fs32', 50)" onmouseover="showTip(event, 'fs32', 50)" class="i">ns</span>)
+    | _ <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs33', 51)" onmouseover="showTip(event, 'fs33', 51)" class="t">XName</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs34', 52)" onmouseover="showTip(event, 'fs34', 52)" class="f">Get</span>(<span onmouseout="hideTip(event, 'fs29', 53)" onmouseover="showTip(event, 'fs29', 53)" class="i">str</span>)
+    
+  <span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs35', 54)" onmouseover="showTip(event, 'fs35', 54)" class="f">parseType</span> (<span onmouseout="hideTip(event, 'fs36', 55)" onmouseover="showTip(event, 'fs36', 55)" class="i">element</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs37', 56)" onmouseover="showTip(event, 'fs37', 56)" class="t">XContainer</span>) (<span onmouseout="hideTip(event, 'fs38', 57)" onmouseover="showTip(event, 'fs38', 57)" class="i">targetType</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs1', 58)" onmouseover="showTip(event, 'fs1', 58)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs39', 59)" onmouseover="showTip(event, 'fs39', 59)" class="t">Type</span>) <span class="o">=</span> 
+
+    <span class="c">// Determine information about the target type</span>
+    <span class="c">// If it is list, the &#39;typ&#39; is the element type.</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs40', 60)" onmouseover="showTip(event, 'fs40', 60)" class="i">isList</span>, <span onmouseout="hideTip(event, 'fs18', 61)" onmouseover="showTip(event, 'fs18', 61)" class="i">typ</span> <span class="o">=</span> 
+      <span class="k">if</span> <span onmouseout="hideTip(event, 'fs38', 62)" onmouseover="showTip(event, 'fs38', 62)" class="i">targetType</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs41', 63)" onmouseover="showTip(event, 'fs41', 63)" class="i">IsGenericType</span> <span class="o">&amp;&amp;</span> 
+         <span onmouseout="hideTip(event, 'fs38', 64)" onmouseover="showTip(event, 'fs38', 64)" class="i">targetType</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs42', 65)" onmouseover="showTip(event, 'fs42', 65)" class="f">GetGenericTypeDefinition</span>() <span class="o">=</span> <span onmouseout="hideTip(event, 'fs43', 66)" onmouseover="showTip(event, 'fs43', 66)" class="i">typedefof</span><span class="o">&lt;</span>_ <span onmouseout="hideTip(event, 'fs44', 67)" onmouseover="showTip(event, 'fs44', 67)" class="t">list</span><span class="o">&gt;</span> <span class="k">then</span> 
+        <span class="k">true</span>, <span onmouseout="hideTip(event, 'fs38', 68)" onmouseover="showTip(event, 'fs38', 68)" class="i">targetType</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs45', 69)" onmouseover="showTip(event, 'fs45', 69)" class="f">GetGenericArguments</span>()<span class="o">.</span>[<span class="n">0</span>]
+      <span class="k">else</span> <span class="k">false</span>, <span onmouseout="hideTip(event, 'fs38', 70)" onmouseover="showTip(event, 'fs38', 70)" class="i">targetType</span>
+  
+    <span class="k">if</span> <span onmouseout="hideTip(event, 'fs18', 71)" onmouseover="showTip(event, 'fs18', 71)" class="i">typ</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs21', 72)" onmouseover="showTip(event, 'fs21', 72)" class="i">typeof</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs25', 73)" onmouseover="showTip(event, 'fs25', 73)" class="t">string</span><span class="o">&gt;</span> <span class="k">then</span>
+      <span class="c">// When target is &#39;string&#39;, get the XElement&#39;s body</span>
+      <span onmouseout="hideTip(event, 'fs46', 74)" onmouseover="showTip(event, 'fs46', 74)" class="f">box</span> (<span onmouseout="hideTip(event, 'fs36', 75)" onmouseover="showTip(event, 'fs36', 75)" class="i">element</span> <span class="o">:?&gt;</span> <span onmouseout="hideTip(event, 'fs47', 76)" onmouseover="showTip(event, 'fs47', 76)" class="t">XElement</span>)<span class="o">.</span><span class="i">Value</span>
+    <span class="k">elif</span> <span onmouseout="hideTip(event, 'fs48', 77)" onmouseover="showTip(event, 'fs48', 77)" class="f">not</span>(<span onmouseout="hideTip(event, 'fs49', 78)" onmouseover="showTip(event, 'fs49', 78)" class="t">FSharpType</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs50', 79)" onmouseover="showTip(event, 'fs50', 79)" class="f">IsUnion</span>(<span onmouseout="hideTip(event, 'fs18', 80)" onmouseover="showTip(event, 'fs18', 80)" class="i">typ</span>)) <span class="k">then</span> 
+      <span class="c">// When it&#39;s not a discriminated union, then that&#39;s error</span>
+      <span onmouseout="hideTip(event, 'fs51', 81)" onmouseover="showTip(event, 'fs51', 81)" class="f">failwithf</span> <span class="s">&quot;Expected discriminated union!</span><span class="e">\n</span><span class="s">Got: </span><span class="pf">%s</span><span class="s">&quot;</span> <span onmouseout="hideTip(event, 'fs18', 82)" onmouseover="showTip(event, 'fs18', 82)" class="i">typ</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs52', 83)" onmouseover="showTip(event, 'fs52', 83)" class="i">Name</span>
+    <span class="k">else</span>
+      <span class="c">// For every union case, find all children matching the case name</span>
+      <span class="k">let</span> <span onmouseout="hideTip(event, 'fs53', 84)" onmouseover="showTip(event, 'fs53', 84)" class="i">children</span> <span class="o">=</span>
+        [ <span class="k">for</span> <span onmouseout="hideTip(event, 'fs54', 85)" onmouseover="showTip(event, 'fs54', 85)" class="i">case</span> <span class="k">in</span> <span onmouseout="hideTip(event, 'fs49', 86)" onmouseover="showTip(event, 'fs49', 86)" class="t">FSharpType</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs55', 87)" onmouseover="showTip(event, 'fs55', 87)" class="f">GetUnionCases</span>(<span onmouseout="hideTip(event, 'fs18', 88)" onmouseover="showTip(event, 'fs18', 88)" class="i">typ</span>) <span class="k">do</span>
+            <span class="k">let</span> <span onmouseout="hideTip(event, 'fs56', 89)" onmouseover="showTip(event, 'fs56', 89)" class="i">fields</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs54', 90)" onmouseover="showTip(event, 'fs54', 90)" class="i">case</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs57', 91)" onmouseover="showTip(event, 'fs57', 91)" class="f">GetFields</span>()
+            <span class="k">let</span> <span onmouseout="hideTip(event, 'fs58', 92)" onmouseover="showTip(event, 'fs58', 92)" class="i">children</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs36', 93)" onmouseover="showTip(event, 'fs36', 93)" class="i">element</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs59', 94)" onmouseover="showTip(event, 'fs59', 94)" class="f">Elements</span>(<span onmouseout="hideTip(event, 'fs28', 95)" onmouseover="showTip(event, 'fs28', 95)" class="f">resolveName</span> <span onmouseout="hideTip(event, 'fs54', 96)" onmouseover="showTip(event, 'fs54', 96)" class="i">case</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs60', 97)" onmouseover="showTip(event, 'fs60', 97)" class="i">Name</span>)
+            <span class="k">for</span> <span onmouseout="hideTip(event, 'fs61', 98)" onmouseover="showTip(event, 'fs61', 98)" class="i">ch</span> <span class="k">in</span> <span onmouseout="hideTip(event, 'fs58', 99)" onmouseover="showTip(event, 'fs58', 99)" class="i">children</span> <span class="k">do</span> 
+              <span class="c">// Recursively parse children and match them to the required type</span>
+              <span class="k">let</span> <span onmouseout="hideTip(event, 'fs62', 100)" onmouseover="showTip(event, 'fs62', 100)" class="i">args</span> <span class="o">=</span> [| <span class="k">for</span> <span onmouseout="hideTip(event, 'fs63', 101)" onmouseover="showTip(event, 'fs63', 101)" class="i">field</span> <span class="k">in</span> <span onmouseout="hideTip(event, 'fs56', 102)" onmouseover="showTip(event, 'fs56', 102)" class="i">fields</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs35', 103)" onmouseover="showTip(event, 'fs35', 103)" class="f">parseType</span> <span onmouseout="hideTip(event, 'fs61', 104)" onmouseover="showTip(event, 'fs61', 104)" class="i">ch</span> <span onmouseout="hideTip(event, 'fs63', 105)" onmouseover="showTip(event, 'fs63', 105)" class="i">field</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs64', 106)" onmouseover="showTip(event, 'fs64', 106)" class="i">PropertyType</span> |]
+              <span class="k">yield</span> <span onmouseout="hideTip(event, 'fs65', 107)" onmouseover="showTip(event, 'fs65', 107)" class="t">FSharpValue</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs66', 108)" onmouseover="showTip(event, 'fs66', 108)" class="f">MakeUnion</span>(<span onmouseout="hideTip(event, 'fs54', 109)" onmouseover="showTip(event, 'fs54', 109)" class="i">case</span>, <span onmouseout="hideTip(event, 'fs62', 110)" onmouseover="showTip(event, 'fs62', 110)" class="i">args</span>) ]
+      
+      <span class="c">// If the result is list, convert it to the right type.</span>
+      <span class="c">// If it&#39;s not a list, return the child as object.</span>
+      <span class="k">match</span> <span onmouseout="hideTip(event, 'fs40', 111)" onmouseover="showTip(event, 'fs40', 111)" class="i">isList</span>, <span onmouseout="hideTip(event, 'fs53', 112)" onmouseover="showTip(event, 'fs53', 112)" class="i">children</span> <span class="k">with</span>
+      | <span class="k">true</span>, <span onmouseout="hideTip(event, 'fs53', 113)" onmouseover="showTip(event, 'fs53', 113)" class="i">children</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs67', 114)" onmouseover="showTip(event, 'fs67', 114)" class="t">Internal</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs17', 115)" onmouseover="showTip(event, 'fs17', 115)" class="f">castList</span> <span onmouseout="hideTip(event, 'fs18', 116)" onmouseover="showTip(event, 'fs18', 116)" class="i">typ</span> <span onmouseout="hideTip(event, 'fs53', 117)" onmouseover="showTip(event, 'fs53', 117)" class="i">children</span>
+      | <span class="k">false</span>, [<span onmouseout="hideTip(event, 'fs68', 118)" onmouseover="showTip(event, 'fs68', 118)" class="i">child</span>] <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs68', 119)" onmouseover="showTip(event, 'fs68', 119)" class="i">child</span>
+      | <span class="k">false</span>, _ <span class="k">-&gt;</span> 
+          <span class="c">// When expected type is non-list, but we find</span>
+          <span class="c">// multiple children, that&#39;s an error...</span>
+          <span onmouseout="hideTip(event, 'fs51', 120)" onmouseover="showTip(event, 'fs51', 120)" class="f">failwithf</span> 
+            <span class="s">&quot;Wrong number of children in node (</span><span class="pf">%d</span><span class="s">).</span><span class="e">\n</span><span class="s">When formatting XML as &#39;</span><span class="pf">%s</span><span class="s">&#39;.&quot;</span> 
+            <span onmouseout="hideTip(event, 'fs53', 121)" onmouseover="showTip(event, 'fs53', 121)" class="i">children</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs69', 122)" onmouseover="showTip(event, 'fs69', 122)" class="i">Length</span> <span onmouseout="hideTip(event, 'fs18', 123)" onmouseover="showTip(event, 'fs18', 123)" class="i">typ</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs52', 124)" onmouseover="showTip(event, 'fs52', 124)" class="i">Name</span>
+
+
+  <span class="c">// Parse the document &amp; store it in a local field</span>
+  <span class="k">let</span> <span onmouseout="hideTip(event, 'fs70', 125)" onmouseover="showTip(event, 'fs70', 125)" class="i">root</span> <span class="o">:</span> <span class="o">&#39;</span><span class="i">T</span> <span class="o">=</span> (<span onmouseout="hideTip(event, 'fs35', 126)" onmouseover="showTip(event, 'fs35', 126)" class="f">parseType</span> (<span onmouseout="hideTip(event, 'fs71', 127)" onmouseover="showTip(event, 'fs71', 127)" class="t">XDocument</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs72', 128)" onmouseover="showTip(event, 'fs72', 128)" class="f">Load</span>(<span onmouseout="hideTip(event, 'fs24', 129)" onmouseover="showTip(event, 'fs24', 129)" class="i">url</span>)) <span onmouseout="hideTip(event, 'fs21', 130)" onmouseover="showTip(event, 'fs21', 130)" class="i">typeof</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span>) <span class="o">:?&gt;</span> <span class="o">&#39;</span><span class="i">T</span>
+
+  <span class="c">/// Returns the parsed XML data structure as a value of the user-specified type</span>
+  <span class="k">member</span> <span onmouseout="hideTip(event, 'fs73', 131)" onmouseover="showTip(event, 'fs73', 131)" class="i">x</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs74', 132)" onmouseover="showTip(event, 'fs74', 132)" class="i">Root</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs70', 133)" onmouseover="showTip(event, 'fs70', 133)" class="i">root</span>
+
+  <span class="c">/// Load XML data from the specified URI and dynamically match them</span>
+  <span class="c">/// to a structure described by the discriminated union &#39;T. Optional</span>
+  <span class="c">/// arguments can be used to specify default XML namespace and to </span>
+  <span class="c">/// specify that case names should be treated as lower case.</span>
+  <span class="k">static</span> <span class="k">member</span> <span onmouseout="hideTip(event, 'fs75', 134)" onmouseover="showTip(event, 'fs75', 134)" class="f">Load</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span>(<span onmouseout="hideTip(event, 'fs24', 135)" onmouseover="showTip(event, 'fs24', 135)" class="i">url</span>, <span class="o">?</span><span onmouseout="hideTip(event, 'fs76', 136)" onmouseover="showTip(event, 'fs76', 136)" class="i">Namespace</span>, <span class="o">?</span><span onmouseout="hideTip(event, 'fs77', 137)" onmouseover="showTip(event, 'fs77', 137)" class="i">LowerCase</span>) <span class="o">=</span> 
+    <span class="k">new</span> <span onmouseout="hideTip(event, 'fs23', 138)" onmouseover="showTip(event, 'fs23', 138)" class="t">StructuralXml</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span>(<span onmouseout="hideTip(event, 'fs24', 139)" onmouseover="showTip(event, 'fs24', 139)" class="i">url</span>, <span onmouseout="hideTip(event, 'fs76', 140)" onmouseover="showTip(event, 'fs76', 140)" class="i">Namespace</span>, <span onmouseout="hideTip(event, 'fs78', 141)" onmouseover="showTip(event, 'fs78', 141)" class="f">defaultArg</span> <span onmouseout="hideTip(event, 'fs77', 142)" onmouseover="showTip(event, 'fs77', 142)" class="i">LowerCase</span> <span class="k">false</span>)
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace System</div>
+<div class="tip" id="fs2">namespace System.Net</div>
+<div class="tip" id="fs3">namespace System.Xml</div>
+<div class="tip" id="fs4">namespace System.Xml.Linq</div>
+<div class="tip" id="fs5">namespace Microsoft</div>
+<div class="tip" id="fs6">namespace Microsoft.FSharp</div>
+<div class="tip" id="fs7">namespace Microsoft.FSharp.Reflection</div>
+<div class="tip" id="fs8">type Helper =<br />&#160;&#160;static member CastList : input:IEnumerable -&gt; &#39;T list<br /><br />Full name: Script.Internal.Helper</div>
+<div class="tip" id="fs9">static member Helper.CastList : input:Collections.IEnumerable -&gt; &#39;T list<br /><br />Full name: Script.Internal.Helper.CastList</div>
+<div class="tip" id="fs10">val input : Collections.IEnumerable</div>
+<div class="tip" id="fs11">namespace System.Collections</div>
+<div class="tip" id="fs12">type IEnumerable =<br />&#160;&#160;member GetEnumerator : unit -&gt; IEnumerator<br /><br />Full name: System.Collections.IEnumerable</div>
+<div class="tip" id="fs13">module Seq<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs14">val cast : source:Collections.IEnumerable -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.cast</div>
+<div class="tip" id="fs15">Multiple items<br />module List<br /><br />from Microsoft.FSharp.Collections<br /><br />--------------------<br />type List&lt;&#39;T&gt; =<br />&#160;&#160;| ( [] )<br />&#160;&#160;| ( :: ) of Head: &#39;T * Tail: &#39;T list<br />&#160;&#160;interface IEnumerable<br />&#160;&#160;interface IEnumerable&lt;&#39;T&gt;<br />&#160;&#160;member Head : &#39;T<br />&#160;&#160;member IsEmpty : bool<br />&#160;&#160;member Item : index:int -&gt; &#39;T with get<br />&#160;&#160;member Length : int<br />&#160;&#160;member Tail : &#39;T list<br />&#160;&#160;static member Cons : head:&#39;T * tail:&#39;T list -&gt; &#39;T list<br />&#160;&#160;static member Empty : &#39;T list<br /><br />Full name: Microsoft.FSharp.Collections.List&lt;_&gt;</div>
+<div class="tip" id="fs16">val ofSeq : source:seq&lt;&#39;T&gt; -&gt; &#39;T list<br /><br />Full name: Microsoft.FSharp.Collections.List.ofSeq</div>
+<div class="tip" id="fs17">val castList : typ:Type -&gt; input:&#39;a -&gt; obj<br /><br />Full name: Script.Internal.castList<br /><em><br /><br />&#160;Converts any &#39;IEnumerable&#39; to a list &#39;list&lt;#type&gt;&#39; where<br />&#160;type is specified as an argument System.Type</em></div>
+<div class="tip" id="fs18">val typ : Type</div>
+<div class="tip" id="fs19">val input : &#39;a</div>
+<div class="tip" id="fs20">val mi : Reflection.MethodInfo</div>
+<div class="tip" id="fs21">val typeof&lt;&#39;T&gt; : Type<br /><br />Full name: Microsoft.FSharp.Core.Operators.typeof</div>
+<div class="tip" id="fs22">Reflection.MethodBase.Invoke(obj: obj, parameters: obj []) : obj<br />Reflection.MethodBase.Invoke(obj: obj, invokeAttr: Reflection.BindingFlags, binder: Reflection.Binder, parameters: obj [], culture: Globalization.CultureInfo) : obj</div>
+<div class="tip" id="fs23">Multiple items<br />type StructuralXml&lt;&#39;T&gt; =<br />&#160;&#160;private new : url:string * ns:string option * lowerCase:bool -&gt; StructuralXml&lt;&#39;T&gt;<br />&#160;&#160;member Root : &#39;T<br />&#160;&#160;static member Load : url:string * ?Namespace:string * ?LowerCase:bool -&gt; StructuralXml&lt;&#39;T&gt;<br /><br />Full name: Script.StructuralXml&lt;_&gt;<br /><em><br /><br />&#160;Provides an easy access to XML data</em><br /><br />--------------------<br />private new : url:string * ns:string option * lowerCase:bool -&gt; StructuralXml&lt;&#39;T&gt;</div>
+<div class="tip" id="fs24">val url : string</div>
+<div class="tip" id="fs25">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />Full name: Microsoft.FSharp.Core.Operators.string<br /><br />--------------------<br />type string = String<br /><br />Full name: Microsoft.FSharp.Core.string</div>
+<div class="tip" id="fs26">val ns : string option</div>
+<div class="tip" id="fs27">val lowerCase : bool</div>
+<div class="tip" id="fs28">val resolveName : (string -&gt; XName)<br /><em><br /><br />&#160;A name resolver that turns member name into XName<br />&#160;depending on the class configuration (namespace, lowerCase flag)</em></div>
+<div class="tip" id="fs29">val str : string</div>
+<div class="tip" id="fs30">String.ToLower() : string<br />String.ToLower(culture: Globalization.CultureInfo) : string</div>
+<div class="tip" id="fs31">union case Option.Some: Value: &#39;T -&gt; Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs32">val ns : string</div>
+<div class="tip" id="fs33">type XName =<br />&#160;&#160;member Equals : obj:obj -&gt; bool<br />&#160;&#160;member GetHashCode : unit -&gt; int<br />&#160;&#160;member LocalName : string<br />&#160;&#160;member Namespace : XNamespace<br />&#160;&#160;member NamespaceName : string<br />&#160;&#160;member ToString : unit -&gt; string<br />&#160;&#160;static member Get : expandedName:string -&gt; XName + 1 overload<br /><br />Full name: System.Xml.Linq.XName</div>
+<div class="tip" id="fs34">XName.Get(expandedName: string) : XName<br />XName.Get(localName: string, namespaceName: string) : XName</div>
+<div class="tip" id="fs35">val parseType : (XContainer -&gt; Type -&gt; obj)</div>
+<div class="tip" id="fs36">val element : XContainer</div>
+<div class="tip" id="fs37">type XContainer =<br />&#160;&#160;inherit XNode<br />&#160;&#160;member Add : content:obj -&gt; unit + 1 overload<br />&#160;&#160;member AddFirst : content:obj -&gt; unit + 1 overload<br />&#160;&#160;member CreateWriter : unit -&gt; XmlWriter<br />&#160;&#160;member DescendantNodes : unit -&gt; IEnumerable&lt;XNode&gt;<br />&#160;&#160;member Descendants : unit -&gt; IEnumerable&lt;XElement&gt; + 1 overload<br />&#160;&#160;member Element : name:XName -&gt; XElement<br />&#160;&#160;member Elements : unit -&gt; IEnumerable&lt;XElement&gt; + 1 overload<br />&#160;&#160;member FirstNode : XNode<br />&#160;&#160;member LastNode : XNode<br />&#160;&#160;member Nodes : unit -&gt; IEnumerable&lt;XNode&gt;<br />&#160;&#160;...<br /><br />Full name: System.Xml.Linq.XContainer</div>
+<div class="tip" id="fs38">val targetType : Type</div>
+<div class="tip" id="fs39">type Type =<br />&#160;&#160;inherit MemberInfo<br />&#160;&#160;member Assembly : Assembly<br />&#160;&#160;member AssemblyQualifiedName : string<br />&#160;&#160;member Attributes : TypeAttributes<br />&#160;&#160;member BaseType : Type<br />&#160;&#160;member ContainsGenericParameters : bool<br />&#160;&#160;member DeclaringMethod : MethodBase<br />&#160;&#160;member DeclaringType : Type<br />&#160;&#160;member Equals : o:obj -&gt; bool + 1 overload<br />&#160;&#160;member FindInterfaces : filter:TypeFilter * filterCriteria:obj -&gt; Type[]<br />&#160;&#160;member FindMembers : memberType:MemberTypes * bindingAttr:BindingFlags * filter:MemberFilter * filterCriteria:obj -&gt; MemberInfo[]<br />&#160;&#160;...<br /><br />Full name: System.Type</div>
+<div class="tip" id="fs40">val isList : bool</div>
+<div class="tip" id="fs41">property Type.IsGenericType: bool</div>
+<div class="tip" id="fs42">Type.GetGenericTypeDefinition() : Type</div>
+<div class="tip" id="fs43">val typedefof&lt;&#39;T&gt; : Type<br /><br />Full name: Microsoft.FSharp.Core.Operators.typedefof</div>
+<div class="tip" id="fs44">type &#39;T list = List&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.list&lt;_&gt;</div>
+<div class="tip" id="fs45">Type.GetGenericArguments() : Type []</div>
+<div class="tip" id="fs46">val box : value:&#39;T -&gt; obj<br /><br />Full name: Microsoft.FSharp.Core.Operators.box</div>
+<div class="tip" id="fs47">Multiple items<br />type XElement =<br />&#160;&#160;inherit XContainer<br />&#160;&#160;new : name:XName -&gt; XElement + 4 overloads<br />&#160;&#160;member AncestorsAndSelf : unit -&gt; IEnumerable&lt;XElement&gt; + 1 overload<br />&#160;&#160;member Attribute : name:XName -&gt; XAttribute<br />&#160;&#160;member Attributes : unit -&gt; IEnumerable&lt;XAttribute&gt; + 1 overload<br />&#160;&#160;member DescendantNodesAndSelf : unit -&gt; IEnumerable&lt;XNode&gt;<br />&#160;&#160;member DescendantsAndSelf : unit -&gt; IEnumerable&lt;XElement&gt; + 1 overload<br />&#160;&#160;member FirstAttribute : XAttribute<br />&#160;&#160;member GetDefaultNamespace : unit -&gt; XNamespace<br />&#160;&#160;member GetNamespaceOfPrefix : prefix:string -&gt; XNamespace<br />&#160;&#160;member GetPrefixOfNamespace : ns:XNamespace -&gt; string<br />&#160;&#160;...<br /><br />Full name: System.Xml.Linq.XElement<br /><br />--------------------<br />XElement(name: XName) : unit<br />XElement(other: XElement) : unit<br />XElement(other: XStreamingElement) : unit<br />XElement(name: XName, content: obj) : unit<br />XElement(name: XName, [&lt;ParamArray&gt;] content: obj []) : unit</div>
+<div class="tip" id="fs48">val not : value:bool -&gt; bool<br /><br />Full name: Microsoft.FSharp.Core.Operators.not</div>
+<div class="tip" id="fs49">type FSharpType =<br />&#160;&#160;static member GetExceptionFields : exceptionType:Type * ?bindingFlags:BindingFlags -&gt; PropertyInfo []<br />&#160;&#160;static member GetFunctionElements : functionType:Type -&gt; Type * Type<br />&#160;&#160;static member GetRecordFields : recordType:Type * ?bindingFlags:BindingFlags -&gt; PropertyInfo []<br />&#160;&#160;static member GetTupleElements : tupleType:Type -&gt; Type []<br />&#160;&#160;static member GetUnionCases : unionType:Type * ?bindingFlags:BindingFlags -&gt; UnionCaseInfo []<br />&#160;&#160;static member IsExceptionRepresentation : exceptionType:Type * ?bindingFlags:BindingFlags -&gt; bool<br />&#160;&#160;static member IsFunction : typ:Type -&gt; bool<br />&#160;&#160;static member IsModule : typ:Type -&gt; bool<br />&#160;&#160;static member IsRecord : typ:Type * ?bindingFlags:BindingFlags -&gt; bool<br />&#160;&#160;static member IsTuple : typ:Type -&gt; bool<br />&#160;&#160;...<br /><br />Full name: Microsoft.FSharp.Reflection.FSharpType</div>
+<div class="tip" id="fs50">static member FSharpType.IsUnion : typ:Type * ?allowAccessToPrivateRepresentation:bool -&gt; bool<br />static member FSharpType.IsUnion : typ:Type * ?bindingFlags:Reflection.BindingFlags -&gt; bool</div>
+<div class="tip" id="fs51">val failwithf : format:Printf.StringFormat&lt;&#39;T,&#39;Result&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.failwithf</div>
+<div class="tip" id="fs52">property Reflection.MemberInfo.Name: string</div>
+<div class="tip" id="fs53">val children : obj list</div>
+<div class="tip" id="fs54">val case : UnionCaseInfo</div>
+<div class="tip" id="fs55">static member FSharpType.GetUnionCases : unionType:Type * ?allowAccessToPrivateRepresentation:bool -&gt; UnionCaseInfo []<br />static member FSharpType.GetUnionCases : unionType:Type * ?bindingFlags:Reflection.BindingFlags -&gt; UnionCaseInfo []</div>
+<div class="tip" id="fs56">val fields : Reflection.PropertyInfo []</div>
+<div class="tip" id="fs57">member UnionCaseInfo.GetFields : unit -&gt; Reflection.PropertyInfo []</div>
+<div class="tip" id="fs58">val children : Collections.Generic.IEnumerable&lt;XElement&gt;</div>
+<div class="tip" id="fs59">XContainer.Elements() : Collections.Generic.IEnumerable&lt;XElement&gt;<br />XContainer.Elements(name: XName) : Collections.Generic.IEnumerable&lt;XElement&gt;</div>
+<div class="tip" id="fs60">property UnionCaseInfo.Name: string</div>
+<div class="tip" id="fs61">val ch : XElement</div>
+<div class="tip" id="fs62">val args : obj []</div>
+<div class="tip" id="fs63">val field : Reflection.PropertyInfo</div>
+<div class="tip" id="fs64">property Reflection.PropertyInfo.PropertyType: Type</div>
+<div class="tip" id="fs65">type FSharpValue =<br />&#160;&#160;static member GetExceptionFields : exn:obj * ?bindingFlags:BindingFlags -&gt; obj []<br />&#160;&#160;static member GetRecordField : record:obj * info:PropertyInfo -&gt; obj<br />&#160;&#160;static member GetRecordFields : record:obj * ?bindingFlags:BindingFlags -&gt; obj []<br />&#160;&#160;static member GetTupleField : tuple:obj * index:int -&gt; obj<br />&#160;&#160;static member GetTupleFields : tuple:obj -&gt; obj []<br />&#160;&#160;static member GetUnionFields : value:obj * unionType:Type * ?bindingFlags:BindingFlags -&gt; UnionCaseInfo * obj []<br />&#160;&#160;static member MakeFunction : functionType:Type * implementation:(obj -&gt; obj) -&gt; obj<br />&#160;&#160;static member MakeRecord : recordType:Type * values:obj [] * ?bindingFlags:BindingFlags -&gt; obj<br />&#160;&#160;static member MakeTuple : tupleElements:obj [] * tupleType:Type -&gt; obj<br />&#160;&#160;static member MakeUnion : unionCase:UnionCaseInfo * args:obj [] * ?bindingFlags:BindingFlags -&gt; obj<br />&#160;&#160;...<br /><br />Full name: Microsoft.FSharp.Reflection.FSharpValue</div>
+<div class="tip" id="fs66">static member FSharpValue.MakeUnion : unionCase:UnionCaseInfo * args:obj [] * ?allowAccessToPrivateRepresentation:bool -&gt; obj<br />static member FSharpValue.MakeUnion : unionCase:UnionCaseInfo * args:obj [] * ?bindingFlags:Reflection.BindingFlags -&gt; obj</div>
+<div class="tip" id="fs67">module Internal<br /><br />from Script</div>
+<div class="tip" id="fs68">val child : obj</div>
+<div class="tip" id="fs69">property List.Length: int</div>
+<div class="tip" id="fs70">val root : &#39;T</div>
+<div class="tip" id="fs71">Multiple items<br />type XDocument =<br />&#160;&#160;inherit XContainer<br />&#160;&#160;new : unit -&gt; XDocument + 3 overloads<br />&#160;&#160;member Declaration : XDeclaration with get, set<br />&#160;&#160;member DocumentType : XDocumentType<br />&#160;&#160;member NodeType : XmlNodeType<br />&#160;&#160;member Root : XElement<br />&#160;&#160;member Save : fileName:string -&gt; unit + 6 overloads<br />&#160;&#160;member WriteTo : writer:XmlWriter -&gt; unit<br />&#160;&#160;static member Load : uri:string -&gt; XDocument + 7 overloads<br />&#160;&#160;static member Parse : text:string -&gt; XDocument + 1 overload<br /><br />Full name: System.Xml.Linq.XDocument<br /><br />--------------------<br />XDocument() : unit<br />XDocument([&lt;ParamArray&gt;] content: obj []) : unit<br />XDocument(other: XDocument) : unit<br />XDocument(declaration: XDeclaration, [&lt;ParamArray&gt;] content: obj []) : unit</div>
+<div class="tip" id="fs72">XDocument.Load(reader: Xml.XmlReader) : XDocument<br />XDocument.Load(textReader: IO.TextReader) : XDocument<br />XDocument.Load(stream: IO.Stream) : XDocument<br />XDocument.Load(uri: string) : XDocument<br />XDocument.Load(reader: Xml.XmlReader, options: LoadOptions) : XDocument<br />XDocument.Load(textReader: IO.TextReader, options: LoadOptions) : XDocument<br />XDocument.Load(stream: IO.Stream, options: LoadOptions) : XDocument<br />XDocument.Load(uri: string, options: LoadOptions) : XDocument</div>
+<div class="tip" id="fs73">val x : StructuralXml&lt;&#39;T&gt;</div>
+<div class="tip" id="fs74">member StructuralXml.Root : &#39;T<br /><br />Full name: Script.StructuralXml`1.Root<br /><em><br /><br />&#160;Returns the parsed XML data structure as a value of the user-specified type</em></div>
+<div class="tip" id="fs75">static member StructuralXml.Load : url:string * ?Namespace:string * ?LowerCase:bool -&gt; StructuralXml&lt;&#39;T&gt;<br /><br />Full name: Script.StructuralXml`1.Load<br /><em><br /><br />&#160;Load XML data from the specified URI and dynamically match them<br />&#160;to a structure described by the discriminated union &#39;T. Optional<br />&#160;arguments can be used to specify default XML namespace and to <br />&#160;specify that case names should be treated as lower case.</em></div>
+<div class="tip" id="fs76">val Namespace : string option</div>
+<div class="tip" id="fs77">val LowerCase : bool option</div>
+<div class="tip" id="fs78">val defaultArg : arg:&#39;T option -&gt; defaultValue:&#39;T -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.Operators.defaultArg</div>
+
