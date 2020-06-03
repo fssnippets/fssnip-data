@@ -1,0 +1,14 @@
+(*
+Sieve of Eratosthenes.
+*)
+
+let generatePrimes limit =
+    let candidates = set [ 2 .. limit ]
+    let bases = [| 2 .. (limit / 2 + 1) |]
+
+    let nonPrimes =
+        bases
+        |> Array.map (fun b -> set [ (b * 2) .. b .. limit ])
+        |> Array.reduce (+)
+
+    candidates - nonPrimes

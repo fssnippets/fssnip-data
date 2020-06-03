@@ -1,0 +1,88 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">// Calculate prime numbers using erathosphen method</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">Collections</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="i">Generic</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="f">erathosphensSieve</span>  <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="i">n</span> <span class="o">=</span> 
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="i">numbers</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs7', 7)" onmouseover="showTip(event, 'fs7', 7)" class="t">ResizeArray</span> [|<span class="n">2..</span><span onmouseout="hideTip(event, 'fs5', 8)" onmouseover="showTip(event, 'fs5', 8)" class="i">n</span>|]    
+    <span class="k">let</span> <span class="k">mutable</span> <span onmouseout="hideTip(event, 'fs8', 9)" onmouseover="showTip(event, 'fs8', 9)" class="v">p</span> <span class="o">=</span> <span class="n">2</span>
+    <span class="k">let</span> <span class="k">mutable</span> <span onmouseout="hideTip(event, 'fs9', 10)" onmouseover="showTip(event, 'fs9', 10)" class="v">ready</span> <span class="o">=</span> <span class="k">false</span>
+    <span class="k">while</span> <span onmouseout="hideTip(event, 'fs10', 11)" onmouseover="showTip(event, 'fs10', 11)" class="f">not</span> <span onmouseout="hideTip(event, 'fs9', 12)" onmouseover="showTip(event, 'fs9', 12)" class="v">ready</span> <span class="k">do</span> 
+        <span class="k">match</span> <span onmouseout="hideTip(event, 'fs11', 13)" onmouseover="showTip(event, 'fs11', 13)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs12', 14)" onmouseover="showTip(event, 'fs12', 14)" class="f">tryFindIndex</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs13', 15)" onmouseover="showTip(event, 'fs13', 15)" class="i">x</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs13', 16)" onmouseover="showTip(event, 'fs13', 16)" class="i">x</span> <span class="o">&gt;</span><span class="o">=</span> <span onmouseout="hideTip(event, 'fs8', 17)" onmouseover="showTip(event, 'fs8', 17)" class="v">p</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs8', 18)" onmouseover="showTip(event, 'fs8', 18)" class="v">p</span>) <span onmouseout="hideTip(event, 'fs6', 19)" onmouseover="showTip(event, 'fs6', 19)" class="i">numbers</span> <span class="k">with</span>
+        | <span onmouseout="hideTip(event, 'fs14', 20)" onmouseover="showTip(event, 'fs14', 20)" class="p">None</span> <span class="k">-&gt;</span> 
+            <span onmouseout="hideTip(event, 'fs9', 21)" onmouseover="showTip(event, 'fs9', 21)" class="v">ready</span> <span class="o">&lt;-</span> <span class="k">true</span>
+        | <span onmouseout="hideTip(event, 'fs15', 22)" onmouseover="showTip(event, 'fs15', 22)" class="p">Some</span> <span onmouseout="hideTip(event, 'fs5', 23)" onmouseover="showTip(event, 'fs5', 23)" class="i">n</span> <span class="k">-&gt;</span> 
+            <span class="k">let</span> <span class="k">mutable</span> <span onmouseout="hideTip(event, 'fs16', 24)" onmouseover="showTip(event, 'fs16', 24)" class="v">n</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs5', 25)" onmouseover="showTip(event, 'fs5', 25)" class="i">n</span>
+            <span class="k">let</span> <span class="k">mutable</span> <span onmouseout="hideTip(event, 'fs17', 26)" onmouseover="showTip(event, 'fs17', 26)" class="v">len</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs6', 27)" onmouseover="showTip(event, 'fs6', 27)" class="i">numbers</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs18', 28)" onmouseover="showTip(event, 'fs18', 28)" class="i">Count</span>
+            <span class="k">while</span> <span onmouseout="hideTip(event, 'fs17', 29)" onmouseover="showTip(event, 'fs17', 29)" class="v">len</span> <span class="o">&gt;</span> <span class="n">0</span> <span class="o">&amp;&amp;</span> <span onmouseout="hideTip(event, 'fs16', 30)" onmouseover="showTip(event, 'fs16', 30)" class="v">n</span> <span class="o">&lt;</span> <span onmouseout="hideTip(event, 'fs17', 31)" onmouseover="showTip(event, 'fs17', 31)" class="v">len</span> <span class="k">do</span>
+                <span class="k">if</span> <span onmouseout="hideTip(event, 'fs6', 32)" onmouseover="showTip(event, 'fs6', 32)" class="i">numbers</span><span class="o">.</span>[<span onmouseout="hideTip(event, 'fs16', 33)" onmouseover="showTip(event, 'fs16', 33)" class="v">n</span>] <span class="o">%</span> <span onmouseout="hideTip(event, 'fs8', 34)" onmouseover="showTip(event, 'fs8', 34)" class="v">p</span> <span class="o">=</span> <span class="n">0</span> <span class="k">then</span>
+                    <span onmouseout="hideTip(event, 'fs6', 35)" onmouseover="showTip(event, 'fs6', 35)" class="i">numbers</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs19', 36)" onmouseover="showTip(event, 'fs19', 36)" class="f">RemoveAt</span> <span onmouseout="hideTip(event, 'fs16', 37)" onmouseover="showTip(event, 'fs16', 37)" class="v">n</span>
+                    <span onmouseout="hideTip(event, 'fs17', 38)" onmouseover="showTip(event, 'fs17', 38)" class="v">len</span> <span class="o">&lt;-</span> <span onmouseout="hideTip(event, 'fs17', 39)" onmouseover="showTip(event, 'fs17', 39)" class="v">len</span> <span class="o">-</span> <span class="n">1</span>
+                <span class="k">else</span>
+                    <span onmouseout="hideTip(event, 'fs16', 40)" onmouseover="showTip(event, 'fs16', 40)" class="v">n</span> <span class="o">&lt;-</span> <span onmouseout="hideTip(event, 'fs16', 41)" onmouseover="showTip(event, 'fs16', 41)" class="v">n</span> <span class="o">+</span> <span class="n">1</span>  
+            <span class="c">//printfn &quot;p = %d&quot; p</span>
+            <span class="c">//Seq.iteri (printfn &quot;[%d] : %d&quot;) numbers                 </span>
+            <span class="k">match</span> <span onmouseout="hideTip(event, 'fs11', 42)" onmouseover="showTip(event, 'fs11', 42)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs20', 43)" onmouseover="showTip(event, 'fs20', 43)" class="f">tryFind</span>( <span class="k">fun</span> <span onmouseout="hideTip(event, 'fs13', 44)" onmouseover="showTip(event, 'fs13', 44)" class="i">x</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs13', 45)" onmouseover="showTip(event, 'fs13', 45)" class="i">x</span> <span class="o">&gt;</span> <span onmouseout="hideTip(event, 'fs8', 46)" onmouseover="showTip(event, 'fs8', 46)" class="v">p</span>) <span onmouseout="hideTip(event, 'fs6', 47)" onmouseover="showTip(event, 'fs6', 47)" class="i">numbers</span> <span class="k">with</span>
+            | <span onmouseout="hideTip(event, 'fs14', 48)" onmouseover="showTip(event, 'fs14', 48)" class="p">None</span> <span class="k">-&gt;</span> 
+                <span onmouseout="hideTip(event, 'fs9', 49)" onmouseover="showTip(event, 'fs9', 49)" class="v">ready</span> <span class="o">&lt;-</span> <span class="k">true</span>
+            | <span onmouseout="hideTip(event, 'fs15', 50)" onmouseover="showTip(event, 'fs15', 50)" class="p">Some</span> <span onmouseout="hideTip(event, 'fs13', 51)" onmouseover="showTip(event, 'fs13', 51)" class="i">x</span> <span class="k">-&gt;</span> 
+                <span onmouseout="hideTip(event, 'fs8', 52)" onmouseover="showTip(event, 'fs8', 52)" class="v">p</span> <span class="o">&lt;-</span> <span onmouseout="hideTip(event, 'fs13', 53)" onmouseover="showTip(event, 'fs13', 53)" class="i">x</span>
+    <span onmouseout="hideTip(event, 'fs6', 54)" onmouseover="showTip(event, 'fs6', 54)" class="i">numbers</span>
+      
+<span onmouseout="hideTip(event, 'fs4', 55)" onmouseover="showTip(event, 'fs4', 55)" class="f">erathosphensSieve</span> <span class="n">31</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs11', 56)" onmouseover="showTip(event, 'fs11', 56)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs21', 57)" onmouseover="showTip(event, 'fs21', 57)" class="f">toList</span> <span class="o">=</span> [<span class="n">2</span>; <span class="n">3</span>; <span class="n">5</span>; <span class="n">7</span>; <span class="n">11</span>; <span class="n">13</span>; <span class="n">17</span>; <span class="n">19</span>; <span class="n">23</span>; <span class="n">29</span>; <span class="n">31</span>]
+<span onmouseout="hideTip(event, 'fs4', 58)" onmouseover="showTip(event, 'fs4', 58)" class="f">erathosphensSieve</span> <span class="n">41</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs11', 59)" onmouseover="showTip(event, 'fs11', 59)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs21', 60)" onmouseover="showTip(event, 'fs21', 60)" class="f">toList</span> <span class="o">=</span> [<span class="n">2</span>; <span class="n">3</span>; <span class="n">5</span>; <span class="n">7</span>; <span class="n">11</span>; <span class="n">13</span>; <span class="n">17</span>; <span class="n">19</span>; <span class="n">23</span>; <span class="n">29</span>; <span class="n">31</span>; <span class="n">37</span>; <span class="n">41</span>]
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace System</div>
+<div class="tip" id="fs2">namespace System.Collections</div>
+<div class="tip" id="fs3">namespace System.Collections.Generic</div>
+<div class="tip" id="fs4">val erathosphensSieve : n:int -&gt; List&lt;int&gt;<br /><br />Full name: Script.erathosphensSieve</div>
+<div class="tip" id="fs5">val n : int</div>
+<div class="tip" id="fs6">val numbers : List&lt;int&gt;</div>
+<div class="tip" id="fs7">type ResizeArray&lt;&#39;T&gt; = List&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.ResizeArray&lt;_&gt;</div>
+<div class="tip" id="fs8">val mutable p : int</div>
+<div class="tip" id="fs9">val mutable ready : bool</div>
+<div class="tip" id="fs10">val not : value:bool -&gt; bool<br /><br />Full name: Microsoft.FSharp.Core.Operators.not</div>
+<div class="tip" id="fs11">module Seq<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs12">val tryFindIndex : predicate:(&#39;T -&gt; bool) -&gt; source:seq&lt;&#39;T&gt; -&gt; int option<br /><br />Full name: Microsoft.FSharp.Collections.Seq.tryFindIndex</div>
+<div class="tip" id="fs13">val x : int</div>
+<div class="tip" id="fs14">union case Option.None: Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs15">union case Option.Some: Value: &#39;T -&gt; Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs16">val mutable n : int</div>
+<div class="tip" id="fs17">val mutable len : int</div>
+<div class="tip" id="fs18">property List.Count: int</div>
+<div class="tip" id="fs19">List.RemoveAt(index: int) : unit</div>
+<div class="tip" id="fs20">val tryFind : predicate:(&#39;T -&gt; bool) -&gt; source:seq&lt;&#39;T&gt; -&gt; &#39;T option<br /><br />Full name: Microsoft.FSharp.Collections.Seq.tryFind</div>
+<div class="tip" id="fs21">val toList : source:seq&lt;&#39;T&gt; -&gt; &#39;T list<br /><br />Full name: Microsoft.FSharp.Collections.Seq.toList</div>
+

@@ -1,0 +1,9 @@
+type PairDispatcher = PairDispatcher with
+  static member inline ($) (PairDispatcher,        (a, b)) = fun f -> f a b
+  static member inline ($) (PairDispatcher, struct (a, b)) = fun f -> f a b
+  
+let inline fst x = (PairDispatcher $ x) (fun a _ -> a)
+let inline snd x = (PairDispatcher $ x) (fun _ b -> b)
+
+let res1 = fst (1, 2)
+let res2 = snd struct (1, 2)

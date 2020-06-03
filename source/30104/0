@@ -1,0 +1,19 @@
+open System.Threading.Task
+
+type AsyncBuilder with
+  member x.Bind(task : Task<'a>, f : 'a -> Async<'b>) =
+    let task = task |> Async.AwaitTask
+    async.Bind(task, f)
+
+
+// Example
+let work = async {
+        use client = new System.Net.WebClient()
+        let! bytes = client.DownloadDataTaskAsync(Uri("http://www.google.com"))  
+        do! Task.Factory.StartNew<unit>(fun () -> File.WriteAllBytes(@"c:\temp\google.bin", bytes))
+
+        do! Task.Run<unit>(fun () -> printfn "Bytes len %d" bytes.Length)
+
+        return bytes } |> Async.RunSynchronously
+
+printfn "first 5 Bytes %A" work.[0..4]

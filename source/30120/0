@@ -1,0 +1,75 @@
+open Owin
+open System
+open System.Collections.Generic
+open System.Threading.Tasks
+open System.IO
+open System.Runtime.CompilerServices
+open System.Web.Http
+open Microsoft.Owin.Hosting
+
+(* basic types *)
+type Greeting = { text: string }
+type AppFunc = Func<IDictionary<string, obj>, Task>
+let awaitTask = Async.AwaitIAsyncResult >> Async.Ignore
+
+(* Controllers *)
+type GreetingController() =
+    inherit ApiController()
+    member this.Get() = { text = "Hello World "}
+
+(* Middleware *)
+type HelloWorldComponent(next: AppFunc) =
+    let _next = next
+    member this.Invoke(environment: IDictionary<string, obj>) : Task = 
+        let response = environment.["owin.ResponseBody"] :?> Stream
+        use writer = new StreamWriter(response)
+        writer.WriteAsync("Hello!!!")
+
+(* Extensions *)
+[<Extension>]
+type AppBuilderExtensions () =
+    [<Extension>]
+    static member UseHelloWorld(app: IAppBuilder) =
+        app.Use<HelloWorldComponent>() |> ignore
+
+(* Startup class *)
+type Startup() =
+    let configureWebApi = fun (app: IAppBuilder) -> 
+        let inline (=>) a b = a, box b
+        let config = new HttpConfiguration()
+        let defaults = dict ["id" => RouteParameter.Optional]
+
+        config.Routes.MapHttpRoute("DefaultApi", "api/{controller}/{id}", defaults) |> ignore
+        app.UseWebApi(config)
+
+    member this.Configuration(app: IAppBuilder) =
+        app.Use(fun environment next ->
+            printfn "showing environment...."
+            for pair in environment.Environment do
+                printfn "%s : %A" pair.Key pair.Value
+
+            async { 
+                do! awaitTask <| next.Invoke()
+            } |> Async.StartAsTask :> Task) |> ignore
+
+        app.Use(fun environment next ->
+            printfn "showing request & response...."
+            printfn "Request path: %s" (environment.Request.Path.ToString())
+            async { 
+                do! awaitTask <| next.Invoke()
+                printfn "Response status code: %i" environment.Response.StatusCode
+            } |> Async.StartAsTask :> Task) |> ignore
+
+        configureWebApi(app) |> ignore
+
+        app.UseHelloWorld() |> ignore
+
+(* main *)
+[<EntryPoint>]
+let main argv = 
+    let uri = "http://localhost:8080"
+    use app = WebApp.Start<Startup>(uri)
+    printfn "Started!"
+    Console.ReadKey() |> ignore
+    printfn "Stopping"
+    0

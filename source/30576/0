@@ -1,0 +1,108 @@
+//[snippet:HKT encoding]
+type App<'F, 't> = private App of payload : obj
+
+module HKT =
+    let inline pack (value : 'Fa) : App<'F, 'a>
+        when 'F : (static member Assign : App<'F, 'a> * 'Fa -> unit) =
+        App value
+        
+    let inline unpack (App value : App<'F, 'a>) : 'Fa
+        when 'F : (static member Assign : App<'F, 'a> * 'Fa -> unit) =
+        value :?> _
+
+    let inline (|Unpack|) app = unpack app
+
+//[/snippet]
+//[snippet:Leibniz Equality]
+
+// Leibniz equality c.f. http://okmij.org/ftp/Computation/extra-polymorphism.html?new#injectivity
+// NB `To` implies `From`, proof omitted for brevity
+type Eq<'a,'b> =
+    abstract To<'F> : App<'F, 'a> -> App<'F, 'b>
+    abstract From<'F> : App<'F, 'b> -> App<'F, 'a>
+
+module Eq =
+    // Equivalence axioms
+
+    let refl<'a> = 
+        { new Eq<'a, 'a> with 
+            member __.To x = x 
+            member __.From x = x }
+
+    let sym (eq : Eq<'a,'b>) =
+        { new Eq<'b, 'a> with
+            member __.To x = eq.From x
+            member __.From x = eq.To x }
+
+    let trans (eq : Eq<'a, 'b>) (eq' : Eq<'b, 'c>) =
+        { new Eq<'a, 'c> with
+            member __.To x = eq'.To(eq.To(x))
+            member __.From x = eq.From(eq'.From(x)) }
+
+//[/snippet]
+//[snippet:Typed Expressions]
+
+type Expr<'a> =
+    | Bool of bool * Eq<'a, bool>
+    | Int  of int  * Eq<'a, int>
+    | Add  of Expr<int> * Expr<int> * Eq<'a, int>
+    | IfThenElse of Expr<bool> * Expr<'a> * Expr<'a>
+
+module Expr =
+
+    let bool b = Bool(b, Eq.refl)
+    let int  i = Int(i , Eq.refl)
+    let add x y = Add(x, y, Eq.refl)
+    let ifThenElse b x y = IfThenElse(b, x, y)
+
+let testExpr = Expr.ifThenElse (Expr.bool true) (Expr.add (Expr.int 10) (Expr.int 32)) (Expr.int -2)
+
+//[/snippet]
+//[snippet:Simple Evaluator]
+
+// Identity functor encoding
+type Id = 
+    static member Assign(_ : App<Id, 'a>, _ : 'a) = ()
+    // helper functions
+    static member To (eq : Eq<'a, 'b>) (x : 'a) = eq.To<Id>(HKT.pack x) |> HKT.unpack
+    static member From (eq : Eq<'a, 'b>) (x : 'b) = eq.From<Id>(HKT.pack x) |> HKT.unpack
+
+let rec eval<'t> (e : Expr<'t>) : 't =
+    match e with
+    | Bool(b, eq) -> Id.From eq b
+    | Int (i, eq) -> Id.From eq i
+    | Add (x, y, eq) -> Id.From eq (eval x + eval y)
+    | IfThenElse(b, x, y) -> if eval b then eval x else eval y
+
+eval testExpr
+
+//[/snippet]
+//[snippet:Evaluating to thunks]
+
+type Thunk = 
+    static member Assign(_ : App<Thunk, 'a>, _ : unit -> 'a) = ()
+
+    static member To (eq : Eq<'a, 'b>) (x : unit -> 'a) = eq.To<Thunk>(HKT.pack x) |> HKT.unpack
+    static member From (eq : Eq<'a, 'b>) (x : unit -> 'b) = eq.From<Thunk>(HKT.pack x) |> HKT.unpack
+
+let rec toThunk<'t> (e : Expr<'t>) : (unit -> 't) =
+    match e with
+    | Bool (b, eq) -> Thunk.From eq (fun () -> b)
+    | Int  (i, eq) -> Thunk.From eq (fun () -> i)
+    | Add  (x, y, eq) -> 
+        let xt = toThunk x
+        let yt = toThunk y
+        Thunk.From eq (fun () -> xt () + yt ())
+
+    | IfThenElse (b,x,y) ->
+        let bt = toThunk b
+        let xt = toThunk x
+        let yt = toThunk y
+        (fun () -> if bt() then xt() else yt())
+
+
+// interpret once
+let f = toThunk testExpr
+// evaluate many times without interpretation costs
+[ for i in 1 .. 100 -> f () ] 
+//[/snippet]

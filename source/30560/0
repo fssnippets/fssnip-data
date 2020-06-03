@@ -1,0 +1,45 @@
+/// Extends the Result module with additional functions which can be useful for processing Result types.
+module Result =
+    [<CompiledName("IsOk")>]
+    let isOk result = match result with Error _ -> false | Ok _ -> true
+  
+    [<CompiledName("IsError")>]
+    let isError result = match result with Error _ -> true | Ok _ -> false
+    
+    [<CompiledName("ChooseOk")>]
+    let chooseOk result = match result with Error _ -> None | Ok x -> Some x
+
+    [<CompiledName("ChooseError")>]
+    let chooseError result = match result with Error err -> Some err | Ok _ -> None
+
+    [<CompiledName("Get")>]
+    let getOk result = match result with Error err -> failwithf "Could not get Ok item from Result as it contained an error: %A" err | Ok x -> x
+
+    [<CompiledName("GetError")>]
+    let getError result = match result with Error err -> err | Ok x -> failwithf "Could not get Error from Result: %A" x
+    
+    [<CompiledName("Throw")>]
+    let throwOnError result = match result with Error err -> failwith err | Ok _ -> ()
+
+// A common scenario is processing a list of items and handling the results
+let mixedBag =
+    [|
+        Ok 50.0
+        Error "Could not retrieve statistics for item: Reason 1"
+        Ok 16.5
+        Ok 10.1
+        Error "Could not retrieve statistics for item: Reason 2"
+        Ok 5.0
+    |]
+
+// You may want to route the successes to a different workflow
+let successes = 
+    mixedBag 
+    |> Array.choose Result.chooseOk
+    
+// You may also want to route the failures to a different workflow
+let failures =
+    mixedBag
+    |> Array.choose Result.chooseError
+    
+printfn "There were %d successes and %d failures for this operation." successes.Length failures.Length

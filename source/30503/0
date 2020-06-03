@@ -1,0 +1,88 @@
+open System
+open System.IO
+
+type State<'s, 'a> = State of ('s -> ('a * 's))
+
+module State =
+    let inline run (state: 's) (x: State<'s, 'a>) =
+        let (State(f)) = x
+        f state
+        
+    let get: State<'s, 's> = State(fun s -> (s, s))
+    
+    let put (newState: 's) = State(fun _ -> ((), newState))
+    
+    let map (f: 'a -> 'b) (s: State<'s, 'a>) =
+        State(fun (state: 's) ->
+                    let x, state = run state s
+                    f x, state)
+
+type StateBuilder() = //computation expression (https://docs.microsoft.com/en-us/dotnet/fsharp/language-reference/computation-expressions#creating-a-new-type-of-computation-expression)
+    member this.Zero () = State(fun s -> (), s)
+    member this.Return x = State(fun s -> x, s)
+    member inline this.ReturnFrom (x: State<'s, 'a>) = x
+    member this.Bind (x, f) : State<'s, 'b> =
+        State(fun state ->
+            let (result: 'a), state = State.run state x
+            State.run state (f result))
+    member this.Combine (x1: State<'s, 'a>, x2: State<'s, 'b>) =
+        State(fun state ->
+            let result, state = State.run state x1
+            State.run state x2)
+    member this.Delay f : State<'s, 'a> = f ()
+    member this.For (seq, (f: 'a -> State<'s, 'b>)) =
+        seq
+        |> Seq.map f
+        |> Seq.reduceBack (fun x1 x2 -> this.Combine (x1, x2))
+    member this.While (f, x) =
+        if f () then this.Combine (x, this.While (f, x))
+        else this.Zero ()
+
+let state = new StateBuilder()
+
+let (=>>) = (fun a b -> state.Bind(a, b))
+
+let add (a: float) = State(fun state -> (state + a, state + a))
+let subtract (a: float) = State(fun state -> (state - a, state - a))
+let multiply (a: float) = State(fun state -> (state * a, state * a))
+let divide (a: float) = State(fun state -> (state / a, state / a))
+let ignore (a) = State(fun state -> ((), state))
+
+let constant x y = x
+
+// elso variacio, nincs binding
+
+let myComp =
+    state {
+        do! add 10.0 |> ignore
+        do! divide 12.3 |> ignore
+        do! subtract 11.2 |> ignore
+        do! multiply 100.0 |> ignore
+    } |> State.run 0.0
+
+
+// ugyanaz csak desugarozva
+let myComp' = State.run 0.0
+                  (add 10.0
+                   =>> constant (divide 12.3)
+                   =>> constant (subtract 11.2)
+                   =>> constant (multiply 100.0))    
+
+// masodik variacio, van binding, computation expression
+
+let myComp2 =
+    state {
+        let! res1 = add 10.0
+        let! res2 = divide 12.3
+        let! res3 = subtract 11.2
+        let! res4 = multiply 100.0
+        return res1 + res2 + res3 + res4
+    } |> State.run 0.0
+
+// ugyanaz, csak desugarozva
+let myComp2' = State.run 0.0
+                  (add 10.0 =>>
+                   (fun res1 -> divide 12.3 =>>
+                                (fun res2 -> subtract 11.2 =>>
+                                             (fun res3 -> multiply 100.0 =>>
+                                                          (fun res4 -> State.put (res1 + res2 + res3 + res4))))))

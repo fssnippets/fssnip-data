@@ -1,0 +1,301 @@
+<h2><a name="Basic-Types-amp-Builder" class="anchor" href="#Basic-Types-amp-Builder">Basic Types &amp; Builder</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">type</span> <span class="t">Eff</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">Ctx</span>, <span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span> <span class="o">=</span> <span class="o">&#39;</span><span class="i">Ctx</span> <span class="k">-&gt;</span> <span class="o">&#39;</span><span class="i">T</span>
+
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="t">EffBuilder</span>() <span class="o">=</span>
+    <span class="k">member</span> <span class="i">__</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="f">Return</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="i">x</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="t">Eff</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">Ctx</span>,<span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span> <span class="o">=</span> <span class="k">fun</span> _ <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs3', 5)" onmouseover="showTip(event, 'fs3', 5)" class="i">x</span>
+    <span class="k">member</span> <span onmouseout="hideTip(event, 'fs5', 6)" onmouseover="showTip(event, 'fs5', 6)" class="i">__</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs6', 7)" onmouseover="showTip(event, 'fs6', 7)" class="f">Bind</span>(<span onmouseout="hideTip(event, 'fs7', 8)" onmouseover="showTip(event, 'fs7', 8)" class="f">f</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs4', 9)" onmouseover="showTip(event, 'fs4', 9)" class="t">Eff</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">Ctx</span>, <span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span>, <span onmouseout="hideTip(event, 'fs8', 10)" onmouseover="showTip(event, 'fs8', 10)" class="f">g</span> <span class="o">:</span> <span class="o">&#39;</span><span class="i">T</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs4', 11)" onmouseover="showTip(event, 'fs4', 11)" class="t">Eff</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">Ctx</span>, <span class="o">&#39;</span><span class="i">S</span><span class="o">&gt;</span>) <span class="o">:</span> <span onmouseout="hideTip(event, 'fs4', 12)" onmouseover="showTip(event, 'fs4', 12)" class="t">Eff</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">Ctx</span>, <span class="o">&#39;</span><span class="i">S</span><span class="o">&gt;</span> <span class="o">=</span>
+        <span class="k">fun</span> <span onmouseout="hideTip(event, 'fs9', 13)" onmouseover="showTip(event, 'fs9', 13)" class="i">c</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs8', 14)" onmouseover="showTip(event, 'fs8', 14)" class="f">g</span> (<span onmouseout="hideTip(event, 'fs7', 15)" onmouseover="showTip(event, 'fs7', 15)" class="f">f</span> <span onmouseout="hideTip(event, 'fs9', 16)" onmouseover="showTip(event, 'fs9', 16)" class="i">c</span>) <span onmouseout="hideTip(event, 'fs9', 17)" onmouseover="showTip(event, 'fs9', 17)" class="i">c</span>
+
+    <span class="k">member</span> <span onmouseout="hideTip(event, 'fs5', 18)" onmouseover="showTip(event, 'fs5', 18)" class="i">__</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs10', 19)" onmouseover="showTip(event, 'fs10', 19)" class="f">Zero</span>() <span class="o">:</span> <span onmouseout="hideTip(event, 'fs4', 20)" onmouseover="showTip(event, 'fs4', 20)" class="t">Eff</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">Ctx</span>, <span onmouseout="hideTip(event, 'fs11', 21)" onmouseover="showTip(event, 'fs11', 21)" class="t">unit</span><span class="o">&gt;</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs12', 22)" onmouseover="showTip(event, 'fs12', 22)" class="f">ignore</span>
+    <span class="k">member</span> <span onmouseout="hideTip(event, 'fs5', 23)" onmouseover="showTip(event, 'fs5', 23)" class="i">__</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs13', 24)" onmouseover="showTip(event, 'fs13', 24)" class="f">ReturnFrom</span> (<span onmouseout="hideTip(event, 'fs14', 25)" onmouseover="showTip(event, 'fs14', 25)" class="f">x</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs4', 26)" onmouseover="showTip(event, 'fs4', 26)" class="t">Eff</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">Ctx</span>, <span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span>) <span class="o">=</span> <span onmouseout="hideTip(event, 'fs14', 27)" onmouseover="showTip(event, 'fs14', 27)" class="f">x</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs15', 28)" onmouseover="showTip(event, 'fs15', 28)" class="i">eff</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs1', 29)" onmouseover="showTip(event, 'fs1', 29)" class="t">EffBuilder</span>()
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs16', 30)" onmouseover="showTip(event, 'fs16', 30)" class="f">getCtx</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">Ctx</span><span class="o">&gt;</span> () <span class="o">:</span> <span onmouseout="hideTip(event, 'fs4', 31)" onmouseover="showTip(event, 'fs4', 31)" class="t">Eff</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">Ctx</span>, <span class="o">&#39;</span><span class="i">Ctx</span><span class="o">&gt;</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs17', 32)" onmouseover="showTip(event, 'fs17', 32)" class="f">id</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs18', 33)" onmouseover="showTip(event, 'fs18', 33)" class="f">run</span> <span onmouseout="hideTip(event, 'fs19', 34)" onmouseover="showTip(event, 'fs19', 34)" class="i">ctx</span> (<span onmouseout="hideTip(event, 'fs20', 35)" onmouseover="showTip(event, 'fs20', 35)" class="f">eff</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs4', 36)" onmouseover="showTip(event, 'fs4', 36)" class="t">Eff</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">Ctx</span>, <span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span>) <span class="o">=</span> <span onmouseout="hideTip(event, 'fs20', 37)" onmouseover="showTip(event, 'fs20', 37)" class="f">eff</span> <span onmouseout="hideTip(event, 'fs19', 38)" onmouseover="showTip(event, 'fs19', 38)" class="i">ctx</span>
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Defining-and-combining-abstract-effects" class="anchor" href="#Defining-and-combining-abstract-effects">Defining and combining abstract effects</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+<span class="l">38: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">module</span> <span class="t">Logger</span> <span class="o">=</span>
+
+    <span class="k">type</span> <span onmouseout="hideTip(event, 'fs21', 39)" onmouseover="showTip(event, 'fs21', 39)" class="t">ILogger</span> <span class="o">=</span> 
+        <span class="k">abstract</span> <span onmouseout="hideTip(event, 'fs22', 40)" onmouseover="showTip(event, 'fs22', 40)" class="f">Log</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs23', 41)" onmouseover="showTip(event, 'fs23', 41)" class="t">string</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs11', 42)" onmouseover="showTip(event, 'fs11', 42)" class="t">unit</span>
+
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs24', 43)" onmouseover="showTip(event, 'fs24', 43)" class="f">log</span> (<span onmouseout="hideTip(event, 'fs25', 44)" onmouseover="showTip(event, 'fs25', 44)" class="i">msg</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs23', 45)" onmouseover="showTip(event, 'fs23', 45)" class="t">string</span>) <span class="o">=</span> <span onmouseout="hideTip(event, 'fs15', 46)" onmouseover="showTip(event, 'fs15', 46)" class="i">eff</span> {
+        <span class="k">let!</span> <span onmouseout="hideTip(event, 'fs26', 47)" onmouseover="showTip(event, 'fs26', 47)" class="i">logger</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs16', 48)" onmouseover="showTip(event, 'fs16', 48)" class="f">getCtx</span><span class="o">&lt;</span>#<span onmouseout="hideTip(event, 'fs21', 49)" onmouseover="showTip(event, 'fs21', 49)" class="t">ILogger</span><span class="o">&gt;</span> ()
+        <span onmouseout="hideTip(event, 'fs26', 50)" onmouseover="showTip(event, 'fs26', 50)" class="i">logger</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs27', 51)" onmouseover="showTip(event, 'fs27', 51)" class="f">Log</span> <span onmouseout="hideTip(event, 'fs25', 52)" onmouseover="showTip(event, 'fs25', 52)" class="i">msg</span>
+    }
+
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs28', 53)" onmouseover="showTip(event, 'fs28', 53)" class="f">logf</span> <span onmouseout="hideTip(event, 'fs29', 54)" onmouseover="showTip(event, 'fs29', 54)" class="i">fmt</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs30', 55)" onmouseover="showTip(event, 'fs30', 55)" class="t">Printf</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs31', 56)" onmouseover="showTip(event, 'fs31', 56)" class="f">ksprintf</span> <span onmouseout="hideTip(event, 'fs24', 57)" onmouseover="showTip(event, 'fs24', 57)" class="f">log</span> <span onmouseout="hideTip(event, 'fs29', 58)" onmouseover="showTip(event, 'fs29', 58)" class="i">fmt</span>
+
+<span class="k">module</span> <span class="t">State</span> <span class="o">=</span>
+
+    <span class="k">type</span> <span onmouseout="hideTip(event, 'fs32', 59)" onmouseover="showTip(event, 'fs32', 59)" class="t">IState</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span> <span class="o">=</span>
+        <span class="k">abstract</span> <span onmouseout="hideTip(event, 'fs33', 60)" onmouseover="showTip(event, 'fs33', 60)" class="f">Get</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs11', 61)" onmouseover="showTip(event, 'fs11', 61)" class="t">unit</span> <span class="k">-&gt;</span> <span class="o">&#39;</span><span class="i">T</span>
+        <span class="k">abstract</span> <span onmouseout="hideTip(event, 'fs34', 62)" onmouseover="showTip(event, 'fs34', 62)" class="f">Set</span> <span class="o">:</span> <span class="o">&#39;</span><span class="i">T</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs11', 63)" onmouseover="showTip(event, 'fs11', 63)" class="t">unit</span>
+
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs35', 64)" onmouseover="showTip(event, 'fs35', 64)" class="f">get</span> () <span class="o">=</span> <span onmouseout="hideTip(event, 'fs15', 65)" onmouseover="showTip(event, 'fs15', 65)" class="i">eff</span> {
+        <span class="k">let!</span> <span onmouseout="hideTip(event, 'fs36', 66)" onmouseover="showTip(event, 'fs36', 66)" class="i">state</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs16', 67)" onmouseover="showTip(event, 'fs16', 67)" class="f">getCtx</span><span class="o">&lt;</span>#<span onmouseout="hideTip(event, 'fs32', 68)" onmouseover="showTip(event, 'fs32', 68)" class="t">IState</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span><span class="o">&gt;</span>()
+        <span class="k">return</span> <span onmouseout="hideTip(event, 'fs36', 69)" onmouseover="showTip(event, 'fs36', 69)" class="i">state</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs37', 70)" onmouseover="showTip(event, 'fs37', 70)" class="f">Get</span>()
+    }
+
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs38', 71)" onmouseover="showTip(event, 'fs38', 71)" class="f">set</span> (<span onmouseout="hideTip(event, 'fs39', 72)" onmouseover="showTip(event, 'fs39', 72)" class="i">t</span> <span class="o">:</span> <span class="o">&#39;</span><span class="i">T</span>) <span class="o">=</span> <span onmouseout="hideTip(event, 'fs15', 73)" onmouseover="showTip(event, 'fs15', 73)" class="i">eff</span> {
+        <span class="k">let!</span> <span onmouseout="hideTip(event, 'fs36', 74)" onmouseover="showTip(event, 'fs36', 74)" class="i">state</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs16', 75)" onmouseover="showTip(event, 'fs16', 75)" class="f">getCtx</span><span class="o">&lt;</span>#<span onmouseout="hideTip(event, 'fs32', 76)" onmouseover="showTip(event, 'fs32', 76)" class="t">IState</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span><span class="o">&gt;</span>()
+        <span onmouseout="hideTip(event, 'fs36', 77)" onmouseover="showTip(event, 'fs36', 77)" class="i">state</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs40', 78)" onmouseover="showTip(event, 'fs40', 78)" class="f">Set</span> <span onmouseout="hideTip(event, 'fs39', 79)" onmouseover="showTip(event, 'fs39', 79)" class="i">t</span>
+    }
+
+
+<span class="k">module</span> <span class="t">DateTime</span> <span class="o">=</span>
+
+    <span class="k">type</span> <span onmouseout="hideTip(event, 'fs41', 80)" onmouseover="showTip(event, 'fs41', 80)" class="t">IDateTime</span> <span class="o">=</span>
+        <span class="k">abstract</span> <span onmouseout="hideTip(event, 'fs42', 81)" onmouseover="showTip(event, 'fs42', 81)" class="i">Now</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs43', 82)" onmouseover="showTip(event, 'fs43', 82)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs44', 83)" onmouseover="showTip(event, 'fs44', 83)" class="t">DateTime</span>
+
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs45', 84)" onmouseover="showTip(event, 'fs45', 84)" class="f">now</span>() <span class="o">=</span> <span onmouseout="hideTip(event, 'fs15', 85)" onmouseover="showTip(event, 'fs15', 85)" class="i">eff</span> {
+        <span class="k">let!</span> <span onmouseout="hideTip(event, 'fs46', 86)" onmouseover="showTip(event, 'fs46', 86)" class="i">dt</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs16', 87)" onmouseover="showTip(event, 'fs16', 87)" class="f">getCtx</span><span class="o">&lt;</span>#<span onmouseout="hideTip(event, 'fs41', 88)" onmouseover="showTip(event, 'fs41', 88)" class="t">IDateTime</span><span class="o">&gt;</span>()
+        <span class="k">return</span> <span onmouseout="hideTip(event, 'fs46', 89)" onmouseover="showTip(event, 'fs46', 89)" class="i">dt</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs47', 90)" onmouseover="showTip(event, 'fs47', 90)" class="i">Now</span>
+    }
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Combining-effects" class="anchor" href="#Combining-effects">Combining effects</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">// type signature of this computation reveals effect dependencies of the workflow</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs48', 91)" onmouseover="showTip(event, 'fs48', 91)" class="f">combinedEffects</span>() <span class="o">=</span> <span onmouseout="hideTip(event, 'fs15', 92)" onmouseover="showTip(event, 'fs15', 92)" class="i">eff</span> {
+    <span class="k">let!</span> <span onmouseout="hideTip(event, 'fs49', 93)" onmouseover="showTip(event, 'fs49', 93)" class="i">date</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs50', 94)" onmouseover="showTip(event, 'fs50', 94)" class="t">DateTime</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs51', 95)" onmouseover="showTip(event, 'fs51', 95)" class="f">now</span>()
+    <span class="k">do!</span> <span onmouseout="hideTip(event, 'fs52', 96)" onmouseover="showTip(event, 'fs52', 96)" class="t">Logger</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs53', 97)" onmouseover="showTip(event, 'fs53', 97)" class="f">logf</span> <span class="s">&quot;Current time is: </span><span class="pf">%O</span><span class="s">&quot;</span> <span onmouseout="hideTip(event, 'fs49', 98)" onmouseover="showTip(event, 'fs49', 98)" class="i">date</span>
+    <span class="k">do!</span> <span onmouseout="hideTip(event, 'fs52', 99)" onmouseover="showTip(event, 'fs52', 99)" class="t">Logger</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs54', 100)" onmouseover="showTip(event, 'fs54', 100)" class="f">log</span> <span class="s">&quot;Reading the variable&quot;</span>
+    <span class="k">let!</span> <span onmouseout="hideTip(event, 'fs55', 101)" onmouseover="showTip(event, 'fs55', 101)" class="i">x</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs56', 102)" onmouseover="showTip(event, 'fs56', 102)" class="t">State</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs57', 103)" onmouseover="showTip(event, 'fs57', 103)" class="f">get</span>()
+    <span class="k">do!</span> <span onmouseout="hideTip(event, 'fs52', 104)" onmouseover="showTip(event, 'fs52', 104)" class="t">Logger</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs54', 105)" onmouseover="showTip(event, 'fs54', 105)" class="f">log</span> <span class="s">&quot;Incrementing the variable&quot;</span>
+    <span class="k">do!</span> <span onmouseout="hideTip(event, 'fs56', 106)" onmouseover="showTip(event, 'fs56', 106)" class="t">State</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs58', 107)" onmouseover="showTip(event, 'fs58', 107)" class="f">set</span> (<span onmouseout="hideTip(event, 'fs55', 108)" onmouseover="showTip(event, 'fs55', 108)" class="i">x</span> <span class="o">+</span> <span class="n">1</span>)
+    <span class="k">do!</span> <span onmouseout="hideTip(event, 'fs52', 109)" onmouseover="showTip(event, 'fs52', 109)" class="t">Logger</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs54', 110)" onmouseover="showTip(event, 'fs54', 110)" class="f">log</span> <span class="s">&quot;Reading the variable again&quot;</span>
+    <span class="k">return!</span> <span onmouseout="hideTip(event, 'fs56', 111)" onmouseover="showTip(event, 'fs56', 111)" class="t">State</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs57', 112)" onmouseover="showTip(event, 'fs57', 112)" class="f">get</span>()
+}
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Defining-effect-handlers" class="anchor" href="#Defining-effect-handlers">Defining "effect handlers"</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">type</span> <span onmouseout="hideTip(event, 'fs59', 113)" onmouseover="showTip(event, 'fs59', 113)" class="t">ConsoleLogger</span>() <span class="o">=</span>
+    <span class="k">interface</span> <span onmouseout="hideTip(event, 'fs52', 114)" onmouseover="showTip(event, 'fs52', 114)" class="t">Logger</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs21', 115)" onmouseover="showTip(event, 'fs21', 115)" class="t">ILogger</span> <span class="k">with</span>
+        <span class="k">member</span> <span class="i">__</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs60', 116)" onmouseover="showTip(event, 'fs60', 116)" class="f">Log</span> <span onmouseout="hideTip(event, 'fs25', 117)" onmouseover="showTip(event, 'fs25', 117)" class="i">msg</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs61', 118)" onmouseover="showTip(event, 'fs61', 118)" class="f">printfn</span> <span class="s">&quot;</span><span class="pf">%s</span><span class="s">&quot;</span> <span onmouseout="hideTip(event, 'fs25', 119)" onmouseover="showTip(event, 'fs25', 119)" class="i">msg</span>
+
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs62', 120)" onmouseover="showTip(event, 'fs62', 120)" class="t">RefCellState</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span>(<span onmouseout="hideTip(event, 'fs63', 121)" onmouseover="showTip(event, 'fs63', 121)" class="i">init</span> <span class="o">:</span> <span class="o">&#39;</span><span class="i">T</span>) <span class="o">=</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs64', 122)" onmouseover="showTip(event, 'fs64', 122)" class="v">cell</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs65', 123)" onmouseover="showTip(event, 'fs65', 123)" class="f">ref</span> <span onmouseout="hideTip(event, 'fs63', 124)" onmouseover="showTip(event, 'fs63', 124)" class="i">init</span>
+    <span class="k">interface</span> <span onmouseout="hideTip(event, 'fs56', 125)" onmouseover="showTip(event, 'fs56', 125)" class="t">State</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs32', 126)" onmouseover="showTip(event, 'fs32', 126)" class="t">IState</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span> <span class="k">with</span>
+        <span class="k">member</span> <span class="i">__</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs66', 127)" onmouseover="showTip(event, 'fs66', 127)" class="f">Get</span> () <span class="o">=</span> <span class="o">!</span><span onmouseout="hideTip(event, 'fs64', 128)" onmouseover="showTip(event, 'fs64', 128)" class="v">cell</span>
+        <span class="k">member</span> <span onmouseout="hideTip(event, 'fs67', 129)" onmouseover="showTip(event, 'fs67', 129)" class="i">__</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs68', 130)" onmouseover="showTip(event, 'fs68', 130)" class="f">Set</span> <span onmouseout="hideTip(event, 'fs39', 131)" onmouseover="showTip(event, 'fs39', 131)" class="i">t</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs64', 132)" onmouseover="showTip(event, 'fs64', 132)" class="v">cell</span> <span class="o">:=</span> <span onmouseout="hideTip(event, 'fs39', 133)" onmouseover="showTip(event, 'fs39', 133)" class="i">t</span>
+
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs69', 134)" onmouseover="showTip(event, 'fs69', 134)" class="t">MyHandler</span>(<span onmouseout="hideTip(event, 'fs70', 135)" onmouseover="showTip(event, 'fs70', 135)" class="i">init</span>) <span class="o">=</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs71', 136)" onmouseover="showTip(event, 'fs71', 136)" class="i">logger</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs59', 137)" onmouseover="showTip(event, 'fs59', 137)" class="t">ConsoleLogger</span>() <span class="o">:&gt;</span> <span onmouseout="hideTip(event, 'fs52', 138)" onmouseover="showTip(event, 'fs52', 138)" class="t">Logger</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs21', 139)" onmouseover="showTip(event, 'fs21', 139)" class="t">ILogger</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs72', 140)" onmouseover="showTip(event, 'fs72', 140)" class="i">cell</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs62', 141)" onmouseover="showTip(event, 'fs62', 141)" class="t">RefCellState</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs73', 142)" onmouseover="showTip(event, 'fs73', 142)" class="t">int</span><span class="o">&gt;</span>(<span onmouseout="hideTip(event, 'fs70', 143)" onmouseover="showTip(event, 'fs70', 143)" class="i">init</span>) <span class="o">:&gt;</span> <span onmouseout="hideTip(event, 'fs56', 144)" onmouseover="showTip(event, 'fs56', 144)" class="t">State</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs32', 145)" onmouseover="showTip(event, 'fs32', 145)" class="t">IState</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs73', 146)" onmouseover="showTip(event, 'fs73', 146)" class="t">int</span><span class="o">&gt;</span>
+
+    <span class="k">interface</span> <span onmouseout="hideTip(event, 'fs52', 147)" onmouseover="showTip(event, 'fs52', 147)" class="t">Logger</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs21', 148)" onmouseover="showTip(event, 'fs21', 148)" class="t">ILogger</span> <span class="k">with</span>
+        <span class="k">member</span> <span class="i">__</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs74', 149)" onmouseover="showTip(event, 'fs74', 149)" class="f">Log</span> <span onmouseout="hideTip(event, 'fs75', 150)" onmouseover="showTip(event, 'fs75', 150)" class="i">m</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs71', 151)" onmouseover="showTip(event, 'fs71', 151)" class="i">logger</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs76', 152)" onmouseover="showTip(event, 'fs76', 152)" class="f">Log</span> <span onmouseout="hideTip(event, 'fs75', 153)" onmouseover="showTip(event, 'fs75', 153)" class="i">m</span>
+
+    <span class="k">interface</span> <span onmouseout="hideTip(event, 'fs56', 154)" onmouseover="showTip(event, 'fs56', 154)" class="t">State</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs32', 155)" onmouseover="showTip(event, 'fs32', 155)" class="t">IState</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs73', 156)" onmouseover="showTip(event, 'fs73', 156)" class="t">int</span><span class="o">&gt;</span> <span class="k">with</span>
+        <span class="k">member</span> <span onmouseout="hideTip(event, 'fs77', 157)" onmouseover="showTip(event, 'fs77', 157)" class="i">__</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs78', 158)" onmouseover="showTip(event, 'fs78', 158)" class="f">Get</span>() <span class="o">=</span> <span onmouseout="hideTip(event, 'fs72', 159)" onmouseover="showTip(event, 'fs72', 159)" class="i">cell</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs79', 160)" onmouseover="showTip(event, 'fs79', 160)" class="f">Get</span>()
+        <span class="k">member</span> <span onmouseout="hideTip(event, 'fs77', 161)" onmouseover="showTip(event, 'fs77', 161)" class="i">__</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs80', 162)" onmouseover="showTip(event, 'fs80', 162)" class="f">Set</span> <span onmouseout="hideTip(event, 'fs81', 163)" onmouseover="showTip(event, 'fs81', 163)" class="i">t</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs72', 164)" onmouseover="showTip(event, 'fs72', 164)" class="i">cell</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs82', 165)" onmouseover="showTip(event, 'fs82', 165)" class="f">Set</span> <span onmouseout="hideTip(event, 'fs81', 166)" onmouseover="showTip(event, 'fs81', 166)" class="i">t</span>
+
+    <span class="k">interface</span> <span onmouseout="hideTip(event, 'fs50', 167)" onmouseover="showTip(event, 'fs50', 167)" class="t">DateTime</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs41', 168)" onmouseover="showTip(event, 'fs41', 168)" class="t">IDateTime</span> <span class="k">with</span>
+        <span class="k">member</span> <span onmouseout="hideTip(event, 'fs77', 169)" onmouseover="showTip(event, 'fs77', 169)" class="i">__</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs83', 170)" onmouseover="showTip(event, 'fs83', 170)" class="i">Now</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs43', 171)" onmouseover="showTip(event, 'fs43', 171)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs44', 172)" onmouseover="showTip(event, 'fs44', 172)" class="t">DateTime</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs84', 173)" onmouseover="showTip(event, 'fs84', 173)" class="i">Now</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs85', 174)" onmouseover="showTip(event, 'fs85', 174)" class="f">AddYears</span>(<span class="n">10</span>)
+</code></pre></td>
+</tr>
+</table>
+<h2><a name="Executing-the-computations" class="anchor" href="#Executing-the-computations">Executing the computations</a></h2>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+<span class="l">6: </span>
+<span class="l">7: </span>
+<span class="l">8: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span onmouseout="hideTip(event, 'fs18', 175)" onmouseover="showTip(event, 'fs18', 175)" class="f">run</span> (<span onmouseout="hideTip(event, 'fs59', 176)" onmouseover="showTip(event, 'fs59', 176)" class="t">ConsoleLogger</span>()) (<span onmouseout="hideTip(event, 'fs52', 177)" onmouseover="showTip(event, 'fs52', 177)" class="t">Logger</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs54', 178)" onmouseover="showTip(event, 'fs54', 178)" class="f">log</span> <span class="s">&quot;log test&quot;</span>)
+<span onmouseout="hideTip(event, 'fs18', 179)" onmouseover="showTip(event, 'fs18', 179)" class="f">run</span> (<span onmouseout="hideTip(event, 'fs62', 180)" onmouseover="showTip(event, 'fs62', 180)" class="t">RefCellState</span>(<span class="s">&quot;lorem ipsum&quot;</span>)) (<span onmouseout="hideTip(event, 'fs56', 181)" onmouseover="showTip(event, 'fs56', 181)" class="t">State</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs57', 182)" onmouseover="showTip(event, 'fs57', 182)" class="f">get</span> ())
+<span onmouseout="hideTip(event, 'fs18', 183)" onmouseover="showTip(event, 'fs18', 183)" class="f">run</span> (<span onmouseout="hideTip(event, 'fs69', 184)" onmouseover="showTip(event, 'fs69', 184)" class="t">MyHandler</span>(<span onmouseout="hideTip(event, 'fs70', 185)" onmouseover="showTip(event, 'fs70', 185)" class="i">init</span> <span class="o">=</span> <span class="n">41</span>)) (<span onmouseout="hideTip(event, 'fs48', 186)" onmouseover="showTip(event, 'fs48', 186)" class="f">combinedEffects</span>())
+
+<span class="c">// uncomment for type errors</span>
+<span class="c">//run (ConsoleLogger()) (State.get())</span>
+<span class="c">//run (RefCellState(0)) (Logger.log &quot;lorem ipsum&quot;)</span>
+<span class="c">//run (ConsoleLogger()) (combinedEffects())</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">Multiple items<br />type EffBuilder =<br />&#160;&#160;new : unit -&gt; EffBuilder<br />&#160;&#160;member Bind : f:Eff&lt;&#39;Ctx,&#39;T&gt; * g:(&#39;T -&gt; Eff&lt;&#39;Ctx,&#39;S&gt;) -&gt; Eff&lt;&#39;Ctx,&#39;S&gt;<br />&#160;&#160;member Return : x:&#39;T -&gt; Eff&lt;&#39;Ctx,&#39;T&gt;<br />&#160;&#160;member ReturnFrom : x:Eff&lt;&#39;Ctx,&#39;T&gt; -&gt; Eff&lt;&#39;Ctx,&#39;T&gt;<br />&#160;&#160;member Zero : unit -&gt; Eff&lt;&#39;Ctx,unit&gt;<br /><br />Full name: Script.EffBuilder<br /><br />--------------------<br />new : unit -&gt; EffBuilder</div>
+<div class="tip" id="fs2">member EffBuilder.Return : x:&#39;T -&gt; Eff&lt;&#39;Ctx,&#39;T&gt;<br /><br />Full name: Script.EffBuilder.Return</div>
+<div class="tip" id="fs3">val x : &#39;T</div>
+<div class="tip" id="fs4">type Eff&lt;&#39;Ctx,&#39;T&gt; = &#39;Ctx -&gt; &#39;T<br /><br />Full name: Script.Eff&lt;_,_&gt;</div>
+<div class="tip" id="fs5">val __ : EffBuilder</div>
+<div class="tip" id="fs6">member EffBuilder.Bind : f:Eff&lt;&#39;Ctx,&#39;T&gt; * g:(&#39;T -&gt; Eff&lt;&#39;Ctx,&#39;S&gt;) -&gt; Eff&lt;&#39;Ctx,&#39;S&gt;<br /><br />Full name: Script.EffBuilder.Bind</div>
+<div class="tip" id="fs7">val f : Eff&lt;&#39;Ctx,&#39;T&gt;</div>
+<div class="tip" id="fs8">val g : (&#39;T -&gt; Eff&lt;&#39;Ctx,&#39;S&gt;)</div>
+<div class="tip" id="fs9">val c : &#39;Ctx</div>
+<div class="tip" id="fs10">member EffBuilder.Zero : unit -&gt; Eff&lt;&#39;Ctx,unit&gt;<br /><br />Full name: Script.EffBuilder.Zero</div>
+<div class="tip" id="fs11">type unit = Unit<br /><br />Full name: Microsoft.FSharp.Core.unit</div>
+<div class="tip" id="fs12">val ignore : value:&#39;T -&gt; unit<br /><br />Full name: Microsoft.FSharp.Core.Operators.ignore</div>
+<div class="tip" id="fs13">member EffBuilder.ReturnFrom : x:Eff&lt;&#39;Ctx,&#39;T&gt; -&gt; Eff&lt;&#39;Ctx,&#39;T&gt;<br /><br />Full name: Script.EffBuilder.ReturnFrom</div>
+<div class="tip" id="fs14">val x : Eff&lt;&#39;Ctx,&#39;T&gt;</div>
+<div class="tip" id="fs15">val eff : EffBuilder<br /><br />Full name: Script.eff</div>
+<div class="tip" id="fs16">val getCtx : unit -&gt; Eff&lt;&#39;Ctx,&#39;Ctx&gt;<br /><br />Full name: Script.getCtx</div>
+<div class="tip" id="fs17">val id : x:&#39;T -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.Operators.id</div>
+<div class="tip" id="fs18">val run : ctx:&#39;Ctx -&gt; eff:Eff&lt;&#39;Ctx,&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Script.run</div>
+<div class="tip" id="fs19">val ctx : &#39;Ctx</div>
+<div class="tip" id="fs20">val eff : Eff&lt;&#39;Ctx,&#39;T&gt;</div>
+<div class="tip" id="fs21">type ILogger =<br />&#160;&#160;interface<br />&#160;&#160;&#160;&#160;abstract member Log : string -&gt; unit<br />&#160;&#160;end<br /><br />Full name: Script.Logger.ILogger</div>
+<div class="tip" id="fs22">abstract member ILogger.Log : string -&gt; unit<br /><br />Full name: Script.Logger.ILogger.Log</div>
+<div class="tip" id="fs23">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />Full name: Microsoft.FSharp.Core.Operators.string<br /><br />--------------------<br />type string = System.String<br /><br />Full name: Microsoft.FSharp.Core.string</div>
+<div class="tip" id="fs24">val log : msg:string -&gt; Eff&lt;#ILogger,unit&gt;<br /><br />Full name: Script.Logger.log</div>
+<div class="tip" id="fs25">val msg : string</div>
+<div class="tip" id="fs26">val logger : #ILogger</div>
+<div class="tip" id="fs27">abstract member ILogger.Log : string -&gt; unit</div>
+<div class="tip" id="fs28">val logf : fmt:Printf.StringFormat&lt;&#39;a,Eff&lt;#ILogger,unit&gt;&gt; -&gt; &#39;a<br /><br />Full name: Script.Logger.logf</div>
+<div class="tip" id="fs29">val fmt : Printf.StringFormat&lt;&#39;a,Eff&lt;#ILogger,unit&gt;&gt;</div>
+<div class="tip" id="fs30">module Printf<br /><br />from Microsoft.FSharp.Core</div>
+<div class="tip" id="fs31">val ksprintf : continutation:(string -&gt; &#39;Result) -&gt; format:Printf.StringFormat&lt;&#39;T,&#39;Result&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.Printf.ksprintf</div>
+<div class="tip" id="fs32">type IState&lt;&#39;T&gt; =<br />&#160;&#160;interface<br />&#160;&#160;&#160;&#160;abstract member Get : unit -&gt; &#39;T<br />&#160;&#160;&#160;&#160;abstract member Set : &#39;T -&gt; unit<br />&#160;&#160;end<br /><br />Full name: Script.State.IState&lt;_&gt;</div>
+<div class="tip" id="fs33">abstract member IState.Get : unit -&gt; &#39;T<br /><br />Full name: Script.State.IState`1.Get</div>
+<div class="tip" id="fs34">Multiple items<br />abstract member IState.Set : &#39;T -&gt; unit<br /><br />Full name: Script.State.IState`1.Set<br /><br />--------------------<br />module Set<br /><br />from Microsoft.FSharp.Collections<br /><br />--------------------<br />type Set&lt;&#39;T (requires comparison)&gt; =<br />&#160;&#160;interface IComparable<br />&#160;&#160;interface IEnumerable<br />&#160;&#160;interface IEnumerable&lt;&#39;T&gt;<br />&#160;&#160;interface ICollection&lt;&#39;T&gt;<br />&#160;&#160;new : elements:seq&lt;&#39;T&gt; -&gt; Set&lt;&#39;T&gt;<br />&#160;&#160;member Add : value:&#39;T -&gt; Set&lt;&#39;T&gt;<br />&#160;&#160;member Contains : value:&#39;T -&gt; bool<br />&#160;&#160;override Equals : obj -&gt; bool<br />&#160;&#160;member IsProperSubsetOf : otherSet:Set&lt;&#39;T&gt; -&gt; bool<br />&#160;&#160;member IsProperSupersetOf : otherSet:Set&lt;&#39;T&gt; -&gt; bool<br />&#160;&#160;...<br /><br />Full name: Microsoft.FSharp.Collections.Set&lt;_&gt;<br /><br />--------------------<br />new : elements:seq&lt;&#39;T&gt; -&gt; Set&lt;&#39;T&gt;</div>
+<div class="tip" id="fs35">val get : unit -&gt; Eff&lt;#IState&lt;&#39;T&gt;,&#39;T&gt;<br /><br />Full name: Script.State.get</div>
+<div class="tip" id="fs36">val state : #IState&lt;&#39;T&gt;</div>
+<div class="tip" id="fs37">abstract member IState.Get : unit -&gt; &#39;T</div>
+<div class="tip" id="fs38">val set : t:&#39;T -&gt; Eff&lt;#IState&lt;&#39;T&gt;,unit&gt;<br /><br />Full name: Script.State.set</div>
+<div class="tip" id="fs39">val t : &#39;T</div>
+<div class="tip" id="fs40">abstract member IState.Set : &#39;T -&gt; unit</div>
+<div class="tip" id="fs41">type IDateTime =<br />&#160;&#160;interface<br />&#160;&#160;&#160;&#160;abstract member Now : DateTime<br />&#160;&#160;end<br /><br />Full name: Script.DateTime.IDateTime</div>
+<div class="tip" id="fs42">abstract member IDateTime.Now : System.DateTime<br /><br />Full name: Script.DateTime.IDateTime.Now</div>
+<div class="tip" id="fs43">namespace System</div>
+<div class="tip" id="fs44">Multiple items<br />type DateTime =<br />&#160;&#160;struct<br />&#160;&#160;&#160;&#160;new : ticks:int64 -&gt; DateTime + 10 overloads<br />&#160;&#160;&#160;&#160;member Add : value:TimeSpan -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddDays : value:float -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddHours : value:float -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddMilliseconds : value:float -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddMinutes : value:float -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddMonths : months:int -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddSeconds : value:float -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddTicks : value:int64 -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddYears : value:int -&gt; DateTime<br />&#160;&#160;&#160;&#160;...<br />&#160;&#160;end<br /><br />Full name: System.DateTime<br /><br />--------------------<br />System.DateTime()<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />System.DateTime(ticks: int64) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />System.DateTime(ticks: int64, kind: System.DateTimeKind) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />System.DateTime(year: int, month: int, day: int) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />System.DateTime(year: int, month: int, day: int, calendar: System.Globalization.Calendar) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />System.DateTime(year: int, month: int, day: int, hour: int, minute: int, second: int) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />System.DateTime(year: int, month: int, day: int, hour: int, minute: int, second: int, kind: System.DateTimeKind) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />System.DateTime(year: int, month: int, day: int, hour: int, minute: int, second: int, calendar: System.Globalization.Calendar) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />System.DateTime(year: int, month: int, day: int, hour: int, minute: int, second: int, millisecond: int) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />System.DateTime(year: int, month: int, day: int, hour: int, minute: int, second: int, millisecond: int, kind: System.DateTimeKind) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em></div>
+<div class="tip" id="fs45">val now : unit -&gt; Eff&lt;#IDateTime,System.DateTime&gt;<br /><br />Full name: Script.DateTime.now</div>
+<div class="tip" id="fs46">val dt : #IDateTime</div>
+<div class="tip" id="fs47">property IDateTime.Now: System.DateTime</div>
+<div class="tip" id="fs48">val combinedEffects : unit -&gt; Eff&lt;&#39;a,int&gt; (requires &#39;a :&gt; State.IState&lt;int&gt; and &#39;a :&gt; Logger.ILogger and &#39;a :&gt; DateTime.IDateTime)<br /><br />Full name: Script.combinedEffects</div>
+<div class="tip" id="fs49">val date : System.DateTime</div>
+<div class="tip" id="fs50">module DateTime<br /><br />from Script</div>
+<div class="tip" id="fs51">val now : unit -&gt; Eff&lt;#DateTime.IDateTime,System.DateTime&gt;<br /><br />Full name: Script.DateTime.now</div>
+<div class="tip" id="fs52">module Logger<br /><br />from Script</div>
+<div class="tip" id="fs53">val logf : fmt:Printf.StringFormat&lt;&#39;a,Eff&lt;#Logger.ILogger,unit&gt;&gt; -&gt; &#39;a<br /><br />Full name: Script.Logger.logf</div>
+<div class="tip" id="fs54">val log : msg:string -&gt; Eff&lt;#Logger.ILogger,unit&gt;<br /><br />Full name: Script.Logger.log</div>
+<div class="tip" id="fs55">val x : int</div>
+<div class="tip" id="fs56">module State<br /><br />from Script</div>
+<div class="tip" id="fs57">val get : unit -&gt; Eff&lt;#State.IState&lt;&#39;T&gt;,&#39;T&gt;<br /><br />Full name: Script.State.get</div>
+<div class="tip" id="fs58">val set : t:&#39;T -&gt; Eff&lt;#State.IState&lt;&#39;T&gt;,unit&gt;<br /><br />Full name: Script.State.set</div>
+<div class="tip" id="fs59">Multiple items<br />type ConsoleLogger =<br />&#160;&#160;interface ILogger<br />&#160;&#160;new : unit -&gt; ConsoleLogger<br /><br />Full name: Script.ConsoleLogger<br /><br />--------------------<br />new : unit -&gt; ConsoleLogger</div>
+<div class="tip" id="fs60">override ConsoleLogger.Log : msg:string -&gt; unit<br /><br />Full name: Script.ConsoleLogger.Log</div>
+<div class="tip" id="fs61">val printfn : format:Printf.TextWriterFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.printfn</div>
+<div class="tip" id="fs62">Multiple items<br />type RefCellState&lt;&#39;T&gt; =<br />&#160;&#160;interface IState&lt;&#39;T&gt;<br />&#160;&#160;new : init:&#39;T -&gt; RefCellState&lt;&#39;T&gt;<br /><br />Full name: Script.RefCellState&lt;_&gt;<br /><br />--------------------<br />new : init:&#39;T -&gt; RefCellState&lt;&#39;T&gt;</div>
+<div class="tip" id="fs63">val init : &#39;T</div>
+<div class="tip" id="fs64">val cell : &#39;T ref</div>
+<div class="tip" id="fs65">Multiple items<br />val ref : value:&#39;T -&gt; &#39;T ref<br /><br />Full name: Microsoft.FSharp.Core.Operators.ref<br /><br />--------------------<br />type &#39;T ref = Ref&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Core.ref&lt;_&gt;</div>
+<div class="tip" id="fs66">override RefCellState.Get : unit -&gt; &#39;T<br /><br />Full name: Script.RefCellState`1.Get</div>
+<div class="tip" id="fs67">val __ : RefCellState&lt;&#39;T&gt;</div>
+<div class="tip" id="fs68">Multiple items<br />override RefCellState.Set : t:&#39;T -&gt; unit<br /><br />Full name: Script.RefCellState`1.Set<br /><br />--------------------<br />module Set<br /><br />from Microsoft.FSharp.Collections<br /><br />--------------------<br />type Set&lt;&#39;T (requires comparison)&gt; =<br />&#160;&#160;interface IComparable<br />&#160;&#160;interface IEnumerable<br />&#160;&#160;interface IEnumerable&lt;&#39;T&gt;<br />&#160;&#160;interface ICollection&lt;&#39;T&gt;<br />&#160;&#160;new : elements:seq&lt;&#39;T&gt; -&gt; Set&lt;&#39;T&gt;<br />&#160;&#160;member Add : value:&#39;T -&gt; Set&lt;&#39;T&gt;<br />&#160;&#160;member Contains : value:&#39;T -&gt; bool<br />&#160;&#160;override Equals : obj -&gt; bool<br />&#160;&#160;member IsProperSubsetOf : otherSet:Set&lt;&#39;T&gt; -&gt; bool<br />&#160;&#160;member IsProperSupersetOf : otherSet:Set&lt;&#39;T&gt; -&gt; bool<br />&#160;&#160;...<br /><br />Full name: Microsoft.FSharp.Collections.Set&lt;_&gt;<br /><br />--------------------<br />new : elements:seq&lt;&#39;T&gt; -&gt; Set&lt;&#39;T&gt;</div>
+<div class="tip" id="fs69">Multiple items<br />type MyHandler =<br />&#160;&#160;interface IDateTime<br />&#160;&#160;interface IState&lt;int&gt;<br />&#160;&#160;interface ILogger<br />&#160;&#160;new : init:int -&gt; MyHandler<br /><br />Full name: Script.MyHandler<br /><br />--------------------<br />new : init:int -&gt; MyHandler</div>
+<div class="tip" id="fs70">val init : int</div>
+<div class="tip" id="fs71">val logger : Logger.ILogger</div>
+<div class="tip" id="fs72">val cell : State.IState&lt;int&gt;</div>
+<div class="tip" id="fs73">Multiple items<br />val int : value:&#39;T -&gt; int (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.int<br /><br />--------------------<br />type int = int32<br /><br />Full name: Microsoft.FSharp.Core.int<br /><br />--------------------<br />type int&lt;&#39;Measure&gt; = int<br /><br />Full name: Microsoft.FSharp.Core.int&lt;_&gt;</div>
+<div class="tip" id="fs74">override MyHandler.Log : m:string -&gt; unit<br /><br />Full name: Script.MyHandler.Log</div>
+<div class="tip" id="fs75">val m : string</div>
+<div class="tip" id="fs76">abstract member Logger.ILogger.Log : string -&gt; unit</div>
+<div class="tip" id="fs77">val __ : MyHandler</div>
+<div class="tip" id="fs78">override MyHandler.Get : unit -&gt; int<br /><br />Full name: Script.MyHandler.Get</div>
+<div class="tip" id="fs79">abstract member State.IState.Get : unit -&gt; &#39;T</div>
+<div class="tip" id="fs80">Multiple items<br />override MyHandler.Set : t:int -&gt; unit<br /><br />Full name: Script.MyHandler.Set<br /><br />--------------------<br />module Set<br /><br />from Microsoft.FSharp.Collections<br /><br />--------------------<br />type Set&lt;&#39;T (requires comparison)&gt; =<br />&#160;&#160;interface IComparable<br />&#160;&#160;interface IEnumerable<br />&#160;&#160;interface IEnumerable&lt;&#39;T&gt;<br />&#160;&#160;interface ICollection&lt;&#39;T&gt;<br />&#160;&#160;new : elements:seq&lt;&#39;T&gt; -&gt; Set&lt;&#39;T&gt;<br />&#160;&#160;member Add : value:&#39;T -&gt; Set&lt;&#39;T&gt;<br />&#160;&#160;member Contains : value:&#39;T -&gt; bool<br />&#160;&#160;override Equals : obj -&gt; bool<br />&#160;&#160;member IsProperSubsetOf : otherSet:Set&lt;&#39;T&gt; -&gt; bool<br />&#160;&#160;member IsProperSupersetOf : otherSet:Set&lt;&#39;T&gt; -&gt; bool<br />&#160;&#160;...<br /><br />Full name: Microsoft.FSharp.Collections.Set&lt;_&gt;<br /><br />--------------------<br />new : elements:seq&lt;&#39;T&gt; -&gt; Set&lt;&#39;T&gt;</div>
+<div class="tip" id="fs81">val t : int</div>
+<div class="tip" id="fs82">abstract member State.IState.Set : &#39;T -&gt; unit</div>
+<div class="tip" id="fs83">override MyHandler.Now : System.DateTime<br /><br />Full name: Script.MyHandler.Now</div>
+<div class="tip" id="fs84">property System.DateTime.Now: System.DateTime</div>
+<div class="tip" id="fs85">System.DateTime.AddYears(value: int) : System.DateTime</div>
+

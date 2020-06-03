@@ -1,0 +1,10 @@
+let rec all predicate = function
+    | []                        -> true
+    | x::xs when predicate x    -> all predicate xs
+    | _                         -> false
+
+let even n = n % 2 = 0
+let odd = even >> not
+
+[1..2..50] |> all odd |> printfn "%b"
+[10;20;30;40;50;55;60] |> all even |> printfn "%b"

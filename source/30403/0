@@ -1,0 +1,60 @@
+open System
+
+
+let flip (func : 'a -> 'a -> 'a) (a : 'a) (b: 'a) =
+    func b a
+
+let (-*) = flip (-)
+let (/*) = flip (/)
+
+type Wrapped<'a> =  State of 'a
+                    | IllegalState of string
+
+type State = { value: float; cycles: int }
+
+let get (a : 'a) : Wrapped<'a> = a |> State
+
+let getTextResult (input: Wrapped<State>) : string =
+    match input with
+    | IllegalState (x) -> x
+    | State ({value = value ; cycles = cycles}) -> sprintf "result=%f remaining cycles=%d" value cycles
+    
+let evaluate (operationCost: int) (resultMapper: float -> float) (input : State) : Wrapped<State> =
+    let { value = value; cycles = cycles } = input
+    let result = resultMapper value
+    State { value = result; cycles = (cycles - operationCost)  }
+
+let ``Cost 1 fun`` = evaluate 1
+let ``Cost 2 fun`` = evaluate 2
+let ``Cost 3 fun`` = evaluate 3
+let ``Cost 5 fun`` = evaluate 5
+
+let multiply x = ((*) x) |> ``Cost 2 fun``
+let add param =  ((+) param) |> ``Cost 1 fun``
+let subtract param = ((-*) param) |> ``Cost 1 fun``
+let divide param = ((/*) param) |> ``Cost 3 fun``
+let pow y = 
+    let innerPow x =
+        Math.Pow(x, y)
+    innerPow |> ``Cost 5 fun``
+
+let bind (input: Wrapped<State>) (f: State -> Wrapped<State>) : Wrapped<State> =
+    match input with
+    | IllegalState (x) -> IllegalState (x)
+    | State ({value = _ ; cycles = cycles}) 
+        when cycles <= 1 -> IllegalState("Not enough cycles, the computation cannot be executed")
+    | State ({value = value ; cycles = _}) 
+        when Double.IsInfinity(value) || Double.IsNaN(value) -> IllegalState("Result overflow")
+    | State (x) -> x |> f
+    
+let (>>=) = bind
+
+let doCalculation value cycleLimit = 
+    { value = value; cycles = cycleLimit }
+    |> get
+    >>= divide 2.0
+    >>= subtract 10.0
+    >>= add 15.0
+    >>= multiply 123.0
+    >>= pow 2.0
+    |> getTextResult

@@ -1,0 +1,23 @@
+
+
+let mb = new MailboxProcessor<int>(
+          fun mb ->
+            async {
+              for i in [0..100] do
+                do! Async.Sleep(100)
+                mb.Post(i)
+              return ()
+            })
+
+mb.Start()
+[0..2]
+|> List.map(
+  fun _ ->
+     async {
+        while true do
+          let! msg = mb.Receive()
+          printfn "msg:%A" msg
+      }
+)
+|> Async.Parallel
+|> Async.RunSynchronously

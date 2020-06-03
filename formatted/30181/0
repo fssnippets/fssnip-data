@@ -1,0 +1,109 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">module</span> <span class="t">Rop</span> <span class="o">=</span> 
+    
+    <span class="k">type</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="t">Failure</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">e</span><span class="o">&gt;</span> <span class="o">=</span> 
+        | <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="p">FunctionalError</span> <span class="k">of</span> <span class="o">&#39;</span><span class="i">e</span>
+        | <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="p">ExceptionError</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="t">exn</span>
+
+    <span class="k">type</span> <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="t">Result</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">a</span>, <span class="o">&#39;</span><span class="i">e</span><span class="o">&gt;</span> <span class="o">=</span> 
+        | <span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="p">Success</span> <span class="k">of</span> <span class="o">&#39;</span><span class="i">a</span> 
+        | <span onmouseout="hideTip(event, 'fs7', 7)" onmouseover="showTip(event, 'fs7', 7)" class="p">Failure</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs7', 8)" onmouseover="showTip(event, 'fs7', 8)" class="t">Failure</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">e</span><span class="o">&gt;</span>
+
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs8', 9)" onmouseover="showTip(event, 'fs8', 9)" class="f">ret</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs6', 10)" onmouseover="showTip(event, 'fs6', 10)" class="p">Success</span>
+
+    <span class="c">//The basic</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs9', 11)" onmouseover="showTip(event, 'fs9', 11)" class="f">bind2</span> <span onmouseout="hideTip(event, 'fs10', 12)" onmouseover="showTip(event, 'fs10', 12)" class="f">f</span> <span onmouseout="hideTip(event, 'fs11', 13)" onmouseover="showTip(event, 'fs11', 13)" class="i">x</span> <span onmouseout="hideTip(event, 'fs12', 14)" onmouseover="showTip(event, 'fs12', 14)" class="i">y</span> <span class="o">=</span> 
+        <span class="k">match</span> <span onmouseout="hideTip(event, 'fs11', 15)" onmouseover="showTip(event, 'fs11', 15)" class="i">x</span>, <span onmouseout="hideTip(event, 'fs12', 16)" onmouseover="showTip(event, 'fs12', 16)" class="i">y</span> <span class="k">with</span>
+        | <span onmouseout="hideTip(event, 'fs6', 17)" onmouseover="showTip(event, 'fs6', 17)" class="p">Success</span> <span onmouseout="hideTip(event, 'fs13', 18)" onmouseover="showTip(event, 'fs13', 18)" class="i">xR</span>, <span onmouseout="hideTip(event, 'fs6', 19)" onmouseover="showTip(event, 'fs6', 19)" class="p">Success</span> <span onmouseout="hideTip(event, 'fs14', 20)" onmouseover="showTip(event, 'fs14', 20)" class="i">yR</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs10', 21)" onmouseover="showTip(event, 'fs10', 21)" class="f">f</span> <span class="i">xR</span> <span onmouseout="hideTip(event, 'fs14', 22)" onmouseover="showTip(event, 'fs14', 22)" class="i">yR</span>
+        | <span onmouseout="hideTip(event, 'fs15', 23)" onmouseover="showTip(event, 'fs15', 23)" class="p">Failure</span> <span onmouseout="hideTip(event, 'fs16', 24)" onmouseover="showTip(event, 'fs16', 24)" class="i">e</span>, _ | _, <span onmouseout="hideTip(event, 'fs15', 25)" onmouseover="showTip(event, 'fs15', 25)" class="p">Failure</span> <span onmouseout="hideTip(event, 'fs16', 26)" onmouseover="showTip(event, 'fs16', 26)" class="i">e</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs15', 27)" onmouseover="showTip(event, 'fs15', 27)" class="p">Failure</span> <span onmouseout="hideTip(event, 'fs16', 28)" onmouseover="showTip(event, 'fs16', 28)" class="i">e</span>
+    
+    <span class="c">//If you have only exception for eg with C# interop</span>
+    <span class="c">//You can build your own result style but if you use it with map2 the type of failure (without the Failure type) will be always exn. </span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs17', 29)" onmouseover="showTip(event, 'fs17', 29)" class="f">tryF</span> <span onmouseout="hideTip(event, 'fs18', 30)" onmouseover="showTip(event, 'fs18', 30)" class="f">f</span> <span onmouseout="hideTip(event, 'fs19', 31)" onmouseover="showTip(event, 'fs19', 31)" class="i">x</span> <span onmouseout="hideTip(event, 'fs20', 32)" onmouseover="showTip(event, 'fs20', 32)" class="i">y</span> <span class="o">=</span>
+        <span class="k">try</span> <span onmouseout="hideTip(event, 'fs18', 33)" onmouseover="showTip(event, 'fs18', 33)" class="f">f</span> <span onmouseout="hideTip(event, 'fs19', 34)" onmouseover="showTip(event, 'fs19', 34)" class="i">x</span> <span onmouseout="hideTip(event, 'fs20', 35)" onmouseover="showTip(event, 'fs20', 35)" class="i">y</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs6', 36)" onmouseover="showTip(event, 'fs6', 36)" class="p">Success</span>
+        <span class="k">with</span> <span onmouseout="hideTip(event, 'fs21', 37)" onmouseover="showTip(event, 'fs21', 37)" class="i">ex</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs21', 38)" onmouseover="showTip(event, 'fs21', 38)" class="i">ex</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs3', 39)" onmouseover="showTip(event, 'fs3', 39)" class="p">ExceptionError</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs15', 40)" onmouseover="showTip(event, 'fs15', 40)" class="p">Failure</span>
+
+    <span class="c">//Compose map2 with tryF and bind2 to eraise the result type from the return of f</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs22', 41)" onmouseover="showTip(event, 'fs22', 41)" class="f">map2</span> <span onmouseout="hideTip(event, 'fs18', 42)" onmouseover="showTip(event, 'fs18', 42)" class="f">f</span> <span onmouseout="hideTip(event, 'fs11', 43)" onmouseover="showTip(event, 'fs11', 43)" class="i">x</span> <span onmouseout="hideTip(event, 'fs12', 44)" onmouseover="showTip(event, 'fs12', 44)" class="i">y</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs9', 45)" onmouseover="showTip(event, 'fs9', 45)" class="f">bind2</span> (<span onmouseout="hideTip(event, 'fs17', 46)" onmouseover="showTip(event, 'fs17', 46)" class="f">tryF</span> <span onmouseout="hideTip(event, 'fs18', 47)" onmouseover="showTip(event, 'fs18', 47)" class="f">f</span>) <span onmouseout="hideTip(event, 'fs11', 48)" onmouseover="showTip(event, 'fs11', 48)" class="i">x</span> <span onmouseout="hideTip(event, 'fs12', 49)" onmouseover="showTip(event, 'fs12', 49)" class="i">y</span>
+
+    <span class="c">//Partial application for continuation or in order to build map</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs23', 50)" onmouseover="showTip(event, 'fs23', 50)" class="f">apply</span> <span onmouseout="hideTip(event, 'fs24', 51)" onmouseover="showTip(event, 'fs24', 51)" class="i">f</span> <span onmouseout="hideTip(event, 'fs25', 52)" onmouseover="showTip(event, 'fs25', 52)" class="i">x</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs22', 53)" onmouseover="showTip(event, 'fs22', 53)" class="f">map2</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs26', 54)" onmouseover="showTip(event, 'fs26', 54)" class="f">f</span> <span onmouseout="hideTip(event, 'fs19', 55)" onmouseover="showTip(event, 'fs19', 55)" class="i">x</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs26', 56)" onmouseover="showTip(event, 'fs26', 56)" class="f">f</span> <span onmouseout="hideTip(event, 'fs19', 57)" onmouseover="showTip(event, 'fs19', 57)" class="i">x</span>) <span onmouseout="hideTip(event, 'fs24', 58)" onmouseover="showTip(event, 'fs24', 58)" class="i">f</span> <span onmouseout="hideTip(event, 'fs25', 59)" onmouseover="showTip(event, 'fs25', 59)" class="i">x</span>
+
+    <span class="c">//Build map thanks to apply</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs27', 60)" onmouseover="showTip(event, 'fs27', 60)" class="f">map</span> <span onmouseout="hideTip(event, 'fs26', 61)" onmouseover="showTip(event, 'fs26', 61)" class="f">f</span> <span onmouseout="hideTip(event, 'fs25', 62)" onmouseover="showTip(event, 'fs25', 62)" class="i">x</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs23', 63)" onmouseover="showTip(event, 'fs23', 63)" class="f">apply</span> (<span onmouseout="hideTip(event, 'fs8', 64)" onmouseover="showTip(event, 'fs8', 64)" class="f">ret</span> <span onmouseout="hideTip(event, 'fs26', 65)" onmouseover="showTip(event, 'fs26', 65)" class="f">f</span>) <span onmouseout="hideTip(event, 'fs25', 66)" onmouseover="showTip(event, 'fs25', 66)" class="i">x</span>
+
+    <span class="c">//A more pragmatical bind to avoid composition</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs28', 67)" onmouseover="showTip(event, 'fs28', 67)" class="f">bind</span> <span onmouseout="hideTip(event, 'fs29', 68)" onmouseover="showTip(event, 'fs29', 68)" class="f">f</span> <span class="o">=</span> <span class="k">function</span>
+        | <span onmouseout="hideTip(event, 'fs6', 69)" onmouseover="showTip(event, 'fs6', 69)" class="p">Success</span> <span onmouseout="hideTip(event, 'fs19', 70)" onmouseover="showTip(event, 'fs19', 70)" class="i">x</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs29', 71)" onmouseover="showTip(event, 'fs29', 71)" class="f">f</span> <span onmouseout="hideTip(event, 'fs19', 72)" onmouseover="showTip(event, 'fs19', 72)" class="i">x</span>
+        | <span onmouseout="hideTip(event, 'fs15', 73)" onmouseover="showTip(event, 'fs15', 73)" class="p">Failure</span> <span onmouseout="hideTip(event, 'fs30', 74)" onmouseover="showTip(event, 'fs30', 74)" class="i">e</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs15', 75)" onmouseover="showTip(event, 'fs15', 75)" class="p">Failure</span> <span onmouseout="hideTip(event, 'fs30', 76)" onmouseover="showTip(event, 'fs30', 76)" class="i">e</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">Multiple items<br />val Failure : message:string -&gt; exn<br /><br />Full name: Microsoft.FSharp.Core.Operators.Failure<br /><br />--------------------<br />active recognizer Failure: exn -&gt; string option<br /><br />Full name: Microsoft.FSharp.Core.Operators.( |Failure|_| )<br /><br />--------------------<br />type Failure&lt;&#39;e&gt; =<br />&#160;&#160;| FunctionalError of &#39;e<br />&#160;&#160;| ExceptionError of exn<br /><br />Full name: Script.Rop.Failure&lt;_&gt;</div>
+<div class="tip" id="fs2">union case Failure.FunctionalError: &#39;e -&gt; Failure&lt;&#39;e&gt;</div>
+<div class="tip" id="fs3">union case Failure.ExceptionError: exn -&gt; Failure&lt;&#39;e&gt;</div>
+<div class="tip" id="fs4">type exn = System.Exception<br /><br />Full name: Microsoft.FSharp.Core.exn</div>
+<div class="tip" id="fs5">type Result&lt;&#39;a,&#39;e&gt; =<br />&#160;&#160;| Success of &#39;a<br />&#160;&#160;| Failure of Failure&lt;&#39;e&gt;<br /><br />Full name: Script.Rop.Result&lt;_,_&gt;</div>
+<div class="tip" id="fs6">union case Result.Success: &#39;a -&gt; Result&lt;&#39;a,&#39;e&gt;</div>
+<div class="tip" id="fs7">Multiple items<br />union case Result.Failure: Failure&lt;&#39;e&gt; -&gt; Result&lt;&#39;a,&#39;e&gt;<br /><br />--------------------<br />active recognizer Failure: exn -&gt; string option<br /><br />Full name: Microsoft.FSharp.Core.Operators.( |Failure|_| )<br /><br />--------------------<br />type Failure&lt;&#39;e&gt; =<br />&#160;&#160;| FunctionalError of &#39;e<br />&#160;&#160;| ExceptionError of exn<br /><br />Full name: Script.Rop.Failure&lt;_&gt;</div>
+<div class="tip" id="fs8">val ret : arg0:&#39;a -&gt; Result&lt;&#39;a,&#39;b&gt;<br /><br />Full name: Script.Rop.ret</div>
+<div class="tip" id="fs9">val bind2 : f:(&#39;a -&gt; &#39;b -&gt; Result&lt;&#39;c,&#39;d&gt;) -&gt; x:Result&lt;&#39;a,&#39;d&gt; -&gt; y:Result&lt;&#39;b,&#39;d&gt; -&gt; Result&lt;&#39;c,&#39;d&gt;<br /><br />Full name: Script.Rop.bind2</div>
+<div class="tip" id="fs10">val f : (&#39;a -&gt; &#39;b -&gt; Result&lt;&#39;c,&#39;d&gt;)</div>
+<div class="tip" id="fs11">val x : Result&lt;&#39;a,&#39;d&gt;</div>
+<div class="tip" id="fs12">val y : Result&lt;&#39;b,&#39;d&gt;</div>
+<div class="tip" id="fs13">val xR : &#39;a</div>
+<div class="tip" id="fs14">val yR : &#39;b</div>
+<div class="tip" id="fs15">Multiple items<br />union case Result.Failure: Failure&lt;&#39;e&gt; -&gt; Result&lt;&#39;a,&#39;e&gt;<br /><br />--------------------<br />type Failure&lt;&#39;e&gt; =<br />&#160;&#160;| FunctionalError of &#39;e<br />&#160;&#160;| ExceptionError of exn<br /><br />Full name: Script.Rop.Failure&lt;_&gt;</div>
+<div class="tip" id="fs16">val e : Failure&lt;&#39;d&gt;</div>
+<div class="tip" id="fs17">val tryF : f:(&#39;a -&gt; &#39;b -&gt; &#39;c) -&gt; x:&#39;a -&gt; y:&#39;b -&gt; Result&lt;&#39;c,&#39;d&gt;<br /><br />Full name: Script.Rop.tryF</div>
+<div class="tip" id="fs18">val f : (&#39;a -&gt; &#39;b -&gt; &#39;c)</div>
+<div class="tip" id="fs19">val x : &#39;a</div>
+<div class="tip" id="fs20">val y : &#39;b</div>
+<div class="tip" id="fs21">val ex : exn</div>
+<div class="tip" id="fs22">val map2 : f:(&#39;a -&gt; &#39;b -&gt; &#39;c) -&gt; x:Result&lt;&#39;a,&#39;d&gt; -&gt; y:Result&lt;&#39;b,&#39;d&gt; -&gt; Result&lt;&#39;c,&#39;d&gt;<br /><br />Full name: Script.Rop.map2</div>
+<div class="tip" id="fs23">val apply : f:Result&lt;(&#39;a -&gt; &#39;b),&#39;c&gt; -&gt; x:Result&lt;&#39;a,&#39;c&gt; -&gt; Result&lt;&#39;b,&#39;c&gt;<br /><br />Full name: Script.Rop.apply</div>
+<div class="tip" id="fs24">val f : Result&lt;(&#39;a -&gt; &#39;b),&#39;c&gt;</div>
+<div class="tip" id="fs25">val x : Result&lt;&#39;a,&#39;c&gt;</div>
+<div class="tip" id="fs26">val f : (&#39;a -&gt; &#39;b)</div>
+<div class="tip" id="fs27">val map : f:(&#39;a -&gt; &#39;b) -&gt; x:Result&lt;&#39;a,&#39;c&gt; -&gt; Result&lt;&#39;b,&#39;c&gt;<br /><br />Full name: Script.Rop.map</div>
+<div class="tip" id="fs28">val bind : f:(&#39;a -&gt; Result&lt;&#39;b,&#39;c&gt;) -&gt; _arg1:Result&lt;&#39;a,&#39;c&gt; -&gt; Result&lt;&#39;b,&#39;c&gt;<br /><br />Full name: Script.Rop.bind</div>
+<div class="tip" id="fs29">val f : (&#39;a -&gt; Result&lt;&#39;b,&#39;c&gt;)</div>
+<div class="tip" id="fs30">val e : Failure&lt;&#39;c&gt;</div>
+

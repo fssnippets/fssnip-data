@@ -1,0 +1,45 @@
+type UoM = class end
+with
+    static member inline Tag< ^W, ^t, ^tm when (^W or ^t) : (static member IsUoM : ^t * ^tm -> unit)> (t : ^t) = (# "" t : ^tm #)
+    static member inline UnTag< ^W, ^t, ^tm when (^W or ^t) : (static member IsUoM : ^t * ^tm -> unit)> (t : ^tm) = (# "" t : ^t #)
+
+let inline tag (x : 't) : 'tm = UoM.Tag<UoM, 't, 'tm> x
+let inline untag (x : 'tm) : 't = UoM.UnTag<UoM, 't, 'tm> x
+
+// Extending UoM to existing types
+open System
+
+[<MeasureAnnotatedAbbreviation>]
+type Guid<[<Measure>] 'Measure> = Guid
+
+[<MeasureAnnotatedAbbreviation>]
+type string<[<Measure>] 'Measure> = string
+
+type UoM with
+    // Be *very* careful when writing this; bad args will result in invalid IL
+    static member IsUoM(_ : Guid, _ : Guid<'Measure>) = ()
+    static member IsUoM(_ : string, _ : string<'Measure>) = ()
+
+// Extending UoM to new types
+[<MeasureAnnotatedAbbreviation>]
+type Foo<[<Measure>] 'Measure> = Foo
+and Foo = Foo
+with
+    // Be *very* careful when writing this; bad args will result in invalid IL
+    static member IsUoM(_ : Foo, _ : Foo<'Measure>) = ()
+
+
+// Example
+[<Measure>] type processId = class end
+[<Measure>] type taskId = class end
+[<Measure>] type bar = class end
+
+type Entry = { ProcessId : Guid<processId> ; TaskId : Guid<taskId> ; Bar : Foo<bar> }
+
+
+let value = { ProcessId = tag <| Guid.NewGuid() ; TaskId = tag <| Guid.NewGuid() ; Bar = tag Foo }
+
+match value with
+| { ProcessId = pid ; TaskId = tid ; Bar = bar} -> 
+    { ProcessId = pid ; TaskId = tid ; Bar = bar}
+//    { ProcessId = pid ; TaskId = pid ; Bar = bar} // uncomment for type error

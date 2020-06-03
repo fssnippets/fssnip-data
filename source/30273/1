@@ -1,0 +1,54 @@
+// Bitcoin mining profitability calculation
+
+// Units of measure
+[<Measure>] type USD
+[<Measure>] type BTC
+[<Measure>] type sec
+[<Measure>] type hour
+[<Measure>] type H
+[<Measure>] type GH
+[<Measure>] type Watt
+[<Measure>] type KW
+
+// Unit conversions
+let hashesPerGH : float<H/GH> = 1000000000.0<H/GH>
+let secondsPerHour : float<sec/hour> = 3600.0<sec/hour>
+let wattsperKilowatt = 1000.0<Watt/KW>
+
+// Specification of S9 Antminer
+let unit_hash_power  = 13000.0<GH/sec> 
+let unit_consumption = 1375.0<Watt>
+let unit_cost = 
+   2100.0<USD> // miner cost
+  + 200.0<USD> // psu cost
+
+let hash_rate =  unit_hash_power * hashesPerGH
+
+// Difficulty is recalculated every 2016 blocks (~ 14 days)
+let difficulty = 440779902287.0<H> 
+
+// Block time solo mining
+let block_time : float<hour> = difficulty * (2.0 ** 32.0) / (hash_rate * secondsPerHour)
+
+// How many miners you need to mine 1 block per day
+let number_of_miners = block_time / 24.0<hour>
+
+// Is it profitable ?
+
+let psu_efficiency = 0.97 // 97% 
+
+let electricity_price = 0.12<USD/(KW*hour)>/wattsperKilowatt
+let btc_price    = 1157.00<USD/BTC> // Bitcoin price
+let block_reward = 12.5<BTC>
+
+let daily_power_consumption = number_of_miners * unit_consumption * 24.0<hour> / psu_efficiency
+
+let daily_electricity_cost = daily_power_consumption * electricity_price
+
+let daily_profit = block_reward*btc_price - daily_electricity_cost
+
+// Hardware cost.
+let hardware_cost = unit_cost * number_of_miners
+
+// Asuming it is profitable, daily_profit > 0.0<USD>
+let months_to_roi = hardware_cost / (daily_profit * 30.0)

@@ -1,0 +1,10 @@
+/// todo: replace mutable by array.reduce
+let rec tally (values :obj array) =
+    let mutable r = 0,0
+    let add = fun s c -> r <- s + fst r, c + snd r
+    values |> Array.iter(function
+        | :? int as i -> add i 1
+        | :? array<obj> as a when a.Length > 0 ->
+            tally(a) ||> add
+        | _ -> printfn "f# can't leak by accident!")
+    r

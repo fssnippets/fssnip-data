@@ -1,0 +1,28 @@
+open System
+open System.Windows
+open System.Threading
+open System.Timers
+open FsXaml
+
+type WpfBuilder(ui:UIElement)=
+    let disp=ui.Dispatcher
+    let Fn (fn:(unit-> 'b))=new Func<'b>(fn)|>disp.Invoke
+    member ob.Zero()=()
+    member ob.Delay(fn)=Fn fn
+    member ob.Return(x)=(fun _ ->x)|>Fn
+
+type Winr=XAML<"MainForm.xaml">
+
+let win=new Winr()
+let wpf=new WpfBuilder(win)
+
+let tmr=new Timer(2000.0,Enabled=true)
+tmr.Elapsed.Add(fun _->let head=wpf{let h=win.Title
+                                    win.Title<-h+"..."
+                                    return h}
+                       Thread.Sleep(1000)
+                       wpf{win.Title<-head+"."})
+
+let app=new Application()
+[<STAThread>]
+app.Run(win)|>ignore

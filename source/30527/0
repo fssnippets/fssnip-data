@@ -1,0 +1,28 @@
+// The idea is that you will have a generic wrapper ID<'T> and then use 
+// different types for 'T to represent different types of IDs. Those types 
+// are never actually instantiated, which is why they're called phantom types.
+
+[<Struct>]
+type ID<'T> = ID of System.Guid
+
+type CustomerID = interface end
+type ProductID = interface end
+
+// Now you can create ID<CustomerID> and 
+// ID<ProductID> values to represent two kinds of IDs:
+
+let newCustomerID () : ID<CustomerID> = ID(System.Guid.NewGuid())
+let newProductID () : ID<ProductID> = ID(System.Guid.NewGuid())
+
+// The nice thing about this is that you can write functions that work with any ID easily:
+
+let printID (ID g) = printfn "%s" (g.ToString())
+
+// For example, I can now create one customer ID, one product ID and print 
+// both, but I cannot do equality test on those IDs, because they're types do not match:
+
+let ci = newCustomerID ()
+let pi = newProductID ()
+printID ci
+printID pi
+ci = pi 

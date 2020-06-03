@@ -1,0 +1,50 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">IronPython</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">Hosting</span>
+
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="t">Py</span>() <span class="o">=</span>  
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="i">eng</span> <span class="o">=</span> <span class="i">Python</span><span class="o">.</span><span class="i">CreateEngine</span>()
+    <span class="k">member</span> <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="i">x</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="f">Expr</span>(<span onmouseout="hideTip(event, 'fs7', 7)" onmouseover="showTip(event, 'fs7', 7)" class="i">s</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs8', 8)" onmouseover="showTip(event, 'fs8', 8)" class="t">string</span>) <span class="o">=</span> <span onmouseout="hideTip(event, 'fs4', 9)" onmouseover="showTip(event, 'fs4', 9)" class="i">eng</span><span class="o">.</span><span class="i">CreateScriptSourceFromString</span>(<span onmouseout="hideTip(event, 'fs7', 10)" onmouseover="showTip(event, 'fs7', 10)" class="i">s</span>)
+    <span class="k">member</span> <span onmouseout="hideTip(event, 'fs5', 11)" onmouseover="showTip(event, 'fs5', 11)" class="i">x</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs9', 12)" onmouseover="showTip(event, 'fs9', 12)" class="f">Scope</span>() <span class="o">=</span> <span onmouseout="hideTip(event, 'fs4', 13)" onmouseover="showTip(event, 'fs4', 13)" class="i">eng</span><span class="o">.</span><span class="i">CreateScope</span>()
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs10', 14)" onmouseover="showTip(event, 'fs10', 14)" class="i">py</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs3', 15)" onmouseover="showTip(event, 'fs3', 15)" class="t">Py</span>()
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs11', 16)" onmouseover="showTip(event, 'fs11', 16)" class="i">scope</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs10', 17)" onmouseover="showTip(event, 'fs10', 17)" class="i">py</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs12', 18)" onmouseover="showTip(event, 'fs12', 18)" class="f">Scope</span>()
+<span onmouseout="hideTip(event, 'fs11', 19)" onmouseover="showTip(event, 'fs11', 19)" class="i">scope</span><span class="o">.</span><span class="i">SetVariable</span>(<span class="s">&quot;foo&quot;</span>, <span class="n">12</span>)
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs13', 20)" onmouseover="showTip(event, 'fs13', 20)" class="i">ss</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs10', 21)" onmouseover="showTip(event, 'fs10', 21)" class="i">py</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs14', 22)" onmouseover="showTip(event, 'fs14', 22)" class="f">Expr</span>(<span class="s">&quot;foo + foo&quot;</span>)
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs15', 23)" onmouseover="showTip(event, 'fs15', 23)" class="i">result</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs13', 24)" onmouseover="showTip(event, 'fs13', 24)" class="i">ss</span><span class="o">.</span><span class="i">Execute</span>(<span onmouseout="hideTip(event, 'fs11', 25)" onmouseover="showTip(event, 'fs11', 25)" class="i">scope</span>) <span class="o">:?&gt;</span> <span onmouseout="hideTip(event, 'fs16', 26)" onmouseover="showTip(event, 'fs16', 26)" class="t">int</span>
+
+<span onmouseout="hideTip(event, 'fs17', 27)" onmouseover="showTip(event, 'fs17', 27)" class="f">printfn</span> <span class="s">&quot;Result is </span><span class="pf">%d</span><span class="s">&quot;</span> <span onmouseout="hideTip(event, 'fs15', 28)" onmouseover="showTip(event, 'fs15', 28)" class="i">result</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace IronPython</div>
+<div class="tip" id="fs2">namespace IronPython.Hosting</div>
+<div class="tip" id="fs3">Multiple items<br />type Py =<br />&#160;&#160;new : unit -&gt; Py<br />&#160;&#160;member Expr : s:string -&gt; &#39;b<br />&#160;&#160;member Scope : unit -&gt; &#39;a<br /><br />Full name: Script.Py<br /><br />--------------------<br />new : unit -&gt; Py</div>
+<div class="tip" id="fs4">val eng : obj</div>
+<div class="tip" id="fs5">val x : Py</div>
+<div class="tip" id="fs6">member Py.Expr : s:string -&gt; &#39;b<br /><br />Full name: Script.Py.Expr</div>
+<div class="tip" id="fs7">val s : string</div>
+<div class="tip" id="fs8">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />Full name: Microsoft.FSharp.Core.Operators.string<br /><br />--------------------<br />type string = System.String<br /><br />Full name: Microsoft.FSharp.Core.string</div>
+<div class="tip" id="fs9">member Py.Scope : unit -&gt; &#39;a<br /><br />Full name: Script.Py.Scope</div>
+<div class="tip" id="fs10">val py : Py<br /><br />Full name: Script.py</div>
+<div class="tip" id="fs11">val scope : obj<br /><br />Full name: Script.scope</div>
+<div class="tip" id="fs12">member Py.Scope : unit -&gt; &#39;a</div>
+<div class="tip" id="fs13">val ss : obj<br /><br />Full name: Script.ss</div>
+<div class="tip" id="fs14">member Py.Expr : s:string -&gt; &#39;b</div>
+<div class="tip" id="fs15">val result : int<br /><br />Full name: Script.result</div>
+<div class="tip" id="fs16">Multiple items<br />val int : value:&#39;T -&gt; int (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.int<br /><br />--------------------<br />type int = int32<br /><br />Full name: Microsoft.FSharp.Core.int<br /><br />--------------------<br />type int&lt;&#39;Measure&gt; = int<br /><br />Full name: Microsoft.FSharp.Core.int&lt;_&gt;</div>
+<div class="tip" id="fs17">val printfn : format:Printf.TextWriterFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.printfn</div>
+

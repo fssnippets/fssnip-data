@@ -1,0 +1,7 @@
+let (|Between|_|) low up i = if i >= low && i <= up then Some () else None
+let (|MoreThan|_|) up i = if i > up then Some () else None
+let rec excelColumnName zeroBasedIndex =
+  match zeroBasedIndex with
+  | Between 0 25 -> string ('A' + (char zeroBasedIndex))
+  | MoreThan 25  -> excelColumnName(zeroBasedIndex / 26) + excelColumnName(zeroBasedIndex % 26 + 1)
+  | _ -> failwithf "couldn't translate %i into excel column name" zeroBasedIndex

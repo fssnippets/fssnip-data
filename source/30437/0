@@ -1,0 +1,22 @@
+open FSharp.Data.UnitSystems.SI.UnitSymbols
+
+type float<[<Measure>] 'm> with
+    member a.Bind(f,x) = f x * a
+    member a.Return(x) = a * sqrt x
+    member a.Yield(x) = a / x
+    member a.Combine(b:float<'m1>, c:float<'m2>) = a * b * c
+    member a.Quote(x) = System.Runtime.Hosting.ApplicationActivator()
+    member a.Delay(f) = f() * a
+    member a.Run(f) = Microsoft.FSharp.Linq.RuntimeHelpers.LeafExpressionConverter.EvaluateQuotation f
+ 
+[<System.Runtime.CompilerServices.Extension>]
+type A =
+  [<System.Runtime.CompilerServices.Extension>]
+  static member Yield(_:float<S>, b:float<Pa>) = b * 1.0<C>   
+
+// Mystery question: Where does the Celsius come from?
+let x = 
+    3.14<S> {
+        yield 2.71<Pa> 
+        yield 2.71<S> 
+    }

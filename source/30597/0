@@ -1,0 +1,175 @@
+(*The random hyperharmonic series is the infinite series S = Sum(1,inf,d(i)/i^pow),
+where integer pow > 1, and d(i) are independent, identically distributed 
+random variables with property P(d(i)=0) = P(d(i)=1) = 0.5. The fact that 
+for even pows the hyperharmonic series converge to some value at [0, ζ(pow)] with prob 1.
+To build comulative function F(x) = P(S < x) the tail of a series replaced by an
+appropriate normal random variable. Complexity ~ O(2^k), although faster calculations 
+are possible, the program shows connections between number theory and probability theory.
+Expresions employed here are quite simple, therefore many improvements can be made easily*)
+
+// some primitive actions
+let inline square x = x * x
+let inline double x = x + x
+let inline half x = x*0.5
+let inline inverse x = 1.0/x
+let sign x = if x=0.0 then x else x/(abs x)
+
+//Binomial coeffs
+type binom =
+     static member fact n = 
+            let rec loop acc = function
+                | n when n = 0 -> acc
+                | n -> loop (n*acc) (n-1)
+            loop 1 n
+   
+     static member comb n m = 
+            binom.fact n / (binom.fact m * binom.fact (n-m))
+
+//Bernoulli numbers
+let rec bernoulli = function
+    | n when n = 0 -> 1.0
+    | n when n = 1 -> -0.5
+    | n when n % 2 = 1 -> 0.0
+    | n -> -([0..(n-1)] 
+                  |> List.map (fun k -> 
+                          (binom.comb (n+1) k |> float, bernoulli k))
+                  |> List.sumBy (fun x -> fst x * snd x)   
+            ) / (float (n+1))
+
+//optional upper limit for a sum                
+type UpperLimit =
+   | Infinity
+   | Integer of int
+
+//Hyperharmonic series of even power   
+type HypHarmonic(pow) =
+   let m = pow/2
+   let repl = 
+       let rec loop f n =
+           if n = 1 then f
+           else loop (f>>f) (n/2)
+       loop square (pow/2) 
+ 
+   member h.pow = pow
+   //terms
+   member h.a i = i |> repl |> inverse
+ 
+   static member (*) (a:HypHarmonic,b:HypHarmonic) = HypHarmonic(a.pow * b.pow)
+   static member pi2 = double System.Math.PI 
+   static member sign n = let k = n % 2 in 1 - double k
+   //sum
+   member h.sum = function
+          | Infinity -> let s = HypHarmonic.sign (m+1) |> float in
+                        let p = pown HypHarmonic.pi2 pow in
+                        let f = binom.fact pow |> float in
+                        s*p*(bernoulli pow) / f |> half
+          | Integer i -> [float i..(-1.0)..1.0] |> List.sumBy h.a
+   //remainder of a sum
+   member h.rest n = h.sum Infinity - h.sum n
+
+//calculate exact distribution for first "apr" terms
+//and approximate distribution for the remainder
+let distribApprox pow apr x =
+  let k = (float (pown 2.0 apr)) in
+  let n = Integer apr in                    //number of terms to sum
+  let h = HypHarmonic pow in                 //series of even power pow S(n) = 1/1^pow + 1/2^pow + .. +1/n^pow
+  let M (h:HypHarmonic) = h.rest n |> half   //remainder of the h's series. It's expectation  Eh
+  let m = M h
+  let s = M (square h) |> half |> sqrt      //remainder of the h's series. It's stdev  sqrt(Vh)
+
+  //Normal distribution
+  let rec erfc x =
+      if x < 0.0 then 2.0 - erfc (-x)
+      elif x<0.5 then 1.0 - erf x
+      elif x>=10.0 then 0.0
+      else 
+         let P =x*(x*(x*(x*(x*(x*(x*(0.5641877825507397413087057563)
+                 + 9.675807882987265400604202961)
+                  + 77.08161730368428609781633646)
+                   + 368.5196154710010637133875746)
+                    + 1143.262070703886173606073338)
+                     + 2320.439590251635247384768711)
+                      + 2898.0293292167655611275846)
+                       + 1826.3348842295112592168999                      
+         let Q = x*(x*(x*(x*(x*(x*(x*(1.0 + 17.14980943627607849376131193)
+                 + 137.1255960500622202878443578)
+                  + 661.7361207107653469211984771)
+                   + 2094.384367789539593790281779)
+                    + 4429.612803883682726711528526)
+                      + 6089.5424232724435504633068)
+                       + 4958.82756472114071495438422)
+                        + 1826.3348842295112595576438       
+         exp (-(square x))*P/Q
+  and erf x =
+      let z = abs x
+      let S = x |> sign |> float
+      if z >= 10.0 then S
+      else
+         if z<0.5 then
+          let Xsq = square x 
+          let P =Xsq*(Xsq*(Xsq*(Xsq*(Xsq*(Xsq*0.007547728033418631287834
+                    + 0.288805137207594084924010)
+                     + 14.3383842191748205576712)
+                      + 38.0140318123903008244444)
+                       + 3017.82788536507577809226)
+                        + 7404.07142710151470082064)
+                         + 80437.3630960840172832162
+          let Q = Xsq*(Xsq*(Xsq*(Xsq*(Xsq + 38.0190713951939403753468)
+                     + 658.070155459240506326937)
+                      + 6379.60017324428279487120)
+                       + 34216.5257924628539769006)
+                        + 80437.3630960840172826266
+          S*1.1283791670955125738961589031*z*P/Q
+         else
+            S*(1.0-erfc z) 
+            
+  let pnormStd t = 
+      let sqrt2 = 1.41421356237309504880
+      half (erf (t / sqrt2)+1.0) 
+  
+  let normalize m s x = (x - m) / s in
+  //cumulative normal distribution N(m,s)
+  let pnorm x m s = x |> normalize m s |> pnormStd 
+  
+  //builds mediate distribution table for sum S(i-1) + a(i)
+  let combine L i =
+    let stat = L 
+                |> List.fold (fun acc an -> 
+                                  let b = h.a (float i) + an in                                
+                                  match b with 
+                                    | b when b + h.rest (Integer i) < x -> acc        //never reach x -> ignore
+                                    | b when b < x -> b::fst acc, snd acc             //lt x -> append to table
+                                    | _ -> fst acc, 1.0/float(pown 2.0 i) + snd acc)  //gt x -> add to prob estim
+                             (L,0.0)
+    //exact table, crude prob estimation
+    fst stat, snd stat
+   
+  //build comlete distribution table for sum S(apr)
+  let stat = [1..apr] 
+                |> List.fold 
+                        (fun acc i -> let c = combine (fst acc) i
+                                      (fst c), snd c + snd acc
+                        ) ([0.0],0.0)
+  
+  //compute sum of exact and normal distributions
+  fst stat
+    |> List.sumBy (fun v -> (1. - pnorm x (m+v) s))  //refine
+    |> (*) (inverse k)
+    |> (+) (snd stat) 
+
+//comulative distribution for Sum(1,inf, d(i)/i^pow), 
+//where P(d(i)=0) = P(d(i)=1) = 0.5 
+//tol - converge criteria 10^(-tol) 
+let distrib pow tol x = 
+   let rec loop cur prev n =
+      if abs (prev-cur)>pown 0.1 tol then loop (distribApprox pow n x) cur (n+1)
+      else cur
+   1. - loop 0.0 1.0 1         
+
+//write to a file   
+let write L =
+     System.IO.File.WriteAllLines(@"c:\temp\a.csv" ,L)
+     printfn "OK"
+
+//data out to file 
+[|0.0..0.001..1.7|] |> Array.map (fun x -> sprintf "%f, %f" x (distrib 2 8 x)) |> write

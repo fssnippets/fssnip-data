@@ -1,0 +1,272 @@
+namespace GRAIL.Processing
+
+open System
+open System.Collections.Generic
+open System.ComponentModel.DataAnnotations
+open System.Data.Entity
+open System.Data.Linq
+open Microsoft.FSharp.Data.TypeProviders
+
+type internal EntityConnection = 
+    SqlEntityConnection<ConnectionString="Server=APPS5;Initial Catalog=GTMS_data;Integrated Security=SSPI;MultipleActiveResultSets=true",Pluralize = true>
+type internal SubdivPrimaryKey =
+    {UserID:int;
+    FolderID:int;
+    RailsystemID:int;
+    SubdivisionID:int}
+type internal Side = 
+    | Side0
+    | Side1
+type internal SwitchLegs =
+    | Facing | Normal | Reverse
+type internal LegOrientationsPTC =
+    | RightFacing = 1
+    | RightRear = 2
+    | LeftFacing = 3
+    | LeftRear = 4
+type internal LinkTypes =
+    | Block = 1 | Switch = 2 | Linkage = 3 | None = 4
+type internal Element =
+    | Block of EntityConnection.ServiceTypes.VirtualBlock
+    | Switch of EntityConnection.ServiceTypes.VirtualSwitch
+    | Point of EntityConnection.ServiceTypes.VirtualPoint
+    | MilepostEquation of EntityConnection.ServiceTypes.V_MilepostEquations
+
+module internal Repository =
+    let context = EntityConnection.GetDataContext()
+    let FetchBlocks primaryKey =
+        query { for block in context.VirtualBlocks do
+                    where (block.SubdivisionID = primaryKey.SubdivisionID)
+                    select block }
+    let FetchBlock primaryKey blockID =
+        let block = 
+            query { for block in FetchBlocks primaryKey do
+                    where (block.VirtualBlockID = blockID)
+                    select block
+                    exactlyOneOrDefault }
+        match block with
+        | null -> None
+        | _ -> 
+            if block.EntityState = Data.EntityState.Unchanged then Some(block)
+            else None
+    let FetchSwitches primaryKey =
+        query { for switch in context.VirtualSwitches do
+                    where (switch.SubdivisionID = primaryKey.SubdivisionID)
+                    select switch }
+    let FetchSwitch primaryKey switchID =
+        let switch = 
+            query { for switch in FetchSwitches primaryKey do
+                    where (switch.VirtualSwitchID = switchID)
+                    select switch
+                    exactlyOneOrDefault }
+        match switch with
+        | null -> None
+        | _ ->
+            if switch.EntityState = Data.EntityState.Unchanged then Some(switch)
+            else None
+    let FetchPoints primaryKey =
+        query { for point in context.VirtualPoints do
+                    where (point.SUBID = primaryKey.SubdivisionID)
+                    select point }
+    let FetchPoint primaryKey pointID =
+        let point =
+            query { for point in FetchPoints primaryKey do
+                    where (point.VIRTUALPOINTID = pointID)
+                    select point
+                    exactlyOneOrDefault }
+        match point with
+        | null -> None
+        | _ ->
+            if point.EntityState = Data.EntityState.Unchanged then Some(point)
+            else None
+    let FetchEquations primaryKey = 
+        query { for eq in context.V_MilepostEquations do
+                    where (eq.SubdivisionID = primaryKey.SubdivisionID)
+                    select eq }
+    let FetchEquation primaryKey equationID =
+        let eq =
+            query { for eq in FetchEquations primaryKey do
+                    where (eq.EquationID = equationID)
+                    select eq
+                    exactlyOneOrDefault }
+        match eq with
+        | null -> None
+        | _ ->
+            if eq.EntityState = Data.EntityState.Unchanged then Some(eq)
+            else None
+    let FetchConnectedElement primaryKey connectedType connectedID : Element option = 
+        match connectedType with
+            | LinkTypes.Block -> FetchBlock primaryKey connectedID |> Option.map (fun b -> Block(b))
+            | LinkTypes.Switch -> FetchSwitch primaryKey connectedID |> Option.map (fun s -> Switch(s))
+            | LinkTypes.Linkage -> FetchPoint primaryKey (int16(connectedID)) |> Option.map (fun l -> Point(l))
+            | LinkTypes.None -> FetchEquation primaryKey connectedID |> Option.map (fun eq -> MilepostEquation(eq))
+            | _ -> None
+    let FetchBlockSide primaryKey side (block:EntityConnection.ServiceTypes.VirtualBlock) =
+        let (connectedID, connectedType) = 
+            match side with
+                | Side0 -> (block.PreviousVirtualID, enum<LinkTypes>(int32(block.PreviousType)))
+                | Side1 -> (block.NextVirtualID, enum<LinkTypes>(int32(block.NextType)))
+        FetchConnectedElement primaryKey connectedType connectedID
+    let FetchSwitchSide primaryKey entryID (switch:EntityConnection.ServiceTypes.VirtualSwitch) =
+        let allLegs =
+            match entryID with
+                | x when switch.FacingElement = entryID -> [Reverse; Normal]
+                | x when switch.NormalElement = entryID -> [Reverse; Facing]
+                | x when switch.ReverseElement = entryID -> [Normal; Facing]
+                | _ -> invalidOp "Unable to determine leg of entryID on switch!"
+        let connection leg = 
+            match leg with 
+            | Normal -> FetchConnectedElement primaryKey (enum<LinkTypes>(int32(switch.NormalElementType))) switch.NormalElement
+            | Facing -> FetchConnectedElement primaryKey (enum<LinkTypes>(int32(switch.FacingElementType))) switch.FacingElement
+            | Reverse -> FetchConnectedElement primaryKey (enum<LinkTypes>(int32(switch.ReverseElementType))) switch.ReverseElement
+        let upcomingLegs = allLegs |> List.map (fun leg -> connection leg)
+        upcomingLegs |> List.choose id
+    let FetchPointSide primaryKey side (point:EntityConnection.ServiceTypes.VirtualPoint) =
+        let (connectedID, connectedType) =
+            match side with
+            | Side0 -> (point.PREVID, LinkTypes.Block)
+            | Side1 -> (point.NEXTID, LinkTypes.Block)
+        if connectedID = int64(0) then
+            None
+        else
+            FetchConnectedElement primaryKey connectedType connectedID
+    let FetchMilepostEquationSide primaryKey entryID (equation:EntityConnection.ServiceTypes.V_MilepostEquations) =
+        let connectedID =
+            if entryID = equation.NextID then equation.PreviousID
+            elif entryID = equation.PreviousID then equation.NextID
+            else int64(-999)
+        let connectedType = 
+            if connectedID >= int64(10000) then
+                LinkTypes.Switch
+            else
+                LinkTypes.Block
+        FetchConnectedElement primaryKey connectedType connectedID
+
+open Repository
+module internal BlockHeightMap =
+    let AssignElementHeight (entity:Element) (yPosition:int16) =
+        match entity with 
+        | Block block -> block.YPos <- int(yPosition)
+        | Switch switch -> switch.YPosition <- yPosition
+        | Point point -> point.YPOS <- yPosition
+        | MilepostEquation mp -> mp.YPosition <- yPosition
+    let FlipSide side =
+        match side with
+        | Side1 -> Side0
+        | Side0 -> Side1
+    let GetElementID element =
+        match element with
+        | Switch sw -> sw.VirtualSwitchID
+        | Block b -> b.VirtualBlockID
+        | Point p -> int64(p.VIRTUALPOINTID)
+        | MilepostEquation eq -> eq.EquationID
+    let GetSwitchLeg (entrySwitch:EntityConnection.ServiceTypes.VirtualSwitch) (elementID:int64) : SwitchLegs =
+        if entrySwitch.FacingElement = elementID then
+            SwitchLegs.Facing
+        elif entrySwitch.NormalElement = elementID then
+            SwitchLegs.Normal
+        elif entrySwitch.ReverseElement = elementID then
+            SwitchLegs.Reverse
+        else
+            invalidOp ("Failed to parse switch leg of connecting element ID: " + string(elementID) + " and switch ID: " + string(entrySwitch.VirtualSwitchID))
+    let rec ProcessSide primaryKeys side currentYPosition entryID element =
+        let connectedElementCollection = 
+            match element with 
+            | Block block -> 
+                match FetchBlockSide primaryKeys side block with
+                | Some b -> [b]
+                | None -> []
+            | Switch switch -> 
+                FetchSwitchSide primaryKeys entryID switch 
+            | Point point -> 
+                match FetchPointSide primaryKeys side point with
+                | Some e -> [e]
+                | None -> []
+            | MilepostEquation mp -> 
+                match FetchMilepostEquationSide primaryKeys entryID mp with
+                | Some m -> [m]
+                | None -> []
+        // Now that we have the list of one or two connectedElements for this side, we process one or two (in the case of the switch
+        if connectedElementCollection.Length = 1 then
+            AssignElementHeight element currentYPosition
+            let connectedElement = connectedElementCollection.[0]
+            let (newY, newSide, newEntryID) =
+                match connectedElement with
+                    | Switch s -> (currentYPosition, side, GetElementID element)
+                    | MilepostEquation mp -> (currentYPosition, FlipSide side, GetElementID element)
+                    | Block b -> (currentYPosition, side, GetElementID element)
+                    | Point p -> (currentYPosition, side, GetElementID element)
+            ProcessSide primaryKeys newSide newY newEntryID connectedElement
+        elif connectedElementCollection.IsEmpty then
+            printf "Hit end point with ID: %i\n" (GetElementID element)
+        // Case where we are processing the side of a switch and must process two elements
+        else
+            let entrySwitch = 
+                match element with
+                | Switch sw -> sw
+                | _ -> invalidOp "Determined element was switch when it was not!"
+            let connectedLegs = 
+                match connectedElementCollection with
+                | [head; tail] -> [GetSwitchLeg entrySwitch (GetElementID head); GetSwitchLeg entrySwitch (GetElementID tail)]
+                | _ -> invalidOp "Not exactly two connectedLegs!"
+            let entrySwitchLeg =
+                GetSwitchLeg entrySwitch entryID
+            for connectedElement in connectedElementCollection do
+                let connectedElementLeg = GetSwitchLeg entrySwitch (GetElementID connectedElement)
+                if connectedElementLeg = entrySwitchLeg then
+                    invalidOp "A switch has two elements referring to the same leg!"
+                let (newY, newSide) =
+                    let oldYPosition = int(currentYPosition)
+                    match enum<LegOrientationsPTC>(int(entrySwitch.SwitchOrientation)) with
+                    | LegOrientationsPTC.RightFacing | LegOrientationsPTC.RightRear -> 
+                        match entrySwitchLeg with
+                        | SwitchLegs.Facing -> 
+                            match connectedElementLeg with
+                            | SwitchLegs.Facing -> (-999, side)
+                            | SwitchLegs.Normal -> (oldYPosition, side)
+                            | SwitchLegs.Reverse -> (oldYPosition - 1, side)
+                        | SwitchLegs.Normal -> 
+                            match connectedElementLeg with
+                            | SwitchLegs.Facing -> (oldYPosition, side)
+                            | SwitchLegs.Normal -> (-999, side)
+                            | SwitchLegs.Reverse -> (oldYPosition - 1, FlipSide side)
+                        | SwitchLegs.Reverse -> 
+                            match connectedElementLeg with
+                            | SwitchLegs.Facing -> (oldYPosition + 1, side)
+                            | SwitchLegs.Normal -> (oldYPosition + 1, FlipSide side)
+                            | SwitchLegs.Reverse -> (-999, side)
+                    | LegOrientationsPTC.LeftFacing | LegOrientationsPTC.LeftRear -> 
+                        match entrySwitchLeg with
+                        | SwitchLegs.Facing -> 
+                            match connectedElementLeg with
+                            | SwitchLegs.Facing -> (-999, side)
+                            | SwitchLegs.Normal -> (oldYPosition, side)
+                            | SwitchLegs.Reverse -> (oldYPosition + 1, side)
+                        | SwitchLegs.Normal -> 
+                            match connectedElementLeg with
+                            | SwitchLegs.Facing -> (oldYPosition, side)
+                            | SwitchLegs.Normal -> (-999, side)
+                            | SwitchLegs.Reverse -> (oldYPosition + 1, FlipSide side)
+                        | SwitchLegs.Reverse -> 
+                            match connectedElementLeg with
+                            | SwitchLegs.Facing -> (oldYPosition - 1, side)
+                            | SwitchLegs.Normal -> (oldYPosition - 1, FlipSide side)
+                            | SwitchLegs.Reverse -> (-999, side)
+                    | _ -> invalidOp "Received invalid leg orentation for switch"
+                AssignElementHeight element (int16(newY))
+                ProcessSide primaryKeys newSide (int16(newY)) (GetElementID connectedElement) connectedElement
+
+    let TraverseBlockHeightMap primaryKeys =
+        let entryPoint = 
+            query { 
+            for point in (FetchPoints primaryKeys) do
+                where (point.PREVID <> int64(0) || point.NEXTID <> int64(0))
+                select point
+                headOrDefault}
+        if entryPoint.NEXTID <> int64(0) then 
+            ProcessSide primaryKeys Side1 (int16(0)) (int64(entryPoint.VIRTUALPOINTID)) (Point entryPoint)
+        elif entryPoint.PREVID <> int64(0) then 
+            ProcessSide primaryKeys Side0 (int16(0)) (int64(entryPoint.VIRTUALPOINTID)) (Point entryPoint)
+        else
+            printf "Entry point not found..."
+        context.DataContext.SaveChanges()

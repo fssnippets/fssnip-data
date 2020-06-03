@@ -1,0 +1,27 @@
+open Suave
+
+/// Sample server that we want to host
+let app = Successful.OK "Hello world!"
+
+/// Start server on the first available port in the range 8000..10000
+/// and return the port number once the server is started (asynchronously)
+let startServer () =
+  Async.FromContinuations(fun (cont, _, _) ->
+    let startedEvent = Event<_>()
+    startedEvent.Publish.Add(cont)
+    async {
+      // Try random ports until we find one that works
+      let rnd = System.Random()
+      while true do 
+        let port = 8000 + rnd.Next(2000)
+        let local = Suave.Http.HttpBinding.mkSimple HTTP "127.0.0.1" port
+        let logger = Suave.Logging.Loggers.saneDefaultsFor Logging.LogLevel.Error
+        let config = { defaultConfig with bindings = [local]; logger = logger }
+        let started, start = startWebServerAsync config app
+        // If it starts OK, we get TCP binding & report success via event
+        async { let! running = started   
+                startedEvent.Trigger(running) } |> Async.Start                    
+        // Try starting the server and handle SocketException
+        try do! start
+        with :? System.Net.Sockets.SocketException -> () } 
+    |> Async.Start )

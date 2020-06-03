@@ -1,0 +1,11 @@
+open System.IO
+
+// let tryCatch f x = try Ok (f x) with ex -> Error ex.Message
+
+let rec findDirectories root name depth =
+    if depth = 0 then Seq.empty
+    else
+        Directory.EnumerateDirectories root
+        |> Seq.collect (fun directory ->
+            if directory.EndsWith("\\" + name) then List.toSeq [directory]
+            else findDirectories directory name (depth - 1))

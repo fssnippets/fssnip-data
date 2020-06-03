@@ -1,0 +1,69 @@
+//[snippet:Base Definition and Implementations]
+// Int expression object algebra
+type IntAlg<'I> =
+    abstract Lit : int -> 'I
+    abstract Add : 'I -> 'I -> 'I
+
+// Church encoding of a term in the algebra
+type IntExpr<'I,'R> = IntAlg<'I> -> 'R
+
+let ``3 + 5`` : IntExpr<_,_> = fun alg -> alg.Add (alg.Lit 3) (alg.Lit 5)
+
+// Evaluator for the algebra
+type IntEval() =
+    interface IntAlg<int> with
+        member __.Lit i = i
+        member __.Add l r = l + r
+
+let eval (f : IntExpr<_,_>) = f (IntEval())
+
+eval ``3 + 5``
+
+// Pretty printer for the algebra
+type IntPrint() =
+    interface IntAlg<string> with
+        member __.Lit i = string i
+        member __.Add l r = sprintf "(%s + %s)" l r
+
+let print (f : IntExpr<_,_>) = f (IntPrint())
+
+print ``3 + 5``
+//[/snippet]
+//[snippet:Extending Algebra and Operations]
+type IntBoolAlg<'I, 'B> =
+    inherit IntAlg<'I>
+    abstract Lit : bool -> 'B
+    abstract IfThenElse : 'B -> 'I -> 'I -> 'I
+
+// Church encoding of expressions in the algebra
+type IntBoolExpr<'I,'B,'R> = IntBoolAlg<'I,'B> -> 'R
+
+let ``if false then 3 else 3 + 5`` : IntBoolExpr<_,_,_> =
+    fun alg ->
+        alg.IfThenElse
+            (alg.Lit false)
+            (alg.Lit 3)
+            (``3 + 5`` alg)
+
+// Extending the evaluator
+type IntBoolEval() =
+    inherit IntEval()
+    interface IntBoolAlg<int, bool> with
+        member __.Lit (b:bool) = b
+        member __.IfThenElse b a c = if b then a else c
+
+let eval' (f : IntBoolExpr<_,_,_>) = f (IntBoolEval())
+
+eval' ``if false then 3 else 3 + 5``
+
+// Extending the pretty-printer
+type IntBoolPrint() =
+    inherit IntPrint()
+    interface IntBoolAlg<string, string> with
+        member __.Lit (b : bool) = sprintf "%b" b
+        member __.IfThenElse b a c = sprintf "if %s then %s else %s" b a c
+
+let print' (f : IntBoolExpr<_,_,_>) = f (IntBoolPrint())
+
+print' ``if false then 3 else 3 + 5``
+//[/snippet]

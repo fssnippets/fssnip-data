@@ -1,0 +1,30 @@
+/// Calculates progressive tax on an annual income
+let calcProgressiveTax taxBrackets income =
+  taxBrackets @ [ (System.Double.MaxValue, 0.0) ]
+  |> Seq.windowed 2
+  |> Seq.fold
+       (fun (incomeLeft, tax) x ->
+         let bracketLow, rate = x.[0]
+         let bracketHight = fst x.[1]
+         let bracketW = bracketHight - bracketLow
+         match incomeLeft, incomeLeft <= bracketW with
+         | 0.0, _            -> (0.0, tax)
+         | incomeLeft, true  -> (0.0, incomeLeft * rate + tax)
+         | incomeLeft, false -> (incomeLeft - bracketW, bracketW * rate + tax)
+       )
+       (income, 0.0)
+  |> snd
+
+
+// Example
+let incomeTaxBelgium2016 =  //   Taxable Income    Tax Rate on 
+  [                         //   Bracket, EUR      Income in Bracket
+  (    0.00, 0.25);         //      0 .. 10,860      25%
+  (10860.00, 0.30);         // 10,860 .. 12,470      30%
+  (12470.00, 0.40);         // 12,470 .. 20,780      40%
+  (20780.00, 0.45);         // 20,780 .. 38,080      45%
+  (38080.00, 0.50);         // 38,080 ..  over       50%
+  ]
+  
+calcProgressiveTax incomeTaxBelgium2016 100000.00
+// Returns: 45,267.00

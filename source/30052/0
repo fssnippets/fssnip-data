@@ -1,0 +1,41 @@
+//https://en.wikipedia.org/wiki/Collatz_conjecture
+//https://uva.onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem=36
+
+let min a b = if (a > b) then b else a
+let max a b = if (b > a) then b else a
+let f a b =
+  let g j =
+    seq { 
+      let mutable i = j
+      while (i > 1) do
+        yield i
+        i <- if ((i % 2) = 0) then i / 2 else 3 * i + 1
+      yield 1
+    }
+  seq{(min a b)..(max a b)} |> Seq.map g
+let max_length a b = f a b |> Seq.map  (fun x -> x |> Seq.length) |> Seq.max
+let print_all a b  = f a b |> Seq.iter (fun x -> printfn "%A" (x |> Seq.toList))
+
+(*
+
+> print_all 1 10;;
+[1]
+[2; 1]
+[3; 10; 5; 16; 8; 4; 2; 1]
+[4; 2; 1]
+[5; 16; 8; 4; 2; 1]
+[6; 3; 10; 5; 16; 8; 4; 2; 1]
+[7; 22; 11; 34; 17; 52; 26; 13; 40; 20; 10; 5; 16; 8; 4; 2; 1]
+[8; 4; 2; 1]
+[9; 28; 14; 7; 22; 11; 34; 17; 52; 26; 13; 40; 20; 10; 5; 16; 8; 4; 2; 1]
+
+> max_length 1 10;;
+val it : int = 20
+> max_length 100 200;;
+val it : int = 125
+> max_length 201 210;;
+val it : int = 89
+> max_length 900 1000;;
+val it : int = 174
+
+*)

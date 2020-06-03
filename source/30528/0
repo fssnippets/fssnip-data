@@ -1,0 +1,16 @@
+open System.Text.RegularExpressions
+open System
+
+let input = "378282246310005"
+
+let digits = input |> Seq.filter System.Char.IsNumber |> Seq.map (string >> int)
+if (digits |> Seq.length) <> 0 then
+    let multiply i n = 
+        match i % 2 with 
+        | 1 when n < 5 -> n * 2 
+        | 1 -> (n * 2) - 9 
+        | _ -> n
+    let sum = digits |> Seq.rev |> Seq.mapi multiply |> Seq.sum
+    sum % 10 = 0   
+else
+    false

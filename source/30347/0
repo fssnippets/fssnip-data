@@ -1,0 +1,9 @@
+open FSharp.Data
+open FSharp.Data.JsonExtensions
+
+type animalsTemplate = JsonProvider<"""{ "dogs" : [{ "category" : "dogtype", "name" : "dogname" }] }""", RootName="root">
+
+let chihuaha = animalsTemplate.Dog(category = "Companion dogs", name = "Chihuahua" )
+let dogsList = [chihuaha, animalsTemplate.Dog(category = "Hounds", name = "Foxhound" )]
+
+let animals = animalsTemplate.Root(dogs = (dogsList |> Array.ofList))

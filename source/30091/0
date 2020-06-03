@@ -1,0 +1,20 @@
+﻿module CongestionRentGraphTests
+
+open NUnit.Framework
+open System
+open System.Linq
+
+
+[<Test>]
+let ``test spill over data with hourly grid alignment``() =
+  let rentGraph = new CongestionRentGraph()
+  let hourDeltas = [0.0f..35.0f]
+  let startDate = DateTime(2016, 1, 1, 0, 0, 0)
+
+  let tupleData = 
+    hourDeltas
+    |> Seq.map(fun hour -> startDate.AddHours(float hour), hour)
+                  
+  rentGraph.SetupDatasource(tupleData)
+  
+  ignore

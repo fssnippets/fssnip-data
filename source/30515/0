@@ -1,0 +1,20 @@
+open Microsoft.Azure.WebJobs
+open Microsoft.Azure.WebJobs.Extensions.Http
+open Microsoft.AspNetCore.Http
+open Microsoft.AspNetCore.Mvc
+
+module RM = WebSharper.Core.Remoting
+
+[<FunctionName("rpc")>]
+let runRpc( [<HttpTrigger(AuthorizationLevel.Anonymous, "get" , "post", "options", Route = "rpc")>] 
+            request     : HttpRequest ) = 
+    async {
+        let  wsServer = RM.Server.Create WebSharper.Web.Shared.Metadata WebSharper.Web.Shared.Json
+        let! body     = request.ReadAsStringAsync() |> Async.AwaitTask
+        let  wsReq    = {
+            RM.Request.Body    = body
+            RM.Request.Headers = ParseO.tryParseWith request.Headers.TryGetValue >> Option.bind Seq.tryHead
+        }
+        let! wsResp   = wsServer.HandleRequest wsReq
+        return ContentResult(Content = wsResp.Content, ContentType = wsResp.ContentType)
+    } |> Async.StartAsTask

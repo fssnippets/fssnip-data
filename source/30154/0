@@ -1,0 +1,38 @@
+namespace ca2
+
+module rectangle =
+  type point = {X:int;Y:int}
+
+  let createPoint x y = 
+    {X=x; Y=y}
+
+  type Rectangle = {bottomLeft:point; topRight:point}
+
+  let create x1 y1 x2 y2 = 
+    {bottomLeft=createPoint x1 y1; topRight = createPoint x2 y2}
+  let height rectangle =
+    rectangle.topRight.Y-rectangle.bottomLeft.Y
+  let width rectangle =
+    rectangle.topRight.X-rectangle.bottomLeft.X
+  let area rectangle =
+    (height rectangle) * (width rectangle)
+  
+  let intersection rec1 rec2 = 
+    let x2 = min rec1.topRight.X rec2.topRight.X
+    let x1 = max rec1.bottomLeft.X rec2.bottomLeft.X
+    let y2 = min rec1.topRight.Y rec2.topRight.Y
+    let y1 = max rec1.bottomLeft.Y rec2.bottomLeft.Y
+    let intersectionHeight = max 0 (y2-y1)
+    let intersectionWidth = max 0 (x2-x1)
+    intersectionHeight * intersectionWidth
+
+module solution =  
+  
+  let typedSolution rectangle1 rectangle2 = 
+    let rec1Area = rectangle.area rectangle1
+    let rec2Area = rectangle.area rectangle2
+    let intersectionArea = rectangle.intersection rectangle1 rectangle2
+    rec1Area+rec2Area-intersectionArea
+
+  let solution k l m n p q r s =
+    typedSolution (rectangle.create k l m n) (rectangle.create p q r s)   

@@ -1,0 +1,104 @@
+open System
+
+#r "node_modules/fable-core/Fable.Core.dll"
+
+open Fable.Core
+open Fable.Core.JsInterop
+module Browser = Fable.Import.Browser
+
+#r "node_modules/fable-arch/Fable.Arch.dll"
+
+open Fable.Arch
+open Fable.Arch.App.Types
+open Fable.Arch.App
+open Fable.Arch.Html
+
+type Model = {
+    A: string
+    B: string
+}
+with
+    static member Empty = {
+        A = "A"
+        B = "B"
+    }
+
+    override x.ToString () =
+        sprintf "A: %s, B: %s" x.A x.B
+
+type Action =
+    | FieldChanged of Id: string * Value: string
+with
+    override x.ToString () =
+        match x with
+        | FieldChanged (id, value) -> sprintf "FieldChanged (%s, %s)" id value
+
+open FSharp.Reflection
+
+let view (model: Model) = 
+    let makeInput id value =
+        div [] [
+            label [] [ Text id ]
+            input [
+                property "value" value
+                onInput (fun e ->
+                    e?preventDefault() |> ignore
+                    let value = unbox<string> e?target?value
+                    FieldChanged (id, value)
+                )
+            ]
+        ]
+    let fields = FSharpType.GetRecordFields typeof<Model>
+    let fieldAndValues =
+        fields
+        |> Array.map (fun field ->
+            field.Name, FSharpValue.GetRecordField(model, field).ToString()
+        )
+    div [] [
+        yield div [] [
+            text "Reflection test"
+        ]
+        yield div [] [
+            text "First field"
+        ]
+        yield makeInput "A" model.A
+        yield div [] [
+            text "Second field"
+        ]
+        yield makeInput "B" model.B
+//        yield!
+//            fieldAndValues
+//            |> Array.map (fun (id, value) ->
+//                makeInput id value
+//            )
+    ]
+
+let update (model: Model) action =
+    match action with
+    | FieldChanged (id, value) ->
+        let fields = FSharpType.GetRecordFields typeof<Model>
+        let oField = fields |> Array.tryFind (fun field -> field.Name = id) 
+        match oField with
+        | None -> 
+            Browser.console.error (sprintf "Unknown field id: %s, wanted to set to value %s" id value)
+            model
+        | Some fieldToSet ->
+            let newFields = 
+                fields
+                |> Array.map (fun field ->
+                    if field.Name = fieldToSet.Name then
+                        value :> obj
+                    else
+                        FSharpValue.GetRecordField(model, field)
+                )
+            FSharpValue.MakeRecord(typeof<Model>, newFields)
+            |> unbox<Model>
+
+createSimpleApp Model.Empty view update Virtualdom.createRender
+|> withStartNodeSelector "#fable-body"
+|> withSubscriber (fun x ->
+    printfn "Message: %s" (string x.Message)
+    printfn "Prev: %s" (string x.PreviousState)
+    printfn "Current: %s" (string x.CurrentState)
+)
+|> start

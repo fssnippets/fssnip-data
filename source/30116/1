@@ -1,0 +1,67 @@
+#if INTERACTIVE
+#r "System.Net.Http.dll"
+#endif
+
+open System.Net
+open System.IO
+
+type PostRequestType =
+| Text
+| ApplicationXml
+| ApplicationSoapXml
+| ApplicationJson
+
+let timeout = 50000 //ms
+/// Make a post-web-request, with custom headers
+let makePostRequestWithHeaders (reqType: PostRequestType) (url : string) (requestBody : string) (headers) =
+    let req = WebRequest.CreateHttp url
+    headers |> Seq.iter(fun (h:string,k:string) -> req.Headers.Add(h,k))
+    req.CookieContainer <- new CookieContainer()
+    req.Method <- "POST"
+    req.Timeout <- timeout
+    req.ProtocolVersion <- HttpVersion.Version10
+    let postBytes = requestBody |> System.Text.Encoding.ASCII.GetBytes
+    req.ContentLength <- postBytes.LongLength
+    let reqtype =
+        match reqType with
+        | Text -> "text/xml; charset=utf-8"
+        | ApplicationXml -> "application/xml; charset=utf-8"
+        | ApplicationSoapXml -> "application/soap+xml; charset=utf-8"
+        | ApplicationJson -> "application/json"
+    req.ContentType <- reqtype
+    async {
+        let! res =
+            async{
+                let! reqStream = req.GetRequestStreamAsync() |> Async.AwaitTask
+                do! reqStream.WriteAsync(postBytes, 0, postBytes.Length) |> Async.AwaitIAsyncResult |> Async.Ignore
+                reqStream.Close()
+                let! res =
+                    async { // Async methods are not using req.Timeout
+                        let! child = Async.StartChild(req.AsyncGetResponse(), timeout)
+                        return! child
+                    }
+                use stream = res.GetResponseStream()
+                use reader = new StreamReader(stream)
+                let! rdata = reader.ReadToEndAsync() |> Async.AwaitTask
+                return rdata
+            } |> Async.Catch
+        match res with
+        | Choice1Of2 x -> return x
+        | Choice2Of2 e ->
+            match e with
+            | :? WebException as wex ->
+                // Read the error from response
+                use stream = wex.Response.GetResponseStream()
+                use reader = new StreamReader(stream)
+                let err = reader.ReadToEnd()
+                return failwith err
+            | _ ->
+                // System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(e).Throw()
+                return failwith(e.ToString())
+    }
+    //  |> Async.StartAsTask |> Task.WaitAll
+
+/// Make a post-web-request
+let makePostRequest (reqType: PostRequestType) (url : string) (requestBody : string) =
+    makePostRequestWithHeaders reqType url requestBody [||]
+

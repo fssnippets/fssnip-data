@@ -1,0 +1,49 @@
+public class Fibonacci extends Thread {
+    int n;
+    int result;
+	
+    public Fibonacci(int n) {
+        this.n = n;
+        System.out.println("Konstruktor: " + this.n);
+    }
+	
+    public void run() {
+        if ((n == 0)||(n == 1 )){
+        System.out.println("If n=0 ili n=1: " + n);
+        result = 1;
+        }else {
+            Fibonacci f1 = new Fibonacci(n-1);  
+            Fibonacci f2 = new Fibonacci(n-2);
+System.out.println("Trenutno smo u dretvi " + n + ", a otisli smo u konstruktor " + (n-1) +" i " + (n-2) +".");
+f1.start();
+f2.start();
+System.out.println("Nakon f1 i f2 start: " + this.n);
+try {
+System.out.println("Cekajte! " + n);
+f1.join();
+f2.join();
+System.out.println("Hajde! " + n);
+System.out.println("Nakon f1, f2 join: " + this.n);
+} catch (InterruptedException e){};
+result = f1.getResult() + f2.getResult();
+System.out.println("Rezultat: " + result);
+}
+}
+
+public int getResult(){
+return result;
+}
+	
+public static void main(String[] args) {
+Fibonacci f1 = new Fibonacci(Integer.parseInt(args[0]));
+f1.start();
+System.out.println("U mainu nakon f1 start.");
+try {
+System.out.println("Cekaj!");
+f1.join();
+System.out.println("Hajde!");
+System.out.println("U mainu nakon f1 join");
+} catch (InterruptedException e){};
+System.out.println("Answer is " + f1.getResult());
+}
+}

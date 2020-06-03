@@ -1,0 +1,238 @@
+
+/// This is 100% based on tomas petricek blog article.
+/// there has been some small additions in regards to adding Result type
+/// and handling Monoids for the Writer Part.
+/// go check the following blog article : http://tomasp.net/blog/2014/update-monads/
+/// Comment appreciated + bear in mind that performance wise, the Monoid Combine operator,
+/// could be greatly improved and more.
+[<AutoOpen>]
+module Monoid =
+
+    type IMonoid<'M> =
+        abstract member Empty : (unit -> 'M)
+        abstract member Combine : ('M * 'M -> 'M)
+
+    let listMonoid =
+        { new IMonoid<list<'T>> with 
+            member __.Empty = fun () -> []
+            member __.Combine = fun (l1,l2) -> l1 @ l2
+        } 
+    let arrayMonoid =
+        { new IMonoid<'T []> with 
+            member __.Empty = fun () -> [||]
+            member __.Combine = fun (a1,a2) -> Array.append a1 a2
+        } 
+
+    let unitMonoid =
+        { new IMonoid<_> with 
+            member __.Empty = fun () -> ()
+            member __.Combine = fun (_,_) -> ()
+        } 
+
+
+
+[<AutoOpen>]
+
+module UpdateResult =
+
+
+    [<NoComparison>]
+    [<NoEquality>]
+    type Result<'Update, 'T> = 
+        | Success of 'Update * 'T
+        // It is bad practice to use a string as a failure description
+        // Let to the user to update the Failure payload to be a proper type or something
+        // of the sort
+        | Failure of string 
+
+    [<NoComparison>]
+    [<NoEquality>]
+    type UpdateMonad<'TState, 'TUpdate, 'T> = UM of ('TState -> Result<'TUpdate, 'T>)    
+
+    [<NoComparison>]
+    [<NoEquality>]
+    type DelayedUM<'TState, 'TUpdate, 'T> = DelayedUM of (unit -> UpdateMonad<'TState, 'TUpdate, 'T>)    
+
+
+    let inline unit< 'T, ^S when ^S : (static member Unit : IMonoid<'T> -> ^S) > (m : IMonoid<'T>) : ^S =
+        (^S : (static member Unit : IMonoid<'T> -> ^S) (m)) 
+
+    /// Invokes Combine operation on a pair of ^S values
+    let inline combine< 'T, ^S when ^S : (static member Combine : IMonoid<'T> * ^S * ^S -> ^S ) > m a b : ^S =
+        (^S : (static member Combine : IMonoid<'T> * ^S * ^S -> ^S) (m, a, b)) 
+
+    /// Invokes Apply operation on state and update ^S * ^U
+    let inline apply< 'T, ^S, ^U when ^U : (static member Apply : IMonoid<'T> * ^S * ^U -> ^S )> m s a : ^S = 
+        (^U : (static member Apply : IMonoid<'T> * ^S * ^U -> ^S) (m, s, a))     
+
+
+
+    type UpdateBuilder<'M>(monoid: IMonoid<'M>) = 
+        member inline __.Bind(DelayedUM delayed, f:'T -> UpdateMonad<'S, 'U, 'R>) : UpdateMonad<'S, 'U, 'R>=  
+            UM (fun state -> 
+                // Run the first computation to get first update
+                // 'u1', then run 'f' to get second computation
+                let (UM update1) = delayed ()
+                match update1 state with
+                | Success (update1,value1) ->
+                    let (UM update2) = f value1
+                // Apply 'u1' to original state & run second computation
+                // then return result with combined state updates
+                    match update2 (apply monoid state update1) with
+                    | Success (update2,value2) ->
+                        let res = combine monoid update1 update2
+                        Success (res,value2)
+                    | Failure failure -> Failure failure
+                | Failure failure -> Failure failure
+                )
+        member inline __.Return(value:'T) : UpdateMonad<'S, 'U, 'T> = 
+            let update = unit monoid
+            UM (fun _ -> Success (update,value))
+
+        member inline __.ReturnFrom(DelayedUM update : DelayedUM<'S, 'U, 'T>) : UpdateMonad<'S, 'U, 'T> = 
+            update ()
+
+        member inline x.Yield(value:'T) : UpdateMonad<'S, 'U, 'T> = x.Return value
+        member inline x.YieldFrom(delayedUM) = x.ReturnFrom delayedUM
+        
+        member inline this.Zero() : UpdateMonad<'S, 'U, unit> = this.Return ()
+
+        member inline __.Delay(f:unit -> UpdateMonad<'State, 'Update, 'T>) = f
+
+        member inline __.Run(f:unit -> UpdateMonad<'State, 'Update, 'T>) = DelayedUM f
+
+        member inline this.Combine(update : UpdateMonad<'S, 'U, 'T>, delayedUM : unit -> UpdateMonad<'S, 'U, 'T>) :  UpdateMonad<'S, 'U, 'T>= 
+            this.Bind(DelayedUM (fun _ -> update), fun _ -> delayedUM())
+
+        member inline this.TryFinally(body, compensation) =
+            try this.ReturnFrom(body())
+            finally compensation() 
+
+        member inline this.TryWith(body : unit -> DelayedUM<'S,'U,'T>, handler: exn -> UpdateMonad<'S, 'U, 'T>) : UpdateMonad<'S, 'U, 'T> =
+            try this.ReturnFrom(body())
+            with e -> handler e
+
+        member inline this.Using(disposable:#System.IDisposable, body : 'a -> DelayedUM<'S, 'U, 'T>) =
+            let body' = fun () -> body disposable
+            this.TryFinally(body', fun () -> 
+                match disposable with 
+                    | null -> () 
+                    | disp -> disp.Dispose())
+
+        member inline this.While(guard: unit -> bool, body: unit -> UpdateMonad<'S, 'U, unit>) : DelayedUM<'S, 'U, unit> =
+            let rec loop () = 
+              if guard() then 
+                this.Bind(DelayedUM body, loop)
+              else 
+                this.Zero()
+            DelayedUM( fun () -> loop())
+    
+        member inline this.For(sequence:seq<'a>, body: 'a -> UpdateMonad<'S, 'U, unit>) : UpdateMonad<'S, 'U, unit>=
+            this.Using(sequence.GetEnumerator(),fun enum -> 
+                this.While(enum.MoveNext, 
+                    this.Delay(fun () -> body enum.Current)))            
+
+
+
+module ReaderResult =
+
+    let reader = UpdateBuilder(unitMonoid)
+
+    type ReaderUpdate = 
+      | NoUpdate
+      static member Unit(_:IMonoid<'T>) = NoUpdate
+      static member Combine(_:IMonoid<'T>, NoUpdate, NoUpdate) = NoUpdate
+      static member Apply(_:IMonoid<'T>, s, NoUpdate) = s
+
+
+    /// Read the current state (int) and return it as 'int'
+    let read = DelayedUM ( fun() -> UM (fun (s:'T) -> Success (NoUpdate, s)) )
+    /// Run computation and return the result 
+    let readRun (s:'T) (DelayedUM f) = 
+        let (UM update) = f()
+        update s
+
+
+
+    /// Returns state + 1
+    let demo1 = reader { 
+      let! v = read
+      printfn "side effect"
+      return v + 1 
+      }
+    /// Returns the result of demo1 + 1
+    let demo2 = reader { 
+      printfn "hello"
+      let! v = demo1
+      return v + 1 
+      }
+
+    // Run it with state 40 
+    let resRead = demo2 |> readRun 40
+
+
+module WriterResult =
+    /// Writer monad has no readable state
+    type WriterState = NoState
+
+    type WriterUpdate<'M> = 
+        | WU of 'M
+
+        static member Unit(monoid : IMonoid<'T>) = WU (monoid.Empty())
+
+        static member Combine(monoid : IMonoid<'T>, WU m1, WU m2) = WU (monoid.Combine(m1,m2))
+
+        /// Applying updates to state does not affect the state
+        static member Apply(_ : IMonoid<'T>, NoState, _) = NoState
+
+
+    let inline write value = 
+        DelayedUM( fun () -> UM (fun _ -> Success (WU value, ())))
+
+    /// Runs a "writer monad computation" and returns 
+    let writeRun (DelayedUM delayed) = 
+        let (UM update) = delayed()
+        update NoState 
+
+    let writerList () = UpdateBuilder<'a list>(listMonoid)  
+    let inline writeList value = write value
+
+
+    let demoWriter =
+        writerList () {
+            for i in 1..10 do
+                do! writeList [i]
+        }
+
+    let resWriter = demoWriter |> writeRun
+
+
+module StateResult = 
+
+    /// Wraps a state of type 'T
+    type StateState<'T> = State of 'T
+
+    /// Represents updates on state of type 'T
+    type StateUpdate<'T> = 
+        | Set of 'T 
+        | SetNop
+        /// Empty update - do not change the state
+        static member Unit(_ : IMonoid<'T>) = SetNop
+        /// Combine updates - return the latest (rightmost) 'Set' update
+        static member Combine(_ : IMonoid<'T>, a, b) = 
+            match a, b with 
+            | SetNop, v | v, SetNop -> v 
+            | Set _ , Set b -> Set b
+        /// Apply update to a state - the 'Set' update changes the state
+        static member Apply(_ : IMonoid<'T>, s, p) = 
+            match p with 
+            | SetNop -> s 
+            | Set s -> State s
+
+
+    /// Put the state to the specified value
+    let put s = UM (fun _ -> Success (Set s,()))
+    /// Get the current state 
+    let get = UM (fun (State s) -> Success (SetNop, s))
+    /// Run a computation using a specified initial state
+    let setRun s (UM f) = f (State s)

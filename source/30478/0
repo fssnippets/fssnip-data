@@ -1,0 +1,26 @@
+// https://docs.scala-lang.org/tour/implicit-parameters.html
+
+open Fable.Core
+open Fable.Core.Experimental
+
+type Monoid<'a> =
+    abstract member add: 'a -> 'a -> 'a
+    abstract member unit : 'a
+
+type ImplicitTest =
+    static member sum (xs: 'a list, [<Inject; Implicit>] ?m : Monoid<'a>) =
+        let m = m.Value // unwrap instance
+        xs |> List.fold m.add m.unit
+
+let [<Implicit>] intMonoid = 
+    { new Monoid<int> with
+        member this.add (x: int) (y: int) = x + y
+        member this.unit = 0 }
+
+let [<Implicit>] stringMonoid = 
+    { new Monoid<string> with
+        member this.add (x: string) (y: string) = x + y
+        member this.unit = "" }      
+
+printfn "%d" (ImplicitTest.sum [1; 2; 3]) // 6
+printfn "%s" (ImplicitTest.sum ["a"; "b"; "c"]) // abc

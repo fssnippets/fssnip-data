@@ -1,0 +1,87 @@
+open System
+open System.Text.RegularExpressions
+
+let regexOptions = RegexOptions.CultureInvariant ||| RegexOptions.IgnoreCase
+
+type Result<'a> = 
+    { Result : 'a
+      Tail : string }
+
+type ResultState<'a> = 
+    | Success of Result<'a>
+    | Failure of string
+
+type Pattern = 
+    | Pattern of string
+
+type Capture<'a> = 
+    | Capture of (string list -> 'a option)
+
+type Parser<'a> = 
+    | Parser of Capture<'a> * Pattern
+
+let regex (Parser(Capture f, Pattern pattern)) input = 
+    let m = Regex.Match(input, pattern, regexOptions)
+    if m.Success then 
+        let values = 
+            [ for g in m.Groups -> g.Value ]
+        
+        let value = 
+            values
+            |> List.head
+            |> Seq.length
+        
+        match f (values |> List.tail) with
+        | Some result -> 
+            { Result = result
+              Tail = input.Substring(m.Index + value) }
+            |> Success
+        | None -> Failure input
+    else Failure input
+
+let apply parse f = 
+    match f with
+    | Success f' -> 
+        match parse f'.Tail with
+        | Success r' -> 
+            Success { Result = f'.Result r'.Result
+                      Tail = r'.Tail }
+        | Failure failure -> Failure failure
+    | Failure failure -> Failure failure
+
+let map f input = 
+    Success { Result = f
+              Tail = input }
+
+let timeSpan = 
+    function 
+    | [ i; "m" ] | [ i; "mn" ] -> TimeSpan.FromMinutes(float i) |> Some
+    | [ i; "h" ] -> TimeSpan.FromHours(float i) |> Some
+    | [ i; "s" ] -> TimeSpan.FromSeconds(float i) |> Some
+    | _ -> None
+
+type Command = Inspect
+let nc r = Capture (fun _ -> Some r)
+
+let inspectCommand = 
+    function 
+    | [ "inspect" ] -> Some Inspect
+    | _ -> None
+
+let inspector command t1 t2 = command, t1, t2
+
+let parseTime = 
+    (Capture timeSpan, Pattern """\b([0-9]+)(mn|m|h|s)""")
+    |> Parser
+    |> regex
+
+let parseInspect = 
+    (nc Inspect, Pattern """(inspect)""")
+    |> Parser
+    |> regex
+
+"inspect every 10s toto 23mn"
+|> map inspector
+|> apply parseInspect
+|> apply parseTime
+|> apply parseTime

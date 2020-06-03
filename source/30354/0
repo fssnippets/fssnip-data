@@ -1,0 +1,12 @@
+let tryParse (s: string) =
+    let trimmed = s.Trim()
+    let positive, isNegative =
+        if trimmed.Length > 0 && trimmed.StartsWith("-") then
+            trimmed.Replace("-", ""), true
+        else
+            trimmed, false
+    match Int32.TryParse positive with
+    | true, number ->
+        (if isNegative then -1 else 1) * number
+        |> Some
+    | _ -> None

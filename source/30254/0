@@ -1,0 +1,322 @@
+#if INTERACTIVE
+#I "./../packages/NBitcoin/lib/net45/"
+#I "./../packages/Newtonsoft.Json/lib/net45"
+#r "NBitcoin.dll"
+#r "Newtonsoft.Json.dll"
+#else
+module BlockChain
+#endif
+
+open System
+open NBitcoin
+open NBitcoin.Protocol
+
+// -------------- GENERAL BLOCKCHAIN NETWORK SETTINGS -------------- //
+
+let network = 
+    // Select your network
+    // Network.Main
+    // Network.Test
+
+    // Or create your own:
+        let builder = NetworkBuilder()
+        builder.CopyFrom Network.Main
+        let genesis = Network.Main.GetGenesis()
+        //builder.SetGenesis( {genesis.Header.UpdateTime with Ti }
+        builder.SetName("MyBlockChain").BuildAndRegister()
+
+/// Generate a new wallet private key for a new user as byte array
+let getNewPrivateKey() = Key().ToBytes()
+
+/// Create BitcoinSecret from byte array
+let getSecret(bytes:byte[]) = BitcoinSecret(Key(bytes), network)
+
+
+// --------- CUSTOM BLOCKCHAIN AND ITS COMPLEXITY --------- //
+
+/// Complexity of valid mining. Genesis is having 10.
+/// But this comes down to how much resources you are willing to
+/// spend to validate blockchain. Note: Some part of blockchain
+/// security comes from the fact that valid hashes are not so easy
+/// to calculate, making the generation of alternative valid blockchain slow.
+let leadingZeros = "0000"
+
+/// Validation of blockchain hashes.
+type BlockChainCheck =
+/// No validation
+| NoWork
+/// Validation of leadingZeros amount only
+| EasyWork
+/// Default Bitcoin level validation
+| CorrectWork
+
+/// The normal bitcoin validation is 8 leading zeros in hashcodes
+/// That makes mining taking a lot of resources. So this is more
+/// light weight option to mining.
+type ChainedBlock with
+  /// Re-implementation of Validate()
+  member cb.ValidateEasy(network:Network) =
+    let genesis = cb.Height = 0
+    if (not genesis) && cb.Previous = null then false
+    else
+    let heightCorrect = genesis || cb.Height = cb.Previous.Height + 1
+    let genesisCorrect = 
+        (not genesis) || cb.HashBlock = network.GetGenesis().GetHash()
+    let hashPrevCorrect = 
+        genesis || cb.Header.HashPrevBlock = cb.Previous.HashBlock
+    let hashCorrect = cb.HashBlock = cb.Header.GetHash()
+    let workCorrect = 
+        genesis || cb.Header.GetHash().ToString().StartsWith leadingZeros
+    
+    heightCorrect && genesisCorrect && hashPrevCorrect
+    && hashCorrect && workCorrect
+   
+type ChainBase with
+  /// Re-implementation of Validate()
+  member cb.ValidateEasy(network:Network, ?fullChain) =
+    let tip = cb.Tip
+    if tip = null then false
+    else
+    match fullChain with
+    | None | Some true ->
+        let anyFails = 
+            tip.EnumerateToGenesis() 
+            |> Seq.exists(fun block -> not(block.ValidateEasy network))
+        not anyFails
+    | Some false ->
+        tip.ValidateEasy network
+
+
+/// This will mine the correct hash. 
+/// Performance is not optimized: if you would really want to do
+/// mining, you would probably want to use some more parallel algorithm.
+let ``mine to correct`` checkType (chain:ConcurrentChain) (block:Block) =
+    let validation = 
+        match checkType with
+        | NoWork -> fun (cb:ChainedBlock) -> true
+        | EasyWork -> fun cb -> cb.ValidateEasy network
+        | CorrectWork -> fun cb -> cb.Validate network 
+
+    let rec mine nonce =
+        block.Header.Nonce <- nonce
+        let headerBlock = 
+            ChainedBlock(block.Header, block.Header.GetHash(), 
+                         chain.GetBlock(block.Header.HashPrevBlock))
+        if validation headerBlock then ()
+        else mine (nonce+1u)
+    mine 0u
+
+/// Attach a block to chain
+let ``attach to chain`` (checkType:BlockChainCheck) (chain:ConcurrentChain) (block:Block) =
+    let header = block.Header
+    header.HashPrevBlock <- chain.Tip.HashBlock
+    header.Bits <- 
+        //header.GetWorkRequired(network, chain.Tip)
+        chain.Tip.GetWorkRequired(network)
+    header.BlockTime <- DateTimeOffset.UtcNow
+    header.Nonce <- RandomUtils.GetUInt32()
+    //header.UpdateTime(network, chain.Tip)
+    block.UpdateMerkleRoot()
+    ``mine to correct`` checkType chain block
+    chain.SetTip header |> ignore
+    chain.GetBlock(header.GetHash())
+
+
+/// Attach a bunch of transactions to a new block
+let ``to new block`` txs =
+    let block = Block()
+    txs |> Seq.iter (block.AddTransaction >> ignore)
+    block.UpdateMerkleRoot()
+    block
+    
+// --------- TRANSACTIONS --------- //
+
+/// No fees on our custom block-chain
+/// Consifer adding some fee when you want users to do the mining.
+let noFees = Unchecked.defaultof<FeeRate>
+let txBuilder() = 
+    let b = TransactionBuilder()
+    b.StandardTransactionPolicy.MinRelayTxFee <- FeeRate.Zero
+    b
+
+/// Coinbase transaction is a transaction to generate money to our system.
+let ``give money`` (toUser:BitcoinSecret) (sum:int) =
+    let money = Money sum
+    let coin = 
+        Coin( // Coins for sums, ColoredCoins for assets
+              // This is a coinbase / generation transaction, so hash is zero:
+            OutPoint(), TxOut(money, toUser.PubKey.ScriptPubKey)
+        )
+    let builder = txBuilder()
+    let tx =
+        builder
+            //.IssueAsset(toUser, OpenAsset.AssetMoney(asset.AssetId, quantity))
+            .AddCoins([| (coin :> ICoin) |])
+            .AddKeys(toUser)
+            .Send(toUser, money)
+            .SetChange(toUser.GetAddress())
+            .BuildTransaction(true)
+
+    if not tx.IsCoinBase then 
+        failwith "Was not a coinbase transaction"
+
+    let ok, errs = builder.Verify(tx, noFees)
+    match ok with
+    | true -> tx
+    | false -> failwith(String.Join(",", errs))
+
+/// Normal transaction to transfer money / asset from user to next user. 
+/// Needs outpoint from previous transaction to make a block chain.
+let ``spend money`` (coins:Coin list) (fromUser:BitcoinSecret) (toUser:BitcoinPubKeyAddress) (sum:int) =
+    let money = Money sum
+    let fees = Money.Zero
+    let coinsArr = 
+        coins 
+        |> List.filter(fun c -> c.TxOut.IsTo fromUser)
+        |> List.map(fun c -> c :> ICoin) |> List.toArray
+    let builder = txBuilder()
+    let tx =
+        builder
+            .AddCoins(coinsArr)
+            .AddKeys(fromUser)
+            .Send(toUser, (money - fees))
+            .SendFees(fees)
+            .SetChange(fromUser.GetAddress())
+            .BuildTransaction(true)
+    let ok, errs = builder.Verify(tx, noFees)
+    match ok with
+    | true -> tx
+    | false -> failwith(String.Join(",", errs))
+
+// --------- SOME HELPER FUNCTIONS --------- //
+
+/// Create a new user
+let makeUser() = 
+    let user = BitcoinSecret(Key(), network)
+    Console.WriteLine "Store users private key to a cold dry place and never show it to anyone:"
+    network |> user.PrivateKey.GetWif |> Console.WriteLine
+    user
+
+/// Get coins from transaction
+let ``fetch coins of`` dest (tx:Transaction) =
+     tx.Outputs 
+     |> Seq.mapi(fun idx op -> idx,op)
+     |> Seq.filter(fun (_,op) -> op.Value > Money.Zero && op.IsTo(dest)) 
+     |> Seq.map(fun (idx,op) ->
+         Coin(OutPoint(tx, idx), op)
+     ) |> Seq.toList
+
+let ``save tracker`` filename (tracker:NBitcoin.SPV.Tracker) =
+    let filterBefore = tracker.CreateBloomFilter(0.005)
+    use fileStream = System.IO.File.Create filename
+    tracker.Save fileStream
+
+let ``load tracker`` filename =
+    let tracker = 
+        filename |> System.IO.File.OpenRead
+        |> NBitcoin.SPV.Tracker.Load
+    if not(tracker.Validate()) then failwith "Not valid tracker"
+    else tracker
+
+let ``save chain`` filename (chain:ConcurrentChain) =
+    use fileStream = System.IO.File.Create filename
+    chain.WriteTo (BitcoinStream(fileStream, true))
+
+let ``load chain`` filename =
+    let chain = new ConcurrentChain(network)
+    filename |> System.IO.File.ReadAllBytes |> chain.Load
+    // if not(chain.Validate network) then failwith "Not valid"
+    if not(chain.ValidateEasy network) then failwith "Not valid chain"
+    else chain
+
+// --------- TESTING --------- //
+let testing() =
+
+    // A block chain, and a tracker
+    let chain = new ConcurrentChain(network)
+    let tracker = NBitcoin.SPV.Tracker()
+    
+    // make some users
+    let thomas = makeUser()
+    let antero = makeUser()
+    let john = makeUser()
+
+    tracker.Add(thomas)
+    tracker.Add(antero)
+    tracker.Add(john)
+
+    // Make Block 1 with transactions and add it to chain
+    let coinbase1 = ``give money`` thomas 1000
+
+    let coins1 = coinbase1 |> ``fetch coins of`` thomas
+    let transfer1 = 
+        ``spend money`` coins1 thomas (antero.GetAddress()) 500
+
+    let coins2 = transfer1 |> ``fetch coins of`` thomas
+    let transfer2 = ``spend money`` coins2 thomas (john.GetAddress()) 300
+
+    let block1 = 
+        [coinbase1; transfer1; transfer2] 
+        |> ``to new block`` 
+    
+    let chained1 = 
+        block1 |> ``attach to chain`` BlockChainCheck.EasyWork chain
+
+    block1.Transactions |> Seq.iter (fun tx -> 
+        tracker.NotifyTransaction(tx, chained1, block1) |> ignore)
+        
+    // Check that chain and the tracker are valid:
+    let ``chain ok`` = chain.ValidateEasy(network)
+    let ``tracker ok`` = tracker.Validate()
+    let transactions1 = tracker.GetWalletTransactions(chain)
+    //transactions1.GetSpendableCoins()
+    //transactions1.Summary.Confirmed
+    // Thomas: 200, Antero: 500, John: 300
+
+    // Make Block 2 with transactions and add it to chain
+
+    let coinbase2 = ``give money`` thomas 100
+
+    let coins3 = transfer1 |> ``fetch coins of`` antero
+    let transfer3 = ``spend money`` coins3 antero (john.GetAddress()) 500
+
+    let coins4 = 
+        (transfer2 |> ``fetch coins of`` thomas) @
+        (coinbase2 |> ``fetch coins of`` thomas)
+
+    let transfer4 = 
+        ``spend money`` coins4 thomas (john.GetAddress()) 250
+
+    //let coins5 = transfer4 |> ``fetch coins of`` thomas 
+    let block2 = 
+        [coinbase2; transfer3; transfer4] 
+        |> ``to new block`` 
+
+    let chained2 = 
+        block2 |> ``attach to chain`` BlockChainCheck.EasyWork chain
+
+    block2.Transactions |> Seq.iter (fun tx -> 
+        tracker.NotifyTransaction(tx, chained2, block2) |> ignore)
+    
+    // Check the validity of the chain and the tracker
+    let ``chain still ok`` = chain.ValidateEasy(network)
+    let ``tracker still ok`` = tracker.Validate()
+    let transactions2 = tracker.GetWalletTransactions(chain)
+    let ``available coins`` = transactions2.GetSpendableCoins() |> Seq.toList
+    // transactions2.Count
+    // transactions2 |> Seq.map(fun b -> b.Balance, b.Transaction.GetHash())
+    // |> Seq.toArray
+    // ``available coins`` |> List.map(fun v -> v.Amount) |> List.sum
+    // ``available coins``
+    // transactions2.Summary.Confirmed
+    // Thomas: 50, John: 250+500+300+500
+
+    ``save tracker`` @"c:\tracker.dat" tracker
+    ``save chain`` @"c:\chain.dat" chain
+
+    // let tracker2 = ``load tracker`` @"c:\tracker.dat"
+    // let chain2 = ``load chain`` @"c:\chain.dat"
+
+    // Some resources:
+    // Article: https://www.codeproject.com/articles/835098/nbitcoin-build-them-all
+    // A video: https://www.youtube.com/watch?v=_160oMzblY8

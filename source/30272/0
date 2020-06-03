@@ -1,0 +1,32 @@
+#r "WindowsBase"
+open System.Diagnostics
+open System.ComponentModel
+open System.Threading
+open System.Threading.Tasks
+open System.Windows.Threading
+open global.Xunit.Sdk
+
+type StaCase(testCase) =
+        //attempted translation of https://github.com/xunit/samples.xunit/blob/master/STAExamples/WpfTestCase.cs#L57-L68
+        member __.RunAsync(diagnosticMessageSink, messageBus, constructorArguments, aggregator, cancellationTokensource) =
+            let tcs = TaskCompletionSource<RunSummary>()
+            let thread = Thread(fun () ->
+                try
+                    SynchronizationContext.SetSynchronizationContext(DispatcherSynchronizationContext())
+                    let testCaseTask = testCase.RunAsync(diagnosticMessageSink, messageBus, constructorArguments, aggregator, cancellationTokensource)
+                    let frame = DispatcherFrame()
+                    try
+                        testCaseTask |> Async.AwaitIAsyncResult |> Async.Ignore
+                    finally
+                        frame.Continue <- false
+                    |> Async.RunSynchronously
+                    Dispatcher.PushFrame frame
+                    StaTestCase.CopyTaskResultFrom(tcs,testCaseTask)
+
+                    tcs.SetResult(testCaseTask.Result)
+                with ex ->
+                    tcs.SetException ex
+            )
+            thread.SetApartmentState ApartmentState.STA
+            thread.Start()
+            tcs.Task

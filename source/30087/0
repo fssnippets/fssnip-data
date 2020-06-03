@@ -1,0 +1,15 @@
+let (^^) f =
+    let rec iter acc = function
+        | 0 -> acc
+        | p -> p - 1 |> iter (f >> acc)
+
+    iter (fun x -> x)
+
+[<EntryPoint>] // unit test
+let main argv =
+    0 |> ((+) 10) ^^ 7 |> printfn "%d"
+
+    2. ** (1. / 4.) |> printfn "%f"
+    (sqrt ^^ 2) 2. |> printfn "%f"
+
+    0

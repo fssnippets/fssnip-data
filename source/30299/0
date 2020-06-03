@@ -1,0 +1,324 @@
+open Hopac
+open Hopac.Infixes
+open ZeroMQ
+open System
+open System.Threading
+open System.Diagnostics
+
+//   ____                _              _
+//  / ___|___  _ __  ___| |_ __ _ _ __ | |_ ___
+// | |   / _ \| '_ \/ __| __/ _` | '_ \| __/ __|
+// | |__| (_) | | | \__ \ || (_| | | | | |_\__ \
+//  \____\___/|_| |_|___/\__\__,_|_| |_|\__|___/
+
+module Constants =
+  let backend = "inproc://backend"
+  let frontend = "tcp://127.0.0.1:5555"
+
+//  _   _ _   _ _
+// | | | | |_(_) |___
+// | | | | __| | / __|
+// | |_| | |_| | \__ \
+//  \___/ \__|_|_|___/
+
+[<AutoOpen>]
+module Utils =
+
+  let timedOut (timer: Stopwatch) =
+    if timer.ElapsedMilliseconds > 1000L then
+      timer.Stop()
+      true
+    else false
+
+  let dispose (t: 't when 't :> IDisposable) =
+    try  (t :> IDisposable).Dispose()
+    with | _ -> ()
+
+type Request = string
+type Response = string
+type ResponseHandler = string -> unit
+
+//   ____ _ _            _
+//  / ___| (_) ___ _ __ | |_
+// | |   | | |/ _ \ '_ \| __|
+// | |___| | |  __/ | | | |_
+//  \____|_|_|\___|_| |_|\__|
+
+type IClient =
+  inherit IDisposable
+  abstract Request: Request -> Job<Response>
+
+module Client =
+
+  type private ClientState(ctx: ZContext) =
+    let id = Guid.NewGuid()
+
+    let req:Ch<string * IVar<string>> = Ch()
+    let poll = ZPollItem.CreateReceiver()
+
+    [<DefaultValue>]
+    val mutable Socket: ZSocket
+
+    member state.Id
+      with get () = id.ToByteArray()
+
+    member state.Req
+      with get () = req
+
+    member state.Poll
+      with get () = poll
+
+    member state.Start() =
+      let socket = new ZSocket(ctx, ZSocketType.DEALER) // DEALER
+      socket.Identity <- id.ToByteArray()
+      socket.Linger <- TimeSpan.FromMilliseconds(1.0)
+      socket.Connect(Constants.frontend)
+      state.Socket <- socket
+
+    member state.Restart() =
+      dispose state
+      state.Start()
+
+    interface IDisposable with
+      member self.Dispose() =
+        dispose self.Socket
+
+  let private loop (state: ClientState) = job {
+      printfn "[client] waiting for request"
+
+      let! (payload, ivar) = Ch.take state.Req
+
+      let mutable error = ZError.None
+      let t = Nullable(TimeSpan.FromMilliseconds 1.0)
+
+      use msg = new ZMessage()
+      msg.Add(new ZFrame(state.Id))
+      msg.Add(new ZFrame(payload))
+
+      printfn "[client] sending request"
+      let result = state.Socket.Send(msg, &error)
+
+      if result then
+        let mutable incoming = Unchecked.defaultof<ZMessage>
+
+        let timer = new Stopwatch()
+        timer.Start()
+
+        printfn "[client] waiting for reply"
+        while not (state.Socket.PollIn(state.Poll, &incoming, &error, t)) && not (timedOut timer) do
+          do! timeOut (TimeSpan.FromMilliseconds 1.0)
+
+        if timedOut timer then
+          printfn "[client] timeout"
+          do! IVar.fill ivar "error"
+        else
+          let response = incoming.[0].ReadString()
+          printfn "[client] got a response"
+          do! IVar.fill ivar response
+      else
+        printfn "[client] sending unsuccessful"
+        do! IVar.fill ivar "error"
+
+      return state
+    }
+
+  let create (ctx: ZContext) =
+    let state = new ClientState(ctx)
+    state.Start()
+
+    printfn "[client] starting server loop"
+
+    loop
+    |> Job.iterateServer state
+    |> Hopac.queue
+
+    printfn "[client] returning"
+
+    { new IClient with
+        member client.Request (request: Request) =
+          job {
+            let ivar = IVar()
+            printfn "[client]] passing request to loop"
+            do! Ch.give state.Req (request, ivar)
+            printfn "[client]] waiting for response from loop"
+            let! result = IVar.read ivar
+            return result
+          }
+
+        member client.Dispose () =
+          dispose state }
+
+//  ____
+// / ___|  ___ _ ____   _____ _ __
+// \___ \ / _ \ '__\ \ / / _ \ '__|
+//  ___) |  __/ |   \ V /  __/ |
+// |____/ \___|_|    \_/ \___|_|
+
+type IServer =
+  inherit IDisposable
+
+module Server =
+
+  type IWorker =
+    inherit IDisposable
+
+  type Workers = IWorker array
+  type RequestPipeline = Mailbox<Request * (Response -> unit)>
+
+  type private ServerState =
+    { Frontend: ZSocket
+      Backend: ZSocket
+      Workers: Workers
+      Mailbox: RequestPipeline }
+
+    interface IDisposable with
+      member self.Dispose() =
+        Array.iter dispose self.Workers
+        dispose self.Frontend
+        dispose self.Backend
+
+  module private Worker =
+    type private WorkerState(ctx: ZContext, mb: RequestPipeline) =
+      let timeout = Nullable(TimeSpan.FromMilliseconds 100.0)
+      let poll = ZPollItem.CreateReceiver()
+
+      [<DefaultValue>]
+      val mutable Socket: ZSocket
+
+      member worker.Poll
+        with get () = poll
+
+      member worker.Timeout
+        with get () = timeout
+
+      member worker.Mailbox
+        with get () = mb
+
+      member worker.Start() =
+        worker.Socket <- new ZSocket(ctx, ZSocketType.DEALER)
+        worker.Socket.Connect(Constants.backend)
+
+      interface IDisposable with
+        member self.Dispose() =
+          dispose self.Socket
+
+    let private handle (var: IVar<Response>) (response: Response) =
+      response |> IVar.fill var |> Hopac.queue
+
+    let private loop (state: WorkerState) = job {
+      let mutable error = ZError.None
+      let mutable incoming = Unchecked.defaultof<ZMessage>
+
+      if state.Socket.PollIn(state.Poll, &incoming, &error, state.Timeout) then
+        let ident = incoming.[1].ReadString()
+        let str = incoming.[2].ReadString()
+
+        let var = IVar()
+        do! Mailbox.send state.Mailbox (str, handle var)
+
+        let timer = Stopwatch()
+        timer.Start()
+
+        while not (IVar.Now.isFull var) && not (timedOut timer) do
+         do! timeOut (TimeSpan.FromMilliseconds 1.0)
+
+        if timedOut timer then
+          printfn "[worker] timeout on backend"
+        else
+          let! response = IVar.read var
+
+          use reply = new ZMessage()
+          reply.Add(new ZFrame(ident))
+          reply.Add(new ZFrame(response))
+
+          if state.Socket.Send(reply, &error) then
+            printfn "[worker] replied successfully"
+          else
+            printfn "[worker] error sending response %O" error
+      else
+        if error <> ZError.EAGAIN then
+          printfn "[worker] error during poll %O" error
+
+      return state
+    }
+
+    let private onRequest (cb: Request -> ResponseHandler -> unit) (mb: RequestPipeline): Job<RequestPipeline> =
+      Mailbox.take mb >>= fun (request, handler) ->
+        cb request handler
+        Job.result mb
+
+    let create (mb: RequestPipeline) (ctx: ZContext) (cb: Request -> ResponseHandler -> unit) =
+      let state = new WorkerState(ctx, mb)
+      state.Start()
+
+      onRequest cb
+      |> Job.iterateServer mb
+      |> Hopac.queue
+
+      loop
+      |> Job.iterateServer state
+      |> Hopac.queue
+
+      { new IWorker with
+          member server.Dispose() =
+            dispose state }
+
+
+  let create (n: int) (ctx: ZContext) (handler: Request -> ResponseHandler -> unit)  =
+    let mailbox = RequestPipeline()
+
+    printfn "[server] creating frontend"
+    let frontend = new ZSocket(ctx, ZSocketType.ROUTER)
+    frontend.Bind(Constants.frontend)
+
+    printfn "[server] creating backend"
+    let backend = new ZSocket(ctx, ZSocketType.DEALER)
+    backend.Bind(Constants.backend)
+
+    printfn "[server] creating worker"
+    let workers = new ResizeArray<IWorker>()
+    for n in 0 .. n - 1 do
+      let worker = Worker.create mailbox ctx handler
+      workers.Add worker
+
+    let thread = new Thread(fun () ->
+      printfn "[server] setting up proxy"
+      // proxy messages
+      let mutable err = ZError.None
+      if not (ZContext.Proxy(frontend, backend, &err)) then
+        printfn "[server] error during proxy setup %O" err
+        ZException(err) |> raise)
+    thread.Start()
+
+    printfn "[server] return state"
+    let state =
+      { Frontend = frontend
+        Backend = backend
+        Workers = workers.ToArray()
+        Mailbox = mailbox }
+
+    { new IServer with
+        member self.Dispose() =
+          dispose state }
+//  ____  _                                             _
+// |  _ \| | __ _ _   _  __ _ _ __ ___  _   _ _ __   __| |
+// | |_) | |/ _` | | | |/ _` | '__/ _ \| | | | '_ \ / _` |
+// |  __/| | (_| | |_| | (_| | | | (_) | |_| | | | | (_| |
+// |_|   |_|\__,_|\__, |\__, |_|  \___/ \__,_|_| |_|\__,_|
+//                |___/ |___/
+
+let ctx = new ZContext()
+
+let mutable respond = true
+
+let handler (request: Request) (handler: ResponseHandler) =
+  if respond then
+    let chars = request.ToCharArray()
+    Array.Reverse chars
+    let response = String chars
+    handler response
+
+let server = Server.create 4 ctx handler
+let client = Client.create ctx
+
+client.Request "ohai" // should respond with "iaho"

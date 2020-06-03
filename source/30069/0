@@ -1,0 +1,33 @@
+(*[omit:(Nuget includes)]*)
+#if INTERACTIVE
+#I @"./packages/Owin/lib/net40"
+#I @"./packages/Owin.Compression/lib/net45"
+#I @"./packages/Microsoft.Owin/lib/net45" 
+#I @"./packages/Microsoft.Owin.Hosting/lib/net45"
+#I @"./packages/Microsoft.Owin.Host.HttpListener/lib/net45"
+#I @"./packages/Microsoft.Owin.StaticFiles/lib/net45"
+#I @"./packages/Microsoft.Owin.FileSystems/lib/net45"
+
+#r "Owin.dll"
+#r "Microsoft.Owin.dll"
+#r "Microsoft.Owin.FileSystems.dll"
+#r "Microsoft.Owin.Hosting.dll"
+#r "Microsoft.Owin.StaticFiles.dll"
+#r "System.Configuration.dll"
+#r "Owin.Compression.dll"
+#endif
+(*[/omit]*)
+
+open Owin
+open System
+
+type MyStartup() =
+    member __.Configuration(app:Owin.IAppBuilder) =
+        let app1 = app.UseCompressionModule()
+        app1.UseFileServer "/." |> ignore
+        ()
+
+let server = Microsoft.Owin.Hosting.WebApp.Start<MyStartup> "http://*:6000"
+Console.WriteLine "Press Enter to stop & quit."
+Console.ReadLine() |> ignore
+server.Dispose()

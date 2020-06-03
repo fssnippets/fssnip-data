@@ -1,0 +1,102 @@
+module CsvSchema
+open System
+
+module TypeDetermination =
+        type TypeWrapper = None | Nullable | Option
+
+        //https://github.com/fsharp/FSharp.Data/blob/master/src/Csv/CsvInference.fs
+        let private nameToType =
+          ["int" ,           (typeof<int>     , TypeWrapper.None    )
+           "int64",          (typeof<int64>   , TypeWrapper.None    )
+           "bool",           (typeof<bool>    , TypeWrapper.None    )
+           "float",          (typeof<float>   , TypeWrapper.None    )
+           "decimal",        (typeof<decimal> , TypeWrapper.None    )
+           "date",           (typeof<DateTime>, TypeWrapper.None    )
+           "guid",           (typeof<Guid>    , TypeWrapper.None    )
+           "string",         (typeof<String>  , TypeWrapper.None    )
+           "int?",           (typeof<int>     , TypeWrapper.Nullable)
+           "int64?",         (typeof<int64>   , TypeWrapper.Nullable)
+           "bool?",          (typeof<bool>    , TypeWrapper.Nullable)
+           "float?",         (typeof<float>   , TypeWrapper.Nullable)
+           "decimal?",       (typeof<decimal> , TypeWrapper.Nullable)
+           "date?",          (typeof<DateTime>, TypeWrapper.Nullable)
+           "guid?",          (typeof<Guid>    , TypeWrapper.Nullable)
+           "int option",     (typeof<int>     , TypeWrapper.Option  )
+           "int64 option",   (typeof<int64>   , TypeWrapper.Option  )
+           "bool option",    (typeof<bool>    , TypeWrapper.Option  )
+           "float option",   (typeof<float>   , TypeWrapper.Option  )
+           "decimal option", (typeof<decimal> , TypeWrapper.Option  )
+           "date option",    (typeof<DateTime>, TypeWrapper.Option  )
+           "guid option",    (typeof<Guid>    , TypeWrapper.Option  )
+           "string option",  (typeof<string>  , TypeWrapper.Option  )]
+          |> dict
+        let determinType s = nameToType.[s]
+
+module Parsing =
+
+    let take i f (s:string) = 
+        let rec loop i acc =
+            if i < s.Length then
+                let c = s.[i]
+                if f c then loop (i+1) (c::acc)
+                else String(acc |> List.rev |> List.toArray),(i,s)
+            else String(acc |> List.rev |> List.toArray),(i,s)
+        loop i []
+
+    let isTokenChar c = Char.IsLetterOrDigit (c) || c = '_'
+    let isWhitespace = Char.IsWhiteSpace
+    let isNotQuote = fun c -> c <> '"'
+
+    let (|Char|_|) c (i,s:string)  = 
+        if i < s.Length then 
+            if s.[i] = c then Some(i+1,s) else None 
+        else None
+
+    let (|Comma|_|)         = (|Char|_|) ','
+    let (|QuestionMark|_|)  = (|Char|_|) '?'
+    let (|LP|_|)            = (|Char|_|) '('
+    let (|RP|_|)            = (|Char|_|) ')'
+    let (|Quote|_|)         = (|Char|_|) '"'
+
+    let (|WS|) (i,s) = s |> take i isWhitespace |> snd
+    let (|TillEndQuote|) (i,s) = s |> take i isNotQuote
+    let (|Eof|_|) (i,s:string) = if i>=s.Length then Some(i) else None
+
+    let (|Token|_|) = function
+        |  Eof _-> None 
+        | (i,s) when  isTokenChar s.[i] -> s |> take i isTokenChar |> Some 
+        | _ -> None
+
+    let (|Option|_|) = function Token ("option", rest) -> Some rest | _ -> None
+
+    let (|DataType|) = function
+        | WS (Token (n, WS (QuestionMark rest)))     -> TypeDetermination.determinType (n+"?"), rest
+        | WS (Token (n, WS (Option rest)))           -> TypeDetermination.determinType (n+" option"), rest
+        | WS (Token (n, rest))                       -> TypeDetermination.determinType (n+" option"), rest
+        | _ -> failwith "expected datatype"
+
+    let (|Name|_|) = function
+        | WS (Quote (TillEndQuote (n, Quote(rest)))) -> Some (n,rest)
+        | WS (Token (n, rest))                       -> Some (n,rest)
+        | _                                          -> None
+
+    let rec (|Schema|) acc = function
+        | Eof _ -> acc |> List.rev
+        | Name (name, WS (LP ( WS (DataType (dt, RP(rest)))))) -> (|Schema|) ((name,dt)::acc) rest
+        | Name (name, rest) -> (|Schema|) ((name,(typeof<string>,TypeDetermination.TypeWrapper.None))::acc) rest
+        | Comma rest -> (|Schema|) acc rest 
+        | WS rest -> (|Schema|) acc rest 
+        | x -> failwithf "Unable to parse at %A" x
+
+let parseSchema s = Parsing.(|Schema|) [] (0,s)
+
+(*
+[<Literal>]
+let scma = """
+"f1 field" (int),"f2" (int),"f3","f4" (int),"f5" (date),"f6" (int?),"f7","f8","f9"(int?),"f10", f11 (float option)
+"""
+parseSchema scma
+
+let s2 = "Date(date),Time(string),Time__abs_(float),CANSAS(float),ESS1_Elec_Satalite_Sensor(float),ESS4_Elec_Satalite_Sensor(float),ESS2_Elec_Satalite_Sensor(float),ESS3_Elec_Satalite_Sensor(float),CANSAS_2(float),ESS5_Elec_Satalite_Sensor(float),ESS6_Elec_Satalite_Sensor(float),Yaw(float),Roll_rate(float),Channel_1_Differential_(float),Channel_2_Differential_(float),Channel_3_Differential_(float),Channel_4_Differential_(float),Inertial1_Accel1_FO(float),Master_Trigger_Sync_Inertial_11(float),Inertial_Sensor_1_Lateral_Acceleration(float),Inertial_Sensor_1_Longitudinal_Acceleration(float),Inertial_Sensor_1_Vertical_Acceleration(float),Inertial1_Accel2_FO(float),Master_Trigger_Sync_Inertial_12(float),Inertial_Sensor_1_Pitch_Acceleration(float),Inertial_Sensor_1_Roll_Acceleration(float),Inertial_Sensor_1_Yaw_Acceleration(float),Inertial1_Rates_FO(float),Master_Trigger_Sync_Inertial_1_Rate(float),Inertial_Sensor_1_Pitch_Rate(float),Inertial_Sensor_1_Roll_Rate(float),Inertial_Sensor_1_Yaw_Rate(float),Inertial2_Accel1_FO(float),Master_Trigger_Sync_Inertial_21(float),Inertial_Sensor_2_Lateral_Acceleration(float),Inertial_Sensor_2_Longitudinal_Acceleration(float),Inertial_Sensor_2_Vertical_Acceleration(float),Inertial2_Accel2_FO(float),Master_Trigger_Sync_Inertial_22(float),Inertial_Sensor_2_Pitch_Acceleration(float),Inertial_Sensor_2_Roll_Acceleration(float),Inertial_Sensor_2_Yaw_Acceleration(float),Inertial2_Rates_FO(float),Master_Trigger_Sync_Inertial_2_Rate(float),Inertial_Sensor_2_Pitch_Rate(float),Inertial_Sensor_2_Roll_Rate(float),Inertial_Sensor_2_Yaw_Rate(float),Longitudinal_Acceleration(float),Raw_Longitudinal_Acceleration(float),Lateral_Acceleration(float),Raw_Lateral_Acceleration(float),Vertical_Acceleration(float),Raw_Vertical_Acceleration(float),Roll_Rate(float),Raw_Roll_Rate(float),Pitch_Rate(float),Raw_Pitch_Rate(float),Yaw_Rate(float),Raw_Yaw_Rate(float),Longitudinal_NoGrav_Accel(float),Lateral_NoGrav_Accel(float),Vertical_NoGrav_Accel(float),Longitudinal_Acceleration(float),Raw_Longitudinal_Acceleration(float),Lateral_Acceleration(float),Raw_Lateral_Acceleration(float),Vertical_Acceleration(float),Raw_Vertical_Acceleration(float),Roll_Rate(float),Raw_Roll_Rate(float),Pitch_Rate(float),Raw_Pitch_Rate(float),Yaw_Rate(float),Raw_Yaw_Rate(float),Longitudinal_NoGrav_Accel(float),Lateral_NoGrav_Accel(float),Vertical_NoGrav_Accel(float),StrWhAngGrd(float),StrWhAng(float),Corrected_Angle(float)"
+parseSchema s2
+*)

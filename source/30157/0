@@ -1,0 +1,24 @@
+open System
+open System.Threading
+
+type IndexPool private () =
+    static let instance = new ThreadLocal<_>(fun () -> ResizeArray<int>(100000))
+    static member Instance = instance.Value
+
+type Array with    
+  static member inline fastFilter (f: ^T -> bool) (array: ( ^T)[]) = 
+    if array = null then invalidArg "array" "Array can not be null."            
+    if array.Length = 0 then invalidArg "array" "Array can not be empty."    
+    
+    let indices = IndexPool.Instance
+    indices.Clear()    
+    for i = 0 to array.Length-1 do
+        if f array.[i] then
+            indices.Add(i)
+        
+
+    let res = Array.zeroCreate indices.Count
+    for i = 0 to res.Length-1 do
+        res.[i] <- array.[indices.[i]]
+        
+    res

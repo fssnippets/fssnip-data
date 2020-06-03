@@ -1,0 +1,25 @@
+type Context = { Errors : ResizeArray<string> }
+
+let demo1 ctx (a: int) =
+    if a < 0 then ctx.Errors.Add("We don't like negative numbers")
+    a
+
+let demo2 ctx (a: int) =
+    a |> string
+
+let demo3 ctx (a: int) =
+    string (a * -1)
+
+let demo4 ctx (s1 : string) (s2 : string) =
+    if s1.Length < 100 then ctx.Errors.Add("We don't like long strings numbers")
+    sprintf "%s - %s" s1 s2
+
+let Demo input =
+    let ctx = { Errors = ResizeArray() }
+    let tmp = demo1 ctx input 
+    let res = demo4 ctx (demo2 ctx tmp) (demo3 ctx tmp)
+    if ctx.Errors.Count > 0 then 
+      printfn "Errors: %A" ctx.Errors
+      None
+    else 
+      Some res

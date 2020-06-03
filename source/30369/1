@@ -1,0 +1,28 @@
+let ``mine to correct`` checkType (chain:ConcurrentChain) (block:Block) =    
+    let validation = 
+        match checkType with
+        | NoWork -> fun (cb:ChainedBlock) -> true
+        | EasyWork -> fun cb -> cb.ValidateEasy network
+        | CorrectWork -> fun cb -> cb.Validate network 
+    let processors = uint32(Environment.ProcessorCount)
+    let prevBlock = chain.GetBlock(block.Header.HashPrevBlock)
+    let rec mine nonce (blockHead:BlockHeader) =
+        let bh = blockHead.Clone()
+        bh.Nonce <- nonce
+        let headerBlock = 
+            ChainedBlock(bh, bh.GetHash(), prevBlock)
+        if validation headerBlock then nonce
+        else mine (nonce+processors) bh
+    let tasks = 
+        [|0u .. processors-1u|] |> Array.map(fun i ->
+            System.Threading.Tasks.Task.Run(fun t ->
+                mine i block.Header
+            )
+        )
+    let found = 
+        tasks 
+        |> Array.map (fun t -> t :> System.Threading.Tasks.Task) 
+        |> System.Threading.Tasks.Task.WaitAny
+    let r = tasks.[found].Result
+    printfn "%d" r
+    block.Header.Nonce <- r

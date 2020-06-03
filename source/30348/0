@@ -1,0 +1,99 @@
+// I can haz F# 4.1?
+
+open System
+open TypeShape
+open TypeShape_Utils
+open FSharp.NativeInterop
+
+// The Universal Mutator
+
+type Mutator<'T> = 'T -> 'T
+
+let rec mutate<'T> (t : 'T) : 'T =
+    match cache.TryFind<Mutator<'T>> () with
+    | Some m -> m t
+    | None ->
+        use ctx = cache.CreateRecTypeManager()
+        mkMutatorCached<'T> ctx t
+
+and private mkMutatorCached<'T> (ctx : RecTypeManager) : Mutator<'T> =
+    match ctx.TryFind<Mutator<'T>> () with
+    | Some m -> m
+    | None ->
+        let _ = ctx.CreateUninitialized<Mutator<'T>> (fun c f -> c.Value f)
+        let m = mkMutator<'T> ctx
+        ctx.Complete m
+
+and private mkMutator<'T> (ctx : RecTypeManager) : Mutator<'T> =
+    let EQ (input : Mutator<'a>) : Mutator<'T> = unbox input
+
+    let mkMemberMutator (shape : IShapeWriteMember<'T>) =
+        shape.Accept { new IWriteMemberVisitor<'T, Mutator<'T>> with
+            member __.Visit (shape : ShapeWriteMember<'T, 'Field>) =
+                let fmutator = mkMutatorCached<'Field> ctx
+                fun input ->
+                    let field = shape.Project input
+                    let field' = fmutator field
+                    shape.Inject input field' }
+
+    match shapeof<'T> with
+    | Shape.Bool -> EQ not
+    | Shape.Byte -> EQ (fun x -> x + 1uy)
+    | Shape.Int32 -> EQ (fun x -> x + 1)
+    | Shape.Int64 -> EQ (fun x -> x + 1L)
+    | Shape.Decimal -> EQ (fun x -> x + 1M)
+    | Shape.String -> 
+        fun (x:string) ->
+            if isNull x then x else
+            use fp = fixed x
+            for i = 0 to x.Length - 1 do
+                let c = NativePtr.get fp i
+                NativePtr.set fp i (int c + 1 |> char)
+            x
+        |> EQ
+
+    | Shape.Array s when s.Rank = 1 ->
+        s.Accept { new IArrayVisitor<Mutator<'T>> with
+            member __.Visit<'t> _ = // 't [] = 'T
+                let em = mkMutatorCached<'t> ctx
+                fun ts -> 
+                    if isNull ts then ts else
+                    for i = 0 to Array.length ts - 1 do ts.[i] <- em ts.[i]
+                    ts
+                |> EQ
+        }
+
+    | Shape.Poco (:? ShapePoco<'T> as shape) ->
+        let isOpen = not typeof<'T>.IsSealed
+        let fms = shape.Fields |> Array.map mkMemberMutator
+        fun t ->
+            if obj.ReferenceEquals(t,null) then t 
+            elif isOpen && t.GetType() <> typeof<'T> then
+                let sub = TypeShape.Create(t.GetType())
+                sub.Accept 
+                  { new ITypeShapeVisitor<'T> with 
+                    member __.Visit<'t>() = mutate (unbox<'t> t) |> unbox }
+            else
+                let mutable t = t
+                for fm in fms do t <- fm t
+                t
+
+    | _ -> id
+
+and private cache : TypeCache = new TypeCache()
+
+
+//-------------------------------
+// Examples
+
+let test<'T when 'T : not struct> (x : 'T) =
+    let y = mutate x
+    obj.ReferenceEquals(x,y), y
+
+test "Hello, World"
+test [1 .. 10]
+test ([|1uy;5uy|], [Choice1Of2 true ; Choice2Of2 42])
+test [|(1, [2;3], Some false)|]
+test (Some ("1", 42, true))
+test (set [1;2;3])
+test (ref (42, struct(0, Some "test")))

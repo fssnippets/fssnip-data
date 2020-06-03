@@ -1,0 +1,31 @@
+/// allows fetching elements from same sequence
+type ContinueSequence<'a> (xs: 'a seq) =
+    let en = xs.GetEnumerator()
+
+    member _.Continue (includeCurrent: bool) =
+        let s = seq { while en.MoveNext() do yield en.Current }
+        let c = seq { en.Current }
+        if includeCurrent then
+            Seq.append c s
+        else
+            s
+
+    interface IDisposable with 
+        member _.Dispose() =
+            en.Dispose()
+
+/// usage example:
+let a = seq [1; 2; 3; 4; 5; 6; 7]
+
+use seq = new ContinueSequence<_>(a)
+let s1 = seq.Continue(false) |> Seq.takeWhile((>) 3) // take 1 and 2, 3 is current
+let s2 = seq.Continue(true) |> Seq.take(2)    // take 3 and 4
+let s3 = seq.Continue(false) |> Seq.skip(1)   // skip 5
+
+let s = 
+	s1 
+	|> Seq.append <| s2 
+	|> Seq.append <| s3 
+	|> Seq.toList
+
+// s = [1; 2; 3; 4; 6; 7]

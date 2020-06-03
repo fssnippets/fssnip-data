@@ -1,0 +1,136 @@
+//
+// Object Oriented Programming in F#
+//
+
+// Passed in default Constructor, Visible Everywhere After
+type SimpleClass (myInt: int) =
+    // Calculated in Constructor, Visible Everywhere After
+    let internalInt = 20
+    
+    let mutable mutableInternalInt = 25
+    // Int Property
+    member __.ReadProperty = myInt
+    // Automatic Backing Field, Evaluated Once
+    member val ReadWriteProperty = 0 with get, set
+    // Manual Backing Field
+    member __.ExplicitReadWriteProperty 
+            with get () = mutableInternalInt
+            and  set v = mutableInternalInt <- v
+    // Int Methods 
+    member __.GetInt() = myInt
+    member __.ReturnInt (myInt: int) = myInt
+    // Static Methods and Properties
+    static member MyNumber = 10.0
+    static member GetMySumber() = SimpleClass.MyNumber
+    static member val GlobalReadWriteProperty = 10 with get, set
+
+type OptionalArgExample(?optInt: int) =
+    let actualInt = defaultArg optInt 0
+    member t.IntValue = actualInt
+
+
+let f (x: obj option) = 
+    match x with
+    | Some (:? string as str) -> str
+    | Some (:? int as i) -> sprintf "%i" i
+
+// 
+// Interfaces
+//
+
+type IExampleMethod = 
+    abstract member MyMethod: int -> bool
+
+type IExampleProps =
+    abstract member MyProp: int
+    abstract member MyGetSetProp : int with get, set
+
+type InheritedType () = 
+    let propValue = 10
+    let mutable getSetPropValue = 0
+
+    interface IExampleMethod with 
+        member t.MyMethod i = i > 0
+
+    interface IExampleProps with
+        member t.MyProp = propValue
+        member t.MyGetSetProp with get () = getSetPropValue
+                               and set v  = getSetPropValue <- v
+
+
+let _ = 
+    let t = new InheritedType()
+    //t.MyMethod
+    (t :> IExampleProps).MyProp |> ignore
+    (t :> IExampleMethod).MyMethod 10 |> ignore
+
+let objectExpressionInterface (propValue: int) = 
+    let mutable getSetPropValue = 0
+    {
+        new IExampleMethod with 
+            member t.MyMethod i = i > 0
+
+        interface IExampleProps with
+            member t.MyProp = propValue
+            member t.MyGetSetProp with get () = getSetPropValue
+                                    and set v  = getSetPropValue <- v
+            
+    }
+
+let _ = 
+    let anonObj = objectExpressionInterface 10
+    anonObj.MyMethod -5 |> ignore
+    (anonObj :?> IExampleProps).MyGetSetProp
+
+//
+// Abstract Classes in F#, Plz Not Without a Good Reason
+//
+
+[<AbstractClass>]
+type AbstractBase(myInt: int) =
+    abstract AbstractProp : int with get, set
+    member t.ConcreteProp = myInt
+ 
+    abstract AbastractWithDefault : int with get, set
+    // Virtual Method Implementation
+    default val AbastractWithDefault = 10 with get, set
+
+
+type Derived(myInt: int) =
+    // Can't put anything here in the constructor
+    inherit AbstractBase(myInt)
+    override val AbstractProp = 0 with get, set
+
+// private, public, internal
+type DerivedWithCtorWork private (myInt: int) =
+    inherit AbstractBase(myInt)
+    //new(whatInt: int) = DerivedWithWork(whatInt + 10)
+    new(whatInt: int option) = // Can't be the same type as the default c'tor
+        let actualInt = defaultArg whatInt 0
+        DerivedWithCtorWork(actualInt + 10)
+    override val AbstractProp = 0 with get, set
+
+let objectExpressionAbstract (propValue: int) = 
+    let mutable innerVal = 0
+    {
+        new AbstractBase(propValue) with
+            // Can't do override or val here
+            member t.AbstractProp with get () = innerVal 
+                                   and set v = innerVal <-v 
+    }
+
+// #1 - Interfaces
+// #1a - Create two Interfaces
+// #1b - Create a class that inherits from those interfaces
+// #1c - Create a function that takes the class and calls members from both interfaces
+
+// #2 - Abstract Classes
+// #2a - Create an abstract class with an abstract, virtual and concrete member
+// #2b - Create a concrete class that inherits from the abstract class, and overrides the virtual member
+// #2c - Create a function that takes the abstract class and calls the members on it
+//       Pass this function the concrete implementation and see what happens
+
+// #3 - Object Expressions
+// #3a - Create an object expression that implements both interfaces defined above
+// #3b - Create an object expression that implements the abstract class defined above
+// #3c - Create an object expression that implements both interfaces and the abstract class defined above

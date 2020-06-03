@@ -1,0 +1,83 @@
+// The Portfolio type is defined further down.
+// First some Map-related functions are defined.
+// The function mergeAll is used in the Portfolio consolidation function.
+
+open Deedle
+
+/// Returns a list with the map's keys.
+let keys m =
+    m
+    |> Map.toList
+    |> List.map fst
+
+/// Returns a list with the map's values.
+let values m =
+    m
+    |> Map.toList
+    |> List.map snd
+    
+/// Merges two maps applying the binary operation f to common keys.
+/// Keys present in only in one of the two argument maps are copied into the merged map.
+let merge (f: 'V -> 'V -> 'V) (m1: Map<'K,'V>) (m2: Map<'K,'V>) : Map<'K,'V> =
+    let keys1 = keys m1 |> Set.ofList
+    let keys2 = keys m2 |> Set.ofList
+
+    let keysList =
+        Set.union keys1 keys2
+        |> Set.toList
+    let aux1 = 
+        keysList
+        |> List.map (fun x -> Map.tryFind x m1)
+    let aux2 = 
+        keysList
+        |> List.map (fun x -> Map.tryFind x m2)
+
+    let mapper tup =
+        match tup with 
+        | Some v, None -> v
+        | None, Some v -> v
+        | Some v, Some w -> f v w
+        | None, None -> failwith "Error in Maps.merge: This should never happen"
+
+    List.zip aux1 aux2
+    |> List.map mapper
+    |> List.zip keysList
+    |> Map.ofList
+        
+/// Merges a collection of maps applying recursively the Map.merge function.
+let mergeAll (f: 'V -> 'V -> 'V) (ms: Map<'K,'V> list) =
+    List.reduce (merge f) ms
+
+// Recursive type
+type Portfolio =
+    | Simple of string // Implicitly has weight = 1.0
+    | Composite of Map<Portfolio,float> // The Map values are weights
+
+/// Consolidates the weights of a Portfolio object, going recursively through its subportfolios.
+/// Applied to a Simple Portfolio returns a Composite with only one key-value pair
+let rec consolidate (p: Portfolio) : Map<string,float> =
+    let f ((p, w): Portfolio*float) = consolidate p |> Map.map (fun _ v -> w * v) 
+    match p with
+    | Simple sp -> Map.empty.Add (sp, 1.0)
+    | Composite cp ->
+        cp
+        |> Map.toList
+        |> List.map f
+        |> mergeAll (+)
+
+let isEqualTo (p1: Portfolio) (p2: Portfolio) =
+    consolidate p1 = consolidate p2
+
+/// Calculate the sum of the shallow weights of a Portfolio object.
+/// The shallow weights do not include the weights of subportfolios.
+let shallowSum (p: Portfolio) =
+    match p with
+    | Simple _ -> 1.0
+    | Composite cp -> values cp |> List.sum
+
+/// Returns true if all subportfolios of a portfolio have the property that their weights add up to one.
+let rec checkWeights (p: Portfolio) =
+    match p with
+    | Simple _ -> true
+    | Composite cp ->
+        shallowSum p = 1.0 && cp |> Map.forall (fun q _ -> checkWeights q)

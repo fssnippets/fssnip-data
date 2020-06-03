@@ -1,0 +1,61 @@
+open System
+open System.Collections.Generic
+
+/// A simple queue that also allows for the removal of items waiting in the queue as well as FIFO operation.
+type FilterableQueue<'a> () =
+    let queue = new LinkedList<'a>()
+
+    /// Add an item to the tail of the queue.
+    member x.Enqueue (item: 'a) = queue.AddLast item |> ignore
+
+    /// Get the item at the head of the queue and remove it, the result is None if the queue is empty.
+    member x.TryDequeue () =
+        match x.Count with
+        | 0 -> None
+        | _ -> let item = queue.First.Value
+               queue.RemoveFirst ()
+               Some item
+
+    /// The number of items currently in the queue.
+    member x.Count with get () = queue.Count
+
+    /// Remove items from the queue for which the predicate is true.
+    member x.RemoveSelectedItems predicate =
+        // A list that will contain any items removed from the queue.
+        let removedItems = new LinkedList<_>()
+
+        // Tail-recursive function to iterate over the nodes in the queue.
+        let rec loop (node: LinkedListNode<'a>) =
+            match predicate node.Value with
+            | true ->
+                // Predicate returned true, so remove the item from the queue and add it to the removedItems list.
+                let next = node.Next
+                removedItems.AddLast node.Value |> ignore
+                queue.Remove node
+                next
+            | false ->
+                // Item should not be removed if predicate returns false, just move onto the next element in the queue.
+                node.Next
+            |> function
+               // Either there is another node to process or not..
+               | null -> ()
+               | nextNode -> loop nextNode
+        // Start the scan of the nodes if there are any.
+        if queue.Count <> 0 then loop queue.First
+        // Evaluates to the list of items that were removed.
+        removedItems
+
+
+// Example..
+let q = FilterableQueue<int>()
+
+q.Enqueue 3
+q.Enqueue 7
+q.Enqueue 9
+
+// Filter anything where 8 is less then or equal to the item.
+let removed = q.RemoveSelectedItems ((<=) 8)
+
+let a = q.TryDequeue () // Some 3
+let b = q.TryDequeue () // Some 7
+let c = q.TryDequeue () // None

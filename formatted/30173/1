@@ -1,0 +1,59 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">// ResizeArray is not synchronized: Array.Parallel.map shows a race condition</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">a</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="t">ResizeArray</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="t">int</span><span class="o">&gt;</span> <span class="n">100000</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="i">b</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs2', 5)" onmouseover="showTip(event, 'fs2', 5)" class="t">ResizeArray</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs3', 6)" onmouseover="showTip(event, 'fs3', 6)" class="t">int</span><span class="o">&gt;</span> <span class="n">100000</span>
+
+[|<span class="n">1..</span><span class="n">50000</span>|] <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs5', 7)" onmouseover="showTip(event, 'fs5', 7)" class="t">Array</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs6', 8)" onmouseover="showTip(event, 'fs6', 8)" class="f">iter</span>(<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs7', 9)" onmouseover="showTip(event, 'fs7', 9)" class="i">x</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs1', 10)" onmouseover="showTip(event, 'fs1', 10)" class="i">a</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs8', 11)" onmouseover="showTip(event, 'fs8', 11)" class="f">Add</span>(<span class="n">1</span>) )
+[|<span class="n">1..</span><span class="n">50000</span>|] <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs5', 12)" onmouseover="showTip(event, 'fs5', 12)" class="t">Array</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs9', 13)" onmouseover="showTip(event, 'fs9', 13)" class="t">Parallel</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs10', 14)" onmouseover="showTip(event, 'fs10', 14)" class="f">iter</span>(<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs7', 15)" onmouseover="showTip(event, 'fs7', 15)" class="i">x</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs4', 16)" onmouseover="showTip(event, 'fs4', 16)" class="i">b</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs8', 17)" onmouseover="showTip(event, 'fs8', 17)" class="f">Add</span>(<span class="n">1</span>))
+
+<span onmouseout="hideTip(event, 'fs11', 18)" onmouseover="showTip(event, 'fs11', 18)" class="f">printfn</span> <span class="s">&quot;a.length is: </span><span class="pf">%d</span><span class="s"> </span><span class="e">\n</span><span class="s">b.length is </span><span class="pf">%d</span><span class="s">&quot;</span> (<span onmouseout="hideTip(event, 'fs1', 19)" onmouseover="showTip(event, 'fs1', 19)" class="i">a</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs12', 20)" onmouseover="showTip(event, 'fs12', 20)" class="f">ToArray</span>()<span class="o">.</span><span class="i">Length</span>) (<span onmouseout="hideTip(event, 'fs4', 21)" onmouseover="showTip(event, 'fs4', 21)" class="i">b</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs12', 22)" onmouseover="showTip(event, 'fs12', 22)" class="f">ToArray</span>()<span class="o">.</span><span class="i">Length</span>;)
+
+<span onmouseout="hideTip(event, 'fs4', 23)" onmouseover="showTip(event, 'fs4', 23)" class="i">b</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs13', 24)" onmouseover="showTip(event, 'fs13', 24)" class="f">Clear</span>()
+[|<span class="n">1..</span><span class="n">50000</span>|] <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs5', 25)" onmouseover="showTip(event, 'fs5', 25)" class="t">Array</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs9', 26)" onmouseover="showTip(event, 'fs9', 26)" class="t">Parallel</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs10', 27)" onmouseover="showTip(event, 'fs10', 27)" class="f">iter</span>(<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs7', 28)" onmouseover="showTip(event, 'fs7', 28)" class="i">x</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs14', 29)" onmouseover="showTip(event, 'fs14', 29)" class="f">lock</span> <span onmouseout="hideTip(event, 'fs4', 30)" onmouseover="showTip(event, 'fs4', 30)" class="i">b</span> (<span class="k">fun</span> () <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs4', 31)" onmouseover="showTip(event, 'fs4', 31)" class="i">b</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs8', 32)" onmouseover="showTip(event, 'fs8', 32)" class="f">Add</span>(<span class="n">1</span>)) )
+
+<span onmouseout="hideTip(event, 'fs11', 33)" onmouseover="showTip(event, 'fs11', 33)" class="f">printfn</span> <span class="s">&quot;a.length is: </span><span class="pf">%d</span><span class="s"> </span><span class="e">\n</span><span class="s">b.length is </span><span class="pf">%d</span><span class="s">&quot;</span> (<span onmouseout="hideTip(event, 'fs1', 34)" onmouseover="showTip(event, 'fs1', 34)" class="i">a</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs12', 35)" onmouseover="showTip(event, 'fs12', 35)" class="f">ToArray</span>()<span class="o">.</span><span class="i">Length</span>) (<span onmouseout="hideTip(event, 'fs4', 36)" onmouseover="showTip(event, 'fs4', 36)" class="i">b</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs12', 37)" onmouseover="showTip(event, 'fs12', 37)" class="f">ToArray</span>()<span class="o">.</span><span class="i">Length</span>;)
+
+<span class="c">// Output</span>
+<span class="c">// a.length is: 50000 </span>
+<span class="c">// b.length is 20731</span>
+<span class="c">// a.length is: 50000 </span>
+<span class="c">// b.length is 50000</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">val a : System.Collections.Generic.List&lt;int&gt;<br /><br />Full name: Script.a</div>
+<div class="tip" id="fs2">type ResizeArray&lt;&#39;T&gt; = System.Collections.Generic.List&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.ResizeArray&lt;_&gt;</div>
+<div class="tip" id="fs3">Multiple items<br />val int : value:&#39;T -&gt; int (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.int<br /><br />--------------------<br />type int = int32<br /><br />Full name: Microsoft.FSharp.Core.int<br /><br />--------------------<br />type int&lt;&#39;Measure&gt; = int<br /><br />Full name: Microsoft.FSharp.Core.int&lt;_&gt;</div>
+<div class="tip" id="fs4">val b : System.Collections.Generic.List&lt;int&gt;<br /><br />Full name: Script.b</div>
+<div class="tip" id="fs5">module Array<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs6">val iter : action:(&#39;T -&gt; unit) -&gt; array:&#39;T [] -&gt; unit<br /><br />Full name: Microsoft.FSharp.Collections.Array.iter</div>
+<div class="tip" id="fs7">val x : int</div>
+<div class="tip" id="fs8">System.Collections.Generic.List.Add(item: int) : unit</div>
+<div class="tip" id="fs9">module Parallel<br /><br />from Microsoft.FSharp.Collections.ArrayModule</div>
+<div class="tip" id="fs10">val iter : action:(&#39;T -&gt; unit) -&gt; array:&#39;T [] -&gt; unit<br /><br />Full name: Microsoft.FSharp.Collections.ArrayModule.Parallel.iter</div>
+<div class="tip" id="fs11">val printfn : format:Printf.TextWriterFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.printfn</div>
+<div class="tip" id="fs12">System.Collections.Generic.List.ToArray() : int []</div>
+<div class="tip" id="fs13">System.Collections.Generic.List.Clear() : unit</div>
+<div class="tip" id="fs14">val lock : lockObject:&#39;Lock -&gt; action:(unit -&gt; &#39;T) -&gt; &#39;T (requires reference type)<br /><br />Full name: Microsoft.FSharp.Core.Operators.lock</div>
+

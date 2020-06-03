@@ -1,0 +1,167 @@
+open System
+open System.Data
+open System.Linq
+
+/// Push a [string] to the [int]-th element of a [string].
+let StrPush (sample : string) (cell : int) (input : string) : string = 
+    //  What an elegant pattern matching !
+    match cell with 
+        | cell when cell <= 0 
+            -> input.Insert( 0 , sample )
+        | cell when cell >= input.Length 
+            -> input.Insert( input.Length , sample )
+        | _ -> input.Insert( cell , sample )   
+    
+/// Toss a [string] out of a [string]. 
+let Toss (wipe : string) (input : string) : string =
+    
+    let mutable result = input
+
+    while (result.Contains wipe) do
+        result <- result.Remove ((result.IndexOf wipe) , (wipe.Length))
+
+    result
+
+/// The [string] morphs into a [string] in a [string].
+let Morph (replace : string) (by : string) (input : string) : string =
+    
+    let mutable result = input
+
+    while (result.Contains replace) do
+        let checkpoint : int = result.IndexOf replace
+        result <- result.Remove( checkpoint , (replace.Length) )
+        result <- StrPush by checkpoint result
+
+    result
+
+/// Remove all ' ' characters in two ends of a string.
+let _NO_ (input : string) : string = (input.TrimStart [| ' ' |]).TrimEnd [| ' ' |]
+
+/// This function takes every word in a string then puts them in a string[].
+let StrArr (input: string) : string[] = 
+
+    (Array.filter (fun s -> s <> " " ) (input.Split(' ')))
+        .Distinct().ToArray()
+
+/// Counts words in a string.
+let Count (input: string) : int = 
+
+    (StrArr input).Length
+
+/// Join all elements in a [string[]] with a [string] between them.
+let StrJoin (input : string[]) (xtra : string) : string = 
+
+    String.Join ( xtra , input )
+
+/// Any ['T] type element in a ['T] list ?
+let Any (id : 'T) (clist : 'T list) : bool =
+    
+    List.exists ( fun elem -> elem = id ) clist
+
+let Sig (input : string) : string[] = 
+
+    let result = 
+        input 
+        |> Toss "(" 
+        |> Toss ")"
+        |> Toss "and" 
+        |> Toss "or"
+        |> Toss "not" 
+        |> Toss "True" 
+        |> Toss "False"
+        |> _NO_ 
+        |> Morph "  " " "
+
+    StrArr result
+
+let BOOL (input : string) :  string =
+       
+    sprintf " %s "
+        (input.ToUpper()
+        |> Morph "("        "PARL"
+        |> Morph ")"        "PARR"
+        |> Morph "PARL"     " ( "
+        |> Morph "PARR"     " ) "
+        |> Morph "1"        " True "
+        |> Morph "TRUE"     " True "
+        |> Morph "0"        " False "
+        |> Morph "FALSE"    " False "
+        |> Morph "OR"       "  or "
+        |> Morph "+"        "  or "
+        |> Morph "|"        "  or "
+        |> Morph "||"       "  or "
+        |> Morph "AND"      " and "
+        |> Morph "."        " and "
+        |> Morph "*"        " and "
+        |> Morph "&"        " and "
+        |> Morph "&&"       " and "
+        |> Morph "NOT"      " not "
+        |> Morph "!"        " not "
+        |> Morph "~"        " not "
+        |> Morph "  "       " ")
+
+let Core (xpression : string) : string =
+
+    let data : DataTable = new DataTable()
+
+    match string (data.Compute(xpression, null)) with
+        | "True"    -> "1"
+        |   _       -> "0"
+
+let TruthTable =
+    
+    printf "\n  >>  WELCOME TO THE TRUTH TABLE PROGRAM 1.0 !\n"
+    printf "\n  >>  Please enter expression for output: "
+
+    let mutable xpression = Console.ReadLine()
+    printf "\n\t >>  %s\n" (xpression)
+    xpression <- xpression |> BOOL
+    printf "\n\t ->  %s" (xpression |> _NO_)
+
+    let var : string[] = Sig xpression
+
+    let mutable var2 = [| for i in 0 .. var.Length - 1 -> "" |]
+
+    let mutable temp = xpression
+    for i in 0 .. var.Length - 1 do
+       
+        temp <- 
+            sprintf " %s " temp
+            |> Morph (sprintf " %s " var.[i]) " @@ "
+            |> Morph " @@ " (sprintf " [%s] " var.[i])
+    
+    printfn "\n"
+    printf "\n\t%s\n\n" ( String.Join ( "  " , [| for i in 0 .. 12 -> "-" |]) )
+
+    for i : int in 0 .. 1 .. int ( 2. ** float (var.Length) ) - 1 do
+        
+        let mutable temp2 = temp
+        if i = 0 then 
+            for j : int in 0 .. 1 .. var.Length - 1 do printf "\t%s  " var.[j]
+            printf "\t  %s\n\n" ("OUTPUT")
+
+        let mutable foo : string = Convert.ToString ( i , 2 ) 
+        if foo.Length < var.Length 
+        then 
+            foo <- String.Concat( String.replicate (var.Length - foo.Length) "0") + foo  
+
+        for k : int in 0 .. var.Length - 1 do 
+            
+            var2.[k] <- foo.[k].ToString()
+            printf "\t%s  " var2.[k]
+
+        for l : int in 0 .. var.Length - 1 do
+                
+            temp2 <- Morph (sprintf "[%s]" var.[l] ) var2.[l] temp2
+
+        printf "\t  %s\n" (temp2 |> BOOL |> Core) 
+
+    printf "\n\t%s\n\n" ( String.Join ( "  " , [| for i in 0 .. 12 -> "-" |]) )
+
+TruthTable
+
+Console.ReadKey() |> ignore
+
+//  Comments:
+
+//  20200406 - My Name: Tell me something ...

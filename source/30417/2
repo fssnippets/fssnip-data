@@ -1,0 +1,33 @@
+type Width =
+    /// Use the full width of the console
+    | FullWidth
+    /// The width of the chart including the printed title and value
+    | Width of int
+    member self.Value =
+        match self with
+        | FullWidth -> System.Console.WindowWidth
+        | Width value -> value
+
+// based on: https://www.daniweb.com/programming/software-development/code/238532/very-simple-console-barchart
+let inline drawBarChartWith (width: Width) valueFormatter (xs: (string * 'a) seq) =
+    let xs = xs |> Seq.cache
+    // calculate maximum of the data
+    let maxTitleWidth = xs |> Seq.map (fst >> String.length) |> Seq.max
+    let maxValue = xs |> Seq.map snd |> Seq.max
+    let maxValueWidth = xs |> Seq.map (snd >> valueFormatter >> String.length) |> Seq.max
+    // use full width of console
+    let factor = float (width.Value - maxTitleWidth - maxValueWidth - 3)
+    // draw chart
+    let emptyTitle = String.replicate maxTitleWidth " "
+    let emptyValue = String.replicate maxValueWidth " "
+    printfn "%s│%s│" emptyTitle emptyValue
+    for (title, value) in xs do
+        let paddedTitle = (string title).PadLeft(maxTitleWidth)
+        let width = int (float value / float maxValue * factor)
+        let value = (valueFormatter value).PadLeft(maxValueWidth)
+        let segments = String.replicate width "■"
+        printfn "%s│%s│%s" paddedTitle value segments
+    printfn "%s│%s│" emptyTitle emptyValue
+
+let inline drawBarChart xs =
+    drawBarChartWith FullWidth string xs

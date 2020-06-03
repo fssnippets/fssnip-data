@@ -1,0 +1,8 @@
+open System
+
+let toBin n =
+    let rec toBinImpl n = seq {
+        let div, rem = Math.DivRem (n, 2)
+        yield rem
+        if div <> 0 then yield! toBinImpl div }
+    toBinImpl n |> Seq.rev |> Seq.toArray

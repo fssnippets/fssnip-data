@@ -1,0 +1,29 @@
+let letters = [|"a"; "b"; "c"; "d"|]
+
+let forward = 
+    letters
+    |> Array.fold (fun acc elem -> acc + elem) "->"
+// "->abcd"
+
+// The built in foldBack has parameters in an odd order:
+// you can't pipe the array into it, and the folder 
+// signature is different from Array.fold's:
+let nasty =
+    Array.foldBack (fun elem acc -> acc + elem) letters "->"
+// "->dcba"
+
+// Let's fix that:
+module Array =
+
+    let foldBack' folder state array =
+        let folder' x y = folder y x
+        Array.foldBack folder' array state
+
+// Now a foldBack call looks like a fold call but
+// still goes backwards through the array:
+let backward = 
+    letters
+    |> Array.foldBack' (fun acc elem -> acc + elem) "->"
+// "->dcba"
+
+

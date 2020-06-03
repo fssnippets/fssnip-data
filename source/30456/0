@@ -1,0 +1,44 @@
+open System
+
+// I wanted to share this neat trick for making recursive types countable. Let's say you had tree of integers like so:
+
+type Tree = 
+    | Empty
+    | Node of int * Tree * Tree
+
+// We can write a function that will turn any integer into a unique instance of our tree type.
+
+//  Let's use the Cantor's inv pairing function (https://en.wikipedia.org/wiki/Pairing_function):
+
+let invCantor(z:int) : (int * int) = 
+    let z1 = double(z)
+    let w = int(Math.Floor((Math.Sqrt(8.0 * z1 + 1.0) - 1.0) / 2.0))
+    let t = (w * w + w) / 2
+    let y = z - t
+    let x = w - y
+    (x, y)
+
+//  Cantor's pairing function maps all unique pairs of natural numbers to a unique natural number.  
+//  The inverted function has the signature: int -> int * int.
+
+//  Using invCantor, we can make a function that maps any integer to an integer list of any size:
+
+let rec invCantorList (length:int) (n:int) : int list =
+    match length with
+    | 0 -> []
+    | 1 -> [n]
+    | l -> let (x, y) = invCantor(n)
+           x::invCantorList (l - 1) y
+
+// We're almost done. With invCantorList, we can use it to map the set of integers to our Tree type.
+
+let rec intToTree (n:int) : Tree = 
+    if n = 0 then Empty
+    else
+        let n = n - 1
+        let [x;y;z] = n |> invCantorList 3
+        Node(x, intToTree y, intToTree z)
+
+// Now you have a predictable and deterministic method for enumerating test cases for recursive types.
+
+[ for x in 0..100 -> x, intToTree x ] |> List.iter (printfn "%A")

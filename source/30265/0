@@ -1,0 +1,79 @@
+(*
+Any live cell with fewer than two live neighbours dies, as if caused by underpopulation.
+Any live cell with two or three live neighbours lives on to the next generation.
+Any live cell with more than three live neighbours dies, as if by overpopulation.
+Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
+*)
+
+type CellState = 
+    | Alive
+    | Dead
+
+type Pos = int * int
+
+type Grid = Map<Pos, CellState>
+
+let getState numAlive curState = 
+    match curState, numAlive with
+    | Alive, 2 | _, 3 -> Alive
+    | _ -> Dead
+
+let emptyGrid : Grid = Map.empty
+
+let neighbours (x, y) = 
+    [ x - 1, y - 1
+      x, y - 1
+      x + 1, y - 1
+      x - 1, y
+      x + 1, y
+      x - 1, y + 1
+      x, y + 1
+      x + 1, y + 1 ]
+
+let defaultGrid dim = 
+    [ for y in 0..(dim - 1) do
+        for x in 0..(dim - 1) do
+            yield (x,y),Dead ]
+    |> Map.ofList
+
+let createGrid dim (alivePos:Pos list) =
+    alivePos |> List.fold(fun acc pos -> acc |> Map.add pos Alive) (defaultGrid dim)
+
+let someOrValue d = function 
+| Some v -> v
+| None -> d
+
+let getNumAlive grid pos =
+    pos
+    |> neighbours 
+    |> List.map (fun n-> grid |> Map.tryFind n |> someOrValue Dead)
+    |> List.filter (fun s -> s = Alive)
+    |> List.length
+    
+
+let nextCellState grid pos state  =
+    let numAlive = getNumAlive grid pos
+    getState numAlive state
+
+let nextGeneration (grid:Grid):Grid = 
+    grid |> Map.map (nextCellState grid)
+
+let printGrid (dim:int) (grid:Grid) =
+    let printCell (((x,y):Pos),state) = 
+        if x = dim - 1 
+        then printf"%A\n" state
+        else printf"%A\t" state
+    grid 
+    |> Map.toSeq
+    |> Seq.sortBy (fun ((x,y),_) -> x + y*dim)
+    |> Seq.iter printCell
+    printf"\n"
+    grid
+
+createGrid 5 [(1,2);(2,2);(3,2)]
+|> printGrid 5
+|> nextGeneration
+|> printGrid 5
+|> nextGeneration
+|> printGrid 5
+|> ignore

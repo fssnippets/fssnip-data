@@ -1,0 +1,25 @@
+open System
+let decodeBase36 (input: string) = 
+    if String.IsNullOrEmpty(input) then
+        raise (new ArgumentException("decodeBase36 input string was null or empty"))
+    
+    let zeroChar = uint64 '0' // int 48
+    let lowPunc  = uint64 ':' // int 58
+    let highPunc = uint64 '@' // int 64
+    let maxChar  = uint64 'Z' // int 90
+
+    let mutable result = 0UL
+    let mutable expBase = 1UL
+
+    for i = input.Length - 1 downto 0 do
+        let cv = 
+            let c = uint64 input.[i] 
+            if (c >= lowPunc && c <= highPunc) || c < zeroChar || c > maxChar then
+                raise (new ArgumentException(sprintf "decodeBase36 found an unexpected character in string: %c" input.[i]))
+            let v = c - zeroChar
+            if v > 10UL then v - 7UL else v   
+        
+        result <- result + (cv * expBase)
+        expBase <- expBase * 36UL
+   
+    result

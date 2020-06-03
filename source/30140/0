@@ -1,0 +1,68 @@
+open System
+open System.Linq
+open System.IO
+ 
+let templatesFolderPath = Path.Combine(__SOURCE_DIRECTORY__," WebApplication", "Views")
+ 
+let rec getAllDescendants(directory: DirectoryInfo) =
+  seq {
+    let items = directory.GetFileSystemInfos()
+    let subDirectories = items.OfType<DirectoryInfo>()
+    yield! items
+    for subdir in subDirectories do
+      yield! getAllDescendants(subdir)
+    }
+let getDirectoryDescendants(directory: DirectoryInfo) = getAllDescendants(directory).OfType<DirectoryInfo>()
+let getFilesDescendants(directory: DirectoryInfo) = getAllDescendants(directory).OfType<FileInfo>()
+ 
+let getNamespaceForFolder (folder: DirectoryInfo) =
+  let folderFullName = folder.FullName
+  if folderFullName.StartsWith(templatesFolderPath) then
+    let splits =
+      folderFullName.Substring(templatesFolderPath.Length).Split([|Path.DirectorySeparatorChar|], StringSplitOptions.RemoveEmptyEntries)
+    printfn "%A" splits
+    splits
+  else
+    [||]
+ 
+let generate (baseFolder: DirectoryInfo) (baseNamespace: string array) (filename:string) =
+  let titleCase = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase
+  use underlying = new StreamWriter(filename)
+  use writer = new System.CodeDom.Compiler.IndentedTextWriter(underlying)
+  let write, indent, deindent =
+    (fun (t:string) -> writer.WriteLine(t))
+    , (fun () -> writer.Indent <- 1 + writer.Indent)
+    , (fun () -> writer.Indent <- -1 + writer.Indent)
+  let writef format = FSharp.Core.Printf.kprintf write format
+ 
+  let files =
+    getFilesDescendants baseFolder
+    |> Seq.groupBy (fun f -> f.Directory)
+    |> Seq.map (fun (d, files) -> getNamespaceForFolder d, files |> Seq.map (fun f -> f,f.Name) |> Seq.toArray)
+    |> Seq.toArray
+    |> Array.groupBy fst
+    |> Array.map (fun (g, files) -> g, files |> Array.map snd |> Array.concat)
+ 
+  let substring = __SOURCE_DIRECTORY__
+  for (ns, files) in files do
+    let ns =
+      Seq.concat [baseNamespace;ns]
+      |> Seq.map titleCase
+      |> String.concat "."
+    writef "namespace %s" ns
+    indent()
+    write "open WebSharper.UI.Next.Templating"
+    for (f, n) in files do
+      let n =
+        let splits = n.Split('.')
+        splits
+        |> Seq.truncate (splits.Length - 1)
+        |> Seq.map titleCase
+        |> String.concat ""
+      writef @"type %s = Template< const(__SOURCE_DIRECTORY__ + @""\..\..%s"") >" n (f.FullName.Substring(substring.Length))
+    deindent()
+  underlying.Flush()
+  writer.Dispose()
+ 
+let folder = DirectoryInfo(templatesFolderPath)
+generate folder [|"Templates"|] (Path.Combine(__SOURCE_DIRECTORY__, "WebApplication", "Code", "Template.fs"))

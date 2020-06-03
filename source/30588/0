@@ -1,0 +1,47 @@
+open MongoDB.Bson
+open MongoDB.Bson.IO
+open MongoDB.Driver
+​
+/// <summary>
+/// Contains functions for communicating with MongoDB.
+/// </summary>
+module Mongo =
+    /// <summary>
+    /// Stores a document in the MongoDB target.
+    /// </summary>
+    let store (connection : string) database collection document =
+        let client = new MongoClient(connection)
+        let db = database |> client.GetDatabase
+        let collection = collection |> db.GetCollection
+        let document = document |> BsonDocument.Parse
+        document |> collection.InsertOne
+        let settings = JsonWriterSettings()
+        settings.OutputMode <- JsonOutputMode.Strict
+        let document = document.ToJson(settings)
+        document
+​
+    /// <summary>
+    /// Reads a document or documents from the MongoDB target.
+    /// </summary>
+    let read (connection : string) database collection (filter : string option) =
+        let client = new MongoClient(connection)
+        let db = database |> client.GetDatabase
+        let collection = collection |> db.GetCollection<BsonDocument>
+        let cursor : IAsyncCursor<BsonDocument> =
+            collection.FindSync(
+                filter
+                |> Option.map (BsonDocument.Parse >> FilterDefinition.op_Implicit)
+                |> Option.defaultValue FilterDefinition.Empty)
+        let settings = JsonWriterSettings()
+        settings.OutputMode <- JsonOutputMode.Strict
+        let rec readDoc docs =
+            if cursor.MoveNext() |> not then
+                docs
+            else
+                let batch = cursor.Current
+                batch
+                |> Seq.toArray
+                |> Array.map (fun d -> d.ToJson(settings))
+                |> Array.append docs
+                |> readDoc
+        readDoc [|  |]

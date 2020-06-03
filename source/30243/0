@@ -1,0 +1,103 @@
+open System
+open System.Windows.Forms
+open System.Drawing
+#r "System.Windows.Forms.DataVisualization.dll"
+open System.Windows.Forms.DataVisualization.Charting
+
+
+type imageReader(filePath: string) = class
+
+  let image  = new Bitmap(filePath)
+  let imageW = image.Width
+  let imageH = image.Height
+  let mutable histogram = []
+  let mutable xData = []
+
+// creates the X date for the chart
+  member this.createXData()=
+    let rec loop x =
+      match x with
+      |255 -> [x]
+      |_ -> [x]@(loop (x+1))
+    xData <- loop 1
+    xData |> ignore
+
+// get the color of a certain pixel
+  member this.obtainPixel(x:int, y:int) =
+    let pixel = image.GetPixel(x,y)
+    let stringPixel = pixel.ToString()
+    printfn "%A" pixel
+
+  member this.obtainWidth()=
+    printfn "%A" imageW
+
+  member this.obtainHeight()=
+    printfn "%A" imageH
+
+// creates the Y data for the chart
+// This resolves in an unheard of running time.
+  member this.createYData()  =
+      let rec breakFinder (s:string) (h:int)  =
+        match s.[h] with
+        |'B' -> s.[(h+2)..(s.Length-2)] |> int
+        |_ -> (breakFinder s (h+1))
+
+      let rec yello t x y p =
+        let mutable pixel = image.GetPixel(x,y)
+        let mutable stringPixel = pixel.ToString()
+        printfn "Scanning pixel %A out of 73800" t
+        match x with
+        |l when l = (imageW-1) -> match y with
+                                        |k when k = (imageH-1) -> p@[(breakFinder stringPixel 0)]
+                                        |_ -> yello (t+1) 0 (y+1) (p@[(breakFinder stringPixel 0)])
+        |_ -> yello (t+1) (x+1)(y)(p@[(breakFinder stringPixel 0)])
+      histogram <- yello 1 0 0 [] //|> Seq.countBy id |> Seq.toList
+      histogram |> Seq.iter (printf "%A ") // this is only done for testing perposes.
+
+      let rec count x j t =
+        match x with
+        |g when g = ((List.length histogram)-1) -> t
+        |_ -> match histogram.[x] with
+              |e when e = j -> (count (x+1) j (t+1))
+              |_ -> (count (x+1) j t)
+
+      let rec sorter x =
+        match x with
+        |255 -> [count 0 x 0]
+        |_ -> printfn "Sorting color %A out of 255" x
+              [count 0 x 0]@(sorter (x+1))
+
+      histogram <- sorter 1
+      histogram |> Seq.iter (printf "%A ") // this is only done for testing perposes
+
+// creates the chart and adds it to a form
+  member this.createChart()=
+    let form = new Form()
+    form.Text <- "Ugeopgave 12"
+    form.Width <- 1600
+    form.Height <- 800
+    let chart = new Chart(Dock = DockStyle.Fill)
+    let chartArea = new ChartArea("MyChartArea")
+    chartArea.BackColor <- System.Drawing.Color.Black
+    chartArea.AxisX.ArrowStyle <- AxisArrowStyle.Triangle
+    chartArea.AxisY.ArrowStyle <- AxisArrowStyle.Triangle
+    chart.ChartAreas.Add(chartArea)
+    form.Controls.Add(chart)
+
+    let series = new Series(ChartType = SeriesChartType.Column)
+    chart.Series.Add(series)
+    series.Points.DataBindXY(xData, "Item1", histogram, "Item")
+    Application.Run form
+end
+
+
+let main() =
+  let picture = new imageReader("coins.jpg")
+  picture.obtainWidth()
+  picture.obtainHeight()
+  picture.obtainPixel(0,0)
+  picture.createYData()
+  picture.createXData()
+  picture.createChart()
+
+main()

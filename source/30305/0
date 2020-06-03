@@ -1,0 +1,28 @@
+type TraceType = 
+| Debug
+| Exception
+| Etc
+
+type internal Result =
+	{ Instance: string option
+      Context: string option
+	  Tag: string option
+	  Type: TraceType option}
+	  
+let wildcard = pstring "*"
+let delimiter = pstring ">"
+let stringLiteral = 
+	let escape = anyOf "\bfnrt*>"
+					|>> function
+						| 'b' -> "\b"
+						| 'f' -> "\u000c"
+						| 'n' -> "\n"
+						| 'r' -> "\r"
+						| 't' -> "\t"
+						| c -> string c
+	let escapedCharSnippet = pstring "\\" >>. escape
+	let normalCharSnippet = manySatisfy (fun c -> c <> "\\")
+	stringsSepBy normalCharSnippet escapedCharSnippet
+let value = wildcard <|> stringLiteral
+let typeValue = pstring "*"  |> None <|> pstring "Debug" |>> Debug <|> pstring "Exception" |>> Exception <|> "Etc" |>> Etc
+let result = pipe4 (spaces >>. value .>> spaces .>> delimiter) (spaces >>. value .>> spaces .>> delimiter) (spaces >>. value .>> spaces .>> delimiter) (spaces >>. typeValue .>> spaces) (fun a b c d -> {Instance = a; Context = b; Tag = c; Type = d}) 

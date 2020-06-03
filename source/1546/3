@@ -1,0 +1,22 @@
+let dateRange startDate (endDate:System.DateTime) = 
+  Seq.unfold (function 
+     | acc when acc < endDate.AddDays(1.) -> Some(acc, acc.AddDays(1.))
+     | acc when acc > endDate -> Some(acc, acc.AddDays(-1.))
+     | acc -> None) startDate
+
+// Another bit different approach:
+// This version generates a fixed number of dates, does not have an endDate parameter
+let dateRange2 (start:System.DateTime) x = 
+    [1..x] |> List.map(fun i -> start.AddDays(float i))
+
+// This version has an endDate parameter
+let dateRange3 (startDate: System.DateTime) endDate =
+     Seq.initInfinite float
+     |> Seq.map (fun i -> startDate.AddDays i)
+     |> Seq.takeWhile (fun dt -> dt <= endDate)
+
+/// Creates an increasing sequence with all dates between two dates (inclusive).
+let createDateRange4 (date1:System.DateTime) date2 =
+    let start = min date1 date2
+    let totalDays = (date2 - date1).TotalDays |> abs |> int |> (+) 1
+    Seq.init totalDays (float >> start.AddDays)

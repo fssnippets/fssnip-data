@@ -1,0 +1,53 @@
+type UserId = int
+
+type User = 
+    { id : UserId
+      name: string
+    }
+
+
+type Task =
+    { id : int
+    }
+
+
+type CreateUserData =
+    { name : string }
+
+type Action =
+| CreateUser of CreateUserData 
+
+type Request = Action * UserId
+
+type Process =
+| Received of Request
+| Validated of Request
+| Authorized of Request
+| Saved of Request
+| NotValidated of Request
+| NotAuthorized of Request
+
+let recieve = Received 
+
+let validate req = 
+    match req with
+    | (CreateUser data,_) -> Validated req
+
+let authorized req =
+    Authorized req
+
+let save req = async {
+    return Saved req
+}
+
+let transition p = async {
+    match p with
+    | Received r ->  return validate r
+    | Validated r -> return authorized r
+    | Saved r -> return! (save r)
+    | _ -> return p
+}
+
+type Processor  () =
+    let x =  1
+    with member this.Start (req:Request) = 0 

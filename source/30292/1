@@ -1,0 +1,29 @@
+ let parallelFilter f (array: 'T[]) = 
+                
+    let inputLength = array.Length                      
+
+    let isChosen : bool [] = Array.zeroCreate inputLength                
+    let mutable outputLength = 0        
+    let range = Partitioner.Create(0,inputLength)
+    Parallel.ForEach(
+                    range,
+                    (fun () ->0),
+                    (fun (start,finish) _ count -> 
+                    let mutable localCount = 0
+                    for i in start .. finish-1 do
+                        match f array.[i] with 
+                        | true -> () 
+                        | false -> 
+                            isChosen.[i] <- true                                      
+                            localCount <- localCount+1
+                    localCount),
+                    Action<int> (fun x -> System.Threading.Interlocked.Add(&outputLength,x) |> ignore )
+                    ) |> ignore         
+                                                                                                                                                      
+    let output = Array.zeroCreate outputLength
+    let mutable curr = 0
+    for i = 0 to isChosen.Length-1 do 
+        if isChosen.[i] then 
+            output.[curr] <- output.[i]
+            curr <- curr + 1
+    output

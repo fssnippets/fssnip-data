@@ -1,0 +1,16 @@
+   let ageRangeComments (booking:BMS_BookingNotifRQ.BmsBookingNotifRq) =
+           let ageResultComment (partnerRoom:BMS_BookingNotifRQ.Room) =
+               let partnerGuest = partnerRoom |> getPartnerCustomers |> Seq.toList
+               let adultGuests = partnerGuest |> List.filter(fun g -> g.Type = "AD" || g.Type = "LD" && g.Age > 0) 
+               let childGuests = partnerGuest |> List.filter(fun g -> g.Type = "CH"  && g.Age > 0)
+               let babyGuests = partnerGuest |> List.filter(fun g -> g.Type = "IN"  && g.Age > 0)
+
+               let ageComment = new StringWriter()
+               adultGuests |> List.iter (fun x -> fprintfn ageComment "Adult: age: %i" x.Age)
+               childGuests |> List.iter (fun x -> fprintfn ageComment "Child: age: %i" x.Age)
+               babyGuests |> List.iter (fun x -> fprintfn ageComment "Infant: age: %i" x.Age)
+
+              Comment(sprintf ageComment)
+
+              booking.Establishment.RoomList
+              |> Seq.collect ageResultComment

@@ -1,0 +1,9 @@
+let any asyncs =
+    async {
+        let! t = 
+            asyncs
+            |> Seq.map Async.StartAsTask
+            |> System.Threading.Tasks.Task.WhenAny
+            |> Async.AwaitTask
+
+        return t.Result }

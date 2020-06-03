@@ -1,0 +1,60 @@
+module Test
+
+type Point = 
+    { x : float
+      y : float }
+
+type Line = 
+    { startpoint : Point
+      endpoint : Point }
+
+module Intersections = //behaves like a static class
+    let orderlineon_y line = 
+        if line.startpoint.y > line.endpoint.y then (line.startpoint.y, line.endpoint.y)
+        else (line.endpoint.y, line.startpoint.y)
+    
+    let orderlineon_x line = 
+        if line.startpoint.x > line.endpoint.x then (line.startpoint.x, line.endpoint.x)
+        else (line.endpoint.x, line.startpoint.x)
+    
+    let tointerceptform line = 
+        let m = (line.endpoint.x - line.startpoint.x) / (line.endpoint.y - line.startpoint.y)
+        let b = -m * (line.startpoint.x) + line.startpoint.y
+        (m, b)
+    
+    let check x y line = 
+        let hy, ly = orderlineon_y line
+        let hx, lx = orderlineon_x line
+        (hx >= x) && (x >= lx) && (hy >= y) && (y >= ly)
+    
+    let check_parellel line1 line2 = 
+        let hy, ly = orderlineon_y line1
+        let hy2, ly2 = orderlineon_y line2
+        let hx, lx = orderlineon_y line1
+        let hx2, lx2 = orderlineon_y line2
+        ((hy2 >= ly) || (hy >= ly2)) && ((hx2 >= lx) || (hx >= lx2))
+    
+    let intersect_verticle line vline = 
+        let m, b = tointerceptform line
+        let x = vline.startpoint.x
+        let y = m * (x) + b
+        (check x y line) && (check x y vline)
+    
+    let intersect line1 line2 = 
+        let m1, b1 = tointerceptform line1
+        let m2, b2 = tointerceptform line2
+        if m1 = m2 then 
+            if b1 = b2 then check_parellel line1 line2
+            else false
+        else 
+            let x = (b2 - b1) / (m1 - m2)
+            let y = m1 * x + b1
+            (check x y line1) && (check x y line2)
+
+let doesIntersect (A : Line, B : Line) = 
+    match ((B.endpoint.y - A.startpoint.y), (A.endpoint.y - B.startpoint.y)) with
+    | 0.0, 0.0 -> (A.startpoint.x = B.startpoint.x) && (Intersections.check_parellel A B)
+    | 0.0, dy -> Intersections.intersect_verticle B A
+    | dy, 0.0 -> Intersections.intersect_verticle A B
+    | _, _ -> Intersections.intersect A B
+

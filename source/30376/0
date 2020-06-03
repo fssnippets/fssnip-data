@@ -1,0 +1,14 @@
+let rec isMember x=function| y::ys -> x=y || (isMember x ys) |[]-> false
+let rNb a b m     =isMember (a,b) m || isMember (b,a) m
+
+let addi  x ys    =if isMember x ys then ys else x::ys
+let rec countries =function|[]->[]  |(a,b)::m->addi a (addi b (countries m))
+
+let rec canXCl m c=function|[]->true|cl::cls->not(rNb cl c m) && canXCl m c cls
+
+let rec xClrng m c=function|[]->[[c]]|cl::cls->if canXCl m c cl  
+                                               then (c::cl)::cls
+                                               else cl:: xClrng m c cls
+let m = ["a","b"; "a","c"; "b","d"]
+
+List.fold(fun A i ->  xClrng m i A ) [] (countries m)  //[["d";"a"]; ["b";"c"]]  Musa.Jahanghir@Live.com

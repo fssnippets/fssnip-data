@@ -1,0 +1,14 @@
+open System
+
+let getCharWord =
+  let words = ["foo"; "bar"; "hey"]
+  let random = new Random()
+  let randomizedWord = words.[random.Next(words.Length)]
+  let toUpper = String.map (fun (c:char) -> Char.ToUpper(c))
+  let toCharList (s:string) = [for c in s -> c]
+  randomizedWord |> toUpper |> toCharList
+
+[<EntryPoint>]
+let main argv =
+    getCharWord |> Seq.iter (fun (x:char) -> printf "%c" x)
+    0 // return an integer exit code

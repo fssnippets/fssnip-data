@@ -1,0 +1,109 @@
+// **** **** **** **** **** **** **** **** **** **** **** **** ****
+// **  Copyright (c) 2017, Robert Nielsen. All rights reserved.  **
+// **** **** **** **** **** **** **** **** **** **** **** **** ****
+
+namespace Rodhern.FerramDebug
+
+open System
+open System.Collections.Generic
+open UnityEngine
+
+
+[< KSPAddon(KSPAddon.Startup.EditorSPH, false) >]
+type FerramDebugger () =
+  inherit MonoBehaviour ()
+  
+  /// Check if object reference is null.
+  let unassigned o =
+    obj.ReferenceEquals (o, null)
+  
+  /// Get value from named instance field.
+  let (.>) (o: obj) (name: string) =
+    if unassigned o then null else
+    let bindingflags = Reflection.BindingFlags.Instance ||| Reflection.BindingFlags.Public ||| Reflection.BindingFlags.NonPublic
+    match (o.GetType ()).GetMember (name, bindingflags) with
+    | [| :? Reflection.FieldInfo as fieldinfo |] -> fieldinfo.GetValue o
+    | _ -> null
+  
+  /// Return all parts of the vessel in the editor.
+  let allEditorParts () =
+    let rec inclusiveChildren (parts: Part seq) =
+      seq { for part in parts
+             do yield part
+                yield! inclusiveChildren part.children }
+    seq { match EditorLogic.RootPart with
+          | root when unassigned root -> ()
+          | root -> yield root }
+    |> inclusiveChildren
+  
+  /// Pick the "FARWingAerodynamicModel" module from those parts that have one.
+  let listWingMods (partseq: Part seq) =
+    [ for part in partseq
+       do if (part.Modules.Contains "FARWingAerodynamicModel")
+           then yield part.Modules.["FARWingAerodynamicModel"] ]
+  
+  /// Output text to trace listeners and the Unity debug log.
+  let log s =
+    System.Diagnostics.Trace.WriteLine s
+    Debug.Log s
+  
+  /// Output 'influence' values for particular part module to debug log.
+  let writePartModInfluences (partmodlist: PartModule list) (partmodidx: int) =
+    
+    let asList (o: obj) =
+      [ for i in o :?> System.Collections.ICollection do yield i ]
+    
+    let getIdx (o: obj) =
+      let mutable idx = -1
+      List.tryFindIndex (fun pmod -> obj.ReferenceEquals (o, pmod)) partmodlist
+      
+    let printInfluence (s: string) (d: obj) (reflist: obj) (dlist: obj) =
+      let d = d :?> double
+      let reflist = reflist |> asList
+      let dlist = dlist |> asList
+      log <| sprintf "   %s exposure %f (%d nearby wing modules)." s d reflist.Length
+      if reflist.Length <> dlist.Length
+       then log <| sprintf "   CAUTION: %s nearby list length mis-match; %d <> %d." s reflist.Length dlist.Length
+      
+      for j = 0 to (min reflist.Length dlist.Length) - 1
+       do match getIdx reflist.[j] with
+          | None -> "no match"
+          | Some k -> sprintf "match idx %d" k
+          |> sprintf "      influence= %f (%s)." (dlist.[j] :?> double)
+          |> log
+    
+    let partmod = partmodlist.[partmodidx]
+    do log <| sprintf " Part '%s' (idx= %d; x= %f; y= %f; z= %f)." partmod.part.name partmodidx partmod.part.attPos.x partmod.part.attPos.y partmod.part.attPos.z
+    let wingInteraction = partmod.> "wingInteraction"
+    
+    let forwardExposure = wingInteraction.> "forwardExposure"
+    let nearbyWingModulesForwardList = wingInteraction.> "nearbyWingModulesForwardList"
+    let nearbyWingModulesForwardInfluence = wingInteraction.> "nearbyWingModulesForwardInfluence"
+    do printInfluence "forward" forwardExposure nearbyWingModulesForwardList nearbyWingModulesForwardInfluence
+
+    let backwardExposure = wingInteraction.> "backwardExposure"
+    let nearbyWingModulesBackwardList = wingInteraction.> "nearbyWingModulesBackwardList"
+    let nearbyWingModulesBackwardInfluence = wingInteraction.> "nearbyWingModulesBackwardInfluence"
+    do printInfluence "backward" backwardExposure nearbyWingModulesBackwardList nearbyWingModulesBackwardInfluence
+
+    let leftwardExposure = wingInteraction.> "leftwardExposure"
+    let nearbyWingModulesLeftwardList = wingInteraction.> "nearbyWingModulesLeftwardList"
+    let nearbyWingModulesLeftwardInfluence = wingInteraction.> "nearbyWingModulesLeftwardInfluence"
+    do printInfluence "leftward" leftwardExposure nearbyWingModulesLeftwardList nearbyWingModulesLeftwardInfluence
+
+    let rightwardExposure = wingInteraction.> "rightwardExposure"
+    let nearbyWingModulesRightwardList = wingInteraction.> "nearbyWingModulesRightwardList"
+    let nearbyWingModulesRightwardInfluence = wingInteraction.> "nearbyWingModulesRightwardInfluence"
+    do printInfluence "rightward" rightwardExposure nearbyWingModulesRightwardList nearbyWingModulesRightwardInfluence
+  
+  member public dbg.Update () =
+    if not (Input.GetKeyDown KeyCode.F1) then () else
+    log " -- FAR Wing Interaction Influences --"
+    let allparts = allEditorParts ()
+    let allmods = listWingMods allparts
+    log <| sprintf " %d vessel parts including %d wing modules." (Seq.length allparts) (List.length allmods)
+    for j = 0 to allmods.Length - 1
+     do writePartModInfluences allmods j
+    log " -- ----- ----- -- - -- ----- ----- --"
+    ScreenMessages.PostScreenMessage "Data listed in log output." |> ignore
+

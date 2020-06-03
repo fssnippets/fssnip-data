@@ -1,0 +1,40 @@
+override this.RunAsync(serviceCancellationToken: CancellationToken) :Task =
+        logger.Info "Service replica started"
+        
+        broker.MaintenanceAgent.Start()
+
+        async {
+            use! _onCancel = Async.OnCancel (fun () ->  logger.Info "Sending shutdown signal to maintenance agent"
+                                                        broker.MaintenanceAgent.Post(Shutdown)
+                                                        broker.CleanUp())
+            do! Async.Sleep Timeout.Infinite
+        }
+        |> fun a -> Async.StartAsTask(a,cancellationToken = serviceCancellationToken) :> Task
+
+
+    override __.OnDataLossAsync(cx: RestoreContext, ct: CancellationToken) :Task<bool> =
+        let backupDir = "D:\\sfbackup"
+        let partition = this.Partition
+        let partitionKey = match partition.PartitionInfo with
+                           | :? Int64RangePartitionInformation as ip -> sprintf "Int64[%d-%d]" ip.LowKey ip.HighKey
+                           | :? NamedPartitionInformation as np -> sprintf "Named[%s]" np.Name
+                           | :? SingletonPartitionInformation as sp -> "Singleton"
+                           | p -> failwithf "Unsupported partiton kind %A" p.Kind        
+
+        if not (System.IO.Directory.Exists backupDir)
+        then
+            invalidArg "dirName" "Backup directory does not exist"
+
+        let sourceBackupFileName = System.IO.Path.Combine(
+                                            backupDir,
+                                            this.Context.ServiceName.AbsolutePath.TrimStart('/')
+                                        )
+                                   |> System.IO.Path.GetFullPath
+
+        let rd = RestoreDescription(backupFolder, RestorePolicy.Safe)
+
+        async {
+            do! cx.RestoreAsync(rd) |> Async.AwaitTask
+            return true
+        }
+        |> Async.StartAsTask

@@ -1,0 +1,10 @@
+let chooseWhile f (input:seq<_>) = 
+  seq { use en = input.GetEnumerator()
+        let mutable finished = false
+        while not finished do
+          if en.MoveNext() then 
+            match f en.Current with
+            | None -> finished <- true
+            | Some v -> yield v
+          else  
+            finished <- true }

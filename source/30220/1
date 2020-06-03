@@ -1,0 +1,17 @@
+/// Creates a function from a sequence that, when called, returns the items in the sequence
+let enumerate (xs: seq<_>)  = 
+    use en = xs.GetEnumerator()
+    fun () ->
+        en.MoveNext() |> ignore
+        en.Current
+
+// Example
+
+let f = [1;2;3;4;5] |> enumerate
+
+f() |> printf "val = %i"
+f() |> printf "val = %i"
+f() |> printf "val = %i"
+f() |> printf "val = %i"
+f() |> printf "val = %i"
+f() |> printf "val = %i" // This line will throw

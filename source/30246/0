@@ -1,0 +1,30 @@
+  member this.createData()  =
+
+      // Tager en string og skærer den til med Replace method hvor efter den anvender Split og caster til en liste.
+      // Til sidst tager den alle elementerne i listen og dividere dem med 3 som svarer til gråtonen.
+      let sliceAndDice (s:string) =
+        let string0 = s
+        let rec finder (s:string) (h:int)  =
+          match s.[h] with
+          |',' -> s.[(h+1)..((s.Length)-2)]
+          |_ -> (finder s (h+1))
+        let string1 = finder string0 0
+        let string2 = string1.Replace(",", ";")
+        let string3 = string2.Replace(" ", "")
+        let string4 = string3.Replace("R=", "")
+        let string5 = string4.Replace("B=", "")
+        let string6 = string5.Replace("G=", "")
+        let value   = string6.Split ';' |> Array.map int |> Array.toList
+        ((value.[0] + value.[1] + value.[2]) / 3) |> int
+
+      // Denne funktion iterere igennem alle pixels i et billede og returnere en liste af integers som er svarende til gråtonerne.
+      // Den anvender biblioteks funktionen GetPixel til at få rgb farven fra et billede. Der til anvender den sliceAndDice funktionen
+      // til at returnere gråtonen og putter det i en liste.
+      let rec yello t x y p =
+        match x with
+        |l when l = (imageW-1) -> match y with
+                                        |k when k = (imageH-1) -> p@[(sliceAndDice stringPixel)]
+                                        |_ -> yello (t+1) 0 (y+1) (p@[(sliceAndDice stringPixel)])
+        |_ -> yello (t+1) (x+1)(y)(p@[(sliceAndDice stringPixel)])
+      grayTones <- yello 1 0 1 []
+      printfn "%A" grayTones

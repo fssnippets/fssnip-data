@@ -1,0 +1,34 @@
+module TypeClassDispatcher =
+    let dispatch map (value : obj) =
+        (map |> Map.find (value.GetType().FullName)) value
+        
+type IYesNo<'t> =
+    abstract member YesNo : this:'t -> bool
+
+module YesNoDispatcher =
+    let mutable YesNo : Map<string, obj -> bool> = Map.empty
+
+module YesNo_bool =
+    let YesNo (this : bool) : bool =
+        if this = true then
+            true
+        else
+            false
+    do
+        YesNoDispatcher.YesNo <- YesNoDispatcher.YesNo
+        |> Map.add (typedefof<bool>.FullName) (fun (this : obj) ->
+            YesNo (this :?> bool))
+
+module YesNo_int =
+    let YesNo (this : int) : bool =
+        if this = 1 then
+            true
+        else
+            false
+    do
+        YesNoDispatcher.YesNo <- YesNoDispatcher.YesNo
+        |> Map.add (typedefof<int>.FullName) (fun (this : obj) ->
+            YesNo (this :?> int))
+
+let yesNo (value : obj) =
+    (TypeClassDispatcher.dispatch (YesNoDispatcher.YesNo) value)

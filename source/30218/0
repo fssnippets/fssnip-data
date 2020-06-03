@@ -1,0 +1,14 @@
+type Position = { x : int; y: int }
+type Turn = Right= 1 | Left= -1
+type Command = Command of Turn * int
+type Direction = North= 0 | East= 1 | South= 2 | West= 3
+type State = State of Position * Direction
+
+let executeCommand : (State -> Command ->  State) = fun st cmd ->
+    match cmd with
+    | Command (turn, dist) ->
+        match st with
+        | State (pos, dir) ->
+            let newDir = executeTurn dir turn
+            let newPos = executeMove pos newDir dist
+            State (newPos, newDir)

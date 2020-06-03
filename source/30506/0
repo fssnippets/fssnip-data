@@ -1,0 +1,148 @@
+open System.Text
+open Microsoft.FSharp.Compiler.Ast
+open Microsoft.FSharp.Compiler.Range
+open Microsoft.FSharp.Compiler.SourceCodeServices
+
+//PARSING
+
+let parse text =
+    let fileName = "whatever.fs"
+    let checker = FSharpChecker.Create()
+    let opts = 
+        { FSharpParsingOptions.Default with
+            SourceFiles = [|fileName|] }
+    let res = checker.ParseFile(fileName, text, opts) |> Async.RunSynchronously
+    let fileAst =
+        match res.ParseTree.Value with
+        | ParsedInput.ImplFile x -> x
+        | ParsedInput.SigFile _ -> failwith "give me fs, not fsi"
+    let (ParsedImplFileInput.ParsedImplFileInput(_, _, _, _, _, modules, _)) = fileAst
+    let (SynModuleOrNamespace.SynModuleOrNamespace(_, _, _, moduleDeclarations, _, _, _, _)) = modules.[0]
+    moduleDeclarations
+
+//ANALYZING PATTERNS
+
+let (|NotAttributesLetBinding|_|) (Binding(_, _, _, _, attrs, _, _, _, _, _, _, _) as binding) =
+    if attrs.IsEmpty then Some binding else None
+
+//TRANSFORMING AST FUNCTIONS
+let addObsoleteToBinding = 
+    let obsoleteAst =
+        { SynAttribute.AppliesToGetterAndSetter = false
+          SynAttribute.ArgExpr = SynExpr.Const(SynConst.Unit, range.Zero)
+          SynAttribute.Range = range.Zero
+          SynAttribute.Target = None
+          SynAttribute.TypeName = LongIdentWithDots([Ident("System",range.Zero);Ident("Obsolete",range.Zero)],[]) }
+    fun (Binding(ao, bindKind, isInline, isMutable, attrs, px, valData, pat, retInfo, expr, range, seqInfo)) ->
+        Binding (ao, bindKind, isInline, isMutable, obsoleteAst::attrs, px, valData, pat, retInfo, expr, range, seqInfo)
+
+let rec addObsolete = function
+    | SynModuleDecl.Let(_isRecursive, [NotAttributesLetBinding binding], _range) ->
+        SynModuleDecl.Let(_isRecursive, [addObsoleteToBinding binding], _range)
+    | x -> x
+
+//PRINTING TO TEXT HELPERs FUNCTIONS
+
+type StringBuilder with
+    member x.Add (text: string) = x.Append text |> ignore
+
+let identToString (LongIdentWithDots(ids, _)) =
+    ids
+    |> Seq.map (fun id -> id.idText)
+    |> String.concat "."
+
+let printIdent (sb: StringBuilder) ident =
+    let name = identToString ident
+    sb.Add (name + " ")
+
+let rec exprToString (valData: SynExpr) = 
+    match valData with
+    | SynExpr.Const (SynConst.Unit,_) -> "()"
+    | SynExpr.App (_,isInfix,funcExpr,argExpr,_) ->
+        if isInfix then
+            exprToString argExpr + " " + exprToString funcExpr
+        else
+            exprToString funcExpr + " " + exprToString argExpr
+    | SynExpr.Ident x when x.idText = "op_Addition" -> "+"
+    | SynExpr.Ident id -> id.idText
+    | _ -> failwith "not implemented"
+
+let printAttributes (sb: StringBuilder) (attrs: SynAttributes) =
+    if not attrs.IsEmpty then
+        sb.Add "[<"
+        attrs
+        |> Seq.map (fun attr -> identToString attr.TypeName + exprToString attr.ArgExpr)
+        |> String.concat ";"
+        |> sb.Add
+        sb.Add ">] "
+
+let printInline (sb: StringBuilder) isInline = 
+    if isInline then sb.Add "inline "
+
+let printText (sb: StringBuilder) text = 
+    sb.Add (text + " ")
+
+let printAccess (sb: StringBuilder) = function
+    | Some SynAccess.Internal -> sb.Add "internal "
+    | Some SynAccess.Private -> sb.Add "private "
+    | Some SynAccess.Public -> sb.Add "public "
+    | _ -> ()
+
+let rec printConsctructorArgs (sb: StringBuilder) = function
+    | SynConstructorArgs.Pats pats ->
+        for pat in pats do
+            printPattern sb pat
+    | SynConstructorArgs.NamePatPairs _ -> failwith "unsupported"
+
+and printPattern (sb: StringBuilder) = function
+    | SynPat.LongIdent (identWithDots, _, _, pats,access,_) ->
+        printAccess sb access
+        printIdent sb identWithDots
+        printConsctructorArgs sb pats
+    | SynPat.Paren (pat,_) ->
+        sb.Add "("
+        printPattern sb pat
+        sb.Add ") "
+    | SynPat.Tuple (pats,_) ->
+        let pats = Array.ofList pats
+        for i = 0 to pats.Length-1 do
+            printPattern sb (pats.[i])
+            if i < (pats.Length-1) then
+                sb.Add ","
+            sb.Add " "
+    | SynPat.Named (SynPat.Wild _, ident, _, _, _) ->
+        printText sb ident.idText
+    | SynPat.Named (pat, ident, _, _, _) ->
+        printPattern sb pat
+        printText sb ("as " + ident.idText)
+    | SynPat.Typed (pat, SynType.LongIdent ident, _) ->
+        printPattern sb pat
+        printText sb (": " + identToString ident)
+    | _ -> failwith "unsupported"
+
+let printBind (sb: StringBuilder) (Binding(_, _, isInline, _, attrs, _, _, pat, _, expr, _, _)) =
+    printAttributes sb attrs
+    printInline sb isInline
+    printPattern sb pat
+    sb.Add "= "
+    printText sb (exprToString expr)
+
+let rec astToText = function
+    | SynModuleDecl.Let(_isRecursive, [binding], _range) ->
+        let sb = new StringBuilder()
+        sb.Add "let "
+        if _isRecursive then sb.Add "rec "
+        printBind sb binding
+        sb.ToString()
+    | _ -> failwith "not implemented"
+
+//COMBINING ALL TOGETHER
+
+let workFlow =
+    parse
+    >> List.map addObsolete
+    >> List.map astToText
+    >> String.concat "\n"
+
+let functionText = "let internal sum (a as d,c:string) b = a + b + c"
+workFlow functionText //let [<System.Obsolete()>] internal sum (a as d , c : string  ) b = a + b + c

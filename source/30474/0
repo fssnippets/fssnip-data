@@ -1,0 +1,45 @@
+open HtmlAgilityPack
+open System.Text
+
+let rec getText (sb:StringBuilder) (node:HtmlNode) : StringBuilder =
+    match node.NodeType with
+    | HtmlNodeType.Document ->
+        node.ChildNodes |> Seq.fold (getText) sb
+    | HtmlNodeType.Text ->
+        let textNode = (node :?> HtmlTextNode)
+        let text = textNode.Text |> HtmlEntity.DeEntitize
+        sb.Append text
+    | HtmlNodeType.Element ->
+        match node.Name with
+        | "p" ->
+            let sb = node.ChildNodes |> Seq.fold getText (sb.AppendLine())
+            sb.AppendLine()
+        | "li" ->
+            let sb = node.ChildNodes |> Seq.fold (getText) sb
+            sb.AppendLine()
+        | "div" ->
+            node.ChildNodes |> Seq.fold getText (sb.AppendLine())
+        | "ul" ->
+            let sb = sb.AppendLine()
+            node.ChildNodes
+            |> Seq.fold(fun (stateSb:StringBuilder) node ->
+                let itemSb = new StringBuilder()
+                itemSb.Append("• ") |> ignore
+                let itemSb = getText itemSb node
+                stateSb.Append(itemSb)
+            ) (new StringBuilder())
+            |> sb.Append
+        | "ol" ->
+            let sb = sb.AppendLine()
+            node.ChildNodes
+            |> Seq.fold(fun ((stateSb:StringBuilder),count) node ->
+                let itemSb = new StringBuilder()
+                itemSb.Append(sprintf "%i. ") |> ignore
+                let itemSb = getText itemSb node
+                stateSb.Append(itemSb), count + 1
+            ) ((new StringBuilder()),1)
+            |> fst
+            |> sb.Append
+        | _ -> node.ChildNodes |> Seq.fold (getText) sb
+    | HtmlNodeType.Comment -> sb
+    | unknown -> printfn "Unknown value: %A" unknown; sb

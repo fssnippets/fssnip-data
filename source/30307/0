@@ -1,0 +1,32 @@
+// Calculate prime numbers using erathosphen method
+open System.Collections.Generic
+
+let erathosphensSieve  n = 
+    let numbers = ResizeArray [|2..n|]    
+    let mutable p = 2
+    let mutable ready = false
+    while not ready do 
+        match Seq.tryFindIndex (fun x -> x >= p * p) numbers with
+        | None -> 
+            ready <- true
+        | Some n -> 
+            let mutable n = n
+            let mutable len = numbers.Count
+            while len > 0 && n < len do
+                if numbers.[n] <> p && numbers.[n] % p = 0 then
+                    numbers.RemoveAt n
+                    len <- len - 1
+                else
+                    n <- n + 1  
+            //printfn "p = %d" p
+            //Seq.iteri (printfn "[%d] : %d") numbers                 
+            match Seq.tryFind( fun x -> x > p) numbers with
+            | None -> 
+                ready <- true
+            | Some x -> 
+                p <- x
+    numbers
+      
+erathosphensSieve 31 |> Seq.toList = [2; 3; 5; 7; 11; 13; 17; 19; 23; 29; 31]
+erathosphensSieve 41 |> Seq.toList = [2; 3; 5; 7; 11; 13; 17; 19; 23; 29; 31; 37; 41]
+

@@ -1,0 +1,64 @@
+//[snippet:Core Definition]
+type HKT = interface end
+
+//[Struct] no F# 4.1 in ffsnip!
+type App<'F, 't when 'F :> HKT> = private App of payload : obj
+
+type App<'F, 't1, 't2 when 'F :> HKT> = App<'F, TCons<'t1, 't2>>
+and  App<'F, 't1, 't2, 't3 when 'F :> HKT> = App<'F, TCons<'t1, 't2, 't3>>
+and  App<'F, 't1, 't2, 't3, 't4 when 'F :> HKT> = App<'F, TCons<'t1, 't2, 't3, 't4>>
+
+and  TCons<'T1, 'T2> = class end
+and  TCons<'T1, 'T2, 'T3> = TCons<TCons<'T1, 'T2>, 'T3>
+and  TCons<'T1, 'T2, 'T3, 'T4> = TCons<TCons<'T1, 'T2, 'T3>, 'T4>
+
+[<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
+module HKT =
+    let inline pack (value : 'Fa) : App<'F, 'a>
+        when 'F : (static member Assign : App<'F, 'a> * 'Fa -> unit) =
+        App value
+        
+    let inline unpack (App value : App<'F, 'a>) : 'Fa
+        when 'F : (static member Assign : App<'F, 'a> * 'Fa -> unit) =
+        value :?> _
+        
+    // active pattern variant useful for method definitions
+    let inline (|Unpack|) app = unpack app
+//[/snippet]
+
+//[snippet:Pair Example]
+type Pair =
+    interface HKT
+    // method signature associates HKT encoding with underlying type
+    // to be picked up by SRTP constraint solver
+    static member Assign(_ : App<Pair,'a, 'b>, _ : 'a * 'b) = ()
+
+let packed : App<Pair,_,_> = HKT.pack ("foo", 42)
+let unpacked = HKT.unpack packed
+//[/snippet]
+
+//[snippet:Functor Example]
+type Functor<'F when 'F :> Functor<'F> and 'F : struct> =
+    inherit HKT
+    abstract Fmap : ('a -> 'b) -> App<'F, 'a> -> App<'F, 'b>
+
+let fmap f x : App<'F, 'b> when 'F :> Functor<'F> = Unchecked.defaultof<'F>.Fmap f x
+
+let incrementAndSquare xs =
+    xs 
+    |> fmap (fun i -> i + 1)
+    |> fmap (fun i -> i * i)
+
+[<Struct>]
+type List =
+    // associate App<List, 'a> to 'a list
+    static member Assign(_ : App<List, 'a>, _ : 'a list) = ()
+
+    interface Functor<List> with
+        member __.Fmap f (HKT.Unpack xs) = HKT.pack (List.map f xs)
+
+
+let packedList = HKT.pack [1 .. 10] : App<List,_>
+let packedList' = packedList |> incrementAndSquare |> fmap (fun i -> i.ToString())
+let unpackedList' = HKT.unpack packedList'
+//[/snippet]

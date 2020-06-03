@@ -1,0 +1,25 @@
+open System
+    
+let Swap (indexA : int) (indexB : int) (input : 'T[]) =
+        
+        let indexT : 'T = input.[indexA]
+        input.[indexA] <- input.[indexB]
+        input.[indexB] <- indexT 
+    
+        input
+    
+let rec Chaos (input : 'T[]) : 'T[] =
+        
+        let mutable result : 'T[] = input
+        let rnd : Random = new Random()
+    
+        for i in 0 .. input.Length - 1 do 
+            
+            let j : int = rnd.Next ( 0 , input.Length - 1)
+            
+            result <- Swap i j input
+
+        result
+
+//  Demo:
+printf "\n  >> %A -> %A" ([|0 .. 9|]) ([|0 .. 9|] |> Chaos)

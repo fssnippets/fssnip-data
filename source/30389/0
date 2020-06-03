@@ -1,0 +1,72 @@
+open System
+open System.ComponentModel
+open Microsoft.FSharp.Reflection
+open Microsoft.FSharp.Quotations
+open Microsoft.FSharp.Quotations.Patterns
+
+type ViewModelBase() =
+
+  /// Evaluates an expression. From http://www.fssnip.net/h1
+  let rec eval = function
+    | Value (v, _) -> v
+    | Coerce (e, _) -> eval e
+    | NewObject (ci, args) -> ci.Invoke (evalAll args)
+    | NewArray (t, args) -> 
+        let array = Array.CreateInstance (t, args.Length) 
+        args |> List.iteri (fun i arg -> array.SetValue (eval arg, i))
+        box array
+    | NewUnionCase (case, args) -> FSharpValue.MakeUnion (case, evalAll args)
+    | NewRecord (t, args) -> FSharpValue.MakeRecord (t, evalAll args)
+    | NewTuple args ->
+        let t = FSharpType.MakeTupleType [| for arg in args -> arg.Type |]
+        FSharpValue.MakeTuple (evalAll args, t)
+    | FieldGet (Some (Value (v, _)), fi) -> fi.GetValue v
+    | PropertyGet (None, pi, args) -> pi.GetValue (null, evalAll args)
+    | PropertyGet (Some x, pi, args) -> pi.GetValue (eval x, evalAll args)
+    | Call (None, mi, args) -> mi.Invoke (null, evalAll args)
+    | Call (Some x, mi, args) -> mi.Invoke (eval x, evalAll args)
+    | x -> raise <| NotSupportedException(string x)
+  and evalAll args = [| for arg in args -> eval arg |]
+
+  let propertyChanged = new Event<_,_>()
+
+  interface INotifyPropertyChanged with
+    [<CLIEvent>]
+    member __.PropertyChanged = propertyChanged.Publish
+
+  member this.OnPropertyChanged(propertyName : string) =
+    propertyChanged.Trigger(this, new PropertyChangedEventArgs(propertyName))
+
+  /// Returns an observable that publishes the value of the quoted property each
+  /// time INotifyPropertyChanged is raised for this property.
+  member this.Observe (getProperty: Expr<'a>) : IObservable<'a> = 
+    match getProperty with
+    | PropertyGet (_, propInfo, _) ->
+        (this :> INotifyPropertyChanged).PropertyChanged
+        |> Observable.filter (fun args -> args.PropertyName = propInfo.Name)
+        |> Observable.map (fun _ -> eval getProperty :?> 'a)
+    | _ -> failwith "Expression must be a property getter"
+
+  /// Calls the callback with the value of the expression every time
+  /// INotifyPropertyChanged is raised for this property.
+  member this.Subscribe (getProperty: Expr<'a>) (callback: 'a -> unit) : unit = 
+    this.Observe getProperty |> Observable.add callback
+
+  /// Calls the callback with the value of the expression every time
+  /// INotifyPropertyChanged is raised for this property. Also calls the callback
+  /// immediately with the current value of the expression.
+  member this.SubscribeAndInit (getProperty: Expr<'a>) (callback: 'a -> unit) : unit = 
+    this.Subscribe getProperty callback
+    eval getProperty :?> 'a |> callback
+
+
+
+/// Usage
+
+type MyVm() =
+  inherit ViewModelBase()
+  member val MyInt = 0 with get, set
+
+let vm = MyVm()
+
+vm.SubscribeAndInit <@ vm.MyInt @> (fun i -> printfn "Value is %i" i)

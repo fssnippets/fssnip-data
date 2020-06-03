@@ -1,0 +1,16 @@
+// Does not compile
+type A (a : int option, b : string option) =
+
+    new a = A (a, None)
+    new b = A (None, b)
+
+    member __.X = ""
+
+
+// Compiles
+type A (a : int option, b : string option) =
+
+    new (a) = A (a, None)
+    new b = A (None, b)
+
+    member __.X = ""

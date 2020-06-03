@@ -1,0 +1,65 @@
+module QuotationPrinter = 
+    
+    open System
+    open Microsoft.FSharp.Quotations
+
+    let rec print depth (expr:Expr) = 
+        match expr with
+        | Patterns.Value (v, typ) -> sprintf "%A" v
+        | Patterns.Var v ->  sprintf "%s:%s" v.Type.Name v.Name
+        | Patterns.NewUnionCase (uci, args) -> 
+            sprintf "%s(%s)" uci.Name (printArgs depth args)
+        | Patterns.NewArray (_,args) -> 
+            sprintf "[%s]" (printArgs depth args) 
+        | Patterns.NewRecord (_,args) -> 
+            sprintf "{%s}" (printArgs depth args)
+        | Patterns.NewTuple args -> 
+            sprintf "(%s)" (printArgs depth args)
+        | Patterns.NewObject (ci, args) -> 
+            sprintf "new %s(%s)" ci.Name (printArgs depth args)
+        | Patterns.Call (Some (Patterns.ValueWithName(_,_,instance)), mi, args) -> 
+            sprintf "%s.%s(%s)" instance mi.Name (printArgs (depth + 1) args)
+        | Patterns.Call (None, mi, args) -> 
+            sprintf "%s(%s)" mi.Name (printArgs (depth + 1) args)
+        | Patterns.Lambda (var, body) -> 
+            sprintf "(λ %s -> %s)" (print 0 (Expr.Var var)) (printArgs (depth + 1) [body])
+        | Patterns.Let (var, bind, body) ->
+            sprintf "let %s = %s in\r\n%*s%s" (print 0 (Expr.Var var)) (print 0 bind) ((depth - 1) * 4) "" (print depth body)
+        | Patterns.PropertyGet (Some(var), pi, args) -> 
+            sprintf "%s.%s" (print 0 var) pi.Name
+        | Patterns.PropertySet (Some(var), pi, args, value) -> 
+            sprintf "%s.%s <- %s" (print 0 var) pi.Name (print depth value)
+        | Patterns.Sequential (x,y) -> 
+            sprintf "%s; %s" (print depth x) (print depth y)
+        | a -> failwithf "Unknown patterns %A" a
+
+    and printArgs depth args = 
+        match args with
+        | [a] -> sprintf "\r\n%*s%s\r\n%*s" (depth * 4) "" (print (depth + 1) a) (depth * 4) ""
+        | a -> 
+            sprintf "\r\n%*s%s" (depth * 4) "" (String.Join(sprintf ",\r\n%*s" (depth * 4) "",List.map (print (depth + 1)) a))
+
+    let enableFSI() =
+#if INTERACTIVE
+        fsi.AddPrinter (fun (x:Expr) -> print 0 x)
+#endif
+        ()
+
+QuotationPrinter.enableFSI()
+
+<@ seq { for i in 0..10 do yield i } @>
+(*
+  CreateSequence(
+    Delay(
+            (λ Unit:unitVar -> 
+                    Map(
+                            (λ Int32:i -> 
+                                    Int32:i
+                                    ),
+                            op_Range(
+                                    0,
+                                    10))
+                    )
+            )
+    )
+*)

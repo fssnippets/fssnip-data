@@ -1,0 +1,28 @@
+let leftPad s l p =
+  String.replicate (max (l - String.length s) 0) p |> (+) <| s 
+
+let unique = Set.ofList >> Set.toList
+
+// O(n) time, O(1) space
+let fulcrum sq =
+  let f (ri, m, ls, rs, i) e =
+    let ls, rs = ls + e, rs - e
+    let d = abs (ls - rs)
+    let m, ri = if d < m || i = 0 then d, i else m, ri
+    (ri, m, ls, rs, i + 1)
+  let (ri, _, _, _, _) = List.fold f (0, 0, 0, List.sum sq, 0) sq
+  ri + 1
+
+[<EntryPoint>]
+let main _ =
+  printfn "%s" "leftPad:"
+  printfn "%s" (leftPad "str" 1 "*")
+  printfn "%s" (leftPad "str" 3 "*")
+  printfn "%s" (leftPad "str" 6 "*")
+  printfn "%s" (leftPad "str" 10 "*")
+  printfn "%s" "unique:"
+  printfn "%A" (unique [1; 2; 2; 4; 4; -1; 6; 6])
+  printfn "%s" "fulcrum:"
+  printfn "%d" (fulcrum [5; 5; 10]) // (5 + 5) - 10 = abs(0) = 0
+  printfn "%d" (fulcrum [1; 2; 3; 4; 5; -7]) // (1 + 2) - (3 + 4 + 5 - 7) = abs(-2) = 2 
+  0

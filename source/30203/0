@@ -1,0 +1,24 @@
+// Computes the fibonacci sequence with the tail recursive O(n) algorithm.
+let inline fibonacci (n : 'a) =
+    let zero : 'a = LanguagePrimitives.GenericZero
+    let one : 'a = LanguagePrimitives.GenericOne
+    
+    let rec fib a b n' =
+        if n' = zero then a else fib b (a + b) (n' - one)
+        
+    if n < zero then
+        failwith "Fibonacci sequences have no negatively indexed positions"
+    else
+        fib zero one n
+
+[<EntryPoint>]
+let main argv = // fibonacci unit test
+    try
+        [0..10] |> List.map fibonacci |> printfn "%A"
+        200I |> fibonacci |> printfn "%A"
+        fibonacci -1L |> printfn "%d"
+        0
+    with
+    | e ->
+        eprintfn "error: %s" e.Message
+        1

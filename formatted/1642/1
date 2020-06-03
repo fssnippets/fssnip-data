@@ -1,0 +1,58 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">IO</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 3)" onmouseover="showTip(event, 'fs1', 3)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 4)" onmouseover="showTip(event, 'fs3', 4)" class="i">Diagnostics</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs4', 5)" onmouseover="showTip(event, 'fs4', 5)" class="i">path</span> <span class="o">=</span> <span class="s">@&quot;C:\folder\with\my\papers&quot;</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs5', 6)" onmouseover="showTip(event, 'fs5', 6)" class="i">fsw</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs6', 7)" onmouseover="showTip(event, 'fs6', 7)" class="t">FileSystemWatcher</span>(<span onmouseout="hideTip(event, 'fs4', 8)" onmouseover="showTip(event, 'fs4', 8)" class="i">path</span>,<span class="s">&quot;*.tex&quot;</span>)
+<span onmouseout="hideTip(event, 'fs5', 9)" onmouseover="showTip(event, 'fs5', 9)" class="i">fsw</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs7', 10)" onmouseover="showTip(event, 'fs7', 10)" class="i">Changed</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs8', 11)" onmouseover="showTip(event, 'fs8', 11)" class="f">Add</span>(<span class="k">fun</span> _ <span class="k">-&gt;</span> 
+  <span onmouseout="hideTip(event, 'fs5', 12)" onmouseover="showTip(event, 'fs5', 12)" class="i">fsw</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs9', 13)" onmouseover="showTip(event, 'fs9', 13)" class="i">EnableRaisingEvents</span> <span class="o">&lt;-</span> <span class="k">false</span>
+  <span class="k">let</span> <span onmouseout="hideTip(event, 'fs10', 14)" onmouseover="showTip(event, 'fs10', 14)" class="i">ps</span> <span class="o">=</span> 
+    <span onmouseout="hideTip(event, 'fs11', 15)" onmouseover="showTip(event, 'fs11', 15)" class="t">ProcessStartInfo</span>
+      ( <span class="i">FileName</span> <span class="o">=</span> <span class="s">@&quot;C:\full\path\to\pdflatex.exe&quot;</span>,
+        <span class="i">Arguments</span> <span class="o">=</span> <span class="s">&quot;-interaction=nonstopmode my-paper-name.tex&quot;</span>,
+        <span class="i">WorkingDirectory</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs4', 16)" onmouseover="showTip(event, 'fs4', 16)" class="i">path</span>,
+        <span class="i">UseShellExecute</span> <span class="o">=</span> <span class="k">false</span>,
+        <span class="i">CreateNoWindow</span> <span class="o">=</span> <span class="k">true</span> )
+  <span class="k">let</span> <span onmouseout="hideTip(event, 'fs12', 17)" onmouseover="showTip(event, 'fs12', 17)" class="i">p</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs13', 18)" onmouseover="showTip(event, 'fs13', 18)" class="t">Process</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs14', 19)" onmouseover="showTip(event, 'fs14', 19)" class="f">Start</span>(<span onmouseout="hideTip(event, 'fs10', 20)" onmouseover="showTip(event, 'fs10', 20)" class="i">ps</span>)
+  <span onmouseout="hideTip(event, 'fs12', 21)" onmouseover="showTip(event, 'fs12', 21)" class="i">p</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs15', 22)" onmouseover="showTip(event, 'fs15', 22)" class="f">WaitForExit</span>()
+  <span onmouseout="hideTip(event, 'fs5', 23)" onmouseover="showTip(event, 'fs5', 23)" class="i">fsw</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs9', 24)" onmouseover="showTip(event, 'fs9', 24)" class="i">EnableRaisingEvents</span> <span class="o">&lt;-</span> <span class="k">true</span> )
+
+<span onmouseout="hideTip(event, 'fs5', 25)" onmouseover="showTip(event, 'fs5', 25)" class="i">fsw</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs9', 26)" onmouseover="showTip(event, 'fs9', 26)" class="i">EnableRaisingEvents</span> <span class="o">&lt;-</span> <span class="k">true</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace System</div>
+<div class="tip" id="fs2">namespace System.IO</div>
+<div class="tip" id="fs3">namespace System.Diagnostics</div>
+<div class="tip" id="fs4">val path : string<br /><br />Full name: Script.path</div>
+<div class="tip" id="fs5">val fsw : FileSystemWatcher<br /><br />Full name: Script.fsw</div>
+<div class="tip" id="fs6">Multiple items<br />type FileSystemWatcher =<br />&#160;&#160;inherit Component<br />&#160;&#160;new : unit -&gt; FileSystemWatcher + 2 overloads<br />&#160;&#160;member BeginInit : unit -&gt; unit<br />&#160;&#160;member EnableRaisingEvents : bool with get, set<br />&#160;&#160;member EndInit : unit -&gt; unit<br />&#160;&#160;member Filter : string with get, set<br />&#160;&#160;member IncludeSubdirectories : bool with get, set<br />&#160;&#160;member InternalBufferSize : int with get, set<br />&#160;&#160;member NotifyFilter : NotifyFilters with get, set<br />&#160;&#160;member Path : string with get, set<br />&#160;&#160;member Site : ISite with get, set<br />&#160;&#160;...<br /><br />Full name: System.IO.FileSystemWatcher<br /><br />--------------------<br />FileSystemWatcher() : unit<br />FileSystemWatcher(path: string) : unit<br />FileSystemWatcher(path: string, filter: string) : unit</div>
+<div class="tip" id="fs7">event FileSystemWatcher.Changed: IEvent&lt;FileSystemEventHandler,FileSystemEventArgs&gt;</div>
+<div class="tip" id="fs8">member System.IObservable.Add : callback:(&#39;T -&gt; unit) -&gt; unit</div>
+<div class="tip" id="fs9">property FileSystemWatcher.EnableRaisingEvents: bool</div>
+<div class="tip" id="fs10">val ps : ProcessStartInfo</div>
+<div class="tip" id="fs11">Multiple items<br />type ProcessStartInfo =<br />&#160;&#160;new : unit -&gt; ProcessStartInfo + 2 overloads<br />&#160;&#160;member Arguments : string with get, set<br />&#160;&#160;member CreateNoWindow : bool with get, set<br />&#160;&#160;member Domain : string with get, set<br />&#160;&#160;member EnvironmentVariables : StringDictionary<br />&#160;&#160;member ErrorDialog : bool with get, set<br />&#160;&#160;member ErrorDialogParentHandle : nativeint with get, set<br />&#160;&#160;member FileName : string with get, set<br />&#160;&#160;member LoadUserProfile : bool with get, set<br />&#160;&#160;member Password : SecureString with get, set<br />&#160;&#160;...<br /><br />Full name: System.Diagnostics.ProcessStartInfo<br /><br />--------------------<br />ProcessStartInfo() : unit<br />ProcessStartInfo(fileName: string) : unit<br />ProcessStartInfo(fileName: string, arguments: string) : unit</div>
+<div class="tip" id="fs12">val p : Process</div>
+<div class="tip" id="fs13">Multiple items<br />type Process =<br />&#160;&#160;inherit Component<br />&#160;&#160;new : unit -&gt; Process<br />&#160;&#160;member BasePriority : int<br />&#160;&#160;member BeginErrorReadLine : unit -&gt; unit<br />&#160;&#160;member BeginOutputReadLine : unit -&gt; unit<br />&#160;&#160;member CancelErrorRead : unit -&gt; unit<br />&#160;&#160;member CancelOutputRead : unit -&gt; unit<br />&#160;&#160;member Close : unit -&gt; unit<br />&#160;&#160;member CloseMainWindow : unit -&gt; bool<br />&#160;&#160;member EnableRaisingEvents : bool with get, set<br />&#160;&#160;member ExitCode : int<br />&#160;&#160;...<br /><br />Full name: System.Diagnostics.Process<br /><br />--------------------<br />Process() : unit</div>
+<div class="tip" id="fs14">Process.Start(startInfo: ProcessStartInfo) : Process<br />Process.Start(fileName: string) : Process<br />Process.Start(fileName: string, arguments: string) : Process<br />Process.Start(fileName: string, userName: string, password: System.Security.SecureString, domain: string) : Process<br />Process.Start(fileName: string, arguments: string, userName: string, password: System.Security.SecureString, domain: string) : Process</div>
+<div class="tip" id="fs15">Process.WaitForExit() : unit<br />Process.WaitForExit(milliseconds: int) : bool</div>
+

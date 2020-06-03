@@ -1,0 +1,123 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+<span class="l">38: </span>
+<span class="l">39: </span>
+<span class="l">40: </span>
+<span class="l">41: </span>
+<span class="l">42: </span>
+<span class="l">43: </span>
+<span class="l">44: </span>
+<span class="l">45: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// https://stackoverflow.com/questions/40052256/how-does-continuation-monad-really-work/42062682#42062682</span>
+
+<span class="c">/// A continuation is a function that represents &quot;the rest of the computation&quot;.</span>
+<span class="k">type</span> <span class="t">Cont</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span>, <span class="o">&#39;</span><span class="i">U</span><span class="o">&gt;</span> <span class="o">=</span> (<span class="o">&#39;</span><span class="i">T</span> <span class="k">-&gt;</span> <span class="o">&#39;</span><span class="i">U</span>)
+
+<span class="c">/// An incomplete computation is a function which, when given a continuation,</span>
+<span class="c">/// will return a value.</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="t">Inc</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span>, <span class="o">&#39;</span><span class="i">U</span><span class="o">&gt;</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="t">Cont</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span>, <span class="o">&#39;</span><span class="i">U</span><span class="o">&gt;</span> <span class="k">-&gt;</span> <span class="o">&#39;</span><span class="i">U</span>
+
+<span class="c">/// Creates an incomplete computation that holds the given value.</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="f">ret</span> (<span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="i">t</span> <span class="o">:</span> <span class="o">&#39;</span><span class="i">T</span>) <span class="o">:</span> <span onmouseout="hideTip(event, 'fs1', 5)" onmouseover="showTip(event, 'fs1', 5)" class="t">Inc</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span>, _<span class="o">&gt;</span> <span class="o">=</span>
+    <span class="k">fun</span> (<span onmouseout="hideTip(event, 'fs5', 6)" onmouseover="showTip(event, 'fs5', 6)" class="f">cont</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs2', 7)" onmouseover="showTip(event, 'fs2', 7)" class="t">Cont</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span>, _<span class="o">&gt;</span>) <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs5', 8)" onmouseover="showTip(event, 'fs5', 8)" class="f">cont</span> <span onmouseout="hideTip(event, 'fs4', 9)" onmouseover="showTip(event, 'fs4', 9)" class="i">t</span>
+
+<span class="c">/// Composition of incomplete computations.</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs6', 10)" onmouseover="showTip(event, 'fs6', 10)" class="f">bind</span> (<span onmouseout="hideTip(event, 'fs7', 11)" onmouseover="showTip(event, 'fs7', 11)" class="f">incT</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs1', 12)" onmouseover="showTip(event, 'fs1', 12)" class="t">Inc</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span>, _<span class="o">&gt;</span>) (<span onmouseout="hideTip(event, 'fs8', 13)" onmouseover="showTip(event, 'fs8', 13)" class="f">wrap</span> <span class="o">:</span> <span class="o">&#39;</span><span class="i">T</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs1', 14)" onmouseover="showTip(event, 'fs1', 14)" class="t">Inc</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">U</span>, _<span class="o">&gt;</span>) <span class="o">:</span> <span onmouseout="hideTip(event, 'fs1', 15)" onmouseover="showTip(event, 'fs1', 15)" class="t">Inc</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">U</span>, _<span class="o">&gt;</span> <span class="o">=</span>
+    <span class="k">fun</span> (<span onmouseout="hideTip(event, 'fs9', 16)" onmouseover="showTip(event, 'fs9', 16)" class="f">contU</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs2', 17)" onmouseover="showTip(event, 'fs2', 17)" class="t">Cont</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">U</span>, _<span class="o">&gt;</span>) <span class="k">-&gt;</span>   <span class="c">// return an Inc, which is a function that takes a continuation as input</span>
+        <span onmouseout="hideTip(event, 'fs7', 18)" onmouseover="showTip(event, 'fs7', 18)" class="f">incT</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs4', 19)" onmouseover="showTip(event, 'fs4', 19)" class="i">t</span> <span class="k">-&gt;</span>             <span class="c">// force the given incomplete computation to cough up its wrapped value</span>
+            (<span onmouseout="hideTip(event, 'fs8', 20)" onmouseover="showTip(event, 'fs8', 20)" class="f">wrap</span> <span onmouseout="hideTip(event, 'fs4', 21)" onmouseover="showTip(event, 'fs4', 21)" class="i">t</span>) <span onmouseout="hideTip(event, 'fs9', 22)" onmouseover="showTip(event, 'fs9', 22)" class="f">contU</span>)        <span class="c">// re-wrap the raw value so it can be sent to the given continuation</span>
+
+<span class="c">/// Monad definition.</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs10', 23)" onmouseover="showTip(event, 'fs10', 23)" class="t">ContinuationBuilder</span>() <span class="o">=</span>
+    <span class="k">member</span> <span class="i">__</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs11', 24)" onmouseover="showTip(event, 'fs11', 24)" class="f">Return</span>(<span onmouseout="hideTip(event, 'fs12', 25)" onmouseover="showTip(event, 'fs12', 25)" class="i">value</span>) <span class="o">=</span> <span onmouseout="hideTip(event, 'fs3', 26)" onmouseover="showTip(event, 'fs3', 26)" class="f">ret</span> <span onmouseout="hideTip(event, 'fs12', 27)" onmouseover="showTip(event, 'fs12', 27)" class="i">value</span>
+    <span class="k">member</span> <span onmouseout="hideTip(event, 'fs13', 28)" onmouseover="showTip(event, 'fs13', 28)" class="i">__</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs14', 29)" onmouseover="showTip(event, 'fs14', 29)" class="f">Bind</span>(<span onmouseout="hideTip(event, 'fs15', 30)" onmouseover="showTip(event, 'fs15', 30)" class="f">inc</span>, <span onmouseout="hideTip(event, 'fs16', 31)" onmouseover="showTip(event, 'fs16', 31)" class="f">wrap</span>) <span class="o">=</span> <span onmouseout="hideTip(event, 'fs6', 32)" onmouseover="showTip(event, 'fs6', 32)" class="f">bind</span> <span onmouseout="hideTip(event, 'fs15', 33)" onmouseover="showTip(event, 'fs15', 33)" class="f">inc</span> <span onmouseout="hideTip(event, 'fs16', 34)" onmouseover="showTip(event, 'fs16', 34)" class="f">wrap</span>
+
+<span class="c">/// Builder instance.</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs17', 35)" onmouseover="showTip(event, 'fs17', 35)" class="i">continuation</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs10', 36)" onmouseover="showTip(event, 'fs10', 36)" class="t">ContinuationBuilder</span>()
+
+<span class="c">/// Continuation-ized version of Fibonacci function.</span>
+<span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs18', 37)" onmouseover="showTip(event, 'fs18', 37)" class="f">fib</span> <span onmouseout="hideTip(event, 'fs19', 38)" onmouseover="showTip(event, 'fs19', 38)" class="i">n</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs1', 39)" onmouseover="showTip(event, 'fs1', 39)" class="t">Inc</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs20', 40)" onmouseover="showTip(event, 'fs20', 40)" class="t">int</span>, _<span class="o">&gt;</span> <span class="o">=</span>
+    <span onmouseout="hideTip(event, 'fs17', 41)" onmouseover="showTip(event, 'fs17', 41)" class="i">continuation</span> {
+        <span class="k">match</span> <span onmouseout="hideTip(event, 'fs19', 42)" onmouseover="showTip(event, 'fs19', 42)" class="i">n</span> <span class="k">with</span>
+            | <span class="n">0</span> <span class="k">-&gt;</span> <span class="k">return</span> <span class="n">0</span>
+            | <span class="n">1</span> <span class="k">-&gt;</span> <span class="k">return</span> <span class="n">1</span>
+            | <span onmouseout="hideTip(event, 'fs19', 43)" onmouseover="showTip(event, 'fs19', 43)" class="i">n</span> <span class="k">-&gt;</span>
+                <span class="k">let!</span> <span onmouseout="hideTip(event, 'fs21', 44)" onmouseover="showTip(event, 'fs21', 44)" class="i">x1</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs18', 45)" onmouseover="showTip(event, 'fs18', 45)" class="f">fib</span> (<span onmouseout="hideTip(event, 'fs19', 46)" onmouseover="showTip(event, 'fs19', 46)" class="i">n</span> <span class="o">-</span> <span class="n">1</span>)
+                <span class="k">let!</span> <span onmouseout="hideTip(event, 'fs22', 47)" onmouseover="showTip(event, 'fs22', 47)" class="i">x2</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs18', 48)" onmouseover="showTip(event, 'fs18', 48)" class="f">fib</span> (<span onmouseout="hideTip(event, 'fs19', 49)" onmouseover="showTip(event, 'fs19', 49)" class="i">n</span> <span class="o">-</span> <span class="n">2</span>)
+                <span class="k">return</span> <span onmouseout="hideTip(event, 'fs21', 50)" onmouseover="showTip(event, 'fs21', 50)" class="i">x1</span> <span class="o">+</span> <span onmouseout="hideTip(event, 'fs22', 51)" onmouseover="showTip(event, 'fs22', 51)" class="i">x2</span>
+    }
+
+[&lt;<span onmouseout="hideTip(event, 'fs23', 52)" onmouseover="showTip(event, 'fs23', 52)" class="t">EntryPoint</span>&gt;]
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs24', 53)" onmouseover="showTip(event, 'fs24', 53)" class="f">main</span> <span onmouseout="hideTip(event, 'fs25', 54)" onmouseover="showTip(event, 'fs25', 54)" class="i">argv</span> <span class="o">=</span>
+    <span class="k">for</span> <span onmouseout="hideTip(event, 'fs26', 55)" onmouseover="showTip(event, 'fs26', 55)" class="i">i</span> <span class="o">=</span> <span class="n">0</span> <span class="k">to</span> <span class="n">10</span> <span class="k">do</span>
+        <span onmouseout="hideTip(event, 'fs18', 56)" onmouseover="showTip(event, 'fs18', 56)" class="f">fib</span> <span onmouseout="hideTip(event, 'fs26', 57)" onmouseover="showTip(event, 'fs26', 57)" class="i">i</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs27', 58)" onmouseover="showTip(event, 'fs27', 58)" class="i">x</span> <span class="k">-&gt;</span>   <span class="c">// pass the continuation directly to the fib function</span>
+            <span onmouseout="hideTip(event, 'fs28', 59)" onmouseover="showTip(event, 'fs28', 59)" class="f">printfn</span> <span class="s">&quot;</span><span class="pf">%d</span><span class="s">: </span><span class="pf">%d</span><span class="s">&quot;</span> <span onmouseout="hideTip(event, 'fs26', 60)" onmouseover="showTip(event, 'fs26', 60)" class="i">i</span> <span onmouseout="hideTip(event, 'fs27', 61)" onmouseover="showTip(event, 'fs27', 61)" class="i">x</span>)
+    <span class="n">0</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">type Inc&lt;&#39;T,&#39;U&gt; = Cont&lt;&#39;T,&#39;U&gt; -&gt; &#39;U<br /><br />Full name: Script.Inc&lt;_,_&gt;<br /><em><br /><br />&#160;An incomplete computation is a function which, when given a continuation,<br />&#160;will return a value.</em></div>
+<div class="tip" id="fs2">type Cont&lt;&#39;T,&#39;U&gt; = &#39;T -&gt; &#39;U<br /><br />Full name: Script.Cont&lt;_,_&gt;<br /><em><br /><br />&#160;https://stackoverflow.com/questions/40052256/how-does-continuation-monad-really-work/42062682#42062682<br />&#160;A continuation is a function that represents &quot;the rest of the computation&quot;.</em></div>
+<div class="tip" id="fs3">val ret : t:&#39;T -&gt; cont:Cont&lt;&#39;T,&#39;a&gt; -&gt; &#39;a<br /><br />Full name: Script.ret<br /><em><br /><br />&#160;Creates an incomplete computation that holds the given value.</em></div>
+<div class="tip" id="fs4">val t : &#39;T</div>
+<div class="tip" id="fs5">val cont : Cont&lt;&#39;T,&#39;a&gt;</div>
+<div class="tip" id="fs6">val bind : incT:Inc&lt;&#39;T,&#39;a&gt; -&gt; wrap:(&#39;T -&gt; Inc&lt;&#39;U,&#39;a&gt;) -&gt; contU:Cont&lt;&#39;U,&#39;a&gt; -&gt; &#39;a<br /><br />Full name: Script.bind<br /><em><br /><br />&#160;Composition of incomplete computations.</em></div>
+<div class="tip" id="fs7">val incT : Inc&lt;&#39;T,&#39;a&gt;</div>
+<div class="tip" id="fs8">val wrap : (&#39;T -&gt; Inc&lt;&#39;U,&#39;a&gt;)</div>
+<div class="tip" id="fs9">val contU : Cont&lt;&#39;U,&#39;a&gt;</div>
+<div class="tip" id="fs10">Multiple items<br />type ContinuationBuilder =<br />&#160;&#160;new : unit -&gt; ContinuationBuilder<br />&#160;&#160;member Bind : inc:Inc&lt;&#39;a,&#39;b&gt; * wrap:(&#39;a -&gt; Inc&lt;&#39;c,&#39;b&gt;) -&gt; Inc&lt;&#39;c,&#39;b&gt;<br />&#160;&#160;member Return : value:&#39;d -&gt; Inc&lt;&#39;d,&#39;e&gt;<br /><br />Full name: Script.ContinuationBuilder<br /><em><br /><br />&#160;Monad definition.</em><br /><br />--------------------<br />new : unit -&gt; ContinuationBuilder</div>
+<div class="tip" id="fs11">member ContinuationBuilder.Return : value:&#39;d -&gt; Inc&lt;&#39;d,&#39;e&gt;<br /><br />Full name: Script.ContinuationBuilder.Return</div>
+<div class="tip" id="fs12">val value : &#39;d</div>
+<div class="tip" id="fs13">val __ : ContinuationBuilder</div>
+<div class="tip" id="fs14">member ContinuationBuilder.Bind : inc:Inc&lt;&#39;a,&#39;b&gt; * wrap:(&#39;a -&gt; Inc&lt;&#39;c,&#39;b&gt;) -&gt; Inc&lt;&#39;c,&#39;b&gt;<br /><br />Full name: Script.ContinuationBuilder.Bind</div>
+<div class="tip" id="fs15">val inc : Inc&lt;&#39;a,&#39;b&gt;</div>
+<div class="tip" id="fs16">val wrap : (&#39;a -&gt; Inc&lt;&#39;c,&#39;b&gt;)</div>
+<div class="tip" id="fs17">val continuation : ContinuationBuilder<br /><br />Full name: Script.continuation<br /><em><br /><br />&#160;Builder instance.</em></div>
+<div class="tip" id="fs18">val fib : n:int -&gt; Inc&lt;int,&#39;a&gt;<br /><br />Full name: Script.fib<br /><em><br /><br />&#160;Continuation-ized version of Fibonacci function.</em></div>
+<div class="tip" id="fs19">val n : int</div>
+<div class="tip" id="fs20">Multiple items<br />val int : value:&#39;T -&gt; int (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.int<br /><br />--------------------<br />type int = int32<br /><br />Full name: Microsoft.FSharp.Core.int<br /><br />--------------------<br />type int&lt;&#39;Measure&gt; = int<br /><br />Full name: Microsoft.FSharp.Core.int&lt;_&gt;</div>
+<div class="tip" id="fs21">val x1 : int</div>
+<div class="tip" id="fs22">val x2 : int</div>
+<div class="tip" id="fs23">Multiple items<br />type EntryPointAttribute =<br />&#160;&#160;inherit Attribute<br />&#160;&#160;new : unit -&gt; EntryPointAttribute<br /><br />Full name: Microsoft.FSharp.Core.EntryPointAttribute<br /><br />--------------------<br />new : unit -&gt; EntryPointAttribute</div>
+<div class="tip" id="fs24">val main : argv:string [] -&gt; int<br /><br />Full name: Script.main</div>
+<div class="tip" id="fs25">val argv : string []</div>
+<div class="tip" id="fs26">val i : int</div>
+<div class="tip" id="fs27">val x : int</div>
+<div class="tip" id="fs28">val printfn : format:Printf.TextWriterFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.printfn</div>
+

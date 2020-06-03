@@ -1,0 +1,112 @@
+open System
+open System.Text.RegularExpressions
+
+type Terminal = 
+    | LBracket | RBracket | LParen | RParen | Plus | Minus | Times | Divide 
+    | Number of int 
+    | Variable of string
+
+type Operation = OpPlus | OpMinus | OpTimes | OpDivide
+
+type Ast = 
+    | BinOp of Operation * Ast * Ast
+    | Const of int
+    | Ref of int
+
+let (|Int|_|) = Int32.TryParse >> function | true, i -> Some i | false, _ -> None
+
+let lexer = function
+    | "[" -> LBracket
+    | "]" -> RBracket
+    | "(" -> LParen
+    | ")" -> RParen
+    | "+" -> Plus
+    | "-" -> Minus
+    | "*" -> Times
+    | "/" -> Divide
+    | Int i -> Number i
+    | str -> Variable str
+
+let pass1 prog =
+    let tokenize str = 
+        let matches = Regex.Matches(str, "\\[|\\]|[-+*/=\\(\\)]|[A-Za-z_][A-Za-z0-9_]*|[0-9]*(\\.?[0-9]+)")
+        [for m in matches -> m.Groups.[0].Value]
+
+    let rec (|ArgList|_|) = function
+        | Variable v::ArgList (args, rest) -> Some (v::args, rest)
+        | Variable v::rest -> Some (v::[], rest)
+        | _ -> None
+    and (|Function|_|) = function
+        | LBracket::ArgList (args, RBracket::rest) -> Some (args, rest)
+        | _ -> None
+
+    let (args, tokens) = prog |> tokenize |> List.map lexer |> (|Function|_|) |> Option.get
+        
+    let getArgumentIndex varName = List.findIndex ((=) varName) args 
+
+    let rec (|Factor|_|) = function
+        | Number i::rest -> Some (Const i, rest)
+        | Variable v::rest -> Some (v |> getArgumentIndex |> Ref, rest)
+        | LParen::Expression (e, RParen::rest) -> Some (e, rest)
+        | _ -> None
+    and (|Term|_|) =  function
+        | Factor (e1, Times::Term (e2, rest)) -> Some (BinOp (OpTimes, e1, e2), rest)
+        | Factor (e1, Divide::Term (e2, rest)) -> Some (BinOp (OpDivide, e1, e2), rest)
+        | Factor (e, rest) -> Some (e, rest)
+        | _ -> None
+    and (|Expression|_|) = function
+        | Term (e1, Plus::Expression (e2, rest)) -> Some (BinOp (OpPlus, e1, e2), rest)
+        | Term (e1, Minus::Expression (e2, rest)) -> Some (BinOp (OpMinus, e1, e2), rest)
+        | Term (e, rest) -> Some (e, rest)
+        | _ -> None
+
+    (|Expression|_|) tokens |> Option.get |> fst
+
+let eval op a b = 
+    match op with
+    | OpPlus -> a + b
+    | OpMinus -> a - b
+    | OpTimes -> a * b
+    | OpDivide -> a / b
+
+let rec pass2 = function
+    | BinOp (op, Const l, Const r) -> Const (eval op l r)
+    | BinOp (op, l, r) -> BinOp (op, pass2 l, pass2 r)
+    | constOrRef -> constOrRef
+
+let (|Leaf|_|) = function Ref i | Const i -> Some () | BinOp _ -> None
+
+let operation = function
+    | OpPlus -> "AD" | OpMinus -> "SU" | OpTimes -> "MU"| OpDivide -> "DI"
+
+let rec pass3 = function
+    | BinOp (op, a, b) ->
+        let left = pass3 a
+        let right = pass3 b
+        match (a, b) with
+        | Leaf, Leaf -> right @ "SW"::left @ operation op::[]
+        | _ -> left @ "PU"::right @ "SW"::"PO"::operation op::[]
+    | Const i -> ("IM " + string i)::[]
+    | Ref i -> ("AR " + string i)::[]
+
+let simulate asm (argv : int list) = 
+    let executeInstruction (r0, r1, stack) (ins : string) =
+        match ins.[0..1] with
+        | "IM" -> (ins.Substring(2).Trim() |> int), r1, stack
+        | "AR" -> argv.[ins.Substring(2).Trim() |> int], r1, stack
+        | "SW" -> r1, r0, stack
+        | "PU" -> r0, r1, r0::stack
+        | "PO" -> List.head stack, r1, List.tail stack
+        | "AD" -> r0 + r1, r1, stack
+        | "SU" -> r0 - r1, r1, stack
+        | "MU" -> r0 * r1, r1, stack
+        | "DI" -> r0 / r1, r1, stack
+        | _  -> failwith "Invalid instruction"
+    let r0, _, _ = List.fold executeInstruction (0, 0, []) asm
+    r0
+
+let program = "[ x y z ] ( 2*3*x + 5*y - 3*z ) / (1 + 3 + 2*2)" |> pass1 |> pass2 |> pass3
+
+simulate program [4; 0; 0] = 3 |> printfn "%A"
+simulate program [4; 8; 0] = 8 |> printfn "%A"
+simulate program [4; 8; 16] = 2 |> printfn "%A"

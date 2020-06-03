@@ -1,0 +1,45 @@
+// client side
+
+let getFiles () : FileList =
+    let input = JS.Document.GetElementById("uploadInput") |> As<HTMLInputElement>
+    input?files
+
+let sendFiles (el:Dom.Element) (ev:Dom.Event) =
+    ev.PreventDefault()
+    JS.Document.GetElementById("response").InnerHTML <- ""
+    let oReq : XMLHttpRequest = JS.Inline("new XMLHttpRequest()") // WORKAROUND 1
+    let url = "/upload"
+    oReq.Open("POST",url, true)
+    oReq.Onload <- fun ev -> 
+        Console.Log("Uploaded", ev)
+    oReq.Onerror <- fun ev -> 
+        Console.Log("Error", ev)
+    oReq.Onreadystatechange <- fun ev ->
+        let response = oReq.StatusText + ": " + oReq.ResponseText
+                                      + " ReadyState: " + oReq.ReadyState.ToString()
+        Console.Log(response)
+        if  (oReq.ReadyState = 4) then
+             JS.Document.GetElementById("response").InnerHTML <- response
+    let files = getFiles ()
+    JS.Inline("$0.send($1)", oReq, files.[0]) // WORKAROUND 2
+
+// server side
+
+let StreamingUploadFilePage (ctx:Context<EndPoint>) =
+    try
+        let stream = ctx.Request.Body
+        if (stream.Length > (int64 0) && stream.Length < (int64 2.5E6)) then
+                let count = int stream.Length
+                let buffer = Array.zeroCreate<byte> count
+                let res = stream.Read(buffer, 0, count)
+                use fs = File.Open(destinationPath, FileMode.Create)
+                fs.Write(buffer, 0, count)
+                Content.Text ("Uploaded! (" + res.ToString() + ")")  
+        else 
+            Content.Text ("File Size is not permitted: " + stream.Length.ToString())
+            |> Content.SetStatus (Http.Status.Custom 400 (Some "Bad Request"))  
+    with
+    |exc ->  
+        Content.Text exc.Message
+        |> Content.SetStatus Http.Status.InternalServerError
+ 

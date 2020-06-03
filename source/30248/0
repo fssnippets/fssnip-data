@@ -1,0 +1,32 @@
+type imageLoader(filePath: string) = class
+  let howMany pred = Seq.filter pred >> Seq.length 
+  let image  = new Bitmap(filePath)
+  let imageHeight = (image.Height)-1
+  let imageWidth = (image.Width)-1
+  let mutable histogramList = []
+  let mutable pixelCounter = 0
+  let sliceAndDice (s:string) =
+        let string0 = s
+        let rec finder (s:string) (h:int)  =
+          match s.[h] with
+          |',' -> s.[(h+1)..((s.Length)-2)]
+          |_ -> (finder s (h+1))
+        let string1  = finder string0 0
+        let string2  = string1.Replace(",", ";")
+        let string3  = string2.Replace(" ", "")
+        let string4  = string3.Replace("R=", "")
+        let string5  = string4.Replace("B=", "")
+        let string6  = string5.Replace("G=", "")
+        let string7  = string6.Replace("[", "")
+        let string8  = string7.Replace("Color", "")
+        let string9  = string8.Replace(" ", "")
+        let string10 = string9.Replace("]", "")
+        let value    = string10.Split ';' |> Array.map int |> Array.toList
+        ((value.[0] + value.[1] + value.[2]) / 3) |> int  
+
+  member this.pixelLoader =
+    for i in 0..imageWidth do
+      for j in 0 .. imageHeight do
+        pixelCounter <- pixelCounter + 1
+        histogramList <- sliceAndDice([image.GetPixel(i,j)].ToString()) :: histogramList
+    histogramList <- List.sort(histogramList)

@@ -1,0 +1,112 @@
+open System
+
+#r "node_modules/fable-core/Fable.Core.dll"
+
+open Fable.Core
+open Fable.Core.JsInterop
+module Browser = Fable.Import.Browser
+
+#r "node_modules/fable-arch/Fable.Arch.dll"
+
+open Fable.Arch
+open Fable.Arch.App.Types
+open Fable.Arch.App
+open Fable.Arch.Html
+
+#load "node_modules/fable-aether/Aether.fs"
+
+open Aether
+open Aether.Operators
+
+type RecordB = {
+    A: string
+    B: bool
+}
+with
+    static member New = {
+        A = ""
+        B = false
+    }
+
+    // Aether
+    static member A_ : Lens<RecordB, string> = (fun x -> x.A), (fun value x -> { x with A = value })
+    static member B_ : Lens<RecordB, bool> = (fun x -> x.B), (fun value x -> { x with B = value })
+
+type RecordA = {
+    RecordB: RecordB
+}
+with 
+    static member New = {
+        RecordB = RecordB.New
+    }
+
+    // Aether
+    static member RecordB_ : Lens<RecordA, RecordB> = (fun x -> x.RecordB), (fun value x -> { x with RecordB = value })
+
+type Action<'model> =
+    | InputChanged of Id: string * Value: string * Lens<'model, string>
+    | CheckboxChanged of Id: string * Value: bool * Lens<'model, bool>
+with
+    override x.ToString () =
+        match x with
+        | InputChanged (id, value, _) -> sprintf "InputChanged (%s, %s)" id value
+        | CheckboxChanged (id, value, _) -> sprintf "CheckboxChanged (%s, %b)" id value
+
+open FSharp.Reflection
+
+let makeInput<'model> id (model: 'model) (lens: Lens<'model, string>) =
+    let value = Optic.get lens model
+    div [] [
+        label [] [ Text id ]
+        input [
+            property "value" value
+            onInput (fun e ->
+                e?preventDefault() |> ignore
+                let value = unbox<string> e?target?value
+                InputChanged (id, value, lens)
+            )
+        ]
+    ]
+let makeCheckbox<'model> id (model: 'model) (lens: Lens<'model, bool>) =
+    let value = Optic.get lens model
+    div [] [
+        label [] [ Text id ]
+        input [
+            if value then 
+                yield property "checked" "true"
+            else
+                ()
+            yield Attributes.property "type" "checkbox"
+            yield onChange (fun e -> 
+                e?preventDefault() |> ignore
+                let value = unbox<bool> e?target?``checked``
+                CheckboxChanged (id, value, lens)
+            )
+        ]
+    ]
+
+let view (model: RecordA) = 
+    let subModel = Optic.get RecordA.RecordB_ model
+    div [] [
+        div [] [
+            text "Aether test"
+        ]
+        makeInput<RecordB> "A" subModel RecordB.A_
+        makeCheckbox<RecordB> "B" subModel RecordB.B_
+    ]
+
+let update (model: RecordA) action =
+    match action with
+    | InputChanged (id, value, lens) ->
+        Optic.set (RecordA.RecordB_ >-> lens) value model
+    | CheckboxChanged (id, value, lens) ->
+        Optic.set (RecordA.RecordB_ >-> lens) value model
+
+createSimpleApp RecordA.New view update Virtualdom.createRender
+|> withStartNodeSelector "#fable-body"
+|> withSubscriber (fun x ->
+    printfn "Message: %s" (string x.Message)
+    printfn "Prev: %s" (string x.PreviousState)
+    printfn "Current: %s" (string x.CurrentState)
+)
+|> start

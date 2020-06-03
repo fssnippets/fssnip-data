@@ -1,0 +1,58 @@
+// Get from the server certificate. Set this as config, as the server may change the certificate.
+let ``trusted server certificate hash`` = "603780E732DB12D0F6BA434BA8E04D141904A165"
+
+open System
+open System.IO
+open System.Net
+open System.Net.Security
+
+type FTPSClient(username:string, password:string) =
+    inherit WebClient(Credentials =
+        (NetworkCredential(username.Normalize(), password.Normalize()) :> ICredentials),
+         UseDefaultCredentials = false)
+    override __.GetWebRequest(address) =
+        let request = base.GetWebRequest(address) :?> FtpWebRequest
+        request.Credentials <- NetworkCredential(username.Normalize(), password.Normalize())
+        request.EnableSsl <- true
+        request.UsePassive <- true
+        //request.UseBinary <- t
+        ServicePointManager.ServerCertificateValidationCallback <-
+            RemoteCertificateValidationCallback(
+                fun obj serverCert chain errors ->
+                    // Validate server security certificate here!
+                    if serverCert.GetCertHashString() = ``trusted server certificate hash`` then
+                        true
+                    else
+                    match errors with
+                    | SslPolicyErrors.None -> true
+                    | x -> Console.WriteLine("Server SSL invalid: " +
+                                Enum.GetName(typeof<SslPolicyErrors>, (box x)))
+                           false)
+        let cert =
+            request.ClientCertificates.Add(
+                new System.Security.Cryptography.X509Certificates.X509Certificate())
+        request :> WebRequest
+
+let downloadFTPS host username (password:string) fileName targetPath =
+    async {
+        use client = new FTPSClient(username, password)
+        let fileToGet = Uri("ftp://" + host + "/" + fileName)
+        let target = Path.Combine [| targetPath; fileName |]
+        return! client.DownloadFileTaskAsync(fileToGet, target) |> Async.AwaitTask
+    }
+
+let uploadFTPS host username (password:string) filePath =
+    async {
+        let fileName = Path.GetFileName(filePath)
+        use client = new FTPSClient(username, password)
+        let fileToSend = Uri("ftp://" + host + "/" + fileName)
+        return!
+            client.UploadFileTaskAsync(fileToSend, WebRequestMethods.Ftp.UploadFile, filePath)
+            |> Async.AwaitTask |> Async.Catch
+    }
+
+//downloadFTPS "test.rebex.net" "demo" "password" "readme.txt" @"c:\temp\"
+//|> Async.RunSynchronously
+
+//uploadFTPS "test.rebex.net" "demo" "password" @"C:\Temp\test3.txt"
+//|> Async.RunSynchronously

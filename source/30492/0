@@ -1,0 +1,23 @@
+//For the following snippet to work it requires a ConverterBase which is provided in this snippet http://fssnip.net/62 from a different author.
+
+type DiscriminatedUnionTypeConverterGeneric<'a>(defaultOnError : 'a option) =
+    inherit ConverterBase()
+    let convertFunc = fun (v:obj) _ _ _ -> box (string v)
+    let convertBackFunc = fun (v:obj) _ _ _ ->
+        if ((unbox v).GetType().Name = "String") && defaultOnError.IsSome
+        then box defaultOnError.Value
+        else v
+    override this.Convert = convertFunc 
+    override this.ConvertBack = convertBackFunc
+
+
+type DiscriminatedUnionTypeConverter() =
+    inherit DiscriminatedUnionTypeConverterGeneric<ConverterBase>(None)
+
+//Usage:
+// Either use the DiscriminatedUnionTypeConverter, or create your own with a default option for when a wrong union case is provided to the converter like so:
+
+//type ExampleDiscriminatedUnionTypeConverter() =
+//    inherit DiscriminatedUnionTypeConverterGeneric<ExampleDiscriminatedUnion>(Some ExampleDiscriminatedUnion.CarCase)
+
+// In this case if a wrong union case is provided the convertBackFunc will provide the defaultOnError value.

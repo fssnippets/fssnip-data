@@ -1,0 +1,64 @@
+open System
+open System.Threading
+open System.Threading.Tasks
+
+type private Latch() =
+    let mutable counter = 0
+    member inline __.Enter() = Interlocked.Increment &counter = 1
+
+type Async with
+    static member AwaitTask2(task : Task<'T>) : Async<'T> = async {
+        let! ct = Async.CancellationToken
+        return! Async.FromContinuations(fun (sc,ec,cc) ->
+            let l = new Latch()
+            let ctrDisposer = ct.Register(fun _ -> if l.Enter() then cc(OperationCanceledException()))
+            task.ContinueWith(fun (task:Task<'T>) ->
+                if l.Enter() then
+                    ctrDisposer.Dispose()
+                    if task.IsFaulted then
+                        let e = task.Exception
+                        if e.InnerExceptions.Count = 1 then ec e.InnerExceptions.[0]
+                        else ec e
+                    elif task.IsCanceled then
+                        ec(TaskCanceledException())
+                    else
+                        sc task.Result)
+            |> ignore)
+    }
+
+    static member AwaitTask2(task : Task) : Async<unit> = async {
+        let! ct = Async.CancellationToken
+        return! Async.FromContinuations(fun (sc,ec,cc) ->
+            let l = new Latch()
+            let ctrDisposer = ct.Register(fun _ -> if l.Enter() then cc(OperationCanceledException()))
+            task.ContinueWith(fun (task:Task) ->
+                if l.Enter() then
+                    ctrDisposer.Dispose()
+                    if task.IsFaulted then
+                        let e = task.Exception
+                        if e.InnerExceptions.Count = 1 then ec e.InnerExceptions.[0]
+                        else ec e
+                    elif task.IsCanceled then
+                        ec(TaskCanceledException())
+                    else
+                        sc ())
+            |> ignore)
+    }
+
+// example
+
+let test taskAwaiter = 
+    async {
+        let tcs = new TaskCompletionSource<unit>()
+        let worker i = async {
+            if i < 9 then
+                do! taskAwaiter tcs.Task
+            else
+                do failwith "error"
+        }
+
+        return! Seq.init 10 worker |> Async.Parallel
+    } |> Async.RunSynchronously
+
+test Async.AwaitTask  // hangs forever
+test Async.AwaitTask2 // fails with exceptions

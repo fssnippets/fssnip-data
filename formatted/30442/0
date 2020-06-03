@@ -1,0 +1,101 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="prep">#if</span> <span class="i">INTERACTIVE</span>
+<span class="inactive">#r</span><span class="inactive"> </span><span class="inactive">&quot;Emailage.NET.4.5.1.Wrapper/lib/net451/Emailage.NET.4.5.1.Wrapper.dll&quot;</span>
+<span class="inactive">#r</span><span class="inactive"> </span><span class="inactive">&quot;Newtonsoft.Json/lib/net45/Newtonsoft.Json.dll&quot;</span>
+<span class="prep">#endif</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">accountSID</span> <span class="o">=</span> <span class="s">&quot;ABC123&quot;</span> <span class="c">// Your SID</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">authToken</span> <span class="o">=</span> <span class="s">&quot;ABC123&quot;</span> <span class="c">// Your Token</span>
+
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="t">EmailageResults</span> <span class="o">=</span>
+| <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="p">Risk</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="t">int</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="t">string</span> <span class="c">// score and relevant info</span>
+| <span onmouseout="hideTip(event, 'fs7', 7)" onmouseover="showTip(event, 'fs7', 7)" class="p">Failed</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs5', 8)" onmouseover="showTip(event, 'fs5', 8)" class="t">int</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs6', 9)" onmouseover="showTip(event, 'fs6', 9)" class="t">string</span> <span class="c">// fail code and reason</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs8', 10)" onmouseover="showTip(event, 'fs8', 10)" class="i">emailage</span> <span class="o">=</span>
+    <span class="i">Emailage</span><span class="o">.</span><span class="i">EmailageClient</span>(
+        <span class="i">Emailage</span><span class="o">.</span><span class="i">Models</span><span class="o">.</span><span class="i">Enums</span><span class="o">.</span><span class="i">Environment</span><span class="o">.</span><span class="i">Sandbox</span>, <span class="c">// Sandbox or Production</span>
+        <span onmouseout="hideTip(event, 'fs1', 11)" onmouseover="showTip(event, 'fs1', 11)" class="i">accountSID</span>,
+        <span onmouseout="hideTip(event, 'fs2', 12)" onmouseover="showTip(event, 'fs2', 12)" class="i">authToken</span>, 
+        <span class="i">Emailage</span><span class="o">.</span><span class="i">Models</span><span class="o">.</span><span class="i">Enums</span><span class="o">.</span><span class="i">Method</span><span class="o">.</span><span class="i">Get</span>,
+        <span class="i">Emailage</span><span class="o">.</span><span class="i">Models</span><span class="o">.</span><span class="i">Enums</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs9', 13)" onmouseover="showTip(event, 'fs9', 13)" class="i">Format</span><span class="o">.</span><span class="i">Json</span>,
+        <span class="i">Emailage</span><span class="o">.</span><span class="i">Models</span><span class="o">.</span><span class="i">Enums</span><span class="o">.</span><span class="i">SignatureMethod</span><span class="o">.</span><span class="i">HMAC_SHA384</span>
+    )
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs10', 14)" onmouseover="showTip(event, 'fs10', 14)" class="f">checkEmail</span> <span onmouseout="hideTip(event, 'fs11', 15)" onmouseover="showTip(event, 'fs11', 15)" class="i">email</span> <span class="o">=</span>
+    <span onmouseout="hideTip(event, 'fs12', 16)" onmouseover="showTip(event, 'fs12', 16)" class="i">async</span> {
+        <span class="k">let!</span> <span onmouseout="hideTip(event, 'fs13', 17)" onmouseover="showTip(event, 'fs13', 17)" class="i">res</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs8', 18)" onmouseover="showTip(event, 'fs8', 18)" class="i">emailage</span><span class="o">.</span><span class="i">QueryAsync</span> <span onmouseout="hideTip(event, 'fs11', 19)" onmouseover="showTip(event, 'fs11', 19)" class="i">email</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs14', 20)" onmouseover="showTip(event, 'fs14', 20)" class="t">Async</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs15', 21)" onmouseover="showTip(event, 'fs15', 21)" class="f">AwaitTask</span>
+        <span class="k">match</span> <span onmouseout="hideTip(event, 'fs13', 22)" onmouseover="showTip(event, 'fs13', 22)" class="i">res</span><span class="o">.</span><span class="i">responseStatus</span><span class="o">.</span><span class="i">status</span> <span class="k">with</span>
+        | <span class="s">&quot;success&quot;</span> <span class="k">-&gt;</span>
+            <span class="k">if</span> <span onmouseout="hideTip(event, 'fs16', 23)" onmouseover="showTip(event, 'fs16', 23)" class="t">Array</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs17', 24)" onmouseover="showTip(event, 'fs17', 24)" class="f">isEmpty</span> <span onmouseout="hideTip(event, 'fs13', 25)" onmouseover="showTip(event, 'fs13', 25)" class="i">res</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs18', 26)" onmouseover="showTip(event, 'fs18', 26)" class="i">query</span><span class="o">.</span><span class="i">results</span> <span class="k">then</span>
+                <span class="k">return</span> <span onmouseout="hideTip(event, 'fs7', 27)" onmouseover="showTip(event, 'fs7', 27)" class="p">Failed</span>(<span class="n">0</span>, <span class="s">&quot;not found&quot;</span>)
+            <span class="k">else</span>
+                <span class="k">let</span> <span onmouseout="hideTip(event, 'fs13', 28)" onmouseover="showTip(event, 'fs13', 28)" class="i">res</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs13', 29)" onmouseover="showTip(event, 'fs13', 29)" class="i">res</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs18', 30)" onmouseover="showTip(event, 'fs18', 30)" class="i">query</span><span class="o">.</span><span class="i">results</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs16', 31)" onmouseover="showTip(event, 'fs16', 31)" class="t">Array</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs19', 32)" onmouseover="showTip(event, 'fs19', 32)" class="f">head</span>
+                <span class="k">return</span> <span onmouseout="hideTip(event, 'fs4', 33)" onmouseover="showTip(event, 'fs4', 33)" class="p">Risk</span>(
+                    <span onmouseout="hideTip(event, 'fs13', 34)" onmouseover="showTip(event, 'fs13', 34)" class="i">res</span><span class="o">.</span><span class="i">EAScore</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs20', 35)" onmouseover="showTip(event, 'fs20', 35)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs21', 36)" onmouseover="showTip(event, 'fs21', 36)" class="t">Int32</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs22', 37)" onmouseover="showTip(event, 'fs22', 37)" class="f">Parse</span>,
+                    <span onmouseout="hideTip(event, 'fs13', 38)" onmouseover="showTip(event, 'fs13', 38)" class="i">res</span><span class="o">.</span><span class="i">EAAdvice</span> <span class="o">+</span> <span class="s">&quot; / &quot;</span> <span class="o">+</span> <span onmouseout="hideTip(event, 'fs13', 39)" onmouseover="showTip(event, 'fs13', 39)" class="i">res</span><span class="o">.</span><span class="i">EAReason</span>
+                )
+        | _ <span class="k">-&gt;</span> <span class="k">return</span> <span onmouseout="hideTip(event, 'fs7', 40)" onmouseover="showTip(event, 'fs7', 40)" class="p">Failed</span>(<span onmouseout="hideTip(event, 'fs13', 41)" onmouseover="showTip(event, 'fs13', 41)" class="i">res</span><span class="o">.</span><span class="i">responseStatus</span><span class="o">.</span><span class="i">errorCode</span>, <span onmouseout="hideTip(event, 'fs13', 42)" onmouseover="showTip(event, 'fs13', 42)" class="i">res</span><span class="o">.</span><span class="i">responseStatus</span><span class="o">.</span><span class="i">description</span>)
+    }
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">val accountSID : string<br /><br />Full name: Script.accountSID</div>
+<div class="tip" id="fs2">val authToken : string<br /><br />Full name: Script.authToken</div>
+<div class="tip" id="fs3">type EmailageResults =<br />&#160;&#160;| Risk of int * string<br />&#160;&#160;| Failed of int * string<br /><br />Full name: Script.EmailageResults</div>
+<div class="tip" id="fs4">union case EmailageResults.Risk: int * string -&gt; EmailageResults</div>
+<div class="tip" id="fs5">Multiple items<br />val int : value:&#39;T -&gt; int (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.int<br /><br />--------------------<br />type int = int32<br /><br />Full name: Microsoft.FSharp.Core.int<br /><br />--------------------<br />type int&lt;&#39;Measure&gt; = int<br /><br />Full name: Microsoft.FSharp.Core.int&lt;_&gt;</div>
+<div class="tip" id="fs6">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />Full name: Microsoft.FSharp.Core.Operators.string<br /><br />--------------------<br />type string = System.String<br /><br />Full name: Microsoft.FSharp.Core.string</div>
+<div class="tip" id="fs7">union case EmailageResults.Failed: int * string -&gt; EmailageResults</div>
+<div class="tip" id="fs8">val emailage : obj<br /><br />Full name: Script.emailage</div>
+<div class="tip" id="fs9">Multiple items<br />type Format&lt;&#39;Printer,&#39;State,&#39;Residue,&#39;Result&gt; = PrintfFormat&lt;&#39;Printer,&#39;State,&#39;Residue,&#39;Result&gt;<br /><br />Full name: Microsoft.FSharp.Core.Format&lt;_,_,_,_&gt;<br /><br />--------------------<br />type Format&lt;&#39;Printer,&#39;State,&#39;Residue,&#39;Result,&#39;Tuple&gt; = PrintfFormat&lt;&#39;Printer,&#39;State,&#39;Residue,&#39;Result,&#39;Tuple&gt;<br /><br />Full name: Microsoft.FSharp.Core.Format&lt;_,_,_,_,_&gt;</div>
+<div class="tip" id="fs10">val checkEmail : email:&#39;a -&gt; Async&lt;EmailageResults&gt;<br /><br />Full name: Script.checkEmail</div>
+<div class="tip" id="fs11">val email : &#39;a</div>
+<div class="tip" id="fs12">val async : AsyncBuilder<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.async</div>
+<div class="tip" id="fs13">val res : obj</div>
+<div class="tip" id="fs14">Multiple items<br />type Async<br />static member AsBeginEnd : computation:(&#39;Arg -&gt; Async&lt;&#39;T&gt;) -&gt; (&#39;Arg * AsyncCallback * obj -&gt; IAsyncResult) * (IAsyncResult -&gt; &#39;T) * (IAsyncResult -&gt; unit)<br />static member AwaitEvent : event:IEvent&lt;&#39;Del,&#39;T&gt; * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt; (requires delegate and &#39;Del :&gt; Delegate)<br />static member AwaitIAsyncResult : iar:IAsyncResult * ?millisecondsTimeout:int -&gt; Async&lt;bool&gt;<br />static member AwaitTask : task:Task -&gt; Async&lt;unit&gt;<br />static member AwaitTask : task:Task&lt;&#39;T&gt; -&gt; Async&lt;&#39;T&gt;<br />static member AwaitWaitHandle : waitHandle:WaitHandle * ?millisecondsTimeout:int -&gt; Async&lt;bool&gt;<br />static member CancelDefaultToken : unit -&gt; unit<br />static member Catch : computation:Async&lt;&#39;T&gt; -&gt; Async&lt;Choice&lt;&#39;T,exn&gt;&gt;<br />static member FromBeginEnd : beginAction:(AsyncCallback * obj -&gt; IAsyncResult) * endAction:(IAsyncResult -&gt; &#39;T) * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member FromBeginEnd : arg:&#39;Arg1 * beginAction:(&#39;Arg1 * AsyncCallback * obj -&gt; IAsyncResult) * endAction:(IAsyncResult -&gt; &#39;T) * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member FromBeginEnd : arg1:&#39;Arg1 * arg2:&#39;Arg2 * beginAction:(&#39;Arg1 * &#39;Arg2 * AsyncCallback * obj -&gt; IAsyncResult) * endAction:(IAsyncResult -&gt; &#39;T) * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member FromBeginEnd : arg1:&#39;Arg1 * arg2:&#39;Arg2 * arg3:&#39;Arg3 * beginAction:(&#39;Arg1 * &#39;Arg2 * &#39;Arg3 * AsyncCallback * obj -&gt; IAsyncResult) * endAction:(IAsyncResult -&gt; &#39;T) * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member FromContinuations : callback:((&#39;T -&gt; unit) * (exn -&gt; unit) * (OperationCanceledException -&gt; unit) -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member Ignore : computation:Async&lt;&#39;T&gt; -&gt; Async&lt;unit&gt;<br />static member OnCancel : interruption:(unit -&gt; unit) -&gt; Async&lt;IDisposable&gt;<br />static member Parallel : computations:seq&lt;Async&lt;&#39;T&gt;&gt; -&gt; Async&lt;&#39;T []&gt;<br />static member RunSynchronously : computation:Async&lt;&#39;T&gt; * ?timeout:int * ?cancellationToken:CancellationToken -&gt; &#39;T<br />static member Sleep : millisecondsDueTime:int -&gt; Async&lt;unit&gt;<br />static member Start : computation:Async&lt;unit&gt; * ?cancellationToken:CancellationToken -&gt; unit<br />static member StartAsTask : computation:Async&lt;&#39;T&gt; * ?taskCreationOptions:TaskCreationOptions * ?cancellationToken:CancellationToken -&gt; Task&lt;&#39;T&gt;<br />static member StartChild : computation:Async&lt;&#39;T&gt; * ?millisecondsTimeout:int -&gt; Async&lt;Async&lt;&#39;T&gt;&gt;<br />static member StartChildAsTask : computation:Async&lt;&#39;T&gt; * ?taskCreationOptions:TaskCreationOptions -&gt; Async&lt;Task&lt;&#39;T&gt;&gt;<br />static member StartImmediate : computation:Async&lt;unit&gt; * ?cancellationToken:CancellationToken -&gt; unit<br />static member StartWithContinuations : computation:Async&lt;&#39;T&gt; * continuation:(&#39;T -&gt; unit) * exceptionContinuation:(exn -&gt; unit) * cancellationContinuation:(OperationCanceledException -&gt; unit) * ?cancellationToken:CancellationToken -&gt; unit<br />static member SwitchToContext : syncContext:SynchronizationContext -&gt; Async&lt;unit&gt;<br />static member SwitchToNewThread : unit -&gt; Async&lt;unit&gt;<br />static member SwitchToThreadPool : unit -&gt; Async&lt;unit&gt;<br />static member TryCancelled : computation:Async&lt;&#39;T&gt; * compensation:(OperationCanceledException -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member CancellationToken : Async&lt;CancellationToken&gt;<br />static member DefaultCancellationToken : CancellationToken<br /><br />Full name: Microsoft.FSharp.Control.Async<br /><br />--------------------<br />type Async&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Control.Async&lt;_&gt;</div>
+<div class="tip" id="fs15">static member Async.AwaitTask : task:System.Threading.Tasks.Task -&gt; Async&lt;unit&gt;<br />static member Async.AwaitTask : task:System.Threading.Tasks.Task&lt;&#39;T&gt; -&gt; Async&lt;&#39;T&gt;</div>
+<div class="tip" id="fs16">module Array<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs17">val isEmpty : array:&#39;T [] -&gt; bool<br /><br />Full name: Microsoft.FSharp.Collections.Array.isEmpty</div>
+<div class="tip" id="fs18">val query : Linq.QueryBuilder<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.query</div>
+<div class="tip" id="fs19">val head : array:&#39;T [] -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Collections.Array.head</div>
+<div class="tip" id="fs20">namespace System</div>
+<div class="tip" id="fs21">type Int32 =<br />&#160;&#160;struct<br />&#160;&#160;&#160;&#160;member CompareTo : value:obj -&gt; int + 1 overload<br />&#160;&#160;&#160;&#160;member Equals : obj:obj -&gt; bool + 1 overload<br />&#160;&#160;&#160;&#160;member GetHashCode : unit -&gt; int<br />&#160;&#160;&#160;&#160;member GetTypeCode : unit -&gt; TypeCode<br />&#160;&#160;&#160;&#160;member ToString : unit -&gt; string + 3 overloads<br />&#160;&#160;&#160;&#160;static val MaxValue : int<br />&#160;&#160;&#160;&#160;static val MinValue : int<br />&#160;&#160;&#160;&#160;static member Parse : s:string -&gt; int + 3 overloads<br />&#160;&#160;&#160;&#160;static member TryParse : s:string * result:int -&gt; bool + 1 overload<br />&#160;&#160;end<br /><br />Full name: System.Int32</div>
+<div class="tip" id="fs22">System.Int32.Parse(s: string) : int<br />System.Int32.Parse(s: string, provider: System.IFormatProvider) : int<br />System.Int32.Parse(s: string, style: System.Globalization.NumberStyles) : int<br />System.Int32.Parse(s: string, style: System.Globalization.NumberStyles, provider: System.IFormatProvider) : int</div>
+

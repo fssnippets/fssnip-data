@@ -1,0 +1,57 @@
+// NOTE: Work-In-Progress
+
+let inline (^) x = x
+let inline flip f y x = f x y
+
+type Fn = class end
+type Ap = class inherit Fn end
+
+type C<'c, 'a> = private Over of 'a | View
+
+let (<&>) a2b (aA: C<'c, _>) : C<'c, _> =
+  match aA with
+   | Over a -> Over ^ a2b a
+   | View -> View
+
+let (<*>) (a2bA: C<Ap, _>) (aA: C<Ap, _>) : C<Ap, _> =
+  match a2bA, aA with
+   | Over a2b, Over a -> Over (a2b a)
+   | _, _ -> View
+
+type Optic<'c, 's, 't, 'a, 'b> = ('a -> C<'c, 'b>) -> 's -> C<'c, 't>
+
+let view (o: Optic<Fn, _, _, _, _>) s =
+  let r = ref Unchecked.defaultof<_>
+  s |> o ^ fun a -> r := a; View
+    |> ignore
+  !r
+let fold (o: Optic<#Fn, _, _, _, _>) a f s =
+  let r = ref a
+  s |> o ^ fun a -> r := f !r a ; View
+    |> ignore
+  !r
+let over (o: Optic<#Fn, _, _, _, _>) a2b =
+  a2b >> Over |> o >> function
+   | Over t -> t
+   | _ -> failwith "Impossible"
+let inline set l b s = s |> over l ^ fun _ -> b
+
+let inline optic s2a b2s2t f s = flip b2s2t s <&> f ^ s2a s
+let inline morph s2a b2t   f s = b2t <&> f ^ s2a s
+
+let inline fstO f = f |> optic fst ^ fun x (_, y) -> (x, y)
+let inline sndO f = f |> optic snd ^ fun y (x, _) -> (x, y)
+
+let rec listT = fun a2bF -> function
+  | x::xs -> (fun x xs -> x::xs) <&> a2bF x <*> listT a2bF xs
+  | []    -> Over []
+
+let arrayT f = morph List.ofArray Array.ofList << listT <| f
+
+do (true, [| [1], "Why"; [2;3], "so"; [4;5;6], "serious?" |])
+   |> over (sndO << arrayT << fstO << listT) ^ fun x -> 100.0 + 0.1 * float x
+   |> printfn "%A"
+
+   (true, [| [1], "Why"; [2;3], "so"; [4;5;6], "serious?" |])
+   |> fold (sndO << arrayT << fstO << listT) "" ^ fun s x -> s + string x
+   |> printfn "%A"

@@ -1,0 +1,37 @@
+#r "FSharp.Data.dll"
+open System
+open FSharp.Data
+
+let distanceFromLocation (lat1,lon1) (lat2,lon2) =
+    let deg2rad deg = deg * (Math.PI/180.)
+    let R = 6371.
+    let (dLat,dLon) = deg2rad (abs (lat1-lat2)), deg2rad (abs(lon1-lon2))
+    let a =
+        (sin(dLat / 2.)) * (sin(dLat / 2.)) +
+        (cos(deg2rad(lat1))) * (cos(deg2rad(lat2))) *
+        (sin(dLon/2.)) * (sin(dLon/2.))
+    R * (2. * (atan2 (sqrt a) (sqrt (1. - a))))
+
+let nearestPlane destination : JsonValue =
+    let aeroJSON = "https://opensky-network.org/api/states/all"
+    let json = JsonValue.Load(aeroJSON)
+    let validTuple (i,j) = i <> JsonValue.Null && j <> JsonValue.Null
+    let parseTuple (i:JsonValue,j:JsonValue) = (i.AsFloat(), j.AsFloat())
+    let n = Array.length (json.["states"].AsArray())
+    let rec findPlane i recordPlane recordDistance =
+        if i = (n-1) then recordPlane
+        else
+            let state = json.["states"].[i]
+            let planeLoc = (state.[6], state.[5])
+            if validTuple planeLoc then
+                let distance = distanceFromLocation destination (parseTuple planeLoc)
+                if recordDistance > distance then
+                    findPlane (i+1) state distance
+                else findPlane (i+1) recordPlane recordDistance
+            else findPlane (i+1) recordPlane recordDistance
+    findPlane 0 (JsonValue.Null) (1e99)
+
+//Examples:
+nearestPlane (51.507351, -0.127758)     //-- London
+nearestPlane (48.860731, 2.342342)      //-- Paris
+nearestPlane (35.708628, 139.731891)    //-- Tokyo

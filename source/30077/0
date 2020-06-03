@@ -1,0 +1,12 @@
+open System;
+open System.Net;
+open System.Net.NetworkInformation;
+
+let GetLocalIpv4Address() = 
+    let interfaces = NetworkInterface.GetAllNetworkInterfaces()
+    let unicastAddresses = 
+        interfaces |> Seq.map (fun i -> i.GetIPProperties().UnicastAddresses) |> Seq.concat |> Seq.toList
+    let item = 
+        unicastAddresses |> Seq.find (fun a -> a.IPv4Mask.ToString() <> "0.0.0.0" && a.IPv4Mask.ToString() <> "255.0.0.0")
+    //|> Seq.find (fun a -> a.PrefixLength = 16)
+    item.Address.ToString()

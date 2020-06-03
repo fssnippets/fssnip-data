@@ -1,0 +1,9 @@
+type TaskBuilder()=
+    member __.Bind(x, f) = 
+        async{
+            let! x' = x |> Async.AwaitTask
+            return! f x'
+        }
+    member __.Return(x) = async{return x}
+
+let task = TaskBuilder()

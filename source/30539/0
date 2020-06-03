@@ -1,0 +1,32 @@
+
+let rec split a n l r =
+    match a with
+    | [] -> (l, r)
+    | h::t when n > 0 -> split t (n - 1) (l @ [h]) r
+    | h::t            -> split t (n - 1) l (r @ [h])
+
+let rec merge l r acc =
+    match l, r with
+    | [], [] -> acc
+    | lh::lt, [] -> merge lt [] (acc @ [lh])
+    | [], rh::rt -> merge rt [] (acc @ [rh])
+    | lh::lt, rh::rt ->
+        if lh < rh 
+        then merge lt r (acc @ [lh])
+        else merge l rt (acc @ [rh])
+
+let rec mergeSort a =
+    match a with
+    | [] -> []
+    | [x] -> [x]
+    | a ->
+        let m = Seq.length a / 2
+        let (l, r) = split a m [] []
+        let l = mergeSort l
+        let r = mergeSort r
+        merge l r []
+
+let rng = (new System.Random(int System.DateTime.Now.Ticks)).Next
+let l = List.init 1000000 rng
+
+l |> mergeSort 

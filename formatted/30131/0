@@ -1,0 +1,97 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">module</span> <span class="t">TypeClassDispatcher</span> <span class="o">=</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="f">dispatch</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">map</span> (<span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="i">value</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="t">obj</span>) <span class="o">=</span>
+        (<span onmouseout="hideTip(event, 'fs2', 5)" onmouseover="showTip(event, 'fs2', 5)" class="i">map</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs5', 6)" onmouseover="showTip(event, 'fs5', 6)" class="t">Map</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs6', 7)" onmouseover="showTip(event, 'fs6', 7)" class="f">find</span> (<span onmouseout="hideTip(event, 'fs3', 8)" onmouseover="showTip(event, 'fs3', 8)" class="i">value</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs7', 9)" onmouseover="showTip(event, 'fs7', 9)" class="f">GetType</span>()<span class="o">.</span><span class="i">FullName</span>)) <span onmouseout="hideTip(event, 'fs3', 10)" onmouseover="showTip(event, 'fs3', 10)" class="i">value</span>
+        
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs8', 11)" onmouseover="showTip(event, 'fs8', 11)" class="t">IYesNo</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">t</span><span class="o">&gt;</span> <span class="o">=</span>
+    <span class="k">abstract</span> <span class="k">member</span> <span onmouseout="hideTip(event, 'fs9', 12)" onmouseover="showTip(event, 'fs9', 12)" class="f">YesNo</span> <span class="o">:</span> <span class="i">this</span><span class="o">:</span><span class="o">&#39;</span><span class="i">t</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs10', 13)" onmouseover="showTip(event, 'fs10', 13)" class="t">bool</span>
+
+<span class="k">module</span> <span class="t">YesNoDispatcher</span> <span class="o">=</span>
+    <span class="k">let</span> <span class="k">mutable</span> <span onmouseout="hideTip(event, 'fs11', 14)" onmouseover="showTip(event, 'fs11', 14)" class="v">YesNo</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs5', 15)" onmouseover="showTip(event, 'fs5', 15)" class="t">Map</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs12', 16)" onmouseover="showTip(event, 'fs12', 16)" class="t">string</span>, <span onmouseout="hideTip(event, 'fs4', 17)" onmouseover="showTip(event, 'fs4', 17)" class="t">obj</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs10', 18)" onmouseover="showTip(event, 'fs10', 18)" class="t">bool</span><span class="o">&gt;</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs5', 19)" onmouseover="showTip(event, 'fs5', 19)" class="t">Map</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs13', 20)" onmouseover="showTip(event, 'fs13', 20)" class="i">empty</span>
+
+<span class="k">module</span> <span class="t">YesNo_bool</span> <span class="o">=</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs14', 21)" onmouseover="showTip(event, 'fs14', 21)" class="f">YesNo</span> (<span onmouseout="hideTip(event, 'fs15', 22)" onmouseover="showTip(event, 'fs15', 22)" class="i">this</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs10', 23)" onmouseover="showTip(event, 'fs10', 23)" class="t">bool</span>) <span class="o">:</span> <span onmouseout="hideTip(event, 'fs10', 24)" onmouseover="showTip(event, 'fs10', 24)" class="t">bool</span> <span class="o">=</span>
+        <span class="k">if</span> <span onmouseout="hideTip(event, 'fs15', 25)" onmouseover="showTip(event, 'fs15', 25)" class="i">this</span> <span class="o">=</span> <span class="k">true</span> <span class="k">then</span>
+            <span class="k">true</span>
+        <span class="k">else</span>
+            <span class="k">false</span>
+    <span class="k">do</span>
+        <span onmouseout="hideTip(event, 'fs16', 26)" onmouseover="showTip(event, 'fs16', 26)" class="t">YesNoDispatcher</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs11', 27)" onmouseover="showTip(event, 'fs11', 27)" class="v">YesNo</span> <span class="o">&lt;-</span> <span onmouseout="hideTip(event, 'fs16', 28)" onmouseover="showTip(event, 'fs16', 28)" class="t">YesNoDispatcher</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs11', 29)" onmouseover="showTip(event, 'fs11', 29)" class="v">YesNo</span>
+        <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs5', 30)" onmouseover="showTip(event, 'fs5', 30)" class="t">Map</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs17', 31)" onmouseover="showTip(event, 'fs17', 31)" class="f">add</span> (<span onmouseout="hideTip(event, 'fs18', 32)" onmouseover="showTip(event, 'fs18', 32)" class="i">typedefof</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs10', 33)" onmouseover="showTip(event, 'fs10', 33)" class="t">bool</span><span class="o">&gt;</span><span class="o">.</span><span class="i">FullName</span>) (<span class="k">fun</span> (<span onmouseout="hideTip(event, 'fs19', 34)" onmouseover="showTip(event, 'fs19', 34)" class="i">this</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs4', 35)" onmouseover="showTip(event, 'fs4', 35)" class="t">obj</span>) <span class="k">-&gt;</span>
+            <span onmouseout="hideTip(event, 'fs14', 36)" onmouseover="showTip(event, 'fs14', 36)" class="f">YesNo</span> (<span onmouseout="hideTip(event, 'fs19', 37)" onmouseover="showTip(event, 'fs19', 37)" class="i">this</span> <span class="o">:?&gt;</span> <span onmouseout="hideTip(event, 'fs10', 38)" onmouseover="showTip(event, 'fs10', 38)" class="t">bool</span>))
+
+<span class="k">module</span> <span class="t">YesNo_int</span> <span class="o">=</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs20', 39)" onmouseover="showTip(event, 'fs20', 39)" class="f">YesNo</span> (<span onmouseout="hideTip(event, 'fs21', 40)" onmouseover="showTip(event, 'fs21', 40)" class="i">this</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs22', 41)" onmouseover="showTip(event, 'fs22', 41)" class="t">int</span>) <span class="o">:</span> <span onmouseout="hideTip(event, 'fs10', 42)" onmouseover="showTip(event, 'fs10', 42)" class="t">bool</span> <span class="o">=</span>
+        <span class="k">if</span> <span onmouseout="hideTip(event, 'fs21', 43)" onmouseover="showTip(event, 'fs21', 43)" class="i">this</span> <span class="o">=</span> <span class="n">1</span> <span class="k">then</span>
+            <span class="k">true</span>
+        <span class="k">else</span>
+            <span class="k">false</span>
+    <span class="k">do</span>
+        <span onmouseout="hideTip(event, 'fs16', 44)" onmouseover="showTip(event, 'fs16', 44)" class="t">YesNoDispatcher</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs11', 45)" onmouseover="showTip(event, 'fs11', 45)" class="v">YesNo</span> <span class="o">&lt;-</span> <span onmouseout="hideTip(event, 'fs16', 46)" onmouseover="showTip(event, 'fs16', 46)" class="t">YesNoDispatcher</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs11', 47)" onmouseover="showTip(event, 'fs11', 47)" class="v">YesNo</span>
+        <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs5', 48)" onmouseover="showTip(event, 'fs5', 48)" class="t">Map</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs17', 49)" onmouseover="showTip(event, 'fs17', 49)" class="f">add</span> (<span onmouseout="hideTip(event, 'fs18', 50)" onmouseover="showTip(event, 'fs18', 50)" class="i">typedefof</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs22', 51)" onmouseover="showTip(event, 'fs22', 51)" class="t">int</span><span class="o">&gt;</span><span class="o">.</span><span class="i">FullName</span>) (<span class="k">fun</span> (<span onmouseout="hideTip(event, 'fs19', 52)" onmouseover="showTip(event, 'fs19', 52)" class="i">this</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs4', 53)" onmouseover="showTip(event, 'fs4', 53)" class="t">obj</span>) <span class="k">-&gt;</span>
+            <span onmouseout="hideTip(event, 'fs20', 54)" onmouseover="showTip(event, 'fs20', 54)" class="f">YesNo</span> (<span onmouseout="hideTip(event, 'fs19', 55)" onmouseover="showTip(event, 'fs19', 55)" class="i">this</span> <span class="o">:?&gt;</span> <span onmouseout="hideTip(event, 'fs22', 56)" onmouseover="showTip(event, 'fs22', 56)" class="t">int</span>))
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs23', 57)" onmouseover="showTip(event, 'fs23', 57)" class="f">yesNo</span> (<span onmouseout="hideTip(event, 'fs3', 58)" onmouseover="showTip(event, 'fs3', 58)" class="i">value</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs4', 59)" onmouseover="showTip(event, 'fs4', 59)" class="t">obj</span>) <span class="o">=</span>
+    (<span onmouseout="hideTip(event, 'fs24', 60)" onmouseover="showTip(event, 'fs24', 60)" class="t">TypeClassDispatcher</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs1', 61)" onmouseover="showTip(event, 'fs1', 61)" class="f">dispatch</span> (<span onmouseout="hideTip(event, 'fs16', 62)" onmouseover="showTip(event, 'fs16', 62)" class="t">YesNoDispatcher</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs11', 63)" onmouseover="showTip(event, 'fs11', 63)" class="v">YesNo</span>) <span onmouseout="hideTip(event, 'fs3', 64)" onmouseover="showTip(event, 'fs3', 64)" class="i">value</span>)
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">val dispatch : map:Map&lt;string,(obj -&gt; &#39;a)&gt; -&gt; value:obj -&gt; &#39;a<br /><br />Full name: Script.TypeClassDispatcher.dispatch</div>
+<div class="tip" id="fs2">val map : Map&lt;string,(obj -&gt; &#39;a)&gt;</div>
+<div class="tip" id="fs3">val value : obj</div>
+<div class="tip" id="fs4">type obj = System.Object<br /><br />Full name: Microsoft.FSharp.Core.obj</div>
+<div class="tip" id="fs5">Multiple items<br />module Map<br /><br />from Microsoft.FSharp.Collections<br /><br />--------------------<br />type Map&lt;&#39;Key,&#39;Value (requires comparison)&gt; =<br />&#160;&#160;interface IEnumerable<br />&#160;&#160;interface IComparable<br />&#160;&#160;interface IEnumerable&lt;KeyValuePair&lt;&#39;Key,&#39;Value&gt;&gt;<br />&#160;&#160;interface ICollection&lt;KeyValuePair&lt;&#39;Key,&#39;Value&gt;&gt;<br />&#160;&#160;interface IDictionary&lt;&#39;Key,&#39;Value&gt;<br />&#160;&#160;new : elements:seq&lt;&#39;Key * &#39;Value&gt; -&gt; Map&lt;&#39;Key,&#39;Value&gt;<br />&#160;&#160;member Add : key:&#39;Key * value:&#39;Value -&gt; Map&lt;&#39;Key,&#39;Value&gt;<br />&#160;&#160;member ContainsKey : key:&#39;Key -&gt; bool<br />&#160;&#160;override Equals : obj -&gt; bool<br />&#160;&#160;member Remove : key:&#39;Key -&gt; Map&lt;&#39;Key,&#39;Value&gt;<br />&#160;&#160;...<br /><br />Full name: Microsoft.FSharp.Collections.Map&lt;_,_&gt;<br /><br />--------------------<br />new : elements:seq&lt;&#39;Key * &#39;Value&gt; -&gt; Map&lt;&#39;Key,&#39;Value&gt;</div>
+<div class="tip" id="fs6">val find : key:&#39;Key -&gt; table:Map&lt;&#39;Key,&#39;T&gt; -&gt; &#39;T (requires comparison)<br /><br />Full name: Microsoft.FSharp.Collections.Map.find</div>
+<div class="tip" id="fs7">System.Object.GetType() : System.Type</div>
+<div class="tip" id="fs8">type IYesNo&lt;&#39;t&gt; =<br />&#160;&#160;interface<br />&#160;&#160;&#160;&#160;abstract member YesNo : this:&#39;t -&gt; bool<br />&#160;&#160;end<br /><br />Full name: Script.IYesNo&lt;_&gt;</div>
+<div class="tip" id="fs9">abstract member IYesNo.YesNo : this:&#39;t -&gt; bool<br /><br />Full name: Script.IYesNo`1.YesNo</div>
+<div class="tip" id="fs10">type bool = System.Boolean<br /><br />Full name: Microsoft.FSharp.Core.bool</div>
+<div class="tip" id="fs11">val mutable YesNo : Map&lt;string,(obj -&gt; bool)&gt;<br /><br />Full name: Script.YesNoDispatcher.YesNo</div>
+<div class="tip" id="fs12">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />Full name: Microsoft.FSharp.Core.Operators.string<br /><br />--------------------<br />type string = System.String<br /><br />Full name: Microsoft.FSharp.Core.string</div>
+<div class="tip" id="fs13">val empty&lt;&#39;Key,&#39;T (requires comparison)&gt; : Map&lt;&#39;Key,&#39;T&gt; (requires comparison)<br /><br />Full name: Microsoft.FSharp.Collections.Map.empty</div>
+<div class="tip" id="fs14">val YesNo : this:bool -&gt; bool<br /><br />Full name: Script.YesNo_bool.YesNo</div>
+<div class="tip" id="fs15">val this : bool</div>
+<div class="tip" id="fs16">module YesNoDispatcher<br /><br />from Script</div>
+<div class="tip" id="fs17">val add : key:&#39;Key -&gt; value:&#39;T -&gt; table:Map&lt;&#39;Key,&#39;T&gt; -&gt; Map&lt;&#39;Key,&#39;T&gt; (requires comparison)<br /><br />Full name: Microsoft.FSharp.Collections.Map.add</div>
+<div class="tip" id="fs18">val typedefof&lt;&#39;T&gt; : System.Type<br /><br />Full name: Microsoft.FSharp.Core.Operators.typedefof</div>
+<div class="tip" id="fs19">val this : obj</div>
+<div class="tip" id="fs20">val YesNo : this:int -&gt; bool<br /><br />Full name: Script.YesNo_int.YesNo</div>
+<div class="tip" id="fs21">val this : int</div>
+<div class="tip" id="fs22">Multiple items<br />val int : value:&#39;T -&gt; int (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.int<br /><br />--------------------<br />type int = int32<br /><br />Full name: Microsoft.FSharp.Core.int<br /><br />--------------------<br />type int&lt;&#39;Measure&gt; = int<br /><br />Full name: Microsoft.FSharp.Core.int&lt;_&gt;</div>
+<div class="tip" id="fs23">val yesNo : value:obj -&gt; bool<br /><br />Full name: Script.yesNo</div>
+<div class="tip" id="fs24">module TypeClassDispatcher<br /><br />from Script</div>
+

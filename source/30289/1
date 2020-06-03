@@ -1,0 +1,66 @@
+//[snippet:Base Definition and Implementations]
+// Int expression object algebra
+type IntAlg<'I> =
+    abstract Lit : int -> 'I
+    abstract Add : 'I -> 'I -> 'I
+
+// Church encoding of terms in the algebra
+type IntExpr<'I> = IntAlg<'I> -> 'I
+let lit i : IntExpr<'I> = fun alg -> alg.Lit i
+let add l r : IntExpr<'I> = fun alg -> alg.Add (l alg) (r alg)
+
+// Evaluator for the algebra
+type IntEval() =
+    interface IntAlg<int> with
+        member __.Lit i = i
+        member __.Add l r = l + r
+
+let eval (f : IntExpr<_>) = f (IntEval())
+
+eval (add (add (lit 3) (lit 5)) (lit -8))
+
+// Pretty printer for the algebra
+type IntPrint() =
+    interface IntAlg<string> with
+        member __.Lit i = string i
+        member __.Add l r = sprintf "(%s + %s)" l r
+
+let print (f : IntExpr<_>) = f (IntPrint())
+
+print (add (add (lit 3) (lit 5)) (lit -8))
+//[/snippet]
+//[snippet:Extending Algebra and Operations]
+// Multi-Sorted algebra of int/boolean expressions 
+type IntBoolAlg<'I, 'B> =
+    inherit IntAlg<'I>
+    abstract Lit : bool -> 'B
+    abstract IfThenElse : 'B -> 'I -> 'I -> 'I
+
+// Church encoding of expressions in the algebra
+type IntBoolExpr<'I,'B,'R> = IntBoolAlg<'I,'B> -> 'R
+let litB (b : bool) : IntBoolExpr<'I,'B,'B> = fun alg -> alg.Lit b
+let ifThenElse c a b : IntBoolExpr<'I,'B,'I> =
+    fun alg -> alg.IfThenElse (c alg) (a alg) (b alg)
+
+// Extending the evaluator
+type IntBoolEval() =
+    inherit IntEval()
+    interface IntBoolAlg<int, bool> with
+        member __.Lit (b:bool) = b
+        member __.IfThenElse b a c = if b then a else c
+
+let eval' (f : IntBoolExpr<_,_,_>) = f (IntBoolEval())
+
+eval' (ifThenElse (litB false) (lit 3) (add (lit 3) (lit 5)))
+
+// Extending the pretty-printer
+type IntBoolPrint() =
+    inherit IntPrint()
+    interface IntBoolAlg<string, string> with
+        member __.Lit (b : bool) = sprintf "%b" b
+        member __.IfThenElse b a c = sprintf "if %s then %s else %s" b a c
+
+let print' (f : IntBoolExpr<_,_,_>) = f (IntBoolPrint())
+
+print' (ifThenElse (litB false) (lit 3) (add (lit 3) (lit 5)))
+//[/snippet]

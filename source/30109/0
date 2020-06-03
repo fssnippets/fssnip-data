@@ -1,0 +1,288 @@
+// OplFs: OPL tools in FSharp
+
+#light
+
+namespace OplFs
+open System
+open ILOG.Concert
+open ILOG.OPL
+open ILOG.CPLEX
+
+module MathProg =
+    let GenererModele fichierModele fichierDonnees = 
+        let stopWatch = Diagnostics.Stopwatch.StartNew()
+         // 01. Loading OPL objects
+        printfn "\ta. Loading OPL object"
+        stopWatch.Restart()
+
+        OplFactory.DebugMode <-true
+        let factory = new OplFactory()
+        let errorHandler = factory.CreateOplErrorHandler(Console.Out)
+        let settings = factory.CreateOplSettings(errorHandler)
+        settings.DisplayPrecision <- 10
+        settings.setWithWarnings(false)
+
+        let modelSource = factory.CreateOplModelSource(fichierModele)
+        let modelDefinition = factory.CreateOplModelDefinition(modelSource, settings)
+        let cplex = factory.CreateCplex()
+        let model = factory.CreateOplModel(modelDefinition, cplex)
+
+        //let proj = factory.CreateOplProject(repertoireProjet)
+        //let x=proj.MakeRunConfiguration()
+
+        printfn "\t\tObjects load in %d millisec" (stopWatch.ElapsedMilliseconds/1000L)
+
+        // 02. Chargement des données
+        printfn "\tb. Loading data and pre-process"
+        stopWatch.Restart()
+
+        let dataSource = factory.CreateOplDataSource(fichierDonnees)
+        model.AddDataSource(dataSource)
+        let dataElement=model.MakeDataElements
+
+        printfn"\t\tData load in %d millisec" stopWatch.ElapsedMilliseconds
+
+        // Génération du modèle
+        stopWatch.Restart()
+        printfn "\tc. Generate model"
+        model.Generate()
+        printfn"\t\tModel load in %d millisec" stopWatch.ElapsedMilliseconds
+        model, dataElement, cplex
+
+
+module Util =
+    type cplexParamCat =
+        |IntParam of int
+        |DoubleParam of float
+        |BooleanParam of bool
+        |StringParam of string
+        |LongParam of int64
+        
+    type cplexParam = {
+            cplexParamName:string;
+            cplexParamValue:cplexParamCat}
+
+    type tuningTrial = cplexParam list
+
+    type tuningResult =  {
+            cplexParamList: cplexParam list;
+            result:string;
+            cplexStatus:string;
+            elapsedTime:int64}
+
+    let setCplexIntParam (cplex : Cplex) cplexParamName cplexParamValue=
+        match cplexParamName with
+            | "AdvInd" -> cplex.SetParam(Cplex.IntParam.AdvInd, cplexParamValue)//General
+            | "ClockType" -> cplex.SetParam(Cplex.IntParam.ClockType, cplexParamValue)//General
+            | "MIPEmphasis" -> cplex.SetParam(Cplex.IntParam.MIPEmphasis, cplexParamValue)//Insistance
+            | "BndStrenInd" -> cplex.SetParam(Cplex.IntParam.BndStrenInd, cplexParamValue)//Pré-traitement
+            | "CoeRedInd" -> cplex.SetParam(Cplex.IntParam.CoeRedInd, cplexParamValue)//Pré-traitement
+            | "DepInd" -> cplex.SetParam(Cplex.IntParam.DepInd, cplexParamValue)//Pré-traitement
+            | "PreDual" -> cplex.SetParam(Cplex.IntParam.PreDual, cplexParamValue)//Pré-traitement
+            | "AggFill" -> cplex.SetParam(Cplex.IntParam.AggFill, cplexParamValue)//Pré-traitement
+            | "PrePass" -> cplex.SetParam(Cplex.IntParam.PrePass, cplexParamValue)//Pré-traitement
+            | "Reduce" -> cplex.SetParam(Cplex.IntParam.Reduce, cplexParamValue)//Pré-traitement
+            | "RelaxPreInd" -> cplex.SetParam(Cplex.IntParam.RelaxPreInd, cplexParamValue)//Pré-traitement
+            | "RepeatPresolve" -> cplex.SetParam(Cplex.IntParam.RepeatPresolve, cplexParamValue)//Pré-traitement
+            | "Symmetry" -> cplex.SetParam(Cplex.IntParam.Symmetry, cplexParamValue)//Pré-traitement
+            | "ScaInd" -> cplex.SetParam(Cplex.IntParam.ScaInd, cplexParamValue) //Lecture
+            | "MIPDisplay" -> cplex.SetParam(Cplex.IntParam.MIPDisplay, cplexParamValue)//MIP General
+            | "MIPOrdType" -> cplex.SetParam(Cplex.IntParam.MIPOrdType, cplexParamValue)//MIP General
+            | "BrDir" -> cplex.SetParam(Cplex.IntParam.BrDir, cplexParamValue)//MIP Stratégie
+            | "DiveType" -> cplex.SetParam(Cplex.IntParam.DiveType, cplexParamValue)//MIP Stratégie
+            | "FPHeur" -> cplex.SetParam(Cplex.IntParam.FPHeur, cplexParamValue)//MIP Stratégie
+            | "HeurFreq" -> cplex.SetParam(Cplex.IntParam.HeurFreq, cplexParamValue)//MIP Stratégie
+            | "MIPKappaStats" -> cplex.SetParam(Cplex.IntParam.MIPKappaStats, cplexParamValue)//MIP Stratégie
+            | "NodeSel" -> cplex.SetParam(Cplex.IntParam.NodeSel, cplexParamValue)
+            | "PreslvNd" -> cplex.SetParam(Cplex.IntParam.PreslvNd, cplexParamValue)
+            | "Probe" -> cplex.SetParam(Cplex.IntParam.Probe, cplexParamValue)
+            | "RINSHeur" -> cplex.SetParam(Cplex.IntParam.RINSHeur, cplexParamValue)
+            | "RootAlg" -> cplex.SetParam(Cplex.IntParam.RootAlg, cplexParamValue)
+            | "NodeAlg" -> cplex.SetParam(Cplex.IntParam.NodeAlg, cplexParamValue)
+            | "VarSel" -> cplex.SetParam(Cplex.IntParam.VarSel, cplexParamValue)
+            | "MIPSearch" -> cplex.SetParam(Cplex.IntParam.MIPSearch, cplexParamValue)
+            | "CutPass" -> cplex.SetParam(Cplex.IntParam.CutPass, cplexParamValue)//MIP Limites
+            | "Cliques" -> cplex.SetParam(Cplex.IntParam.Cliques, cplexParamValue)//Coupes
+            | "Covers" -> cplex.SetParam(Cplex.IntParam.Covers, cplexParamValue)//Coupes
+            | "DisjCuts" -> cplex.SetParam(Cplex.IntParam.DisjCuts, cplexParamValue)//Coupes
+            | "FlowCovers" -> cplex.SetParam(Cplex.IntParam.FlowCovers, cplexParamValue)//Coupes
+            | "FracCuts" -> cplex.SetParam(Cplex.IntParam.FracCuts, cplexParamValue)//Coupes
+            | "GUBCovers" -> cplex.SetParam(Cplex.IntParam.GUBCovers, cplexParamValue)//Coupes
+            | "ImplBd" -> cplex.SetParam(Cplex.IntParam.ImplBd, cplexParamValue)//Coupes
+            | "MIRCuts" -> cplex.SetParam(Cplex.IntParam.MIRCuts, cplexParamValue)//Coupes
+            | "MCFCuts" -> cplex.SetParam(Cplex.IntParam.MCFCuts, cplexParamValue)//Coupes
+            | "FlowPaths" -> cplex.SetParam(Cplex.IntParam.FlowPaths, cplexParamValue)//Coupes
+            | "ZeroHalfCuts" -> cplex.SetParam(Cplex.IntParam.ZeroHalfCuts, cplexParamValue)//Coupes
+            | "BarColNz" -> cplex.SetParam(Cplex.IntParam.BarColNz, cplexParamValue)//Barrière
+            | "BarAlg" -> cplex.SetParam(Cplex.IntParam.BarAlg, cplexParamValue)//Barrière
+            | "BarCrossAlg" -> cplex.SetParam(Cplex.IntParam.BarCrossAlg, cplexParamValue)
+            | "BarDisplay" -> cplex.SetParam(Cplex.IntParam.BarDisplay, cplexParamValue)
+            | "BarOrder" -> cplex.SetParam(Cplex.IntParam.BarOrder, cplexParamValue)
+            | "BarStartAlg" -> cplex.SetParam(Cplex.IntParam.BarStartAlg, cplexParamValue)
+            | _ -> printfn "Paramètre inexistant: %s" cplexParamName //Manquante: LocalImplied, solutiontype, BQP, LPMethode
+            //Fonctionne pas: AggFill
+
+    let setCplexDoubleParam (cplex : Cplex) cplexParamName cplexParamValue=
+        match cplexParamName with
+            | "TiLim" -> cplex.SetParam(Cplex.DoubleParam.TiLim, cplexParamValue)//Général
+            | "DetTiLim" -> cplex.SetParam(Cplex.DoubleParam.DetTiLim, cplexParamValue)//Général
+            | "EpGap" -> cplex.SetParam(Cplex.DoubleParam.EpGap, cplexParamValue)//MIP Tolérance
+            | "BarEpComp" -> cplex.SetParam(Cplex.DoubleParam.BarEpComp, cplexParamValue)//Barrière
+            | "BarQCPEpComp" -> cplex.SetParam(Cplex.DoubleParam.BarQCPEpComp, cplexParamValue)//Barrière
+            | "BarGrowth" -> cplex.SetParam(Cplex.DoubleParam.BarGrowth, cplexParamValue)//Barrière
+            | "BarObjRng" -> cplex.SetParam(Cplex.DoubleParam.BarObjRng, cplexParamValue)//Barrière
+            | _ -> printfn "Unavailable parameter: %s" cplexParamName
+
+    let setCplexBooleanParam (cplex : Cplex) cplexParamName cplexParamValue =
+        match cplexParamName with
+            | "NumericalEmphasis" -> cplex.SetParam(Cplex.BooleanParam.NumericalEmphasis, cplexParamValue)//Insistance
+            | "PreLinear" -> cplex.SetParam(Cplex.BooleanParam.PreLinear, cplexParamValue)//Pré-traitement
+            | "PreInd" -> cplex.SetParam(Cplex.BooleanParam.PreInd, cplexParamValue)//Pré-traitement
+            | "LBHeur" -> cplex.SetParam(Cplex.BooleanParam.LBHeur, cplexParamValue)//MIP Stratégie
+            | "MIPOrdInd" -> cplex.SetParam(Cplex.BooleanParam.MIPOrdInd, cplexParamValue)//MIP Stratégie
+            | _ -> printfn "Unavailable parameter: %s" cplexParamName
+
+    let setCplexStringParam (cplex : Cplex) cplexParamName cplexParamValue =
+        match cplexParamName with
+            | "WorkDir" -> cplex.SetParam(Cplex.StringParam.WorkDir, cplexParamValue)//Général
+            | _ -> printfn "Unavailable parameter: %s" cplexParamName
+    let setCplexLongParam (cplex : Cplex) cplexParamName cplexParamValue  =
+        match cplexParamName with            
+            | "CutPass" -> cplex.SetParam(Cplex.LongParam.CutPass, cplexParamValue)//MIP Limites
+            | "BarMaxCor" -> cplex.SetParam(Cplex.LongParam.BarMaxCor, cplexParamValue)//Barrière
+            | "BarItLim" -> cplex.SetParam(Cplex.LongParam.BarItLim, cplexParamValue)//Barrière
+            | _ -> printfn "Unavailable parameter: %s" cplexParamName
+
+
+    let setCplexParam (cplex : Cplex)(param :cplexParam) =
+        match param.cplexParamValue with
+            | IntParam prm ->  setCplexIntParam cplex param.cplexParamName prm
+            | DoubleParam prm ->  setCplexDoubleParam cplex param.cplexParamName prm
+            | BooleanParam prm ->  setCplexBooleanParam cplex param.cplexParamName prm
+            | StringParam prm ->  setCplexStringParam cplex param.cplexParamName prm
+            | LongParam prm ->  setCplexLongParam cplex param.cplexParamName prm
+
+    let generateTuningList lstParamToTest=
+        let rec listCartesianProduct LL = 
+            match LL with
+            | [] -> Seq.singleton []
+            | L::Ls -> seq {for x in L do for xs in listCartesianProduct Ls -> x::xs}
+
+        let tblLstPrm =
+            seq{for (paramName, paramValues) in lstParamToTest do
+                    for paramValue in paramValues do
+                        yield{cplexParamName=paramName; cplexParamValue=paramValue}
+                }|>Seq.groupBy (fun x -> x.cplexParamName)|>Seq.map (fun (a,b) -> b)|>Seq.toList
+
+        listCartesianProduct tblLstPrm|>Seq.toList
+
+    let tune (cplex : Cplex) (tuningList: tuningTrial list) :tuningResult list=
+        let setCplexParamInst = setCplexParam cplex
+        let stopWatch = Diagnostics.Stopwatch.StartNew()
+        let resultats= 
+            seq{for trial in tuningList do
+                    cplex.SetParam(Cplex.IntParam.AdvInd, 0)//Advanced start switch à off
+                    //cplex.SetParam(Cplex.IntParam.ClockType, 1)//Temps déterministe
+                    stopWatch.Restart()
+                    trial|>Seq.iter setCplexParamInst
+                    let resultat=
+                        match cplex.Solve() with
+                            | true -> "Success"
+                            | false -> "Error"
+                    yield{cplexParamList=trial;result=resultat; 
+                        cplexStatus=cplex.GetCplexStatus().ToString(); elapsedTime=stopWatch.ElapsedMilliseconds}
+                }
+        Seq.toList résultats
+
+// Script to tune OPL Cplex model. Enter a list of all parameters possible value and the script will try all combinaison of parameters
+
+(*#light
+#if INTERACTIVE
+#r "C:\Program Files\IBM\ILOG\CPLEX_Studio1263\opl\lib\oplall.dll"
+#load "OplFs.fs"
+#endif
+
+open OplFs
+open OplFs.Util
+open OplFs.MathProg
+open System
+
+let stopWatch = Diagnostics.Stopwatch.StartNew()
+let repertoireProjet = @"C:\YourProjectDirectory\"
+let fichierModele = repertoireProjet + "Warehouse.mod"
+let  fichierDonnees = repertoireProjet + "Warehouse.dat"
+
+let model, dataElement, cplex =GenererModele fichierModele fichierDonnees
+
+//Parmètres CPLEX
+//Liste de paramètres à tester
+//Test de coupes
+let lstParamToTest=
+        [("TiLim", [DoubleParam 140.0]);
+        ("RootAlg", [IntParam 4]);
+        ("BarAlg", [ IntParam 3]);
+        ("BarStartAlg", [IntParam 4]);
+        ("BarOrder", [IntParam 1;IntParam 2;IntParam 3]);
+        ("BarCrossAlg", [IntParam 1]);
+        ("BarColNz", [IntParam 229;IntParam 100;IntParam 300;IntParam 400]);
+        ("EpGap", [DoubleParam 0.05]);
+        ("NodeAlg", [IntParam 4]);
+        ("HeurFreq",[IntParam 10]);
+        ("CutPass", [IntParam -1]);
+        ]
+
+stopWatch.Restart()
+printfn "\td. Tune"
+
+let tuningList = generateTuningList lstParamToTest
+let resultatTuning=tune cplex tuningList
+
+for x in resultatTuning do
+    printfn "%d" x.elapsedTime*)
+
+// Script to optimise a model
+(*#light
+#if INTERACTIVE
+#r "C:\Program Files\IBM\ILOG\CPLEX_Studio1263\opl\lib\oplall.dll"
+#load "OplFs.fs"
+#endif
+
+open OplFs
+open OplFs.Util
+open OplFs.MathProg
+open System
+
+let stopWatch = Diagnostics.Stopwatch.StartNew()
+let repertoireProjet = @"C:\YourProjectDirectory\"
+let fichierModele = repertoireProjet + "Warehouse.mod"
+let  fichierDonnees = repertoireProjet + "Warehouse.dat"
+let model, dataElement, cplex =GenererModele fichierModele fichierDonnees
+
+printfn "\td. Optimise"
+stopWatch.Restart()
+let resultatOptimisation=tune cplex [[{cplexParamName = "TiLim";   cplexParamValue = DoubleParam 140.0;};
+                                      {cplexParamName = "RootAlg"; cplexParamValue = IntParam 4;};
+                                            {cplexParamName = "BarAlg";  cplexParamValue = IntParam 3;};
+                                            {cplexParamName = "ScaInd";  cplexParamValue = IntParam 1;};
+                                            {cplexParamName ="BarColNz";  cplexParamValue = IntParam 1000;};
+                                            {cplexParamName = "BarStartAlg"; cplexParamValue = IntParam 4;};
+                                            {cplexParamName = "BarCrossAlg";cplexParamValue = IntParam 1;}; 
+                                            {cplexParamName = "EpGap";cplexParamValue = DoubleParam 0.05;};
+                                            {cplexParamName = "HeurFreq";cplexParamValue = IntParam 10;};
+                                            {cplexParamName = "MIPEmphasis";cplexParamValue = IntParam 1;};  
+                                            {cplexParamName = "NodeAlg";cplexParamValue = IntParam 4;};
+                                            {cplexParamName = "Symmetry"; cplexParamValue=IntParam 0;};
+                                            {cplexParamName = "DiveType"; cplexParamValue=IntParam 1;};
+                                            {cplexParamName = "FlowCovers";cplexParamValue = IntParam 0;};
+                                            {cplexParamName = "FPHeur";cplexParamValue = IntParam 2;};
+                                            {cplexParamName = "FracCuts";cplexParamValue = IntParam 0;};
+                                            {cplexParamName = "GUBCovers";cplexParamValue = IntParam 0;};
+                                            {cplexParamName = "ImplBd";cplexParamValue = IntParam 0;}; 
+                                            {cplexParamName = "MIRCuts";cplexParamValue = IntParam 0;};
+                                            {cplexParamName = "MCFCuts";cplexParamValue = IntParam 2;};
+                                            {cplexParamName = "FlowPaths";cplexParamValue = IntParam 0;};
+                                            {cplexParamName = "ZeroHalfCuts";cplexParamValue = IntParam 0;}
+                                           ]]
+
+printfn"\t\tOptimisation en %d millisec" stopWatch.ElapsedMilliseconds
+*)

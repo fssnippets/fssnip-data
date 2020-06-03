@@ -1,0 +1,32 @@
+module Async =
+    open System.Threading
+    let inline ParallelWithThrottle (millisecondsTimeout:int) (limit:int) (operation:'a->Async<'b>) (items:'a seq) =
+        let semaphore = new System.Threading.SemaphoreSlim(limit, limit)
+        let mutable count = (items |> Seq.length) 
+        items 
+        |> Seq.map(fun item -> async {
+                let! isHandleAquired = Async.AwaitTask <| semaphore.WaitAsync(millisecondsTimeout=millisecondsTimeout)
+                if isHandleAquired then 
+                    try
+                        return! operation item
+                    finally 
+                        semaphore.Release() |> ignore
+                        if Interlocked.Decrement(&count) = 0 then
+                            semaphore.Dispose()
+                else return! failwith "Failled to aquire handle" })
+        |> Async.Parallel 
+
+// Example
+let rec fib n =
+    match n with
+    | 1 | 2 -> 1
+    | n -> fib(n - 2) + fib
+
+let op n =   
+    async{  let fibN = fib n
+                  return (n, fibN)   }
+
+
+Async.ParallelWithThrottle 10000 4 op [30..45] 
+    |> Async.RunSynchronously
+    |> Seq.iter(fun (n,fibN) ->  printfn "The fib number of %d is %d" n fibN) 

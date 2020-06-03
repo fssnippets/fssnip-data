@@ -1,0 +1,64 @@
+module ServerCode.Config
+
+open System
+open System.IO
+open System.Diagnostics.CodeAnalysis
+open Nett
+open Nett.Coma
+
+let private (</>) a b = Path.Combine(a, b)
+
+type  DbConfig() =
+  member val host = "" with get, set
+  member val port = 0 with get, set
+  member val database = "" with get, set
+  member val user = "" with get, set
+  member val password = "" with get, set
+  [<TomlIgnore>]
+  member this.Url with
+    get() =
+        sprintf
+          "User ID=%s;Host=%s;Port=%d;Database=%s;Password=%s"
+          this.user this.host this.port this.database this.password
+
+type ArDBConfig() =
+  member val host = "" with get, set
+  member val port = 0 with get, set
+
+type Profile() =
+  member val dev = false with get, set
+  member val prod = false with get, set
+
+type AppConfig() =
+  member val database = DbConfig() with get, set
+  member val ardb = ArDBConfig() with get, set
+  member val profile = Profile() with get, set
+
+let mutable private defaultConf = null
+let mutable private prodConf: IConfigSource = null
+let mutable private debugConf: IConfigSource = null
+
+let private getConf file =
+  Environment.CurrentDirectory </> "Config" </> file
+// merge both TOML files into one settings object
+let private comaConfig =
+  Config.CreateAs()
+    .MappedToType(fun () -> AppConfig())
+    .StoredAs(
+      fun store ->
+        store
+          .File(getConf "Default.toml")
+          .AccessedBySource("prod", &defaultConf)
+          .MergeWith(
+              store
+#if DEBUG
+                .File(getConf "Dev.toml")
+#else
+                .File(getConf "Prod.toml")
+#endif
+                .AccessedBySource("default", &prodConf))
+          |> ignore)
+    .Initialize();
+
+[<SuppressMessage("Hints", "RulesHintRefactor")>]
+let Config = comaConfig.Get(fun x -> x)

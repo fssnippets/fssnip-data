@@ -1,0 +1,56 @@
+module JsonWebToken =
+    open System
+    open System.Text
+    open System.Text.RegularExpressions
+    open System.Security.Cryptography
+    let replace (oldVal: string) (newVal: string) = fun (s: string) -> s.Replace(oldVal, newVal)
+    let minify = 
+        let regex = Regex("(\"(?:[^\"\\\\]|\\\\.)*\")|\\s+", RegexOptions.Compiled|||RegexOptions.CultureInvariant)
+        fun s ->
+            regex.Replace(s, "$1")
+    let base64UrlEncode bytes =
+        Convert.ToBase64String(bytes) |> replace "+" "-" |> replace "/" "_" |> replace "=" ""
+    type IJwtAuthority =
+        inherit IDisposable
+        abstract member IssueToken: header:string -> payload:string -> string
+        abstract member VerifyToken: string -> bool
+    let newJwtAuthority (initAlg: byte array -> HMAC) key =
+        let alg = initAlg(key)
+        let encode = minify >> Encoding.UTF8.GetBytes >> base64UrlEncode
+        let issue header payload =
+            let parts = [header; payload] |> List.map encode |> String.concat "."
+            let signature = parts |> Encoding.UTF8.GetBytes |> alg.ComputeHash |> base64UrlEncode
+            [parts; signature] |> String.concat "."
+        let verify (token: string) =
+            let secondDot = token.LastIndexOf(".")
+            let parts = token.Substring(0, secondDot)
+            let signature = token.Substring(secondDot + 1)
+            (parts |> Encoding.UTF8.GetBytes |> alg.ComputeHash |> base64UrlEncode) = signature
+
+        {
+            new IJwtAuthority with
+                member this.IssueToken header payload = issue header payload
+                member this.VerifyToken token = verify token
+                member this.Dispose() = alg.Dispose()
+        }
+
+open System.Text
+open System.Security.Cryptography
+open JsonWebToken
+let header = 
+    """{
+        "alg": "HS256",
+        "typ": "JWT"
+    }"""
+let payload = 
+    """{
+        "sub": "1234567890",
+        "name": "John Doe",
+        "admin": true
+    }"""
+let encodedSecret = "secret" |> Encoding.UTF8.GetBytes
+let testAuth = newJwtAuthority (fun key -> new HMACSHA256(key) :> HMAC) encodedSecret
+let token = testAuth.IssueToken header payload
+token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ"
+testAuth.VerifyToken token
+testAuth.Dispose()

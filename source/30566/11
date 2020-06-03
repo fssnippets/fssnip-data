@@ -1,0 +1,250 @@
+// http://www.fssnip.net/7X0
+
+namespace Adhemar.Polynomials
+
+open System
+open System.Diagnostics.Contracts
+open System.Numerics
+open System.Text
+
+module Option =
+
+    // https://raw.githubusercontent.com/fsharp/fsharp/
+    //                                   cb6cb5c410f537c81cf26825657ef3bb29a7e952/
+    //                                   src/fsharp/FSharp.Core/option.fs r:20
+    let defaultValue value option =
+        match option with
+            | None ->
+                value
+            | Some v ->
+                v
+
+type Terms =
+    | NoTerms = 1
+    | NegativeTerm = 2
+    | MinusOneTerm = 3
+    | OneTerm = 3
+    | PositiveTerm = 4
+    | MultipleTerms = 5
+
+type Poly (coefficients : int64 list list) =
+
+    do
+        let rec innerNoZeroHighestCoefficient cs =
+            match cs with
+                | []
+                | [ 0L ] ->
+                    []
+                | 0L :: ts when List.isEmpty (innerNoZeroHighestCoefficient ts) ->
+                    []
+                | _ ->
+                    cs
+        let rec outerNoZeroHighestCoefficient css =
+            let mss = List.map innerNoZeroHighestCoefficient css
+            match mss with
+                | []
+                | [ [] ] ->
+                    []
+                | [] :: tss when List.forall List.isEmpty (outerNoZeroHighestCoefficient tss) ->
+                    []
+                | _ ->
+                    mss
+        if coefficients <> outerNoZeroHighestCoefficient coefficients then
+             invalidArg "coefficients" "Zero highest coefficient"
+
+    member this.Coefficients =
+        coefficients
+
+    override this.ToString () =
+        let innerTerm cs =
+            let folder s c =
+                match s, c with
+                    | Option.Some Terms.NoTerms, 0L ->
+                         Option.Some Terms.NoTerms
+                    | Option.Some Terms.NoTerms, -1L ->
+                         Option.Some Terms.MinusOneTerm
+                    | Option.Some Terms.NoTerms, 1L ->
+                         Option.Some Terms.OneTerm
+                    | Option.Some Terms.NoTerms, _ when c < 0L ->
+                         Option.Some Terms.NegativeTerm
+                    | Option.Some Terms.NoTerms, _ ->
+                         Option.Some Terms.PositiveTerm
+                    | _, 0L ->
+                         s
+                    | Option.Some t, _ when t <> Terms.MultipleTerms ->
+                         Option.Some Terms.MultipleTerms
+                    | _ ->
+                         None
+            let initialState = Some Terms.NoTerms
+            let scanning = Seq.scan folder initialState cs
+            Option.get (Seq.last (Seq.takeWhile Option.isSome scanning))
+        let printPowerOfVariable b x y leftTrim p =
+            if p <> 0 then
+                if not leftTrim then
+                   Printf.bprintf b " "
+                Printf.bprintf b "%s" x
+                if p <> 1 then
+                    Printf.bprintf b "^%d" p
+                match y with
+                    | None ->
+                        ()
+                    | Some r ->
+                        Printf.bprintf b "(%s)" r
+        let printTerm b n m explicitOne firstTerm p c =
+            let f = Option.defaultValue true firstTerm
+            if c > 1L || (c = 1L && Option.isNone firstTerm && p = 0) then
+                if f then
+                    Printf.bprintf b "%d" c
+                else
+                    Printf.bprintf b " + %d" c
+            elif c = 1L then
+                if not f then
+                    Printf.bprintf b " + "
+                if p = 0 && explicitOne then
+                    Printf.bprintf b "1"
+            elif c < -1L || (c = -1L && Option.isNone firstTerm && p = 0) then
+                if f then
+                    Printf.bprintf b "-%d" -c
+                else
+                    Printf.bprintf b " - %d" -c
+            elif c = -1L then
+                if f then
+                    Printf.bprintf b "-"
+                else
+                    Printf.bprintf b " - "
+                if p = 0 && explicitOne then
+                    Printf.bprintf b "1"
+            if c <> 0L then
+                printPowerOfVariable b n m (c = 1L || c = -1L) p
+            elif Option.isNone firstTerm then
+                Printf.bprintf b "0"
+        let printInnerPoly b n m firstTerm p cs =
+            let itering u v f j (q, d) =
+                printTerm b u v (q = 0) (Option.Some (f && j = 0)) q d
+            let terms = seq {
+                for i = List.length cs - 1 downto 0 do
+                    let c = List.item i cs
+                    if c <> 0L then
+                        yield i, c
+            }
+            Seq.iteri (itering n m (Option.defaultValue true firstTerm)) terms
+        let printInnerPolyTerm b n m x y singlePolyTerm firstPolyTerm p cs =
+            let f = Option.defaultValue true firstPolyTerm
+            let t = innerTerm cs
+            if t = Terms.MultipleTerms && not singlePolyTerm then
+                if not f then
+                    Printf.bprintf b " + "
+                Printf.bprintf b "("
+            printInnerPoly b n m (Option.Some (f || t = Terms.MultipleTerms)) p cs
+            if t = Terms.MultipleTerms && not singlePolyTerm then
+                Printf.bprintf b ")"
+            if t <> Terms.NoTerms then
+                printPowerOfVariable b x y (t = Terms.MinusOneTerm || t = Terms.OneTerm) p
+            elif Option.isNone firstPolyTerm then
+                Printf.bprintf b "0"
+        let printOuterPoly b n m x y firstPolyTerm css =
+            let itering u v w z f j (q, ds) =
+                printInnerPolyTerm b u v w z (List.length css = 1) (Option.Some (f && j = 0)) q ds
+            let polyTerms = seq {
+                for i = List.length css - 1 downto 0 do
+                    let cs = List.item i css
+                    if innerTerm cs <> Terms.NoTerms then
+                        yield i, cs
+            }
+            Seq.iteri (itering n m x y (Option.defaultValue true firstPolyTerm)) polyTerms
+        let printPoly b css =
+            let innerTermIsNoTerms cs =
+                innerTerm cs = Terms.NoTerms
+            printOuterPoly b "n" Option.None "cos" (Option.Some "x") Option.None css
+            if List.forall innerTermIsNoTerms css then
+                Printf.bprintf b "0"
+        let builder = StringBuilder ()
+        printPoly builder coefficients
+        builder.ToString ()
+
+    static member FlexiblePoly (coefficients : int64 list list) =
+        let rec innerNoZeroHighestCoefficient cs =
+            match cs with
+                | []
+                | [ 0L ] ->
+                    []
+                | 0L :: ts when List.isEmpty (innerNoZeroHighestCoefficient ts) ->
+                    []
+                | _ ->
+                    cs
+        let rec outerNoZeroHighestCoefficient css =
+            let mss = List.map innerNoZeroHighestCoefficient css
+            match mss with
+                | []
+                | [ [] ] ->
+                    []
+                | [] :: tss when List.forall List.isEmpty (outerNoZeroHighestCoefficient tss) ->
+                    []
+                | _ ->
+                    mss
+        Poly (outerNoZeroHighestCoefficient coefficients)
+
+//     Exp (x + i y) = Exp x (Cos y + i Sin y)
+//     Sin (x + i y) = Sin x Cosh y + i Cos x Sinh y
+//     Cos (x + i y) = Cos x Cosh y - i Sin x Sinh y
+//     Sinh (x + i y) = Sinh x Cos y + i Cosh x Sin y
+//     Cosh (x + i y) = Cosh x Cos y + i Sinh x Sin y
+//     http://math2.org/math/trig/hyperbolics.htm
+
+// open System
+// open System.Numerics
+
+module Complex =
+    let toComplex f =
+        Complex (f, 0.0)
+
+module Qi =
+    // Feng Qi, Derivatives of tangent function and tangent numbers
+    // https://arxiv.org/pdf/1202.1205.pdf p. 11 middle (cos) and p. 12 top (sin)
+
+    let powerOfMinusOne p =
+        if p % 2 = 0 then
+            1
+        else
+            -1
+
+    let rec power n p =
+        if p = 0u then
+            1
+        else
+            n * power n (p - 1u)
+       
+    let rec factorial n =
+        if n = 0u then
+            1u
+        else
+            n * factorial (n - 1u)
+
+    let choose n m =
+        if m > n then
+            0u
+        else
+            factorial n / (factorial m * factorial (n - m))
+
+    let sinDer k n x =
+        let seqAddComplex (zs : Complex seq) =
+            Seq.fold (+) Complex.Zero zs
+        let term r m y q =
+            let twoQMinusM = 2 * q - int m
+            let factor = float (powerOfMinusOne q * int (choose m (uint32 q)) * power twoQMinusM r)
+            let argument = float (r - m) * Math.PI / 2.0 + float twoQMinusM * y
+            Complex (factor * Math.Cos argument, factor * Math.Sin argument)     
+        let nu = uint32 n
+        let powMinusOne = Complex.toComplex (float (powerOfMinusOne n))
+        powMinusOne * seqAddComplex (Seq.map (term k nu x) {0 .. n}) / Complex.toComplex (float (power 2 nu))
+
+    let cosDer k n x =
+        let seqAddComplex (zs : Complex seq) =
+            Seq.fold (+) Complex.Zero zs
+        let term r m y q =
+            let twoQMinusM = 2 * q - int m
+            let factor = float (int (choose m (uint32 q)) * power twoQMinusM r)
+            let argument = Math.PI / 2.0 + float twoQMinusM * y
+            Complex (factor * Math.Cos argument, factor * Math.Sin argument)     
+        let nu = uint32 n
+        Complex.One * seqAddComplex (Seq.map (term k nu x) {0 .. n}) / Complex.toComplex (float (power 2 nu))

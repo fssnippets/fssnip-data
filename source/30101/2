@@ -1,0 +1,39 @@
+open System
+open System.Collections.Concurrent  
+
+let memoize cacheTimeSeconds (caller:string) (f: ('a -> 'b)) =
+    let cacheTimes = ConcurrentDictionary<string,DateTime>()
+    let cache = ConcurrentDictionary<'a, 'b>()    
+    fun x ->
+        match cacheTimes.TryGetValue caller with
+        | true, time when time < DateTime.UtcNow.AddSeconds(-cacheTimeSeconds)
+            -> cache.TryRemove(x) |> ignore
+        | _ -> ()
+        cache.GetOrAdd(x, fun x -> 
+            cacheTimes.AddOrUpdate(caller, DateTime.UtcNow, fun _ _ ->DateTime.UtcNow)|> ignore
+            f(x)
+            )
+
+let memoizeAsync cacheTimeSeconds (caller:string) (f: ('a -> Async<'b>)) =
+    let cacheTimes = ConcurrentDictionary<string,DateTime>()
+    let cache = ConcurrentDictionary<'a, System.Threading.Tasks.Task<'b>>()    
+    fun x ->
+        match cacheTimes.TryGetValue caller with
+        | true, time when time < DateTime.UtcNow.AddSeconds(-cacheTimeSeconds)
+            -> cache.TryRemove(x) |> ignore
+        | _ -> ()
+        cache.GetOrAdd(x, fun x -> 
+            cacheTimes.AddOrUpdate(caller, DateTime.UtcNow, fun _ _ ->DateTime.UtcNow)|> ignore
+            f(x) |> Async.StartAsTask
+            ) |> Async.AwaitTask
+
+(* Example test:
+let cacheTimeSeconds = 30.
+let myfun = memoize "myTest" cacheTimeSeconds (fun f -> Console.WriteLine("SideEffect"); f + 1)
+myfun 3 // "SideEffect"
+myfun 5 // "SideEffect"
+myfun 3
+System.Threading.Thread.Sleep ((cacheTimeSeconds |> int) * 1000 + 100)
+myfun 3 // "SideEffect"
+myfun 3
+*)

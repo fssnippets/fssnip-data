@@ -1,0 +1,70 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">// From NuGet:</span>
+<span class="c">// Install-Package TextmagicRest</span>
+<span class="prep">#if</span> <span class="i">INTERACTIVE</span>
+<span class="inactive">#I</span><span class="inactive"> </span><span class="inactive">&quot;./packages/TextmagicRest.1.0.0.2/lib/net45&quot;</span>
+<span class="inactive">#I</span><span class="inactive"> </span><span class="inactive">&quot;./packages/RestSharp.105.1.0/lib/net45&quot;</span>
+<span class="inactive">#r</span><span class="inactive"> </span><span class="inactive">&quot;TextmagicRest.dll&quot;</span>
+<span class="inactive">#r</span><span class="inactive"> </span><span class="inactive">&quot;RestSharp.dll&quot;</span>
+<span class="prep">#else</span>
+<span class="k">module</span> <span class="i">Textmagic</span>
+<span class="prep">#endif</span>
+    
+    <span class="c">// Insert your account details:</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">username</span> <span class="o">=</span> <span class="s">&quot;test&quot;</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">apiKey</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="i">client</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="i">TextmagicRest</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="t">Client</span>(<span onmouseout="hideTip(event, 'fs1', 6)" onmouseover="showTip(event, 'fs1', 6)" class="i">username</span>, <span onmouseout="hideTip(event, 'fs2', 7)" onmouseover="showTip(event, 'fs2', 7)" class="i">apiKey</span>)
+
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs6', 8)" onmouseover="showTip(event, 'fs6', 8)" class="i">sms</span> <span class="o">=</span> <span class="s">&quot;Hello from TextMagic&quot;</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs7', 9)" onmouseover="showTip(event, 'fs7', 9)" class="i">``international phone number``</span> <span class="o">=</span> <span class="s">&quot;447860021130&quot;</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs8', 10)" onmouseover="showTip(event, 'fs8', 10)" class="i">msg</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs3', 11)" onmouseover="showTip(event, 'fs3', 11)" class="i">client</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs9', 12)" onmouseover="showTip(event, 'fs9', 12)" class="f">SendMessage</span>(<span onmouseout="hideTip(event, 'fs6', 13)" onmouseover="showTip(event, 'fs6', 13)" class="i">sms</span>, <span onmouseout="hideTip(event, 'fs7', 14)" onmouseover="showTip(event, 'fs7', 14)" class="i">``international phone number``</span>)
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs10', 15)" onmouseover="showTip(event, 'fs10', 15)" class="i">res</span> <span class="o">=</span> 
+        <span class="k">match</span> <span onmouseout="hideTip(event, 'fs8', 16)" onmouseover="showTip(event, 'fs8', 16)" class="i">msg</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs11', 17)" onmouseover="showTip(event, 'fs11', 17)" class="i">Success</span> <span class="k">with</span>
+        | <span class="k">true</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs12', 18)" onmouseover="showTip(event, 'fs12', 18)" class="f">sprintf</span> <span class="s">&quot;Message session </span><span class="pf">%i</span><span class="s"> successfully sent&quot;</span> <span onmouseout="hideTip(event, 'fs8', 19)" onmouseover="showTip(event, 'fs8', 19)" class="i">msg</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs13', 20)" onmouseover="showTip(event, 'fs13', 20)" class="i">Id</span>
+        | <span class="k">false</span> <span class="k">-&gt;</span> 
+            <span onmouseout="hideTip(event, 'fs12', 21)" onmouseover="showTip(event, 'fs12', 21)" class="f">sprintf</span> <span class="s">&quot;Message was not sent due to following exception: </span><span class="pf">%s</span><span class="s">&quot;</span> 
+                    <span onmouseout="hideTip(event, 'fs8', 22)" onmouseover="showTip(event, 'fs8', 22)" class="i">msg</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs14', 23)" onmouseover="showTip(event, 'fs14', 23)" class="i">ClientException</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs15', 24)" onmouseover="showTip(event, 'fs15', 24)" class="i">Message</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">val username : string<br /><br />Full name: Script.username</div>
+<div class="tip" id="fs2">val apiKey : string<br /><br />Full name: Script.apiKey</div>
+<div class="tip" id="fs3">val client : TextmagicRest.Client<br /><br />Full name: Script.client</div>
+<div class="tip" id="fs4">namespace TextmagicRest</div>
+<div class="tip" id="fs5">Multiple items<br />type Client =<br />&#160;&#160;new : client:IRestClient -&gt; Client + 3 overloads<br />&#160;&#160;member AddContactsToList : id:int * contactIds:int[] -&gt; LinkResult + 1 overload<br />&#160;&#160;member BaseUrl : string with get, set<br />&#160;&#160;member BuyDedicatedNumber : phone:string * country:string * userId:string -&gt; LinkResult<br />&#160;&#160;member CancelDedicatedNumber : id:int -&gt; DeleteResult + 1 overload<br />&#160;&#160;member CloseSubaccount : id:int -&gt; DeleteResult<br />&#160;&#160;member CreateContact : phone:string * listIds:int[] * firstName:string * lastName:string -&gt; LinkResult + 1 overload<br />&#160;&#160;member CreateCustomField : name:string -&gt; LinkResult<br />&#160;&#160;member CreateList : name:string -&gt; LinkResult + 1 overload<br />&#160;&#160;member CreateSenderId : senderId:string * explanation:string -&gt; LinkResult<br />&#160;&#160;...<br /><br />Full name: TextmagicRest.Client<br /><br />--------------------<br />TextmagicRest.Client(client: RestSharp.IRestClient) : unit<br />TextmagicRest.Client(username: string, token: string) : unit<br />TextmagicRest.Client(username: string, token: string, baseUrl: string) : unit<br />TextmagicRest.Client(username: string, token: string, baseUrl: string, timeout: int) : unit</div>
+<div class="tip" id="fs6">val sms : string<br /><br />Full name: Script.sms</div>
+<div class="tip" id="fs7">val ( international phone number ) : string<br /><br />Full name: Script.( international phone number )</div>
+<div class="tip" id="fs8">val msg : TextmagicRest.Model.SendingResult<br /><br />Full name: Script.msg</div>
+<div class="tip" id="fs9">TextmagicRest.Client.SendMessage(options: TextmagicRest.Model.SendingOptions) : TextmagicRest.Model.SendingResult<br />TextmagicRest.Client.SendMessage(text: string, phone: string) : TextmagicRest.Model.SendingResult<br />TextmagicRest.Client.SendMessage(text: string, phones: string []) : TextmagicRest.Model.SendingResult</div>
+<div class="tip" id="fs10">val res : string<br /><br />Full name: Script.res</div>
+<div class="tip" id="fs11">property TextmagicRest.Model.BaseModel.Success: bool</div>
+<div class="tip" id="fs12">val sprintf : format:Printf.StringFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.sprintf</div>
+<div class="tip" id="fs13">property TextmagicRest.Model.LinkResult.Id: int</div>
+<div class="tip" id="fs14">property TextmagicRest.Model.BaseModel.ClientException: TextmagicRest.ClientException</div>
+<div class="tip" id="fs15">property TextmagicRest.ClientException.Message: string</div>
+

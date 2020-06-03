@@ -1,0 +1,60 @@
+open System.IO
+
+type Data =
+    | Int16s of int16[]
+    | Int32s of int32[]
+    | Singles of single[]
+    | Doubles of double[]
+
+let readData (dataType : int) (reader : BinaryReader) =
+    match dataType with
+    | 0 ->
+        seq {
+            while reader.BaseStream.Position < reader.BaseStream.Length do
+                yield reader.ReadInt16();
+        }
+        |> Array.ofSeq
+        |> Int16s
+    | 1 ->
+        seq {
+            while reader.BaseStream.Position < reader.BaseStream.Length do
+                yield reader.ReadInt32();
+        }
+        |> Array.ofSeq
+        |> Int32s
+    | 2 -> 
+        seq {
+            while reader.BaseStream.Position < reader.BaseStream.Length do
+                yield reader.ReadSingle();
+        }
+        |> Array.ofSeq
+        |> Singles
+    | 3 -> 
+        seq {
+            while reader.BaseStream.Position < reader.BaseStream.Length do
+                yield reader.ReadDouble();
+        }
+        |> Array.ofSeq
+        |> Doubles
+    | _ -> failwith "Unexpected data type"
+
+let inline kMeansClustering (values : ^a[]) = values |> Array.map double // Dummy implementation
+
+let visualizeResult (result : double[]) = () // Dummy implementation
+
+[<EntryPoint>]
+let main argv =
+    use stream = File.OpenRead "values.dat"
+    use reader = new BinaryReader(stream)
+
+    let dataType = reader.ReadInt32 ()
+    let result =
+        match readData dataType reader with
+        | Int16s values -> kMeansClustering values
+        | Int32s values -> kMeansClustering values
+        | Singles values -> kMeansClustering values
+        | Doubles values -> kMeansClustering values
+
+    visualizeResult result
+
+    0

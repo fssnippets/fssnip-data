@@ -1,0 +1,49 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">System</span>;
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 2)" onmouseover="showTip(event, 'fs1', 2)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 3)" onmouseover="showTip(event, 'fs2', 3)" class="i">Net</span>;
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 4)" onmouseover="showTip(event, 'fs1', 4)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 5)" onmouseover="showTip(event, 'fs2', 5)" class="i">Net</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 6)" onmouseover="showTip(event, 'fs3', 6)" class="i">NetworkInformation</span>;
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs4', 7)" onmouseover="showTip(event, 'fs4', 7)" class="f">GetLocalIpv4Address</span>() <span class="o">=</span> 
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs5', 8)" onmouseover="showTip(event, 'fs5', 8)" class="i">interfaces</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs6', 9)" onmouseover="showTip(event, 'fs6', 9)" class="t">NetworkInterface</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs7', 10)" onmouseover="showTip(event, 'fs7', 10)" class="f">GetAllNetworkInterfaces</span>()
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs8', 11)" onmouseover="showTip(event, 'fs8', 11)" class="i">unicastAddresses</span> <span class="o">=</span> 
+        <span onmouseout="hideTip(event, 'fs5', 12)" onmouseover="showTip(event, 'fs5', 12)" class="i">interfaces</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs9', 13)" onmouseover="showTip(event, 'fs9', 13)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs10', 14)" onmouseover="showTip(event, 'fs10', 14)" class="f">map</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs11', 15)" onmouseover="showTip(event, 'fs11', 15)" class="i">i</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs11', 16)" onmouseover="showTip(event, 'fs11', 16)" class="i">i</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs12', 17)" onmouseover="showTip(event, 'fs12', 17)" class="f">GetIPProperties</span>()<span class="o">.</span><span class="i">UnicastAddresses</span>) <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs9', 18)" onmouseover="showTip(event, 'fs9', 18)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs13', 19)" onmouseover="showTip(event, 'fs13', 19)" class="f">concat</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs9', 20)" onmouseover="showTip(event, 'fs9', 20)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs14', 21)" onmouseover="showTip(event, 'fs14', 21)" class="f">toList</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs15', 22)" onmouseover="showTip(event, 'fs15', 22)" class="i">item</span> <span class="o">=</span> 
+        <span onmouseout="hideTip(event, 'fs8', 23)" onmouseover="showTip(event, 'fs8', 23)" class="i">unicastAddresses</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs9', 24)" onmouseover="showTip(event, 'fs9', 24)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs16', 25)" onmouseover="showTip(event, 'fs16', 25)" class="f">find</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs17', 26)" onmouseover="showTip(event, 'fs17', 26)" class="i">a</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs17', 27)" onmouseover="showTip(event, 'fs17', 27)" class="i">a</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs18', 28)" onmouseover="showTip(event, 'fs18', 28)" class="i">IPv4Mask</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs19', 29)" onmouseover="showTip(event, 'fs19', 29)" class="f">ToString</span>() <span class="o">&lt;&gt;</span> <span class="s">&quot;0.0.0.0&quot;</span> <span class="o">&amp;&amp;</span> <span onmouseout="hideTip(event, 'fs17', 30)" onmouseover="showTip(event, 'fs17', 30)" class="i">a</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs18', 31)" onmouseover="showTip(event, 'fs18', 31)" class="i">IPv4Mask</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs19', 32)" onmouseover="showTip(event, 'fs19', 32)" class="f">ToString</span>() <span class="o">&lt;&gt;</span> <span class="s">&quot;255.0.0.0&quot;</span>)
+    <span class="c">//|&gt; Seq.find (fun a -&gt; a.PrefixLength = 16)</span>
+    <span onmouseout="hideTip(event, 'fs15', 33)" onmouseover="showTip(event, 'fs15', 33)" class="i">item</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs20', 34)" onmouseover="showTip(event, 'fs20', 34)" class="i">Address</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs19', 35)" onmouseover="showTip(event, 'fs19', 35)" class="f">ToString</span>()
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace System</div>
+<div class="tip" id="fs2">namespace System.Net</div>
+<div class="tip" id="fs3">namespace System.Net.NetworkInformation</div>
+<div class="tip" id="fs4">val GetLocalIpv4Address : unit -&gt; string<br /><br />Full name: Script.GetLocalIpv4Address</div>
+<div class="tip" id="fs5">val interfaces : NetworkInterface []</div>
+<div class="tip" id="fs6">type NetworkInterface =<br />&#160;&#160;member Description : string<br />&#160;&#160;member GetIPProperties : unit -&gt; IPInterfaceProperties<br />&#160;&#160;member GetIPv4Statistics : unit -&gt; IPv4InterfaceStatistics<br />&#160;&#160;member GetPhysicalAddress : unit -&gt; PhysicalAddress<br />&#160;&#160;member Id : string<br />&#160;&#160;member IsReceiveOnly : bool<br />&#160;&#160;member Name : string<br />&#160;&#160;member NetworkInterfaceType : NetworkInterfaceType<br />&#160;&#160;member OperationalStatus : OperationalStatus<br />&#160;&#160;member Speed : int64<br />&#160;&#160;...<br /><br />Full name: System.Net.NetworkInformation.NetworkInterface</div>
+<div class="tip" id="fs7">NetworkInterface.GetAllNetworkInterfaces() : NetworkInterface []</div>
+<div class="tip" id="fs8">val unicastAddresses : UnicastIPAddressInformation list</div>
+<div class="tip" id="fs9">module Seq<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs10">val map : mapping:(&#39;T -&gt; &#39;U) -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;U&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.map</div>
+<div class="tip" id="fs11">val i : NetworkInterface</div>
+<div class="tip" id="fs12">NetworkInterface.GetIPProperties() : IPInterfaceProperties</div>
+<div class="tip" id="fs13">val concat : sources:seq&lt;#seq&lt;&#39;T&gt;&gt; -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.concat</div>
+<div class="tip" id="fs14">val toList : source:seq&lt;&#39;T&gt; -&gt; &#39;T list<br /><br />Full name: Microsoft.FSharp.Collections.Seq.toList</div>
+<div class="tip" id="fs15">val item : UnicastIPAddressInformation</div>
+<div class="tip" id="fs16">val find : predicate:(&#39;T -&gt; bool) -&gt; source:seq&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Collections.Seq.find</div>
+<div class="tip" id="fs17">val a : UnicastIPAddressInformation</div>
+<div class="tip" id="fs18">property UnicastIPAddressInformation.IPv4Mask: IPAddress</div>
+<div class="tip" id="fs19">IPAddress.ToString() : string</div>
+<div class="tip" id="fs20">property IPAddressInformation.Address: IPAddress</div>
+

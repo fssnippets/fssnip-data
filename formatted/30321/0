@@ -1,0 +1,91 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">// From L&#246;b&#39;s Theorem to Spreadsheet Evaluation (memoized)</span>
+<span class="c">// based on http://blog.sigfpe.com/2006/11/from-l-theorem-to-spreadsheet.html</span>
+
+<span class="k">type</span> <span class="t">seq2</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="t">seq</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs1', 2)" onmouseover="showTip(event, 'fs1', 2)" class="t">seq</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span><span class="o">&gt;</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs2', 3)" onmouseover="showTip(event, 'fs2', 3)" class="f">loeb</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs3', 4)" onmouseover="showTip(event, 'fs3', 4)" class="t">seq2</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs3', 5)" onmouseover="showTip(event, 'fs3', 5)" class="t">seq2</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span> <span class="k">-&gt;</span> <span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs3', 6)" onmouseover="showTip(event, 'fs3', 6)" class="t">seq2</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span> <span class="o">=</span> <span class="k">fun</span> <span onmouseout="hideTip(event, 'fs4', 7)" onmouseover="showTip(event, 'fs4', 7)" class="i">seqs</span> <span class="k">-&gt;</span>
+    <span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs5', 8)" onmouseover="showTip(event, 'fs5', 8)" class="i">g</span> <span class="o">=</span>  
+        <span onmouseout="hideTip(event, 'fs1', 9)" onmouseover="showTip(event, 'fs1', 9)" class="i">seq</span> { <span class="k">for</span> <span onmouseout="hideTip(event, 'fs6', 10)" onmouseover="showTip(event, 'fs6', 10)" class="i">fs</span> <span class="k">in</span> <span onmouseout="hideTip(event, 'fs4', 11)" onmouseover="showTip(event, 'fs4', 11)" class="i">seqs</span> <span class="k">-&gt;</span>
+                <span onmouseout="hideTip(event, 'fs1', 12)" onmouseover="showTip(event, 'fs1', 12)" class="i">seq</span> { <span class="k">for</span> <span onmouseout="hideTip(event, 'fs7', 13)" onmouseover="showTip(event, 'fs7', 13)" class="f">f</span> <span class="k">in</span> <span onmouseout="hideTip(event, 'fs6', 14)" onmouseover="showTip(event, 'fs6', 14)" class="i">fs</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs7', 15)" onmouseover="showTip(event, 'fs7', 15)" class="f">f</span> <span onmouseout="hideTip(event, 'fs5', 16)" onmouseover="showTip(event, 'fs5', 16)" class="i">g</span> } <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs8', 17)" onmouseover="showTip(event, 'fs8', 17)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs9', 18)" onmouseover="showTip(event, 'fs9', 18)" class="f">cache</span> } <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs8', 19)" onmouseover="showTip(event, 'fs8', 19)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs9', 20)" onmouseover="showTip(event, 'fs9', 20)" class="f">cache</span>
+    <span onmouseout="hideTip(event, 'fs5', 21)" onmouseover="showTip(event, 'fs5', 21)" class="i">g</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs10', 22)" onmouseover="showTip(event, 'fs10', 22)" class="f">value</span> <span class="o">:</span> <span class="o">&#39;</span><span class="i">T</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs3', 23)" onmouseover="showTip(event, 'fs3', 23)" class="t">seq2</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span> <span class="k">-&gt;</span> <span class="o">&#39;</span><span class="i">T</span> <span class="o">=</span> 
+    <span class="k">fun</span> <span onmouseout="hideTip(event, 'fs11', 24)" onmouseover="showTip(event, 'fs11', 24)" class="i">v</span> _ <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs11', 25)" onmouseover="showTip(event, 'fs11', 25)" class="i">v</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs12', 26)" onmouseover="showTip(event, 'fs12', 26)" class="f">nth</span> <span class="o">:</span> (<span onmouseout="hideTip(event, 'fs13', 27)" onmouseover="showTip(event, 'fs13', 27)" class="t">int</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs13', 28)" onmouseover="showTip(event, 'fs13', 28)" class="t">int</span>) <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs3', 29)" onmouseover="showTip(event, 'fs3', 29)" class="t">seq2</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span> <span class="k">-&gt;</span> <span class="o">&#39;</span><span class="i">T</span> <span class="o">=</span> 
+    <span class="k">fun</span> (<span onmouseout="hideTip(event, 'fs14', 30)" onmouseover="showTip(event, 'fs14', 30)" class="i">i</span>, <span onmouseout="hideTip(event, 'fs15', 31)" onmouseover="showTip(event, 'fs15', 31)" class="i">j</span>) <span onmouseout="hideTip(event, 'fs16', 32)" onmouseover="showTip(event, 'fs16', 32)" class="i">cells</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs16', 33)" onmouseover="showTip(event, 'fs16', 33)" class="i">cells</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs8', 34)" onmouseover="showTip(event, 'fs8', 34)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs17', 35)" onmouseover="showTip(event, 'fs17', 35)" class="f">item</span> <span onmouseout="hideTip(event, 'fs14', 36)" onmouseover="showTip(event, 'fs14', 36)" class="i">i</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs8', 37)" onmouseover="showTip(event, 'fs8', 37)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs17', 38)" onmouseover="showTip(event, 'fs17', 38)" class="f">item</span> <span onmouseout="hideTip(event, 'fs15', 39)" onmouseover="showTip(event, 'fs15', 39)" class="i">j</span>
+
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs18', 40)" onmouseover="showTip(event, 'fs18', 40)" class="i">cells</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs3', 41)" onmouseover="showTip(event, 'fs3', 41)" class="t">seq2</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs3', 42)" onmouseover="showTip(event, 'fs3', 42)" class="t">seq2</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs13', 43)" onmouseover="showTip(event, 'fs13', 43)" class="t">int</span><span class="o">&gt;</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs13', 44)" onmouseover="showTip(event, 'fs13', 44)" class="t">int</span><span class="o">&gt;</span> <span class="o">=</span>
+    [[<span onmouseout="hideTip(event, 'fs10', 45)" onmouseover="showTip(event, 'fs10', 45)" class="f">value</span> <span class="n">1</span>; <span onmouseout="hideTip(event, 'fs12', 46)" onmouseover="showTip(event, 'fs12', 46)" class="f">nth</span> (<span class="n">0</span>, <span class="n">0</span>)];
+     [<span onmouseout="hideTip(event, 'fs10', 47)" onmouseover="showTip(event, 'fs10', 47)" class="f">value</span> <span class="n">2</span>; <span class="k">fun</span> <span onmouseout="hideTip(event, 'fs19', 48)" onmouseover="showTip(event, 'fs19', 48)" class="i">c</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs12', 49)" onmouseover="showTip(event, 'fs12', 49)" class="f">nth</span> (<span class="n">1</span>, <span class="n">0</span>) <span onmouseout="hideTip(event, 'fs19', 50)" onmouseover="showTip(event, 'fs19', 50)" class="i">c</span> <span class="o">+</span> <span onmouseout="hideTip(event, 'fs12', 51)" onmouseover="showTip(event, 'fs12', 51)" class="f">nth</span> (<span class="n">0</span>, <span class="n">1</span>) <span onmouseout="hideTip(event, 'fs19', 52)" onmouseover="showTip(event, 'fs19', 52)" class="i">c</span>];
+     [<span onmouseout="hideTip(event, 'fs10', 53)" onmouseover="showTip(event, 'fs10', 53)" class="f">value</span> <span class="n">3</span>; <span class="k">fun</span> <span onmouseout="hideTip(event, 'fs19', 54)" onmouseover="showTip(event, 'fs19', 54)" class="i">c</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs12', 55)" onmouseover="showTip(event, 'fs12', 55)" class="f">nth</span> (<span class="n">2</span>, <span class="n">0</span>) <span onmouseout="hideTip(event, 'fs19', 56)" onmouseover="showTip(event, 'fs19', 56)" class="i">c</span> <span class="o">+</span> <span onmouseout="hideTip(event, 'fs12', 57)" onmouseover="showTip(event, 'fs12', 57)" class="f">nth</span> (<span class="n">1</span>, <span class="n">1</span>) <span onmouseout="hideTip(event, 'fs19', 58)" onmouseover="showTip(event, 'fs19', 58)" class="i">c</span>];
+     [<span onmouseout="hideTip(event, 'fs10', 59)" onmouseover="showTip(event, 'fs10', 59)" class="f">value</span> <span class="n">4</span>; <span class="k">fun</span> <span onmouseout="hideTip(event, 'fs19', 60)" onmouseover="showTip(event, 'fs19', 60)" class="i">c</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs12', 61)" onmouseover="showTip(event, 'fs12', 61)" class="f">nth</span> (<span class="n">3</span>, <span class="n">0</span>) <span onmouseout="hideTip(event, 'fs19', 62)" onmouseover="showTip(event, 'fs19', 62)" class="i">c</span> <span class="o">+</span> <span onmouseout="hideTip(event, 'fs12', 63)" onmouseover="showTip(event, 'fs12', 63)" class="f">nth</span> (<span class="n">2</span>, <span class="n">1</span>) <span onmouseout="hideTip(event, 'fs19', 64)" onmouseover="showTip(event, 'fs19', 64)" class="i">c</span>];
+     [<span onmouseout="hideTip(event, 'fs10', 65)" onmouseover="showTip(event, 'fs10', 65)" class="f">value</span> <span class="n">5</span>; <span class="k">fun</span> <span onmouseout="hideTip(event, 'fs19', 66)" onmouseover="showTip(event, 'fs19', 66)" class="i">c</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs12', 67)" onmouseover="showTip(event, 'fs12', 67)" class="f">nth</span> (<span class="n">4</span>, <span class="n">0</span>) <span onmouseout="hideTip(event, 'fs19', 68)" onmouseover="showTip(event, 'fs19', 68)" class="i">c</span> <span class="o">+</span> <span onmouseout="hideTip(event, 'fs12', 69)" onmouseover="showTip(event, 'fs12', 69)" class="f">nth</span> (<span class="n">3</span>, <span class="n">1</span>) <span onmouseout="hideTip(event, 'fs19', 70)" onmouseover="showTip(event, 'fs19', 70)" class="i">c</span>];] 
+    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs8', 71)" onmouseover="showTip(event, 'fs8', 71)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs20', 72)" onmouseover="showTip(event, 'fs20', 72)" class="f">map</span> <span onmouseout="hideTip(event, 'fs8', 73)" onmouseover="showTip(event, 'fs8', 73)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs21', 74)" onmouseover="showTip(event, 'fs21', 74)" class="f">cast</span> 
+
+<span onmouseout="hideTip(event, 'fs18', 75)" onmouseover="showTip(event, 'fs18', 75)" class="i">cells</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs2', 76)" onmouseover="showTip(event, 'fs2', 76)" class="f">loeb</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs8', 77)" onmouseover="showTip(event, 'fs8', 77)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs22', 78)" onmouseover="showTip(event, 'fs22', 78)" class="f">toArray</span>
+<span class="c">// [|seq [1; 1]; </span>
+<span class="c">//   seq [2; 3]; </span>
+<span class="c">//   seq [3; 6]; </span>
+<span class="c">//   seq [4; 10]; </span>
+<span class="c">//   seq [5; 15] |]</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">Multiple items<br />val seq : sequence:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Core.Operators.seq<br /><br />--------------------<br />type seq&lt;&#39;T&gt; = System.Collections.Generic.IEnumerable&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.seq&lt;_&gt;</div>
+<div class="tip" id="fs2">val loeb : seqs:seq2&lt;(seq2&lt;&#39;T&gt; -&gt; &#39;T)&gt; -&gt; seq2&lt;&#39;T&gt;<br /><br />Full name: Script.loeb</div>
+<div class="tip" id="fs3">type seq2&lt;&#39;T&gt; = seq&lt;seq&lt;&#39;T&gt;&gt;<br /><br />Full name: Script.seq2&lt;_&gt;</div>
+<div class="tip" id="fs4">val seqs : seq2&lt;(seq2&lt;&#39;T&gt; -&gt; &#39;T)&gt;</div>
+<div class="tip" id="fs5">val g : seq&lt;seq&lt;&#39;T&gt;&gt;</div>
+<div class="tip" id="fs6">val fs : seq&lt;(seq2&lt;&#39;T&gt; -&gt; &#39;T)&gt;</div>
+<div class="tip" id="fs7">val f : (seq2&lt;&#39;T&gt; -&gt; &#39;T)</div>
+<div class="tip" id="fs8">module Seq<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs9">val cache : source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.cache</div>
+<div class="tip" id="fs10">val value : v:&#39;T -&gt; seq2&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Script.value</div>
+<div class="tip" id="fs11">val v : &#39;T</div>
+<div class="tip" id="fs12">val nth : i:int * j:int -&gt; cells:seq2&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Script.nth</div>
+<div class="tip" id="fs13">Multiple items<br />val int : value:&#39;T -&gt; int (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.int<br /><br />--------------------<br />type int = int32<br /><br />Full name: Microsoft.FSharp.Core.int<br /><br />--------------------<br />type int&lt;&#39;Measure&gt; = int<br /><br />Full name: Microsoft.FSharp.Core.int&lt;_&gt;</div>
+<div class="tip" id="fs14">val i : int</div>
+<div class="tip" id="fs15">val j : int</div>
+<div class="tip" id="fs16">val cells : seq2&lt;&#39;T&gt;</div>
+<div class="tip" id="fs17">val item : index:int -&gt; source:seq&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Collections.Seq.item</div>
+<div class="tip" id="fs18">val cells : seq2&lt;(seq2&lt;int&gt; -&gt; int)&gt;<br /><br />Full name: Script.cells</div>
+<div class="tip" id="fs19">val c : seq2&lt;int&gt;</div>
+<div class="tip" id="fs20">val map : mapping:(&#39;T -&gt; &#39;U) -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;U&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.map</div>
+<div class="tip" id="fs21">val cast : source:System.Collections.IEnumerable -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.cast</div>
+<div class="tip" id="fs22">val toArray : source:seq&lt;&#39;T&gt; -&gt; &#39;T []<br /><br />Full name: Microsoft.FSharp.Collections.Seq.toArray</div>
+

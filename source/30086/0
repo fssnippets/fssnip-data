@@ -1,0 +1,8 @@
+let (^^) f =
+    let rec iter acc = function
+        | 0 -> acc
+        | p -> p - 1 |> iter (f >> acc)
+    
+    iter (fun x -> x)
+
+0 |> ((+) 1) ^^ 1000000 |> printfn "%d"

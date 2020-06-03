@@ -1,0 +1,42 @@
+//Binet's formula F(n) = ( (1 + sqrt(5))^n/2^n) - (1 - sqrt(5))^n/2^n))/sqrt(5)
+//(a+b sqrt(5)) <=> (a,b)
+type Fpair (a:bigint,b:bigint) =
+  member this.a=a
+  member this.b=b
+
+  //Fpair multiplication
+  static member (.*) (left:Fpair,right:Fpair) = 
+      let tasks = [| async {let bb = left.b*right.b
+                            return bb + (bb <<< 2)}
+                     async {return left.a*right.a}
+                     async {return left.b*right.a}
+                     async {return left.a*right.b}|]
+      let res = tasks |> Async.Parallel |> Async.RunSynchronously
+      Fpair(res.[0] + res.[1], res.[2] + res.[3]) 
+  //square Fpair (a + b sqrt(5))^2 = a^2 + 5b^2 + 2(ab)sqrt(5)
+  static member (~+) (arg:Fpair) =
+    let tasks =[|async {let bb = arg.b*arg.b
+                        return bb + (bb <<< 2)}         //5b^2
+                 async {return arg.a*arg.a}             //a^2
+                 async {return arg.a*arg.b <<< 1}|]     //2ab
+    let res = tasks |> Async.Parallel |> Async.RunSynchronously
+    Fpair(res.[0]+res.[1],res.[2]) 
+  //Fpair division by pow of 2
+  static member (./) (left:int,right:Fpair) =
+    Fpair(right.a >>> left,right.b >>> left)
+  //First Fpair 1 + sqrt(5)
+  static member one = Fpair(1I,1I)
+
+let fastFib (n:int) =
+   let ans = new System.Collections.BitArray([|n|]) 
+            |> Seq.cast<bool>
+            |> Seq.rev
+            |> Seq.skipWhile (fun x -> not x)
+            |> Seq.skip 1
+            |> Seq.fold (
+                 fun a x -> if x then 
+                              + a |> (.*) Fpair.one |> (./) 2
+                            else 
+                              + a |> (./) 1) 
+                 Fpair.one
+   ans.b 

@@ -1,0 +1,29 @@
+open Microsoft.FSharp.Linq.RuntimeHelpers
+open System
+open System.Linq.Expressions
+
+//F#-helper method for Linq.Expressions: fssnip.net/ts/title/F-lambda-to-C-LINQ-Expression
+module Lambda =
+    let toExpression (``f# lambda`` : Quotations.Expr<'a>) =
+        ``f# lambda``
+        |> LeafExpressionConverter.QuotationToExpression 
+        |> unbox<Expression<'a>>
+
+let toTraverse = <@ Func<int, int>(fun i -> i + 1) @> |> Lambda.toExpression 
+// val toTraverse : Expression<Func<int,int>> = i => (i + 1)
+
+let toInject = <@ Func<int, int>(fun j -> j * 2) @> |> Lambda.toExpression
+// val toInject : Expression<Func<int,int>> = j => (j * 2)
+
+let visitor =
+    { new ExpressionVisitor() with
+        member __.VisitParameter _ = toInject.Body
+        member __.VisitLambda x =
+            let visitedBody = base.Visit x.Body
+            Expression.Lambda(visitedBody, toInject.Parameters) :> Expression
+        }
+let visited = visitor.Visit toTraverse
+// val visited : Expression = j => ((j * 2) + 1)
+
+//let f = Expression.Lambda(visited).Compile().DynamicInvoke() |> unbox<Func<int,int>>
+//f.Invoke(5) // val it : int = 11

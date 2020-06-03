@@ -1,0 +1,14 @@
+open System
+open System.Windows.Forms
+open System.Drawing
+open Microsoft.FSharp.Control.CommonExtensions
+
+//-----------------------------------------------
+// Graphics System
+
+// Define a special type of form that doesn't flicker
+type SmoothForm() as x = 
+    inherit Form()
+    do x.DoubleBuffered <- true
+        
+let form = new SmoothForm(Text="F# Solar System Simulator",  Visible=true, TopMost=true, Width=500, Height=500)

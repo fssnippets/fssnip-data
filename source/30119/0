@@ -1,0 +1,25 @@
+open System
+open System.IO
+open System.Security.Cryptography
+open System.Text
+open System.Diagnostics.Contracts
+
+let EncryptStringWith (plain:string) (key:string) (iv:string) = 
+    let enc = new ASCIIEncoding()
+    use encrypted = new MemoryStream()
+    use encode = new ToBase64Transform()
+    let errdesc = "Failure when encrypting the string: " + plain + "\r\n"
+    try
+        use encryptor = Rijndael.Create().CreateEncryptor(enc.GetBytes(key), enc.GetBytes(iv))
+        use tmpcrypt = new CryptoStream(encrypted, encryptor, CryptoStreamMode.Write)
+        use encodestream = new CryptoStream(tmpcrypt, encode, CryptoStreamMode.Write)
+            
+        let encryptedbytes = enc.GetBytes(plain);
+        encodestream.Write(encryptedbytes, 0, encryptedbytes.Length);
+        encodestream.Close() // lazy, has to close explicitly before use. use is not enough.
+    with
+        | :? CryptographicException as ex -> failwith(errdesc + ex.ToString())
+        | :? FormatException as ex -> failwith(errdesc + ex.ToString())
+    encrypted.ToArray() |> Convert.ToBase64String
+
+

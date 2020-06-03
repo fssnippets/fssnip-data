@@ -1,0 +1,60 @@
+type O<'v, 'ui1, 'ui2, 'r, 'a, 'b> =
+  | Over  of ('a -> 'b)
+  | View  of ('a -> 'v)
+  | UnIso of ('a -> 'ui1) * ('ui2 -> 'b)
+  | Fold  of ('a -> 'r -> 'r)
+
+type Optic<'v, 'ui1, 'ui2, 'r, 's, 'a, 'b, 't> =
+  O<'v, 'ui1, 'ui2, 'r, 'a, 'b> -> O<'v, 'ui1, 'ui2, 'r, 's, 't>
+
+let over o a2b =
+  Over a2b |> o |> function
+   | Over s2t -> s2t
+   | _        -> failwith "over"
+
+let view o =
+  View id |> o |> function
+   | View s2a -> s2a
+   | _        -> failwith "view"
+
+let iso sa bt = function
+  | Over ab        -> Over (sa >> ab >> bt)
+  | View ao        -> View (sa >> ao)
+  | UnIso (au, ub) -> UnIso (sa >> au, ub >> bt)
+  | Fold arr       -> Fold (sa >> arr)
+let iso' o sa bt = iso sa bt o
+
+let swapI o = iso' o <| fun (a, b) -> (b, a)
+                     <| fun (b, a) -> (a, b)
+
+let uniso o =
+  UnIso (id, id) |> o |> function
+   | UnIso (su, ut) -> (su, ut)
+   | _              -> failwith "uniso"
+
+let invert o = uniso o |> fun (sa, bt) -> iso bt sa
+
+let fold o arr =
+  Fold arr |> o |> function
+   | Fold srr -> srr
+   | _        -> failwith "fold"
+
+let lens sa bst = function
+  | Over ab  -> Over <| fun s -> bst (ab (sa s)) s
+  | View ao  -> View (sa >> ao)
+  | UnIso _  -> failwith "lens"
+  | Fold arr -> Fold (sa >> arr)
+let lens' o sa bst = lens sa bst o
+
+let fstL o = lens' o fst <| fun b (a, c) -> (b, c)
+let sndL o = lens' o snd <| fun b (c, a) -> (c, b)
+
+let arrayT = function
+  | Over ab  -> Over <| Array.map ab
+  | View _   -> failwith "array"
+  | UnIso _  -> failwith "array"
+  | Fold arr -> Fold <| fun s r -> Array.fold (fun r a -> arr a r) r s
+
+// Examples
+let six = fold (arrayT << fstL) (+) [|(3, "a");(1, "b")|] 2
+let poly = over (fstL << swapI << fstL) (sprintf "%A") ((1.0, 1), true)

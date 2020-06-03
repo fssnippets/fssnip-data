@@ -1,0 +1,25 @@
+#r @"..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll"
+
+//the ExcelDataReader NuGet installs the 'SharpZipLib' above
+#r @"..\packages\ExcelDataReader.2.1.2.3\lib\net45\Excel.dll"
+
+open System
+open System.IO
+open System.Data
+open Excel
+
+
+/// returns array of row arrays
+let exampleOfRowArray () = 
+    let pth = @"c:\temp\data.xlsx"
+    use stream = File.Open(pth, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)
+    use reader = ExcelReaderFactory.CreateOpenXmlReader stream
+    [|  while reader.Read () do 
+            yield Array.init reader.FieldCount (fun i -> reader.GetValue(i))|]
+
+let exampleOfDataSet () = 
+    let pth = @"c:\temp\data.xlsx"
+    use stream = File.Open(pth, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)
+    use reader = ExcelReaderFactory.CreateOpenXmlReader stream
+    reader.AsDataSet(true).Tables.Item(0)
+    

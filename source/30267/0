@@ -1,0 +1,8 @@
+|> withInitMessage (fun handler -> 
+    // Deal with initial url hit in a hash
+    let endPoint =
+        EndPoint.EndPoints
+        |> List.tryFind (fun endPoint -> Browser.location.hash.StartsWith("#" + endPoint.Url))
+        |> Option.defaultsTo EndPoint.Home
+    handler (Action.Navigation endPoint)
+)

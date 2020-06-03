@@ -1,0 +1,33 @@
+#if INTERACTIVE
+#r "System.Xml.dll"
+#r "System.Xml.Linq.dll"
+#endif
+
+open System
+open System.Net
+open System.IO
+open System.Xml.Linq
+
+let fetch() = 
+    let currencyUrl = "http://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml"
+    let req = WebRequest.Create (currencyUrl) :?> HttpWebRequest
+    use stream = req.GetResponse().GetResponseStream()
+    use reader = new StreamReader(stream)
+    reader.ReadToEnd()
+
+let parsedoc() =
+    let xn ns s = XName.Get(s,ns)
+    let xml = fetch() |> XDocument.Parse
+    let xns = xn (xml.Root.Attribute(XName.Get("xmlns")).Value)
+
+    let cubedata = xml.Descendants(xns "Cube") 
+                   |> Seq.filter(fun x -> x.HasAttributes) |> Seq.head 
+
+    let time = cubedata.Attribute(xn "" "time").Value |> DateTime.Parse
+
+    let currencies =
+        cubedata.Descendants(xns "Cube") |>
+            Seq.map(fun c -> c.Attribute(xn "" "currency").Value, 
+                             c.Attribute(xn "" "rate").Value |> Decimal.Parse)
+
+    time, currencies |> Map.ofSeq

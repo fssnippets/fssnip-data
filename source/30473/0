@@ -1,0 +1,36 @@
+var gulp = require('gulp');
+var stylus = require('gulp-stylus');
+var browserSync = require('browser-sync').create();
+var reload = browserSync.reload;
+var pug = require('gulp-pug');
+
+gulp.task('stylus', function () {
+  return gulp.src('./src/*.styl')
+    .pipe(stylus({
+      compress: true
+    }))
+    .pipe(gulp.dest('./dist/'))
+    .pipe(browserSync.stream());
+});
+
+gulp.task('pug', function buildHTML() {
+  return gulp.src('./src/*.pug')
+  .pipe(pug({
+    compress: true
+  }))
+  .pipe(gulp.dest('./dist/'))
+  .pipe(browserSync.stream());
+});
+
+// watch files for changes and reload
+gulp.task('serve', function() {
+  browserSync({
+    server: {
+      baseDir: 'dist'
+    }
+  });
+
+  gulp.watch(['*.html', 'styles/**/*.css', 'scripts/**/*.js'], {cwd: 'dist'}, reload);
+});
+
+gulp.task( 'default', [ 'stylus', 'pug', 'serve' ] );v

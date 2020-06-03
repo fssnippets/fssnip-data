@@ -1,0 +1,132 @@
+// [snippet:Implementation]
+// XXX Uncomment the following line:
+//[<Struct>]
+type FSharpNullable<'T when 'T : struct> =
+    | Value of 'T
+    | Null
+
+    member this.HasValue =
+        match this with
+        | Null -> false
+        | Value _ -> true
+
+    static member inline op_Explicit(this) : 'T =
+        match this with
+        | Null -> raise <| System.InvalidOperationException(
+                               "Nullable object must have a value.")
+        | Value x -> x
+
+    static member inline (<??>) (lhs, rhs) =
+        match lhs with
+        | Null -> rhs
+        | Value x -> x
+
+module FSharpNullable =
+    let bind f x =
+        match x with
+        | Null -> Null
+        | Value x' -> f x'
+
+type FSharpNullableBuilder() =
+    member __.Bind(x, f) = x |> FSharpNullable.bind f
+    member __.Return(x) = Value x
+
+[<AutoOpen>]
+module FSharpNullableComputationExpression =
+    let nullable = FSharpNullableBuilder()
+
+[<AutoOpen>]
+module private FSharpNullableOps =
+    let inline add (a: FSharpNullable<'T>) (b: FSharpNullable<'T>) : FSharpNullable<'T> =
+        nullable {
+            let! x = a
+            let! y = b
+            return x + y
+        }
+
+    let inline subtract (a: FSharpNullable<'T>) (b: FSharpNullable<'T>) : FSharpNullable<'T> =
+        nullable {
+            let! x = a
+            let! y = b
+            return x - y
+        }
+
+    let inline multiply (a: FSharpNullable<'T>) (b: FSharpNullable<'T>) : FSharpNullable<'T> =
+        nullable {
+            let! x = a
+            let! y = b
+            return x * y
+        }
+
+    let inline divide (a: FSharpNullable<'T>) (b: FSharpNullable<'T>) : FSharpNullable<'T> =
+        nullable {
+            let! x = a
+            let! y = b
+            return x / y
+        }
+
+type FSharpNullable<'T when 'T : struct> with
+    static member inline ( + ) (lhs, rhs) = add lhs rhs
+    static member inline (.+.) (lhs, rhs) = add lhs rhs
+    static member inline ( +.) (lhs, rhs) = add (Value lhs) rhs
+    static member inline (.+ ) (lhs, rhs) = add lhs (Value rhs)
+
+    static member inline ( - ) (lhs, rhs) = subtract lhs rhs
+    static member inline (.-.) (lhs, rhs) = subtract lhs rhs
+    static member inline ( -.) (lhs, rhs) = subtract (Value lhs) rhs
+    static member inline (.- ) (lhs, rhs) = subtract lhs (Value rhs)
+
+    static member inline ( * ) (lhs, rhs) = multiply lhs rhs
+    static member inline (.*.) (lhs, rhs) = multiply lhs rhs
+    static member inline ( *.) (lhs, rhs) = multiply (Value lhs) rhs
+    static member inline (.* ) (lhs, rhs) = multiply lhs (Value rhs)
+
+    static member inline ( / ) (lhs, rhs) = divide lhs rhs
+    static member inline (./.) (lhs, rhs) = divide lhs rhs
+    static member inline ( /.) (lhs, rhs) = divide (Value lhs) rhs
+    static member inline (./ ) (lhs, rhs) = divide lhs (Value rhs)
+// [/snippet]
+
+// [snippet:Examples]
+// Prepend/append `.` to the operator to let the compiler know that the left/right hand side of operand is of Nullable.
+let a = Value 13 .+. Value 29 // val b : FSharpNullable<int> = Value 42
+
+// If both sides of the operator are of Nullable, you can omit `.`.
+let b = Value 19 + Value 23 // val a : FSharpNullable<int> = Value 42
+
+// Supports structural equality.
+a = b // val it : bool = true
+
+// Supports structural comparison.
+Value 2 < Value 3 // val it : bool = true
+
+// `.+` denotes the LHS is of FSharpNullable and the RHS non-nullable.
+let c = a .+ 42 // val c : FSharpNullable<int> = Value 84
+
+// `+.` denotes the LHS is of non-nullable and the RHS of FSharpNullable.
+let c = 42 +. a // val c : FSharpNullable<int> = Value 84
+
+// Null is such a scary thing so that it turns everything it touches into Null.
+let n = a + Null // val n : FSharpNullable<int> = Null
+
+// Null-coalescing operator evaluates to the LHS if the LHS is not Null..
+a + c <??> 42 // val it : int = 126
+
+// Null-coalescing operator evaluates to the RHS if the LHS is Null.
+a + c + n <??> 42 // val it : int = 42
+
+// Supports C#-like property.
+a.HasValue // val it : bool = true
+n.HasValue // val it : bool = false
+
+// Explicit type conversion to the underlying type.
+int a // val it : int = 42
+
+// Type-safety.
+int64 a // error FS0001: The type 'FSharpNullable<int>' does not support a conversion to the type 'int64'
+
+int64 (Value 42L) // val it : int64 = 42L
+
+// Can't type-convert Null in any case.
+int n // System.InvalidOperationException: Nullable object must have a value.
+// [/snippet]

@@ -1,0 +1,106 @@
+type Width =
+    /// Use the full width of the console
+    | FullWidth
+    /// The width of the chart including the printed title and value
+    | Width of int
+    member self.Value =
+        match self with
+        | FullWidth -> System.Console.WindowWidth
+        | Width value -> value
+
+// based on: https://www.daniweb.com/programming/software-development/code/238532/very-simple-console-barchart
+let inline drawBarChartWith (width: Width) valueFormatter (xs: (string * 'a) seq) =
+    let xs = xs |> Seq.cache
+    // calculate maximum of the data
+    let maxTitleWidth = xs |> Seq.map (fst >> String.length) |> Seq.max
+    let maxValue = xs |> Seq.map snd |> Seq.max
+    let maxValueWidth = xs |> Seq.map (snd >> valueFormatter >> String.length) |> Seq.max
+    // use full width of console
+    let factor = float (width.Value - maxTitleWidth - maxValueWidth - 3)
+    // draw chart
+    let emptyTitle = String.replicate maxTitleWidth " "
+    let emptyValue = String.replicate maxValueWidth " "
+    printfn "%s│%s│" emptyTitle emptyValue
+    for (title, value) in xs do
+        let paddedTitle = (string title).PadLeft(maxTitleWidth)
+        let width = int (float value / float maxValue * factor)
+        let value = (valueFormatter value).PadLeft(maxValueWidth)
+        let segments = String.replicate width "■"
+        printfn "%s│%s│%s" paddedTitle value segments
+    printfn "%s│%s│" emptyTitle emptyValue
+
+let inline drawBarChart xs =
+    drawBarChartWith FullWidth string xs
+
+(*** Usage example: ***)
+
+open FSharp.Data
+
+let data = WorldBankData.GetDataContext()
+let idc = data.Countries.Italy.Indicators.``Agricultural land (% of land area)``
+let yearsWithValues = Seq.zip idc.Years idc.Values
+
+yearsWithValues
+|> Seq.map (fun (x, y) -> string x, y)
+|> drawBarChartWith (Width 50) (sprintf "%.2f")
+
+(*** Output
+    │     │
+1961│70.32│■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+1962│70.22│■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+1963│69.74│■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+1964│69.57│■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+1965│69.50│■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+1966│69.38│■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+1967│69.29│■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+1968│69.21│■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+1969│68.77│■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+1970│68.61│■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+1971│60.01│■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+1972│59.53│■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+1973│59.44│■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+1974│59.51│■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+1975│59.56│■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+1976│59.60│■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+1977│59.50│■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+1978│59.80│■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+1979│59.87│■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+1980│59.71│■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+1981│59.67│■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+1982│59.62│■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+1983│58.69│■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+1984│58.63│■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+1985│58.12│■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+1986│57.94│■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+1987│57.84│■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+1988│57.25│■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+1989│57.29│■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+1990│57.26│■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+1991│54.59│■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+1992│54.33│■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+1993│54.10│■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+1994│53.39│■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+1995│52.13│■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+1996│52.19│■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+1997│52.17│■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+1998│52.65│■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+1999│53.72│■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+2000│53.17│■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+2001│52.71│■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+2002│51.93│■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+2003│50.68│■■■■■■■■■■■■■■■■■■■■■■■■■■■
+2004│50.60│■■■■■■■■■■■■■■■■■■■■■■■■■■■
+2005│50.10│■■■■■■■■■■■■■■■■■■■■■■■■■■■
+2006│48.29│■■■■■■■■■■■■■■■■■■■■■■■■■■
+2007│48.15│■■■■■■■■■■■■■■■■■■■■■■■■■■
+2008│49.15│■■■■■■■■■■■■■■■■■■■■■■■■■■
+2009│47.54│■■■■■■■■■■■■■■■■■■■■■■■■■
+2010│48.71│■■■■■■■■■■■■■■■■■■■■■■■■■■
+2011│47.10│■■■■■■■■■■■■■■■■■■■■■■■■■
+2012│46.68│■■■■■■■■■■■■■■■■■■■■■■■■■
+2013│46.34│■■■■■■■■■■■■■■■■■■■■■■■■■
+2014│44.75│■■■■■■■■■■■■■■■■■■■■■■■■
+2015│44.01│■■■■■■■■■■■■■■■■■■■■■■■
+    │     │
+ ***)
+

@@ -1,0 +1,25 @@
+let inline fastPow x (n:int) =
+   if n < 1 then failwith "Parameter n must be greater then 0"
+   else
+   new System.Collections.BitArray([|n|]) 
+                |> Seq.cast<bool>                     //cast bit array to bool array
+                |> Seq.rev                           
+                |> Seq.skipWhile (fun b -> not b)     //skip leading false bits 
+                |> Seq.skip 1                                       //skip one true bit
+                |> Seq.fold (
+                     fun a b -> 
+                                let sq = a*a
+                                if b then   //if true bit
+                                  printfn "square and mul (2 ops)"
+                                  sq * x             //squaring and then multiplying  
+                                else        //if false bit
+                                  printfn "just square (1 op)"
+                                  sq                 //only squaring
+                     ) x
+//test
+fastPow 3 11
+fastPow 1.3 16
+fastPow (new System.Numerics.Complex(1.1,1.02)) 17
+fastPow 15I 16
+//function narrowed to float type
+//let floatPow x n:float = if n = 0 then 1.0 elif n<0 then 1.0 / (fastPow x (-n)) else fastPow x n

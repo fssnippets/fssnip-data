@@ -1,0 +1,30 @@
+#r "EnvDTE"
+open System
+open System.Runtime.InteropServices
+open System.Runtime.InteropServices.ComTypes
+open EnvDTE
+// https://stackoverflow.com/a/14205934
+module Platform =
+  let [<Literal>] dllName = "ole32.dll"
+  [<DllImport(dllName)>] extern int GetRunningObjectTable(int reserved, [<Out>] IRunningObjectTable& prot)
+  [<DllImport(dllName)>] extern void CreateBindCtx(int reserved, [<Out>] IBindCtx& ppbc)
+
+
+let getDTEInstances () =
+  [
+  let mutable rot : IRunningObjectTable = null
+  if Platform.GetRunningObjectTable(0, &rot) = 0 then
+    let mutable enumMoniker : IEnumMoniker ref = ref null
+    rot.EnumRunning(enumMoniker)
+    let mutable moniker : IMoniker array = Array.zeroCreate 1
+    let mutable fetched = IntPtr.Zero
+    while enumMoniker.Value.Next(1, moniker, fetched) = 0 do
+      let mutable bindCtx : IBindCtx = null
+      Platform.CreateBindCtx(0, &bindCtx)
+      let mutable displayName : string ref = ref null
+      moniker.[0].GetDisplayName(bindCtx, null, displayName)
+      if displayName.Value.StartsWith "!VisualStudio" then
+        let o : obj ref = ref null
+        rot.GetObject(moniker.[0], o) |> ignore
+        yield (o.Value :?> DTE)
+  ]

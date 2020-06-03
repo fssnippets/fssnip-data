@@ -1,0 +1,151 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+<span class="l">38: </span>
+<span class="l">39: </span>
+<span class="l">40: </span>
+<span class="l">41: </span>
+<span class="l">42: </span>
+<span class="l">43: </span>
+<span class="l">44: </span>
+<span class="l">45: </span>
+<span class="l">46: </span>
+<span class="l">47: </span>
+<span class="l">48: </span>
+<span class="l">49: </span>
+<span class="l">50: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">// Equality without Leibniz&#39;s law</span>
+<span class="k">module</span> <span class="t">Eq</span> <span class="o">=</span> 
+
+    <span class="k">type</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="t">Eq</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">A</span>, <span class="o">&#39;</span><span class="i">B</span><span class="o">&gt;</span> <span class="o">=</span> <span class="k">private</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="p">Refl</span> <span class="k">of</span> (<span class="o">&#39;</span><span class="i">A</span> <span class="k">-&gt;</span> <span class="o">&#39;</span><span class="i">B</span>) <span class="o">*</span> (<span class="o">&#39;</span><span class="i">B</span> <span class="k">-&gt;</span> <span class="o">&#39;</span><span class="i">A</span>)
+    
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="f">refl</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">A</span><span class="o">&gt;</span> () <span class="o">:</span> <span onmouseout="hideTip(event, 'fs1', 4)" onmouseover="showTip(event, 'fs1', 4)" class="t">Eq</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">A</span>, <span class="o">&#39;</span><span class="i">A</span><span class="o">&gt;</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs2', 5)" onmouseover="showTip(event, 'fs2', 5)" class="p">Refl</span> (<span onmouseout="hideTip(event, 'fs4', 6)" onmouseover="showTip(event, 'fs4', 6)" class="f">id</span>, <span onmouseout="hideTip(event, 'fs4', 7)" onmouseover="showTip(event, 'fs4', 7)" class="f">id</span>)
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs5', 8)" onmouseover="showTip(event, 'fs5', 8)" class="f">sym</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs1', 9)" onmouseover="showTip(event, 'fs1', 9)" class="t">Eq</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">A</span>, <span class="o">&#39;</span><span class="i">B</span><span class="o">&gt;</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs1', 10)" onmouseover="showTip(event, 'fs1', 10)" class="t">Eq</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">B</span>, <span class="o">&#39;</span><span class="i">A</span><span class="o">&gt;</span> <span class="o">=</span> <span class="k">fun</span> (<span onmouseout="hideTip(event, 'fs2', 11)" onmouseover="showTip(event, 'fs2', 11)" class="p">Refl</span> (<span onmouseout="hideTip(event, 'fs6', 12)" onmouseover="showTip(event, 'fs6', 12)" class="f">f</span>, <span onmouseout="hideTip(event, 'fs7', 13)" onmouseover="showTip(event, 'fs7', 13)" class="f">g</span>)) <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs2', 14)" onmouseover="showTip(event, 'fs2', 14)" class="p">Refl</span> (<span onmouseout="hideTip(event, 'fs7', 15)" onmouseover="showTip(event, 'fs7', 15)" class="f">g</span>, <span onmouseout="hideTip(event, 'fs6', 16)" onmouseover="showTip(event, 'fs6', 16)" class="f">f</span>)
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs8', 17)" onmouseover="showTip(event, 'fs8', 17)" class="f">trans</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs1', 18)" onmouseover="showTip(event, 'fs1', 18)" class="t">Eq</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">A</span>, <span class="o">&#39;</span><span class="i">B</span><span class="o">&gt;</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs1', 19)" onmouseover="showTip(event, 'fs1', 19)" class="t">Eq</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">B</span>, <span class="o">&#39;</span><span class="i">C</span><span class="o">&gt;</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs1', 20)" onmouseover="showTip(event, 'fs1', 20)" class="t">Eq</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">A</span>, <span class="o">&#39;</span><span class="i">C</span><span class="o">&gt;</span> <span class="o">=</span> 
+        <span class="k">fun</span> (<span onmouseout="hideTip(event, 'fs2', 21)" onmouseover="showTip(event, 'fs2', 21)" class="p">Refl</span> (<span onmouseout="hideTip(event, 'fs6', 22)" onmouseover="showTip(event, 'fs6', 22)" class="f">f</span>, <span onmouseout="hideTip(event, 'fs7', 23)" onmouseover="showTip(event, 'fs7', 23)" class="f">g</span>)) (<span onmouseout="hideTip(event, 'fs2', 24)" onmouseover="showTip(event, 'fs2', 24)" class="p">Refl</span> (<span onmouseout="hideTip(event, 'fs9', 25)" onmouseover="showTip(event, 'fs9', 25)" class="f">h</span>, <span onmouseout="hideTip(event, 'fs10', 26)" onmouseover="showTip(event, 'fs10', 26)" class="f">k</span>)) <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs2', 27)" onmouseover="showTip(event, 'fs2', 27)" class="p">Refl</span> (<span onmouseout="hideTip(event, 'fs6', 28)" onmouseover="showTip(event, 'fs6', 28)" class="f">f</span> <span class="o">&gt;</span><span class="o">&gt;</span> <span onmouseout="hideTip(event, 'fs9', 29)" onmouseover="showTip(event, 'fs9', 29)" class="f">h</span>, <span onmouseout="hideTip(event, 'fs10', 30)" onmouseover="showTip(event, 'fs10', 30)" class="f">k</span> <span class="o">&gt;</span><span class="o">&gt;</span> <span onmouseout="hideTip(event, 'fs7', 31)" onmouseover="showTip(event, 'fs7', 31)" class="f">g</span>)
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs11', 32)" onmouseover="showTip(event, 'fs11', 32)" class="f">cast</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs1', 33)" onmouseover="showTip(event, 'fs1', 33)" class="t">Eq</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">A</span>, <span class="o">&#39;</span><span class="i">B</span><span class="o">&gt;</span> <span class="k">-&gt;</span> <span class="o">&#39;</span><span class="i">A</span> <span class="k">-&gt;</span> <span class="o">&#39;</span><span class="i">B</span> <span class="o">=</span> <span class="k">fun</span> (<span onmouseout="hideTip(event, 'fs2', 34)" onmouseover="showTip(event, 'fs2', 34)" class="p">Refl</span> (<span onmouseout="hideTip(event, 'fs6', 35)" onmouseover="showTip(event, 'fs6', 35)" class="f">f</span>, _)) <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs6', 36)" onmouseover="showTip(event, 'fs6', 36)" class="f">f</span>
+
+<span class="c">// Example: http://okmij.org/ftp/ML/GADT.ml</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs12', 37)" onmouseover="showTip(event, 'fs12', 37)" class="i">Eq</span>
+
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs13', 38)" onmouseover="showTip(event, 'fs13', 38)" class="t">NodeLink</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs13', 39)" onmouseover="showTip(event, 'fs13', 39)" class="p">NodeLink</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs14', 40)" onmouseover="showTip(event, 'fs14', 40)" class="t">NodeNoLink</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs14', 41)" onmouseover="showTip(event, 'fs14', 41)" class="p">NodeNoLink</span>
+
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs15', 42)" onmouseover="showTip(event, 'fs15', 42)" class="t">Node</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span> <span class="o">=</span>
+   | <span onmouseout="hideTip(event, 'fs16', 43)" onmouseover="showTip(event, 'fs16', 43)" class="p">Text</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs17', 44)" onmouseover="showTip(event, 'fs17', 44)" class="t">string</span>
+   | <span onmouseout="hideTip(event, 'fs18', 45)" onmouseover="showTip(event, 'fs18', 45)" class="p">Bold</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs15', 46)" onmouseover="showTip(event, 'fs15', 46)" class="t">Node</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span> <span onmouseout="hideTip(event, 'fs19', 47)" onmouseover="showTip(event, 'fs19', 47)" class="t">list</span>
+   | <span onmouseout="hideTip(event, 'fs20', 48)" onmouseover="showTip(event, 'fs20', 48)" class="p">Href</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs21', 49)" onmouseover="showTip(event, 'fs21', 49)" class="t">Eq</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs13', 50)" onmouseover="showTip(event, 'fs13', 50)" class="t">NodeLink</span>, <span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs17', 51)" onmouseover="showTip(event, 'fs17', 51)" class="t">string</span>
+   | <span onmouseout="hideTip(event, 'fs22', 52)" onmouseover="showTip(event, 'fs22', 52)" class="p">Mref</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs21', 53)" onmouseover="showTip(event, 'fs21', 53)" class="t">Eq</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs13', 54)" onmouseover="showTip(event, 'fs13', 54)" class="t">NodeLink</span>, <span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs17', 55)" onmouseover="showTip(event, 'fs17', 55)" class="t">string</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs15', 56)" onmouseover="showTip(event, 'fs15', 56)" class="t">Node</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs14', 57)" onmouseover="showTip(event, 'fs14', 57)" class="t">NodeNoLink</span><span class="o">&gt;</span> <span onmouseout="hideTip(event, 'fs19', 58)" onmouseover="showTip(event, 'fs19', 58)" class="t">list</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs23', 59)" onmouseover="showTip(event, 'fs23', 59)" class="f">text</span> <span onmouseout="hideTip(event, 'fs24', 60)" onmouseover="showTip(event, 'fs24', 60)" class="i">txt</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs16', 61)" onmouseover="showTip(event, 'fs16', 61)" class="p">Text</span> <span onmouseout="hideTip(event, 'fs24', 62)" onmouseover="showTip(event, 'fs24', 62)" class="i">txt</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs25', 63)" onmouseover="showTip(event, 'fs25', 63)" class="f">bold</span> <span onmouseout="hideTip(event, 'fs26', 64)" onmouseover="showTip(event, 'fs26', 64)" class="i">seq</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs18', 65)" onmouseover="showTip(event, 'fs18', 65)" class="p">Bold</span> <span onmouseout="hideTip(event, 'fs26', 66)" onmouseover="showTip(event, 'fs26', 66)" class="i">seq</span>;;
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs27', 67)" onmouseover="showTip(event, 'fs27', 67)" class="f">href</span> <span onmouseout="hideTip(event, 'fs28', 68)" onmouseover="showTip(event, 'fs28', 68)" class="i">lnk</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs20', 69)" onmouseover="showTip(event, 'fs20', 69)" class="p">Href</span> (<span onmouseout="hideTip(event, 'fs3', 70)" onmouseover="showTip(event, 'fs3', 70)" class="f">refl</span> (), <span onmouseout="hideTip(event, 'fs28', 71)" onmouseover="showTip(event, 'fs28', 71)" class="i">lnk</span>)
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs29', 72)" onmouseover="showTip(event, 'fs29', 72)" class="f">mref</span> <span onmouseout="hideTip(event, 'fs28', 73)" onmouseover="showTip(event, 'fs28', 73)" class="i">lnk</span> <span onmouseout="hideTip(event, 'fs30', 74)" onmouseover="showTip(event, 'fs30', 74)" class="i">seq</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs22', 75)" onmouseover="showTip(event, 'fs22', 75)" class="p">Mref</span> (<span onmouseout="hideTip(event, 'fs3', 76)" onmouseover="showTip(event, 'fs3', 76)" class="f">refl</span> (), <span onmouseout="hideTip(event, 'fs28', 77)" onmouseover="showTip(event, 'fs28', 77)" class="i">lnk</span>, <span onmouseout="hideTip(event, 'fs30', 78)" onmouseover="showTip(event, 'fs30', 78)" class="i">seq</span>)
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs31', 79)" onmouseover="showTip(event, 'fs31', 79)" class="i">test1</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs25', 80)" onmouseover="showTip(event, 'fs25', 80)" class="f">bold</span> [<span onmouseout="hideTip(event, 'fs23', 81)" onmouseover="showTip(event, 'fs23', 81)" class="f">text</span> <span class="s">&quot;text1&quot;</span>; <span onmouseout="hideTip(event, 'fs23', 82)" onmouseover="showTip(event, 'fs23', 82)" class="f">text</span> <span class="s">&quot;text2&quot;</span>]
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs32', 83)" onmouseover="showTip(event, 'fs32', 83)" class="i">test2</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs25', 84)" onmouseover="showTip(event, 'fs25', 84)" class="f">bold</span> [<span onmouseout="hideTip(event, 'fs23', 85)" onmouseover="showTip(event, 'fs23', 85)" class="f">text</span> <span class="s">&quot;text1&quot;</span>; <span onmouseout="hideTip(event, 'fs27', 86)" onmouseover="showTip(event, 'fs27', 86)" class="f">href</span> <span class="s">&quot;link1&quot;</span>]
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs33', 87)" onmouseover="showTip(event, 'fs33', 87)" class="i">test3</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs29', 88)" onmouseover="showTip(event, 'fs29', 88)" class="f">mref</span> <span class="s">&quot;link2&quot;</span> [<span onmouseout="hideTip(event, 'fs31', 89)" onmouseover="showTip(event, 'fs31', 89)" class="i">test1</span>; <span onmouseout="hideTip(event, 'fs31', 90)" onmouseover="showTip(event, 'fs31', 90)" class="i">test1</span>]
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs34', 91)" onmouseover="showTip(event, 'fs34', 91)" class="i">test4</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs25', 92)" onmouseover="showTip(event, 'fs25', 92)" class="f">bold</span> [<span onmouseout="hideTip(event, 'fs23', 93)" onmouseover="showTip(event, 'fs23', 93)" class="f">text</span> <span class="s">&quot;text3&quot;</span>; <span onmouseout="hideTip(event, 'fs33', 94)" onmouseover="showTip(event, 'fs33', 94)" class="i">test3</span>]
+
+<span class="c">// Type errors</span>
+<span class="c">// let test31 = mref &quot;link2&quot; [test1; test2]</span>
+<span class="c">// let test41 = mref &quot;link3&quot; [test1; test4]</span>
+
+<span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs35', 95)" onmouseover="showTip(event, 'fs35', 95)" class="f">capnode</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs15', 96)" onmouseover="showTip(event, 'fs15', 96)" class="t">Node</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs15', 97)" onmouseover="showTip(event, 'fs15', 97)" class="t">Node</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span> <span class="o">=</span>  
+ <span class="k">function</span> 
+   | <span onmouseout="hideTip(event, 'fs16', 98)" onmouseover="showTip(event, 'fs16', 98)" class="p">Text</span> <span onmouseout="hideTip(event, 'fs36', 99)" onmouseover="showTip(event, 'fs36', 99)" class="i">x</span>        <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs16', 100)" onmouseover="showTip(event, 'fs16', 100)" class="p">Text</span> (<span onmouseout="hideTip(event, 'fs36', 101)" onmouseover="showTip(event, 'fs36', 101)" class="i">x</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs37', 102)" onmouseover="showTip(event, 'fs37', 102)" class="f">ToUpper</span>())
+   | <span onmouseout="hideTip(event, 'fs18', 103)" onmouseover="showTip(event, 'fs18', 103)" class="p">Bold</span> <span onmouseout="hideTip(event, 'fs38', 104)" onmouseover="showTip(event, 'fs38', 104)" class="i">x</span>        <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs18', 105)" onmouseover="showTip(event, 'fs18', 105)" class="p">Bold</span> (<span onmouseout="hideTip(event, 'fs39', 106)" onmouseover="showTip(event, 'fs39', 106)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs40', 107)" onmouseover="showTip(event, 'fs40', 107)" class="f">map</span> <span onmouseout="hideTip(event, 'fs35', 108)" onmouseover="showTip(event, 'fs35', 108)" class="f">capnode</span> <span onmouseout="hideTip(event, 'fs38', 109)" onmouseover="showTip(event, 'fs38', 109)" class="i">x</span>)
+   | <span onmouseout="hideTip(event, 'fs20', 110)" onmouseover="showTip(event, 'fs20', 110)" class="p">Href</span> (<span onmouseout="hideTip(event, 'fs41', 111)" onmouseover="showTip(event, 'fs41', 111)" class="i">eq</span>,<span onmouseout="hideTip(event, 'fs36', 112)" onmouseover="showTip(event, 'fs36', 112)" class="i">x</span>)   <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs20', 113)" onmouseover="showTip(event, 'fs20', 113)" class="p">Href</span> (<span onmouseout="hideTip(event, 'fs41', 114)" onmouseover="showTip(event, 'fs41', 114)" class="i">eq</span>, <span onmouseout="hideTip(event, 'fs36', 115)" onmouseover="showTip(event, 'fs36', 115)" class="i">x</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs37', 116)" onmouseover="showTip(event, 'fs37', 116)" class="f">ToUpper</span>())
+   | <span onmouseout="hideTip(event, 'fs22', 117)" onmouseover="showTip(event, 'fs22', 117)" class="p">Mref</span> (<span onmouseout="hideTip(event, 'fs41', 118)" onmouseover="showTip(event, 'fs41', 118)" class="i">eq</span>,<span onmouseout="hideTip(event, 'fs42', 119)" onmouseover="showTip(event, 'fs42', 119)" class="i">l</span>,<span onmouseout="hideTip(event, 'fs43', 120)" onmouseover="showTip(event, 'fs43', 120)" class="i">x</span>) <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs22', 121)" onmouseover="showTip(event, 'fs22', 121)" class="p">Mref</span> (<span onmouseout="hideTip(event, 'fs41', 122)" onmouseover="showTip(event, 'fs41', 122)" class="i">eq</span>, <span onmouseout="hideTip(event, 'fs42', 123)" onmouseover="showTip(event, 'fs42', 123)" class="i">l</span>, <span onmouseout="hideTip(event, 'fs39', 124)" onmouseover="showTip(event, 'fs39', 124)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs40', 125)" onmouseover="showTip(event, 'fs40', 125)" class="f">map</span> <span onmouseout="hideTip(event, 'fs35', 126)" onmouseover="showTip(event, 'fs35', 126)" class="f">capnode</span> <span onmouseout="hideTip(event, 'fs43', 127)" onmouseover="showTip(event, 'fs43', 127)" class="i">x</span>)
+
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs44', 128)" onmouseover="showTip(event, 'fs44', 128)" class="i">test1c</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs35', 129)" onmouseover="showTip(event, 'fs35', 129)" class="f">capnode</span> <span onmouseout="hideTip(event, 'fs31', 130)" onmouseover="showTip(event, 'fs31', 130)" class="i">test1</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs45', 131)" onmouseover="showTip(event, 'fs45', 131)" class="i">test3c</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs35', 132)" onmouseover="showTip(event, 'fs35', 132)" class="f">capnode</span> <span onmouseout="hideTip(event, 'fs33', 133)" onmouseover="showTip(event, 'fs33', 133)" class="i">test3</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs46', 134)" onmouseover="showTip(event, 'fs46', 134)" class="i">test4c</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs35', 135)" onmouseover="showTip(event, 'fs35', 135)" class="f">capnode</span> <span onmouseout="hideTip(event, 'fs34', 136)" onmouseover="showTip(event, 'fs34', 136)" class="i">test4</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">type Eq&lt;&#39;A,&#39;B&gt; = private | Refl of (&#39;A -&gt; &#39;B) * (&#39;B -&gt; &#39;A)<br /><br />Full name: Script.Eq.Eq&lt;_,_&gt;</div>
+<div class="tip" id="fs2">union case Eq.Refl: (&#39;A -&gt; &#39;B) * (&#39;B -&gt; &#39;A) -&gt; Eq&lt;&#39;A,&#39;B&gt;</div>
+<div class="tip" id="fs3">val refl : unit -&gt; Eq&lt;&#39;A,&#39;A&gt;<br /><br />Full name: Script.Eq.refl</div>
+<div class="tip" id="fs4">val id : x:&#39;T -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.Operators.id</div>
+<div class="tip" id="fs5">val sym : Eq&lt;&#39;A,&#39;B&gt; -&gt; Eq&lt;&#39;B,&#39;A&gt;<br /><br />Full name: Script.Eq.sym</div>
+<div class="tip" id="fs6">val f : (&#39;A -&gt; &#39;B)</div>
+<div class="tip" id="fs7">val g : (&#39;B -&gt; &#39;A)</div>
+<div class="tip" id="fs8">val trans : Eq&lt;&#39;A,&#39;B&gt; -&gt; Eq&lt;&#39;B,&#39;C&gt; -&gt; Eq&lt;&#39;A,&#39;C&gt;<br /><br />Full name: Script.Eq.trans</div>
+<div class="tip" id="fs9">val h : (&#39;B -&gt; &#39;C)</div>
+<div class="tip" id="fs10">val k : (&#39;C -&gt; &#39;B)</div>
+<div class="tip" id="fs11">val cast : Eq&lt;&#39;A,&#39;B&gt; -&gt; (&#39;A -&gt; &#39;B)<br /><br />Full name: Script.Eq.cast</div>
+<div class="tip" id="fs12">module Eq<br /><br />from Script</div>
+<div class="tip" id="fs13">Multiple items<br />union case NodeLink.NodeLink: NodeLink<br /><br />--------------------<br />type NodeLink = | NodeLink<br /><br />Full name: Script.NodeLink</div>
+<div class="tip" id="fs14">Multiple items<br />union case NodeNoLink.NodeNoLink: NodeNoLink<br /><br />--------------------<br />type NodeNoLink = | NodeNoLink<br /><br />Full name: Script.NodeNoLink</div>
+<div class="tip" id="fs15">type Node&lt;&#39;T&gt; =<br />&#160;&#160;| Text of string<br />&#160;&#160;| Bold of Node&lt;&#39;T&gt; list<br />&#160;&#160;| Href of Eq&lt;NodeLink,&#39;T&gt; * string<br />&#160;&#160;| Mref of Eq&lt;NodeLink,&#39;T&gt; * string * Node&lt;NodeNoLink&gt; list<br /><br />Full name: Script.Node&lt;_&gt;</div>
+<div class="tip" id="fs16">union case Node.Text: string -&gt; Node&lt;&#39;T&gt;</div>
+<div class="tip" id="fs17">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />Full name: Microsoft.FSharp.Core.Operators.string<br /><br />--------------------<br />type string = System.String<br /><br />Full name: Microsoft.FSharp.Core.string</div>
+<div class="tip" id="fs18">union case Node.Bold: Node&lt;&#39;T&gt; list -&gt; Node&lt;&#39;T&gt;</div>
+<div class="tip" id="fs19">type &#39;T list = List&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.list&lt;_&gt;</div>
+<div class="tip" id="fs20">union case Node.Href: Eq&lt;NodeLink,&#39;T&gt; * string -&gt; Node&lt;&#39;T&gt;</div>
+<div class="tip" id="fs21">Multiple items<br />module Eq<br /><br />from Script<br /><br />--------------------<br />type Eq&lt;&#39;A,&#39;B&gt; = private | Refl of (&#39;A -&gt; &#39;B) * (&#39;B -&gt; &#39;A)<br /><br />Full name: Script.Eq.Eq&lt;_,_&gt;</div>
+<div class="tip" id="fs22">union case Node.Mref: Eq&lt;NodeLink,&#39;T&gt; * string * Node&lt;NodeNoLink&gt; list -&gt; Node&lt;&#39;T&gt;</div>
+<div class="tip" id="fs23">val text : txt:string -&gt; Node&lt;&#39;a&gt;<br /><br />Full name: Script.text</div>
+<div class="tip" id="fs24">val txt : string</div>
+<div class="tip" id="fs25">val bold : seq:Node&lt;&#39;a&gt; list -&gt; Node&lt;&#39;a&gt;<br /><br />Full name: Script.bold</div>
+<div class="tip" id="fs26">Multiple items<br />val seq : Node&lt;&#39;a&gt; list<br /><br />--------------------<br />type seq&lt;&#39;T&gt; = System.Collections.Generic.IEnumerable&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.seq&lt;_&gt;</div>
+<div class="tip" id="fs27">val href : lnk:string -&gt; Node&lt;NodeLink&gt;<br /><br />Full name: Script.href</div>
+<div class="tip" id="fs28">val lnk : string</div>
+<div class="tip" id="fs29">val mref : lnk:string -&gt; seq:Node&lt;NodeNoLink&gt; list -&gt; Node&lt;NodeLink&gt;<br /><br />Full name: Script.mref</div>
+<div class="tip" id="fs30">Multiple items<br />val seq : Node&lt;NodeNoLink&gt; list<br /><br />--------------------<br />type seq&lt;&#39;T&gt; = System.Collections.Generic.IEnumerable&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.seq&lt;_&gt;</div>
+<div class="tip" id="fs31">val test1 : Node&lt;NodeNoLink&gt;<br /><br />Full name: Script.test1</div>
+<div class="tip" id="fs32">val test2 : Node&lt;NodeLink&gt;<br /><br />Full name: Script.test2</div>
+<div class="tip" id="fs33">val test3 : Node&lt;NodeLink&gt;<br /><br />Full name: Script.test3</div>
+<div class="tip" id="fs34">val test4 : Node&lt;NodeLink&gt;<br /><br />Full name: Script.test4</div>
+<div class="tip" id="fs35">val capnode : _arg1:Node&lt;&#39;T&gt; -&gt; Node&lt;&#39;T&gt;<br /><br />Full name: Script.capnode</div>
+<div class="tip" id="fs36">val x : string</div>
+<div class="tip" id="fs37">System.String.ToUpper() : string<br />System.String.ToUpper(culture: System.Globalization.CultureInfo) : string</div>
+<div class="tip" id="fs38">val x : Node&lt;&#39;T&gt; list</div>
+<div class="tip" id="fs39">Multiple items<br />module List<br /><br />from Microsoft.FSharp.Collections<br /><br />--------------------<br />type List&lt;&#39;T&gt; =<br />&#160;&#160;| ( [] )<br />&#160;&#160;| ( :: ) of Head: &#39;T * Tail: &#39;T list<br />&#160;&#160;interface IEnumerable<br />&#160;&#160;interface IEnumerable&lt;&#39;T&gt;<br />&#160;&#160;member GetSlice : startIndex:int option * endIndex:int option -&gt; &#39;T list<br />&#160;&#160;member Head : &#39;T<br />&#160;&#160;member IsEmpty : bool<br />&#160;&#160;member Item : index:int -&gt; &#39;T with get<br />&#160;&#160;member Length : int<br />&#160;&#160;member Tail : &#39;T list<br />&#160;&#160;static member Cons : head:&#39;T * tail:&#39;T list -&gt; &#39;T list<br />&#160;&#160;static member Empty : &#39;T list<br /><br />Full name: Microsoft.FSharp.Collections.List&lt;_&gt;</div>
+<div class="tip" id="fs40">val map : mapping:(&#39;T -&gt; &#39;U) -&gt; list:&#39;T list -&gt; &#39;U list<br /><br />Full name: Microsoft.FSharp.Collections.List.map</div>
+<div class="tip" id="fs41">val eq : Eq&lt;NodeLink,&#39;T&gt;</div>
+<div class="tip" id="fs42">val l : string</div>
+<div class="tip" id="fs43">val x : Node&lt;NodeNoLink&gt; list</div>
+<div class="tip" id="fs44">val test1c : Node&lt;NodeNoLink&gt;<br /><br />Full name: Script.test1c</div>
+<div class="tip" id="fs45">val test3c : Node&lt;NodeLink&gt;<br /><br />Full name: Script.test3c</div>
+<div class="tip" id="fs46">val test4c : Node&lt;NodeLink&gt;<br /><br />Full name: Script.test4c</div>
+

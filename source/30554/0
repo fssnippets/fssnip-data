@@ -1,0 +1,51 @@
+type IKeyed<'TKey when 'TKey: comparison> =
+    abstract member Key : 'TKey
+
+type Keyed<'TKey,'TVal when 'TKey: comparison> = {
+    Key: 'TKey
+    Value: 'TVal
+} with
+    interface IKeyed<'TKey> with
+        member this.Key with get() = this.Key
+
+let toKeyed<'T,'TKey when 'TKey: comparison> (keySelector: 'T -> 'TKey) (value: 'T) =
+    { Key = keySelector value; Value = value }
+
+type KeyedSet<'TKey, 'T when 'TKey: comparison and 'T :> IKeyed<'TKey>> =
+    private  | MapOfKeyToKeyedSet of Map<'TKey,'T>
+
+    with
+        static member empty
+            with get() = MapOfKeyToKeyedSet(Map.empty<'TKey,'T>)
+
+        member this.add (value: 'T) =
+            match this with
+            | MapOfKeyToKeyedSet m ->
+                Map.add (value.Key) value m
+                |> MapOfKeyToKeyedSet
+
+let inline getKeyedFromKeyProp (x: ^t) :Keyed< ^k,^t> when ^k : comparison =
+    {
+        Key = (^t: (member Key: ^k) (x))
+        Value = x
+    }
+
+module KeyedSet =
+    let addKeyed (value:'T) (keyedSet: KeyedSet<'TKey,'T>) =
+        keyedSet.add value
+
+    let inline add value keyedSet =
+        addKeyed (getKeyedFromKeyProp value) keyedSet
+
+type FooBar = {
+    Key: string
+    Bar: int
+}
+
+let main() =
+    let fooBar1 = { Key = "Foo1"; Bar = 5 }
+    let fooBar2 = { Key = "Foo2"; Bar = 10 }
+
+    KeyedSet.empty
+    |> KeyedSet.add fooBar1
+    |> KeyedSet.add fooBar1

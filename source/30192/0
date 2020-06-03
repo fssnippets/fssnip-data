@@ -1,0 +1,16 @@
+let dynU N m n =
+    let U = Array.zeroCreate (N+1)
+    let K = Array.zeroCreate (N+1)
+    let S N k = max (m + U.[k]) (n + U.[N - k])
+    for M in 2 .. N do
+        let mutable minS = System.Int32.MaxValue
+        let mutable argminK = -1
+        for k in 1..M-1 do
+            let s = S M k
+            if s < minS then
+                minS <- s
+                argminK <- k
+        U.[M] <- minS
+        K.[M] <- argminK
+
+    U, K

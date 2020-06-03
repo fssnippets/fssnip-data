@@ -1,0 +1,26 @@
+#nowarn "051"
+ 
+open System
+open System.Numerics
+
+let getAddr (data : nativeptr<'T>) : int = 
+    
+    sprintf "%A" data
+    |> String.filter ( fun c -> Char.IsDigit(c) )
+    |> int 
+
+let GetSize (data : 'T) : int =
+
+    let mutable value = [| data ; data |]
+
+    (getAddr &&value.[1]) - (getAddr &&value.[0])
+
+printfn " bool    : %02d byte(s) " (GetSize true)
+printfn " int8    : %02d byte(s) " (GetSize 8y)
+printfn " int16   : %02d byte(s) " (GetSize 123s)
+printfn " int32   : %02d byte(s) " (GetSize 999 )
+printfn " int64   : %02d byte(s) " (GetSize 999L)
+printfn " float32 : %02d byte(s) " (GetSize 999.999f)
+printfn " float64 : %02d byte(s) " (GetSize 999.999)
+printfn " decimal : %02d byte(s) " (GetSize 99999999999999999999999M)
+printfn " BigInt  : %02d byte(s) " (GetSize 999999999999999999999999999999999999999999I)

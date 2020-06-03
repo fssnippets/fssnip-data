@@ -1,0 +1,30 @@
+type PCStats =
+    { LogicalCores : int
+      PhysicalCores : int
+      ClockSpeed : int
+      MemoryGB : int }
+
+#r "System.Management"
+open System.Management
+
+let getClockSpeedAndCores () =
+    let query = "SELECT MaxClockSpeed, NumberOfCores FROM Win32_Processor"
+    use mos = new ManagementObjectSearcher(query)
+    [ for m in mos.Get() -> unbox<uint32> m.["MaxClockSpeed"], 
+                            unbox<uint32> m.["NumberOfCores"]]
+    |> List.head
+
+let getMemory () =
+    let query = "SELECT Capacity FROM Win32_PhysicalMemory"
+    use mos = new ManagementObjectSearcher(query)
+    [ for s in mos.Get() -> unbox<uint64> s.["Capacity"] ]
+    |> List.sum
+
+let getPCStats () =
+    let clockSpeed, physicalCores = getClockSpeedAndCores()
+    { LogicalCores = System.Environment.ProcessorCount 
+      PhysicalCores = physicalCores |> int
+      ClockSpeed = clockSpeed |> int
+      MemoryGB = getMemory () / 1073741824UL |> int }
+
+let stats = getPCStats()

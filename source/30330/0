@@ -1,0 +1,40 @@
+open System
+open System.Net
+open System.IO
+open Deedle
+
+let fetch (url : Uri) = 
+    let req = WebRequest.Create (url) :?> HttpWebRequest
+    use stream = req.GetResponse().GetResponseStream()
+    use reader = new StreamReader(stream)
+    reader.ReadToEnd()
+
+let downloadFromGoogle (ticker: string)  : Frame<DateTime,string>=
+    let url = @"https://www.google.com/finance/historical?output=csv&q=" + ticker
+    let uri = new Uri(url)
+    let data = fetch uri
+    let rows = data.Split '\n'
+    let headers = rows |> Array.head
+    let arr = rows |> Array.tail
+    let arrStrings = arr |> Array.map (fun (x: string) -> x.Split ',')
+    let dates1 =
+        arrStrings
+        |> Array.map (fun x -> Array.head x)
+    let arr1 =
+        arrStrings
+        |> Array.map (fun x -> Array.tail x)
+        |> Array.map (fun arrstr -> arrstr |> Array.map float)
+    let len = arr1.Length
+    // Throw away last array element if necessary.
+    let arr2, dates2 =
+        if Array.length arr1.[len-1] = 0 then arr1.[0..(len-2)], dates1.[0..(len-2)]
+        else arr1, dates1
+    let dates3 =
+        dates2
+        |> Array.map (fun dt -> DateTime.Parse(dt))
+        |> Series.ofValues
+    array2D arr2
+    |> Frame.ofArray2D
+    |> Frame.indexColsWith ["Open"; "High"; "Low"; "Close"; "Volume"]
+    |> Frame.addCol "Date" dates3
+    |> Frame.indexRows "Date"

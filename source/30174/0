@@ -1,0 +1,73 @@
+// Install Nuget-package FSharp.Data.
+open System.Net
+open System.IO
+open FSharp.Data
+
+//Parse sample xml files, you need these:
+type CallValidateInput = XmlProvider<"callvalidate-input-sample.xml">
+type CallValidateOutput = XmlProvider<"callvalidate-output-sample.xml">
+
+let makePostRequest (reqtype: string) (url : string) (requestBody : string) = 
+    let req = WebRequest.CreateHttp url
+    req.CookieContainer <- new CookieContainer()
+    req.Method <- "POST"
+    req.ProtocolVersion <- HttpVersion.Version10
+    let postBytes = requestBody |> System.Text.Encoding.ASCII.GetBytes
+    req.ContentLength <- postBytes.LongLength
+    req.ContentType <- reqtype
+    async{
+        let! reqStream = req.GetRequestStreamAsync() |> Async.AwaitTask
+        do! reqStream.WriteAsync(postBytes, 0, postBytes.Length) |> Async.AwaitIAsyncResult |> Async.Ignore
+        reqStream.Close()
+        let! res = req.AsyncGetResponse() 
+        use stream = res.GetResponseStream()
+        use reader = new StreamReader(stream)
+        return! reader.ReadToEndAsync() |> Async.AwaitTask 
+    }
+
+let validateUser (personData:CallValidateInput.Data) =
+    let call_req = 
+        CallValidateInput.Callvalidate(
+            CallValidateInput.Authentication("My Company", "user@pmycompany.com", "password"),
+            [|CallValidateInput.Session("CC-TEST-HARNESS", personData)|], "V58-API-TEST"
+        )
+    // Callvalidate uses "application/xml; charset=utf-8", Affordability check would use "text/xml; charset=utf-8"
+    makePostRequest "application/xml; charset=utf-8" "https://ct.callcreditsecure.co.uk/callvalidateapi/incomingserver.php" (call_req.ToString())
+
+let testPerson =
+    CallValidateInput.Data(
+        personalinformation = CallValidateInput.Personalinformation(
+            CallValidateInput.IndividualDetails(
+                title = "Mr",
+                firstname = "John",
+                othernames = None,
+                surname = "Doe",
+                phonenumber = Some(CallValidateInput.Phonenumber("+44 (0) 123 456 6789")),
+                emailaddress = Some "john.doe@mailinator.com",
+                dateofbirth = CallValidateInput.Dateofbirth("15-01M-1977"),
+                ipAddress = None, addresslessthan12months = None,
+                passportline1 = None, passportline2 = None,
+                drivinglicensenumber = None, passportExpiryDate = None
+            ),
+            CallValidateInput.AddressDetails(
+                buildingnumber = 1,
+                postcode = "EC1 1AA",
+                abodenumber = None, buildingname = None,
+                address1 = None, address2 = None, address3 = None,
+                town = None,  previousabodenumber = None,
+                previousbuildingname = None, previousbuildingnumber = None, previousaddress1 = None,
+                previousaddress2 = None, previousaddress3 = None, previoustown = None,
+                previouspostcode = None, deliveryabodenumber = None, deliverybuildingnumber = None,
+                deliverybuildingname = None, deliveryaddress1 = None, deliveryaddress2 = None,
+                deliveryaddress3 = None, deliverytown = None, deliverypostcode = None
+            )),
+        bankinformation = CallValidateInput.Bankinformation(
+            bankaccountnumber = 62136016,
+            banksortcode = 404865
+        ),
+        incomeDetails = CallValidateInput.IncomeDetails(Some 3500, None),
+        checksrequired = None, cardinformation = None, deviceDetails = None
+    )
+
+let resultString = validateUser testPerson |> Async.RunSynchronously
+let validateResult = CallValidateOutput.Parse resultString

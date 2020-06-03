@@ -1,0 +1,131 @@
+open System
+open System.Text.RegularExpressions
+
+module NaturalOrder =
+    module private Impl =
+        let regex = Regex ("([0-9]+)", RegexOptions.Compiled)
+
+        let trimLeadingZeros (s: string) =
+            s.TrimStart '0'
+
+        let toChars (s: string) =
+            s.ToCharArray()
+
+        let split text =
+            text
+            |> regex.Split
+            |> Seq.filter (fun s -> s.Length > 0)
+            |> Seq.toArray
+
+        let compareStrings (s1: string) (s2: string) =
+            // each string is either all letters or all numbers
+            let isNumeric1 = Char.IsDigit s1.[0]
+            let isNumeric2 = Char.IsDigit s2.[0]
+
+            // If we have a string and a number, the number comes first. When we have 
+            // two strings, compare them normally. The tricky case is two numbers.
+            match isNumeric1, isNumeric2 with
+            | true, false -> -1
+            | false, true -> 1
+            | false, false -> String.Compare (s1, s2, true)
+            | true, true -> 
+                // leading zeros will trip us up, get rid of them
+                let n1, n2 = trimLeadingZeros s1, trimLeadingZeros s2
+                if n1.Length < n2.Length then -1
+                elif n2.Length < n1.Length then 1
+                else
+                    // compare digit-by-digit
+                    let chars1, chars2 = toChars n1, toChars n2
+                    let result =
+                        chars2
+                        |> Seq.zip chars1
+                        |> Seq.tryPick (fun (c1, c2) -> 
+                            if c1 < c2 then Some -1
+                            elif c2 < c1 then Some 1
+                            else None)
+                    match result with
+                    | Some i -> i
+                    | None -> 0
+
+        type Pair = {
+            Name: string
+            Pieces: string[]
+        }
+    
+    open Impl
+
+    /// Sort a sequence of strings in natural order.
+    let sort names =
+        names
+        |> Seq.map (fun name -> { Name = name; Pieces = split name })
+        |> Seq.sortWith (fun p1 p2 -> Array.compareWith compareStrings p1.Pieces p2.Pieces)
+        |> Seq.map (fun pair -> pair.Name)
+
+let files = 
+    [
+        "VisualStudio.150x150.contrast-black_scale-100.png"
+        "VisualStudio.150x150.contrast-black_scale-140.png"
+        "VisualStudio.150x150.contrast-black_scale-180.png"
+        "VisualStudio.150x150.contrast-black_scale-80.png"
+        "Blend.150x150.contrast-black_scale-100.png"
+        "Blend.150x150.contrast-black_scale-140.png"
+        "Blend.150x150.contrast-black_scale-180.png"
+        "Blend.150x150.contrast-black_scale-80.png"
+        "Blend.70x70.contrast-black_scale-100.png"
+        "Blend.70x70.contrast-black_scale-140.png"
+        "Blend.70x70.contrast-black_scale-180.png"
+        "Blend.70x70.contrast-black_scale-80.png"
+        "VisualStudio.70x70.contrast-black_scale-100.png"
+        "VisualStudio.70x70.contrast-black_scale-140.png"
+        "VisualStudio.70x70.contrast-black_scale-180.png"
+        "VisualStudio.70x70.contrast-black_scale-80.png"
+    ]
+
+let sorted =    
+    files
+    |> Seq.sort
+    |> Seq.toArray
+
+(*
+val sorted : string [] =
+  [|"Blend.150x150.contrast-black_scale-100.png";
+    "Blend.150x150.contrast-black_scale-140.png";
+    "Blend.150x150.contrast-black_scale-180.png";
+    "Blend.150x150.contrast-black_scale-80.png";
+    "Blend.70x70.contrast-black_scale-100.png";
+    "Blend.70x70.contrast-black_scale-140.png";
+    "Blend.70x70.contrast-black_scale-180.png";
+    "Blend.70x70.contrast-black_scale-80.png";
+    "VisualStudio.150x150.contrast-black_scale-100.png";
+    "VisualStudio.150x150.contrast-black_scale-140.png";
+    "VisualStudio.150x150.contrast-black_scale-180.png";
+    "VisualStudio.150x150.contrast-black_scale-80.png";
+    "VisualStudio.70x70.contrast-black_scale-100.png";
+    "VisualStudio.70x70.contrast-black_scale-140.png";
+    "VisualStudio.70x70.contrast-black_scale-180.png";
+    "VisualStudio.70x70.contrast-black_scale-80.png"|]*)
+
+let naturallySorted =    
+    files
+    |> NaturalOrder.sort
+    |> Seq.toArray
+
+(*
+val naturallySorted : string [] =
+  [|"Blend.70x70.contrast-black_scale-80.png";
+    "Blend.70x70.contrast-black_scale-100.png";
+    "Blend.70x70.contrast-black_scale-140.png";
+    "Blend.70x70.contrast-black_scale-180.png";
+    "Blend.150x150.contrast-black_scale-80.png";
+    "Blend.150x150.contrast-black_scale-100.png";
+    "Blend.150x150.contrast-black_scale-140.png";
+    "Blend.150x150.contrast-black_scale-180.png";
+    "VisualStudio.70x70.contrast-black_scale-80.png";
+    "VisualStudio.70x70.contrast-black_scale-100.png";
+    "VisualStudio.70x70.contrast-black_scale-140.png";
+    "VisualStudio.70x70.contrast-black_scale-180.png";
+    "VisualStudio.150x150.contrast-black_scale-80.png";
+    "VisualStudio.150x150.contrast-black_scale-100.png";
+    "VisualStudio.150x150.contrast-black_scale-140.png";
+    "VisualStudio.150x150.contrast-black_scale-180.png"|]
+*)

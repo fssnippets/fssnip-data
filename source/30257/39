@@ -1,0 +1,26 @@
+open FSharp.Data
+
+
+type WalletData =
+    FSharp.Data.JsonProvider<"""{"unspent_outputs":[{"value":9000000000},{"value":10}]}""">
+
+let getBalance publicKey =
+    
+    let balance =      
+        try 
+            WalletData.Load("https://blockchain.info/unspent?active=" + publicKey).UnspentOutputs
+            |> Array.sumBy(fun t -> t.Value)
+        with 
+        | :? System.Net.WebException as ex ->
+            use stream = ex.Response.GetResponseStream()
+            use reader = new System.IO.StreamReader(stream)
+            let err = reader.ReadToEnd()
+            System.Console.WriteLine err
+            0L
+            
+        
+    let output = (System.Convert.ToDecimal balance)/100000000m
+    
+    printfn "%A" output
+    
+getBalance "03fa3e5325277081e02bbba223cb7e902acf8d6c5019f7920eab55cda6c4d7637d"

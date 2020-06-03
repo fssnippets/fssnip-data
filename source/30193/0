@@ -1,0 +1,32 @@
+let sieve n = // Returns the set of primes up to n.
+    let (a : bool array) = n + 1 |> Array.zeroCreate // true => composite
+
+    for i in {3..2..(n |> float |> sqrt |> int)} do
+        if not a.[i] then
+            for j in {(i * i)..(i * 2)..n} do a.[j] <- true
+
+    {3..2..n} |> Seq.filter (fun i -> not a.[i]) |> Seq.append [2] |> set
+
+
+// Unit test for sieve:
+
+open System
+open System.IO
+
+let die message =
+    let name = Environment.GetCommandLineArgs().[0] |> Path.GetFileName
+    eprintfn "%s: error: %s" name message
+    eprintfn "%s: usage: %s <bound>" name name
+    Environment.Exit 1
+
+[<EntryPoint>]
+let main argv =
+    try
+        argv |> Seq.map int |> Seq.max |> sieve
+             |> Seq.map string |> String.concat " " |> printfn "%s"
+    with
+    | :? ArgumentException  -> die "too few arguments (need upper bound)"
+    | :? FormatException    -> die "invalid upper bound (non-numeric)"
+    | :? OverflowException  -> die "specified upper bound out of range"
+
+    0

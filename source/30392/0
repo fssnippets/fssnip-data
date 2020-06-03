@@ -1,0 +1,22 @@
+open System
+
+let rec uniqueRandom s (rand:Random) count lower upper =
+    if count = 0 then 
+        s
+    else
+        let rndNr = rand.Next(lower, upper)
+        if (Set.contains rndNr s) then 
+            uniqueRandom s rand count lower upper
+        else 
+            uniqueRandom (s.Add(rndNr)) rand (count-1) lower upper
+
+let uniqueRandomMutable (rand:Random) count lower upper =
+    let mutable r = Set.empty
+    while r.Count < count do
+        let x = rand.Next(lower, upper)
+        r <- Set.add x r
+    r
+
+let rand = new Random()
+let ur = uniqueRandom Set.empty rand 10 0 100
+let ur2 = uniqueRandomMutable rand 10 0 100

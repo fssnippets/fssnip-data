@@ -1,0 +1,12 @@
+open System.IO
+
+let openFile (path : string) =
+    new StreamReader(path)
+
+let read (stream : StreamReader) = seq {
+    while not stream.EndOfStream do
+        yield stream.ReadLine()
+}
+
+let readToEnd (path : string) =
+    openFile path |> read |> Seq.toList |> String.concat "\n"

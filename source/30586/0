@@ -1,0 +1,21 @@
+open Microsoft.FSharp.Reflection
+
+let recordHeader<'record>  
+    : string [] = 
+    FSharpType.GetRecordFields(typeof<'record>) 
+    |> Array.map (fun field -> field.Name ) 
+
+let recordValues<'record> (record:'record) 
+    : obj [] = 
+    FSharpType.GetRecordFields(record.GetType()) 
+    |> Array.map (fun field -> FSharpValue.GetRecordField(record,field) ) 
+
+let toGenericResult<'record> (result: Result<'record[], string>) 
+    : Model.GenericExtract =
+    match result with
+    | Error error -> Error error
+    | Ok array ->
+        Ok {
+            Model.Header = recordHeader<'record>;
+            Model.Values = array |> Array.map recordValues; 
+        } 

@@ -1,0 +1,8 @@
+type Acc = {id : int; name : string}
+
+let accs = [{id=1;name="2"}; {id=2;name="2"}; {id=3;name="42"}]
+let accs' = List.map (fun x -> (x.id, x)) accs
+let mymap = Map.ofList accs'
+let mymap' : Map<int, Acc> = List.fold (fun a x -> Map.add x.id x a) Map.empty accs
+Map.find 1 mymap
+

@@ -1,0 +1,12 @@
+// Minimal example
+// We can use active patterns and SRTP for methods deconstruction
+// It allow to hide some rough SRTP syntax
+let inline (|HasLength|) x = 
+  fun () -> (^a: (member Length: int) x)
+
+// `this` is optional here, just for demonstration `as` pattern
+let inline length (HasLength f as this) = f()
+
+// It works!
+let foo = length [1; 2; 3]
+let bar = length [|1; 2; 3|]

@@ -1,0 +1,65 @@
+// [snippet:Assembly references for FSI]
+// We can use the kRPC C# client library in F#.
+
+#r @"mscorlib"
+#r @"System.Runtime" // in my GAC
+#r @"DLLs/Google.Protobuf.dll" // from https://www.nuget.org/packages/Google.Protobuf
+#r @"DLLs/KRPC.Client.dll" // from kRPC 0.2.1 (in the client folder)
+// [/snippet]
+
+
+// [snippet:Connecting to the Server]
+let connection = new KRPC.Client.Connection (name= "FSI Example")
+// [/snippet]
+
+
+// [snippet:Interacting with the Server (version information)]
+open KRPC.Client.Services.KRPC
+do printfn "Version: %A." (connection.KRPC().GetStatus().Version)
+// [/snippet]
+
+
+// [snippet:Interacting with the Server (name of active vessel)]
+open KRPC.Client.Services.SpaceCenter
+let spacecenter = connection.SpaceCenter ()
+let vessel = spacecenter.ActiveVessel
+do printfn "Name of vessel: %A." (vessel.Name)
+// [/snippet]
+
+
+// [snippet:Streaming Data from the Server (straight)]
+let refframe = vessel.Orbit.Body.ReferenceFrame
+
+/// Calculate Kerbin altitude in meters.
+/// Note: Assumes the reference frame is Kerbin.
+let altOfPos (x,y,z) =
+  sqrt( x*x + y*y + z*z ) - 600000.
+
+let pos0 = vessel.Position refframe
+
+do printfn "Altitude of position: %.0f." (altOfPos pos0)
+// [/snippet]
+
+
+// [snippet:Streaming Data from the Server (lambda)]
+open System.Threading
+open System.Linq.Expressions
+open Microsoft.FSharp.Linq.RuntimeHelpers.LeafExpressionConverter
+
+let positionstream: KRPC.Client.Stream<float*float*float> =
+    let quotation = <@ vessel.Position refframe @>
+    let body =  quotation |> QuotationToExpression
+    let lambda = Expression.Lambda(body, Seq.empty)
+    connection.AddStream lambda
+
+let getAltitude () =
+    positionstream.Get () |> altOfPos
+
+let writeAltitude obj =
+    do printfn "Altitude: %7.1f m." (getAltitude ())
+
+do writeAltitude ()
+
+let myTimer = new Timer (new TimerCallback (writeAltitude), (), 5000, 2500)
+// do myTimer.Dispose ()  // dispose will kill the timer
+// [/snippet]

@@ -1,0 +1,6 @@
+let tryFold folder state source =
+    let folder' stateOpt item =
+        stateOpt
+            |> Option.bind (fun state ->
+                folder state item)
+    Seq.fold folder' (Some state) source

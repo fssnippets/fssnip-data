@@ -1,0 +1,11 @@
+open System
+
+//Add timeout to async module.
+module Async =
+  /// Async.Start with timeout in seconds
+  let StartWithTimeout (timeoutSecs:int) (computation:Async<unit>) =
+    let c = new System.Threading.CancellationTokenSource(timeoutSecs*1000)
+    Async.Start(computation, cancellationToken = c.Token)
+
+// Another way to setup timeout to existing async computation would be:
+// Async.StartChild(myComputation(), timeout)

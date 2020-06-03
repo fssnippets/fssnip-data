@@ -1,0 +1,54 @@
+open FSharp.Data
+open Newtonsoft.Json
+open Newtonsoft.Json.Linq
+
+type JsonValueConverter () =
+    inherit JsonConverter()
+
+    override __.CanConvert(objectType) =
+        typeof<JsonValue> = objectType.BaseType ||
+        typeof<JsonValue> = objectType
+    override __.WriteJson(writer, value, serializer) =
+        let jsonValue = value :?> JsonValue
+        let jToken =
+            match jsonValue with
+            | JsonValue.Null -> JValue.CreateNull () :> JToken
+            | _ -> JToken.Parse (jsonValue.ToString())
+        jToken.WriteTo writer
+    override __.ReadJson(reader, objectType, existingValue, serializer) =
+        let rec toJsonValue (jToken:JToken) =
+            match jToken.Type with
+            | JTokenType.Array ->
+                let values = jToken.Values<JToken>()
+                values
+                |> Seq.map toJsonValue
+                |> Seq.toArray
+                |> JsonValue.Array
+            | JTokenType.Object ->
+                let value = jToken.ToString()
+                (JsonValue.Parse value)
+            | JTokenType.Float ->
+                let value = jToken.Value<float>()
+                (JsonValue.Float value)
+            | JTokenType.Null -> (JsonValue.Null)
+            | JTokenType.Boolean ->
+                let value = jToken.Value<bool>()
+                (JsonValue.Boolean value)
+            | JTokenType.String ->
+                let value = jToken.Value<string>()
+                (JsonValue.String value)
+            | JTokenType.Integer ->
+                let value = jToken.Value<int64>()
+                let d = decimal value
+                (JsonValue.Number d)
+            | _ ->
+                failwithf
+                    "Unable to deserialize into JsonValue.  Unrecognized jToken type.|tokenType=%A|value=%s"
+                    jToken.Type
+                    (jToken.ToString())
+
+        let jToken = JToken.Load reader
+
+        let jv = toJsonValue jToken
+
+        jv :> obj

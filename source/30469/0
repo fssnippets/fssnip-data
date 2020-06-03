@@ -1,0 +1,11 @@
+module ReadOnly =
+    open System
+
+    let ofSeq<'a> (ss: 'a seq) = (ResizeArray ss).AsReadOnly()
+    let ofList<'a> (ls: 'a list) = (ResizeArray ls).AsReadOnly()
+    let ofArray<'a> (arr: 'a array) = (ResizeArray arr).AsReadOnly()
+    let empty<'a> () = (ResizeArray []).AsReadOnly()
+    let init<'a> length initializer = (ResizeArray (List.init length initializer)).AsReadOnly()
+    let toSeq<'a> (collection: Collections.ObjectModel.ReadOnlyCollection<'a>) = seq { for i in collection do yield i } 
+    let toList<'a> collection = collection |> toSeq |> List.ofSeq
+    let toArray<'a> collection = collection |> toSeq |> List.ofSeq

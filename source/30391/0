@@ -1,0 +1,58 @@
+// Library1.fs content
+namespace FSharpHttpAsyncHandler.Lib
+
+open System
+open System.Web
+open System.Threading
+
+type AsynchOperation (callback:AsyncCallback, context:HttpContext,  state:Object) as this =
+    let _callback:AsyncCallback = callback
+    let _context:HttpContext = context
+    let _state:Object = state
+    let mutable _completed:bool = false
+
+    interface IAsyncResult with
+
+        member x.IsCompleted
+            with get() =
+                _completed
+
+        member x.AsyncWaitHandle
+            with get() =
+                null
+
+        member x.AsyncState
+            with get() =
+                _state
+
+        member x.CompletedSynchronously
+            with get() =
+                false
+
+    member x.StartAsyncTask(workItemState:Object) :unit =
+        _context.Response.Write("<p>Completion IsThreadPoolThread is " + (Thread.CurrentThread.IsThreadPoolThread).ToString() + "</p>\r\n")
+        _context.Response.Write("Hello World from Async Handler!")
+        _completed <- true
+        _callback.Invoke(this:>IAsyncResult)
+
+    member x.StartAsyncWork() =
+        ThreadPool.QueueUserWorkItem(new WaitCallback(x.StartAsyncTask), null)
+
+type HTTPAsyncHandler () =
+    interface IHttpAsyncHandler with
+
+        member x.IsReusable
+            with get() = 
+                false
+
+        member x.BeginProcessRequest(context:HttpContext, cb:AsyncCallback, extraData:Object):IAsyncResult =
+            context.Response.Write("<p>Begin IsThreadPoolThread is " + (Thread.CurrentThread.IsThreadPoolThread).ToString() + "</p>\r\n")
+            let asynch:AsynchOperation = new AsynchOperation(cb, context, extraData)
+            asynch.StartAsyncWork()|> ignore
+            asynch:>IAsyncResult
+
+        member x.ProcessRequest(context:HttpContext):unit =
+            raise (new System.InvalidOperationException())
+
+        member x.EndProcessRequest((result:IAsyncResult)):unit =
+            ()

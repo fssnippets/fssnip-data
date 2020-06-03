@@ -1,0 +1,91 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">// Argument accumulator inspired by FParsec.Pipes</span>
+    
+<span class="k">type</span> <span class="t">Result</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">a</span>,<span class="o">&#39;</span><span class="i">b</span><span class="o">&gt;</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="p">Succ</span> <span class="k">of</span> <span class="o">&#39;</span><span class="i">b</span> | <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="p">Fail</span> <span class="k">of</span> <span class="o">&#39;</span><span class="i">a</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="i">a</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs1', 4)" onmouseover="showTip(event, 'fs1', 4)" class="p">Succ</span> <span class="s">&quot;asd&quot;</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs4', 5)" onmouseover="showTip(event, 'fs4', 5)" class="i">b</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs1', 6)" onmouseover="showTip(event, 'fs1', 6)" class="p">Succ</span> <span class="n">2</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs5', 7)" onmouseover="showTip(event, 'fs5', 7)" class="i">c</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs1', 8)" onmouseover="showTip(event, 'fs1', 8)" class="p">Succ</span> <span class="s">&#39;a&#39;</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs6', 9)" onmouseover="showTip(event, 'fs6', 9)" class="f">start</span> <span onmouseout="hideTip(event, 'fs7', 10)" onmouseover="showTip(event, 'fs7', 10)" class="i">a</span> <span class="o">=</span> 
+    <span class="k">match</span> <span onmouseout="hideTip(event, 'fs7', 11)" onmouseover="showTip(event, 'fs7', 11)" class="i">a</span> <span class="k">with</span>
+    | <span onmouseout="hideTip(event, 'fs1', 12)" onmouseover="showTip(event, 'fs1', 12)" class="p">Succ</span> <span onmouseout="hideTip(event, 'fs8', 13)" onmouseover="showTip(event, 'fs8', 13)" class="i">a</span> <span class="k">-&gt;</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs9', 14)" onmouseover="showTip(event, 'fs9', 14)" class="f">k</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs9', 15)" onmouseover="showTip(event, 'fs9', 15)" class="f">k</span> <span onmouseout="hideTip(event, 'fs8', 16)" onmouseover="showTip(event, 'fs8', 16)" class="i">a</span>) <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs1', 17)" onmouseover="showTip(event, 'fs1', 17)" class="p">Succ</span>
+    | <span onmouseout="hideTip(event, 'fs2', 18)" onmouseover="showTip(event, 'fs2', 18)" class="p">Fail</span> <span onmouseout="hideTip(event, 'fs10', 19)" onmouseover="showTip(event, 'fs10', 19)" class="i">x</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs2', 20)" onmouseover="showTip(event, 'fs2', 20)" class="p">Fail</span> <span onmouseout="hideTip(event, 'fs10', 21)" onmouseover="showTip(event, 'fs10', 21)" class="i">x</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs11', 22)" onmouseover="showTip(event, 'fs11', 22)" class="f">next</span> <span onmouseout="hideTip(event, 'fs12', 23)" onmouseover="showTip(event, 'fs12', 23)" class="i">b</span> <span onmouseout="hideTip(event, 'fs13', 24)" onmouseover="showTip(event, 'fs13', 24)" class="i">a</span> <span class="o">=</span> 
+    <span class="k">match</span> <span onmouseout="hideTip(event, 'fs13', 25)" onmouseover="showTip(event, 'fs13', 25)" class="i">a</span> <span class="k">with</span>
+    | <span onmouseout="hideTip(event, 'fs1', 26)" onmouseover="showTip(event, 'fs1', 26)" class="p">Succ</span> <span onmouseout="hideTip(event, 'fs14', 27)" onmouseover="showTip(event, 'fs14', 27)" class="f">a</span> <span class="k">-&gt;</span>
+        <span class="k">match</span> <span onmouseout="hideTip(event, 'fs12', 28)" onmouseover="showTip(event, 'fs12', 28)" class="i">b</span> <span class="k">with</span>
+        | <span onmouseout="hideTip(event, 'fs1', 29)" onmouseover="showTip(event, 'fs1', 29)" class="p">Succ</span> <span onmouseout="hideTip(event, 'fs15', 30)" onmouseover="showTip(event, 'fs15', 30)" class="i">b</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs14', 31)" onmouseover="showTip(event, 'fs14', 31)" class="f">a</span> <span class="o">|&gt;</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs16', 32)" onmouseover="showTip(event, 'fs16', 32)" class="f">x</span> <span onmouseout="hideTip(event, 'fs17', 33)" onmouseover="showTip(event, 'fs17', 33)" class="i">k</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs16', 34)" onmouseover="showTip(event, 'fs16', 34)" class="f">x</span> <span onmouseout="hideTip(event, 'fs17', 35)" onmouseover="showTip(event, 'fs17', 35)" class="i">k</span> <span onmouseout="hideTip(event, 'fs15', 36)" onmouseover="showTip(event, 'fs15', 36)" class="i">b</span>) <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs1', 37)" onmouseover="showTip(event, 'fs1', 37)" class="p">Succ</span>
+        | <span onmouseout="hideTip(event, 'fs2', 38)" onmouseover="showTip(event, 'fs2', 38)" class="p">Fail</span> <span onmouseout="hideTip(event, 'fs10', 39)" onmouseover="showTip(event, 'fs10', 39)" class="i">x</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs2', 40)" onmouseover="showTip(event, 'fs2', 40)" class="p">Fail</span> <span onmouseout="hideTip(event, 'fs10', 41)" onmouseover="showTip(event, 'fs10', 41)" class="i">x</span>
+    | <span onmouseout="hideTip(event, 'fs2', 42)" onmouseover="showTip(event, 'fs2', 42)" class="p">Fail</span> <span onmouseout="hideTip(event, 'fs10', 43)" onmouseover="showTip(event, 'fs10', 43)" class="i">x</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs2', 44)" onmouseover="showTip(event, 'fs2', 44)" class="p">Fail</span> <span onmouseout="hideTip(event, 'fs10', 45)" onmouseover="showTip(event, 'fs10', 45)" class="i">x</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs18', 46)" onmouseover="showTip(event, 'fs18', 46)" class="f">fin</span> <span onmouseout="hideTip(event, 'fs19', 47)" onmouseover="showTip(event, 'fs19', 47)" class="i">k</span> <span onmouseout="hideTip(event, 'fs20', 48)" onmouseover="showTip(event, 'fs20', 48)" class="i">a</span> <span class="o">=</span>
+    <span class="k">match</span> <span onmouseout="hideTip(event, 'fs20', 49)" onmouseover="showTip(event, 'fs20', 49)" class="i">a</span> <span class="k">with</span>
+    | <span onmouseout="hideTip(event, 'fs1', 50)" onmouseover="showTip(event, 'fs1', 50)" class="p">Succ</span> <span onmouseout="hideTip(event, 'fs21', 51)" onmouseover="showTip(event, 'fs21', 51)" class="f">a</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs1', 52)" onmouseover="showTip(event, 'fs1', 52)" class="p">Succ</span> <span class="o">&lt;|</span> <span onmouseout="hideTip(event, 'fs21', 53)" onmouseover="showTip(event, 'fs21', 53)" class="f">a</span> <span onmouseout="hideTip(event, 'fs19', 54)" onmouseover="showTip(event, 'fs19', 54)" class="i">k</span>
+    | <span onmouseout="hideTip(event, 'fs2', 55)" onmouseover="showTip(event, 'fs2', 55)" class="p">Fail</span> <span onmouseout="hideTip(event, 'fs22', 56)" onmouseover="showTip(event, 'fs22', 56)" class="i">x</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs2', 57)" onmouseover="showTip(event, 'fs2', 57)" class="p">Fail</span> <span onmouseout="hideTip(event, 'fs22', 58)" onmouseover="showTip(event, 'fs22', 58)" class="i">x</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs23', 59)" onmouseover="showTip(event, 'fs23', 59)" class="i">r</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs24', 60)" onmouseover="showTip(event, 'fs24', 60)" class="t">Result</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs25', 61)" onmouseover="showTip(event, 'fs25', 61)" class="t">string</span>,_<span class="o">&gt;</span> <span class="o">=</span> 
+    <span onmouseout="hideTip(event, 'fs6', 62)" onmouseover="showTip(event, 'fs6', 62)" class="f">start</span> <span onmouseout="hideTip(event, 'fs3', 63)" onmouseover="showTip(event, 'fs3', 63)" class="i">a</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs11', 64)" onmouseover="showTip(event, 'fs11', 64)" class="f">next</span> <span onmouseout="hideTip(event, 'fs4', 65)" onmouseover="showTip(event, 'fs4', 65)" class="i">b</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs11', 66)" onmouseover="showTip(event, 'fs11', 66)" class="f">next</span> <span onmouseout="hideTip(event, 'fs5', 67)" onmouseover="showTip(event, 'fs5', 67)" class="i">c</span>
+    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs18', 68)" onmouseover="showTip(event, 'fs18', 68)" class="f">fin</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs26', 69)" onmouseover="showTip(event, 'fs26', 69)" class="i">a</span> <span onmouseout="hideTip(event, 'fs27', 70)" onmouseover="showTip(event, 'fs27', 70)" class="i">b</span> <span onmouseout="hideTip(event, 'fs28', 71)" onmouseover="showTip(event, 'fs28', 71)" class="i">c</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs28', 72)" onmouseover="showTip(event, 'fs28', 72)" class="i">c</span>)
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">union case Result.Succ: &#39;b -&gt; Result&lt;&#39;a,&#39;b&gt;</div>
+<div class="tip" id="fs2">union case Result.Fail: &#39;a -&gt; Result&lt;&#39;a,&#39;b&gt;</div>
+<div class="tip" id="fs3">val a : Result&lt;&#39;a,string&gt;<br /><br />Full name: Script.a</div>
+<div class="tip" id="fs4">val b : Result&lt;&#39;a,int&gt;<br /><br />Full name: Script.b</div>
+<div class="tip" id="fs5">val c : Result&lt;&#39;a,char&gt;<br /><br />Full name: Script.c</div>
+<div class="tip" id="fs6">val start : a:Result&lt;&#39;a,&#39;b&gt; -&gt; Result&lt;&#39;a,((&#39;b -&gt; &#39;c) -&gt; &#39;c)&gt;<br /><br />Full name: Script.start</div>
+<div class="tip" id="fs7">val a : Result&lt;&#39;a,&#39;b&gt;</div>
+<div class="tip" id="fs8">val a : &#39;b</div>
+<div class="tip" id="fs9">val k : (&#39;b -&gt; &#39;c)</div>
+<div class="tip" id="fs10">val x : &#39;a</div>
+<div class="tip" id="fs11">val next : b:Result&lt;&#39;a,&#39;b&gt; -&gt; a:Result&lt;&#39;a,(&#39;c -&gt; &#39;b -&gt; &#39;d)&gt; -&gt; Result&lt;&#39;a,(&#39;c -&gt; &#39;d)&gt;<br /><br />Full name: Script.next</div>
+<div class="tip" id="fs12">val b : Result&lt;&#39;a,&#39;b&gt;</div>
+<div class="tip" id="fs13">val a : Result&lt;&#39;a,(&#39;c -&gt; &#39;b -&gt; &#39;d)&gt;</div>
+<div class="tip" id="fs14">val a : (&#39;c -&gt; &#39;b -&gt; &#39;d)</div>
+<div class="tip" id="fs15">val b : &#39;b</div>
+<div class="tip" id="fs16">val x : (&#39;c -&gt; &#39;b -&gt; &#39;d)</div>
+<div class="tip" id="fs17">val k : &#39;c</div>
+<div class="tip" id="fs18">val fin : k:&#39;a -&gt; a:Result&lt;&#39;b,(&#39;a -&gt; &#39;c)&gt; -&gt; Result&lt;&#39;b,&#39;c&gt;<br /><br />Full name: Script.fin</div>
+<div class="tip" id="fs19">val k : &#39;a</div>
+<div class="tip" id="fs20">val a : Result&lt;&#39;b,(&#39;a -&gt; &#39;c)&gt;</div>
+<div class="tip" id="fs21">val a : (&#39;a -&gt; &#39;c)</div>
+<div class="tip" id="fs22">val x : &#39;b</div>
+<div class="tip" id="fs23">val r : Result&lt;string,char&gt;<br /><br />Full name: Script.r</div>
+<div class="tip" id="fs24">type Result&lt;&#39;a,&#39;b&gt; =<br />&#160;&#160;| Succ of &#39;b<br />&#160;&#160;| Fail of &#39;a<br /><br />Full name: Script.Result&lt;_,_&gt;</div>
+<div class="tip" id="fs25">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />Full name: Microsoft.FSharp.Core.Operators.string<br /><br />--------------------<br />type string = System.String<br /><br />Full name: Microsoft.FSharp.Core.string</div>
+<div class="tip" id="fs26">val a : string</div>
+<div class="tip" id="fs27">val b : int</div>
+<div class="tip" id="fs28">val c : char</div>
+

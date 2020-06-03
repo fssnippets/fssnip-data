@@ -1,0 +1,37 @@
+#if INTERACTIVE
+#r "Emailage.NET.4.5.1.Wrapper/lib/net451/Emailage.NET.4.5.1.Wrapper.dll"
+#r "Newtonsoft.Json/lib/net45/Newtonsoft.Json.dll"
+#endif
+
+let accountSID = "ABC123" // Your SID
+let authToken = "ABC123" // Your Token
+
+type EmailageResults =
+| Risk of int * string // score and relevant info
+| Failed of int * string // fail code and reason
+
+let emailage =
+    Emailage.EmailageClient(
+        Emailage.Models.Enums.Environment.Sandbox, // Sandbox or Production
+        accountSID,
+        authToken, 
+        Emailage.Models.Enums.Method.Get,
+        Emailage.Models.Enums.Format.Json,
+        Emailage.Models.Enums.SignatureMethod.HMAC_SHA384
+    )
+
+let checkEmail email =
+    async {
+        let! res = emailage.QueryAsync email |> Async.AwaitTask
+        match res.responseStatus.status with
+        | "success" ->
+            if Array.isEmpty res.query.results then
+                return Failed(0, "not found")
+            else
+                let res = res.query.results |> Array.head
+                return Risk(
+                    res.EAScore |> System.Int32.Parse,
+                    res.EAAdvice + " / " + res.EAReason
+                )
+        | _ -> return Failed(res.responseStatus.errorCode, res.responseStatus.description)
+    }

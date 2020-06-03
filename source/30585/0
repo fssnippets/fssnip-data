@@ -1,0 +1,11 @@
+open System
+
+type WriteAnyOverloads = WriteAnyOverloads with
+    static member inline ($) (x: char, _) = Console.Write x
+    static member inline ($) (x: string, _) = Console.Write x
+
+let inline write any = any $ WriteAnyOverloads
+
+write "1" //OK
+write '1' //OK
+//write  1  //NOT OK

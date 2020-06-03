@@ -1,0 +1,18 @@
+[<JsonObject(MemberSerialization.OptIn)>]
+type Host [<JsonConstructor>] (address: string, port: int, ipAddress : string) =
+    new (address : string) = Host(address, 0, "")
+    new (address : string, port : int) = Host(address, port, "")
+
+
+    [<JsonProperty>]
+    member this.Address : string = address
+    [<JsonProperty>]
+    member this.Port : int = port
+    [<JsonProperty>]
+    member this.IpAddress : string = ipAddress
+
+    member this.ConnectionString = match this.Port with
+                                    | 0 -> this.Address
+                                    | _ -> sprintf "%s:%d" this.Address this.Port
+    static member val Empty = new Host("")
+    override this.ToString() = this.ConnectionString

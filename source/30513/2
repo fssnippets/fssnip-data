@@ -1,0 +1,59 @@
+/// For a function, f, define fix(f) as the "fixed point" of f:
+/// A value, z, such that f(z) = z.
+///
+/// Substituting fix(f) for z, gives f(fix(f)) = fix(f), which
+/// we flip to fix(f) = f(fix(f)).
+///
+/// This fixed point, z, is itself a function that takes an
+/// argument, x. We have to make x explicit in the definition
+/// in order to avoid infinite recursion when fix is called.
+///
+/// (In a typed language like F#, fix has to be defined recursively.
+/// However, in an untyped system, such as the pure lambda calculus,
+/// fix can be defined without recursion. That version of fix is
+/// called the "Y" combinator.)
+///
+/// https://en.wikipedia.org/wiki/Fixed-point_combinator
+let rec fix f =
+    let z x = (f (fix f)) x
+    z
+
+/// As an example, we create a factorial "generator", which, when
+/// given a function that implements factorial correctly for inputs
+/// up to some number, n-1, answers a slightly better function that
+/// implements factorial correctly for n as well. Note that this function
+/// is not recursive.
+let factorialGen (factorialWeak : int -> int) : (int -> int) =
+    fun n ->
+        if n = 0 then 1
+        else n * factorialWeak (n - 1)
+
+/// We could feed such a generated function back into the generator
+/// to produce an even better version that works for all numbers
+/// up to n + 1. Instead, applying fix to the generator itself
+/// returns the generator's fixed point, as though we had iterated
+/// the feedback infinitely. The result is a function that implements
+/// factorial correctly for *all* inputs n.
+let factorial = fix factorialGen
+
+/// Another example: Fibonacci numbers. Again, fibGen itself isn't
+/// recursive. It only behaves recursively once we apply fix.
+let fib =
+    let fibGen fibWeak =
+        fun n ->
+            if n <= 1 then 1
+            else fibWeak (n - 1) + fibWeak (n - 2)
+    fix fibGen
+
+[<EntryPoint>]
+let main argv =
+
+    printfn ""
+    for i = 0 to 10 do
+        printfn "%A!: %A" i (factorial i)
+
+    printfn ""
+    for i = 0 to 10 do
+        printfn "fib(%A): %A" i (fib i)
+
+    0

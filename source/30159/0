@@ -1,0 +1,34 @@
+// [snippet:Init]
+let myCache = new System.Collections.Concurrent.ConcurrentDictionary<string,_>()
+let createType() = "some method"
+// [/snippet]
+
+//-----------------------------------------
+// INCORRECT WAY:
+
+let CachedCreateBad key =
+    match myCache.TryGetValue key with
+    | true, item -> item
+    | _ -> 
+        let newItem = createType()
+        myCache.[key] <- newItem
+        newItem
+
+// Using like normal Dictionary is not correct.
+// Because while calling createType() the 
+// myCache is not locked so the addition may fail.
+        
+//-----------------------------------------
+// CORRECT WAY:
+
+let CachedCreateGood key =
+    myCache.GetOrAdd(key, fun key ->
+        let newItem = createType()
+        newItem)
+
+// While the lambda is called there
+// is a lightweight lock inside ConcurrentDictionary
+
+// Notice that the code change between these is quite easy!
+
+

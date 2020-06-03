@@ -1,0 +1,17 @@
+let lagrange (x:float list) (y:float list) (v:float) =
+    [for i in 0..x.Length - 1 ->
+         [for j in [0..i-1]@[i+1..x.Length - 1] ->
+            (v - x.[j]) / (x.[i] - x.[j])]
+         |> List.fold (*) y.[i]]
+    |> List.sum
+
+//Usage
+
+//x values
+let x = [111.0;112.0;113.0;114.0;115.0]
+//y values
+let y = [13.0;24.0;35.0;46.0;57.0]
+//interpolating value
+let v = 117.0
+
+lagrange x y v

@@ -1,0 +1,40 @@
+let backup (backupDirInput: BackupDirectoryInput) :HttpHandler =
+    fun _ ctx ->
+        let service = ctx.RequestServices.GetRequiredService<StatefulServiceBase>()
+        
+        let partition = ctx.RequestServices.GetRequiredService<IStatefulServicePartition>()
+        let partitionKey = match partition.PartitionInfo with
+                           | :? Int64RangePartitionInformation as ip -> sprintf "Int64[%d-%d]" ip.LowKey ip.HighKey
+                           | :? NamedPartitionInformation as np -> sprintf "Named[%s]" np.Name
+                           | :? SingletonPartitionInformation as sp -> "Singleton"
+                           | p -> failwithf "Unsupported partiton kind %A" p.Kind        
+
+        if not (System.IO.Directory.Exists backupDirInput.DirName)
+        then
+            invalidArg "dirName" "Directory does not exist"
+
+        let targetBackupDirectoryName = System.IO.Path.Combine(
+                                            backupDirInput.DirName,
+                                            service.Context.ServiceName.AbsolutePath.TrimStart('/')
+                                        )
+                                        |> System.IO.Path.GetFullPath
+
+        System.IO.Directory.CreateDirectory(targetBackupDirectoryName) |> ignore
+
+        let mutable backupFileName = ""
+        let bd = BackupDescription(BackupOption.Full,
+                    fun bi ct ->
+                        try
+                            backupFileName <- System.IO.Path.Combine(targetBackupDirectoryName, (sprintf "%s.zip" partitionKey))
+                            ZipFile.CreateFromDirectory(bi.Directory, backupFileName , CompressionLevel.Fastest, false)
+                            System.IO.Directory.Delete(bi.Directory, true)
+                            System.Threading.Tasks.Task.FromResult(true)
+                        with
+                        | e -> 
+                            // TO-DO Log
+                            System.Threading.Tasks.Task.FromResult(false)
+                    )
+        task {
+            let! _ = service.BackupAsync(bd).ContinueWith(fun _ -> true)
+            return! ctx.WriteStringAsync (sprintf "Backup completed. Directory: %s" backupFileName)
+        }

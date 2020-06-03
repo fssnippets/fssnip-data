@@ -1,0 +1,13 @@
+let lst = ["John"; "Bill"; "Larry"; "Dick"]
+
+let shuffleList x = 
+    let rng = new Random()
+    let rec iter arr x =
+        match x with
+        | [] -> arr
+        | _ ->
+            let i = rng.Next(x.Length)
+            iter (x.[i] :: arr) (List.append x.[0 .. i - 1] x.[i + 1 .. x.Length - 1])
+    iter [] x
+
+shuffleList lst

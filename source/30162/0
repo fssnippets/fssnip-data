@@ -1,0 +1,25 @@
+open FSharp.Data
+
+let metaTitle (doc:HtmlDocument) =
+    doc.Descendants "meta"
+    |> Seq.choose (fun x ->
+        match x.AttributeValue("name"), x.AttributeValue("property") with
+        | "title", _
+        | "headline", _
+        | "twitter:title", _
+        | _, "og:title" ->
+            Some(x.AttributeValue("content"))
+        | _, _ -> None
+    )
+
+let titles (doc:HtmlDocument) =
+    let tagged (tag:string) =
+        doc.Descendants tag |> Seq.map (fun x -> x.InnerText())
+    Seq.concat [tagged "title"; metaTitle doc; tagged "h1"]
+
+let title (doc:HtmlDocument) =
+    titles doc |> Seq.tryHead
+
+"http://www.telegraph.co.uk"
+|> HtmlDocument.Load
+|> titles

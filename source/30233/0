@@ -1,0 +1,42 @@
+open System
+
+let sortStringAsKey (listOfWords : string array) = 
+    let getKey (str : string) = 
+        str.ToCharArray() 
+        |> Array.sort 
+        |> String
+
+    listOfWords 
+    |> Array.groupBy getKey 
+    |> Array.filter (fun (sortedWord, originalWord) -> originalWord.Length > 1)
+
+//user
+[<EntryPoint>]
+let main argv = 
+    let filename = "words.txt"
+    let listOfWords = System.IO.File.ReadAllLines(filename)
+    let listOfAnagrams = sortStringAsKey listOfWords
+
+    // Prints every single anagram Combination;;
+    listOfAnagrams |> Array.iter  (fun (_ , anagramList) ->  anagramList |> Array.iter (fun str -> printfn "%s" str); printfn "")
+
+    // Gets the longest
+    let longestAnagrams = listOfAnagrams 
+                        |> Array.filter (fun (sortedWord, _) -> sortedWord.Length >= (listOfAnagrams 
+                                                                                        |> Array.maxBy (fun (sortedWord, _)-> sortedWord.Length) 
+                                                                                        |> fst 
+                                                                                        |> String.length))
+
+    // Gets the set that anagrams
+    let mostAnagrams = listOfAnagrams
+                        |> Array.filter (fun (_, originalWords) -> originalWords.Length >= (listOfAnagrams 
+                                                                                            |> Array.maxBy (fun (_, originalWords) -> originalWords.Length) 
+                                                                                            |> snd 
+                                                                                            |> Array.length))
+
+    // Prints anagrams
+    longestAnagrams |> Array.iter  (fun (_ , anagramList) ->  anagramList |> Array.iter (fun str -> printfn "%s" str); printfn "")
+    mostAnagrams |> Array.iter  (fun (_ , anagramList) ->  anagramList |> Array.iter (fun str -> printfn "%s" str); printfn "")
+
+
+    0 // return an integer exit code

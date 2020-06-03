@@ -1,0 +1,135 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">System</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 2)" onmouseover="showTip(event, 'fs1', 2)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 3)" onmouseover="showTip(event, 'fs2', 3)" class="i">Diagnostics</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs3', 4)" onmouseover="showTip(event, 'fs3', 4)" class="f">runProc</span> <span onmouseout="hideTip(event, 'fs4', 5)" onmouseover="showTip(event, 'fs4', 5)" class="i">filename</span> <span onmouseout="hideTip(event, 'fs5', 6)" onmouseover="showTip(event, 'fs5', 6)" class="i">args</span> <span onmouseout="hideTip(event, 'fs6', 7)" onmouseover="showTip(event, 'fs6', 7)" class="i">startDir</span> <span class="o">=</span> 
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs7', 8)" onmouseover="showTip(event, 'fs7', 8)" class="i">timer</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs8', 9)" onmouseover="showTip(event, 'fs8', 9)" class="t">Stopwatch</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs9', 10)" onmouseover="showTip(event, 'fs9', 10)" class="f">StartNew</span>()
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs10', 11)" onmouseover="showTip(event, 'fs10', 11)" class="i">procStartInfo</span> <span class="o">=</span> 
+        <span onmouseout="hideTip(event, 'fs11', 12)" onmouseover="showTip(event, 'fs11', 12)" class="t">ProcessStartInfo</span>(
+            <span class="i">RedirectStandardOutput</span> <span class="o">=</span> <span class="k">true</span>,
+            <span class="i">RedirectStandardError</span> <span class="o">=</span> <span class="k">true</span>,
+            <span class="i">UseShellExecute</span> <span class="o">=</span> <span class="k">false</span>,
+            <span class="i">FileName</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs4', 13)" onmouseover="showTip(event, 'fs4', 13)" class="i">filename</span>,
+            <span class="i">Arguments</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs5', 14)" onmouseover="showTip(event, 'fs5', 14)" class="i">args</span>
+        )
+    <span class="k">match</span> <span onmouseout="hideTip(event, 'fs6', 15)" onmouseover="showTip(event, 'fs6', 15)" class="i">startDir</span> <span class="k">with</span> | <span onmouseout="hideTip(event, 'fs12', 16)" onmouseover="showTip(event, 'fs12', 16)" class="p">Some</span> <span onmouseout="hideTip(event, 'fs13', 17)" onmouseover="showTip(event, 'fs13', 17)" class="i">d</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs10', 18)" onmouseover="showTip(event, 'fs10', 18)" class="i">procStartInfo</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs14', 19)" onmouseover="showTip(event, 'fs14', 19)" class="i">WorkingDirectory</span> <span class="o">&lt;-</span> <span onmouseout="hideTip(event, 'fs13', 20)" onmouseover="showTip(event, 'fs13', 20)" class="i">d</span> | _ <span class="k">-&gt;</span> ()
+
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs15', 21)" onmouseover="showTip(event, 'fs15', 21)" class="i">outputs</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs1', 22)" onmouseover="showTip(event, 'fs1', 22)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs16', 23)" onmouseover="showTip(event, 'fs16', 23)" class="i">Collections</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs17', 24)" onmouseover="showTip(event, 'fs17', 24)" class="i">Generic</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs18', 25)" onmouseover="showTip(event, 'fs18', 25)" class="t">List</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs19', 26)" onmouseover="showTip(event, 'fs19', 26)" class="t">string</span><span class="o">&gt;</span>()
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs20', 27)" onmouseover="showTip(event, 'fs20', 27)" class="i">errors</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs1', 28)" onmouseover="showTip(event, 'fs1', 28)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs16', 29)" onmouseover="showTip(event, 'fs16', 29)" class="i">Collections</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs17', 30)" onmouseover="showTip(event, 'fs17', 30)" class="i">Generic</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs18', 31)" onmouseover="showTip(event, 'fs18', 31)" class="t">List</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs19', 32)" onmouseover="showTip(event, 'fs19', 32)" class="t">string</span><span class="o">&gt;</span>()
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs21', 33)" onmouseover="showTip(event, 'fs21', 33)" class="f">outputHandler</span> <span onmouseout="hideTip(event, 'fs22', 34)" onmouseover="showTip(event, 'fs22', 34)" class="f">f</span> (<span class="i">_sender</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs23', 35)" onmouseover="showTip(event, 'fs23', 35)" class="t">obj</span>) (<span onmouseout="hideTip(event, 'fs24', 36)" onmouseover="showTip(event, 'fs24', 36)" class="i">args</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs25', 37)" onmouseover="showTip(event, 'fs25', 37)" class="t">DataReceivedEventArgs</span>) <span class="o">=</span> <span onmouseout="hideTip(event, 'fs22', 38)" onmouseover="showTip(event, 'fs22', 38)" class="f">f</span> <span onmouseout="hideTip(event, 'fs24', 39)" onmouseover="showTip(event, 'fs24', 39)" class="i">args</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs26', 40)" onmouseover="showTip(event, 'fs26', 40)" class="i">Data</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs27', 41)" onmouseover="showTip(event, 'fs27', 41)" class="i">p</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs28', 42)" onmouseover="showTip(event, 'fs28', 42)" class="t">Process</span>(<span class="i">StartInfo</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs10', 43)" onmouseover="showTip(event, 'fs10', 43)" class="i">procStartInfo</span>)
+    <span onmouseout="hideTip(event, 'fs27', 44)" onmouseover="showTip(event, 'fs27', 44)" class="i">p</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs29', 45)" onmouseover="showTip(event, 'fs29', 45)" class="i">OutputDataReceived</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs30', 46)" onmouseover="showTip(event, 'fs30', 46)" class="f">AddHandler</span>(<span onmouseout="hideTip(event, 'fs31', 47)" onmouseover="showTip(event, 'fs31', 47)" class="t">DataReceivedEventHandler</span> (<span onmouseout="hideTip(event, 'fs21', 48)" onmouseover="showTip(event, 'fs21', 48)" class="f">outputHandler</span> <span onmouseout="hideTip(event, 'fs15', 49)" onmouseover="showTip(event, 'fs15', 49)" class="i">outputs</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs32', 50)" onmouseover="showTip(event, 'fs32', 50)" class="f">Add</span>))
+    <span onmouseout="hideTip(event, 'fs27', 51)" onmouseover="showTip(event, 'fs27', 51)" class="i">p</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs33', 52)" onmouseover="showTip(event, 'fs33', 52)" class="i">ErrorDataReceived</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs30', 53)" onmouseover="showTip(event, 'fs30', 53)" class="f">AddHandler</span>(<span onmouseout="hideTip(event, 'fs31', 54)" onmouseover="showTip(event, 'fs31', 54)" class="t">DataReceivedEventHandler</span> (<span onmouseout="hideTip(event, 'fs21', 55)" onmouseover="showTip(event, 'fs21', 55)" class="f">outputHandler</span> <span onmouseout="hideTip(event, 'fs20', 56)" onmouseover="showTip(event, 'fs20', 56)" class="i">errors</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs32', 57)" onmouseover="showTip(event, 'fs32', 57)" class="f">Add</span>))
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs34', 58)" onmouseover="showTip(event, 'fs34', 58)" class="i">started</span> <span class="o">=</span> 
+        <span class="k">try</span>
+            <span onmouseout="hideTip(event, 'fs27', 59)" onmouseover="showTip(event, 'fs27', 59)" class="i">p</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs35', 60)" onmouseover="showTip(event, 'fs35', 60)" class="f">Start</span>()
+        <span class="k">with</span> | <span onmouseout="hideTip(event, 'fs36', 61)" onmouseover="showTip(event, 'fs36', 61)" class="i">ex</span> <span class="k">-&gt;</span>
+            <span onmouseout="hideTip(event, 'fs36', 62)" onmouseover="showTip(event, 'fs36', 62)" class="i">ex</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs37', 63)" onmouseover="showTip(event, 'fs37', 63)" class="i">Data</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs38', 64)" onmouseover="showTip(event, 'fs38', 64)" class="f">Add</span>(<span class="s">&quot;filename&quot;</span>, <span onmouseout="hideTip(event, 'fs4', 65)" onmouseover="showTip(event, 'fs4', 65)" class="i">filename</span>)
+            <span onmouseout="hideTip(event, 'fs39', 66)" onmouseover="showTip(event, 'fs39', 66)" class="f">reraise</span>()
+    <span class="k">if</span> <span onmouseout="hideTip(event, 'fs40', 67)" onmouseover="showTip(event, 'fs40', 67)" class="f">not</span> <span onmouseout="hideTip(event, 'fs34', 68)" onmouseover="showTip(event, 'fs34', 68)" class="i">started</span> <span class="k">then</span>
+        <span onmouseout="hideTip(event, 'fs41', 69)" onmouseover="showTip(event, 'fs41', 69)" class="f">failwithf</span> <span class="s">&quot;Failed to start process </span><span class="pf">%s</span><span class="s">&quot;</span> <span onmouseout="hideTip(event, 'fs4', 70)" onmouseover="showTip(event, 'fs4', 70)" class="i">filename</span>
+    <span onmouseout="hideTip(event, 'fs42', 71)" onmouseover="showTip(event, 'fs42', 71)" class="f">printfn</span> <span class="s">&quot;Started </span><span class="pf">%s</span><span class="s"> with pid </span><span class="pf">%i</span><span class="s">&quot;</span> <span onmouseout="hideTip(event, 'fs27', 72)" onmouseover="showTip(event, 'fs27', 72)" class="i">p</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs43', 73)" onmouseover="showTip(event, 'fs43', 73)" class="i">ProcessName</span> <span onmouseout="hideTip(event, 'fs27', 74)" onmouseover="showTip(event, 'fs27', 74)" class="i">p</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs44', 75)" onmouseover="showTip(event, 'fs44', 75)" class="i">Id</span>
+    <span onmouseout="hideTip(event, 'fs27', 76)" onmouseover="showTip(event, 'fs27', 76)" class="i">p</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs45', 77)" onmouseover="showTip(event, 'fs45', 77)" class="f">BeginOutputReadLine</span>()
+    <span onmouseout="hideTip(event, 'fs27', 78)" onmouseover="showTip(event, 'fs27', 78)" class="i">p</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs46', 79)" onmouseover="showTip(event, 'fs46', 79)" class="f">BeginErrorReadLine</span>()
+    <span onmouseout="hideTip(event, 'fs27', 80)" onmouseover="showTip(event, 'fs27', 80)" class="i">p</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs47', 81)" onmouseover="showTip(event, 'fs47', 81)" class="f">WaitForExit</span>()
+    <span onmouseout="hideTip(event, 'fs7', 82)" onmouseover="showTip(event, 'fs7', 82)" class="i">timer</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs48', 83)" onmouseover="showTip(event, 'fs48', 83)" class="f">Stop</span>()
+    <span onmouseout="hideTip(event, 'fs42', 84)" onmouseover="showTip(event, 'fs42', 84)" class="f">printfn</span> <span class="s">&quot;Finished </span><span class="pf">%s</span><span class="s"> after </span><span class="pf">%A</span><span class="s"> milliseconds&quot;</span> <span onmouseout="hideTip(event, 'fs4', 85)" onmouseover="showTip(event, 'fs4', 85)" class="i">filename</span> <span onmouseout="hideTip(event, 'fs7', 86)" onmouseover="showTip(event, 'fs7', 86)" class="i">timer</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs49', 87)" onmouseover="showTip(event, 'fs49', 87)" class="i">ElapsedMilliseconds</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs50', 88)" onmouseover="showTip(event, 'fs50', 88)" class="f">cleanOut</span> <span onmouseout="hideTip(event, 'fs51', 89)" onmouseover="showTip(event, 'fs51', 89)" class="i">l</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs51', 90)" onmouseover="showTip(event, 'fs51', 90)" class="i">l</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs52', 91)" onmouseover="showTip(event, 'fs52', 91)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs53', 92)" onmouseover="showTip(event, 'fs53', 92)" class="f">filter</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs54', 93)" onmouseover="showTip(event, 'fs54', 93)" class="i">o</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs55', 94)" onmouseover="showTip(event, 'fs55', 94)" class="t">String</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs56', 95)" onmouseover="showTip(event, 'fs56', 95)" class="f">IsNullOrEmpty</span> <span onmouseout="hideTip(event, 'fs54', 96)" onmouseover="showTip(event, 'fs54', 96)" class="i">o</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs40', 97)" onmouseover="showTip(event, 'fs40', 97)" class="f">not</span>)
+    <span onmouseout="hideTip(event, 'fs50', 98)" onmouseover="showTip(event, 'fs50', 98)" class="f">cleanOut</span> <span onmouseout="hideTip(event, 'fs15', 99)" onmouseover="showTip(event, 'fs15', 99)" class="i">outputs</span>,<span onmouseout="hideTip(event, 'fs50', 100)" onmouseover="showTip(event, 'fs50', 100)" class="f">cleanOut</span> <span onmouseout="hideTip(event, 'fs20', 101)" onmouseover="showTip(event, 'fs20', 101)" class="i">errors</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace System</div>
+<div class="tip" id="fs2">namespace System.Diagnostics</div>
+<div class="tip" id="fs3">val runProc : filename:string -&gt; args:string -&gt; startDir:string option -&gt; seq&lt;string&gt; * seq&lt;string&gt;<br /><br />Full name: Script.runProc</div>
+<div class="tip" id="fs4">val filename : string</div>
+<div class="tip" id="fs5">val args : string</div>
+<div class="tip" id="fs6">val startDir : string option</div>
+<div class="tip" id="fs7">val timer : Stopwatch</div>
+<div class="tip" id="fs8">Multiple items<br />type Stopwatch =<br />&#160;&#160;new : unit -&gt; Stopwatch<br />&#160;&#160;member Elapsed : TimeSpan<br />&#160;&#160;member ElapsedMilliseconds : int64<br />&#160;&#160;member ElapsedTicks : int64<br />&#160;&#160;member IsRunning : bool<br />&#160;&#160;member Reset : unit -&gt; unit<br />&#160;&#160;member Restart : unit -&gt; unit<br />&#160;&#160;member Start : unit -&gt; unit<br />&#160;&#160;member Stop : unit -&gt; unit<br />&#160;&#160;static val Frequency : int64<br />&#160;&#160;...<br /><br />Full name: System.Diagnostics.Stopwatch<br /><br />--------------------<br />Stopwatch() : unit</div>
+<div class="tip" id="fs9">Stopwatch.StartNew() : Stopwatch</div>
+<div class="tip" id="fs10">val procStartInfo : ProcessStartInfo</div>
+<div class="tip" id="fs11">Multiple items<br />type ProcessStartInfo =<br />&#160;&#160;new : unit -&gt; ProcessStartInfo + 2 overloads<br />&#160;&#160;member Arguments : string with get, set<br />&#160;&#160;member CreateNoWindow : bool with get, set<br />&#160;&#160;member Domain : string with get, set<br />&#160;&#160;member EnvironmentVariables : StringDictionary<br />&#160;&#160;member ErrorDialog : bool with get, set<br />&#160;&#160;member ErrorDialogParentHandle : nativeint with get, set<br />&#160;&#160;member FileName : string with get, set<br />&#160;&#160;member LoadUserProfile : bool with get, set<br />&#160;&#160;member Password : SecureString with get, set<br />&#160;&#160;...<br /><br />Full name: System.Diagnostics.ProcessStartInfo<br /><br />--------------------<br />ProcessStartInfo() : unit<br />ProcessStartInfo(fileName: string) : unit<br />ProcessStartInfo(fileName: string, arguments: string) : unit</div>
+<div class="tip" id="fs12">union case Option.Some: Value: &#39;T -&gt; Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs13">val d : string</div>
+<div class="tip" id="fs14">property ProcessStartInfo.WorkingDirectory: string</div>
+<div class="tip" id="fs15">val outputs : Collections.Generic.List&lt;string&gt;</div>
+<div class="tip" id="fs16">namespace System.Collections</div>
+<div class="tip" id="fs17">namespace System.Collections.Generic</div>
+<div class="tip" id="fs18">Multiple items<br />type List&lt;&#39;T&gt; =<br />&#160;&#160;new : unit -&gt; List&lt;&#39;T&gt; + 2 overloads<br />&#160;&#160;member Add : item:&#39;T -&gt; unit<br />&#160;&#160;member AddRange : collection:IEnumerable&lt;&#39;T&gt; -&gt; unit<br />&#160;&#160;member AsReadOnly : unit -&gt; ReadOnlyCollection&lt;&#39;T&gt;<br />&#160;&#160;member BinarySearch : item:&#39;T -&gt; int + 2 overloads<br />&#160;&#160;member Capacity : int with get, set<br />&#160;&#160;member Clear : unit -&gt; unit<br />&#160;&#160;member Contains : item:&#39;T -&gt; bool<br />&#160;&#160;member ConvertAll&lt;&#39;TOutput&gt; : converter:Converter&lt;&#39;T, &#39;TOutput&gt; -&gt; List&lt;&#39;TOutput&gt;<br />&#160;&#160;member CopyTo : array:&#39;T[] -&gt; unit + 2 overloads<br />&#160;&#160;...<br />&#160;&#160;nested type Enumerator<br /><br />Full name: System.Collections.Generic.List&lt;_&gt;<br /><br />--------------------<br />Collections.Generic.List() : unit<br />Collections.Generic.List(capacity: int) : unit<br />Collections.Generic.List(collection: Collections.Generic.IEnumerable&lt;&#39;T&gt;) : unit</div>
+<div class="tip" id="fs19">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />Full name: Microsoft.FSharp.Core.Operators.string<br /><br />--------------------<br />type string = String<br /><br />Full name: Microsoft.FSharp.Core.string</div>
+<div class="tip" id="fs20">val errors : Collections.Generic.List&lt;string&gt;</div>
+<div class="tip" id="fs21">val outputHandler : ((string -&gt; &#39;a) -&gt; obj -&gt; DataReceivedEventArgs -&gt; &#39;a)</div>
+<div class="tip" id="fs22">val f : (string -&gt; &#39;a)</div>
+<div class="tip" id="fs23">type obj = Object<br /><br />Full name: Microsoft.FSharp.Core.obj</div>
+<div class="tip" id="fs24">val args : DataReceivedEventArgs</div>
+<div class="tip" id="fs25">type DataReceivedEventArgs =<br />&#160;&#160;inherit EventArgs<br />&#160;&#160;member Data : string<br /><br />Full name: System.Diagnostics.DataReceivedEventArgs</div>
+<div class="tip" id="fs26">property DataReceivedEventArgs.Data: string</div>
+<div class="tip" id="fs27">val p : Process</div>
+<div class="tip" id="fs28">Multiple items<br />type Process =<br />&#160;&#160;inherit Component<br />&#160;&#160;new : unit -&gt; Process<br />&#160;&#160;member BasePriority : int<br />&#160;&#160;member BeginErrorReadLine : unit -&gt; unit<br />&#160;&#160;member BeginOutputReadLine : unit -&gt; unit<br />&#160;&#160;member CancelErrorRead : unit -&gt; unit<br />&#160;&#160;member CancelOutputRead : unit -&gt; unit<br />&#160;&#160;member Close : unit -&gt; unit<br />&#160;&#160;member CloseMainWindow : unit -&gt; bool<br />&#160;&#160;member EnableRaisingEvents : bool with get, set<br />&#160;&#160;member ExitCode : int<br />&#160;&#160;...<br /><br />Full name: System.Diagnostics.Process<br /><br />--------------------<br />Process() : unit</div>
+<div class="tip" id="fs29">event Process.OutputDataReceived: IEvent&lt;DataReceivedEventHandler,DataReceivedEventArgs&gt;</div>
+<div class="tip" id="fs30">abstract member IDelegateEvent.AddHandler : handler:&#39;Delegate -&gt; unit</div>
+<div class="tip" id="fs31">type DataReceivedEventHandler =<br />&#160;&#160;delegate of obj * DataReceivedEventArgs -&gt; unit<br /><br />Full name: System.Diagnostics.DataReceivedEventHandler</div>
+<div class="tip" id="fs32">Collections.Generic.List.Add(item: string) : unit</div>
+<div class="tip" id="fs33">event Process.ErrorDataReceived: IEvent&lt;DataReceivedEventHandler,DataReceivedEventArgs&gt;</div>
+<div class="tip" id="fs34">val started : bool</div>
+<div class="tip" id="fs35">Process.Start() : bool</div>
+<div class="tip" id="fs36">val ex : exn</div>
+<div class="tip" id="fs37">property Exception.Data: Collections.IDictionary</div>
+<div class="tip" id="fs38">Collections.IDictionary.Add(key: obj, value: obj) : unit</div>
+<div class="tip" id="fs39">val reraise : unit -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.Operators.reraise</div>
+<div class="tip" id="fs40">val not : value:bool -&gt; bool<br /><br />Full name: Microsoft.FSharp.Core.Operators.not</div>
+<div class="tip" id="fs41">val failwithf : format:Printf.StringFormat&lt;&#39;T,&#39;Result&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.failwithf</div>
+<div class="tip" id="fs42">val printfn : format:Printf.TextWriterFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.printfn</div>
+<div class="tip" id="fs43">property Process.ProcessName: string</div>
+<div class="tip" id="fs44">property Process.Id: int</div>
+<div class="tip" id="fs45">Process.BeginOutputReadLine() : unit</div>
+<div class="tip" id="fs46">Process.BeginErrorReadLine() : unit</div>
+<div class="tip" id="fs47">Process.WaitForExit() : unit<br />Process.WaitForExit(milliseconds: int) : bool</div>
+<div class="tip" id="fs48">Stopwatch.Stop() : unit</div>
+<div class="tip" id="fs49">property Stopwatch.ElapsedMilliseconds: int64</div>
+<div class="tip" id="fs50">val cleanOut : (seq&lt;string&gt; -&gt; seq&lt;string&gt;)</div>
+<div class="tip" id="fs51">val l : seq&lt;string&gt;</div>
+<div class="tip" id="fs52">module Seq<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs53">val filter : predicate:(&#39;T -&gt; bool) -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.filter</div>
+<div class="tip" id="fs54">val o : string</div>
+<div class="tip" id="fs55">Multiple items<br />type String =<br />&#160;&#160;new : value:char -&gt; string + 7 overloads<br />&#160;&#160;member Chars : int -&gt; char<br />&#160;&#160;member Clone : unit -&gt; obj<br />&#160;&#160;member CompareTo : value:obj -&gt; int + 1 overload<br />&#160;&#160;member Contains : value:string -&gt; bool<br />&#160;&#160;member CopyTo : sourceIndex:int * destination:char[] * destinationIndex:int * count:int -&gt; unit<br />&#160;&#160;member EndsWith : value:string -&gt; bool + 2 overloads<br />&#160;&#160;member Equals : obj:obj -&gt; bool + 2 overloads<br />&#160;&#160;member GetEnumerator : unit -&gt; CharEnumerator<br />&#160;&#160;member GetHashCode : unit -&gt; int<br />&#160;&#160;...<br /><br />Full name: System.String<br /><br />--------------------<br />String(value: nativeptr&lt;char&gt;) : unit<br />String(value: nativeptr&lt;sbyte&gt;) : unit<br />String(value: char []) : unit<br />String(c: char, count: int) : unit<br />String(value: nativeptr&lt;char&gt;, startIndex: int, length: int) : unit<br />String(value: nativeptr&lt;sbyte&gt;, startIndex: int, length: int) : unit<br />String(value: char [], startIndex: int, length: int) : unit<br />String(value: nativeptr&lt;sbyte&gt;, startIndex: int, length: int, enc: Text.Encoding) : unit</div>
+<div class="tip" id="fs56">String.IsNullOrEmpty(value: string) : bool</div>
+

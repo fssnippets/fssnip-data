@@ -1,0 +1,104 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">namespace</span> <span class="k">global</span>
+
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="t">Int32</span> <span class="k">private</span> () <span class="o">=</span>
+    <span class="k">static</span> <span class="k">member</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="f">tryParse</span>(<span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="i">s</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="t">string</span>,<span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="i">startIndex</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="t">int</span>,<span onmouseout="hideTip(event, 'fs7', 7)" onmouseover="showTip(event, 'fs7', 7)" class="i">length</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs6', 8)" onmouseover="showTip(event, 'fs6', 8)" class="t">int</span>) <span class="o">=</span>
+        <span class="k">let</span> <span class="k">inline</span> <span onmouseout="hideTip(event, 'fs8', 9)" onmouseover="showTip(event, 'fs8', 9)" class="f">isWhiteSpace</span> <span onmouseout="hideTip(event, 'fs9', 10)" onmouseover="showTip(event, 'fs9', 10)" class="i">c</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs10', 11)" onmouseover="showTip(event, 'fs10', 11)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs11', 12)" onmouseover="showTip(event, 'fs11', 12)" class="t">Char</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs12', 13)" onmouseover="showTip(event, 'fs12', 13)" class="f">IsWhiteSpace</span> <span onmouseout="hideTip(event, 'fs9', 14)" onmouseover="showTip(event, 'fs9', 14)" class="i">c</span>
+        <span class="k">let</span> <span class="k">inline</span> <span onmouseout="hideTip(event, 'fs13', 15)" onmouseover="showTip(event, 'fs13', 15)" class="f">isDigit</span> <span onmouseout="hideTip(event, 'fs9', 16)" onmouseover="showTip(event, 'fs9', 16)" class="i">c</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs10', 17)" onmouseover="showTip(event, 'fs10', 17)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs11', 18)" onmouseover="showTip(event, 'fs11', 18)" class="t">Char</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs14', 19)" onmouseover="showTip(event, 'fs14', 19)" class="f">IsDigit</span> <span onmouseout="hideTip(event, 'fs9', 20)" onmouseover="showTip(event, 'fs9', 20)" class="i">c</span>
+        <span class="k">let</span> <span class="k">mutable</span> <span onmouseout="hideTip(event, 'fs15', 21)" onmouseover="showTip(event, 'fs15', 21)" class="v">i</span> <span class="o">=</span> <span class="n">0</span>
+        <span class="k">let</span> <span class="k">inline</span> <span onmouseout="hideTip(event, 'fs16', 22)" onmouseover="showTip(event, 'fs16', 22)" class="f">at</span> <span onmouseout="hideTip(event, 'fs17', 23)" onmouseover="showTip(event, 'fs17', 23)" class="i">i</span>  <span class="o">=</span> <span onmouseout="hideTip(event, 'fs3', 24)" onmouseover="showTip(event, 'fs3', 24)" class="i">s</span><span class="o">.</span>[<span onmouseout="hideTip(event, 'fs5', 25)" onmouseover="showTip(event, 'fs5', 25)" class="i">startIndex</span><span class="o">+</span><span onmouseout="hideTip(event, 'fs17', 26)" onmouseover="showTip(event, 'fs17', 26)" class="i">i</span>]
+        <span class="k">while</span> <span onmouseout="hideTip(event, 'fs15', 27)" onmouseover="showTip(event, 'fs15', 27)" class="v">i</span> <span class="o">&lt;</span> <span onmouseout="hideTip(event, 'fs7', 28)" onmouseover="showTip(event, 'fs7', 28)" class="i">length</span> <span class="o">&amp;&amp;</span> <span onmouseout="hideTip(event, 'fs8', 29)" onmouseover="showTip(event, 'fs8', 29)" class="f">isWhiteSpace</span>(<span onmouseout="hideTip(event, 'fs16', 30)" onmouseover="showTip(event, 'fs16', 30)" class="f">at</span> <span onmouseout="hideTip(event, 'fs15', 31)" onmouseover="showTip(event, 'fs15', 31)" class="v">i</span>) <span class="k">do</span> <span onmouseout="hideTip(event, 'fs15', 32)" onmouseover="showTip(event, 'fs15', 32)" class="v">i</span> <span class="o">&lt;-</span> <span onmouseout="hideTip(event, 'fs15', 33)" onmouseover="showTip(event, 'fs15', 33)" class="v">i</span> <span class="o">+</span> <span class="n">1</span>
+        <span class="k">if</span> <span onmouseout="hideTip(event, 'fs15', 34)" onmouseover="showTip(event, 'fs15', 34)" class="v">i</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs7', 35)" onmouseover="showTip(event, 'fs7', 35)" class="i">length</span>
+        <span class="k">then</span> 
+            <span onmouseout="hideTip(event, 'fs18', 36)" onmouseover="showTip(event, 'fs18', 36)" class="p">None</span>
+        <span class="k">else</span>
+            <span class="k">let</span> <span onmouseout="hideTip(event, 'fs9', 37)" onmouseover="showTip(event, 'fs9', 37)" class="i">c</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs16', 38)" onmouseover="showTip(event, 'fs16', 38)" class="f">at</span> <span onmouseout="hideTip(event, 'fs15', 39)" onmouseover="showTip(event, 'fs15', 39)" class="v">i</span>
+            <span class="k">let</span> <span onmouseout="hideTip(event, 'fs19', 40)" onmouseover="showTip(event, 'fs19', 40)" class="i">sign</span> <span class="o">=</span> 
+                <span class="k">if</span> <span onmouseout="hideTip(event, 'fs9', 41)" onmouseover="showTip(event, 'fs9', 41)" class="i">c</span> <span class="o">=</span> <span class="s">&#39;-&#39;</span> <span class="k">then</span> 
+                    <span onmouseout="hideTip(event, 'fs15', 42)" onmouseover="showTip(event, 'fs15', 42)" class="v">i</span> <span class="o">&lt;-</span> <span onmouseout="hideTip(event, 'fs15', 43)" onmouseover="showTip(event, 'fs15', 43)" class="v">i</span> <span class="o">+</span> <span class="n">1</span>
+                    <span class="o">-</span><span class="n">1</span>
+                <span class="k">else</span> 
+                    <span class="k">if</span> <span onmouseout="hideTip(event, 'fs9', 44)" onmouseover="showTip(event, 'fs9', 44)" class="i">c</span> <span class="o">=</span> <span class="s">&#39;+&#39;</span> <span class="k">then</span> <span onmouseout="hideTip(event, 'fs15', 45)" onmouseover="showTip(event, 'fs15', 45)" class="v">i</span> <span class="o">&lt;-</span> <span onmouseout="hideTip(event, 'fs15', 46)" onmouseover="showTip(event, 'fs15', 46)" class="v">i</span> <span class="o">+</span> <span class="n">1</span>
+                    <span class="n">1</span>
+            <span class="k">let</span> <span class="k">mutable</span> <span onmouseout="hideTip(event, 'fs20', 47)" onmouseover="showTip(event, 'fs20', 47)" class="v">acc</span> <span class="o">=</span> <span class="n">0</span>
+            <span class="k">let</span> <span onmouseout="hideTip(event, 'fs21', 48)" onmouseover="showTip(event, 'fs21', 48)" class="v">c</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs22', 49)" onmouseover="showTip(event, 'fs22', 49)" class="f">ref</span> <span class="s">&#39;_&#39;</span>
+            <span class="k">while</span> <span onmouseout="hideTip(event, 'fs15', 50)" onmouseover="showTip(event, 'fs15', 50)" class="v">i</span> <span class="o">&lt;</span> <span onmouseout="hideTip(event, 'fs7', 51)" onmouseover="showTip(event, 'fs7', 51)" class="i">length</span> <span class="o">&amp;&amp;</span> (<span onmouseout="hideTip(event, 'fs21', 52)" onmouseover="showTip(event, 'fs21', 52)" class="v">c</span> <span class="o">:=</span> <span onmouseout="hideTip(event, 'fs16', 53)" onmouseover="showTip(event, 'fs16', 53)" class="f">at</span> <span onmouseout="hideTip(event, 'fs15', 54)" onmouseover="showTip(event, 'fs15', 54)" class="v">i</span>; <span onmouseout="hideTip(event, 'fs13', 55)" onmouseover="showTip(event, 'fs13', 55)" class="f">isDigit</span> <span class="o">!</span><span onmouseout="hideTip(event, 'fs21', 56)" onmouseover="showTip(event, 'fs21', 56)" class="v">c</span>) <span class="k">do</span>
+                <span class="k">let</span> <span onmouseout="hideTip(event, 'fs23', 57)" onmouseover="showTip(event, 'fs23', 57)" class="i">digit</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs6', 58)" onmouseover="showTip(event, 'fs6', 58)" class="f">int</span> (<span class="o">!</span><span onmouseout="hideTip(event, 'fs21', 59)" onmouseover="showTip(event, 'fs21', 59)" class="v">c</span>) <span class="o">-</span> <span onmouseout="hideTip(event, 'fs6', 60)" onmouseover="showTip(event, 'fs6', 60)" class="f">int</span> <span class="s">&#39;0&#39;</span>
+                <span onmouseout="hideTip(event, 'fs20', 61)" onmouseover="showTip(event, 'fs20', 61)" class="v">acc</span> <span class="o">&lt;-</span> <span onmouseout="hideTip(event, 'fs20', 62)" onmouseover="showTip(event, 'fs20', 62)" class="v">acc</span> <span class="o">*</span> <span class="n">10</span> <span class="o">+</span> <span onmouseout="hideTip(event, 'fs23', 63)" onmouseover="showTip(event, 'fs23', 63)" class="i">digit</span>
+                <span onmouseout="hideTip(event, 'fs15', 64)" onmouseover="showTip(event, 'fs15', 64)" class="v">i</span> <span class="o">&lt;-</span> <span onmouseout="hideTip(event, 'fs15', 65)" onmouseover="showTip(event, 'fs15', 65)" class="v">i</span> <span class="o">+</span> <span class="n">1</span>
+            <span class="k">while</span> <span onmouseout="hideTip(event, 'fs15', 66)" onmouseover="showTip(event, 'fs15', 66)" class="v">i</span> <span class="o">&lt;</span> <span onmouseout="hideTip(event, 'fs7', 67)" onmouseover="showTip(event, 'fs7', 67)" class="i">length</span> <span class="o">&amp;&amp;</span> <span onmouseout="hideTip(event, 'fs8', 68)" onmouseover="showTip(event, 'fs8', 68)" class="f">isWhiteSpace</span>(<span onmouseout="hideTip(event, 'fs16', 69)" onmouseover="showTip(event, 'fs16', 69)" class="f">at</span> <span onmouseout="hideTip(event, 'fs15', 70)" onmouseover="showTip(event, 'fs15', 70)" class="v">i</span>) <span class="k">do</span>
+                <span onmouseout="hideTip(event, 'fs15', 71)" onmouseover="showTip(event, 'fs15', 71)" class="v">i</span> <span class="o">&lt;-</span> <span onmouseout="hideTip(event, 'fs15', 72)" onmouseover="showTip(event, 'fs15', 72)" class="v">i</span> <span class="o">+</span> <span class="n">1</span>
+            <span class="k">if</span> <span onmouseout="hideTip(event, 'fs15', 73)" onmouseover="showTip(event, 'fs15', 73)" class="v">i</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs7', 74)" onmouseover="showTip(event, 'fs7', 74)" class="i">length</span> 
+            <span class="k">then</span>
+                <span onmouseout="hideTip(event, 'fs24', 75)" onmouseover="showTip(event, 'fs24', 75)" class="p">Some</span> (<span onmouseout="hideTip(event, 'fs20', 76)" onmouseover="showTip(event, 'fs20', 76)" class="v">acc</span> <span class="o">*</span> <span onmouseout="hideTip(event, 'fs19', 77)" onmouseover="showTip(event, 'fs19', 77)" class="i">sign</span>)
+            <span class="k">else</span>
+                <span onmouseout="hideTip(event, 'fs18', 78)" onmouseover="showTip(event, 'fs18', 78)" class="p">None</span>
+    <span class="k">static</span> <span class="k">member</span> <span onmouseout="hideTip(event, 'fs25', 79)" onmouseover="showTip(event, 'fs25', 79)" class="f">tryParse</span>(<span onmouseout="hideTip(event, 'fs3', 80)" onmouseover="showTip(event, 'fs3', 80)" class="i">s</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs4', 81)" onmouseover="showTip(event, 'fs4', 81)" class="t">string</span>) <span class="o">=</span>
+        <span onmouseout="hideTip(event, 'fs1', 82)" onmouseover="showTip(event, 'fs1', 82)" class="t">Int32</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs26', 83)" onmouseover="showTip(event, 'fs26', 83)" class="f">tryParse</span>(<span onmouseout="hideTip(event, 'fs3', 84)" onmouseover="showTip(event, 'fs3', 84)" class="i">s</span>,<span class="n">0</span>,<span onmouseout="hideTip(event, 'fs3', 85)" onmouseover="showTip(event, 'fs3', 85)" class="i">s</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs27', 86)" onmouseover="showTip(event, 'fs27', 86)" class="i">Length</span>)
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">Multiple items<br />type Int32 =<br />&#160;&#160;private new : unit -&gt; Int32<br />&#160;&#160;static member tryParse : s:string -&gt; int option<br />&#160;&#160;static member tryParse : s:string * startIndex:int * length:int -&gt; int option<br /><br />Full name: Int32<br /><br />--------------------<br />private new : unit -&gt; Int32</div>
+<div class="tip" id="fs2">static member Int32.tryParse : s:string * startIndex:int * length:int -&gt; int option<br /><br />Full name: Int32.tryParse</div>
+<div class="tip" id="fs3">val s : string</div>
+<div class="tip" id="fs4">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />Full name: Microsoft.FSharp.Core.Operators.string<br /><br />--------------------<br />type string = System.String<br /><br />Full name: Microsoft.FSharp.Core.string</div>
+<div class="tip" id="fs5">val startIndex : int</div>
+<div class="tip" id="fs6">Multiple items<br />val int : value:&#39;T -&gt; int (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.int<br /><br />--------------------<br />type int = int32<br /><br />Full name: Microsoft.FSharp.Core.int<br /><br />--------------------<br />type int&lt;&#39;Measure&gt; = int<br /><br />Full name: Microsoft.FSharp.Core.int&lt;_&gt;</div>
+<div class="tip" id="fs7">val length : int</div>
+<div class="tip" id="fs8">val isWhiteSpace : (char -&gt; bool)</div>
+<div class="tip" id="fs9">val c : char</div>
+<div class="tip" id="fs10">namespace System</div>
+<div class="tip" id="fs11">type Char =<br />&#160;&#160;struct<br />&#160;&#160;&#160;&#160;member CompareTo : value:obj -&gt; int + 1 overload<br />&#160;&#160;&#160;&#160;member Equals : obj:obj -&gt; bool + 1 overload<br />&#160;&#160;&#160;&#160;member GetHashCode : unit -&gt; int<br />&#160;&#160;&#160;&#160;member GetTypeCode : unit -&gt; TypeCode<br />&#160;&#160;&#160;&#160;member ToString : unit -&gt; string + 1 overload<br />&#160;&#160;&#160;&#160;static val MaxValue : char<br />&#160;&#160;&#160;&#160;static val MinValue : char<br />&#160;&#160;&#160;&#160;static member ConvertFromUtf32 : utf32:int -&gt; string<br />&#160;&#160;&#160;&#160;static member ConvertToUtf32 : highSurrogate:char * lowSurrogate:char -&gt; int + 1 overload<br />&#160;&#160;&#160;&#160;static member GetNumericValue : c:char -&gt; float + 1 overload<br />&#160;&#160;&#160;&#160;...<br />&#160;&#160;end<br /><br />Full name: System.Char</div>
+<div class="tip" id="fs12">System.Char.IsWhiteSpace(c: char) : bool<br />System.Char.IsWhiteSpace(s: string, index: int) : bool</div>
+<div class="tip" id="fs13">val isDigit : (char -&gt; bool)</div>
+<div class="tip" id="fs14">System.Char.IsDigit(c: char) : bool<br />System.Char.IsDigit(s: string, index: int) : bool</div>
+<div class="tip" id="fs15">val mutable i : int</div>
+<div class="tip" id="fs16">val at : (int -&gt; char)</div>
+<div class="tip" id="fs17">val i : int</div>
+<div class="tip" id="fs18">union case Option.None: Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs19">val sign : int</div>
+<div class="tip" id="fs20">val mutable acc : int</div>
+<div class="tip" id="fs21">val c : char ref</div>
+<div class="tip" id="fs22">Multiple items<br />val ref : value:&#39;T -&gt; &#39;T ref<br /><br />Full name: Microsoft.FSharp.Core.Operators.ref<br /><br />--------------------<br />type &#39;T ref = Ref&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Core.ref&lt;_&gt;</div>
+<div class="tip" id="fs23">val digit : int</div>
+<div class="tip" id="fs24">union case Option.Some: Value: &#39;T -&gt; Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs25">static member Int32.tryParse : s:string -&gt; int option<br /><br />Full name: Int32.tryParse</div>
+<div class="tip" id="fs26">static member Int32.tryParse : s:string -&gt; int option<br />static member Int32.tryParse : s:string * startIndex:int * length:int -&gt; int option</div>
+<div class="tip" id="fs27">property System.String.Length: int</div>
+

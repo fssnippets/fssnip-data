@@ -1,0 +1,110 @@
+// http://www.fssnip.net/7WX
+
+open System
+open System.Text
+
+type Terms =
+    | NoTerms = 1
+    | PositiveTerm = 2
+    | NegativeTerm = 3
+    | MultipleTerms = 4
+
+type Poly = {
+    Derivative : uint64
+    Power : uint64
+    Coefficients : int64 list list
+}
+
+with
+    override this.ToString () =
+        let innerTerm (cs : int64 list) =
+            let folder state element =
+                match state, element with
+                    | Option.Some Terms.NoTerms, 0L ->
+                         Option.Some Terms.NoTerms
+                    | Option.Some Terms.NoTerms, _ when element < 0L ->
+                         Option.Some Terms.NegativeTerm
+                    | Option.Some Terms.NoTerms, _->
+                         Option.Some Terms.PositiveTerm
+                    | _, 0L ->
+                         state
+                    | Option.Some Terms.PositiveTerm, _->
+                         Option.Some Terms.MultipleTerms
+                    | Option.Some Terms.NegativeTerm, _->
+                         Option.Some Terms.MultipleTerms
+                    | _ ->
+                         None
+            let initialState = Some Terms.NoTerms
+            let scanning = Seq.scan folder initialState cs
+            Option.get (Seq.last (Seq.takeWhile Option.isSome scanning))
+        let printPowerOfVariable b x y p =
+            if p <> 0 then
+                Printf.bprintf b " %s" x
+                if p <> 1 then
+                    Printf.bprintf b "^%d" p
+                match y with
+                    | None ->
+                        ()
+                    | Some r ->
+                        Printf.bprintf b "(%s)" r
+        let printTerm b f n m p c =
+            let g = Option.defaultValue true f
+            if c > 1L then
+                if g then
+                    Printf.bprintf b "%d" c
+                else
+                    Printf.bprintf b " + %d" c
+            elif c = 1L then
+                if not g then
+                    Printf.bprintf b " + "
+            elif c < -1L then
+                if g then
+                    Printf.bprintf b "-%d" c
+                else
+                    Printf.bprintf b " - %d" c
+            elif c = -1L then
+                if g then
+                    Printf.bprintf b "-"
+                else
+                    Printf.bprintf b " - "
+            if c <> 0L then
+                printPowerOfVariable b n m p
+            elif Option.isNone f then
+                Printf.bprintf b "0"
+        let printInnerPoly b f n m p cs =
+            let itering h u v j (q, d) =
+                printTerm b (Option.Some (h && j = 0)) u v q d
+            let g = Option.defaultValue true f
+            let terms = seq {
+                for i = List.length cs - 1 downto 0 do
+                    let c = List.item i cs
+                    if c <> 0L then
+                        yield i, c
+            }
+            Seq.iteri (itering g n m) terms
+        let printInnerPolyTerm b f n m x y p cs =
+            let g = Option.defaultValue true f
+            let t = innerTerm cs
+            if t = Terms.MultipleTerms then
+                Printf.bprintf b "("
+            printInnerPoly b (g || t = Terms.MultipleTerms) n m p cs
+            if t = Terms.MultipleTerms then
+                Printf.bprintf b ")"
+            if t <> Terms.NoTerms then
+                printPowerOfVariable b x y p
+            elif Option.isNone f then
+                Printf.bprintf b "0"
+        let printOuterPoly b f n m x y css =
+            let itering h u v w z j (q, d) =
+                printInnerPolyTerm b (Option.Some (h && j = 0)) u v w z q d
+            let g = Option.defaultValue true f
+            let terms = seq {
+                for i = List.length css - 1 downto 0 do
+                    let cs = List.item i css
+                    if innerTerm cs <> Terms.NoTerms then
+                        yield i = i, cs
+            }
+            Seq.iteri (itering g n m x y) terms
+        let builder = StringBuilder ()
+        printOuterPoly builder Option.None<bool> "n" Option.None<string> "cos" (Option.Some "x") this.Coefficients
+        builder.ToString ()

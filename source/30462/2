@@ -1,0 +1,34 @@
+#r "FSharp.Data.dll"
+open System
+open FSharp.Data
+
+let (-->) (lat1,lon1) (lat2,lon2) =
+    let deg2rad deg = deg * (Math.PI/180.)
+    let (dLat,dLon) = deg2rad (abs (lat1-lat2)), deg2rad (abs(lon1-lon2))
+    let a =
+        (sin(dLat / 2.)) * (sin(dLat / 2.)) +
+        (cos(deg2rad(lat1))) * (cos(deg2rad(lat2))) *
+        (sin(dLon/2.)) * (sin(dLon/2.))
+    6371. * (2. * (atan2 (sqrt a) (sqrt (1. - a))))
+
+let nearestPlane location : JsonValue =
+    let url = "https://opensky-network.org/api/states/all"
+    let valueJSON = JsonValue.Load(url)
+    let n = Array.length (valueJSON.["states"].AsArray())
+    let rec findPlane i recordPlane recordDistance =
+        if i = n then recordPlane
+        else
+            let state = valueJSON.["states"].[i]
+            if state.[5] = JsonValue.Null || state.[6] = JsonValue.Null then
+                findPlane (i+1) recordPlane recordDistance 
+            else 
+                let distance = location --> (state.[6].AsFloat(), state.[5].AsFloat())
+                if recordDistance > distance then
+                    findPlane (i+1) state distance
+                else findPlane (i+1) recordPlane recordDistance
+    findPlane 0 (JsonValue.Null) (1e99)
+
+//Examples:
+nearestPlane (51.507351, -0.127758)     //-- London
+nearestPlane (48.860731, 2.342342)      //-- Paris
+nearestPlane (35.708628, 139.731891)    //-- Tokyo

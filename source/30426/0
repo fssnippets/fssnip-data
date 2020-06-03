@@ -1,0 +1,9 @@
+match command.CommandBufferingKey, command.KeepBuffered with
+            | Some key, true
+            | Some key, false when intf.IsNone ->  // lock is not currently connected, so we keep the command buffered for later.
+                Ref.send pendingInterfaceCommands
+                    ("New buffered command",
+                        (fun s -> 
+                            let bufferedCommands : HashMap<string, External.Command> = HashMap.tryFind lockid s |> Option.defaultsTo HashMap.empty
+                            HashMap.add lockid (HashMap.add key command bufferedCommands) s))
+            | _, _ -> ()

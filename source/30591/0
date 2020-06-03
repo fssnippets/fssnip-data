@@ -1,0 +1,53 @@
+[<AutoOpen>]
+module GadtModule =
+
+    type 'a Gadt =
+        private
+        | Error of string
+        | Int of int
+        | Float of float
+        | Box of obj
+
+    let Error e : string Gadt = Error e
+    let Int i : int Gadt = Int i
+    let Float f : float Gadt = Float f
+    let Box (gadt : 'a Gadt) : obj Gadt =
+        match gadt with
+        | Error _ as e -> Box (box e)
+        | Float _ as f -> Box (box f)
+        | Int _ as i -> Box (box i)
+        | Box _ as x -> Box (box x)
+
+    let (|Error|Float|Int|Box|) gadt =
+        match gadt with
+        | Error e -> Choice1Of4 e
+        | Float f -> Choice2Of4 f
+        | Int i -> Choice3Of4 i
+        | Box x -> Choice4Of4 x
+
+[<RequireQualifiedAccess>]
+module Gadt =
+
+    let addInt (left : int Gadt) (right : int Gadt) =
+        match (left, right) with (Int i, Int j) -> Int (i + j) | _ -> failwith "Unexpected match failure."
+
+    let addFloat (left : float Gadt) (right : float Gadt) =
+        match (left, right) with (Float i, Float j) -> Float (i + j) | _ -> failwith "Unexpected match failure."
+
+    let add (left : 'a Gadt) (right : 'b Gadt) : obj Gadt =
+        match (box left, box right) with
+        | (:? Gadt<string>, _) -> Box left
+        | (_, :? Gadt<string>) -> Box right
+        | ((:? Gadt<int> as i), (:? Gadt<int> as j)) -> Box (addInt i j)
+        | ((:? Gadt<float> as i), (:? Gadt<float> as j)) -> Box (addFloat i j)
+        | _ -> Box (Error "Incompatible types under addition.")
+
+[<EntryPoint>]
+let main _ =
+    let a = Float 1.0
+    let b = Float 2.0
+    let c = Gadt.addFloat a b
+    let d = Gadt.add a b
+    printfn "%A" c
+    printfn "%A" d
+    0

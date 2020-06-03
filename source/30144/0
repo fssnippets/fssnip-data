@@ -1,0 +1,15 @@
+// Mutable and loop.
+let accumulate (count : int) (f : 'T -> 'T) (initial : 'T) =
+    let mutable acc = initial
+    for _ in 1..count do
+        acc <- f acc
+    acc
+
+// Recursion.
+let accumulate2 (count : int) (f : 'T -> 'T) (initial : 'T) =
+    let rec helper i acc =
+        if i < count then
+            helper (i + 1) (f acc)
+        else
+            acc
+    helper 0 initial

@@ -1,0 +1,74 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="prep">#r</span> <span class="s">@&quot;..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll&quot;</span>
+
+<span class="c">//the ExcelDataReader NuGet installs the &#39;SharpZipLib&#39; above</span>
+<span class="prep">#r</span> <span class="s">@&quot;..\packages\ExcelDataReader.2.1.2.3\lib\net45\Excel.dll&quot;</span>
+
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">System</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 2)" onmouseover="showTip(event, 'fs1', 2)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 3)" onmouseover="showTip(event, 'fs2', 3)" class="i">IO</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 4)" onmouseover="showTip(event, 'fs1', 4)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 5)" onmouseover="showTip(event, 'fs3', 5)" class="i">Data</span>
+<span class="k">open</span> <span class="i">Excel</span>
+
+
+<span class="c">/// returns array of row arrays</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs4', 6)" onmouseover="showTip(event, 'fs4', 6)" class="f">exampleOfRowArray</span> () <span class="o">=</span> 
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs5', 7)" onmouseover="showTip(event, 'fs5', 7)" class="i">pth</span> <span class="o">=</span> <span class="s">@&quot;c:\temp\data.xlsx&quot;</span>
+    <span class="k">use</span> <span onmouseout="hideTip(event, 'fs6', 8)" onmouseover="showTip(event, 'fs6', 8)" class="i">stream</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs7', 9)" onmouseover="showTip(event, 'fs7', 9)" class="t">File</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs8', 10)" onmouseover="showTip(event, 'fs8', 10)" class="f">Open</span>(<span onmouseout="hideTip(event, 'fs5', 11)" onmouseover="showTip(event, 'fs5', 11)" class="i">pth</span>, <span onmouseout="hideTip(event, 'fs9', 12)" onmouseover="showTip(event, 'fs9', 12)" class="t">FileMode</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs10', 13)" onmouseover="showTip(event, 'fs10', 13)" class="i">Open</span>, <span onmouseout="hideTip(event, 'fs11', 14)" onmouseover="showTip(event, 'fs11', 14)" class="t">FileAccess</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs12', 15)" onmouseover="showTip(event, 'fs12', 15)" class="i">Read</span>, <span onmouseout="hideTip(event, 'fs13', 16)" onmouseover="showTip(event, 'fs13', 16)" class="t">FileShare</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs14', 17)" onmouseover="showTip(event, 'fs14', 17)" class="i">ReadWrite</span>)
+    <span class="k">use</span> <span onmouseout="hideTip(event, 'fs15', 18)" onmouseover="showTip(event, 'fs15', 18)" class="i">reader</span> <span class="o">=</span> <span class="i">ExcelReaderFactory</span><span class="o">.</span><span class="i">CreateOpenXmlReader</span> <span onmouseout="hideTip(event, 'fs6', 19)" onmouseover="showTip(event, 'fs6', 19)" class="i">stream</span>
+    [|  <span class="k">while</span> <span onmouseout="hideTip(event, 'fs15', 20)" onmouseover="showTip(event, 'fs15', 20)" class="i">reader</span><span class="o">.</span><span class="i">Read</span> () <span class="k">do</span> 
+            <span class="k">yield</span> <span onmouseout="hideTip(event, 'fs16', 21)" onmouseover="showTip(event, 'fs16', 21)" class="t">Array</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs17', 22)" onmouseover="showTip(event, 'fs17', 22)" class="f">init</span> <span onmouseout="hideTip(event, 'fs15', 23)" onmouseover="showTip(event, 'fs15', 23)" class="i">reader</span><span class="o">.</span><span class="i">FieldCount</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs18', 24)" onmouseover="showTip(event, 'fs18', 24)" class="i">i</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs15', 25)" onmouseover="showTip(event, 'fs15', 25)" class="i">reader</span><span class="o">.</span><span class="i">GetValue</span>(<span onmouseout="hideTip(event, 'fs18', 26)" onmouseover="showTip(event, 'fs18', 26)" class="i">i</span>))|]
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs19', 27)" onmouseover="showTip(event, 'fs19', 27)" class="f">exampleOfDataSet</span> () <span class="o">=</span> 
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs5', 28)" onmouseover="showTip(event, 'fs5', 28)" class="i">pth</span> <span class="o">=</span> <span class="s">@&quot;c:\temp\data.xlsx&quot;</span>
+    <span class="k">use</span> <span onmouseout="hideTip(event, 'fs6', 29)" onmouseover="showTip(event, 'fs6', 29)" class="i">stream</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs7', 30)" onmouseover="showTip(event, 'fs7', 30)" class="t">File</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs8', 31)" onmouseover="showTip(event, 'fs8', 31)" class="f">Open</span>(<span onmouseout="hideTip(event, 'fs5', 32)" onmouseover="showTip(event, 'fs5', 32)" class="i">pth</span>, <span onmouseout="hideTip(event, 'fs9', 33)" onmouseover="showTip(event, 'fs9', 33)" class="t">FileMode</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs10', 34)" onmouseover="showTip(event, 'fs10', 34)" class="i">Open</span>, <span onmouseout="hideTip(event, 'fs11', 35)" onmouseover="showTip(event, 'fs11', 35)" class="t">FileAccess</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs12', 36)" onmouseover="showTip(event, 'fs12', 36)" class="i">Read</span>, <span onmouseout="hideTip(event, 'fs13', 37)" onmouseover="showTip(event, 'fs13', 37)" class="t">FileShare</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs14', 38)" onmouseover="showTip(event, 'fs14', 38)" class="i">ReadWrite</span>)
+    <span class="k">use</span> <span onmouseout="hideTip(event, 'fs15', 39)" onmouseover="showTip(event, 'fs15', 39)" class="i">reader</span> <span class="o">=</span> <span class="i">ExcelReaderFactory</span><span class="o">.</span><span class="i">CreateOpenXmlReader</span> <span onmouseout="hideTip(event, 'fs6', 40)" onmouseover="showTip(event, 'fs6', 40)" class="i">stream</span>
+    <span onmouseout="hideTip(event, 'fs15', 41)" onmouseover="showTip(event, 'fs15', 41)" class="i">reader</span><span class="o">.</span><span class="i">AsDataSet</span>(<span class="k">true</span>)<span class="o">.</span><span class="i">Tables</span><span class="o">.</span><span class="i">Item</span>(<span class="n">0</span>)
+    
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace System</div>
+<div class="tip" id="fs2">namespace System.IO</div>
+<div class="tip" id="fs3">namespace System.Data</div>
+<div class="tip" id="fs4">val exampleOfRowArray : unit -&gt; &#39;a [] []<br /><br />Full name: Script.exampleOfRowArray<br /><em><br /><br />&#160;returns array of row arrays</em></div>
+<div class="tip" id="fs5">val pth : string</div>
+<div class="tip" id="fs6">val stream : FileStream</div>
+<div class="tip" id="fs7">type File =<br />&#160;&#160;static member AppendAllLines : path:string * contents:IEnumerable&lt;string&gt; -&gt; unit + 1 overload<br />&#160;&#160;static member AppendAllText : path:string * contents:string -&gt; unit + 1 overload<br />&#160;&#160;static member AppendText : path:string -&gt; StreamWriter<br />&#160;&#160;static member Copy : sourceFileName:string * destFileName:string -&gt; unit + 1 overload<br />&#160;&#160;static member Create : path:string -&gt; FileStream + 3 overloads<br />&#160;&#160;static member CreateText : path:string -&gt; StreamWriter<br />&#160;&#160;static member Decrypt : path:string -&gt; unit<br />&#160;&#160;static member Delete : path:string -&gt; unit<br />&#160;&#160;static member Encrypt : path:string -&gt; unit<br />&#160;&#160;static member Exists : path:string -&gt; bool<br />&#160;&#160;...<br /><br />Full name: System.IO.File</div>
+<div class="tip" id="fs8">File.Open(path: string, mode: FileMode) : FileStream<br />File.Open(path: string, mode: FileMode, access: FileAccess) : FileStream<br />File.Open(path: string, mode: FileMode, access: FileAccess, share: FileShare) : FileStream</div>
+<div class="tip" id="fs9">type FileMode =<br />&#160;&#160;| CreateNew = 1<br />&#160;&#160;| Create = 2<br />&#160;&#160;| Open = 3<br />&#160;&#160;| OpenOrCreate = 4<br />&#160;&#160;| Truncate = 5<br />&#160;&#160;| Append = 6<br /><br />Full name: System.IO.FileMode</div>
+<div class="tip" id="fs10">field FileMode.Open = 3</div>
+<div class="tip" id="fs11">type FileAccess =<br />&#160;&#160;| Read = 1<br />&#160;&#160;| Write = 2<br />&#160;&#160;| ReadWrite = 3<br /><br />Full name: System.IO.FileAccess</div>
+<div class="tip" id="fs12">field FileAccess.Read = 1</div>
+<div class="tip" id="fs13">type FileShare =<br />&#160;&#160;| None = 0<br />&#160;&#160;| Read = 1<br />&#160;&#160;| Write = 2<br />&#160;&#160;| ReadWrite = 3<br />&#160;&#160;| Delete = 4<br />&#160;&#160;| Inheritable = 16<br /><br />Full name: System.IO.FileShare</div>
+<div class="tip" id="fs14">field FileShare.ReadWrite = 3</div>
+<div class="tip" id="fs15">val reader : IDisposable</div>
+<div class="tip" id="fs16">type Array =<br />&#160;&#160;member Clone : unit -&gt; obj<br />&#160;&#160;member CopyTo : array:Array * index:int -&gt; unit + 1 overload<br />&#160;&#160;member GetEnumerator : unit -&gt; IEnumerator<br />&#160;&#160;member GetLength : dimension:int -&gt; int<br />&#160;&#160;member GetLongLength : dimension:int -&gt; int64<br />&#160;&#160;member GetLowerBound : dimension:int -&gt; int<br />&#160;&#160;member GetUpperBound : dimension:int -&gt; int<br />&#160;&#160;member GetValue : [&lt;ParamArray&gt;] indices:int[] -&gt; obj + 7 overloads<br />&#160;&#160;member Initialize : unit -&gt; unit<br />&#160;&#160;member IsFixedSize : bool<br />&#160;&#160;...<br /><br />Full name: System.Array</div>
+<div class="tip" id="fs17">val init : count:int -&gt; initializer:(int -&gt; &#39;T) -&gt; &#39;T []<br /><br />Full name: Microsoft.FSharp.Collections.Array.init</div>
+<div class="tip" id="fs18">val i : int</div>
+<div class="tip" id="fs19">val exampleOfDataSet : unit -&gt; &#39;a<br /><br />Full name: Script.exampleOfDataSet</div>
+

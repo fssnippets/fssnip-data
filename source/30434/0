@@ -1,0 +1,864 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Windows.Forms;
+using Syncfusion.Windows.Forms.Grid;
+using Syncfusion.Windows.Forms.Grid.Grouping;
+using Syncfusion.Grouping;
+using Syncfusion.GridHelperClasses;
+using System.Configuration;
+using DAVEDataInteface;
+
+namespace DaveUI
+{
+    public partial class Analyzer : Form
+    {
+
+        private Dictionary<string, string> expressions = new Dictionary<string, string>();
+
+          
+        GridDynamicFilter filter = new GridDynamicFilter();
+        private DataTable src = null;
+        private DataTable srcCurrent = null;
+        private DataTable srcCompare = null;
+        private DataTable srcJoined = null; //to store base case joined recordset as joining is expensive.
+        private IEnumerable<string> pk_cols = null;
+        private IEnumerable<string> diff_cols = null;
+        private string currentView = "";
+        private string lastTextSearched = "";
+        
+
+        private GridSummaryRowDescriptor summaryRowDescriptor;
+        private GridSummaryRowDescriptor summaryRowDescGrandTotal;
+        private GridVisibleColumnDescriptorCollection cachedCols;
+        private GridVisibleColumnDescriptorCollection cachedSummaryCols;
+
+        GridOffice2007Filter f2 = new GridOffice2007Filter();
+        public Analyzer()
+        {
+            Init();
+        }
+
+
+
+        public Analyzer(DateTime cob1, DateTime cob2, string datasource, string filter)
+        {
+
+            Init();
+            dateTimePicker1.Value = cob1;
+            dateTimePicker2.Value = cob2;
+            comboBox1.Text = datasource;
+            LoadAndApply(datasource, filter);
+        }
+
+        private void Init()
+        {
+
+            InitializeComponent();
+            checkBox2_CheckedChanged(this, null);
+            FormatGrid(grid);
+            SetupSummaryRows();
+            comboBox1.Items.Clear();
+            comboBox1.Items.AddRange(Controller.GetSources());
+            OptimizeGrid(grid);
+         
+            comboBox1.SelectedItem = comboBox1.Items[0];
+            grid.TableOptions.AllowSelection = ((Syncfusion.Windows.Forms.Grid.GridSelectionFlags)(((((((Syncfusion.Windows.Forms.Grid.GridSelectionFlags.Row | Syncfusion.Windows.Forms.Grid.GridSelectionFlags.Cell)
+                | Syncfusion.Windows.Forms.Grid.GridSelectionFlags.Multiple)
+                | Syncfusion.Windows.Forms.Grid.GridSelectionFlags.Shift)
+                | Syncfusion.Windows.Forms.Grid.GridSelectionFlags.Keyboard)
+                | Syncfusion.Windows.Forms.Grid.GridSelectionFlags.AlphaBlend)
+                | Syncfusion.Windows.Forms.Grid.GridSelectionFlags.MixRangeType)));
+        }
+        void grid_TableControlCellDoubleClick(object sender, GridTableControlCellClickEventArgs e)
+        {
+
+        }
+
+
+        public void FixStringColumnErrors(DataTable dt, string[] summarycols)
+        {
+            var summarydiffcols = summarycols.Concat(diff_cols);
+            foreach (string colstring in summarydiffcols)
+            {
+                if (dt.Columns[colstring].DataType == typeof(string))
+                {
+                    dt.Columns.Add(colstring + "TEMP", typeof(float));
+
+                    foreach (DataRow dr in dt.Rows)
+                    {
+
+                        if (dr[colstring] == DBNull.Value || dr[colstring].ToString() == "")
+                        {
+                            dr[colstring + "TEMP"] = DBNull.Value;
+                        }
+                        else
+                        {
+                            dr[colstring + "TEMP"] =  Double.Parse(dr[colstring].ToString());
+                        }
+//                        dr[colstring + "TEMP"] = dr[colstring] == DBNull.Value ? dr[colstring] : Double.Parse(dr[colstring].ToString());
+
+                    }
+
+                    var colPosition = dt.Columns[colstring].Ordinal;
+                    dt.Columns.Remove(colstring);
+
+                    dt.Columns[colstring + "TEMP"].ColumnName = colstring;
+                    dt.Columns[colstring].SetOrdinal(colPosition);
+                }
+            }
+        }
+
+        public void LoadAndApply(string datasource, string filter)
+        {
+            cachedCols = null;
+            cachedSummaryCols = null;
+
+            System.Diagnostics.Debug.WriteLine("load and apply: " + System.DateTime.Now.ToLongTimeString());
+            var summarycols = Controller.GetList(datasource, "SummaryFields");
+            pk_cols = Controller.GetList(datasource, "PK_COLUMNS").AsEnumerable();
+            diff_cols = Controller.GetList(datasource, "DIFF_COLUMNS").AsEnumerable();
+            var groupcols = Controller.GetList(datasource, "DefaultGroupingFields");
+
+            IDaveData handler = Controller.GetHandler(datasource); //Activator.CreateInstance(myType) as IDaveData;
+            var param = Controller.GetParameters(datasource);
+            param.Add("COB", dateTimePicker1.Value);
+
+            try
+            {
+                srcCurrent = handler.GetData(param);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString());
+                return;
+            }
+
+            var summarydiffcols = summarycols.Concat( diff_cols);
+            FixStringColumnErrors(srcCurrent,summarycols);
+
+
+            src = srcCurrent;
+            if (checkBox2.Checked)
+            {
+                param["COB"] = dateTimePicker2.Value;
+                srcCompare = handler.GetData(param);
+                FixStringColumnErrors(srcCompare, summarycols);
+                //remove duplicates before joining
+                var pk_list = new List<string>(pk_cols);
+                System.Diagnostics.Debug.WriteLine("before cleanup: " + System.DateTime.Now.ToLongTimeString());
+                RemoveDuplicatesFromDataTable(ref srcCurrent, pk_list);
+                System.Diagnostics.Debug.WriteLine("after cleanup 1: " + System.DateTime.Now.ToLongTimeString());
+                RemoveDuplicatesFromDataTable(ref srcCompare, pk_list);
+                System.Diagnostics.Debug.WriteLine("after cleanup 2: " + System.DateTime.Now.ToLongTimeString());
+
+                src = Utility.MergeTables(srcCurrent, srcCompare, pk_cols, diff_cols);
+
+                System.Diagnostics.Debug.WriteLine("after merge: " + System.DateTime.Now.ToLongTimeString());
+            }
+
+            grid.DataSource = src;// handler.GetData(param);
+            grid.TableDescriptor.VisibleColumns.Reset();
+
+            System.Diagnostics.Debug.WriteLine("step 1: " + System.DateTime.Now.ToLongTimeString());
+
+            foreach (var col in grid.TableDescriptor.Columns)
+            {
+                var format = Controller.GetFieldAttribute(datasource, "CustomFormats", col.Name, "Format");
+
+                //for prev and diff columns, use the format of the main column
+                if (col.Name.Contains("_DIFF") || col.Name.Contains("_PREV"))
+                {
+                    format = Controller.GetFieldAttribute(datasource, "CustomFormats", col.Name.Replace("_PREV", "").Replace("_DIFF", ""), "Format");
+                }
+                grid.TableDescriptor.Columns[col.Name].Appearance.AnyRecordFieldCell.CellType = "Static";
+                grid.TableDescriptor.Columns[col.Name].Appearance.AnyRecordFieldCell.ReadOnly = true;
+                grid.TableDescriptor.Columns[col.Name].Appearance.AnyRecordFieldCell.Format = format;
+
+            }
+
+            //create a list of all the columns that need to be summarized
+
+            var l = new List<string>();
+
+            foreach (var i in summarycols)
+            {
+                l.Add(i);
+                if (diff_cols.Contains(i))
+                {
+                    l.Add(i + "_DIFF");
+                    l.Add(i + "_PREV");
+                }
+            }
+
+            if (l.Count() > 0)
+                AddSummaryCols(l.ToArray());
+
+            foreach (var item in groupcols)
+            {
+                this.grid.TableDescriptor.GroupedColumns.Add(item);
+            }
+
+
+            //for (int i = 0; i < grid.TableDescriptor.Columns.Count; i++)
+            //    grid.TableDescriptor.Columns[i].AllowFilter = true;
+
+            grid.TopLevelGroupOptions.ShowFilterBar = true;
+            //filter.WireGrid(grid);
+
+            //f2.WireGrid(grid);
+
+            System.Diagnostics.Debug.WriteLine("step 10: " + System.DateTime.Now.ToLongTimeString());
+
+        }
+
+
+        public void Find()
+        {
+            IGridFindReplaceDialogSink dialogSink = new GroupingGridFindReplaceDialogSink(grid);
+            GridFindReplaceDialog dialog = GridFindReplaceDialog.Instance;
+            dialog.Text = "Find";
+            dialog.Owner = this;
+            dialog.SetState(dialogSink, lastTextSearched, false);
+            dialog.ShowInTaskbar = false;
+            dialog.ShowReplaceButton = false;
+            dialog.ShowDialog();
+            lastTextSearched = dialog.TextSearched;
+        }
+
+
+        private class GroupingGridFindReplaceDialogSink : IGridFindReplaceDialogSink
+        {
+            private GridGroupingControl grid;
+            private int lastRowIndex = 0, lastColIndex = 0;
+            public GroupingGridFindReplaceDialogSink(GridGroupingControl grid)
+            {
+                this.grid = grid;
+            }
+
+            #region IGridFindReplaceDialogSink Members
+
+            public object Find(GridFindReplaceEventArgs e)
+            {
+                int startRowIndex = 0, startColIndex = 0, finalColIndex = 0;
+                DataView dv = grid.Table.GetCurrencyManager().List as DataView;
+                DataTable dt = dv.Table;
+                if ((e.Options & GridFindTextOptions.WholeTable) == GridFindTextOptions.WholeTable)
+                {
+                    finalColIndex = dt.Columns.Count;
+                    if (e.LocationInfo != null)
+                    {	//not first iteration, but 2 or succeding iteration
+                        startRowIndex = lastRowIndex; //((GridRangeInfo)e.LocationInfo).Top;
+                        startColIndex = lastColIndex + 1; //((GridRangeInfo)e.LocationInfo).Left + 1;
+                    }
+                    startColIndex %= finalColIndex;
+                }
+                else if ((e.Options & GridFindTextOptions.ColumnOnly) == GridFindTextOptions.ColumnOnly)
+                {
+                    if (e.LocationInfo != null)	//not first iteration, but 2 or succeding iteration
+                        startRowIndex = lastRowIndex + 1;	//start at next row
+                    FieldDescriptor currentFieldDescriptor = grid.Table.CurrentRecordManager.CurrentField;
+                    if (currentFieldDescriptor == null)
+                        return null;
+                    string currentColName = currentFieldDescriptor.Name;
+                    startColIndex = dt.Columns[currentColName].Ordinal;
+                    finalColIndex = startColIndex + 1;
+                }
+
+                for (int rowIndex = startRowIndex; rowIndex < grid.Table.Records.Count; rowIndex++)
+                {
+                    Record rec = grid.Table.Records[rowIndex];
+                    DataRowView rv = (DataRowView)rec.GetData();
+                    for (int colIndex = startColIndex; colIndex < finalColIndex; colIndex++)
+                    {
+                        string columnText = rv[colIndex].ToString();
+                        if (Find(columnText, e.FindString, e.Options))
+                        {
+                            string columnName = rv.DataView.Table.Columns[colIndex].ColumnName;
+                            rec.SetCurrent(columnName);
+                            lastRowIndex = rowIndex;
+                            lastColIndex = colIndex;
+                            return GridRangeInfo.Cell(rowIndex, colIndex);
+                        }
+                    }
+                    if ((e.Options & GridFindTextOptions.WholeTable) == GridFindTextOptions.WholeTable)
+                        startColIndex = 0;
+                }
+                return null;
+            }
+            private bool Find(string source, string searchedText, GridFindTextOptions options)
+            {
+                if ((options & GridFindTextOptions.MatchWholeCell) == GridFindTextOptions.MatchWholeCell)
+                    if ((options & GridFindTextOptions.MatchCase) == GridFindTextOptions.MatchCase)
+                        return (source == searchedText);
+                    else
+                        return (source.ToUpper() == searchedText.ToUpper());
+                else
+                    if ((options & GridFindTextOptions.MatchCase) == GridFindTextOptions.MatchCase)
+                        return (source.IndexOf(searchedText) > -1);
+                    else
+                        return (source.ToUpper().IndexOf(searchedText.ToUpper()) > -1);
+            }
+
+            public void ReplaceAll(GridFindReplaceEventArgs e)
+            {
+                // TODO:  Add f.ReplaceAll implementation
+            }
+
+            public object Replace(GridFindReplaceEventArgs e)
+            {
+                // TODO:  Add f.Replace implementation
+                return null;
+            }
+
+            public Rectangle GetScreenRect(object lc)
+            {
+                // TODO:  Add f.GetScreenRect implementation
+                return new Rectangle();
+            }
+
+            public void ShowInfoMessage(string msg, string category)
+            {
+                MessageBox.Show(msg, category);
+                // TODO:  Add f.ShowInfoMessage implementation
+            }
+
+            #endregion
+
+        }
+
+
+
+        public void FormatGrid(GridGroupingControl grid)
+        {
+
+
+            GridTableDescriptor desc = grid.TableDescriptor;
+            desc.ChildGroupOptions.ShowCaptionSummaryCells = true;
+            desc.ChildGroupOptions.CaptionSummaryRow = "MyCaption";
+
+            desc.ChildGroupOptions.CaptionText = "{Category} ({RecordCount})";
+
+            desc.ChildGroupOptions.ShowSummaries = false;
+            desc.ChildGroupOptions.ShowAddNewRecordBeforeDetails = false;
+
+            desc.TopLevelGroupOptions.ShowAddNewRecordBeforeDetails = false;
+
+            //grid.Appearance.AnyCell.CellType = "Static";
+            grid.Appearance.AnyCell.Font.Facename = "Calibri";
+
+
+            grid.Appearance.GroupCaptionCell.BackColor = Color.FromArgb(246, 244, 233);
+            //grid.Appearance.GroupCaptionCell.TextColor = Color.WhiteSmoke;
+            grid.Appearance.GroupCaptionCell.Font.Bold = true;
+            //grid.Appearance.GroupCaptionCell.Font.Facename = "Courier New";
+
+
+            grid.Appearance.GroupCaptionCell.Borders.Top = new GridBorder(GridBorderStyle.Standard);
+            grid.Appearance.GroupCaptionCell.CellType = "Static";
+            grid.Appearance.GroupCaptionSummaryCell.BackColor = Color.FromArgb(246, 244, 233);
+            grid.Appearance.GroupCaptionSummaryCell.Font.Facename = "Calibri";
+           // grid.Appearance.GroupCaptionSummaryCell.TextColor = Color.WhiteSmoke;
+
+            grid.Appearance.GroupCaptionSummaryCell.CellValueType = typeof(decimal);
+            grid.Appearance.GroupCaptionSummaryCell.Format = "#,##0_);[Red](#,##0)";//"#,##0.00;(#,##0.00);-";
+            grid.Appearance.GroupCaptionSummaryCell.Font.Bold = true;
+            grid.TableOptions.AllowSelection = ((Syncfusion.Windows.Forms.Grid.GridSelectionFlags)(((((((Syncfusion.Windows.Forms.Grid.GridSelectionFlags.Row | Syncfusion.Windows.Forms.Grid.GridSelectionFlags.Cell)
+                | Syncfusion.Windows.Forms.Grid.GridSelectionFlags.Multiple)
+                | Syncfusion.Windows.Forms.Grid.GridSelectionFlags.Shift)
+                | Syncfusion.Windows.Forms.Grid.GridSelectionFlags.Keyboard)
+                | Syncfusion.Windows.Forms.Grid.GridSelectionFlags.AlphaBlend)
+                | Syncfusion.Windows.Forms.Grid.GridSelectionFlags.MixRangeType)));
+
+
+
+            //for (int i = 0; i < grid.TableDescriptor.Columns.Count; i++)
+            //    grid.TableDescriptor.Columns[i].AllowFilter = true;
+
+            //grid.TopLevelGroupOptions.ShowFilterBar = true;
+            //filter.WireGrid(grid);
+
+            //f2.WireGrid(grid);
+        }
+
+        public void SetupSummaryRows()
+        {
+            summaryRowDescriptor = new GridSummaryRowDescriptor("Summary");
+            summaryRowDescriptor.Visible = false;
+            summaryRowDescriptor.Appearance.AnyCell.Font.Bold = true;
+            summaryRowDescriptor.Title = "Summary";
+
+            GridTableDescriptor tableDescriptor = this.grid.TableDescriptor;
+
+            tableDescriptor.SummaryRows.Add(summaryRowDescriptor);
+
+
+
+            tableDescriptor.ChildGroupOptions.ShowCaptionSummaryCells = true;
+            tableDescriptor.ChildGroupOptions.CaptionSummaryRow = "Summary";
+            tableDescriptor.ChildGroupOptions.CaptionText = "{Category} ({RecordCount})";
+            tableDescriptor.ChildGroupOptions.ShowSummaries = false;
+            tableDescriptor.ChildGroupOptions.ShowAddNewRecordBeforeDetails = false;
+
+            tableDescriptor.TopLevelGroupOptions.ShowCaptionSummaryCells = false;
+
+
+            summaryRowDescGrandTotal = new GridSummaryRowDescriptor();
+            tableDescriptor.SummaryRows.Add(summaryRowDescGrandTotal);
+
+            summaryRowDescGrandTotal.Appearance.AnyCell.Font.Bold = true;
+            summaryRowDescGrandTotal.Appearance.AnyCell.TextColor = Color.WhiteSmoke;
+
+            summaryRowDescGrandTotal.Appearance.AnyCell.BackColor = Color.FromArgb(185, 29, 71);
+
+            summaryRowDescGrandTotal.Name = "Total";
+            summaryRowDescGrandTotal.Visible = true;
+
+
+
+        }
+
+        public void AddSummaryCols(string[] summaryFieldNames)
+        {
+            //first clear any summaries
+            summaryRowDescriptor.SummaryColumns.Clear();
+            summaryRowDescGrandTotal.SummaryColumns.Clear();
+
+            for (int i = 0; i < summaryFieldNames.GetLength(0); i++)
+                AddSummaryColumn(summaryFieldNames[i], summaryRowDescriptor, "");
+
+            for (int i = 0; i < summaryFieldNames.GetLength(0); i++)
+                AddSummaryColumn(summaryFieldNames[i], summaryRowDescGrandTotal, "");
+            
+
+        }
+
+
+        public void AddSummaryColumn(string name, GridSummaryRowDescriptor summaryRowDescriptor, string format)
+        {
+
+            if (grid.TableDescriptor.Columns.Contains(name) == false)
+                return;
+
+            string SUM_FORMAT =  "{{Sum:{0}}}";
+
+
+            string cellFormat = (format != string.Empty) ? format : grid.TableDescriptor.Columns[name].Appearance.AnyRecordFieldCell.Format; // (format != string.Empty) ? format : "#,##0;(#,##0);-";
+            GridSummaryColumnDescriptor summaryColumnDescriptor = null;
+
+            summaryColumnDescriptor = new GridSummaryColumnDescriptor(name, SummaryType.DoubleAggregate, name, string.Format(SUM_FORMAT, cellFormat));
+            summaryColumnDescriptor.Appearance.AnyCell.Format = cellFormat;
+            summaryColumnDescriptor.Appearance.AnyCell.HorizontalAlignment = GridHorizontalAlignment.Right;
+            
+            
+            summaryRowDescriptor.SummaryColumns.Add(summaryColumnDescriptor);
+            //			SummaryColList.Add(new SummarySortInfo(mappingNameA, summaryColumnDescriptor.GetSummaryDescriptorName(),false));
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+
+        }
+        
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            //            if (this.currentView != null && this.currentView
+  //          if (this.currentView == null || this.currentView != comboBox1.SelectedItem.ToString())
+            {
+                this.grid.TableDescriptor.Summaries.Clear();
+                this.grid.TableDescriptor.GroupedColumns.Clear();
+                this.grid.TableDescriptor.SortedColumns.Clear();
+                this.grid.TableDescriptor.RecordFilters.Clear();
+                //              this.grid.TableDescriptor.Columns.Reset();
+           }
+
+            //this.grid.DataSource = null;
+
+
+            var starttime = DateTime.Now;
+            this.grid.TableDescriptor.Columns.Reset();
+            LoadAndApply(comboBox1.SelectedItem.ToString(), "");
+            checkBox1_CheckedChanged(sender, e);
+            
+          //  MessageBox.Show("time now" + DateTime.Now.ToLongTimeString() + " prev: " + starttime.ToLongTimeString());
+        }
+
+
+        void OptimizeGrid(GridGroupingControl gridGroupingControl)
+        {
+            // Couple settings to perform better:
+            gridGroupingControl.Engine.CounterLogic = EngineCounters.FilteredRecords;
+            gridGroupingControl.Engine.AllowedOptimizations =
+            EngineOptimizations.DisableCounters
+            | EngineOptimizations.RecordsAsDisplayElements
+            | EngineOptimizations.VirtualMode
+            ;
+            gridGroupingControl.TableOptions.VerticalPixelScroll = false;
+            gridGroupingControl.Engine.TableOptions.ColumnsMaxLengthStrategy = GridColumnsMaxLengthStrategy.FirstNRecords;
+            gridGroupingControl.Engine.TableOptions.ColumnsMaxLengthFirstNRecords = 100;
+        }
+
+        private void LoadData(string name, string d1, string d2)
+        {
+            //System.Diagnostics.Debug.WriteLine("1   " + System.DateTime.Now.ToLongTimeString());
+            //currentView = MBS_POS.myViews[name];
+            //srcCurrent = MBS_POS.GetData(name, d1, d2);
+
+            //System.Diagnostics.Debug.WriteLine("2   " + System.DateTime.Now.ToLongTimeString());
+   
+            //var summarycols = currentView.diffcols;
+            //List<string> ls = new List<string>();
+            //if (currentView.iscomparable && d1 != d2)
+            //{
+            //    srcCompare = MBS_POS.GetData(name, d2, d2);
+            //    System.Diagnostics.Debug.WriteLine("2.1   " + System.DateTime.Now.ToLongTimeString());
+
+            //    src = Util.MergeTables(srcCurrent, srcCompare, currentView.PKCols, currentView.diffcols);
+            //    System.Diagnostics.Debug.WriteLine("2.2   " + System.DateTime.Now.ToLongTimeString());
+
+            //    foreach (string s in currentView.diffcols)
+            //    {
+            //        ls.Add(s);
+            //        ls.Add(s + "_DIFF");
+            //        ls.Add(s + "_PREV");
+            //    }
+            //    System.Diagnostics.Debug.WriteLine("2.3   " + System.DateTime.Now.ToLongTimeString());
+
+            //}
+            //else
+            //{
+            //    src = srcCurrent;
+            //    srcCompare = null;
+            //    foreach (string s in currentView.diffcols)
+            //        ls.Add(s);
+            //}
+            //System.Diagnostics.Debug.WriteLine("3   " + System.DateTime.Now.ToLongTimeString());
+
+            //grid.DataSource = src;
+
+            //FormatCols();
+            //System.Diagnostics.Debug.WriteLine("4   " + System.DateTime.Now.ToLongTimeString());
+
+            //AddSummaryCols(ls.ToArray());
+            //System.Diagnostics.Debug.WriteLine("5   " + System.DateTime.Now.ToLongTimeString());
+         
+        }
+
+        private void FormatCols()
+        {
+            //var cols = src.Columns;
+            //foreach (DataColumn col in cols)
+            //{
+            //    var fmt = MBS_POS.GetNumericFormat(col.ColumnName, src);
+            //    grid.TableDescriptor.Columns[col.ColumnName].Appearance.AnyRecordFieldCell.CellType = "Static";
+            //    grid.TableDescriptor.Columns[col.ColumnName].Appearance.AnyRecordFieldCell.ReadOnly = true;
+            //    grid.TableDescriptor.Columns[col.ColumnName].Appearance.AnyRecordFieldCell.Format = fmt;
+            //}
+        }
+
+        private void button3_Click_1(object sender, EventArgs e)
+        {
+            if (srcCurrent == null)
+            {
+                MessageBox.Show("ERR! No Data Loaded");
+                return;
+            }
+            var filter = textBox1.SelectedText.Trim().Length > 0 ? textBox1.SelectedText : textBox1.Text.Trim().Length > 0 ? textBox1.Text : "TRUE";
+            ApplyFilter(filter);
+            checkBox1_CheckedChanged(sender, e);
+        }
+
+        private void ApplyFilter(string filter)
+        {
+            try
+            {
+                DataTable res = null;
+                if (srcCompare != null)
+                {
+
+                    if ((string.IsNullOrWhiteSpace(filter) || filter.ToUpper().Trim().Equals("TRUE")) && srcJoined != null)
+                    {
+                        res = srcJoined;
+                    }
+                    else
+                    {
+                        System.Diagnostics.Debug.WriteLine("before apply: " + System.DateTime.Now.ToLongTimeString());
+                        var filteredCurrent = Utility.ToDT(DSLParser.ProcessViewFilter(filter, srcCurrent.AsEnumerable()));
+                        System.Diagnostics.Debug.WriteLine("before apply 1: " + System.DateTime.Now.ToLongTimeString());
+                        var filteredCompare = Utility.ToDT(DSLParser.ProcessViewFilter(filter, srcCompare.AsEnumerable()));
+                        System.Diagnostics.Debug.WriteLine("before apply 2: " + System.DateTime.Now.ToLongTimeString());
+                        res = Utility.MergeTables(filteredCurrent, filteredCompare, pk_cols, diff_cols);
+                        System.Diagnostics.Debug.WriteLine("after apply: " + System.DateTime.Now.ToLongTimeString());
+
+                        if ((string.IsNullOrWhiteSpace(filter) || filter.ToUpper().Trim().Equals("TRUE")) && srcJoined == null)
+                        {
+                            srcJoined = res;
+                        }
+                    }
+                }
+                else
+                {
+                    res = Utility.ToDT(DSLParser.ProcessViewFilter(filter, srcCurrent.AsEnumerable()));
+                }
+
+                grid.DataSource = res;
+                grid.TableDescriptor.VisibleColumns.Reset();
+
+                this.Text =  filter;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("ERR!" + ex.Message);
+            }
+        }
+
+        private void textBox1_MouseHover(object sender, EventArgs e)
+        {
+
+            var t = "";//DSLParser.ParseToString(textBox1.Text);
+            TextBox TB = (TextBox)sender;
+            int VisibleTime = 10000;  //in milliseconds
+
+            ToolTip tt = new ToolTip();
+            tt.Show(t, TB, 0, 0, VisibleTime);
+
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            var sb = new StringBuilder();
+            var v = (DataTable)grid.DataSource;
+            var headers = v.Columns.Cast<DataColumn>();// .Columns.Cast<DataGridViewColumn>();
+            sb.AppendLine(string.Join(",", headers.Select(column => "\"" + column.ColumnName + "\"").ToArray()));
+
+            foreach (DataRowView row in v.DefaultView)
+            {
+                var cells = row.Row.ItemArray;// row.Cells.Cast<DataGridViewCell>();
+                sb.AppendLine(string.Join(",", cells.Select(cell => "\"" + cell.ToString() + "\"").ToArray()));
+            }
+            var writer = new System.IO.StreamWriter(@"C:\temp\test.csv");
+            writer.Write(sb.ToString());
+            writer.Close();
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var defaultMRQL = Controller.GetSourceAttribute(comboBox1.SelectedItem.ToString(), "mrql");
+                ExpressionsMgr.LoadDSL(defaultMRQL);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("No default measure file to show");
+            }
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            cachedSummaryCols = null;
+            if (checkBox1.Checked)
+            {
+                //get all summary and grouped columns..hide everything else
+                cachedCols = grid.TableDescriptor.VisibleColumns.Clone();
+
+                if (cachedSummaryCols == null)
+                {
+                    foreach (var cols in grid.TableDescriptor.Columns)
+                        if ((summaryRowDescriptor.SummaryColumns.IndexOf(cols.Name) < 0) /*&& (grid.TableDescriptor.GroupedColumns.IndexOf(cols.Name) < 0)*/)
+                        {
+                            if (grid.TableDescriptor.VisibleColumns.IndexOf(cols.Name) > 0)
+                                grid.TableDescriptor.VisibleColumns.Remove(cols.Name);
+                        }
+                }
+                else
+                {
+                    grid.TableDescriptor.VisibleColumns = cachedSummaryCols;
+                }
+            }
+            else
+            {
+                cachedSummaryCols = grid.TableDescriptor.VisibleColumns.Clone();
+                grid.TableDescriptor.VisibleColumns = cachedCols;
+
+                //foreach (var cols in grid.TableDescriptor.Columns)
+                //{
+                //        grid.TableDescriptor.VisibleColumns.Add(cols.Name);
+                //}
+            }
+        }
+
+        private void checkBox2_CheckedChanged(object sender, EventArgs e)
+        {
+            dateTimePicker2.Visible = label2.Visible = checkBox2.Checked;
+        }
+
+
+        public static void RemoveDuplicatesFromDataTable(ref DataTable table, List<string> keyColumns)
+        {
+           
+           
+
+            Dictionary<string, string> uniquenessDict = new Dictionary<string, string>(table.Rows.Count);
+
+            StringBuilder stringBuilder = null;
+
+            int rowIndex = 0;
+
+            DataRow row;
+
+            DataRowCollection rows = table.Rows;
+
+            while (rowIndex < rows.Count)
+            {
+
+                row = rows[rowIndex];
+
+//check if all the pk cols are null..if yes, delete the row
+                var isAllNull = true;
+                foreach (string colname in keyColumns)
+                {
+
+                    if (row[colname] != DBNull.Value)
+                    {
+                        isAllNull = false;
+                    }
+
+
+                }
+
+                if (isAllNull)
+                {
+                    rows.Remove(row);
+                    continue;
+                }
+////end checking for nulls
+                stringBuilder = new StringBuilder();
+
+                foreach (string colname in keyColumns)
+                {
+
+                        stringBuilder.Append(((string)row[colname]));
+
+
+                }
+
+                if (uniquenessDict.ContainsKey(stringBuilder.ToString()))
+                {
+
+                    rows.Remove(row);
+
+                }
+
+                else
+                {
+
+                    uniquenessDict.Add(stringBuilder.ToString(), string.Empty);
+
+                    rowIndex++;
+
+                }
+
+            }
+
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            Form frm = new MainForm();
+            frm.Show();
+        }
+
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            FieldDescriptor currentFieldDescriptor = grid.Table.CurrentRecordManager.CurrentField;
+            if (currentFieldDescriptor != null)
+            {
+                string currentColName = currentFieldDescriptor.Name;
+                AddSummaryColumn(currentColName, summaryRowDescriptor, "");
+                AddSummaryColumn(currentColName, summaryRowDescGrandTotal, "");
+            }
+        }
+
+        private void ToggleSummary()
+        {
+            FieldDescriptor currentFieldDescriptor = grid.Table.CurrentRecordManager.CurrentField;
+            if (currentFieldDescriptor != null)
+            {
+                
+                string currentColName = currentFieldDescriptor.Name;
+
+                if (summaryRowDescriptor.SummaryColumns.Contains(currentColName))
+                {
+                    var sTotal = summaryRowDescriptor.SummaryColumns[currentColName];
+                    var sGrandTotal = summaryRowDescGrandTotal.SummaryColumns[currentColName];
+                    summaryRowDescriptor.SummaryColumns.Remove(sTotal);
+                    summaryRowDescGrandTotal.SummaryColumns.Remove(sGrandTotal);
+                }
+                else
+                {
+                    AddSummaryColumn(currentColName, summaryRowDescriptor, "#,##0;(#,##0);-");
+                    AddSummaryColumn(currentColName, summaryRowDescGrandTotal, "#,##0;(#,##0);-");
+                }
+            }
+        }
+        private void ToggleFilter()
+        {
+            FieldDescriptor currentFieldDescriptor = grid.Table.CurrentRecordManager.CurrentField;
+            if (currentFieldDescriptor != null)
+            {
+                string currentColName = currentFieldDescriptor.Name;
+                grid.TableDescriptor.Columns[currentColName].AllowFilter = !grid.TableDescriptor.Columns[currentColName].AllowFilter;
+            }
+        }
+
+        private void ToggleCaption()
+        {
+            if (grid.TableDescriptor.ChildGroupOptions.CaptionText == "{Category} ({RecordCount})")
+            {
+                grid.TableDescriptor.ChildGroupOptions.CaptionText = "{Category}";
+            }
+            else
+            {
+                grid.TableDescriptor.ChildGroupOptions.CaptionText = "{Category} ({RecordCount})";
+            }
+           
+
+        }
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (keyData == (Keys.Control | Keys.F))
+            {
+                Find();
+            }
+            else if (keyData == (Keys.Alt | Keys.F))
+            {
+                ToggleFilter();
+            }
+            else if (keyData == (Keys.Alt | Keys.S))
+            {
+                ToggleSummary();
+            }
+            else if (keyData == (Keys.Alt | Keys.C))
+            {
+                ToggleCaption();
+            }
+
+
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
+
+        private void button2_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+    }
+}

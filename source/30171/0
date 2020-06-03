@@ -1,0 +1,23 @@
+open System
+open TypeShape
+
+let tryGetCtor (t : Type) =
+    match TypeShape.Create(t) with
+    | Shape.DefaultConstructor s ->
+        s.Accept {
+            new IDefaultConstructorVisitor<(unit -> obj) option> with
+                member __.Visit<'T when 'T : (new : unit -> 'T)>() =
+                    Some(fun () -> new 'T() :> obj)
+        }
+
+    | _ -> None
+
+type Foo = class end
+type Bar(value : int) =
+    member __.value = value
+    new() = new Bar(42)
+
+let f = tryGetCtor typeof<Foo> // None
+let b = tryGetCtor typeof<Bar> |> Option.get
+
+b () // Bar {value = 42;}

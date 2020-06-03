@@ -1,0 +1,161 @@
+// https://github.com/mavnn/Algebra.Boolean/blob/6b2099420ef605e3b3f818883db957154afa836a/Algebra.Boolean/Transforms.fs
+// But System.Linq.Expressions, not Microsoft.FSharp.Quotations
+open Microsoft.FSharp.Quotations
+open System.Linq.Expressions
+
+let (|Value|_|) (e:Expression) = 
+    match e.NodeType, e with 
+    | ExpressionType.Constant, (:? ConstantExpression as ce) -> Some (ce.Value, ce.Type)
+    | _ -> None
+
+let (|IfThenElse|_|) (e:Expression) = 
+    match e.NodeType, e with 
+    | ExpressionType.Conditional, (:? ConditionalExpression as ce) -> Some (ce.Test, ce.IfTrue, ce.IfFalse)
+    | _ -> None
+
+let (|Not'|_|) (e:Expression) =
+    match e.NodeType, e with
+    | ExpressionType.Not, (:? UnaryExpression as ue) -> Some(ue.Operand)
+    | _ -> None
+
+
+let (|True'|_|) expr =
+    match expr with
+    | Value (o, t) when t = typeof<bool> && (o :?> bool) = true ->
+        Some expr
+    | _ ->
+        None
+
+let (|False'|_|) expr =
+    match expr with
+    | Value (o, t) when t = typeof<bool> && (o :?> bool) = false ->
+        Some expr
+    | _ ->
+        None
+
+let (|Or'|_|) (e:Expression) =
+    match e.NodeType, e with
+    | _, IfThenElse (left, True' _, right) ->
+        Some (left, right)
+    | ExpressionType.OrElse, ( :? BinaryExpression as be) -> Some(be.Left,be.Right)
+    //| ExpressionType.Or, ( :? BinaryExpression as be) -> Some(be.Left,be.Right)
+    | _ -> None
+
+let (|And'|_|) (e:Expression) =
+    match e.NodeType, e with
+    | _, IfThenElse (left, right, False' _) ->
+        Some (left, right)
+    | ExpressionType.AndAlso, ( :? BinaryExpression as be)  -> Some(be.Left,be.Right)
+    //| ExpressionType.And, ( :? BinaryExpression as be)  -> Some(be.Left,be.Right)
+    | _ -> None
+
+let associate quote =
+    match quote with
+    | Or' (Or' (l, r), r') ->
+        Expression.OrElse(Expression.OrElse(l, r), r')
+    | Or' (l, Or' (l', r)) ->
+        Expression.OrElse(l, Expression.OrElse(l', r))
+    | And' (And' (l, r), r') ->
+        Expression.AndAlso(Expression.AndAlso(l, r), r')
+    | And' (l, And' (l', r)) ->
+        Expression.AndAlso(l, Expression.AndAlso(l', r))
+    | _ ->
+        quote
+
+let commute quote =
+    match quote with
+    | Or' (left, right) ->
+        Expression.OrElse(right, left)
+    | And' (left, right) ->
+        Expression.AndAlso(right, left)
+    | _ ->
+        quote
+
+let distribute quote =
+    match quote with
+    | And' (p, Or' (p', p'')) ->
+        Expression.OrElse(Expression.AndAlso(p, p'), Expression.AndAlso(p, p''))
+    | Or' (p, And' (p', p'')) ->
+        Expression.AndAlso(Expression.OrElse(p, p'), Expression.OrElse(p, p''))
+    | _ ->
+        quote
+
+let gather quote =
+    match quote with
+    | And' (Or'(p, p'), Or'(p'', p''')) when p = p'' ->
+        Expression.OrElse(p, Expression.AndAlso(p', p'''))
+    | Or' (And'(p, p'), And'(p'', p''')) when p = p'' ->
+        Expression.AndAlso(p, Expression.OrElse(p', p'''))
+    | _ ->
+        quote
+
+let identity quote =
+    let rec transform q =
+        match q with
+        | And' (True' _, p)
+        | And' (p, True' _)
+        | Or' (False' _, p) 
+        | Or' (p, False' _)
+            -> transform p
+    transform quote
+
+let annihilate quote =
+    let rec transform q =
+        match q with
+        | And' (False' f, _)
+        | And' (_, False' f)
+            -> f
+        | Or' (True' t, _) 
+        | Or' (_, True' t)
+            -> t
+    transform quote
+
+let absorb quote =
+    let rec transform q =
+        match q with
+        | And' (p, Or' (p', _)) 
+        | And' (p, Or' (_, p')) 
+        | And' (Or' (p', _), p)
+        | And' (Or' (_, p'), p)
+        | Or' (p, And' (p', _))
+        | Or' (p, And' (_, p'))
+        | Or' (And' (p', _), p)
+        | Or' (And' (_, p'), p) when p = p' ->
+            p
+    transform quote
+
+let idempotence quote =
+    let rec transform q =
+        match q with
+        | And' (p, p') when p = p' ->
+            transform p
+        | Or' (p, p')  when p = p' ->
+            transform p
+    transform quote
+
+let complement quote =
+    let rec transform q =
+        match q with
+        | And' (p, Not' p')
+        | And' (Not' p, p') when p = p' ->
+            Expression.Constant(false, typeof<bool>)
+        | Or' (p, Not' p')
+        | Or' (Not' p, p') when p = p' ->
+            Expression.Constant(true, typeof<bool>)
+    transform quote
+
+let doubleNegation quote =
+    match quote with
+    | Not' (Not' p) ->
+        p
+    | _ ->
+        quote
+
+let deMorgan quote =
+    match quote with
+    | Or' (Not' p, Not' p') ->
+        Expression.Not(Expression.AndAlso(p, p'))
+    | And' (Not' p, Not' p') ->
+        Expression.Not(Expression.OrElse(p, p'))
+    | _ ->
+        quote

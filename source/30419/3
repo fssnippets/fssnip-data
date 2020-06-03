@@ -1,0 +1,31 @@
+[<AutoOpen>]
+module Library =
+
+    /// Extensible DU.
+    type Union =
+        | Case1 of int
+        | Case2 of float
+        | CaseN of CaseN
+    and CaseN = interface end
+
+[<AutoOpen>]
+module Extension =
+
+    /// Extended case #3.
+    type private Case3 (i : int) = interface CaseN member this.Value = i
+    let (|Case3|_|) (union : Union) = match union with (CaseN (:? Case3 as c3)) -> Some c3.Value | _ -> None
+
+    /// Extended case #4.
+    type private Case4 (str : string) = interface CaseN member this.Value = str
+    let (|Case4|_|) (union : Union) = match union with (CaseN (:? Case4 as c4)) -> Some c4.Value | _ -> None
+
+module Usage =
+
+    /// Example usage of extensible DU.
+    let f g =
+        match g () with
+        | Case1 i -> "Case 1 " + string i
+        | Case2 f -> "Case 2 " + string f
+        | Case3 i -> "Case 3 " + string i
+        | Case4 s -> "Case 4 " + s
+        | CaseN _ -> "Unknown Case"

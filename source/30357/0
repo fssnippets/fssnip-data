@@ -1,0 +1,9 @@
+open System.IO
+
+let rec findDirectories root name depth =
+    if depth = 0 then Seq.empty
+    else
+        Directory.EnumerateDirectories root
+        |> Seq.collect (fun directory ->
+            if directory.EndsWith("\\" + name) then List.toSeq [directory]
+            else findDirectories directory name (depth - 1))

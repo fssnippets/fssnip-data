@@ -1,0 +1,126 @@
+open System
+open System.Text
+
+type Terms =
+    | NoTerm = 1
+    | PositiveTerm = 2
+    | NegativeTerm = 3
+    | Terms = 4
+
+type Poly {
+    Derivative : ulong
+    Power : ulong
+    Coefficients long list list
+}
+
+with
+    override this.ToString () =
+        let innerTerm (cs : long list) =
+            let folder state element =
+                match state, element with
+                    | Option.Some Terms.NoTerm, 0L ->
+                         Option.Some Terms.NoTerm
+                    | Option.Some Terms.NoTerm, _ when element < 0L ->
+                         Option.Some Terms.NegativeTerm
+                    | Option.Some Terms.NoTerm, _->
+                         Option.Some Terms.PositiveTerm
+                    | _, 0L ->
+                         state
+                    | Option.Some Terms.PositiveTerm, _->
+                         Option.Some Terms.Terms
+                    | Option.Some Terms.NegativeTerm, _->
+                         Option.Some Terms.Terms
+                    | _ ->
+                         None
+            let initialState = Terms.NoTerm
+            let scanning = Seq.scan folder initialState cs
+            Seq.last (Seq.takeWhile Option.isSome scanning)
+        let outerTerm (cs : long list list) =
+            let folder state element =
+                match state, innerTerm element with
+                    | Option.Some Terms.NoTerm, Terms.NoTerm ->
+                         Option.Some Terms.NoTerm
+                    | Option.Some Terms.NoTerm, Terms.NegativeTerm ->
+                         Option.Some Terms.NegativeTerm
+                    | Option.Some Terms.NoTerm, _->
+                         Option.Some Terms.PositiveTerm
+                    | _, Terms.NoTerm ->
+                         state
+                    | Option.Some Terms.PositiveTerm, _->
+                         Option.Some Terms.Terms
+                    | Option.Some Terms.NegativeTerm, _->
+                         Option.Some Terms.Terms
+                    | _ ->
+                         None
+            let initialState = Terms.NoTerm
+            let scanning = Seq.scan folder initialState cs
+            Seq.last (Seq.takeWhile Option.isSome scanning)
+        let printTerm b f a x p c =
+            if c > 1L then
+                if f then
+                    Printf.bprintf b "%d" c
+                else
+                    Printf.bprintf b " + %d" c
+            elif c = 1L then
+                if not f then
+                    Printf.bprintf b " + "
+            elif c < -1L then
+                if f then
+                    Printf.bprintf b "-%d" c
+                else
+                    Printf.bprintf b " - %d" c
+            elif c = -1L then
+                if f then
+                    Printf.bprintf b "-"
+                else
+                    Printf.bprintf b " - "
+            if c <> 0L && p <> 0UL then
+                Printf.bprintf b " %s" x
+                if q <> 1UL then
+                    Printf.bprintf b "^%d" q
+                match a with
+                    | None ->
+                        ()
+                    | Some s ->
+                        Printf.bprintf b "(%s)" s
+        let printInnerPoly b f a x p cs =
+            let t = innerTerm cs
+            if t = Terms.Terms then
+                 Printf.bprintf b "("
+            let terms = List.OfSeq (Seq.filter ((!=) 0) (seq {
+                 for i = Seq.length cs - 1 downto 0 do
+                      yield i, Seq.item i cs
+            }))
+            if t = Terms.Terms then
+                 Printf.bprintf b ") "
+
+    let builder = System.Text.StringBuilder ()
+    let terms = Seq.sum (seq {
+        if not (List.isEmpty cs) then
+            for i = List.length cs - 1 downto 0 do
+                yield printTerm builder (i = List.length cs - 1) None "n" (uint64 i) (Seq.item i cs)
+    })
+    if terms = 0 then
+       match f with
+           | None -> 
+               "0"
+           | Some _ -> 
+               ""
+    elif terms = 1 then
+       match f with
+           | Some false -> 
+               if (builder.ToString ()).StartsWith "-"
+                   sprintf "- %s" ((builder.ToString ()).Substring 1)
+               else
+                   sprintf "+ %s" (builder.ToString ())
+           | _-> 
+               builder.ToString ()
+    else
+       match f with
+           | None ->
+               builder.ToString ()
+           | Some true -> 
+               sprintf "(%s)" (builder.ToString ())
+           | Some false -> 
+               sprintf "+ (%s)" (builder.ToString ())
+ 

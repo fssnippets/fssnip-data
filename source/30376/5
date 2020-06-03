@@ -1,0 +1,11 @@
+let m = ["a","b"; "a","c"; "b","d"]
+
+let rec countries =function|[]->[]   |(a,b)::m->a::b:: countries m
+
+let rec rNb a b   =function|[]->false|y::ys  -> y=(a,b)|| y=(b,a) || rNb a b ys
+
+let rec canXCl m c=function|[]->true |l::ls  -> not(rNb l c m) && canXCl m c ls
+
+let rec xClrng m c=function|[]->[[c]]|cl::cls-> if canXCl m c cl  then (c::cl)::cls  else cl:: xClrng m c cls
+
+List.fold(fun a i->xClrng m i a) [] (countries m|>List.distinct)//[["d";"a"];["c";"b"]]Musa.Jahanghir@Live.com

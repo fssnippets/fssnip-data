@@ -1,0 +1,12 @@
+
+let nPi =     
+    let piSeq = seq{
+        yield 3.0
+        let rec pi start sign = seq{
+            yield (sign * 4.0) / ( start * (start + 1.0) * (start + 2.0))
+            yield! pi (start + 2.0) (sign * -1.0)
+        }
+
+        yield! pi 2.0 1.0
+    }
+    piSeq |> Seq.take 10 |> Seq.sum

@@ -1,0 +1,8 @@
+let inline raisef (exnCtor : string -> #exn) fmt =
+    Printf.kprintf (exnCtor >> raise) fmt
+
+// Before
+do raise <| System.ArgumentException(sprintf "Unexpected argument %A" "foo")
+
+// After
+do raisef System.ArgumentException "Unexpected argument %A" "foo"

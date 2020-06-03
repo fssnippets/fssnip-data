@@ -1,0 +1,372 @@
+module List =
+  let update pred map list =
+    list
+    |> List.map
+        (fun p ->
+            if pred p
+            then map p
+            else p)
+
+module Array =
+  let rand = new System.Random()
+
+  let swap (a: _[]) x y =
+    let tmp = a.[x]
+    a.[x] <- a.[y]
+    a.[y] <- tmp
+
+  // shuffle an array (in-place)
+  let shuffle a =
+    Array.iteri (fun i _ -> swap a i (rand.Next(i, Array.length a))) a
+    a
+
+type Suite =
+  A | B | C | D
+
+type Card =
+  { value: int
+    suite: Suite }
+  static member create suite value  =
+    { value = value
+      suite = suite }
+
+type PlayerId = int
+
+type PlayerCards = (PlayerId*(Card list))
+
+type Boont =  NoBoont | Boont | Hamsa | Ashra
+
+type ScorePoint = int
+
+type Score = PlayerId * ScorePoint
+
+type Deck = Card []
+
+let cardValue card = card.value
+
+module Board =
+
+  type Player =
+    { id : PlayerId
+      cards: Card list
+      foodCount: int }
+
+  type Model =
+    { deck : Deck
+      community: Card list
+      players: Player list }
+
+  let createPlayer id =
+    { id = id
+      cards = List.empty
+      foodCount = 0 }
+  let isNextValue (v1,v2) =
+    (v1 = 7 && v2 = 10) || (v1 + 1 = v2)
+
+  let allCards =
+    [A;B;C;D]
+    |> List.fold
+      (fun acc suite ->
+        let cards =
+          [1..7]@[10..12]
+          |> List.map (Card.create suite)
+        acc @ cards
+      ) []
+
+  let newDeck () =
+    allCards
+      |> Array.ofList
+      |> Array.shuffle
+
+  let empty =
+    { deck = Array.empty
+      community = List.empty
+      players = List.empty }
+
+  let deal model =
+    let updatePlayer player cards =
+      {player with cards = cards |> List.ofArray}
+
+    let (players',deck') =
+      model.players
+      |> List.fold
+        (fun (arr,curDeck) player ->
+          let playerCards = (curDeck |> Array.take 3)
+          let player' = updatePlayer player playerCards
+          let arr' = player'::arr
+          let deck' = curDeck |> Array.skip 3
+          (arr',deck')
+        ) ([], model.deck)
+    { model with
+        deck = deck'
+        players = players' }
+
+  let dealComminity model =
+    let community = model.deck |> Array.take 4 |> Array.toList
+    let deck = model.deck |> Array.skip 4
+    { model with
+        community = community
+        deck = deck }
+  let start (ids:PlayerId list) =
+    let players =  ids |> List.map createPlayer
+    { deck = newDeck ()
+      community = List.empty
+      players = players }
+    |> deal
+    |> dealComminity
+
+  let playerCards model =
+    model.players |> List.map(fun p -> p.id,p.cards)
+
+  let addCommunityCard playerId card model =
+
+    let matchingValues =
+      model.community
+      |> List.map cardValue
+      |> List.sort
+      |> List.skipWhile ((<>)card.value)
+      |> List.pairwise
+      |> List.takeWhile isNextValue
+      |> List.collect (fun p -> [fst p;snd p])
+      |> List.distinct
+
+    let (community',matchingCards) =
+      model.community
+      |> List.fold
+        (fun (cs,ms) c ->
+          if matchingValues |> List.contains c.value
+          then (cs,c::ms)
+          else (c::cs,ms)
+        ) ([],[])
+
+    let players' =
+      model.players
+      |> List.update
+        ((=)playerId)
+        (fun p ->
+          { p with
+              foodCount = p.foodCount + (matchingCards |> List.length)
+              cards = p.cards |> List.filter ((=)card)
+           }
+         )
+
+    { model with
+        players = players'
+        community = community' }
+
+  let getMinScore = function
+    | 2 -> 20
+    | 3 -> 13
+    | 4 -> 10
+    | _ -> 1000
+
+  let score (model:Model) =
+    if   model.deck.Length > 0
+      || model.community.Length > 0
+    then []
+    else
+      let minScore = getMinScore model.players.Length
+      model.players
+      |> List.map (fun p-> (p.id,p.foodCount - minScore))
+      |> List.filter (snd >> (>)0)
+
+module Turn =
+  type Model = Turn of int * int
+
+  let current (Turn(_,cur)) = cur
+
+  let next (Turn (count,cur)) =
+    Turn (count, (cur + 1) % count)
+  let create count start =
+    Turn (count,start)
+
+module Boonts =
+  type Model =
+    { lastCard : (Card*PlayerId) Option
+      boont : Boont
+      score: Map<PlayerId,ScorePoint>}
+
+  let empty:Model =
+    { lastCard = None
+      boont = NoBoont
+      score = Map.empty }
+
+  let boontScore = function
+    | NoBoont -> 0
+    | Boont -> 1
+    | Hamsa -> 5
+    | Ashra -> 10
+
+  let addCard (card,playerId) model =
+    match model.lastCard with
+    | Some (pervCard,prevPlayerId) when pervCard.value = card.value ->
+      let boont' =
+        match model.boont with
+        | NoBoont -> Boont
+        | Boont -> Hamsa
+        | Hamsa -> Ashra
+        | Ashra -> NoBoont
+
+      let scorePoint =
+        match (model.boont, boont') with
+        | (boont,NoBoont) -> boontScore boont
+        | _ -> 0
+
+      let score' =
+        model.score |> Map.add prevPlayerId scorePoint
+
+      { model with
+          score = score'
+          lastCard = Some (card,playerId)
+          boont = boont' }
+    | _ ->
+      { model with
+          lastCard = Some (card,playerId)
+          boont = NoBoont }
+
+module Ronda =
+  type Ronda =
+    | NoRonda
+    | Ronda of int
+    | Tringla of int
+
+  type Model =
+    { claiming: PlayerId Set
+      rondot: (PlayerId * Ronda) list }
+
+  let rondaScore = function
+    | NoRonda -> 0
+    | Ronda _ -> 1
+    | Tringla _ -> 5
+
+  let strength = function
+    | NoRonda -> 0
+    | Ronda n -> 1 + 10 * n
+    | Tringla n -> 1 + 100 * n
+
+  let getRonda cards =
+    cards
+    |> List.map cardValue
+    |> List.sortBy (~-)
+    |> List.groupBy id
+    |> List.map
+      (fun (id,cs) ->
+        match cs with
+        | [v;_] -> Ronda v
+        | [v;_;_] -> Tringla v
+        | _ -> NoRonda
+      )
+    |> List.sortBy (rondaScore >> (~-))
+    |> List.head
+
+  let empty =
+    { claiming =  Set.empty
+      rondot =  List.empty }
+
+  let create playerCards =
+    let rondot =
+      playerCards
+      |> List.map
+        (fun (id,cards) -> id,(getRonda cards))
+
+    { claiming = Set.empty
+      rondot = rondot }
+
+  let addClaim playerId model =
+    let claiming' = model.claiming |> Set.add playerId
+    { model with claiming = claiming' }
+
+  let score model =
+    let playersRondot =
+      model.claiming
+      |> Set.map (fun id -> model.rondot.[id] )
+      |> Set.filter (fun (id,ronda) -> ronda <> NoRonda)
+      |> Set.toList
+
+    let points =
+      model.rondot
+      |> List.map (snd>>rondaScore)
+      |> List.sum
+
+    let (winners,score) =
+      playersRondot
+      |> List.map (fun (id,r) -> id,strength r)
+      |> List.sortBy (snd>>(~-))
+      |> List.filter (snd>>((<)0))
+      |> List.fold
+        (fun (arr,curS) (id,s) ->
+          if s >= curS
+          then (id::arr,s)
+          else (arr,curS)
+        ) ([],0)
+
+    winners,points
+
+module Hand =
+  type Model =
+    { length : int
+      round : int
+      numRounds : int
+      i : int }
+
+  let empty =
+    { length = 0
+      round = 0
+      numRounds = 0
+      i = 0 }
+
+  let create numPlayers =
+    let numRounds = 36 / (numPlayers * 3)
+    { length = numPlayers
+      numRounds = numRounds
+      round = 0
+      i = 0 }
+
+  let next model =
+    let i = model.i + 1
+    let round = i / model.length
+    { model with
+        round = round
+        i = i }
+
+  let completed model = model.round >= model.numRounds
+  let roundCompleted model = model.i > 0 && model.i % model.length = 0
+
+
+type GameState =
+  { board : Board.Model
+    turn : Turn.Model
+    hand : Hand.Model
+    boonts : Boonts.Model
+    ronda : Ronda.Model }
+
+let emptyGame =
+  { board = Board.empty
+    turn = Turn.create 2 0
+    hand = Hand.empty
+    boonts = Boonts.empty
+    ronda = Ronda.empty }
+
+let startGame (ids:PlayerId list) =
+
+  let numPlayers = ids |> List.length
+  let turn = Turn.create numPlayers 0
+  let hand = Hand.create numPlayers
+
+  let board = Board.start ids
+  let playerCards = Board.playerCards board
+  let ronda = Ronda.create playerCards
+
+  let boonts = Boonts.empty
+
+  { board = board
+    turn = turn
+    hand = hand
+    ronda = ronda
+    boonts = boonts }
+
+(startGame [1;2;3;4;5;6]).ronda
+
+
+type Action =
+  | PlayCard of int * int

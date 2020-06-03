@@ -1,0 +1,51 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">let</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">service</span> <span class="o">=</span> 
+    <span class="i">choose</span> [
+        <span class="i">request</span>(<span class="k">fun</span> <span class="i">req</span> <span class="k">-&gt;</span> 
+            <span class="k">match</span> (<span class="i">req</span><span class="o">.</span><span class="i">header</span> <span class="s">&quot;X-AuthToken&quot;</span>) <span class="k">with</span>
+            <span class="c">// If X-AuthToken is set; k1 has value, if not Choice2Of2</span>
+            | <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">Choice1Of2</span> <span class="i">k1</span> <span class="k">-&gt;</span>
+                <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="i">printfn</span> <span class="s">&quot;1 of 2 -- %A&quot;</span> <span class="i">k1</span>
+                <span class="i">OK</span> <span class="s">&quot;OK&quot;</span>
+            | <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="i">Choice2Of2</span> <span class="i">k2</span> <span class="k">-&gt;</span>
+                <span onmouseout="hideTip(event, 'fs3', 5)" onmouseover="showTip(event, 'fs3', 5)" class="i">printfn</span> <span class="s">&quot;2 of 2 -- no header, bad request&quot;</span>
+                <span class="i">RequestErrors</span><span class="o">.</span><span class="i">BAD_REQUEST</span> <span class="s">&quot;ASDF&quot;</span>
+        )
+        <span class="i">RequestErrors</span><span class="o">.</span><span class="i">BAD_REQUEST</span> <span class="s">&quot;HEI&quot;</span>
+    ]
+    <span class="o">&gt;</span><span class="o">=&gt;</span> <span class="i">choose</span> [
+        <span class="i">GET</span> <span class="o">&gt;</span><span class="o">=&gt;</span> <span class="i">choose</span> [
+            <span class="i">path</span> <span class="s">&quot;/v1/get&quot;</span> <span class="o">&gt;</span><span class="o">=&gt;</span> <span class="i">request</span> (<span class="k">fun</span> <span class="i">req</span> <span class="k">-&gt;</span> <span class="i">OK</span> (<span class="i">getEntrepreneurs</span> (<span class="i">req</span>)))
+            <span class="i">path</span> <span class="s">&quot;/v1/test&quot;</span> <span class="o">&gt;</span><span class="o">=&gt;</span> <span class="i">RequestErrors</span><span class="o">.</span><span class="i">NOT_FOUND</span> <span class="s">&quot;.. 4o4&quot;</span>
+        ]
+    ]
+    <span class="o">&gt;</span><span class="o">=&gt;</span> <span class="i">setMimeType</span> <span class="s">&quot;application/json; charset=utf-8&quot;</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">val service : obj<br /><br />Full name: Script.service</div>
+<div class="tip" id="fs2">union case Choice.Choice1Of2: &#39;T1 -&gt; Choice&lt;&#39;T1,&#39;T2&gt;</div>
+<div class="tip" id="fs3">val printfn : format:Printf.TextWriterFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.printfn</div>
+<div class="tip" id="fs4">union case Choice.Choice2Of2: &#39;T2 -&gt; Choice&lt;&#39;T1,&#39;T2&gt;</div>
+

@@ -1,0 +1,66 @@
+// Reference NuGet package FSharp.Data
+#if INTERACTIVE
+#I "./../packages/FSharp.Data.XMLProvider/lib/net40"
+#r "FSharp.Data.dll"
+#else
+module AddressLookup
+#endif
+
+open FSharp.Data
+open System
+
+// Documentation: https://ideal-postcodes.co.uk/documentation
+let fields = "premise,sub_building_name,building_number,line_1,line_2,line_3,postcode,post_town,county,country,organisation_name"
+
+type Address = JsonProvider<"""{
+    "result": [{
+        "postcode": "ID1 1QD",
+        "post_town": "LONDON",
+        "building_number": "2",
+        "building_name": "",
+        "sub_building_name": "",
+        "organisation_name": "",
+        "line_1": "2 Barons Court Road",
+        "line_2": "",
+        "line_3": "",
+        "premise": "2",
+        "country": "England",
+        "county": "Greater London"
+    },{
+        "postcode": "ID1 1QD",
+        "post_town": "LONDON",
+        "building_number": "59",
+        "building_name": "",
+        "sub_building_name": "",
+        "organisation_name": "ID Consulting Limited",
+        "line_1": "ID Consulting Limited",
+        "line_2": "59 Barons Court Road",
+        "line_3": "",
+        "premise": "59",
+        "country": "England",
+        "county": "Greater London"
+    }],
+    "code": "2000",
+    "message": "Success"
+}""">
+
+/// Replace this with your licence key or get it from a config file.
+let apiKey = 
+    //System.Configuration.ConfigurationManager.AppSettings.["ideal-postcodes-api-key"].ToString()
+    "ak_1"
+
+let postCodeLookup (postCode:string) = 
+    async {
+        let! response = 
+            Address.AsyncLoad(
+                "https://api.ideal-postcodes.co.uk/v1/postcodes/" + 
+                postCode.Replace(" ", "") + "?filter=" + fields +
+                (if apiKey = "" then "" else "&api_key=" + apiKey)
+            ) |> Async.Catch
+        return 
+            match response with
+            | Choice1Of2 res -> res
+            | Choice2Of2 err -> Address.Root(Array.empty, 4000, err.Message)
+    }
+
+let testExample() = postCodeLookup "ID11QD" |> Async.RunSynchronously

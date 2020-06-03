@@ -1,0 +1,81 @@
+t F# at http://fsharp.org
+
+open System
+
+type Expr =
+    | Identifier of string
+    | Number of int
+    | Add of Expr * Expr
+    | Assign of string * Expr
+    | Print of Expr
+
+let rec execute (env: Map<string, int>) (expr: Expr) =
+    match expr with
+    | Identifier s -> env |> Map.find s, env
+    | Number i -> i, env
+    | Add (Number a, Number b) -> a + b, env
+    | Assign (s, e) -> 
+        let env = env |> Map.add s (execute env e |> fst)
+        0, env
+    | Print e ->
+        let result = execute env e |> fst
+        printfn "%d" result
+        0, env
+
+module Parser =
+    open FParsec
+    open FParsec.CharParsers
+
+    type ParserState = unit
+    type Parser<'t> = Parser<'t, ParserState>
+
+    let ws = spaces
+
+    let parseIdentifier : Parser<Expr> =
+        many1Chars asciiLower |>> Expr.Identifier
+
+    let parseNumber : Parser<Expr> =
+        pint32 |>> Expr.Number
+
+    let parseExpr, parseExprImpl = createParserForwardedToRef ()
+
+    let parseAdd : Parser<Expr> = 
+        pipe3 parseExpr (pstring "+") parseExpr (fun a _ b ->
+            Add (a, b)
+        )
+
+    let parseAssign : Parser<Expr> = 
+        pipe3 (many1Chars asciiLower) (pstring "=") parseExpr (fun a _ b ->
+            Assign (a, b)
+        )
+
+    let parsePrint : Parser<Expr> = 
+        let print = pstring "print"
+        let paren = between (pstring "(") (pstring ")") parseExpr
+        pipe2 print paren (fun _ expr ->
+            Print expr
+        )
+
+    do parseExprImpl :=
+        choice [
+            parseIdentifier
+            parseNumber
+            parseAdd
+            parseAssign
+            parsePrint
+        ]
+
+    let parse input = 
+        match run parseExpr input with
+        | ParserResult.Success (result, state, position) -> result
+        | ParserResult.Failure _ -> failwith ""
+
+
+[<EntryPoint>]
+let main argv =
+    let env = Map.empty
+    let a = Parser.parse "a = 0"
+    let result, env = execute env a
+
+    printfn "Hello World from F#!"
+    0 // return an integer exit code

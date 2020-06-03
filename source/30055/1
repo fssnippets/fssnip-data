@@ -1,0 +1,9 @@
+open System
+
+type DateTime with
+    static member FromUnixTime (unixTime) =
+        let epoch = new DateTime(1970,1,1,0,0,0,DateTimeKind.Utc)
+        epoch.AddSeconds(unixTime)
+    static member ToUnixTime (date :DateTime) =
+        let epoch = new DateTime(1970,1,1,0,0,0,DateTimeKind.Utc)
+        Convert.ToDouble( date.Subtract(epoch).TotalSeconds)

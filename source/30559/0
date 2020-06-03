@@ -1,0 +1,14 @@
+module Seq =
+    let trySkip (n : int) (s : _ seq) =
+        seq {
+            use e = s.GetEnumerator ()
+            let mutable i = 0
+            let mutable dataAvailable = e.MoveNext ()
+            while dataAvailable && i < n do
+                dataAvailable <- e.MoveNext ()
+                i <- i + 1
+            if dataAvailable then
+                yield e.Current
+                while e.MoveNext () do
+                    yield e.Current
+        }

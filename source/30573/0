@@ -1,0 +1,29 @@
+namespace TestDataLayer.Infrastructure
+
+module PersonasRepository = 
+    open FSharp.Data.Sql
+    open FSharp.Data.Sql.Common
+    open TestDataLayer.Domain
+
+    type private sql = SqlDataProvider<DatabaseVendor = DatabaseProviderTypes.MSSQLSERVER, ConnectionString = "Server=_;Database=_;User Id=_;Password=_;">
+
+    let private ctx = sql.GetDataContext()
+
+    let private ListarInternal (pagina : int) =
+        query {
+            for c in ctx.Dbo.TestData do
+            sortBy (c.Nickname)
+            skip ((pagina - 1) * 15)
+            take 15
+            select c
+        } 
+        //|> Seq.map EntityToTestData
+        |> Seq.toArray
+
+    let private EntityToTestData (entity : sql.dataContext.``dbo.test_dataEntity``) : TestData =
+        new TestData(Id = entity.Id, Nickname = entity.Nickname, StartDate = entity.StartDate, Active = entity.Active, Fingerprint = entity.Fingerprint, Prefix = entity.Prefix.Chars(0), Multiplier = entity.Multiplier)
+
+    let Listar (pagina : int) = 
+        match pagina with 
+        | t when t > 0 -> Some (ListarInternal pagina)
+        | _ -> None

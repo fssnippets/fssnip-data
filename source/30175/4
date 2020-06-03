@@ -1,0 +1,135 @@
+open System
+open System.Net
+open System.IO
+
+// Test credentials:
+let userName, passWord = "...", "..."
+
+let makePostRequest (reqtype: string) (url : string) (requestBody : string) = 
+    let req = WebRequest.CreateHttp url
+    req.CookieContainer <- new CookieContainer()
+    req.Method <- "POST"
+    req.ProtocolVersion <- HttpVersion.Version10
+    let postBytes = requestBody |> System.Text.Encoding.ASCII.GetBytes
+    req.ContentLength <- postBytes.LongLength
+    req.ContentType <- reqtype
+    let asynccall =
+        async{
+            try
+                let! reqStream = req.GetRequestStreamAsync() |> Async.AwaitTask
+                do! reqStream.WriteAsync(postBytes, 0, postBytes.Length) 
+                      |> Async.AwaitIAsyncResult |> Async.Ignore
+                reqStream.Close()
+                let! res = req.AsyncGetResponse() 
+                use stream = res.GetResponseStream()
+                use reader = new StreamReader(stream)
+                let! rdata = reader.ReadToEndAsync() |> Async.AwaitTask                           
+                return rdata
+            with
+                | _ as ex -> //for debug
+                    return failwith(ex.ToString())
+        }
+    asynccall
+
+let reqtype = "text/xml; charset=utf-8"
+
+
+let eqf_address_url = "https://services.uat.uk.equifax.com/xmlii/EWSAddressService-v1_0/addressService/"
+
+// Sample datas. In real life use automatic parsing like XML-Provider: http://fsharp.github.io/FSharp.Data/lib     rary/XmlProvider.html
+let makeAddressRequest eqf_apiusername eqf_apipwd = 
+    """
+   <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" 
+    xmlns:oas="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" 
+    xmlns:lis="http://ewsaddress.services.uk.equifax.com/schema/v1/listaddress/listaddressbypostcoderequest">
+       <soapenv:Header>
+          <wsse:Security soapenv:mustUnderstand="1" 
+            xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:UsernameToken wsu:Id="UseToken-2" 
+               xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+                    <wsse:Username>""" + eqf_apiusername + """</wsse:Username>
+                    <wsse:Password 
+      Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">
+                    """ + eqf_apipwd + """</wsse:Password>
+                    </wsse:UsernameToken>
+                </wsse:Security>
+        </soapenv:Header>
+        <soapenv:Body>
+            <lis:listAddressByPostcodeRequest>
+                <clientRef>POSTCODE LOOK UP</clientRef>
+                <postcode>BA13 3BN</postcode>
+            </lis:listAddressByPostcodeRequest>
+        </soapenv:Body>
+    </soapenv:Envelope>
+    """
+
+let eqf_customer_url = "https://services.uat.uk.equifax.com/xmlii/EWSConsumerService-v1_x/consumerService"
+
+let makeCustomerRequest (eqf_apiusername:string) eqf_apipwd = 
+    """
+    <s:Envelope 
+            xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" 
+            xmlns:u="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <s:Header>
+            <o:Security 
+             s:mustUnderstand="1" 
+             xmlns:o="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+                <o:UsernameToken u:Id="uuid-f2be92e0-7671-43cf-b641-38d444bfe47e-1">
+                    <o:Username>""" + eqf_apiusername + """</o:Username>
+                    <o:Password>""" + eqf_apipwd + """</o:Password>
+                </o:UsernameToken>
+            </o:Security>
+        </s:Header>
+        <s:Body 
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+         xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+          <creditSearchRequest 
+           xmlns="http://ewsconsumer.services.uk.equifax.com/schema/v1/creditsearch/creditsearchrequest">
+                <clientRef xmlns="">C_SHARP_TEST</clientRef>
+                <soleSearch xmlns="">
+                    <creditSearchConfig>
+                        <optIn>true</optIn>
+                    </creditSearchConfig>
+                    <matchCriteria>
+                        <associate>notRequired</associate>
+                        <attributable>notRequired</attributable>
+                        <family>notRequired</family>
+                        <potentialAssociate>notRequired</potentialAssociate>
+                        <subject>required</subject>
+                    </matchCriteria>
+                    <requestedData>
+                        <outputAddressRequest>
+                            <maxNumber>0</maxNumber>
+                        </outputAddressRequest>
+                    </requestedData>
+                    <primary>
+                        <name>
+                            <surname>BECKHAM</surname>
+                            <forename>DAVID</forename>
+                        </name>
+                        <currentAddress>
+                            <address>
+                                <number>26</number>
+                                <postcode>CB6 2JR</postcode>
+                            </address>
+                        </currentAddress>
+                    </primary>
+                </soleSearch>
+            </creditSearchRequest>
+        </s:Body>
+    </s:Envelope>
+    """
+
+let addressResult = 
+    makeAddressRequest userName passWord
+    |> makePostRequest reqtype eqf_address_url
+    |> Async.RunSynchronously
+
+let customerResult = 
+    makeCustomerRequest userName passWord
+    |> makePostRequest reqtype eqf_customer_url
+    |> Async.RunSynchronously
+
+
+Console.WriteLine addressResult
+Console.WriteLine customerResult

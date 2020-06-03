@@ -1,0 +1,45 @@
+module StringBuffer =
+    open System.Text
+
+    [<Struct; NoComparison; NoEquality>]
+    type StringBuffer = StringBuffer of (StringBuilder -> unit)
+
+    let private zero = StringBuffer ignore
+    let inline private (!) x = match x with StringBuffer f -> f
+    
+    type StringBufferM () =
+        static let zero = zero
+        member inline __.Yield (txt: string) = StringBuffer (fun b -> b.Append txt |> ignore)
+        member inline __.Yield (c: char) = StringBuffer (fun b -> b.Append c |> ignore)
+        member inline __.Yield (strings: #seq<string>) =
+            StringBuffer (fun b -> for s in strings do s |> b.AppendLine |> ignore)
+        member inline __.YieldFrom (f: StringBuffer) = f
+        member __.Combine (f, g) = StringBuffer (fun b -> !f b; !g b)
+        member __.Delay f = StringBuffer (fun b -> !(f()) b)
+        member __.Zero () = zero
+        
+        member __.For (xs: 'a seq, f: 'a -> StringBuffer) =
+            StringBuffer (fun b ->
+                let e = xs.GetEnumerator ()
+                while e.MoveNext() do
+                    !(f e.Current) b)
+        
+        member __.While (p: unit -> bool, f: StringBuffer) =
+            StringBuffer (fun b -> while p () do !f b)
+            
+        member __.Run (StringBuffer f) =
+            let b = StringBuilder()
+            do f b
+            b.ToString () 
+
+    let stringBuffer = new StringBufferM ()
+
+// Usage
+
+let bytes2hex (bytes: byte array) : string =
+    stringBuffer {
+        for byte in bytes -> s"%02x" byte
+        yield "foo"
+    }
+
+let hexString = Array.zeroCreate 10 |> bytes2hex

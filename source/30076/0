@@ -1,0 +1,4 @@
+let phpMd5 (dataToHash:string) = 
+    use md5 = new System.Security.Cryptography.MD5CryptoServiceProvider();
+    let encodedBytes = dataToHash |> System.Text.ASCIIEncoding.Default.GetBytes |> md5.ComputeHash
+    System.Text.RegularExpressions.Regex.Replace(System.BitConverter.ToString(encodedBytes), "-", "").ToLower()

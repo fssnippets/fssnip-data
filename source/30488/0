@@ -1,0 +1,16 @@
+// from https://stackoverflow.com/questions/3016139/help-me-to-explain-the-f-matrix-transpose-function
+// replaced list version with Array version
+let rec transpose matrix : ('a [] [] )= 
+  match matrix |> Array.toList with   // matrix is a 'a [] []
+  | row::rows ->      // case when the list of rows is non-empty
+    match row |> Array.toList with    // rows is a ' []
+    | col::cols ->    // case when the row is non-empty
+      // Take first elements from all rows of the matrix
+      let first = Array.map Array.head matrix
+      // Take remaining elements from all rows of the matrix
+      // and then transpose the resulting matrix
+      let rest = transpose (Array.map Array.tail matrix) |> Array.toList
+      first :: rest
+      |> List.toArray
+    | _ -> [||]
+  | _ -> [||] 

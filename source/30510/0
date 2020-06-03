@@ -1,0 +1,64 @@
+open System
+
+module Char = begin
+  let hspace = function
+    | ' ' | '\t' -> true
+    | _ -> false
+end
+
+module Parsers = begin
+  open FParsec
+
+  module Utils = begin
+    let mk_res inp = function
+      | Success (res, _, _) -> Result.Ok (inp, res)
+      | Failure (errstr, _, _) -> Result.Error (inp, errstr)
+
+    let run = run
+  end
+
+  let int32_of_digits ds =
+    let rec aux acc = function
+      | [] -> acc
+      | x::xs -> aux (10 * acc + (int x - int '0')) xs
+    in
+    if List.isEmpty ds then 0 else aux 0 ds
+
+  let psint32 : Parser<int, unit> =
+    let sign = (pchar '-' >>% (~-)) <|> (pchar '+' >>% (~+)) in
+    let optsign = sign <|>% (~+) in
+    let digits = many1 digit in
+    let mk_int32 = (>>) int32_of_digits in
+    pipe2 optsign digits mk_int32
+
+  let pcoord : Parser<int * int, unit> =
+    psint32 .>>. (pchar ',' >>. skipManySatisfy Char.hspace >>. psint32)
+end
+
+open Parsers
+open Parsers.Utils
+
+let diag inp = inp |> run pcoord |> mk_res inp |> printfn "%A\n====="
+
+#if !INTERACTIVE
+[<EntryPoint>]
+let main _ =
+#else
+let _ =
+#endif
+  let testvals =
+    [ "1, 2"
+    ; "-3, 4"
+    ; "0, -9"
+    ; "-5, -4"
+    ; "+4, -3"
+    ; "-0, 99"
+    ; "-93, 77"
+    ; "-000234, +0043"
+    ; "hi"
+    ; "0.2, 3.4"
+    ; "123,-456"
+    ]
+  in
+  List.iter diag testvals;
+  0

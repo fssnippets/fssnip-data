@@ -1,0 +1,63 @@
+open System
+open System.Collections.Generic
+open System.ComponentModel
+
+// SortableBindingList in F# adapted from msmolcic on Stack Overflow
+// https://stackoverflow.com/questions/23661195/datagridview-using-sortablebindinglist
+
+type SortableBindingList<'T>(list:IEnumerable<'T>) =
+    inherit BindingList<'T>(List(list))
+
+    let mutable isSorted = false
+    let mutable sortDirection = ListSortDirection.Ascending
+    let mutable sortProperty : PropertyDescriptor option = None
+
+    new () = SortableBindingList(Seq.empty<'T>)
+
+    override l.ApplySortCore(prop, direction) =
+        let raiseEx () =
+            new NotSupportedException("Cannot sort by " + prop.Name +
+                ". This" + prop.PropertyType.ToString() + " does not implement IComparable")
+            |> raise
+
+        match prop.PropertyType.GetInterface("IComparable") with
+        | null ->
+            if prop.PropertyType.IsValueType then
+                match Nullable.GetUnderlyingType(prop.PropertyType) with
+                | null -> raiseEx()
+                | t -> 
+                    match t.GetInterface("IComparable") with 
+                    | null -> raiseEx() 
+                    | _ -> () // Just fall through the match case and apply the sort
+        | _ -> () // Just fall through the match case and apply the sort
+        
+        // IComparable interface is supported, so apply the sort
+        let query = base.Items :> IEnumerable<'T>
+        sortProperty <- Some prop
+        sortDirection <- direction
+
+        let sorted =
+            match direction with
+            | ListSortDirection.Ascending ->
+                query |> Seq.sortBy (fun i -> prop.GetValue(i) :?> IComparable)
+            | _ ->
+                query |> Seq.sortByDescending (fun i -> prop.GetValue(i) :?> IComparable)
+            |> Array.ofSeq
+        
+        // Can't access protected "Items" within lambda, so use this for loop construct
+        for i in [0 .. Array.length sorted - 1] do
+            l.Items.[i] <- sorted.[i] 
+        isSorted <- true
+        l.OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1))
+
+    override __.SortPropertyCore =
+        match sortProperty with
+        | Some sp -> sp
+        | _ ->
+             new System.NullReferenceException("Sortable property was null.")
+             |> raise
+
+    override __.SortDirectionCore = sortDirection
+    override __.SupportsSortingCore = true
+    override __.IsSortedCore = isSorted
+

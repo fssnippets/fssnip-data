@@ -1,0 +1,142 @@
+// http://www.fssnip.net/7WX
+
+open System
+open System.Text
+
+type Terms =
+    | NoTerms = 1
+    | NegativeTerm = 2
+    | MinusOneTerm = 3
+    | OneTerm = 3
+    | PositiveTerm = 4
+    | MultipleTerms = 5
+
+module Option =
+
+    // https://raw.githubusercontent.com/fsharp/fsharp/
+    //                                   cb6cb5c410f537c81cf26825657ef3bb29a7e952/
+    //                                   src/fsharp/FSharp.Core/option.fs r:20
+    let defaultValue value option =
+        match option with
+            | None ->
+                value
+            | Some v ->
+                v
+
+type Poly = {
+    Derivative : uint64
+    Power : uint64
+    Coefficients : int64 list list
+}
+
+with
+    override this.ToString () =
+
+        let innerTerm cs =
+            let folder state element =
+                match state, element with
+                    | Option.Some Terms.NoTerms, 0L ->
+                         Option.Some Terms.NoTerms
+                    | Option.Some Terms.NoTerms, -1L ->
+                         Option.Some Terms.MinusOneTerm
+                    | Option.Some Terms.NoTerms, 1L ->
+                         Option.Some Terms.OneTerm
+                    | Option.Some Terms.NoTerms, _ when element < 0L ->
+                         Option.Some Terms.NegativeTerm
+                    | Option.Some Terms.NoTerms, _ ->
+                         Option.Some Terms.PositiveTerm
+                    | _, 0L ->
+                         state
+                    | Option.Some t, _ when t <> Terms.MultipleTerms ->
+                         Option.Some Terms.MultipleTerms
+                    | _ ->
+                         None
+            let initialState = Some Terms.NoTerms
+            let scanning = Seq.scan folder initialState cs
+            Option.get (Seq.last (Seq.takeWhile Option.isSome scanning))
+        let printPowerOfVariable b x y k p =
+            if p <> 0 then
+                if not k then
+                   Printf.bprintf b " "
+                Printf.bprintf b "%s" x
+                if p <> 1 then
+                    Printf.bprintf b "^%d" p
+                match y with
+                    | None ->
+                        ()
+                    | Some r ->
+                        Printf.bprintf b "(%s)" r
+        let printTerm b n m k f p c =
+            let g = Option.defaultValue true f
+            if c > 1L || (c = 1L && Option.isNone f && p = 0) then
+                if g then
+                    Printf.bprintf b "%d" c
+                else
+                    Printf.bprintf b " + %d" c
+            elif c = 1L then
+                if not g then
+                    Printf.bprintf b " + "
+                if p = 0 && k then
+                    Printf.bprintf b "1"
+            elif c < -1L || (c = -1L && Option.isNone f && p = 0)then
+                if g then
+                    Printf.bprintf b "-%d" -c
+                else
+                    Printf.bprintf b " - %d" -c
+            elif c = -1L then
+                if g then
+                    Printf.bprintf b "-"
+                else
+                    Printf.bprintf b " - "
+                if p = 0 && k then
+                    Printf.bprintf b "1"
+            if c <> 0L then
+                printPowerOfVariable b n m (c = 1L || c = -1L) p
+            elif Option.isNone f then
+                Printf.bprintf b "0"
+        let printInnerPoly b n m f p cs =
+            let itering u v h k j (q, d) =
+                printTerm b u v k (Option.Some (h && j = 0)) q d
+            let g = Option.defaultValue true f
+            let terms = seq {
+                for i = List.length cs - 1 downto 0 do
+                    let c = List.item i cs
+                    if c <> 0L then
+                        yield i, c
+            }
+            Seq.iteri (itering n m g (p = 0)) terms
+        let printInnerPolyTerm b n m x y f p cs =
+            let g = Option.defaultValue true f
+            let t = innerTerm cs
+            if t = Terms.MultipleTerms then
+                if not g then
+                    Printf.bprintf b " + "
+                Printf.bprintf b "("
+            printInnerPoly b n m (Option.Some (g || t = Terms.MultipleTerms)) p cs
+            if t = Terms.MultipleTerms then
+                Printf.bprintf b ")"
+            if t <> Terms.NoTerms then
+                printPowerOfVariable b x y (t = Terms.MinusOneTerm || t = Terms.OneTerm) p
+            elif Option.isNone f then
+                Printf.bprintf b "0"
+        let printOuterPoly b n m x y f css =
+            let itering u v w z h j (q, ds) =
+                printInnerPolyTerm b u v w z (Option.Some (h && j = 0)) q ds
+            let g = Option.defaultValue true f
+            let terms = seq {
+                for i = List.length css - 1 downto 0 do
+                    let cs = List.item i css
+                    if innerTerm cs <> Terms.NoTerms then
+                        yield i, cs
+            }
+            Seq.iteri (itering n m x y g) terms
+        let printPoly b css =
+            let innerTermIsNoTerms cs =
+                innerTerm cs = Terms.NoTerms
+            printOuterPoly b "n" Option.None "cos" (Option.Some "x") Option.None css
+            if Seq.forall innerTermIsNoTerms css then
+                Printf.bprintf b "0"
+        let builder = StringBuilder ()
+        Printf.bprintf builder "p[%d, %d] = " this.Derivative this.Power
+        printPoly builder this.Coefficients
+        builder.ToString ()

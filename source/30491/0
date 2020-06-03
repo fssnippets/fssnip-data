@@ -1,0 +1,20 @@
+open Microsoft.FSharp.Reflection
+
+let toString (x:'a) = 
+    match FSharpValue.GetUnionFields(x, typeof<'a>) with
+    | case, _ -> case.Name
+
+type SpecialCharactersUnion = 
+    | Ola
+    | Nao
+    | RegularCharactersButWithSpaces
+    | Normal
+    override this.ToString() =
+        match this with
+        | Ola -> "Olá"
+        | Nao -> "Não"
+        | RegularCharactersButWithSpaces -> "Regular Characters But With Spaces"
+        | _ -> toString this
+
+//Usage:
+// Everytime a union case tostring gets called, the special cases will override it and present a string with the special characters.

@@ -1,0 +1,16 @@
+// https://www.reddit.com/r/ProgrammerHumor/comments/4sv6qr/true_random_number_generator/
+
+type Pythia = private | Results of int list with
+
+    static member Create() = Results []
+    
+    member p.Generate() =
+        let (Results r) = p
+        let maxRand = double(System.Int32.MaxValue)
+        let rec aux () =
+            let mynum = int(System.Random().NextDouble() * maxRand)
+            if r |> List.exists ((=) mynum) then aux ()
+            else
+                mynum, Results(mynum :: r)
+
+        aux ()

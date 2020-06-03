@@ -1,0 +1,18 @@
+    // create an active pattern to match an email address
+    let (|EmailAddress|_|) input =
+       let m = Regex.Match(input,@".+@.+") 
+       if (m.Success) then Some input else None  
+
+    // use the active pattern in the match   
+    let classifyString aString = 
+        match aString with 
+        | EmailAddress x ->  //works same with | EmailAddress aString? where does it get x value from, why/How ddoes it match?
+            printfn "%s is an email" x
+        
+        // otherwise leave alone
+        | _ -> 
+            printfn "%s is something else" aString
+
+    //test
+    classifyString "alice@example.com"
+    classifyString "google.com"

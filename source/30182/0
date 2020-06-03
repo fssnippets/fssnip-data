@@ -1,0 +1,33 @@
+open System
+open System.Numerics
+open System.Globalization
+
+let (|BigInt|_|) str = 
+    Some(System.Numerics.BigInteger.Parse(str, NumberStyles.None))
+
+let (|Even|_|) (i: BigInteger) = if i.IsEven then Some Even else None
+let (|Odd|_|) (i: BigInteger) = if i.IsEven then None else Some Odd
+
+let collatzify (i: BigInteger) = 
+    let rec stepCountingCollatzify step (input: BigInteger) =
+        printf "Step %A: %A\n" step input
+        match input with
+        | _ when input.IsOne -> step
+        | Even -> stepCountingCollatzify (step + 1) (input / (bigint 2))
+        | Odd -> 
+            let newInput = ((bigint 3) * input + (bigint 1))
+            printf "Step %A: %A\n" (step + 1) newInput                      // Performs 2 steps at once
+            stepCountingCollatzify (step + 2) ( newInput / (bigint 2) )
+        | _ -> printf "\nReached %A at step %A in error!" input step; -1
+    let steps = stepCountingCollatzify 0 i 
+    printf "\nCollatzified  %A to 1 in %i steps." i steps
+
+[<EntryPoint>]
+let main args =
+    match args.Length with
+    | 0  -> printf "Pass a starting value to test the collatz conjecture"
+    | _ ->
+        match args.[0] with
+        | BigInt i -> collatzify i 
+        | _ -> printf "Invalid input"
+    0

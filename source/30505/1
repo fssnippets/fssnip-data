@@ -1,0 +1,107 @@
+open System
+open System.IO
+open System.Net
+open System.Text.RegularExpressions
+
+let req = HttpWebRequest.Create "https://raw.githubusercontent.com/ua-parser/uap-core/master/regexes.yaml"
+let resp = (new StreamReader(req.GetResponse().GetResponseStream())).ReadToEnd()
+let lines = resp.Split( [| Environment.NewLine; "\r"; "\n"; "\r\n" |], StringSplitOptions.RemoveEmptyEntries)
+/// Minimal YAML-file parsing
+let yamlParse = 
+    let yamlParsed, lastName, lastMap =
+        lines |> 
+            Seq.filter(fun line -> 
+                not(line.Trim().StartsWith("#") || line.Trim().Length = 0) && line.Contains(":")
+            ) |> Seq.fold(fun (mapping:Map<string,ResizeArray<Map<string,string>>>,name,activemap:ResizeArray<Map<string,string>>) line ->
+                let mc = line.IndexOf ':'
+                match line.[0] with
+                | ' ' ->
+                    let key, startLine = 
+                        match line.Substring(0, mc).Trim() with
+                        | x when x.StartsWith("-") -> 
+                            x.Substring(1).Trim(), true
+                        | y -> y, false
+                    let valu = 
+                        match line.Substring(mc + 1).Trim() with
+                        | x when x.StartsWith("'") && x.EndsWith("'") -> x.Substring(1, x.Length-2)
+                        | x when x.StartsWith("\"") && x.EndsWith("\"") -> x.Substring(1, x.Length-2)
+                        | y -> y
+                    if startLine then 
+                        activemap.Add( Map.empty.Add(key, valu))
+                    else 
+                        activemap.[activemap.Count-1] <- activemap.[activemap.Count-1].Add(key, valu)
+
+                    mapping, name, activemap
+                | _ -> 
+                    let mapped = 
+                        if name <> "" && (not (activemap |> Seq.isEmpty)) then
+                            mapping.Add(name, activemap)
+                        else mapping
+                    let newMap = ResizeArray()
+                    mapped,line.Substring(0, mc).Trim(), newMap
+        ) (Map.empty,"", ResizeArray())
+    if lastName <> "" && (not (lastMap |> Seq.isEmpty)) then
+        yamlParsed.Add(lastName, lastMap)
+    else yamlParsed
+
+let getParser parserName (parameters:string list) =
+    yamlParse.[parserName] 
+    |> Seq.filter(fun p -> p.ContainsKey("regex"))
+    |> Seq.map(fun parser ->
+        let reg = Regex(parser.["regex"], RegexOptions.IgnoreCase ||| RegexOptions.Compiled)
+        let groups = reg.GetGroupNumbers().Length
+        reg, 
+        parameters |> List.mapi(fun idx p -> 
+            if groups > idx && parser.ContainsKey p then parser.[p] else ""
+        )
+    ) |> Seq.toArray 
+
+// To add more versions, add more parameters. https://github.com/ua-parser/uap-core/blob/master/docs/specification.md
+let os = getParser "os_parsers" ["os_replacement"; "os_v1_replacement"; "os_v2_replacement"]
+let browser = getParser "user_agent_parsers" ["family_replacement"; "v1_replacement"; "v2_replacement"]
+let device = getParser "device_parsers" ["device_replacement"; "brand_replacement"; "model_replacement"]
+
+let parseCollection (coll:(Regex*List<string>)[]) (uaString:string) = 
+    coll |> Array.filter(fun (regex,_) ->
+        regex.IsMatch(uaString))        
+    |> Array.map(fun (regex,pars) ->
+        let matchedData = regex.Match uaString
+        let grps = regex.GetGroupNames()
+        pars 
+        |> List.mapi(fun idx label -> 
+            let itemName = (idx+1).ToString()
+            let groupName = regex.GroupNumberFromName(itemName)
+            let itemValue = matchedData.Groups.[groupName].Value
+            if label <> "" then 
+                label.Replace("$"+itemName, itemValue)
+            else itemValue
+        ) |> List.filter(fun p -> not(String.IsNullOrEmpty p)) |> List.distinct
+    ) |> Array.filter(fun p -> p |> List.isEmpty |> not) |> Array.distinct
+
+type UASoftware = { Item: string; MajorVersion: string; MinorVersion: string }
+type UADevice = { Item: string; Brand: string; Model: string }
+type UAInfo = { Browser: UASoftware option; Os: UASoftware option; Device: UADevice option }
+   with override __.ToString() = 
+           String.Join(" - ", [|
+                    (if __.Browser.IsSome then __.Browser.Value.Item + " " + __.Browser.Value.MajorVersion else "");
+                    (if __.Os.IsSome then __.Os.Value.Item + " " + __.Os.Value.MajorVersion else "");
+                    (if __.Device.IsSome then __.Device.Value.Brand + " " + __.Device.Value.Item + " " + __.Device.Value.Model else "")
+               |] |> Seq.filter(fun x -> x <> ""))
+
+/// Parse the UserAgent
+let parse uaString =
+    let pickInfo =
+        Array.tryHead >> Option.bind(function
+            | [] -> None
+            | [h] -> Some {Item = h; MajorVersion = ""; MinorVersion = ""}
+            | [h;v] -> Some {Item = h; MajorVersion = v; MinorVersion = ""}
+            | [h;v;t]
+            | h::v::t::_ -> Some {Item = h; MajorVersion = v; MinorVersion = t})
+    let browserInfo = parseCollection browser uaString |> pickInfo
+    let osInfo = parseCollection os uaString |> pickInfo
+    let deviceInfo = parseCollection device uaString |> pickInfo
+    { Browser = browserInfo; Os = osInfo; Device = deviceInfo |> Option.map(fun d -> 
+        { Item = d.Item; Brand = d.MajorVersion; Model = d.MinorVersion})}
+
+//let uaString = "Mozilla/5.0 (iPhone; CPU iPhone OS 5_1_1 like Mac OS X) AppleWebKit/534.46 (KHTML, like Gecko) Version/5.1 Mobile/9B206 Safari/7534.48.3"
+//printfn "%O" (parse uaString)     // Prints: Mobile Safari 5 - iOS 5 - Apple iPhone 

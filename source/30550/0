@@ -1,0 +1,99 @@
+//[snippet:HKT Encoding]
+type App<'F, 't> = App of payload : obj
+
+module HKT =
+
+    // associate HKT encoding to underlying type using SRTPs
+    let inline private assoc<'F, 'a, 'Fa when 'F : (static member Assign : App<'F, 'a> * 'Fa -> unit)> = ()
+
+    // pack and unpack functions
+    let inline pack (value : 'Fa) : App<'F, 'a> = assoc<'F, 'a, 'Fa> ; App value
+    let inline unpack (App value : App<'F, 'a>) : 'Fa = assoc<'F, 'a, 'Fa> ; unbox value
+        
+    // helper active pattern
+    let inline (|Unpack|) app = unpack app
+//[/snippet]
+//[snippet:Tagless-Final Generic Programming]
+type ITypeBuilder<'F> =
+    // primitives
+    abstract Bool : unit -> App<'F, bool>
+    abstract Int : unit -> App<'F, int>
+    abstract String : unit -> App<'F, string>
+    // combinators
+    abstract Option : App<'F, 't> -> App<'F, 't option>
+    abstract List : App<'F, 't> -> App<'F, 't list>
+    abstract Tuple : App<'F, 't1> -> App<'F, 't2> -> App<'F, 't1 * 't2>
+
+let inline private inst() : 'F when 'F :> ITypeBuilder<'F> = new 'F()
+let bool () = inst().Bool()
+let int () = inst().Int()
+let string () = inst().String()
+let option t = inst().Option t
+let list t = inst().List t
+let tuple t = inst().Tuple t
+
+let sample () = int () |> list |> option |> tuple (bool ())
+//[/snippet]
+//[snippet:TypeShape driven folding]
+open TypeShape.Core
+
+let rec fold<'F, 't when 'F :> ITypeBuilder<'F> and 'F : (new : unit -> 'F)> () : App<'F, 't> =
+    let wrap (x : App<'F,_>) : App<'F, 't> = unbox x
+    match shapeof<'t> with
+    | Shape.Bool -> bool() |> wrap
+    | Shape.Int32 -> int() |> wrap
+    | Shape.String -> string() |> wrap
+    | Shape.FSharpOption s ->
+        s.Element.Accept {
+            new ITypeVisitor<App<'F, 't>> with
+                member __.Visit<'e> () =
+                    let e = fold<'F, 'e>()
+                    option e |> wrap
+        }
+
+    | Shape.FSharpList s ->
+        s.Element.Accept {
+            new ITypeVisitor<App<'F, 't>> with
+                member __.Visit<'e> () =
+                    let e = fold<'F, 'e>()
+                    list e |> wrap
+        }
+
+    | Shape.Tuple s when s.Elements.Length = 2 ->
+        let ls = s.Elements.[0].Member
+        let rs = s.Elements.[1].Member
+        ls.Accept {
+            new ITypeVisitor<App<'F, 't>> with
+                member __.Visit<'l> () =
+                    rs.Accept {
+                        new ITypeVisitor<App<'F, 't>> with
+                            member __.Visit<'r>() =
+                                let l = fold<'F, 'l>()
+                                let r = fold<'F, 'r>()
+                                tuple l r |> wrap
+                    }
+        }
+
+    | _ -> failwithf "I do not know how to fold type %O" typeof<'t>
+
+//[/snippet]
+//[snippet:Example: Pretty printer]
+[<Struct>]
+type PrettyPrinter =
+    static member Assign(_ : App<PrettyPrinter, 'a>, _ : 'a -> string) = ()
+
+    interface ITypeBuilder<PrettyPrinter> with
+        member __.Bool () = HKT.pack (function true -> "true" | false -> "false")
+        member __.Int () = HKT.pack (fun i -> i.ToString())
+        member __.String() = HKT.pack (sprintf "\"%s\"")
+
+        member __.Option (HKT.Unpack ep) = HKT.pack(function None -> "None" | Some x -> sprintf "Some(%s)" (ep x))
+        member __.List (HKT.Unpack ep) = HKT.pack(Seq.map ep >> String.concat "; " >> sprintf "[%s]")
+        member __.Tuple (HKT.Unpack lp) (HKT.Unpack rp) = HKT.pack (fun (l,r) -> sprintf "(%s, %s)" (lp l) (rp r))
+
+let mkPrinter (x : App<PrettyPrinter,_>) = HKT.unpack x
+
+let p = sample() |> mkPrinter
+
+p (false, Some [1;2])
+//[/snippet]

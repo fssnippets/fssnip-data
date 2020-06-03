@@ -1,0 +1,34 @@
+type Result<'TSuccess, 'TFailure> =
+    | Success of 'TSuccess
+    | Failure of 'TFailure
+    
+let TryImportXMLFromFileToStream filename:string =
+    using file = importFileFromName(filename);
+    if file.DoesNotExist then
+    Failure("File does not exist!")
+    else
+    Success(file)
+    
+let TryHarmonizeFileFromStream fileStream =
+    try
+        let harmonizedStream = DoHarmonizing(fileStream)
+    with
+        | Failure msg -> Failure("Error in harmonizing: " + msg)
+        | UniqueError msg -> Failure("You hit some unique condition")
+    harmoninzedStream
+let TryTurnIntoIETMSDataObjects harmonizedStream =
+    let xmlDataSet = GetDataSet(harmonizedStream)
+    let resultCollection =
+        match xmlDataSet ->
+            | Failure msg -> Failure("Could not convert imported file into valid track data!")
+            | Success dataSet ->
+            match MakeBlocks(dataSet) ->
+                | Failure kind ->
+                    match kind ->
+                        | InvalidBlockConnection badConnectionList -> FixupConnections(badConnectionList)
+                        | InescapeableFailure -> raise YouDunGoofedException()
+                | Success validBlockList ->
+                match MakeHeadings(validBlockList) ->
+                    | Failure kind ->
+                        match kind ->
+                        ........

@@ -1,0 +1,61 @@
+
+open System
+open System.Linq.Expressions
+open Microsoft.FSharp.Quotations
+open Microsoft.FSharp.Quotations.Patterns
+open Microsoft.FSharp.Linq.RuntimeHelpers
+
+//references
+//http://www.fssnip.net/n1
+//http://www.fssnip.net/bx/title/Expanding-quotations
+//http://www.fssnip.net/ts/title/F-lambda-to-C-LINQ-Expression
+
+//I really hate using reflection, lets compile expressions
+//to read field, that's much better.
+
+let (| QuotedProperty |) ( quoteExpr : Func<'T, 'R> Expr ) =
+    match quoteExpr with
+    | NewDelegate ( dtype, args, PropertyGet ( expr, pi, body ) ) -> pi
+    | _ -> failwith "invalid expression"
+
+//Create a quoted expression from a type and a property info.
+let quotedProperty<'I, 'O> propertyName =
+    let objectType = typeof<'I>
+    let propertyType = typeof<'O>
+    let pi = objectType.GetProperty propertyName 
+    let var = Var ( objectType.Name, objectType )
+    let p = Expr.PropertyGet ( Expr.Var var, pi )
+    let l = Expr.Lambda ( var, p )
+    let castExpr : ('I -> 'O) Expr = l |> Expr.Cast
+    castExpr
+    
+//Convert some quoted expression into a linq expression.
+let toLinq<'I,'O> ( expr : ('I -> 'O) Expr ) =
+    let linq = LeafExpressionConverter.QuotationToExpression expr
+    let call = linq :?> MethodCallExpression
+    let lambda = call.Arguments.[0] :?> LambdaExpression
+    Expression.Lambda<Func<'I,'O>> ( lambda.Body, lambda.Parameters )
+    
+//Compile and execute a linq expression.
+let runExpr expr =
+    let lq = expr |> toLinq
+    let f = lq.Compile()
+    fun i -> f.Invoke i
+
+//Some testing
+
+type X = { a : int; b : float }
+
+[<EntryPoint>]
+let main argv = 
+    let propA = quotedProperty<X, int> "a"
+    let propB = quotedProperty<X, float> "b"
+    let getA = propA |> runExpr
+    let getB = propB |> runExpr
+
+    let obj = { X.a = 2; b = 0.666 }
+
+    let a = getA obj 
+    let b = getB obj 
+
+    0 // return an integer exit code

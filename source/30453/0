@@ -1,0 +1,28 @@
+// The `isCurrentMonth` depends on an implementation of a
+// timer that tells the current time or a mock time for tests
+
+type ITime =
+  abstract Now : System.DateTime
+
+let mutable time:ITime = 
+  { new ITime with 
+    member x.Now = failwith "Not initialized" }
+
+let isCurrentMonth (t:System.DateTime) = 
+  t.Month = time.Now.Month
+
+// Implementation for production
+
+time <- 
+  { new ITime with 
+    member x.Now = System.DateTime.Now }
+
+isCurrentMonth (System.DateTime(2018, 7, 5))
+
+// Implementation for unit testing
+
+time <- 
+  { new ITime with 
+    member x.Now = System.DateTime(2018, 1, 1) }
+
+isCurrentMonth (System.DateTime(2018, 7, 5))

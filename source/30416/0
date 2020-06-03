@@ -1,0 +1,16 @@
+// based on: https://www.daniweb.com/programming/software-development/code/238532/very-simple-console-barchart
+let inline drawBarChart (xs: (string * 'a) seq) =
+    // calculate maximum of the data
+    let maxTitleWidth = xs |> Seq.map (fst >> String.length) |> Seq.max
+    let maxValue = xs |> Seq.map snd |> Seq.max
+    // use full width of console
+    let factor = float (System.Console.WindowWidth - maxTitleWidth - 2)
+    // draw chart
+    let emptyTitle = String.replicate maxTitleWidth " "
+    printfn "%s|" emptyTitle
+    for (title, value) in xs do
+        let paddedTitle = title.PadLeft(maxTitleWidth)
+        let width = int (float value / float maxValue * factor)
+        let segments = String.replicate width "#"
+        printfn "%s|%s" paddedTitle segments
+    printfn "%s|" emptyTitle

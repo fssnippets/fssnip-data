@@ -1,0 +1,89 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">Text</span>
+<span class="k">open</span> <span class="i">PdfSharp</span><span class="o">.</span><span class="i">Pdf</span><span class="o">.</span><span class="i">IO</span>
+<span class="k">open</span> <span class="i">PdfSharp</span><span class="o">.</span><span class="i">Pdf</span><span class="o">.</span><span class="i">Content</span>
+<span class="k">open</span> <span class="i">PdfSharp</span><span class="o">.</span><span class="i">Pdf</span><span class="o">.</span><span class="i">Content</span><span class="o">.</span><span class="i">Objects</span>
+
+<span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="f">extractText</span>(<span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="i">content</span><span class="o">:</span><span class="i">CObject</span>, <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="i">sb</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="t">StringBuilder</span>) <span class="o">=</span>
+   <span class="k">match</span> <span onmouseout="hideTip(event, 'fs4', 7)" onmouseover="showTip(event, 'fs4', 7)" class="i">content</span> <span class="k">with</span>
+   | <span class="o">:?</span> <span class="i">CArray</span> <span class="k">as</span> <span class="i">xs</span> <span class="k">-&gt;</span> <span class="k">for</span> <span class="i">x</span> <span class="k">in</span> <span class="i">xs</span> <span class="k">do</span> <span onmouseout="hideTip(event, 'fs3', 8)" onmouseover="showTip(event, 'fs3', 8)" class="i">extractText</span>(<span class="i">x</span>, <span onmouseout="hideTip(event, 'fs5', 9)" onmouseover="showTip(event, 'fs5', 9)" class="i">sb</span>)
+   | <span class="o">:?</span> <span class="i">CComment</span> <span class="k">-&gt;</span> ()
+   | <span class="o">:?</span> <span class="i">CInteger</span> <span class="k">-&gt;</span> ()
+   | <span class="o">:?</span> <span class="i">CName</span> <span class="k">-&gt;</span> ()
+   | <span class="o">:?</span> <span class="i">CNumber</span> <span class="k">-&gt;</span> ()
+   | <span class="o">:?</span> <span class="i">COperator</span> <span class="k">as</span> <span class="i">op</span> <span class="c">// Tj/TJ = Show text</span>
+      <span class="k">when</span> <span class="i">op</span><span class="o">.</span><span class="i">OpCode</span><span class="o">.</span><span class="i">OpCodeName</span> <span class="o">=</span> <span class="i">OpCodeName</span><span class="o">.</span><span class="i">Tj</span> <span class="o">||</span>
+            <span class="i">op</span><span class="o">.</span><span class="i">OpCode</span><span class="o">.</span><span class="i">OpCodeName</span> <span class="o">=</span> <span class="i">OpCodeName</span><span class="o">.</span><span class="i">TJ</span> <span class="k">-&gt;</span>
+      <span class="k">for</span> <span class="i">element</span> <span class="k">in</span> <span class="i">op</span><span class="o">.</span><span class="i">Operands</span> <span class="k">do</span> <span onmouseout="hideTip(event, 'fs3', 10)" onmouseover="showTip(event, 'fs3', 10)" class="i">extractText</span>(<span class="i">element</span>, <span onmouseout="hideTip(event, 'fs5', 11)" onmouseover="showTip(event, 'fs5', 11)" class="i">sb</span>)
+      <span onmouseout="hideTip(event, 'fs5', 12)" onmouseover="showTip(event, 'fs5', 12)" class="i">sb</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs7', 13)" onmouseover="showTip(event, 'fs7', 13)" class="i">Append</span>(<span class="s">&quot; &quot;</span>) <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs8', 14)" onmouseover="showTip(event, 'fs8', 14)" class="i">ignore</span>
+   | <span class="o">:?</span> <span class="i">COperator</span> <span class="k">-&gt;</span> ()
+   | <span class="o">:?</span> <span class="i">CSequence</span> <span class="k">as</span> <span class="i">xs</span> <span class="k">-&gt;</span> <span class="k">for</span> <span class="i">x</span> <span class="k">in</span> <span class="i">xs</span> <span class="k">do</span> <span onmouseout="hideTip(event, 'fs3', 15)" onmouseover="showTip(event, 'fs3', 15)" class="i">extractText</span>(<span class="i">x</span>, <span onmouseout="hideTip(event, 'fs5', 16)" onmouseover="showTip(event, 'fs5', 16)" class="i">sb</span>)
+   | <span class="o">:?</span> <span class="i">CString</span> <span class="k">as</span> <span class="i">s</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs5', 17)" onmouseover="showTip(event, 'fs5', 17)" class="i">sb</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs7', 18)" onmouseover="showTip(event, 'fs7', 18)" class="i">Append</span>(<span class="i">s</span><span class="o">.</span><span class="i">Value</span>) <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs8', 19)" onmouseover="showTip(event, 'fs8', 19)" class="i">ignore</span>
+   | <span class="i">x</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs9', 20)" onmouseover="showTip(event, 'fs9', 20)" class="i">raise</span> <span class="o">&lt;|</span> <span onmouseout="hideTip(event, 'fs1', 21)" onmouseover="showTip(event, 'fs1', 21)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs10', 22)" onmouseover="showTip(event, 'fs10', 22)" class="i">NotImplementedException</span>(<span class="i">x</span><span class="o">.</span><span class="i">ToString</span>())
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs11', 23)" onmouseover="showTip(event, 'fs11', 23)" class="f">readAllText</span> (<span onmouseout="hideTip(event, 'fs12', 24)" onmouseover="showTip(event, 'fs12', 24)" class="i">pdfPath</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs13', 25)" onmouseover="showTip(event, 'fs13', 25)" class="t">string</span>) <span class="o">=</span>
+   <span class="k">use</span> <span onmouseout="hideTip(event, 'fs14', 26)" onmouseover="showTip(event, 'fs14', 26)" class="i">document</span> <span class="o">=</span> <span class="i">PdfReader</span><span class="o">.</span><span class="i">Open</span>(<span onmouseout="hideTip(event, 'fs12', 27)" onmouseover="showTip(event, 'fs12', 27)" class="i">pdfPath</span>, <span class="i">PdfDocumentOpenMode</span><span class="o">.</span><span class="i">ReadOnly</span>)
+   <span class="k">let</span> <span onmouseout="hideTip(event, 'fs15', 28)" onmouseover="showTip(event, 'fs15', 28)" class="i">result</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs6', 29)" onmouseover="showTip(event, 'fs6', 29)" class="t">StringBuilder</span>()
+   <span class="k">for</span> <span onmouseout="hideTip(event, 'fs16', 30)" onmouseover="showTip(event, 'fs16', 30)" class="i">page</span> <span class="k">in</span> <span onmouseout="hideTip(event, 'fs14', 31)" onmouseover="showTip(event, 'fs14', 31)" class="i">document</span><span class="o">.</span><span class="i">Pages</span> <span class="k">do</span>
+      <span class="k">let</span> <span onmouseout="hideTip(event, 'fs17', 32)" onmouseover="showTip(event, 'fs17', 32)" class="i">content</span> <span class="o">=</span> <span class="i">ContentReader</span><span class="o">.</span><span class="i">ReadContent</span>(<span onmouseout="hideTip(event, 'fs16', 33)" onmouseover="showTip(event, 'fs16', 33)" class="i">page</span>)
+      <span onmouseout="hideTip(event, 'fs3', 34)" onmouseover="showTip(event, 'fs3', 34)" class="f">extractText</span>(<span onmouseout="hideTip(event, 'fs17', 35)" onmouseover="showTip(event, 'fs17', 35)" class="i">content</span>, <span onmouseout="hideTip(event, 'fs15', 36)" onmouseover="showTip(event, 'fs15', 36)" class="i">result</span>)
+      <span onmouseout="hideTip(event, 'fs15', 37)" onmouseover="showTip(event, 'fs15', 37)" class="i">result</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs18', 38)" onmouseover="showTip(event, 'fs18', 38)" class="f">AppendLine</span>() <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs8', 39)" onmouseover="showTip(event, 'fs8', 39)" class="f">ignore</span>
+   <span onmouseout="hideTip(event, 'fs15', 40)" onmouseover="showTip(event, 'fs15', 40)" class="i">result</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs19', 41)" onmouseover="showTip(event, 'fs19', 41)" class="f">ToString</span>()
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs20', 42)" onmouseover="showTip(event, 'fs20', 42)" class="i">text</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs11', 43)" onmouseover="showTip(event, 'fs11', 43)" class="f">readAllText</span> <span class="s">@&quot;&lt;path&gt;.pdf&quot;</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace System</div>
+<div class="tip" id="fs2">namespace System.Text</div>
+<div class="tip" id="fs3">val extractText : content:&#39;a * sb:StringBuilder -&gt; &#39;b<br /><br />Full name: Script.extractText</div>
+<div class="tip" id="fs4">val content : &#39;a</div>
+<div class="tip" id="fs5">val sb : StringBuilder</div>
+<div class="tip" id="fs6">Multiple items<br />type StringBuilder =<br />&#160;&#160;new : unit -&gt; StringBuilder + 5 overloads<br />&#160;&#160;member Append : value:string -&gt; StringBuilder + 18 overloads<br />&#160;&#160;member AppendFormat : format:string * arg0:obj -&gt; StringBuilder + 4 overloads<br />&#160;&#160;member AppendLine : unit -&gt; StringBuilder + 1 overload<br />&#160;&#160;member Capacity : int with get, set<br />&#160;&#160;member Chars : int -&gt; char with get, set<br />&#160;&#160;member Clear : unit -&gt; StringBuilder<br />&#160;&#160;member CopyTo : sourceIndex:int * destination:char[] * destinationIndex:int * count:int -&gt; unit<br />&#160;&#160;member EnsureCapacity : capacity:int -&gt; int<br />&#160;&#160;member Equals : sb:StringBuilder -&gt; bool<br />&#160;&#160;...<br /><br />Full name: System.Text.StringBuilder<br /><br />--------------------<br />StringBuilder() : unit<br />StringBuilder(capacity: int) : unit<br />StringBuilder(value: string) : unit<br />StringBuilder(value: string, capacity: int) : unit<br />StringBuilder(capacity: int, maxCapacity: int) : unit<br />StringBuilder(value: string, startIndex: int, length: int, capacity: int) : unit</div>
+<div class="tip" id="fs7">StringBuilder.Append(value: char []) : StringBuilder<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />StringBuilder.Append(value: obj) : StringBuilder<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />StringBuilder.Append(value: uint64) : StringBuilder<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />StringBuilder.Append(value: uint32) : StringBuilder<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />StringBuilder.Append(value: uint16) : StringBuilder<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />StringBuilder.Append(value: decimal) : StringBuilder<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />StringBuilder.Append(value: float) : StringBuilder<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />StringBuilder.Append(value: float32) : StringBuilder<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />StringBuilder.Append(value: int64) : StringBuilder<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />StringBuilder.Append(value: int) : StringBuilder<br />&#160;&#160;&#160;<em>(+0 other overloads)</em></div>
+<div class="tip" id="fs8">val ignore : value:&#39;T -&gt; unit<br /><br />Full name: Microsoft.FSharp.Core.Operators.ignore</div>
+<div class="tip" id="fs9">val raise : exn:System.Exception -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.Operators.raise</div>
+<div class="tip" id="fs10">Multiple items<br />type NotImplementedException =<br />&#160;&#160;inherit SystemException<br />&#160;&#160;new : unit -&gt; NotImplementedException + 2 overloads<br /><br />Full name: System.NotImplementedException<br /><br />--------------------<br />System.NotImplementedException() : unit<br />System.NotImplementedException(message: string) : unit<br />System.NotImplementedException(message: string, inner: exn) : unit</div>
+<div class="tip" id="fs11">val readAllText : pdfPath:string -&gt; string<br /><br />Full name: Script.readAllText</div>
+<div class="tip" id="fs12">val pdfPath : string</div>
+<div class="tip" id="fs13">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />Full name: Microsoft.FSharp.Core.Operators.string<br /><br />--------------------<br />type string = System.String<br /><br />Full name: Microsoft.FSharp.Core.string</div>
+<div class="tip" id="fs14">val document : System.IDisposable</div>
+<div class="tip" id="fs15">val result : StringBuilder</div>
+<div class="tip" id="fs16">val page : obj</div>
+<div class="tip" id="fs17">val content : obj</div>
+<div class="tip" id="fs18">StringBuilder.AppendLine() : StringBuilder<br />StringBuilder.AppendLine(value: string) : StringBuilder</div>
+<div class="tip" id="fs19">StringBuilder.ToString() : string<br />StringBuilder.ToString(startIndex: int, length: int) : string</div>
+<div class="tip" id="fs20">val text : string<br /><br />Full name: Script.text</div>
+

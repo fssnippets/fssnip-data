@@ -1,0 +1,102 @@
+#I @"./packages"
+#r @"FSharp.Data.2.3.2/lib/net40/FSharp.Data.dll"
+#r @"Accord.3.4.0/lib/net45/Accord.dll"
+#r @"Accord.MachineLearning.3.4.0/lib/net45/Accord.MachineLearning.dll"
+#r @"Accord.Math.3.4.0/lib/net45/Accord.Math.Core.dll"
+#r @"Accord.Math.3.4.0/lib/net45/Accord.Math.dll"
+#r @"Accord.Statistics.3.4.0/lib/net45/Accord.Statistics.dll"
+
+open System
+open FSharp.Data
+
+// We have some sample data that we already know the results
+// and use that to teach the machine:
+
+(* sample.csv data content:
+
+Age,Smokes,Had cancer
+55,0,false
+28,0,false
+65,1,false
+46,0,true
+86,1,true
+56,1,true
+85,0,false
+33,0,false
+21,1,false
+42,1,true
+
+*)
+#time
+open Accord.Statistics.Models.Regression
+open Accord.Statistics.Models.Regression.Fitting 
+
+type People = CsvProvider<"sample.csv",",",InferRows=2000>
+let inputs, output = 
+    People.Load(@"sample.csv").Rows
+    |> Seq.map (fun row -> [|float row.Age; row.Smokes |> Convert.ToDouble|], row.``Had cancer``)
+    |> Seq.toArray
+    |> Array.unzip
+
+type Observation = People.Row
+[<StructuredFormatDisplay("{AsString}")>]
+type Feature = string * (Observation -> int)
+
+let features:Feature[] = [|
+    "Age",(fun obs -> obs.Age)
+    "Smokes",(fun obs -> obs.Smokes |> Convert.ToInt32)
+    |]
+
+let learner = 
+    let cancellationToken, source = 
+        let s = new System.Threading.CancellationTokenSource()
+        s.Token, s
+    
+    /// There are multiple algorithms available.
+    /// For example:
+    IterativeReweightedLeastSquares<LogisticRegression>(
+        Tolerance = 1e-4, 
+        Iterations = 1000,
+        Regularization = 0.0,
+        Token=cancellationToken
+    )
+    // Another one would be:
+//    let alg = LogisticRegression(NumberOfInputs = (features |> Seq.length))
+//    LogisticGradientDescent(alg, 
+//        Tolerance = 0.001,
+//        Iterations = 100000,
+//        Token=cancellationToken)
+
+/// Teach the model in background thread. This may take some time.
+let modelTask = 
+    System.Threading.Tasks.Task.Run(fun () ->
+        learner.Learn(inputs, output)
+    ) |> Async.AwaitTask
+
+// When running background, you could cancel the task:
+//source.Cancel()
+
+// For now, let's just run as non-async:
+let model= modelTask |> Async.RunSynchronously
+
+// Print odds ratios:
+features |> Seq.mapi(fun idx f ->
+    let name = fst f
+    let odds = model.GetOddsRatio(idx+1)
+    name,odds )
+|> Seq.sortBy snd
+|> Seq.iter (printfn "%A")
+// Output:
+//("Age", 1.020859703)
+//("Smokes", 5.858474898)
+
+// Print estimated linear regression formula:
+let formula = model.Linear.ToString()
+// Output: 
+// "y(x0, x1) = 0.0206451183100222*x0 + 1.76788931343272*x1 + -2.45774643623285"
+
+// Test with current items. There is no point of course:
+// You should split your sample data to two sets, and use the other to train
+// the model, and the other to test the accuracy of predictions.
+let items = model.Decide(inputs) |> Array.map Convert.ToDouble
+// [|0.0; 0.0; 1.0; 0.0; 1.0; 1.0; 0.0; 0.0; 0.0; 1.0|]

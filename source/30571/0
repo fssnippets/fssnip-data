@@ -1,0 +1,13 @@
+let pascal rows = // Create pascal's triangle as a jagged 2d list
+  let pascalRow row = //Calculates a row of the triangle
+    List.init (row + 1) (fun i -> i) //Create list of which the element values are the index
+    |> List.scan (fun prev index -> //prev = previous element of this row, index=current element number of row
+      if index = 0 then //Special case for the 1st element
+        1
+      else //Calculate the element at this index based on the previous value
+        prev * (row + 1 - index)/index) 1
+    |> List.tail //Remove the collected value to obtain the row
+  List.init rows pascalRow // Create a new array of pascal row
+
+pascal 3 //Four rows of Pascal's triangle, including row 0,1,2
+// [[1]; [1; 1]; [1; 2; 1]]

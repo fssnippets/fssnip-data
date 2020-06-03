@@ -1,0 +1,7 @@
+open FSharp.Data
+open System.IO
+open System.Text.RegularExpressions
+
+let regex = Regex("pageAllMedalistsJson =([^<]*);[ \t\r\n]*<\/script>")
+let page = Http.RequestString("https://www.rio2016.com/en/medal-count-athletes")
+let json = regex.Match(page).Groups.[1].Value

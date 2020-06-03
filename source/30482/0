@@ -1,0 +1,94 @@
+// https://www.fewbutripe.com/2018/12/05/seemingly-impossible.html
+
+type Bit =
+    | Zero = 0
+    | One = 1
+
+/// An infinite sequence of bits.
+type BitSequence =
+    {
+        /// Answers the bit at the given index. Article calls this "atIndex".
+        Item : uint32 -> Bit
+    }
+
+[<AutoOpen>]
+[<CompilationRepresentation (CompilationRepresentationFlags.ModuleSuffix)>]
+module BitSequence =
+
+    /// Creates a bit sequence with the given lookup function.
+    let create f = { Item = f }
+
+    /// Dumps the beginning of the given sequence to the console.
+    let dump (seq : BitSequence) =
+        [0u .. 10u]
+            |> Seq.iter (fun i ->
+                printfn "%d: %A" i seq.[i])
+
+    /// Prepends the given bit to the given lazy sequence.
+    let (++) bit (lseq : Lazy<BitSequence>) =
+        create (fun i ->
+            if i = 0u then bit
+            else lseq.Value.[i - 1u])   // don't reify the given sequence until we have to
+
+    /// Finds a sequence for which the given predicate is true.
+    /// Warning: answers garbage sequence if no such sequence exists.
+    let rec find (pred : BitSequence -> bool) =
+        let zeroPred seq = pred (Bit.Zero ++ lazy seq)
+        if exists zeroPred then
+            Bit.Zero ++ lazy (find zeroPred)
+        else
+            let onePred seq = pred (Bit.One ++ lazy seq)
+            Bit.One ++ lazy (find onePred)
+
+    /// Is there a sequence for which the given predicate is true? Article calls this "anySatisfy".
+    and exists pred =
+        let lseq = lazy (find pred)
+        let seq = create (fun i -> lseq.Value.[i])
+        pred seq
+
+    /// Do all sequences satisfy the given predicate? Article calls this "allSatisfy".
+    and forall pred =
+        pred >> not
+            |> exists
+            |> not
+
+    /// Equality of functions that have BitSequence as their domains.
+    let (==) (f1 : BitSequence -> 'a) (f2 : BitSequence -> 'a) =
+        forall (fun seq -> f1 seq = f2 seq)
+
+let oneOnFirstFiveEvens () =
+    let seq = BitSequence.find (fun seq ->
+        seq.[0u] = Bit.One
+            && seq.[2u] = Bit.One
+            && seq.[4u] = Bit.One
+            && seq.[6u] = Bit.One
+            && seq.[8u] = Bit.One)
+    BitSequence.dump seq
+
+let equality () =
+
+    let f (seq : BitSequence) = int seq.[1u] * int seq.[2u]
+    let g (seq : BitSequence) = int seq.[1u] + int seq.[2u]
+    printfn "f = f: %A" (f == f)
+    printfn "g = g: %A" (g == g)
+    printfn "f = g: %A" (f == g)
+
+    let h (seq : BitSequence) =
+        match seq.[1u], seq.[2u] with
+            | Bit.One, Bit.One -> 1
+            | _ -> 0
+    printfn "f = h: %A" (f == h)
+    printfn "g = h: %A" (g == h)
+
+    let k (seq : BitSequence) =
+        ((int seq.[1u] + int seq.[2u] + 908) % 6) / 4
+    printfn "f = k: %A" (f == k)
+    printfn "g = k: %A" (g == k)
+    printfn "h = k: %A" (h == k)
+
+[<EntryPoint>]
+let main argv =
+    oneOnFirstFiveEvens ()
+    printfn ""
+    equality ()
+    0

@@ -1,0 +1,10 @@
+module Seq = let rec cycle xs = seq { yield! xs; yield! cycle xs }
+
+// Tests
+let intList = [1..4]
+let charList = ['a'..'d']
+let objList = [obj (); obj (); obj (); obj ()]
+
+Seq.cycle intList |> Seq.take 20 |> Seq.iter (printfn "%A")
+Seq.cycle charList |> Seq.take 20 |> Seq.iter (printfn "%A")
+Seq.cycle objList |> Seq.take 20 |> Seq.iter (printfn "%A")

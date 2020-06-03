@@ -1,0 +1,10 @@
+open System.IO
+
+let rec getFiles(path:string, maxDepth:int) = seq {
+  yield! Directory.EnumerateFiles(path)
+  if maxDepth > 0 then
+    for subPath in Directory.EnumerateDirectories(path) do
+      yield! getFiles(subPath, maxDepth - 1)
+}
+
+getFiles("C:\\Projects", 3).Count().Dump()

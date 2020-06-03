@@ -1,0 +1,10 @@
+module List =
+    let groupWhile<'a> (predicate : 'a -> 'a -> bool) =
+        List.scan (fun state item ->
+            let prevHead = state |> List.tryHead |> Option.bind List.tryHead
+            if prevHead |> Option.map (predicate item) |> Option.defaultValue false
+            then (item :: List.head state) :: (List.tail state)
+            else [item] :: state) []
+        >> List.last
+        >> List.map List.rev
+        >> List.rev

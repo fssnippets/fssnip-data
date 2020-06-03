@@ -1,0 +1,29 @@
+open System
+open System.IO
+open System.Security.Cryptography
+ 
+let MD5 path =
+  use stream = File.OpenRead(path)
+  let bytes = HashAlgorithm.Create("MD5").ComputeHash(stream)
+  BitConverter.ToString(bytes).Replace("-", "").ToLower()
+ 
+[<EntryPoint>]
+let main argv =
+  match argv with
+  | [|file ; directory|] ->
+     match File.Exists(file), Directory.Exists(directory) with
+     | false, false -> printfn "File %s and directory %s don't exist." file directory
+     | true, false  -> printfn "Directory %s doesn't exist." directory
+     | false, true  -> printfn "File %s doesn't exist." file
+     | _ ->
+        let mask = "*" + Path.GetExtension(file)
+        let fileMD5 = lazy(MD5 file)
+        let fileSize = FileInfo(file).Length
+        let results = 
+            Directory.GetFiles(directory, mask) 
+            |> Array.filter (fun path -> fileSize = FileInfo(path).Length &&  (MD5 path) = fileMD5.Force())
+        match results with
+        | [||] -> printf "Duplicates not found.\n"
+        | _    -> Array.iter (printfn "%s") results
+   | _ -> printfn "Usage:\n  find_duplicates.exe file directory"
+  0

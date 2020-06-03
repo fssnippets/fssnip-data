@@ -1,0 +1,265 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">  1: </span>
+<span class="l">  2: </span>
+<span class="l">  3: </span>
+<span class="l">  4: </span>
+<span class="l">  5: </span>
+<span class="l">  6: </span>
+<span class="l">  7: </span>
+<span class="l">  8: </span>
+<span class="l">  9: </span>
+<span class="l"> 10: </span>
+<span class="l"> 11: </span>
+<span class="l"> 12: </span>
+<span class="l"> 13: </span>
+<span class="l"> 14: </span>
+<span class="l"> 15: </span>
+<span class="l"> 16: </span>
+<span class="l"> 17: </span>
+<span class="l"> 18: </span>
+<span class="l"> 19: </span>
+<span class="l"> 20: </span>
+<span class="l"> 21: </span>
+<span class="l"> 22: </span>
+<span class="l"> 23: </span>
+<span class="l"> 24: </span>
+<span class="l"> 25: </span>
+<span class="l"> 26: </span>
+<span class="l"> 27: </span>
+<span class="l"> 28: </span>
+<span class="l"> 29: </span>
+<span class="l"> 30: </span>
+<span class="l"> 31: </span>
+<span class="l"> 32: </span>
+<span class="l"> 33: </span>
+<span class="l"> 34: </span>
+<span class="l"> 35: </span>
+<span class="l"> 36: </span>
+<span class="l"> 37: </span>
+<span class="l"> 38: </span>
+<span class="l"> 39: </span>
+<span class="l"> 40: </span>
+<span class="l"> 41: </span>
+<span class="l"> 42: </span>
+<span class="l"> 43: </span>
+<span class="l"> 44: </span>
+<span class="l"> 45: </span>
+<span class="l"> 46: </span>
+<span class="l"> 47: </span>
+<span class="l"> 48: </span>
+<span class="l"> 49: </span>
+<span class="l"> 50: </span>
+<span class="l"> 51: </span>
+<span class="l"> 52: </span>
+<span class="l"> 53: </span>
+<span class="l"> 54: </span>
+<span class="l"> 55: </span>
+<span class="l"> 56: </span>
+<span class="l"> 57: </span>
+<span class="l"> 58: </span>
+<span class="l"> 59: </span>
+<span class="l"> 60: </span>
+<span class="l"> 61: </span>
+<span class="l"> 62: </span>
+<span class="l"> 63: </span>
+<span class="l"> 64: </span>
+<span class="l"> 65: </span>
+<span class="l"> 66: </span>
+<span class="l"> 67: </span>
+<span class="l"> 68: </span>
+<span class="l"> 69: </span>
+<span class="l"> 70: </span>
+<span class="l"> 71: </span>
+<span class="l"> 72: </span>
+<span class="l"> 73: </span>
+<span class="l"> 74: </span>
+<span class="l"> 75: </span>
+<span class="l"> 76: </span>
+<span class="l"> 77: </span>
+<span class="l"> 78: </span>
+<span class="l"> 79: </span>
+<span class="l"> 80: </span>
+<span class="l"> 81: </span>
+<span class="l"> 82: </span>
+<span class="l"> 83: </span>
+<span class="l"> 84: </span>
+<span class="l"> 85: </span>
+<span class="l"> 86: </span>
+<span class="l"> 87: </span>
+<span class="l"> 88: </span>
+<span class="l"> 89: </span>
+<span class="l"> 90: </span>
+<span class="l"> 91: </span>
+<span class="l"> 92: </span>
+<span class="l"> 93: </span>
+<span class="l"> 94: </span>
+<span class="l"> 95: </span>
+<span class="l"> 96: </span>
+<span class="l"> 97: </span>
+<span class="l"> 98: </span>
+<span class="l"> 99: </span>
+<span class="l">100: </span>
+<span class="l">101: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">// Azure Cosmos DB GraphGetStarted example </span>
+<span class="c">// https://github.com/Azure-Samples/azure-cosmos-db-graph-dotnet-getting-started/tree/master/GraphGetStarted</span>
+ 
+<span class="prep">#r</span> <span class="s">@&quot;..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll&quot;</span>
+<span class="prep">#r</span> <span class="s">@&quot;C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\System.Configuration.dll&quot;</span>
+<span class="c">//#r @&quot;..\packages\FSharp.Interop.Dynamic.3.0.0.0\lib\portable-net45+sl50+win\FSharp.Interop.Dynamic.dll&quot;</span>
+<span class="c">//#r @&quot;..\packages\FSharp.Data.2.4.2\lib\net45\FSharp.Data.dll&quot;</span>
+
+<span class="c">// Microsoft.Azure</span>
+<span class="c">// ===============</span>
+<span class="prep">#r</span> <span class="s">@&quot;..\packages\Microsoft.Azure.DocumentDB.1.17.0\lib\net45\Microsoft.Azure.Documents.Client.dll&quot;</span>
+<span class="c">// #I @&quot;..\packages\Microsoft.Azure.DocumentDB.1.17.0\runtimes\win7-x64\native&quot;</span>
+<span class="c">// #r @&quot;..\packages\Microsoft.Azure.Graphs.0.2.0-preview\lib\net451\Microsoft.Azure.Graphs.dll&quot; // Superceded (but includes .net graph traversal)</span>
+<span class="prep">#r</span> <span class="s">@&quot;..\packages\Microsoft.Azure.Graphs.0.2.4-preview\lib\net451\Microsoft.Azure.Graphs.dll&quot;</span>    <span class="c">// Latest (only string Gremlin)</span>
+<span class="c">//#r @&quot;..\packages\Microsoft.Azure.DocumentDB.1.17.0\runtimes\win7-x64\native\Microsoft.Azure.Documents.ServiceInterop.dll&quot; // This one is native! Can&#39;t &quot;#r&quot; it.</span>
+
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">System</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">Microsoft</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="i">Azure</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs2', 4)" onmouseover="showTip(event, 'fs2', 4)" class="i">Microsoft</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 5)" onmouseover="showTip(event, 'fs3', 5)" class="i">Azure</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs4', 6)" onmouseover="showTip(event, 'fs4', 6)" class="i">Documents</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs2', 7)" onmouseover="showTip(event, 'fs2', 7)" class="i">Microsoft</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 8)" onmouseover="showTip(event, 'fs3', 8)" class="i">Azure</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs4', 9)" onmouseover="showTip(event, 'fs4', 9)" class="i">Documents</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs5', 10)" onmouseover="showTip(event, 'fs5', 10)" class="i">Client</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs2', 11)" onmouseover="showTip(event, 'fs2', 11)" class="i">Microsoft</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 12)" onmouseover="showTip(event, 'fs3', 12)" class="i">Azure</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs4', 13)" onmouseover="showTip(event, 'fs4', 13)" class="i">Documents</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs6', 14)" onmouseover="showTip(event, 'fs6', 14)" class="i">Linq</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs2', 15)" onmouseover="showTip(event, 'fs2', 15)" class="i">Microsoft</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 16)" onmouseover="showTip(event, 'fs3', 16)" class="i">Azure</span><span class="o">.</span><span class="i">Graphs</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs2', 17)" onmouseover="showTip(event, 'fs2', 17)" class="i">Microsoft</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 18)" onmouseover="showTip(event, 'fs3', 18)" class="i">Azure</span><span class="o">.</span><span class="i">Graphs</span><span class="o">.</span><span class="i">Elements</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs7', 19)" onmouseover="showTip(event, 'fs7', 19)" class="i">Newtonsoft</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs8', 20)" onmouseover="showTip(event, 'fs8', 20)" class="i">Json</span>
+
+
+<span class="c">// Add path to native DLL in F# interactive </span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs9', 21)" onmouseover="showTip(event, 'fs9', 21)" class="i">pathToAdd</span> <span class="o">=</span> <span class="s">@&quot;C:\Users\UserName\Source\Repos\azure-cosmos-db-graph-dotnet-getting-started\packages\Microsoft.Azure.DocumentDB.1.17.0\runtimes\win7-x64\native&quot;</span>
+<span onmouseout="hideTip(event, 'fs10', 22)" onmouseover="showTip(event, 'fs10', 22)" class="t">Environment</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs11', 23)" onmouseover="showTip(event, 'fs11', 23)" class="f">SetEnvironmentVariable</span>(<span class="s">&quot;Path&quot;</span>, 
+    <span onmouseout="hideTip(event, 'fs10', 24)" onmouseover="showTip(event, 'fs10', 24)" class="t">Environment</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs12', 25)" onmouseover="showTip(event, 'fs12', 25)" class="f">GetEnvironmentVariable</span>(<span class="s">&quot;Path&quot;</span>) <span class="o">+</span> <span class="s">&quot;;&quot;</span> <span class="o">+</span> <span onmouseout="hideTip(event, 'fs9', 26)" onmouseover="showTip(event, 'fs9', 26)" class="i">pathToAdd</span>)
+
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs13', 27)" onmouseover="showTip(event, 'fs13', 27)" class="i">endpoint</span> <span class="o">=</span> <span class="s">&quot;https://insert-endpoint-name-here.documents.azure.com:443/&quot;</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs14', 28)" onmouseover="showTip(event, 'fs14', 28)" class="i">authKey</span> <span class="o">=</span> <span class="s">&quot;INSERT-AUTH-KEY-HERE==&quot;</span>
+       
+<span class="c">// Create Document Client</span>
+<span class="c">// &quot;The DocumentClient class provides a client-side logical representation of the Azure DocumentDB service.&quot; </span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs15', 29)" onmouseover="showTip(event, 'fs15', 29)" class="i">client</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs16', 30)" onmouseover="showTip(event, 'fs16', 30)" class="t">DocumentClient</span> <span class="o">=</span> 
+    <span class="k">new</span> <span onmouseout="hideTip(event, 'fs16', 31)" onmouseover="showTip(event, 'fs16', 31)" class="t">DocumentClient</span>(
+        <span class="k">new</span> <span onmouseout="hideTip(event, 'fs17', 32)" onmouseover="showTip(event, 'fs17', 32)" class="t">Uri</span>(<span onmouseout="hideTip(event, 'fs13', 33)" onmouseover="showTip(event, 'fs13', 33)" class="i">endpoint</span>),
+        <span onmouseout="hideTip(event, 'fs14', 34)" onmouseover="showTip(event, 'fs14', 34)" class="i">authKey</span>,
+        <span class="k">new</span> <span onmouseout="hideTip(event, 'fs18', 35)" onmouseover="showTip(event, 'fs18', 35)" class="t">ConnectionPolicy</span> ( <span onmouseout="hideTip(event, 'fs19', 36)" onmouseover="showTip(event, 'fs19', 36)" class="i">ConnectionMode</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs19', 37)" onmouseover="showTip(event, 'fs19', 37)" class="t">ConnectionMode</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs20', 38)" onmouseover="showTip(event, 'fs20', 38)" class="i">Direct</span>, <span class="i">ConnectionProtocol</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs21', 39)" onmouseover="showTip(event, 'fs21', 39)" class="t">Protocol</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs22', 40)" onmouseover="showTip(event, 'fs22', 40)" class="i">Tcp</span> ))
+    
+<span class="c">// Create database            </span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs23', 41)" onmouseover="showTip(event, 'fs23', 41)" class="i">database</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs24', 42)" onmouseover="showTip(event, 'fs24', 42)" class="t">ResourceResponse</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs25', 43)" onmouseover="showTip(event, 'fs25', 43)" class="t">Database</span><span class="o">&gt;</span> <span class="o">=</span> 
+    <span onmouseout="hideTip(event, 'fs15', 44)" onmouseover="showTip(event, 'fs15', 44)" class="i">client</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs26', 45)" onmouseover="showTip(event, 'fs26', 45)" class="f">CreateDatabaseIfNotExistsAsync</span>( <span class="k">new</span> <span onmouseout="hideTip(event, 'fs25', 46)" onmouseover="showTip(event, 'fs25', 46)" class="t">Database</span> ( <span class="i">Id</span> <span class="o">=</span> <span class="s">&quot;graphdb&quot;</span> ))<span class="o">.</span><span class="i">Result</span>
+
+<span class="c">// Create graph</span>
+<span class="k">let</span> (<span onmouseout="hideTip(event, 'fs27', 47)" onmouseover="showTip(event, 'fs27', 47)" class="i">graph</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs28', 48)" onmouseover="showTip(event, 'fs28', 48)" class="t">DocumentCollection</span>) <span class="o">=</span>
+    <span onmouseout="hideTip(event, 'fs15', 49)" onmouseover="showTip(event, 'fs15', 49)" class="i">client</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs29', 50)" onmouseover="showTip(event, 'fs29', 50)" class="f">CreateDocumentCollectionIfNotExistsAsync</span>(    <span class="c">// Task&lt;ResourceResponse&lt;DocumentCollection&gt;&gt;</span>
+            <span onmouseout="hideTip(event, 'fs30', 51)" onmouseover="showTip(event, 'fs30', 51)" class="t">UriFactory</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs31', 52)" onmouseover="showTip(event, 'fs31', 52)" class="f">CreateDatabaseUri</span>(<span class="s">&quot;graphdb&quot;</span>),
+            <span class="k">new</span> <span onmouseout="hideTip(event, 'fs28', 53)" onmouseover="showTip(event, 'fs28', 53)" class="t">DocumentCollection</span> ( <span class="i">Id</span> <span class="o">=</span> <span class="s">&quot;graphcollz&quot;</span> ),
+            <span class="k">new</span> <span onmouseout="hideTip(event, 'fs32', 54)" onmouseover="showTip(event, 'fs32', 54)" class="t">RequestOptions</span> ( <span class="i">OfferThroughput</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs33', 55)" onmouseover="showTip(event, 'fs33', 55)" class="t">Nullable</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs34', 56)" onmouseover="showTip(event, 'fs34', 56)" class="t">int</span><span class="o">&gt;</span>(<span class="n">1000</span>) ))
+    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs35', 57)" onmouseover="showTip(event, 'fs35', 57)" class="t">Async</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs36', 58)" onmouseover="showTip(event, 'fs36', 58)" class="f">AwaitTask</span>          <span class="c">// Task&lt;T&gt;-&gt;Async&lt;T&gt;, where T is ResourceResponse&lt;DocumentCollection&gt;</span>
+    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs35', 59)" onmouseover="showTip(event, 'fs35', 59)" class="t">Async</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs37', 60)" onmouseover="showTip(event, 'fs37', 60)" class="f">RunSynchronously</span>   <span class="c">// Async&lt;T&gt; -&gt; T (waits until the entire computation is completed)</span>
+    <span class="o">|&gt;</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs38', 61)" onmouseover="showTip(event, 'fs38', 61)" class="i">z</span><span class="k">-&gt;</span><span onmouseout="hideTip(event, 'fs38', 62)" onmouseover="showTip(event, 'fs38', 62)" class="i">z</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs39', 63)" onmouseover="showTip(event, 'fs39', 63)" class="i">Resource</span>)      <span class="c">// ResourceResponse&lt;DocumentCollection&gt; -&gt; DocumentCollection</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs40', 64)" onmouseover="showTip(event, 'fs40', 64)" class="f">runGremlinQuery</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span> (<span onmouseout="hideTip(event, 'fs41', 65)" onmouseover="showTip(event, 'fs41', 65)" class="i">dq</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs42', 66)" onmouseover="showTip(event, 'fs42', 66)" class="t">IDocumentQuery</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span>) <span class="o">:</span> <span onmouseout="hideTip(event, 'fs43', 67)" onmouseover="showTip(event, 'fs43', 67)" class="t">FeedResponse</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span> <span onmouseout="hideTip(event, 'fs44', 68)" onmouseover="showTip(event, 'fs44', 68)" class="t">list</span> <span class="o">=</span> 
+    [
+        <span class="k">while</span> (<span onmouseout="hideTip(event, 'fs41', 69)" onmouseover="showTip(event, 'fs41', 69)" class="i">dq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs45', 70)" onmouseover="showTip(event, 'fs45', 70)" class="i">HasMoreResults</span>) 
+            <span class="k">do</span> <span class="k">yield</span>
+                <span onmouseout="hideTip(event, 'fs41', 71)" onmouseover="showTip(event, 'fs41', 71)" class="i">dq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs46', 72)" onmouseover="showTip(event, 'fs46', 72)" class="f">ExecuteNextAsync</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span>()
+                <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs35', 73)" onmouseover="showTip(event, 'fs35', 73)" class="t">Async</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs36', 74)" onmouseover="showTip(event, 'fs36', 74)" class="f">AwaitTask</span>          <span class="c">// Task&lt;T&gt;-&gt;Async&lt;T&gt;, where T is ResourceResponse&lt;DocumentCollection&gt;</span>
+                <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs35', 75)" onmouseover="showTip(event, 'fs35', 75)" class="t">Async</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs37', 76)" onmouseover="showTip(event, 'fs37', 76)" class="f">RunSynchronously</span>
+    ]
+
+<span class="c">// Try single queries   </span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs47', 77)" onmouseover="showTip(event, 'fs47', 77)" class="i">queryAddVThomas</span> <span class="o">=</span> <span class="s">&quot;g.addV(&#39;person&#39;).property(&#39;id&#39;, &#39;thomas&#39;).property(&#39;firstName&#39;, &#39;Thomas&#39;).property(&#39;age&#39;, 44)&quot;</span>
+<span onmouseout="hideTip(event, 'fs15', 78)" onmouseover="showTip(event, 'fs15', 78)" class="i">client</span><span class="o">.</span><span class="i">CreateGremlinQuery</span><span class="o">&lt;</span><span class="i">Vertex</span><span class="o">&gt;</span>(<span onmouseout="hideTip(event, 'fs27', 79)" onmouseover="showTip(event, 'fs27', 79)" class="i">graph</span>, <span onmouseout="hideTip(event, 'fs47', 80)" onmouseover="showTip(event, 'fs47', 80)" class="i">queryAddVThomas</span>)       <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs40', 81)" onmouseover="showTip(event, 'fs40', 81)" class="f">runGremlinQuery</span><span class="o">&lt;</span><span class="i">Vertex</span><span class="o">&gt;</span>
+<span onmouseout="hideTip(event, 'fs15', 82)" onmouseover="showTip(event, 'fs15', 82)" class="i">client</span><span class="o">.</span><span class="i">CreateGremlinQuery</span><span class="o">&lt;</span><span class="i">Vertex</span><span class="o">&gt;</span>(<span onmouseout="hideTip(event, 'fs27', 83)" onmouseover="showTip(event, 'fs27', 83)" class="i">graph</span>, <span class="s">&quot;g.V()&quot;</span>)               <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs40', 84)" onmouseover="showTip(event, 'fs40', 84)" class="f">runGremlinQuery</span><span class="o">&lt;</span><span class="i">Vertex</span><span class="o">&gt;</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs48', 85)" onmouseover="showTip(event, 'fs48', 85)" class="i">gremlinQueries</span> <span class="o">=</span> 
+    <span onmouseout="hideTip(event, 'fs49', 86)" onmouseover="showTip(event, 'fs49', 86)" class="f">dict</span> [
+            <span class="s">&quot;Cleanup&quot;</span>,        <span class="s">&quot;g.V().drop()&quot;</span> ;
+            <span class="s">&quot;AddVertex 1&quot;</span>,    <span class="s">&quot;g.addV(&#39;person&#39;).property(&#39;id&#39;, &#39;thomas&#39;).property(&#39;firstName&#39;, &#39;Thomas&#39;).property(&#39;age&#39;, 44)&quot;</span> ;
+            <span class="s">&quot;AddVertex 2&quot;</span>,    <span class="s">&quot;g.addV(&#39;person&#39;).property(&#39;id&#39;, &#39;mary&#39;).property(&#39;firstName&#39;, &#39;Mary&#39;).property(&#39;lastName&#39;, &#39;Andersen&#39;).property(&#39;age&#39;, 39)&quot;</span> ;
+            <span class="s">&quot;AddVertex 3&quot;</span>,    <span class="s">&quot;g.addV(&#39;person&#39;).property(&#39;id&#39;, &#39;ben&#39;).property(&#39;firstName&#39;, &#39;Ben&#39;).property(&#39;lastName&#39;, &#39;Miller&#39;)&quot;</span> ;
+            <span class="s">&quot;AddVertex 4&quot;</span>,    <span class="s">&quot;g.addV(&#39;person&#39;).property(&#39;id&#39;, &#39;robin&#39;).property(&#39;firstName&#39;, &#39;Robin&#39;).property(&#39;lastName&#39;, &#39;Wakefield&#39;)&quot;</span> ;
+            <span class="s">&quot;AddEdge 1&quot;</span>,      <span class="s">&quot;g.V(&#39;thomas&#39;).addE(&#39;knows&#39;).to(g.V(&#39;mary&#39;))&quot;</span> ;
+            <span class="s">&quot;AddEdge 2&quot;</span>,      <span class="s">&quot;g.V(&#39;thomas&#39;).addE(&#39;knows&#39;).to(g.V(&#39;ben&#39;))&quot;</span> ;
+            <span class="s">&quot;AddEdge 3&quot;</span>,      <span class="s">&quot;g.V(&#39;ben&#39;).addE(&#39;knows&#39;).to(g.V(&#39;robin&#39;))&quot;</span> ;
+            <span class="s">&quot;UpdateVertex&quot;</span>,   <span class="s">&quot;g.V(&#39;thomas&#39;).property(&#39;age&#39;, 44)&quot;</span> ;
+            <span class="s">&quot;CountVertices&quot;</span>,  <span class="s">&quot;g.V().count()&quot;</span> ;
+            <span class="s">&quot;Filter Range&quot;</span>,   <span class="s">&quot;g.V().hasLabel(&#39;person&#39;).has(&#39;age&#39;, gt(40))&quot;</span> ;
+            <span class="s">&quot;Project&quot;</span>,        <span class="s">&quot;g.V().hasLabel(&#39;person&#39;).values(&#39;firstName&#39;)&quot;</span> ;
+            <span class="s">&quot;Sort&quot;</span>,           <span class="s">&quot;g.V().hasLabel(&#39;person&#39;).order().by(&#39;firstName&#39;, decr)&quot;</span> ;
+            <span class="s">&quot;Traverse&quot;</span>,       <span class="s">&quot;g.V(&#39;thomas&#39;).outE(&#39;knows&#39;).inV().hasLabel(&#39;person&#39;)&quot;</span> ;
+            <span class="s">&quot;Traverse 2x&quot;</span>,    <span class="s">&quot;g.V(&#39;thomas&#39;).outE(&#39;knows&#39;).inV().hasLabel(&#39;person&#39;).outE(&#39;knows&#39;).inV().hasLabel(&#39;person&#39;)&quot;</span> ;
+            <span class="s">&quot;Loop&quot;</span>,           <span class="s">&quot;g.V(&#39;thomas&#39;).repeat(out()).until(has(&#39;id&#39;, &#39;robin&#39;)).path()&quot;</span> ;
+            <span class="s">&quot;DropEdge&quot;</span>,       <span class="s">&quot;g.V(&#39;thomas&#39;).outE(&#39;knows&#39;).where(inV().has(&#39;id&#39;, &#39;mary&#39;)).drop()&quot;</span> ;
+            <span class="s">&quot;CountEdges&quot;</span>,     <span class="s">&quot;g.E().count()&quot;</span> ;
+            <span class="c">//&quot;DropVertex&quot;,     &quot;g.V(&#39;thomas&#39;).drop()&quot;;</span>
+            ]
+
+<span class="c">// Run all of the queries </span>
+<span onmouseout="hideTip(event, 'fs48', 87)" onmouseover="showTip(event, 'fs48', 87)" class="i">gremlinQueries</span> 
+    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs50', 88)" onmouseover="showTip(event, 'fs50', 88)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs51', 89)" onmouseover="showTip(event, 'fs51', 89)" class="f">map</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs52', 90)" onmouseover="showTip(event, 'fs52', 90)" class="i">queryKVP</span> <span class="k">-&gt;</span> 
+                    <span onmouseout="hideTip(event, 'fs53', 91)" onmouseover="showTip(event, 'fs53', 91)" class="f">printf</span> <span class="s">&quot;</span><span class="pf">%A</span><span class="s">&quot;</span> <span onmouseout="hideTip(event, 'fs52', 92)" onmouseover="showTip(event, 'fs52', 92)" class="i">queryKVP</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs54', 93)" onmouseover="showTip(event, 'fs54', 93)" class="i">Key</span>; 
+                    <span onmouseout="hideTip(event, 'fs15', 94)" onmouseover="showTip(event, 'fs15', 94)" class="i">client</span><span class="o">.</span><span class="i">CreateGremlinQuery</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs55', 95)" onmouseover="showTip(event, 'fs55', 95)" class="i">obj</span><span class="o">&gt;</span>(<span onmouseout="hideTip(event, 'fs27', 96)" onmouseover="showTip(event, 'fs27', 96)" class="i">graph</span>, <span onmouseout="hideTip(event, 'fs52', 97)" onmouseover="showTip(event, 'fs52', 97)" class="i">queryKVP</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs56', 98)" onmouseover="showTip(event, 'fs56', 98)" class="i">Value</span>) 
+                    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs40', 99)" onmouseover="showTip(event, 'fs40', 99)" class="f">runGremlinQuery</span> )                <span class="c">// Why does map stop after 4 iterations???</span>
+    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs50', 100)" onmouseover="showTip(event, 'fs50', 100)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs57', 101)" onmouseover="showTip(event, 'fs57', 101)" class="f">iter</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs58', 102)" onmouseover="showTip(event, 'fs58', 102)" class="i">z</span><span class="k">-&gt;</span><span onmouseout="hideTip(event, 'fs53', 103)" onmouseover="showTip(event, 'fs53', 103)" class="f">printf</span> <span class="s">&quot;</span><span class="pf">%A</span><span class="s"></span><span class="e">\r</span><span class="s"></span><span class="e">\n</span><span class="s">&quot;</span> <span onmouseout="hideTip(event, 'fs58', 104)" onmouseover="showTip(event, 'fs58', 104)" class="i">z</span>)              <span class="c">// Whereas iter carries on until the end!??</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace System</div>
+<div class="tip" id="fs2">namespace Microsoft</div>
+<div class="tip" id="fs3">namespace Microsoft.Azure</div>
+<div class="tip" id="fs4">namespace Microsoft.Azure.Documents</div>
+<div class="tip" id="fs5">namespace Microsoft.Azure.Documents.Client</div>
+<div class="tip" id="fs6">namespace Microsoft.Azure.Documents.Linq</div>
+<div class="tip" id="fs7">namespace Newtonsoft</div>
+<div class="tip" id="fs8">namespace Newtonsoft.Json</div>
+<div class="tip" id="fs9">val pathToAdd : string<br /><br />Full name: Script.pathToAdd</div>
+<div class="tip" id="fs10">type Environment =<br />&#160;&#160;static member CommandLine : string<br />&#160;&#160;static member CurrentDirectory : string with get, set<br />&#160;&#160;static member Exit : exitCode:int -&gt; unit<br />&#160;&#160;static member ExitCode : int with get, set<br />&#160;&#160;static member ExpandEnvironmentVariables : name:string -&gt; string<br />&#160;&#160;static member FailFast : message:string -&gt; unit + 1 overload<br />&#160;&#160;static member GetCommandLineArgs : unit -&gt; string[]<br />&#160;&#160;static member GetEnvironmentVariable : variable:string -&gt; string + 1 overload<br />&#160;&#160;static member GetEnvironmentVariables : unit -&gt; IDictionary + 1 overload<br />&#160;&#160;static member GetFolderPath : folder:SpecialFolder -&gt; string + 1 overload<br />&#160;&#160;...<br />&#160;&#160;nested type SpecialFolder<br />&#160;&#160;nested type SpecialFolderOption<br /><br />Full name: System.Environment</div>
+<div class="tip" id="fs11">Environment.SetEnvironmentVariable(variable: string, value: string) : unit<br />Environment.SetEnvironmentVariable(variable: string, value: string, target: EnvironmentVariableTarget) : unit</div>
+<div class="tip" id="fs12">Environment.GetEnvironmentVariable(variable: string) : string<br />Environment.GetEnvironmentVariable(variable: string, target: EnvironmentVariableTarget) : string</div>
+<div class="tip" id="fs13">val endpoint : string<br /><br />Full name: Script.endpoint</div>
+<div class="tip" id="fs14">val authKey : string<br /><br />Full name: Script.authKey</div>
+<div class="tip" id="fs15">val client : DocumentClient<br /><br />Full name: Script.client</div>
+<div class="tip" id="fs16">Multiple items<br />type DocumentClient =<br />&#160;&#160;new : serviceEndpoint:Uri * authKey:SecureString * ?connectionPolicy:ConnectionPolicy * ?desiredConsistencyLevel:Nullable&lt;ConsistencyLevel&gt; -&gt; DocumentClient + 7 overloads<br />&#160;&#160;member AuthKey : SecureString<br />&#160;&#160;member ConnectionPolicy : ConnectionPolicy<br />&#160;&#160;member ConsistencyLevel : ConsistencyLevel<br />&#160;&#160;member CreateAttachmentAsync : documentLink:string * attachment:obj * ?options:RequestOptions -&gt; Task&lt;ResourceResponse&lt;Attachment&gt;&gt; + 3 overloads<br />&#160;&#160;member CreateAttachmentQuery&lt;&#39;T&gt; : attachmentsUri:Uri * ?feedOptions:FeedOptions -&gt; IOrderedQueryable&lt;&#39;T&gt; + 11 overloads<br />&#160;&#160;member CreateConflictQuery : conflictsUri:Uri * ?feedOptions:FeedOptions -&gt; IOrderedQueryable&lt;Conflict&gt; + 5 overloads<br />&#160;&#160;member CreateDatabaseAsync : database:Database * ?options:RequestOptions -&gt; Task&lt;ResourceResponse&lt;Database&gt;&gt;<br />&#160;&#160;member CreateDatabaseIfNotExistsAsync : database:Database * ?options:RequestOptions -&gt; Task&lt;ResourceResponse&lt;Database&gt;&gt;<br />&#160;&#160;member CreateDatabaseQuery : ?feedOptions:FeedOptions -&gt; IOrderedQueryable&lt;Database&gt; + 2 overloads<br />&#160;&#160;...<br /><br />Full name: Microsoft.Azure.Documents.Client.DocumentClient<br /><br />--------------------<br />DocumentClient(serviceEndpoint: Uri, authKey: Security.SecureString, ?connectionPolicy: ConnectionPolicy, ?desiredConsistencyLevel: Nullable&lt;ConsistencyLevel&gt;) : unit<br />DocumentClient(serviceEndpoint: Uri, authKeyOrResourceToken: string, ?connectionPolicy: ConnectionPolicy, ?desiredConsistencyLevel: Nullable&lt;ConsistencyLevel&gt;) : unit<br />DocumentClient(serviceEndpoint: Uri, permissionFeed: Collections.Generic.IList&lt;Permission&gt;, ?connectionPolicy: ConnectionPolicy, ?desiredConsistencyLevel: Nullable&lt;ConsistencyLevel&gt;) : unit<br />DocumentClient(serviceEndpoint: Uri, authKey: Security.SecureString, serializerSettings: JsonSerializerSettings, ?connectionPolicy: ConnectionPolicy, ?desiredConsistencyLevel: Nullable&lt;ConsistencyLevel&gt;) : unit<br />DocumentClient(serviceEndpoint: Uri, authKeyOrResourceToken: string, serializerSettings: JsonSerializerSettings, ?connectionPolicy: ConnectionPolicy, ?desiredConsistencyLevel: Nullable&lt;ConsistencyLevel&gt;) : unit</div>
+<div class="tip" id="fs17">Multiple items<br />type Uri =<br />&#160;&#160;new : uriString:string -&gt; Uri + 5 overloads<br />&#160;&#160;member AbsolutePath : string<br />&#160;&#160;member AbsoluteUri : string<br />&#160;&#160;member Authority : string<br />&#160;&#160;member DnsSafeHost : string<br />&#160;&#160;member Equals : comparand:obj -&gt; bool<br />&#160;&#160;member Fragment : string<br />&#160;&#160;member GetComponents : components:UriComponents * format:UriFormat -&gt; string<br />&#160;&#160;member GetHashCode : unit -&gt; int<br />&#160;&#160;member GetLeftPart : part:UriPartial -&gt; string<br />&#160;&#160;...<br /><br />Full name: System.Uri<br /><br />--------------------<br />Uri(uriString: string) : unit<br />Uri(uriString: string, uriKind: UriKind) : unit<br />Uri(baseUri: Uri, relativeUri: string) : unit<br />Uri(baseUri: Uri, relativeUri: Uri) : unit</div>
+<div class="tip" id="fs18">Multiple items<br />type ConnectionPolicy =<br />&#160;&#160;new : unit -&gt; ConnectionPolicy<br />&#160;&#160;member ConnectionMode : ConnectionMode with get, set<br />&#160;&#160;member ConnectionProtocol : Protocol with get, set<br />&#160;&#160;member EnableEndpointDiscovery : bool with get, set<br />&#160;&#160;member MaxConnectionLimit : int with get, set<br />&#160;&#160;member MediaReadMode : MediaReadMode with get, set<br />&#160;&#160;member MediaRequestTimeout : TimeSpan with get, set<br />&#160;&#160;member PreferredLocations : Collection&lt;string&gt;<br />&#160;&#160;member RequestTimeout : TimeSpan with get, set<br />&#160;&#160;member RetryOptions : RetryOptions with get, set<br />&#160;&#160;...<br /><br />Full name: Microsoft.Azure.Documents.Client.ConnectionPolicy<br /><br />--------------------<br />ConnectionPolicy() : unit</div>
+<div class="tip" id="fs19">type ConnectionMode =<br />&#160;&#160;| Gateway = 0<br />&#160;&#160;| Direct = 1<br /><br />Full name: Microsoft.Azure.Documents.Client.ConnectionMode</div>
+<div class="tip" id="fs20">field ConnectionMode.Direct = 1</div>
+<div class="tip" id="fs21">type Protocol =<br />&#160;&#160;| Https = 0<br />&#160;&#160;| Tcp = 1<br /><br />Full name: Microsoft.Azure.Documents.Client.Protocol</div>
+<div class="tip" id="fs22">field Protocol.Tcp = 1</div>
+<div class="tip" id="fs23">val database : ResourceResponse&lt;Database&gt;<br /><br />Full name: Script.database</div>
+<div class="tip" id="fs24">Multiple items<br />type ResourceResponse&lt;&#39;TResource (requires default constructor and &#39;TResource :&gt; Resource)&gt; =<br />&#160;&#160;inherit ResourceResponseBase<br />&#160;&#160;new : unit -&gt; ResourceResponse&lt;&#39;TResource&gt; + 1 overload<br />&#160;&#160;member Resource : &#39;TResource<br /><br />Full name: Microsoft.Azure.Documents.Client.ResourceResponse&lt;_&gt;<br /><br />--------------------<br />ResourceResponse() : unit<br />ResourceResponse(resource: &#39;TResource) : unit</div>
+<div class="tip" id="fs25">Multiple items<br />type Database =<br />&#160;&#160;inherit Resource<br />&#160;&#160;new : unit -&gt; Database<br />&#160;&#160;member CollectionsLink : string<br />&#160;&#160;member UsersLink : string<br /><br />Full name: Microsoft.Azure.Documents.Database<br /><br />--------------------<br />Database() : unit</div>
+<div class="tip" id="fs26">DocumentClient.CreateDatabaseIfNotExistsAsync(database: Database, ?options: RequestOptions) : Threading.Tasks.Task&lt;ResourceResponse&lt;Database&gt;&gt;</div>
+<div class="tip" id="fs27">val graph : DocumentCollection<br /><br />Full name: Script.graph</div>
+<div class="tip" id="fs28">Multiple items<br />type DocumentCollection =<br />&#160;&#160;inherit Resource<br />&#160;&#160;new : unit -&gt; DocumentCollection<br />&#160;&#160;member ConflictsLink : string<br />&#160;&#160;member DefaultTimeToLive : Nullable&lt;int&gt; with get, set<br />&#160;&#160;member DocumentsLink : string<br />&#160;&#160;member IndexingPolicy : IndexingPolicy with get, set<br />&#160;&#160;member PartitionKey : PartitionKeyDefinition with get, set<br />&#160;&#160;member StoredProceduresLink : string<br />&#160;&#160;member TriggersLink : string<br />&#160;&#160;member UserDefinedFunctionsLink : string<br /><br />Full name: Microsoft.Azure.Documents.DocumentCollection<br /><br />--------------------<br />DocumentCollection() : unit</div>
+<div class="tip" id="fs29">DocumentClient.CreateDocumentCollectionIfNotExistsAsync(databaseUri: Uri, documentCollection: DocumentCollection, ?options: RequestOptions) : Threading.Tasks.Task&lt;ResourceResponse&lt;DocumentCollection&gt;&gt;<br />DocumentClient.CreateDocumentCollectionIfNotExistsAsync(databaseLink: string, documentCollection: DocumentCollection, ?options: RequestOptions) : Threading.Tasks.Task&lt;ResourceResponse&lt;DocumentCollection&gt;&gt;</div>
+<div class="tip" id="fs30">type UriFactory =<br />&#160;&#160;static member CreateAttachmentUri : databaseId:string * collectionId:string * documentId:string * attachmentId:string -&gt; Uri<br />&#160;&#160;static member CreateCollectionUri : databaseId:string * collectionId:string -&gt; Uri<br />&#160;&#160;static member CreateConflictUri : databaseId:string * collectionId:string * conflictId:string -&gt; Uri<br />&#160;&#160;static member CreateDatabaseUri : databaseId:string -&gt; Uri<br />&#160;&#160;static member CreateDocumentCollectionUri : databaseId:string * collectionId:string -&gt; Uri<br />&#160;&#160;static member CreateDocumentUri : databaseId:string * collectionId:string * documentId:string -&gt; Uri<br />&#160;&#160;static member CreatePartitionKeyRangesUri : databaseId:string * collectionId:string -&gt; Uri<br />&#160;&#160;static member CreatePermissionUri : databaseId:string * userId:string * permissionId:string -&gt; Uri<br />&#160;&#160;static member CreateStoredProcedureUri : databaseId:string * collectionId:string * storedProcedureId:string -&gt; Uri<br />&#160;&#160;static member CreateTriggerUri : databaseId:string * collectionId:string * triggerId:string -&gt; Uri<br />&#160;&#160;...<br /><br />Full name: Microsoft.Azure.Documents.Client.UriFactory</div>
+<div class="tip" id="fs31">UriFactory.CreateDatabaseUri(databaseId: string) : Uri</div>
+<div class="tip" id="fs32">Multiple items<br />type RequestOptions =<br />&#160;&#160;new : unit -&gt; RequestOptions<br />&#160;&#160;member AccessCondition : AccessCondition with get, set<br />&#160;&#160;member ConsistencyLevel : Nullable&lt;ConsistencyLevel&gt; with get, set<br />&#160;&#160;member DisableRUPerMinuteUsage : bool with get, set<br />&#160;&#160;member EnableScriptLogging : bool with get, set<br />&#160;&#160;member IndexingDirective : Nullable&lt;IndexingDirective&gt; with get, set<br />&#160;&#160;member OfferEnableRUPerMinuteThroughput : bool with get, set<br />&#160;&#160;member OfferThroughput : Nullable&lt;int&gt; with get, set<br />&#160;&#160;member OfferType : string with get, set<br />&#160;&#160;member PartitionKey : PartitionKey with get, set<br />&#160;&#160;...<br /><br />Full name: Microsoft.Azure.Documents.Client.RequestOptions<br /><br />--------------------<br />RequestOptions() : unit</div>
+<div class="tip" id="fs33">Multiple items<br />type Nullable =<br />&#160;&#160;static member Compare&lt;&#39;T&gt; : n1:Nullable&lt;&#39;T&gt; * n2:Nullable&lt;&#39;T&gt; -&gt; int<br />&#160;&#160;static member Equals&lt;&#39;T&gt; : n1:Nullable&lt;&#39;T&gt; * n2:Nullable&lt;&#39;T&gt; -&gt; bool<br />&#160;&#160;static member GetUnderlyingType : nullableType:Type -&gt; Type<br /><br />Full name: System.Nullable<br /><br />--------------------<br />type Nullable&lt;&#39;T (requires default constructor and value type and &#39;T :&gt; ValueType)&gt; =<br />&#160;&#160;struct<br />&#160;&#160;&#160;&#160;new : value:&#39;T -&gt; Nullable&lt;&#39;T&gt;<br />&#160;&#160;&#160;&#160;member Equals : other:obj -&gt; bool<br />&#160;&#160;&#160;&#160;member GetHashCode : unit -&gt; int<br />&#160;&#160;&#160;&#160;member GetValueOrDefault : unit -&gt; &#39;T + 1 overload<br />&#160;&#160;&#160;&#160;member HasValue : bool<br />&#160;&#160;&#160;&#160;member ToString : unit -&gt; string<br />&#160;&#160;&#160;&#160;member Value : &#39;T<br />&#160;&#160;end<br /><br />Full name: System.Nullable&lt;_&gt;<br /><br />--------------------<br />Nullable()<br />Nullable(value: &#39;T) : unit</div>
+<div class="tip" id="fs34">Multiple items<br />val int : value:&#39;T -&gt; int (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.int<br /><br />--------------------<br />type int = int32<br /><br />Full name: Microsoft.FSharp.Core.int<br /><br />--------------------<br />type int&lt;&#39;Measure&gt; = int<br /><br />Full name: Microsoft.FSharp.Core.int&lt;_&gt;</div>
+<div class="tip" id="fs35">Multiple items<br />type Async<br />static member AsBeginEnd : computation:(&#39;Arg -&gt; Async&lt;&#39;T&gt;) -&gt; (&#39;Arg * AsyncCallback * obj -&gt; IAsyncResult) * (IAsyncResult -&gt; &#39;T) * (IAsyncResult -&gt; unit)<br />static member AwaitEvent : event:IEvent&lt;&#39;Del,&#39;T&gt; * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt; (requires delegate and &#39;Del :&gt; Delegate)<br />static member AwaitIAsyncResult : iar:IAsyncResult * ?millisecondsTimeout:int -&gt; Async&lt;bool&gt;<br />static member AwaitTask : task:Task -&gt; Async&lt;unit&gt;<br />static member AwaitTask : task:Task&lt;&#39;T&gt; -&gt; Async&lt;&#39;T&gt;<br />static member AwaitWaitHandle : waitHandle:WaitHandle * ?millisecondsTimeout:int -&gt; Async&lt;bool&gt;<br />static member CancelDefaultToken : unit -&gt; unit<br />static member Catch : computation:Async&lt;&#39;T&gt; -&gt; Async&lt;Choice&lt;&#39;T,exn&gt;&gt;<br />static member FromBeginEnd : beginAction:(AsyncCallback * obj -&gt; IAsyncResult) * endAction:(IAsyncResult -&gt; &#39;T) * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member FromBeginEnd : arg:&#39;Arg1 * beginAction:(&#39;Arg1 * AsyncCallback * obj -&gt; IAsyncResult) * endAction:(IAsyncResult -&gt; &#39;T) * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member FromBeginEnd : arg1:&#39;Arg1 * arg2:&#39;Arg2 * beginAction:(&#39;Arg1 * &#39;Arg2 * AsyncCallback * obj -&gt; IAsyncResult) * endAction:(IAsyncResult -&gt; &#39;T) * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member FromBeginEnd : arg1:&#39;Arg1 * arg2:&#39;Arg2 * arg3:&#39;Arg3 * beginAction:(&#39;Arg1 * &#39;Arg2 * &#39;Arg3 * AsyncCallback * obj -&gt; IAsyncResult) * endAction:(IAsyncResult -&gt; &#39;T) * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member FromContinuations : callback:((&#39;T -&gt; unit) * (exn -&gt; unit) * (OperationCanceledException -&gt; unit) -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member Ignore : computation:Async&lt;&#39;T&gt; -&gt; Async&lt;unit&gt;<br />static member OnCancel : interruption:(unit -&gt; unit) -&gt; Async&lt;IDisposable&gt;<br />static member Parallel : computations:seq&lt;Async&lt;&#39;T&gt;&gt; -&gt; Async&lt;&#39;T []&gt;<br />static member RunSynchronously : computation:Async&lt;&#39;T&gt; * ?timeout:int * ?cancellationToken:CancellationToken -&gt; &#39;T<br />static member Sleep : millisecondsDueTime:int -&gt; Async&lt;unit&gt;<br />static member Start : computation:Async&lt;unit&gt; * ?cancellationToken:CancellationToken -&gt; unit<br />static member StartAsTask : computation:Async&lt;&#39;T&gt; * ?taskCreationOptions:TaskCreationOptions * ?cancellationToken:CancellationToken -&gt; Task&lt;&#39;T&gt;<br />static member StartChild : computation:Async&lt;&#39;T&gt; * ?millisecondsTimeout:int -&gt; Async&lt;Async&lt;&#39;T&gt;&gt;<br />static member StartChildAsTask : computation:Async&lt;&#39;T&gt; * ?taskCreationOptions:TaskCreationOptions -&gt; Async&lt;Task&lt;&#39;T&gt;&gt;<br />static member StartImmediate : computation:Async&lt;unit&gt; * ?cancellationToken:CancellationToken -&gt; unit<br />static member StartWithContinuations : computation:Async&lt;&#39;T&gt; * continuation:(&#39;T -&gt; unit) * exceptionContinuation:(exn -&gt; unit) * cancellationContinuation:(OperationCanceledException -&gt; unit) * ?cancellationToken:CancellationToken -&gt; unit<br />static member SwitchToContext : syncContext:SynchronizationContext -&gt; Async&lt;unit&gt;<br />static member SwitchToNewThread : unit -&gt; Async&lt;unit&gt;<br />static member SwitchToThreadPool : unit -&gt; Async&lt;unit&gt;<br />static member TryCancelled : computation:Async&lt;&#39;T&gt; * compensation:(OperationCanceledException -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member CancellationToken : Async&lt;CancellationToken&gt;<br />static member DefaultCancellationToken : CancellationToken<br /><br />Full name: Microsoft.FSharp.Control.Async<br /><br />--------------------<br />type Async&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Control.Async&lt;_&gt;</div>
+<div class="tip" id="fs36">static member Async.AwaitTask : task:Threading.Tasks.Task -&gt; Async&lt;unit&gt;<br />static member Async.AwaitTask : task:Threading.Tasks.Task&lt;&#39;T&gt; -&gt; Async&lt;&#39;T&gt;</div>
+<div class="tip" id="fs37">static member Async.RunSynchronously : computation:Async&lt;&#39;T&gt; * ?timeout:int * ?cancellationToken:Threading.CancellationToken -&gt; &#39;T</div>
+<div class="tip" id="fs38">val z : ResourceResponse&lt;DocumentCollection&gt;</div>
+<div class="tip" id="fs39">property ResourceResponse.Resource: DocumentCollection</div>
+<div class="tip" id="fs40">val runGremlinQuery : dq:IDocumentQuery&lt;&#39;T&gt; -&gt; FeedResponse&lt;&#39;T&gt; list<br /><br />Full name: Script.runGremlinQuery</div>
+<div class="tip" id="fs41">val dq : IDocumentQuery&lt;&#39;T&gt;</div>
+<div class="tip" id="fs42">Multiple items<br />type IDocumentQuery =<br /><br />Full name: Microsoft.Azure.Documents.Linq.IDocumentQuery<br /><br />--------------------<br />type IDocumentQuery&lt;&#39;T&gt; =<br />&#160;&#160;member ExecuteNextAsync&lt;&#39;TResult&gt; : ?token:CancellationToken -&gt; Task&lt;FeedResponse&lt;&#39;TResult&gt;&gt; + 1 overload<br />&#160;&#160;member HasMoreResults : bool<br /><br />Full name: Microsoft.Azure.Documents.Linq.IDocumentQuery&lt;_&gt;</div>
+<div class="tip" id="fs43">Multiple items<br />type FeedResponse&lt;&#39;T&gt; =<br />&#160;&#160;new : unit -&gt; FeedResponse&lt;&#39;T&gt; + 1 overload<br />&#160;&#160;member ActivityId : string<br />&#160;&#160;member CollectionQuota : int64<br />&#160;&#160;member CollectionSizeQuota : int64<br />&#160;&#160;member CollectionSizeUsage : int64<br />&#160;&#160;member CollectionUsage : int64<br />&#160;&#160;member ContentLocation : string<br />&#160;&#160;member Count : int with get, set<br />&#160;&#160;member CurrentResourceQuotaUsage : string<br />&#160;&#160;member DatabaseQuota : int64<br />&#160;&#160;...<br /><br />Full name: Microsoft.Azure.Documents.Client.FeedResponse&lt;_&gt;<br /><br />--------------------<br />FeedResponse() : unit<br />FeedResponse(result: Collections.Generic.IEnumerable&lt;&#39;T&gt;) : unit</div>
+<div class="tip" id="fs44">type &#39;T list = List&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.list&lt;_&gt;</div>
+<div class="tip" id="fs45">property IDocumentQuery.HasMoreResults: bool</div>
+<div class="tip" id="fs46">IDocumentQuery.ExecuteNextAsync(?token: Threading.CancellationToken) : Threading.Tasks.Task&lt;FeedResponse&lt;obj&gt;&gt;<br />IDocumentQuery.ExecuteNextAsync&lt;&#39;TResult&gt;(?token: Threading.CancellationToken) : Threading.Tasks.Task&lt;FeedResponse&lt;&#39;TResult&gt;&gt;</div>
+<div class="tip" id="fs47">val queryAddVThomas : string<br /><br />Full name: Script.queryAddVThomas</div>
+<div class="tip" id="fs48">val gremlinQueries : Collections.Generic.IDictionary&lt;string,string&gt;<br /><br />Full name: Script.gremlinQueries</div>
+<div class="tip" id="fs49">val dict : keyValuePairs:seq&lt;&#39;Key * &#39;Value&gt; -&gt; Collections.Generic.IDictionary&lt;&#39;Key,&#39;Value&gt; (requires equality)<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.dict</div>
+<div class="tip" id="fs50">module Seq<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs51">val map : mapping:(&#39;T -&gt; &#39;U) -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;U&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.map</div>
+<div class="tip" id="fs52">val queryKVP : Collections.Generic.KeyValuePair&lt;string,string&gt;</div>
+<div class="tip" id="fs53">val printf : format:Printf.TextWriterFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.printf</div>
+<div class="tip" id="fs54">property Collections.Generic.KeyValuePair.Key: string</div>
+<div class="tip" id="fs55">type obj = Object<br /><br />Full name: Microsoft.FSharp.Core.obj</div>
+<div class="tip" id="fs56">property Collections.Generic.KeyValuePair.Value: string</div>
+<div class="tip" id="fs57">val iter : action:(&#39;T -&gt; unit) -&gt; source:seq&lt;&#39;T&gt; -&gt; unit<br /><br />Full name: Microsoft.FSharp.Collections.Seq.iter</div>
+<div class="tip" id="fs58">val z : FeedResponse&lt;obj&gt; list</div>
+

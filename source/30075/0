@@ -1,0 +1,97 @@
+open System
+open System.Security.Cryptography
+open System.Net
+open System.Threading
+
+open fszmq
+open fszmq.Context
+open fszmq.Socket
+open fszmq.Polling
+
+open Nessos.FsPickler 
+
+module Main = 
+  type Actor<'T> = MailboxProcessor<'T>
+
+  let utf8_encode = string >> System.Text.Encoding.UTF8.GetBytes
+  let utf8_decode = System.Text.Encoding.UTF8.GetString
+
+  let convert (bytes:byte[]) =
+    Array.fold (fun o (b:byte)-> o + String.Format("{0:x2}",b)) "" bytes
+    
+  [<EntryPoint>]
+  let main args =
+    match ZMQ.version with
+      | Version (m,n,p) -> printfn "Current 0MQ version is %d.%d.%d" m n p
+      | Version.Unknown -> printfn "Unable to determine current 0MQ version"
+
+    let coder = FsPickler.CreateBinarySerializer()
+
+    // fszmq
+    use context = new Context()
+
+    use server = rep context
+    bind server "tcp://*:5555"
+
+    let encoder = new SHA256Managed()
+
+    let rec proc () =
+      async {
+        use msg = new Message ()
+        Message.recv msg server
+
+        let s : string = Message.data msg |> coder.UnPickle
+
+        printfn "[server] msg: %s" s
+
+        Thread.Sleep(1000)
+
+        printfn "[server] responding"
+
+        s |> (utf8_encode >> encoder.ComputeHash >> convert)
+        |> coder.Pickle
+        |> send server
+
+        printfn "[server] response sent"
+
+        return! proc ()
+      }
+
+    Async.Start(proc())
+
+    use client = req context
+    setOption client (ZMQ.LINGER, 0)
+    connect client "tcp://localhost:5555"
+
+    let client =
+      new Actor<string>
+        (fun inbox ->
+          let rec loop () =
+            async {
+                let! msg = inbox.Receive()
+
+                printfn "[client] sending"
+                msg |> coder.Pickle |> send client
+                printfn "[client] done"
+
+                let handler sock = 
+                  printfn "ohm"
+                  recv sock
+                  |> coder.UnPickle
+                  |> printfn "[client] sha256: %A"
+
+                printfn "[client] starting to poll"
+                [ Poll(ZMQ.POLLERR ||| ZMQ.POLLIN ||| ZMQ.POLLOUT, client, handler) ]
+                |> poll 12000L
+                |> printfn "Poll result: %b"
+
+                return! loop () 
+              }
+          loop ())
+
+    client.Start()
+    while true do
+      let msg = Console.ReadLine()
+      client.Post(msg)
+
+    0

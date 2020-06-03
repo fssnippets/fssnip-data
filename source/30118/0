@@ -1,0 +1,83 @@
+// How do you parse some fields from JSON like this (from Google geocoding API)?
+
+let replyString = """{
+   "results" : [
+      {
+         "address_components" : [
+            {
+               "long_name" : "2",
+               "short_name" : "2",
+               "types" : [ "street_number" ]
+            },
+            {
+               "long_name" : "Mannerheimintie",
+               "short_name" : "Mannerheimintie",
+               "types" : [ "route" ]
+            },
+            {
+               "long_name" : "Helsinki",
+               "short_name" : "HKI",
+               "types" : [ "locality", "political" ]
+            },
+            {
+               "long_name" : "Helsinki",
+               "short_name" : "Helsinki",
+               "types" : [ "administrative_area_level_3", "political" ]
+            },
+            {
+               "long_name" : "Finland",
+               "short_name" : "FI",
+               "types" : [ "country", "political" ]
+            },
+            {
+               "long_name" : "00100",
+               "short_name" : "00100",
+               "types" : [ "postal_code" ]
+            }
+         ],
+         "formatted_address" : "Mannerheimintie 2, 00100 Helsinki, Finland",
+         "geometry" : {
+            "location" : {
+               "lat" : 60.1667917,
+               "lng" : 24.9426541
+            },
+            "location_type" : "ROOFTOP",
+            "viewport" : {
+               "northeast" : {
+                  "lat" : 60.16814068029151,
+                  "lng" : 24.9440030802915
+               },
+               "southwest" : {
+                  "lat" : 60.1654427197085,
+                  "lng" : 24.9413051197085
+               }
+            }
+         },
+         "place_id" : "ChIJhfLf_MsLkkYRuZa8FC_DScU",
+         "types" : [ "street_address" ]
+      }
+   ],
+   "status" : "OK"
+}
+"""
+
+// First you define types for the things you are interested in:
+
+type AddressComponent =
+  {long_name: string; short_name: string; types: array<string>}
+type Coord = {lat: float; lng: float}
+type Geometry = {location: Coord}
+type Result =
+  {address_components: array<AddressComponent>
+   geometry: Geometry}
+type Reply = {status: string; results: array<Result>}
+
+// Then you can use Infers.Toys to convert from JSON to the defined type:
+
+open Infers.Toys
+
+let reply = ofJsonString<Reply> replyString
+
+// And also convert from the type back to JSON:
+
+let replyPartString = toJsonString reply

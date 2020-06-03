@@ -1,0 +1,71 @@
+
+#r @"PresentationCore"
+#r @"PresentationFramework"
+#r @"WindowsBase"
+#r @"System.Xaml"
+#r @"UIAutomationTypes"
+
+open System
+open System.Windows
+open System.Windows.Media
+open System.Windows.Shapes
+open System.Windows.Controls
+
+let window = Window(Height = 400.0, Width = 400.0)
+window.Title <- "Draw test"
+let stackPanel = StackPanel()
+window.Content <- stackPanel
+stackPanel.Orientation <- Orientation.Vertical
+
+let button1 = Button()
+button1.Content <- "Click me to draw a blue ellipse"
+stackPanel.Children.Add button1
+
+let button2 = Button()
+button2.Content <- "Click me to draw a red ellipse"
+stackPanel.Children.Add button2
+
+let clearButton = Button()
+clearButton.Content <- "Click me to clear the canvas"
+stackPanel.Children.Add clearButton
+
+let canvas = Canvas()
+canvas.Width <- window.Width
+canvas.Height <- window.Height
+stackPanel.Children.Add canvas
+
+let buildEllipse height width fill stroke =
+    let ellipse = Ellipse()
+    ellipse.Height  <- height
+    ellipse.Width   <- width
+    ellipse.Fill    <- fill
+    ellipse.Stroke  <- stroke
+    ellipse
+
+let ellipse1 = buildEllipse 100.0 200.0 Brushes.Aqua Brushes.Black
+Canvas.SetLeft(ellipse1, canvas.Width / 10.0)
+Canvas.SetTop(ellipse1, canvas.Height / 10.0)
+let ellipse2 = buildEllipse 200.0 100.0 Brushes.Red Brushes.DarkViolet
+Canvas.SetLeft(ellipse2, canvas.Width / 4.0)
+Canvas.SetTop(ellipse2, canvas.Height / 5.0)
+
+let addEllipseToCanvas (canvas:Canvas) (ellipse:Ellipse) =
+    match canvas.Children with
+    | c when c.Contains ellipse ->
+        canvas.Children.Remove ellipse
+        canvas.Children.Add(ellipse) |> ignore //needs to be removed and readded or the canvas complains
+    | _ ->
+        canvas.Children.Add(ellipse) |> ignore
+
+button1.Click.Add(fun _ -> addEllipseToCanvas canvas ellipse1)
+button2.Click.Add(fun _ -> addEllipseToCanvas canvas ellipse2)
+clearButton.Click.Add(fun _ -> canvas.Children.Clear())
+
+#if INTERACTIVE
+window.Show()
+#else
+[<EntryPoint; STAThread>]
+let main argv =
+    let app = new Application()
+    app.Run(window)
+#endif

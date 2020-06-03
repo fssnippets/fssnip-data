@@ -1,0 +1,23 @@
+open System
+open System.Collections.Concurrent  
+let cache = ConcurrentDictionary<(string * obj),Lazy<obj>>()
+let cacheTimes = ConcurrentDictionary<string,DateTime>()
+let memoizeConcurrent (caller:string) cacheTimeSeconds (f: ('a -> 'b)) = fun x ->
+    match cacheTimes.TryGetValue caller with
+    | true, time when time < DateTime.UtcNow.AddSeconds(-cacheTimeSeconds)
+        -> cache.TryRemove((caller, x|>box)) |> ignore
+    | _ -> ()
+    (cache.GetOrAdd((caller, x|>box), 
+        lazy (( cacheTimes.AddOrUpdate(caller, DateTime.UtcNow, fun _ _ ->DateTime.UtcNow) |> ignore
+                f x)|>box)).Force() |> unbox) : 'b
+
+(* Example test:
+let cacheTimeSeconds = 30.
+let myfun = memoizeConcurrent "myTest" cacheTimeSeconds (fun f -> Console.WriteLine("SideEffect"); f + 1)
+myfun 3 // "SideEffect"
+myfun 5 // "SideEffect"
+myfun 3
+System.Threading.Thread.Sleep ((cacheTimeSeconds |> int) * 1000 + 100)
+myfun 3 // "SideEffect"
+myfun 3
+*)

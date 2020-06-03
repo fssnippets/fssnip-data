@@ -1,0 +1,5 @@
+type Rec = { first: string; second: string; third: string}
+
+let compute f' = function | { first=f;second=s;third=t } -> [f; s; t] |> (List.map f' >> (fun [f'; s'; t'] -> { first=f'; second=s'; third=t' }))
+
+{ first=" 1 "; second=" 2 "; third=" 3 " } |> compute (fun s -> s.Trim());;

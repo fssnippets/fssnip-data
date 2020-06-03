@@ -1,0 +1,17 @@
+open FParsec 
+
+type Thing =
+    | Value of string
+    | Pair of Thing * Thing
+
+ 
+let validVariableCharacter x = ['a' .. 'z'] |> Seq.contains x
+
+let thingParser, thingParserImpl = createParserForwardedToRef()
+let valueParser = many1Satisfy validVariableCharacter |>> Value
+let pairParser = thingParser .>> spaces1 .>>. thingParser |>> Pair
+
+do thingParserImpl := attempt(pairParser) <|> valueParser // this results in a stackoverflowexception
+
+printfn "%A" <| run thingParser "a" // expect Value "a"
+printfn "%A" <| run thingParser "a b c" // expect Pair(a, Pair(b, c))

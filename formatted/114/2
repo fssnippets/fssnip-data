@@ -1,0 +1,114 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+<span class="l">38: </span>
+<span class="l">39: </span>
+<span class="l">40: </span>
+<span class="l">41: </span>
+<span class="l">42: </span>
+<span class="l">43: </span>
+<span class="l">44: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">//See examples:</span>
+
+<span class="c">//Input: [&quot;a&quot;;&quot;b&quot;]</span>
+<span class="c">//Output: [&quot;a&quot;; &quot;b&quot;; &quot;ab&quot;]</span>
+
+<span class="c">//Input: [&quot;a&quot;;&quot;b&quot;;&quot;c&quot;;&quot;d&quot;] </span>
+<span class="c">//Output: [&quot;a&quot;; &quot;b&quot;; &quot;c&quot;; &quot;d&quot;; &quot;ab&quot;; &quot;ac&quot;; &quot;ad&quot;; &quot;bc&quot;; &quot;bd&quot;; &quot;cd&quot;; &quot;bcd&quot;; &quot;abc&quot;; &quot;abd&quot;; &quot;acd&quot;; &quot;abcd&quot;]</span>
+
+<span class="c">//Input: [1;2;5]</span>
+<span class="c">//Output: [1; 2; 5; 3; 6; 7; 8]</span>
+
+<span class="c">//Input: [2;3;8;12] </span>
+<span class="c">//Output: [2; 3; 8; 12; 5; 10; 14; 11; 15; 20; 23; 13; 17; 22; 25]</span>
+
+<span class="c">//-----------------------------------------------------</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="f">toDistinct</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">mylist</span> <span class="o">=</span> (<span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="f">toSeq</span> <span class="o">&gt;</span><span class="o">&gt;</span> <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="f">distinct</span> <span class="o">&gt;</span><span class="o">&gt;</span> <span onmouseout="hideTip(event, 'fs5', 7)" onmouseover="showTip(event, 'fs5', 7)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs7', 8)" onmouseover="showTip(event, 'fs7', 8)" class="f">toList</span>) <span onmouseout="hideTip(event, 'fs2', 9)" onmouseover="showTip(event, 'fs2', 9)" class="i">mylist</span>;;
+
+<span class="c">/// get combinations of sums</span>
+<span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs8', 10)" onmouseover="showTip(event, 'fs8', 10)" class="f">recursivecombinations</span> <span onmouseout="hideTip(event, 'fs9', 11)" onmouseover="showTip(event, 'fs9', 11)" class="f">aggregate</span> <span onmouseout="hideTip(event, 'fs2', 12)" onmouseover="showTip(event, 'fs2', 12)" class="i">mylist</span> <span class="o">=</span> 
+    <span class="k">match</span> <span onmouseout="hideTip(event, 'fs2', 13)" onmouseover="showTip(event, 'fs2', 13)" class="i">mylist</span> <span class="k">with</span>
+    |[] <span class="k">-&gt;</span> []
+    |<span onmouseout="hideTip(event, 'fs10', 14)" onmouseover="showTip(event, 'fs10', 14)" class="i">h</span><span class="o">::</span><span onmouseout="hideTip(event, 'fs11', 15)" onmouseover="showTip(event, 'fs11', 15)" class="i">t</span> <span class="k">-&gt;</span>
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs12', 16)" onmouseover="showTip(event, 'fs12', 16)" class="i">tailpart</span> <span class="o">=</span> (<span onmouseout="hideTip(event, 'fs1', 17)" onmouseover="showTip(event, 'fs1', 17)" class="f">toDistinct</span> <span class="o">&lt;&lt;</span> <span onmouseout="hideTip(event, 'fs8', 18)" onmouseover="showTip(event, 'fs8', 18)" class="f">recursivecombinations</span> <span onmouseout="hideTip(event, 'fs9', 19)" onmouseover="showTip(event, 'fs9', 19)" class="f">aggregate</span>) <span onmouseout="hideTip(event, 'fs11', 20)" onmouseover="showTip(event, 'fs11', 20)" class="i">t</span>
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs13', 21)" onmouseover="showTip(event, 'fs13', 21)" class="i">headpart</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs11', 22)" onmouseover="showTip(event, 'fs11', 22)" class="i">t</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs9', 23)" onmouseover="showTip(event, 'fs9', 23)" class="f">aggregate</span> <span onmouseout="hideTip(event, 'fs10', 24)" onmouseover="showTip(event, 'fs10', 24)" class="i">h</span>
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs14', 25)" onmouseover="showTip(event, 'fs14', 25)" class="i">sums</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs13', 26)" onmouseover="showTip(event, 'fs13', 26)" class="i">headpart</span> <span class="o">@</span> <span onmouseout="hideTip(event, 'fs12', 27)" onmouseover="showTip(event, 'fs12', 27)" class="i">tailpart</span>
+        
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs15', 28)" onmouseover="showTip(event, 'fs15', 28)" class="i">recsums</span> <span class="o">=</span> <span class="k">match</span> <span onmouseout="hideTip(event, 'fs14', 29)" onmouseover="showTip(event, 'fs14', 29)" class="i">sums</span> <span class="k">with</span>
+                        |[] <span class="k">-&gt;</span> []
+                        |[<span onmouseout="hideTip(event, 'fs16', 30)" onmouseover="showTip(event, 'fs16', 30)" class="i">x</span>] <span class="k">-&gt;</span> [<span onmouseout="hideTip(event, 'fs16', 31)" onmouseover="showTip(event, 'fs16', 31)" class="i">x</span>]
+                        | _ <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs12', 32)" onmouseover="showTip(event, 'fs12', 32)" class="i">tailpart</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs9', 33)" onmouseover="showTip(event, 'fs9', 33)" class="f">aggregate</span> <span onmouseout="hideTip(event, 'fs10', 34)" onmouseover="showTip(event, 'fs10', 34)" class="i">h</span>
+        <span onmouseout="hideTip(event, 'fs14', 35)" onmouseover="showTip(event, 'fs14', 35)" class="i">sums</span> <span class="o">@</span> <span onmouseout="hideTip(event, 'fs15', 36)" onmouseover="showTip(event, 'fs15', 36)" class="i">recsums</span> 
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs17', 37)" onmouseover="showTip(event, 'fs17', 37)" class="f">combinations</span> <span onmouseout="hideTip(event, 'fs9', 38)" onmouseover="showTip(event, 'fs9', 38)" class="f">aggregate</span> <span onmouseout="hideTip(event, 'fs2', 39)" onmouseover="showTip(event, 'fs2', 39)" class="i">mylist</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs2', 40)" onmouseover="showTip(event, 'fs2', 40)" class="i">mylist</span> <span class="o">@</span> <span onmouseout="hideTip(event, 'fs8', 41)" onmouseover="showTip(event, 'fs8', 41)" class="f">recursivecombinations</span> <span onmouseout="hideTip(event, 'fs9', 42)" onmouseover="showTip(event, 'fs9', 42)" class="f">aggregate</span> <span onmouseout="hideTip(event, 'fs2', 43)" onmouseover="showTip(event, 'fs2', 43)" class="i">mylist</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs1', 44)" onmouseover="showTip(event, 'fs1', 44)" class="f">toDistinct</span>
+
+<span class="c">//custom aggregate function, just sum here:</span>
+<span class="k">let</span> <span class="k">inline</span> <span onmouseout="hideTip(event, 'fs18', 45)" onmouseover="showTip(event, 'fs18', 45)" class="f">sumfunction</span> <span onmouseout="hideTip(event, 'fs19', 46)" onmouseover="showTip(event, 'fs19', 46)" class="i">head</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs3', 47)" onmouseover="showTip(event, 'fs3', 47)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs20', 48)" onmouseover="showTip(event, 'fs20', 48)" class="f">map</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs21', 49)" onmouseover="showTip(event, 'fs21', 49)" class="i">f</span> <span class="k">-&gt;</span><span onmouseout="hideTip(event, 'fs19', 50)" onmouseover="showTip(event, 'fs19', 50)" class="i">head</span><span class="o">+</span><span onmouseout="hideTip(event, 'fs21', 51)" onmouseover="showTip(event, 'fs21', 51)" class="i">f</span>) 
+
+<span class="c">//test:</span>
+<span class="c">//&gt; combinations sumfunction [&quot;a&quot;;&quot;b&quot;;&quot;c&quot;];; </span>
+<span class="c">//val it : string list = [&quot;a&quot;; &quot;b&quot;; &quot;c&quot;; &quot;ab&quot;; &quot;ac&quot;; &quot;bc&quot;; &quot;abc&quot;]</span>
+
+<span class="c">//&gt; combinations sumfunction [1;2;3];; </span>
+<span class="c">//val it : int list = [1; 2; 3; 4; 5; 6]</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">val toDistinct : mylist:&#39;a list -&gt; &#39;a list (requires equality)<br /><br />Full name: Script.toDistinct</div>
+<div class="tip" id="fs2">val mylist : &#39;a list (requires equality)</div>
+<div class="tip" id="fs3">Multiple items<br />module List<br /><br />from Microsoft.FSharp.Collections<br /><br />--------------------<br />type List&lt;&#39;T&gt; =<br />&#160;&#160;| ( [] )<br />&#160;&#160;| ( :: ) of Head: &#39;T * Tail: &#39;T list<br />&#160;&#160;interface IEnumerable<br />&#160;&#160;interface IEnumerable&lt;&#39;T&gt;<br />&#160;&#160;member GetSlice : startIndex:int option * endIndex:int option -&gt; &#39;T list<br />&#160;&#160;member Head : &#39;T<br />&#160;&#160;member IsEmpty : bool<br />&#160;&#160;member Item : index:int -&gt; &#39;T with get<br />&#160;&#160;member Length : int<br />&#160;&#160;member Tail : &#39;T list<br />&#160;&#160;static member Cons : head:&#39;T * tail:&#39;T list -&gt; &#39;T list<br />&#160;&#160;static member Empty : &#39;T list<br /><br />Full name: Microsoft.FSharp.Collections.List&lt;_&gt;</div>
+<div class="tip" id="fs4">val toSeq : list:&#39;T list -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.List.toSeq</div>
+<div class="tip" id="fs5">module Seq<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs6">val distinct : source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt; (requires equality)<br /><br />Full name: Microsoft.FSharp.Collections.Seq.distinct</div>
+<div class="tip" id="fs7">val toList : source:seq&lt;&#39;T&gt; -&gt; &#39;T list<br /><br />Full name: Microsoft.FSharp.Collections.Seq.toList</div>
+<div class="tip" id="fs8">val recursivecombinations : aggregate:(&#39;a -&gt; &#39;a list -&gt; &#39;a list) -&gt; mylist:&#39;a list -&gt; &#39;a list (requires equality)<br /><br />Full name: Script.recursivecombinations<br /><em><br /><br />&#160;get combinations of sums</em></div>
+<div class="tip" id="fs9">val aggregate : (&#39;a -&gt; &#39;a list -&gt; &#39;a list) (requires equality)</div>
+<div class="tip" id="fs10">val h : &#39;a (requires equality)</div>
+<div class="tip" id="fs11">val t : &#39;a list (requires equality)</div>
+<div class="tip" id="fs12">val tailpart : &#39;a list (requires equality)</div>
+<div class="tip" id="fs13">val headpart : &#39;a list (requires equality)</div>
+<div class="tip" id="fs14">val sums : &#39;a list (requires equality)</div>
+<div class="tip" id="fs15">val recsums : &#39;a list (requires equality)</div>
+<div class="tip" id="fs16">val x : &#39;a (requires equality)</div>
+<div class="tip" id="fs17">val combinations : aggregate:(&#39;a -&gt; &#39;a list -&gt; &#39;a list) -&gt; mylist:&#39;a list -&gt; &#39;a list (requires equality)<br /><br />Full name: Script.combinations</div>
+<div class="tip" id="fs18">val sumfunction : head:&#39;a -&gt; (&#39;b list -&gt; &#39;c list) (requires member ( + ))<br /><br />Full name: Script.sumfunction</div>
+<div class="tip" id="fs19">val head : &#39;a (requires member ( + ))</div>
+<div class="tip" id="fs20">val map : mapping:(&#39;T -&gt; &#39;U) -&gt; list:&#39;T list -&gt; &#39;U list<br /><br />Full name: Microsoft.FSharp.Collections.List.map</div>
+<div class="tip" id="fs21">val f : &#39;b (requires member ( + ))</div>
+

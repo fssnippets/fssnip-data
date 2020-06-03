@@ -1,0 +1,165 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+<span class="l">38: </span>
+<span class="l">39: </span>
+<span class="l">40: </span>
+<span class="l">41: </span>
+<span class="l">42: </span>
+<span class="l">43: </span>
+<span class="l">44: </span>
+<span class="l">45: </span>
+<span class="l">46: </span>
+<span class="l">47: </span>
+<span class="l">48: </span>
+<span class="l">49: </span>
+<span class="l">50: </span>
+<span class="l">51: </span>
+<span class="l">52: </span>
+<span class="l">53: </span>
+<span class="l">54: </span>
+<span class="l">55: </span>
+<span class="l">56: </span>
+<span class="l">57: </span>
+<span class="l">58: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">System</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 2)" onmouseover="showTip(event, 'fs1', 2)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 3)" onmouseover="showTip(event, 'fs2', 3)" class="i">Net</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 4)" onmouseover="showTip(event, 'fs1', 4)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 5)" onmouseover="showTip(event, 'fs3', 5)" class="i">IO</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs4', 6)" onmouseover="showTip(event, 'fs4', 6)" class="f">makePostRequest</span> (<span onmouseout="hideTip(event, 'fs5', 7)" onmouseover="showTip(event, 'fs5', 7)" class="i">reqtype</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs6', 8)" onmouseover="showTip(event, 'fs6', 8)" class="t">string</span>) (<span onmouseout="hideTip(event, 'fs7', 9)" onmouseover="showTip(event, 'fs7', 9)" class="i">url</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs6', 10)" onmouseover="showTip(event, 'fs6', 10)" class="t">string</span>) (<span onmouseout="hideTip(event, 'fs8', 11)" onmouseover="showTip(event, 'fs8', 11)" class="i">requestBody</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs6', 12)" onmouseover="showTip(event, 'fs6', 12)" class="t">string</span>) <span class="o">=</span> 
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs9', 13)" onmouseover="showTip(event, 'fs9', 13)" class="i">req</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs10', 14)" onmouseover="showTip(event, 'fs10', 14)" class="i">WebRequest</span><span class="o">.</span><span class="i">CreateHttp</span> <span onmouseout="hideTip(event, 'fs7', 15)" onmouseover="showTip(event, 'fs7', 15)" class="i">url</span>
+    <span onmouseout="hideTip(event, 'fs9', 16)" onmouseover="showTip(event, 'fs9', 16)" class="i">req</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs11', 17)" onmouseover="showTip(event, 'fs11', 17)" class="i">CookieContainer</span> <span class="o">&lt;-</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs11', 18)" onmouseover="showTip(event, 'fs11', 18)" class="i">CookieContainer</span>()
+    <span onmouseout="hideTip(event, 'fs9', 19)" onmouseover="showTip(event, 'fs9', 19)" class="i">req</span><span class="o">.</span><span class="i">Method</span> <span class="o">&lt;-</span> <span class="s">&quot;POST&quot;</span>
+    <span onmouseout="hideTip(event, 'fs9', 20)" onmouseover="showTip(event, 'fs9', 20)" class="i">req</span><span class="o">.</span><span class="i">ProtocolVersion</span> <span class="o">&lt;-</span> <span onmouseout="hideTip(event, 'fs12', 21)" onmouseover="showTip(event, 'fs12', 21)" class="i">HttpVersion</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs13', 22)" onmouseover="showTip(event, 'fs13', 22)" class="i">Version10</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs14', 23)" onmouseover="showTip(event, 'fs14', 23)" class="i">postBytes</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs8', 24)" onmouseover="showTip(event, 'fs8', 24)" class="i">requestBody</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs1', 25)" onmouseover="showTip(event, 'fs1', 25)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs15', 26)" onmouseover="showTip(event, 'fs15', 26)" class="i">Text</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs16', 27)" onmouseover="showTip(event, 'fs16', 27)" class="t">Encoding</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs17', 28)" onmouseover="showTip(event, 'fs17', 28)" class="i">ASCII</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs18', 29)" onmouseover="showTip(event, 'fs18', 29)" class="f">GetBytes</span>
+    <span onmouseout="hideTip(event, 'fs9', 30)" onmouseover="showTip(event, 'fs9', 30)" class="i">req</span><span class="o">.</span><span class="i">ContentLength</span> <span class="o">&lt;-</span> <span onmouseout="hideTip(event, 'fs14', 31)" onmouseover="showTip(event, 'fs14', 31)" class="i">postBytes</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs19', 32)" onmouseover="showTip(event, 'fs19', 32)" class="i">LongLength</span>
+    <span onmouseout="hideTip(event, 'fs9', 33)" onmouseover="showTip(event, 'fs9', 33)" class="i">req</span><span class="o">.</span><span class="i">ContentType</span> <span class="o">&lt;-</span> <span onmouseout="hideTip(event, 'fs5', 34)" onmouseover="showTip(event, 'fs5', 34)" class="i">reqtype</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs20', 35)" onmouseover="showTip(event, 'fs20', 35)" class="i">asynccall</span> <span class="o">=</span>
+        <span onmouseout="hideTip(event, 'fs21', 36)" onmouseover="showTip(event, 'fs21', 36)" class="i">async</span>{
+            <span class="k">try</span>
+                <span class="k">let!</span> <span onmouseout="hideTip(event, 'fs22', 37)" onmouseover="showTip(event, 'fs22', 37)" class="i">reqStream</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs9', 38)" onmouseover="showTip(event, 'fs9', 38)" class="i">req</span><span class="o">.</span><span class="i">GetRequestStreamAsync</span>() <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs23', 39)" onmouseover="showTip(event, 'fs23', 39)" class="t">Async</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs24', 40)" onmouseover="showTip(event, 'fs24', 40)" class="f">AwaitTask</span>
+                <span class="k">do!</span> <span onmouseout="hideTip(event, 'fs22', 41)" onmouseover="showTip(event, 'fs22', 41)" class="i">reqStream</span><span class="o">.</span><span class="i">WriteAsync</span>(<span onmouseout="hideTip(event, 'fs14', 42)" onmouseover="showTip(event, 'fs14', 42)" class="i">postBytes</span>, <span class="n">0</span>, <span onmouseout="hideTip(event, 'fs14', 43)" onmouseover="showTip(event, 'fs14', 43)" class="i">postBytes</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs25', 44)" onmouseover="showTip(event, 'fs25', 44)" class="i">Length</span>) 
+                      <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs23', 45)" onmouseover="showTip(event, 'fs23', 45)" class="t">Async</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs26', 46)" onmouseover="showTip(event, 'fs26', 46)" class="f">AwaitIAsyncResult</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs23', 47)" onmouseover="showTip(event, 'fs23', 47)" class="t">Async</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs27', 48)" onmouseover="showTip(event, 'fs27', 48)" class="f">Ignore</span>
+                <span onmouseout="hideTip(event, 'fs22', 49)" onmouseover="showTip(event, 'fs22', 49)" class="i">reqStream</span><span class="o">.</span><span class="i">Close</span>()
+                <span class="k">let!</span> <span onmouseout="hideTip(event, 'fs28', 50)" onmouseover="showTip(event, 'fs28', 50)" class="i">res</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs9', 51)" onmouseover="showTip(event, 'fs9', 51)" class="i">req</span><span class="o">.</span><span class="i">AsyncGetResponse</span>() 
+                <span class="k">use</span> <span onmouseout="hideTip(event, 'fs29', 52)" onmouseover="showTip(event, 'fs29', 52)" class="i">stream</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs28', 53)" onmouseover="showTip(event, 'fs28', 53)" class="i">res</span><span class="o">.</span><span class="i">GetResponseStream</span>()
+                <span class="k">use</span> <span onmouseout="hideTip(event, 'fs30', 54)" onmouseover="showTip(event, 'fs30', 54)" class="i">reader</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs31', 55)" onmouseover="showTip(event, 'fs31', 55)" class="t">StreamReader</span>(<span onmouseout="hideTip(event, 'fs29', 56)" onmouseover="showTip(event, 'fs29', 56)" class="i">stream</span>)
+                <span class="k">let!</span> <span onmouseout="hideTip(event, 'fs32', 57)" onmouseover="showTip(event, 'fs32', 57)" class="i">rdata</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs30', 58)" onmouseover="showTip(event, 'fs30', 58)" class="i">reader</span><span class="o">.</span><span class="i">ReadToEndAsync</span>() <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs23', 59)" onmouseover="showTip(event, 'fs23', 59)" class="t">Async</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs24', 60)" onmouseover="showTip(event, 'fs24', 60)" class="f">AwaitTask</span>                           
+                <span class="k">return</span> <span onmouseout="hideTip(event, 'fs32', 61)" onmouseover="showTip(event, 'fs32', 61)" class="i">rdata</span>
+            <span class="k">with</span>
+                | _ <span class="k">as</span> <span onmouseout="hideTip(event, 'fs33', 62)" onmouseover="showTip(event, 'fs33', 62)" class="i">ex</span> <span class="k">-&gt;</span> <span class="c">//for debug</span>
+                    <span class="k">return</span> <span onmouseout="hideTip(event, 'fs34', 63)" onmouseover="showTip(event, 'fs34', 63)" class="f">failwith</span>(<span onmouseout="hideTip(event, 'fs33', 64)" onmouseover="showTip(event, 'fs33', 64)" class="i">ex</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs35', 65)" onmouseover="showTip(event, 'fs35', 65)" class="f">ToString</span>())
+        }
+    <span onmouseout="hideTip(event, 'fs20', 66)" onmouseover="showTip(event, 'fs20', 66)" class="i">asynccall</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs36', 67)" onmouseover="showTip(event, 'fs36', 67)" class="f">makeRequest</span> <span onmouseout="hideTip(event, 'fs37', 68)" onmouseover="showTip(event, 'fs37', 68)" class="i">eqf_apiusername</span> <span onmouseout="hideTip(event, 'fs38', 69)" onmouseover="showTip(event, 'fs38', 69)" class="i">eqf_apipwd</span> <span class="o">=</span> <span class="s">&quot;&quot;&quot;</span>
+<span class="s">    &lt;soapenv:Envelope xmlns:soapenv=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot; xmlns:oas=&quot;http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd&quot; xmlns:lis=&quot;http://ewsaddress.services.uk.equifax.com/schema/v1/listaddress/listaddressbypostcoderequest&quot;&gt;</span>
+<span class="s">        &lt;soapenv:Header&gt;</span>
+<span class="s">            &lt;wsse:Security soapenv:mustUnderstand=&quot;1&quot; xmlns:wsse=&quot;http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd&quot;&gt;</span>
+<span class="s">                    &lt;wsse:UsernameToken wsu:Id=&quot;UseToken-2&quot; xmlns:wsu=&quot;http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd&quot;&gt;</span>
+<span class="s">                        &lt;wsse:Username&gt;&quot;&quot;&quot;</span> <span class="o">+</span> <span onmouseout="hideTip(event, 'fs37', 70)" onmouseover="showTip(event, 'fs37', 70)" class="i">eqf_apiusername</span> <span class="o">+</span> <span class="s">&quot;&quot;&quot;&lt;/wsse:Username&gt;</span>
+<span class="s">                        &lt;wsse:Password Type=&quot;http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText&quot;&gt;&quot;&quot;&quot;</span> <span class="o">+</span> <span onmouseout="hideTip(event, 'fs38', 71)" onmouseover="showTip(event, 'fs38', 71)" class="i">eqf_apipwd</span> <span class="o">+</span> <span class="s">&quot;&quot;&quot;&lt;/wsse:Password&gt;</span>
+<span class="s">                    &lt;/wsse:UsernameToken&gt;</span>
+<span class="s">                &lt;/wsse:Security&gt;</span>
+<span class="s">        &lt;/soapenv:Header&gt;</span>
+<span class="s">        &lt;soapenv:Body&gt;</span>
+<span class="s">            &lt;lis:listAddressByPostcodeRequest&gt;</span>
+<span class="s">                &lt;clientRef&gt;POSTCODE LOOK UP&lt;/clientRef&gt;</span>
+<span class="s">                &lt;postcode&gt;BA13 3BN&lt;/postcode&gt;</span>
+<span class="s">            &lt;/lis:listAddressByPostcodeRequest&gt;</span>
+<span class="s">        &lt;/soapenv:Body&gt;</span>
+<span class="s">    &lt;/soapenv:Envelope&gt;</span>
+<span class="s">    &quot;&quot;&quot;</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs39', 72)" onmouseover="showTip(event, 'fs39', 72)" class="i">reqtype</span> <span class="o">=</span> <span class="s">&quot;application/xml; charset=utf-8&quot;</span> <span class="c">//&quot;text/xml; charset=utf-8&quot;</span>
+
+[&lt;<span onmouseout="hideTip(event, 'fs40', 73)" onmouseover="showTip(event, 'fs40', 73)" class="t">Literal</span>&gt;]
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs41', 74)" onmouseover="showTip(event, 'fs41', 74)" class="i">eqf_url</span> <span class="o">=</span> <span class="s">&quot;https://services.uat.uk.equifax.com/xmlii/EWSConsumerService-v1_x/consumerService.wsdl&quot;</span>
+
+<span class="c">// Test credentials:</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs42', 75)" onmouseover="showTip(event, 'fs42', 75)" class="i">eqf_req</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs36', 76)" onmouseover="showTip(event, 'fs36', 76)" class="f">makeRequest</span> <span class="s">&quot;...&quot;</span> <span class="s">&quot;...&quot;</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs43', 77)" onmouseover="showTip(event, 'fs43', 77)" class="i">res</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs4', 78)" onmouseover="showTip(event, 'fs4', 78)" class="f">makePostRequest</span> <span onmouseout="hideTip(event, 'fs39', 79)" onmouseover="showTip(event, 'fs39', 79)" class="i">reqtype</span> <span onmouseout="hideTip(event, 'fs41', 80)" onmouseover="showTip(event, 'fs41', 80)" class="i">eqf_url</span> <span onmouseout="hideTip(event, 'fs42', 81)" onmouseover="showTip(event, 'fs42', 81)" class="i">eqf_req</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs23', 82)" onmouseover="showTip(event, 'fs23', 82)" class="t">Async</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs44', 83)" onmouseover="showTip(event, 'fs44', 83)" class="f">RunSynchronously</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace System</div>
+<div class="tip" id="fs2">namespace System.Net</div>
+<div class="tip" id="fs3">namespace System.IO</div>
+<div class="tip" id="fs4">val makePostRequest : reqtype:string -&gt; url:string -&gt; requestBody:string -&gt; Async&lt;&#39;a&gt;<br /><br />Full name: Script.makePostRequest</div>
+<div class="tip" id="fs5">val reqtype : string</div>
+<div class="tip" id="fs6">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />Full name: Microsoft.FSharp.Core.Operators.string<br /><br />--------------------<br />type string = String<br /><br />Full name: Microsoft.FSharp.Core.string</div>
+<div class="tip" id="fs7">val url : string</div>
+<div class="tip" id="fs8">val requestBody : string</div>
+<div class="tip" id="fs9">val req : obj</div>
+<div class="tip" id="fs10">type WebRequest =<br />&#160;&#160;inherit MarshalByRefObject<br />&#160;&#160;member Abort : unit -&gt; unit<br />&#160;&#160;member AuthenticationLevel : AuthenticationLevel with get, set<br />&#160;&#160;member BeginGetRequestStream : callback:AsyncCallback * state:obj -&gt; IAsyncResult<br />&#160;&#160;member BeginGetResponse : callback:AsyncCallback * state:obj -&gt; IAsyncResult<br />&#160;&#160;member CachePolicy : RequestCachePolicy with get, set<br />&#160;&#160;member ConnectionGroupName : string with get, set<br />&#160;&#160;member ContentLength : int64 with get, set<br />&#160;&#160;member ContentType : string with get, set<br />&#160;&#160;member Credentials : ICredentials with get, set<br />&#160;&#160;member EndGetRequestStream : asyncResult:IAsyncResult -&gt; Stream<br />&#160;&#160;...<br /><br />Full name: System.Net.WebRequest</div>
+<div class="tip" id="fs11">Multiple items<br />type CookieContainer =<br />&#160;&#160;new : unit -&gt; CookieContainer + 2 overloads<br />&#160;&#160;member Add : cookie:Cookie -&gt; unit + 3 overloads<br />&#160;&#160;member Capacity : int with get, set<br />&#160;&#160;member Count : int<br />&#160;&#160;member GetCookieHeader : uri:Uri -&gt; string<br />&#160;&#160;member GetCookies : uri:Uri -&gt; CookieCollection<br />&#160;&#160;member MaxCookieSize : int with get, set<br />&#160;&#160;member PerDomainCapacity : int with get, set<br />&#160;&#160;member SetCookies : uri:Uri * cookieHeader:string -&gt; unit<br />&#160;&#160;static val DefaultCookieLimit : int<br />&#160;&#160;...<br /><br />Full name: System.Net.CookieContainer<br /><br />--------------------<br />CookieContainer() : unit<br />CookieContainer(capacity: int) : unit<br />CookieContainer(capacity: int, perDomainCapacity: int, maxCookieSize: int) : unit</div>
+<div class="tip" id="fs12">Multiple items<br />type HttpVersion =<br />&#160;&#160;new : unit -&gt; HttpVersion<br />&#160;&#160;static val Version10 : Version<br />&#160;&#160;static val Version11 : Version<br /><br />Full name: System.Net.HttpVersion<br /><br />--------------------<br />HttpVersion() : unit</div>
+<div class="tip" id="fs13">field HttpVersion.Version10</div>
+<div class="tip" id="fs14">val postBytes : byte []</div>
+<div class="tip" id="fs15">namespace System.Text</div>
+<div class="tip" id="fs16">type Encoding =<br />&#160;&#160;member BodyName : string<br />&#160;&#160;member Clone : unit -&gt; obj<br />&#160;&#160;member CodePage : int<br />&#160;&#160;member DecoderFallback : DecoderFallback with get, set<br />&#160;&#160;member EncoderFallback : EncoderFallback with get, set<br />&#160;&#160;member EncodingName : string<br />&#160;&#160;member Equals : value:obj -&gt; bool<br />&#160;&#160;member GetByteCount : chars:char[] -&gt; int + 3 overloads<br />&#160;&#160;member GetBytes : chars:char[] -&gt; byte[] + 5 overloads<br />&#160;&#160;member GetCharCount : bytes:byte[] -&gt; int + 2 overloads<br />&#160;&#160;...<br /><br />Full name: System.Text.Encoding</div>
+<div class="tip" id="fs17">property Text.Encoding.ASCII: Text.Encoding</div>
+<div class="tip" id="fs18">Text.Encoding.GetBytes(s: string) : byte []<br />Text.Encoding.GetBytes(chars: char []) : byte []<br />Text.Encoding.GetBytes(chars: char [], index: int, count: int) : byte []<br />Text.Encoding.GetBytes(chars: nativeptr&lt;char&gt;, charCount: int, bytes: nativeptr&lt;byte&gt;, byteCount: int) : int<br />Text.Encoding.GetBytes(s: string, charIndex: int, charCount: int, bytes: byte [], byteIndex: int) : int<br />Text.Encoding.GetBytes(chars: char [], charIndex: int, charCount: int, bytes: byte [], byteIndex: int) : int</div>
+<div class="tip" id="fs19">property Array.LongLength: int64</div>
+<div class="tip" id="fs20">val asynccall : Async&lt;&#39;a&gt;</div>
+<div class="tip" id="fs21">val async : AsyncBuilder<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.async</div>
+<div class="tip" id="fs22">val reqStream : obj</div>
+<div class="tip" id="fs23">Multiple items<br />type Async<br />static member AsBeginEnd : computation:(&#39;Arg -&gt; Async&lt;&#39;T&gt;) -&gt; (&#39;Arg * AsyncCallback * obj -&gt; IAsyncResult) * (IAsyncResult -&gt; &#39;T) * (IAsyncResult -&gt; unit)<br />static member AwaitEvent : event:IEvent&lt;&#39;Del,&#39;T&gt; * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt; (requires delegate and &#39;Del :&gt; Delegate)<br />static member AwaitIAsyncResult : iar:IAsyncResult * ?millisecondsTimeout:int -&gt; Async&lt;bool&gt;<br />static member AwaitTask : task:Task -&gt; Async&lt;unit&gt;<br />static member AwaitTask : task:Task&lt;&#39;T&gt; -&gt; Async&lt;&#39;T&gt;<br />static member AwaitWaitHandle : waitHandle:WaitHandle * ?millisecondsTimeout:int -&gt; Async&lt;bool&gt;<br />static member CancelDefaultToken : unit -&gt; unit<br />static member Catch : computation:Async&lt;&#39;T&gt; -&gt; Async&lt;Choice&lt;&#39;T,exn&gt;&gt;<br />static member FromBeginEnd : beginAction:(AsyncCallback * obj -&gt; IAsyncResult) * endAction:(IAsyncResult -&gt; &#39;T) * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member FromBeginEnd : arg:&#39;Arg1 * beginAction:(&#39;Arg1 * AsyncCallback * obj -&gt; IAsyncResult) * endAction:(IAsyncResult -&gt; &#39;T) * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member FromBeginEnd : arg1:&#39;Arg1 * arg2:&#39;Arg2 * beginAction:(&#39;Arg1 * &#39;Arg2 * AsyncCallback * obj -&gt; IAsyncResult) * endAction:(IAsyncResult -&gt; &#39;T) * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member FromBeginEnd : arg1:&#39;Arg1 * arg2:&#39;Arg2 * arg3:&#39;Arg3 * beginAction:(&#39;Arg1 * &#39;Arg2 * &#39;Arg3 * AsyncCallback * obj -&gt; IAsyncResult) * endAction:(IAsyncResult -&gt; &#39;T) * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member FromContinuations : callback:((&#39;T -&gt; unit) * (exn -&gt; unit) * (OperationCanceledException -&gt; unit) -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member Ignore : computation:Async&lt;&#39;T&gt; -&gt; Async&lt;unit&gt;<br />static member OnCancel : interruption:(unit -&gt; unit) -&gt; Async&lt;IDisposable&gt;<br />static member Parallel : computations:seq&lt;Async&lt;&#39;T&gt;&gt; -&gt; Async&lt;&#39;T []&gt;<br />static member RunSynchronously : computation:Async&lt;&#39;T&gt; * ?timeout:int * ?cancellationToken:CancellationToken -&gt; &#39;T<br />static member Sleep : millisecondsDueTime:int -&gt; Async&lt;unit&gt;<br />static member Start : computation:Async&lt;unit&gt; * ?cancellationToken:CancellationToken -&gt; unit<br />static member StartAsTask : computation:Async&lt;&#39;T&gt; * ?taskCreationOptions:TaskCreationOptions * ?cancellationToken:CancellationToken -&gt; Task&lt;&#39;T&gt;<br />static member StartChild : computation:Async&lt;&#39;T&gt; * ?millisecondsTimeout:int -&gt; Async&lt;Async&lt;&#39;T&gt;&gt;<br />static member StartChildAsTask : computation:Async&lt;&#39;T&gt; * ?taskCreationOptions:TaskCreationOptions -&gt; Async&lt;Task&lt;&#39;T&gt;&gt;<br />static member StartImmediate : computation:Async&lt;unit&gt; * ?cancellationToken:CancellationToken -&gt; unit<br />static member StartWithContinuations : computation:Async&lt;&#39;T&gt; * continuation:(&#39;T -&gt; unit) * exceptionContinuation:(exn -&gt; unit) * cancellationContinuation:(OperationCanceledException -&gt; unit) * ?cancellationToken:CancellationToken -&gt; unit<br />static member SwitchToContext : syncContext:SynchronizationContext -&gt; Async&lt;unit&gt;<br />static member SwitchToNewThread : unit -&gt; Async&lt;unit&gt;<br />static member SwitchToThreadPool : unit -&gt; Async&lt;unit&gt;<br />static member TryCancelled : computation:Async&lt;&#39;T&gt; * compensation:(OperationCanceledException -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member CancellationToken : Async&lt;CancellationToken&gt;<br />static member DefaultCancellationToken : CancellationToken<br /><br />Full name: Microsoft.FSharp.Control.Async<br /><br />--------------------<br />type Async&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Control.Async&lt;_&gt;</div>
+<div class="tip" id="fs24">static member Async.AwaitTask : task:Threading.Tasks.Task -&gt; Async&lt;unit&gt;<br />static member Async.AwaitTask : task:Threading.Tasks.Task&lt;&#39;T&gt; -&gt; Async&lt;&#39;T&gt;</div>
+<div class="tip" id="fs25">property Array.Length: int</div>
+<div class="tip" id="fs26">static member Async.AwaitIAsyncResult : iar:IAsyncResult * ?millisecondsTimeout:int -&gt; Async&lt;bool&gt;</div>
+<div class="tip" id="fs27">static member Async.Ignore : computation:Async&lt;&#39;T&gt; -&gt; Async&lt;unit&gt;</div>
+<div class="tip" id="fs28">val res : obj</div>
+<div class="tip" id="fs29">val stream : IDisposable</div>
+<div class="tip" id="fs30">val reader : StreamReader</div>
+<div class="tip" id="fs31">Multiple items<br />type StreamReader =<br />&#160;&#160;inherit TextReader<br />&#160;&#160;new : stream:Stream -&gt; StreamReader + 9 overloads<br />&#160;&#160;member BaseStream : Stream<br />&#160;&#160;member Close : unit -&gt; unit<br />&#160;&#160;member CurrentEncoding : Encoding<br />&#160;&#160;member DiscardBufferedData : unit -&gt; unit<br />&#160;&#160;member EndOfStream : bool<br />&#160;&#160;member Peek : unit -&gt; int<br />&#160;&#160;member Read : unit -&gt; int + 1 overload<br />&#160;&#160;member ReadLine : unit -&gt; string<br />&#160;&#160;member ReadToEnd : unit -&gt; string<br />&#160;&#160;...<br /><br />Full name: System.IO.StreamReader<br /><br />--------------------<br />StreamReader(stream: Stream) : unit<br />StreamReader(path: string) : unit<br />StreamReader(stream: Stream, detectEncodingFromByteOrderMarks: bool) : unit<br />StreamReader(stream: Stream, encoding: Text.Encoding) : unit<br />StreamReader(path: string, detectEncodingFromByteOrderMarks: bool) : unit<br />StreamReader(path: string, encoding: Text.Encoding) : unit<br />StreamReader(stream: Stream, encoding: Text.Encoding, detectEncodingFromByteOrderMarks: bool) : unit<br />StreamReader(path: string, encoding: Text.Encoding, detectEncodingFromByteOrderMarks: bool) : unit<br />StreamReader(stream: Stream, encoding: Text.Encoding, detectEncodingFromByteOrderMarks: bool, bufferSize: int) : unit<br />StreamReader(path: string, encoding: Text.Encoding, detectEncodingFromByteOrderMarks: bool, bufferSize: int) : unit</div>
+<div class="tip" id="fs32">val rdata : &#39;a</div>
+<div class="tip" id="fs33">val ex : exn</div>
+<div class="tip" id="fs34">val failwith : message:string -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.Operators.failwith</div>
+<div class="tip" id="fs35">Exception.ToString() : string</div>
+<div class="tip" id="fs36">val makeRequest : eqf_apiusername:string -&gt; eqf_apipwd:string -&gt; string<br /><br />Full name: Script.makeRequest</div>
+<div class="tip" id="fs37">val eqf_apiusername : string</div>
+<div class="tip" id="fs38">val eqf_apipwd : string</div>
+<div class="tip" id="fs39">val reqtype : string<br /><br />Full name: Script.reqtype</div>
+<div class="tip" id="fs40">Multiple items<br />type LiteralAttribute =<br />&#160;&#160;inherit Attribute<br />&#160;&#160;new : unit -&gt; LiteralAttribute<br /><br />Full name: Microsoft.FSharp.Core.LiteralAttribute<br /><br />--------------------<br />new : unit -&gt; LiteralAttribute</div>
+<div class="tip" id="fs41">val eqf_url : string<br /><br />Full name: Script.eqf_url</div>
+<div class="tip" id="fs42">val eqf_req : string<br /><br />Full name: Script.eqf_req</div>
+<div class="tip" id="fs43">val res : obj<br /><br />Full name: Script.res</div>
+<div class="tip" id="fs44">static member Async.RunSynchronously : computation:Async&lt;&#39;T&gt; * ?timeout:int * ?cancellationToken:Threading.CancellationToken -&gt; &#39;T</div>
+

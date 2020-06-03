@@ -1,0 +1,45 @@
+// [snippet:Making the request]
+open System
+open FSharp.Data
+
+// To call the service, send POST request to http://fssnip.net/api/format
+let sample = 
+  Http.RequestString
+    ( "http://fssnip.net/api/format", 
+      httpMethod="POST", 
+      // Use "Content-Type" header to specify we're using first version of the API
+      headers=[HttpRequestHeaders.ContentType "application/vnd.fssnip-v1+json"],
+      // Provide a list of snippets (later snippets can use values from earlier)
+      // Additional (optional) fields let you specify NuGet packages to reference,
+      // prefix to use in generated HTML (to make IDs from multiple requests unique)
+      // and disable line numbers (enabled by default)
+      body=HttpRequestBody.TextRequest """{ 
+        "snippets": [
+          "let hello = FSharp.Data.Http.RequestString(\"http://fssnip.net\")",
+          "printfn \"Got %d characters\" hello.Length" ],
+        "packages": [ "FSharp.Data" ],
+        "prefix": "fs",
+        "lineNumbers":false
+      }""")
+
+// [/snippet]
+// [snippet:Parsing the response]
+// The response from the API is a JSON object with two fields:
+//  - snippets is a list with HTML (same length as length of the input collection)
+//  - tips is a string with generated tooltips (used by JavaScript)
+//
+// { "snippets": [
+//      "<pre class=\"fssnip highlighted\">...</pre>\r\n",
+//      "<pre class=\"fssnip highlighted\">...</pre>\r\n" ]
+//   "tips": "<div class=\"tip\" id=\"fs1\">val hello : string (...)" }
+
+type FsSnipResponse = 
+  JsonProvider<"""{ "snippets":["html", "more html"], "tips":"divs" }""">
+
+let formatted = FsSnipResponse.Parse(sample)
+for snip in formatted.Snippets do printfn "%s" snip
+printfn "%s" formatted.Tips
+
+// To use this, you'll also need to add the ".js" and ".css" files from F# Formatting to your site:
+// https://github.com/tpetricek/FSharp.Formatting/tree/master/docs/files/content
+// [/snippet]

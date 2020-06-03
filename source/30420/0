@@ -1,0 +1,54 @@
+open System
+open System.IO
+open System.IO.Compression
+open Microsoft.FSharp.NativeInterop
+
+#nowarn "9"
+
+type CompressedArray<'a when 'a : unmanaged> (data:array<'a>, compressionLevel) =
+    static let compress (uncompressedData:array<'a>) (compressionLevel:CompressionLevel) : (array<byte>*int64) =
+        use ptrToBufferOfA = fixed (&uncompressedData.[0])
+        let ptrToBuffer = NativePtr.toNativeInt ptrToBufferOfA
+        let ptrToBufferOfByte = NativePtr.ofNativeInt<byte> ptrToBuffer
+
+        let length = (int64 uncompressedData.Length) * (int64 sizeof<'a>)
+        use uncompressedStream = new UnmanagedMemoryStream (ptrToBufferOfByte, length)
+        use compressedStream = new MemoryStream ()
+        let deflatingStream = new DeflateStream (compressedStream, compressionLevel)
+        using deflatingStream (fun deflating -> uncompressedStream.CopyTo deflating)
+
+        (compressedStream.ToArray (), length)
+
+    static let decompress (compressedBytes:array<byte>, decompressedSize:int64) : array<'a> =
+        let elements = int (decompressedSize / (int64 sizeof<'a>))
+        if (int64 elements) * (int64 sizeof<'a>) <> decompressedSize then
+            failwith "logic error: decompressedSize is not multiple of sizeof<'a>"
+
+        let buffer = Array.zeroCreate<'a> elements
+        use ptrToBufferofA = fixed (&buffer.[0])
+        let ptrToBuffer = NativePtr.toNativeInt ptrToBufferofA
+        let ptrToBufferOfByte = NativePtr.ofNativeInt<byte> ptrToBuffer
+
+        let uncompressedStreamOnBuffer = new UnmanagedMemoryStream (ptrToBufferOfByte, decompressedSize, decompressedSize, FileAccess.Write)
+        using uncompressedStreamOnBuffer (fun uncompressed ->
+            use compressedStream = new MemoryStream (compressedBytes, false)
+            use inflatingStream = new DeflateStream (compressedStream, CompressionMode.Decompress)
+            inflatingStream.CopyTo uncompressed)
+
+        buffer
+
+    let uncompressed = WeakReference<array<'a>> Unchecked.defaultof<_>
+    let compressed = compress data compressionLevel
+
+    new (data:array<'a>) = CompressedArray<'a> (data, CompressionLevel.Fastest)
+
+    member __.Ratio =
+        (float ((fst compressed).Length)) / (float (snd compressed))
+
+    member __.ToUncompressed () =
+        match uncompressed.TryGetTarget () with
+        | true, result -> result
+        | false, _ ->
+            let result = decompress compressed
+            uncompressed.SetTarget result
+            result

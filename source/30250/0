@@ -1,0 +1,27 @@
+// [snippet:Euler function]
+let euler f a b n y0 =
+    let h = (b - a) / (float) n
+    let rec euler f x y0 h =
+        match x with
+        | x0::x1::xt -> let y1 = y0 + f(x0,y0) * h
+                        let yx = y0 + (f(x0,y0) + f(x1,y1)) / 2.0 * h
+                        printfn "%.06f %.06f %.06f" x1 y1 yx
+                        euler f ([x1]@xt) yx h
+        | _ -> y0
+    euler f [a..h..b] y0 h
+
+// [snippet:Usage]
+//This is the function values
+
+let k1 = 0.00002
+let k2 = 0.0001
+let m = 100000.0
+let x0 = 99000.0
+let f(x,y) = k2*(m-y-x0*exp(-k1/k2*y))
+
+let a = 0.0
+let b = 10.0
+let n = 5 // (b - a) / 2.0
+let y = 5213.95256
+
+euler f a b n y

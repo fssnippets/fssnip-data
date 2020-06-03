@@ -1,0 +1,113 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+<span class="l">38: </span>
+<span class="l">39: </span>
+<span class="l">40: </span>
+<span class="l">41: </span>
+<span class="l">42: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="prep">#load</span> <span class="s">&quot;SetupML.fsx&quot;</span> <span class="c">//get it from here: http://fssnip.net/7Wi</span>
+
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">Threading</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="i">Microsoft</span><span class="o">.</span><span class="i">ML</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs3', 4)" onmouseover="showTip(event, 'fs3', 4)" class="i">Microsoft</span><span class="o">.</span><span class="i">ML</span><span class="o">.</span><span class="i">AutoML</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs4', 5)" onmouseover="showTip(event, 'fs4', 5)" class="i">ctx</span> <span class="o">=</span> <span class="i">MLContext</span>()
+
+<span class="c">//data from here: https://www.kaggle.com/mlg-ulb/creditcardfraud</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs5', 6)" onmouseover="showTip(event, 'fs5', 6)" class="i">trainFile</span> <span class="o">=</span> <span class="s">@&quot;C:\Users\fwaris\Downloads\creditcardfraud\creditcard.csv&quot;</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs6', 7)" onmouseover="showTip(event, 'fs6', 7)" class="i">labelCol</span> <span class="o">=</span> <span class="s">&quot;Class&quot;</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs7', 8)" onmouseover="showTip(event, 'fs7', 8)" class="i">colSelection</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs4', 9)" onmouseover="showTip(event, 'fs4', 9)" class="i">ctx</span><span class="o">.</span><span class="i">Auto</span>()<span class="o">.</span><span class="i">InferColumns</span>(<span onmouseout="hideTip(event, 'fs5', 10)" onmouseover="showTip(event, 'fs5', 10)" class="i">trainFile</span>, <span onmouseout="hideTip(event, 'fs6', 11)" onmouseover="showTip(event, 'fs6', 11)" class="i">labelCol</span>)
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs8', 12)" onmouseover="showTip(event, 'fs8', 12)" class="i">textLoader</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs4', 13)" onmouseover="showTip(event, 'fs4', 13)" class="i">ctx</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs9', 14)" onmouseover="showTip(event, 'fs9', 14)" class="i">Data</span><span class="o">.</span><span class="i">CreateTextLoader</span>(<span onmouseout="hideTip(event, 'fs7', 15)" onmouseover="showTip(event, 'fs7', 15)" class="i">colSelection</span><span class="o">.</span><span class="i">TextLoaderOptions</span>)
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs10', 16)" onmouseover="showTip(event, 'fs10', 16)" class="i">trainView</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs8', 17)" onmouseover="showTip(event, 'fs8', 17)" class="i">textLoader</span><span class="o">.</span><span class="i">Load</span>(<span onmouseout="hideTip(event, 'fs5', 18)" onmouseover="showTip(event, 'fs5', 18)" class="i">trainFile</span>)
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs11', 19)" onmouseover="showTip(event, 'fs11', 19)" class="i">cts</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs12', 20)" onmouseover="showTip(event, 'fs12', 20)" class="t">CancellationTokenSource</span>()
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs13', 21)" onmouseover="showTip(event, 'fs13', 21)" class="i">expSettings</span> <span class="o">=</span> <span class="i">BinaryExperimentSettings</span>()
+<span onmouseout="hideTip(event, 'fs13', 22)" onmouseover="showTip(event, 'fs13', 22)" class="i">expSettings</span><span class="o">.</span><span class="i">OptimizingMetric</span> <span class="o">&lt;-</span> <span class="i">BinaryClassificationMetric</span><span class="o">.</span><span class="i">AreaUnderRocCurve</span>
+<span onmouseout="hideTip(event, 'fs13', 23)" onmouseover="showTip(event, 'fs13', 23)" class="i">expSettings</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs14', 24)" onmouseover="showTip(event, 'fs14', 24)" class="i">CancellationToken</span> <span class="o">&lt;-</span> <span onmouseout="hideTip(event, 'fs11', 25)" onmouseover="showTip(event, 'fs11', 25)" class="i">cts</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs15', 26)" onmouseover="showTip(event, 'fs15', 26)" class="i">Token</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs16', 27)" onmouseover="showTip(event, 'fs16', 27)" class="i">experiment</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs4', 28)" onmouseover="showTip(event, 'fs4', 28)" class="i">ctx</span><span class="o">.</span><span class="i">Auto</span>()<span class="o">.</span><span class="i">CreateBinaryClassificationExperiment</span>(<span onmouseout="hideTip(event, 'fs13', 29)" onmouseover="showTip(event, 'fs13', 29)" class="i">expSettings</span>)
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs17', 30)" onmouseover="showTip(event, 'fs17', 30)" class="v">results</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs18', 31)" onmouseover="showTip(event, 'fs18', 31)" class="f">ref</span> <span onmouseout="hideTip(event, 'fs19', 32)" onmouseover="showTip(event, 'fs19', 32)" class="p">None</span>                                                                                      
+<span onmouseout="hideTip(event, 'fs20', 33)" onmouseover="showTip(event, 'fs20', 33)" class="i">async</span> { 
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs21', 34)" onmouseover="showTip(event, 'fs21', 34)" class="i">r</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs16', 35)" onmouseover="showTip(event, 'fs16', 35)" class="i">experiment</span><span class="o">.</span><span class="i">Execute</span>(<span onmouseout="hideTip(event, 'fs10', 36)" onmouseover="showTip(event, 'fs10', 36)" class="i">trainView</span>, <span onmouseout="hideTip(event, 'fs7', 37)" onmouseover="showTip(event, 'fs7', 37)" class="i">colSelection</span><span class="o">.</span><span class="i">ColumnInformation</span>)
+    <span onmouseout="hideTip(event, 'fs17', 38)" onmouseover="showTip(event, 'fs17', 38)" class="v">results</span> <span class="o">:=</span> <span onmouseout="hideTip(event, 'fs22', 39)" onmouseover="showTip(event, 'fs22', 39)" class="p">Some</span> <span onmouseout="hideTip(event, 'fs21', 40)" onmouseover="showTip(event, 'fs21', 40)" class="i">r</span>
+    }
+    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs23', 41)" onmouseover="showTip(event, 'fs23', 41)" class="t">Async</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs24', 42)" onmouseover="showTip(event, 'fs24', 42)" class="f">Start</span>
+<span class="c">(*</span>
+<span class="c">cts.Cancel()      // cancel to get results (can still take a while)</span>
+
+
+
+<span class="c">results.Value.Value.RunDetails</span>
+<span class="c">|&gt; Seq.sortByDescending (fun x-&gt;x.ValidationMetrics.AreaUnderRocCurve)</span>
+<span class="c">|&gt; Seq.iter (fun dtl -&gt; printfn &quot;%s %f&quot; dtl.TrainerName dtl.ValidationMetrics.AreaUnderRocCurve)</span>
+
+<span class="c">*)</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace System</div>
+<div class="tip" id="fs2">namespace System.Threading</div>
+<div class="tip" id="fs3">namespace Microsoft</div>
+<div class="tip" id="fs4">val ctx : obj<br /><br />Full name: Script.ctx</div>
+<div class="tip" id="fs5">val trainFile : string<br /><br />Full name: Script.trainFile</div>
+<div class="tip" id="fs6">val labelCol : string<br /><br />Full name: Script.labelCol</div>
+<div class="tip" id="fs7">val colSelection : obj<br /><br />Full name: Script.colSelection</div>
+<div class="tip" id="fs8">val textLoader : obj<br /><br />Full name: Script.textLoader</div>
+<div class="tip" id="fs9">namespace Microsoft.FSharp.Data</div>
+<div class="tip" id="fs10">val trainView : obj<br /><br />Full name: Script.trainView</div>
+<div class="tip" id="fs11">val cts : CancellationTokenSource<br /><br />Full name: Script.cts</div>
+<div class="tip" id="fs12">Multiple items<br />type CancellationTokenSource =<br />&#160;&#160;new : unit -&gt; CancellationTokenSource<br />&#160;&#160;member Cancel : unit -&gt; unit + 1 overload<br />&#160;&#160;member Dispose : unit -&gt; unit<br />&#160;&#160;member IsCancellationRequested : bool<br />&#160;&#160;member Token : CancellationToken<br />&#160;&#160;static member CreateLinkedTokenSource : [&lt;ParamArray&gt;] tokens:CancellationToken[] -&gt; CancellationTokenSource + 1 overload<br /><br />Full name: System.Threading.CancellationTokenSource<br /><br />--------------------<br />CancellationTokenSource() : unit</div>
+<div class="tip" id="fs13">val expSettings : obj<br /><br />Full name: Script.expSettings</div>
+<div class="tip" id="fs14">Multiple items<br />type CancellationToken =<br />&#160;&#160;struct<br />&#160;&#160;&#160;&#160;new : canceled:bool -&gt; CancellationToken<br />&#160;&#160;&#160;&#160;member CanBeCanceled : bool<br />&#160;&#160;&#160;&#160;member Equals : other:CancellationToken -&gt; bool + 1 overload<br />&#160;&#160;&#160;&#160;member GetHashCode : unit -&gt; int<br />&#160;&#160;&#160;&#160;member IsCancellationRequested : bool<br />&#160;&#160;&#160;&#160;member Register : callback:Action -&gt; CancellationTokenRegistration + 3 overloads<br />&#160;&#160;&#160;&#160;member ThrowIfCancellationRequested : unit -&gt; unit<br />&#160;&#160;&#160;&#160;member WaitHandle : WaitHandle<br />&#160;&#160;&#160;&#160;static member None : CancellationToken<br />&#160;&#160;end<br /><br />Full name: System.Threading.CancellationToken<br /><br />--------------------<br />CancellationToken()<br />CancellationToken(canceled: bool) : unit</div>
+<div class="tip" id="fs15">property CancellationTokenSource.Token: CancellationToken</div>
+<div class="tip" id="fs16">val experiment : obj<br /><br />Full name: Script.experiment</div>
+<div class="tip" id="fs17">val results : obj option ref<br /><br />Full name: Script.results</div>
+<div class="tip" id="fs18">Multiple items<br />val ref : value:&#39;T -&gt; &#39;T ref<br /><br />Full name: Microsoft.FSharp.Core.Operators.ref<br /><br />--------------------<br />type &#39;T ref = Ref&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Core.ref&lt;_&gt;</div>
+<div class="tip" id="fs19">union case Option.None: Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs20">val async : AsyncBuilder<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.async</div>
+<div class="tip" id="fs21">val r : obj</div>
+<div class="tip" id="fs22">union case Option.Some: Value: &#39;T -&gt; Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs23">Multiple items<br />type Async<br />static member AsBeginEnd : computation:(&#39;Arg -&gt; Async&lt;&#39;T&gt;) -&gt; (&#39;Arg * AsyncCallback * obj -&gt; IAsyncResult) * (IAsyncResult -&gt; &#39;T) * (IAsyncResult -&gt; unit)<br />static member AwaitEvent : event:IEvent&lt;&#39;Del,&#39;T&gt; * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt; (requires delegate and &#39;Del :&gt; Delegate)<br />static member AwaitIAsyncResult : iar:IAsyncResult * ?millisecondsTimeout:int -&gt; Async&lt;bool&gt;<br />static member AwaitTask : task:Task -&gt; Async&lt;unit&gt;<br />static member AwaitTask : task:Task&lt;&#39;T&gt; -&gt; Async&lt;&#39;T&gt;<br />static member AwaitWaitHandle : waitHandle:WaitHandle * ?millisecondsTimeout:int -&gt; Async&lt;bool&gt;<br />static member CancelDefaultToken : unit -&gt; unit<br />static member Catch : computation:Async&lt;&#39;T&gt; -&gt; Async&lt;Choice&lt;&#39;T,exn&gt;&gt;<br />static member FromBeginEnd : beginAction:(AsyncCallback * obj -&gt; IAsyncResult) * endAction:(IAsyncResult -&gt; &#39;T) * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member FromBeginEnd : arg:&#39;Arg1 * beginAction:(&#39;Arg1 * AsyncCallback * obj -&gt; IAsyncResult) * endAction:(IAsyncResult -&gt; &#39;T) * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member FromBeginEnd : arg1:&#39;Arg1 * arg2:&#39;Arg2 * beginAction:(&#39;Arg1 * &#39;Arg2 * AsyncCallback * obj -&gt; IAsyncResult) * endAction:(IAsyncResult -&gt; &#39;T) * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member FromBeginEnd : arg1:&#39;Arg1 * arg2:&#39;Arg2 * arg3:&#39;Arg3 * beginAction:(&#39;Arg1 * &#39;Arg2 * &#39;Arg3 * AsyncCallback * obj -&gt; IAsyncResult) * endAction:(IAsyncResult -&gt; &#39;T) * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member FromContinuations : callback:((&#39;T -&gt; unit) * (exn -&gt; unit) * (OperationCanceledException -&gt; unit) -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member Ignore : computation:Async&lt;&#39;T&gt; -&gt; Async&lt;unit&gt;<br />static member OnCancel : interruption:(unit -&gt; unit) -&gt; Async&lt;IDisposable&gt;<br />static member Parallel : computations:seq&lt;Async&lt;&#39;T&gt;&gt; -&gt; Async&lt;&#39;T []&gt;<br />static member RunSynchronously : computation:Async&lt;&#39;T&gt; * ?timeout:int * ?cancellationToken:CancellationToken -&gt; &#39;T<br />static member Sleep : millisecondsDueTime:int -&gt; Async&lt;unit&gt;<br />static member Start : computation:Async&lt;unit&gt; * ?cancellationToken:CancellationToken -&gt; unit<br />static member StartAsTask : computation:Async&lt;&#39;T&gt; * ?taskCreationOptions:TaskCreationOptions * ?cancellationToken:CancellationToken -&gt; Task&lt;&#39;T&gt;<br />static member StartChild : computation:Async&lt;&#39;T&gt; * ?millisecondsTimeout:int -&gt; Async&lt;Async&lt;&#39;T&gt;&gt;<br />static member StartChildAsTask : computation:Async&lt;&#39;T&gt; * ?taskCreationOptions:TaskCreationOptions -&gt; Async&lt;Task&lt;&#39;T&gt;&gt;<br />static member StartImmediate : computation:Async&lt;unit&gt; * ?cancellationToken:CancellationToken -&gt; unit<br />static member StartWithContinuations : computation:Async&lt;&#39;T&gt; * continuation:(&#39;T -&gt; unit) * exceptionContinuation:(exn -&gt; unit) * cancellationContinuation:(OperationCanceledException -&gt; unit) * ?cancellationToken:CancellationToken -&gt; unit<br />static member SwitchToContext : syncContext:SynchronizationContext -&gt; Async&lt;unit&gt;<br />static member SwitchToNewThread : unit -&gt; Async&lt;unit&gt;<br />static member SwitchToThreadPool : unit -&gt; Async&lt;unit&gt;<br />static member TryCancelled : computation:Async&lt;&#39;T&gt; * compensation:(OperationCanceledException -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member CancellationToken : Async&lt;CancellationToken&gt;<br />static member DefaultCancellationToken : CancellationToken<br /><br />Full name: Microsoft.FSharp.Control.Async<br /><br />--------------------<br />type Async&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Control.Async&lt;_&gt;</div>
+<div class="tip" id="fs24">static member Async.Start : computation:Async&lt;unit&gt; * ?cancellationToken:CancellationToken -&gt; unit</div>
+

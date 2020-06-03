@@ -1,0 +1,11 @@
+let chunkStr size str =
+    let rec loop (s:string) accum =
+        let branch = size < s.Length
+        match branch with
+        | true  -> loop (s.[size..]) (s.[0..size-1]::accum)
+        | false -> s::accum
+    (loop str []) |> List.rev
+
+//example
+"A man, a plan, a canal: Panama." |> chunkStr 3
+//result: ["A m"; "an,"; " a "; "pla"; "n, "; "a c"; "ana"; "l: "; "Pan"; "ama"; "."]

@@ -1,0 +1,14 @@
+open IronPython.Hosting
+
+type Py() =  
+    let eng = Python.CreateEngine()
+    member x.Expr(s: string) = eng.CreateScriptSourceFromString(s)
+    member x.Scope() = eng.CreateScope()
+
+let py = Py()
+let scope = py.Scope()
+scope.SetVariable("foo", 12)
+let ss = py.Expr("foo + foo")
+let result = ss.Execute(scope) :?> int
+
+printfn "Result is %d" result

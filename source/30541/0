@@ -1,0 +1,66 @@
+open MathNet
+open MathNet.Numerics
+open MathNet.Numerics.LinearAlgebra
+open MathNet.Numerics.LinearAlgebra.Double
+open MathNet.Numerics.Statistics
+
+let covarianceMatrix (M : Matrix<float>) =
+    let cols = M.ColumnCount
+    let C = DenseMatrix.Create(cols, cols, 0.0)
+        
+    for c1 in 0 .. (cols - 1) do
+        C.[c1, c1] <- Statistics.Variance (M.Column c1)
+            
+        for c2 in 0 .. (cols - 1) do
+            let cov = Statistics.Covariance (M.Column c1, M.Column c2)
+            C.[c1, c2] <- cov
+            C.[c2, c1] <- cov
+                
+    C  
+
+let normalize dim (observations : float[][]) =
+    let averages = 
+        Array.init dim (fun i -> 
+            observations |> Seq.averageBy (fun x -> x.[i]))
+
+    let stdDevs = 
+        Array.init dim (fun i -> 
+            let avg = averages.[i]
+            observations |> Seq.averageBy (fun x -> pown (float x.[i] - avg) 2 |> sqrt))
+
+    observations
+    |> Array.map (fun row ->
+        row
+        |> Array.mapi (fun i x -> (float x - averages.[i]) / stdDevs.[i]))
+
+let pca (observations : float[][]) =
+    let factorization = 
+        observations
+        |> Matrix.Build.DenseOfRowArrays
+        |> covarianceMatrix
+
+    let eigenValues = factorization.Evd().EigenValues
+    let eigenVectors = factorization.Evd().EigenVectors
+
+    let VectorToArray (v : Vector<float>) =
+        v.ToArray
+
+    let projector (obs : float[]) = 
+        let obsVector = obs |> Vector.Build.DenseOfArray
+        (eigenVectors.Transpose () * obsVector)
+        |> VectorToArray
+
+    (eigenValues, eigenVectors), projector
+
+let pcaWithStats (observations : float[][]) =
+    let (eValues, eVectors), projector = pca observations
+    let total = eValues |> Seq.sumBy (fun x -> x.Magnitude)
+    eValues
+    |> Seq.toList
+    |> List.rev
+    |> List.scan (fun (percent, cumul) value -> 
+        let percent = 100. * value.Magnitude / total
+        let cumul = cumul + percent
+        (percent, cumul)) (0., 0.)
+    |> List.tail
+    |> List.iteri (fun i (p, c) -> printfn "Feature %2i: %.2f%% (%.2f%%)" i p c)

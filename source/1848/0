@@ -1,0 +1,12 @@
+#r "System.Xml.Linq.dll"
+open FSharp.Data
+
+type Rss = XmlProvider<"http://fssnip.net/pages/Rss">
+let snippets = Rss.GetSample()
+
+// Title.Value is a property returning string 
+printfn "%s" snippets.Channel.Title.Value
+
+// Get all item nodes and print title with link
+for item in snippets.Channel.Items do
+  printfn " - %s (%s)" item.Title.Value item.Link

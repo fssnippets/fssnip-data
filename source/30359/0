@@ -1,0 +1,22 @@
+type Result<'TResult,'TError> = Choice<'TResult,'TError>
+
+let inline Ok t : Result<'TResult, 'TError> = Choice1Of2 t
+let inline Error e : Result<'TResult, 'TError> = Choice2Of2 e
+
+let inline (|Ok|Error|) (r : Result<'TResult, 'TError>) = r
+
+
+// examples
+
+// Simple construction and pattern matching
+match [Ok 42 ; Error true] with
+| [Ok i ; Error true] -> i
+| _ -> -1
+
+// interop with Choice encoding of result types
+let catch f = async {
+    let! result = Async.Catch f
+    match result with
+    | Ok t -> printfn "Success %A" t
+    | Error e -> printfn "failure %O" e
+}

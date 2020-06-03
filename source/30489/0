@@ -1,0 +1,109 @@
+open System
+
+/// An event that can defer publication of certain values until a later time.
+type DeferrableEvent<'a>(transformDeferred: 'a list -> 'a list) =
+
+  let locker = obj()
+  let event = Event<'a>()
+
+  /// The deferred predicates keyed by deferral ID
+  let mutable deferPredicates : Map<Guid, 'a -> bool> = Map.empty
+
+  /// The deferred arguments with the list the deferral IDs that caused them to be deferred
+  let mutable deferredArgs : ('a * Set<Guid>) list = []
+
+  new () = DeferrableEvent(id)
+
+  /// Defers publication of values for which the predicate returns true.
+  /// The deferral ends when the returned object is disposed. When the deferral
+  /// ends, all deferred values that are no longer deferred will be transformed
+  /// according to the constructor parameter and then triggered. Note that a call
+  /// to Defer will only affect later calls to Trigger; any values that are already
+  /// deferred and match the specified predicate will not be affected by this call.
+  member __.Defer (predicate: 'a -> bool) =
+    lock locker (fun () ->
+      let deferralId = Guid.NewGuid ()
+      deferPredicates <- deferPredicates.Add (deferralId, predicate)
+      { new IDisposable with
+          member __.Dispose () =
+            lock locker (fun () ->
+              // Remove the deferral predicate
+              deferPredicates <- deferPredicates.Remove deferralId
+
+              // Remove the deferral ID from the args that have been deferred from itS
+              deferredArgs <-
+                deferredArgs
+                |> List.map (fun (arg, defIds) -> arg, defIds.Remove deferralId)
+
+              // Remove arguments that are no longer deferred and trigger them
+              let noLongerDeferred, stillDeferred =
+                deferredArgs |> List.partition (snd >> Set.isEmpty)
+              deferredArgs <- stillDeferred
+              noLongerDeferred
+              |> List.map fst
+              |> transformDeferred
+              |> List.iter event.Trigger
+            )
+      }
+    )
+
+  /// Publishes an observation as a first class value.
+  member __.Publish = event.Publish
+
+  /// Triggers the observation using the given parameter. If the value is deferred,
+  /// it will only be deferred by the deferrals that are currently active when Trigger
+  /// is called. Subsequent calls to Defer with predicates that match the value
+  /// will not affect the deferral of this particular value (but future identical
+  /// values will be affected).
+  member __.Trigger arg =
+    lock locker (fun () ->
+      let defIds =
+        deferPredicates
+        |> Map.filter (fun _ predicate -> predicate arg)
+        |> Map.toSeq
+        |> Seq.map fst
+        |> Set.ofSeq
+      if defIds.IsEmpty then event.Trigger arg
+      else deferredArgs <- deferredArgs @ [arg, defIds]
+    )
+
+///////////
+// USAGE //
+///////////
+
+let e = DeferrableEvent<int>(List.distinct)
+e.Publish.Add (printfn "Triggered: %i")
+
+e.Trigger 1  // "Triggered: 1"
+let d = e.Defer (fun i -> i > 5)  // Normally you'd use the "use" keyword
+e.Trigger 2  // "Triggered: 2"
+e.Trigger 6  // (no output)
+e.Trigger 7  // (no output)
+e.Trigger 6  // (no output)
+e.Trigger 10  // (no output)
+
+d.Dispose()
+// "Triggered: 6"
+// "Triggered: 7"
+// "Triggered: 10"
+
+e.Trigger 6  // "Triggered: 6"
+
+
+// Example of behavior with multiple overlapping deferrals
+let d1 = e.Defer (fun i -> i > 5)
+e.Trigger 11 // (no output)
+e.Trigger 12 // (no output)
+let d2 = e.Defer (fun i -> i > 10)
+e.Trigger 11 // (no output)
+
+d1.Dispose ()
+// "Triggered: 11"
+// "Triggered: 12"
+
+e.Trigger 13 // (no output)
+
+d2.Dispose ()
+// "Triggered: 11"
+// "Triggered: 13"
+

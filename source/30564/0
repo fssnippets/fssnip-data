@@ -1,0 +1,23 @@
+module Map =
+
+    module private Kvp =
+
+        open System.Collections.Generic
+
+        let toTuple (kvp : KeyValuePair<_,_>) =
+            kvp.Key, kvp.Value
+
+    /// Concatenate all the input maps. Where there are duplicate input keys, 
+    /// the last mapping is preserved.
+    let concat maps = 
+        maps
+        |> Seq.concat
+        |> Seq.map Kvp.toTuple
+        |> Map.ofSeq
+
+let map1 = [1,'a'; 2,'b'] |> Map.ofSeq
+let map2 = [2,'c'; 3,'d'] |> Map.ofSeq
+
+//  map [(1, 'a'); (2, 'c'); (3, 'd')]
+Map.concat [|map1; map2|]
+

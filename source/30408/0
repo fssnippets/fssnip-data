@@ -1,0 +1,34 @@
+module test = 
+    type LadderCommission = {
+        Rate: double
+        Amount: double
+    }
+
+    type State = {
+        Init: double
+        Remaining: double
+        Commission: LadderCommission list
+    }
+
+    let commission1 = {Rate = 0.17; Amount = 10000.0}
+    let commission2 = {Rate = 0.12; Amount = 40000.0}
+    let commission3 = {Rate = 0.07; Amount = 1000000.0}
+
+    let ladder = [commission1; commission2; commission3]
+
+    let ladderFold (state: State) (ladder: LadderCommission) = 
+        if state.Remaining > 0.0 then 
+            let commission = 
+                let amountToCalculate = 
+                    if state.Remaining > ladder.Amount then ladder.Amount else state.Remaining
+                {Rate = ladder.Rate; Amount = amountToCalculate * ladder.Rate}                 
+            let remaining = 
+                if state.Remaining > ladder.Amount then
+                    (state.Remaining - ladder.Amount)
+                else 0.0
+            {Init = state.Init; Remaining = remaining; Commission = state.Commission @ [commission] }
+        else state        
+
+    let result = ladder |> List.fold ladderFold {Init = 2000000.0; Remaining = 2000000.0; Commission = []}    
+
+    printfn "%A" result

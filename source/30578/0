@@ -1,0 +1,37 @@
+type Fpair (a:bigint,b:bigint) =
+  member this.a=a
+  member this.b=b
+
+  //Fpair multiplication
+  static member (.*) (left:Fpair,right:Fpair) = 
+      Fpair(left.a*right.a+5I*left.b*right.b, 
+            left.b*right.a + left.a*right.b) 
+  //square Fpair 
+  static member (~+) (arg:Fpair) = 
+    Fpair(arg.a*arg.a+5I*arg.b*arg.b, 
+          2I*arg.a*arg.b) 
+  //Fpair division
+  static member (./) (left:bigint,right:Fpair) =
+    Fpair(right.a/left,right.b/left)
+  static member one = Fpair(1I,1I)
+
+let fastFib (n:int) =
+   let ans = new System.Collections.BitArray([|n|]) 
+            |> Seq.cast<bool>
+            |> Seq.rev
+            |> Seq.skipWhile (fun x -> not x)
+            |> Seq.skip 1
+            |> Seq.fold (
+                 fun a x -> if x then 
+                              + a |> (.*) Fpair.one |> (./) 4I
+                            else 
+                              + a |> (./) 2I) 
+                 Fpair.one
+   ans.b 
+
+let pFib n = 
+   [async {return fastFib (n-2)}
+    async {return fastFib (n-1)}]
+     |> Async.Parallel 
+     |> Async.RunSynchronously 
+     |> Array.reduce (+)

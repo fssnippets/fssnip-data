@@ -1,0 +1,28 @@
+  let mutable TheList = []
+  let mutable stringPixel = TheList.ToString()
+  let mutable grayTones = [] 
+
+ member this.createData()  =
+      let sliceAndDice (s:string) =
+        let string0 = s
+        let rec finder (s:string) (h:int)  =
+          match s.[h] with
+          |',' -> s.[(h+1)..((s.Length)-2)]
+          |_ -> (finder s (h+1))
+        let string1 = finder string0 0
+        let string2 = string1.Replace(",", ";")
+        let string3 = string2.Replace(" ", "")
+        let string4 = string3.Replace("R=", "")
+        let string5 = string4.Replace("B=", "")
+        let string6 = string5.Replace("G=", "")
+        let value   = string6.Split ';' |> Array.map int |> Array.toList
+        ((value.[0] + value.[1] + value.[2]) / 3) |> int
+
+      let rec yello t x y p =
+        match x with
+        |l when l = (imageW-1) -> match y with
+                                        |k when k = (imageH-1) -> p@[(sliceAndDice stringPixel)]
+                                        |_ -> yello (t+1) 0 (y+1) (p@[(sliceAndDice stringPixel)])
+        |_ -> yello (t+1) (x+1)(y)(p@[(sliceAndDice stringPixel)])
+      grayTones <- yello 1 0 1 []
+      printfn "%A" grayTones

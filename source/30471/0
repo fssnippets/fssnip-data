@@ -1,0 +1,23 @@
+let internal createMailboxProcessor() = 
+    MailboxProcessor.Start(fun inbox ->
+        let rec loop () = async {
+            let! msg = inbox.Receive()
+            //...
+            return! loop ()
+        }
+        loop ())
+
+let mutable internal backgroundProcessor = createMailboxProcessor()
+
+let rec setErrorHandler (p:MailboxProcessor<_>) =
+    p.Error.Add(fun e ->
+        printfn "Mailbox died. Spawning a new one. Error: %O" e
+        backgroundProcessor <- createMailboxProcessor()
+        setErrorHandler backgroundProcessor
+    )
+setErrorHandler backgroundProcessor
+
+// Note: This is not ensuring the handling of the existing queue:
+// backgroundProcessor.CurrentQueueLength
+// You may want to retry some messages with some logics to skip the ones causing the error.
+

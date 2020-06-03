@@ -1,0 +1,88 @@
+module Model
+
+open System
+open Microsoft.ML
+open Microsoft.ML.StaticPipe
+
+(* 
+Nuget pacakges: 
+    Microsoft.ML (0.9.0)
+    Microsoft.ML.StaticPipe (0.9.0)
+
+Data:
+    download test / train datasets from here:
+    https://github.com/dotnet/machinelearning/blob/master/test/data/wikipedia-detox-250-line-data.tsv
+    https://github.com/dotnet/machinelearning/blob/master/test/data/wikipedia-detox-250-line-test.tsv
+
+Other Documentation:
+    This sample uses the 0.9.0 'static' pipeline API and is based on MS documentation located here:
+     - https://docs.microsoft.com/en-us/dotnet/machine-learning/tutorials/sentiment-analysis
+
+     *Note: At the time of writing, the code in the above page seems to be based on v 0.7.0 and looks quite different 
+     from what is shown here.
+
+*)
+
+let trainDataPath = @"C:\Users\fwaris\Source\Repos\MLNetTest\MLNetTestF\Data\Train.txt"
+let testDataPath = @"C:\Users\fwaris\Source\Repos\MLNetTest\MLNetTestF\Data\Test.txt"
+let modelPath = @"C:\Users\fwaris\Source\Repos\MLNetTest\MLNetTestF\Data\Model.zip"
+
+//load data, train and evaluate the model
+let train_and_test() = 
+
+    let ctx = MLContext(Nullable 10)
+
+    let reader = 
+        TextLoaderStatic.CreateReader(
+                            ctx, 
+                            (fun (c:TextLoaderStatic.Context) -> 
+                                struct (
+                                    c.LoadBool(0),
+                                    c.LoadText(1)
+                                )),
+                            separator = '\t',
+                            hasHeader = true)
+
+                          
+    let trainData = reader.Read(trainDataPath)
+    let testData = reader.Read(testDataPath)
+
+    let pipeline = 
+        reader
+            .MakeNewEstimator()
+            .Append(fun struct (lbl,text) -> 
+                let features = text.FeaturizeText()
+                let struct(score,probability,predictedLabel) = 
+                        ctx.BinaryClassification.Trainers.FastTree(
+                                lbl,
+                                features,
+                                numTrees= 50,
+                                numLeaves = 50,
+                                minDatapointsInLeaves=20
+                                )
+                struct(
+                    lbl,
+                    text,
+                    features,
+                    score,
+                    probability,
+                    predictedLabel
+                    ))
+
+    let model = pipeline.Fit(trainData)
+
+    let predictions = model.Transform(testData)
+
+    let label struct (lbl,text,features,score,prob,predLbl) = lbl
+    let pred struct (lbl,text,features,score,prob,predLbl) = struct(score,prob,predLbl)
+
+    let metrics = ctx.BinaryClassification.Evaluate(
+                        predictions,
+                        label = label,
+                        pred = pred)
+    printfn 
+        "Accuracy =  %0.2f, AUC = %0.2f, F1 = %0.2f" 
+         metrics.Accuracy
+         metrics.Auc
+         metrics.F1Score
+                    

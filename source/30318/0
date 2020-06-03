@@ -1,0 +1,25 @@
+// From NuGet:
+// Install-Package TextmagicRest
+#if INTERACTIVE
+#I "./packages/TextmagicRest.1.0.0.2/lib/net45"
+#I "./packages/RestSharp.105.1.0/lib/net45"
+#r "TextmagicRest.dll"
+#r "RestSharp.dll"
+#else
+module Textmagic
+#endif
+    
+    // Insert your account details:
+    let username = "test"
+    let apiKey = ""
+    let client = TextmagicRest.Client(username, apiKey)
+
+    let sms = "Hello from TextMagic"
+    let ``international phone number`` = "447860021130"
+    let msg = client.SendMessage(sms, ``international phone number``)
+    let res = 
+        match msg.Success with
+        | true -> sprintf "Message session %i successfully sent" msg.Id
+        | false -> 
+            sprintf "Message was not sent due to following exception: %s" 
+                    msg.ClientException.Message

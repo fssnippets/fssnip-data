@@ -1,0 +1,232 @@
+module CoOccurenceMatrix
+
+open Fmat.Numerics
+open Reader
+open System
+
+
+let EPSILON = 0.000000001
+
+type coMatrix(wordarray :string array) =
+    let size = wordarray.Length
+    let mutable matrix = Array2D.create size size 0
+    let mutable words = wordarray
+    member this.Matrix
+        with get () = matrix
+        and set (value) = matrix <- value
+    member this.Words 
+        with get () = words
+        and set (value) = words <- value
+    member this.AddPair((one :string), (two :string)) =
+        let index1 = Array.findIndex (fun x -> if one.CompareTo(x) = 0 then true else false) words
+        let index2 = Array.findIndex (fun x -> if two.CompareTo(x) = 0 then true else false) words
+        do matrix.[index1,index2] <- (matrix.[index1,index2] + 1)
+    member this.Size 
+        with get () = size
+
+let createMatrix (bk :book) (size :int) (span :int) =
+    let topwords = Array.map (fun x -> fst x) (TopWords bk size)
+    let bkwords = BookToArray bk
+    let mutable matrix = coMatrix(topwords) 
+    for i in [0..(bkwords.Length - 1)] do
+        let w = bkwords.[i]
+        if (Array.exists (fun x -> if w.CompareTo(x) = 0 then true else false) topwords) then 
+            let max = if i + span > bkwords.Length - 1 then bkwords.Length - 1 else i + span
+            let min = if i + 1 > bkwords.Length - 1 then bkwords.Length - 1 else i + 1
+            if not (min = max) then
+                for j in [min..max] do
+                    let w2 = bkwords.[j]
+                    if (Array.exists (fun x -> if w2.CompareTo(x) = 0 then true else false) topwords) then 
+                        matrix.AddPair(bkwords.[i],bkwords.[j])
+    matrix
+
+
+//fixed
+let GetSecondAngularMoment (matrix :coMatrix) = 
+    let mutable sum = 0.0
+    for j in [1..(matrix.Size - 1)] do
+        for i in [1..(matrix.Size - 1)] do
+            let x = matrix.Matrix.[i,j]
+            sum <- sum + (float x) * (float x)
+    sum
+
+//fixed
+let GetContrast (matrix :coMatrix) =
+    let mutable sum = 0.0
+    let mutable littlesum = 0.0
+    for n in [0..(matrix.Size - 1)] do
+        for j in [0..(matrix.Size - 1)] do
+            for i in [0..(matrix.Size - 1)] do
+            if (i - j = n) || (j - i = n) then
+                littlesum <- littlesum + (float matrix.Matrix.[i,j])
+        sum <- sum + (float n) * (float n) * littlesum
+    sum
+
+//fixed
+let GetCorrelation (matrix :coMatrix) = 
+    let mutable sum = 0.0
+    let px = Array.init (matrix.Size) (fun x -> Array.sum (Array.init (matrix.Size - 1) (fun y -> matrix.Matrix.[x,y])))
+    let mutable meanx = 0.0
+    let mutable sumsqrx = 0.0
+    for i in [1..(matrix.Size - 1)] do
+        meanx <- meanx + float (px.[i]*i)
+        sumsqrx <- sumsqrx + float (px.[i]*i*i)
+    let stdevx = Math.Sqrt (sumsqrx - (meanx * meanx))
+    for j in [1..(matrix.Size - 1)] do
+        for i in [1..(matrix.Size - 1)] do
+            sum <- sum + (float i * float j) * (float matrix.Matrix.[i,j])//need clarification
+    sum - (meanx * meanx)/(stdevx * stdevx)
+
+//fixed
+let GetSumOfSquaresVariance (matrix :coMatrix) =
+    let mutable sum = 0.0
+    let mutable mean = 0.0
+    for j in [1..(matrix.Size - 1)] do 
+        for i in [1..(matrix.Size - 1)] do
+            mean <- mean + float i * float matrix.Matrix.[i,j]
+    for j in [1..(matrix.Size - 1)] do
+        for i in [1..(matrix.Size - 1)] do 
+        sum <- sum + (float i - mean) * (float i - mean) * float matrix.Matrix.[i,j]
+    sum
+
+//fixed
+let GetInverseDifferenceMoment (matrix :coMatrix) =
+    let mutable sum = 0.0
+    for j in [1..(matrix.Size - 1)] do
+        for i in [1..(matrix.Size - 1)] do
+            sum <- sum + (1.0/(1.0 + float ((i - j)*(i - j)) ))*(float matrix.Matrix.[i,j])
+    sum
+
+//fixed
+let GetSumAverage (matrix :coMatrix) =
+    let mutable sum = 0.0
+    let mutable pxpy = Array.zeroCreate (2*(matrix.Size))
+    for j in [1..(matrix.Size - 1)] do
+        for i in [1..(matrix.Size - 1)] do
+             pxpy.[i+j] <- matrix.Matrix.[i,j] 
+    for k in [0..(2*(matrix.Size - 2))] do
+        sum <- sum + float k * float pxpy.[k] 
+    sum                
+
+//fixed
+let GetSumVariance (matrix :coMatrix) (S :float) = 
+    let mutable sum = 0.0
+    let mutable pxpy = Array.zeroCreate (2*(matrix.Size))
+    for j in [1..(matrix.Size - 1)] do
+        for i in [1..(matrix.Size - 1)] do
+             pxpy.[i+j] <- matrix.Matrix.[i,j] 
+    for k in [0..(2*(matrix.Size - 2))] do
+        sum <- sum + (float k - S) * (float k - S) * float pxpy.[k]
+    sum
+
+//fixed
+let GetSumEntropy (matrix :coMatrix) =
+    let mutable sum = 0.0
+    let mutable pxpy = Array.zeroCreate (2*(matrix.Size))
+    for j in [1..(matrix.Size - 1)] do
+        for i in [1..(matrix.Size - 1)] do
+             pxpy.[i+j] <- matrix.Matrix.[i,j] 
+    for k in [0..(2*(matrix.Size - 2))] do
+        sum <- sum - float pxpy.[k] * (Math.Log10 (float pxpy.[k] + EPSILON) / 0.301)
+    sum
+
+//fixed
+let GetEntropy (matrix :coMatrix) = 
+    let mutable sum = 0.0
+    for j in [1..(matrix.Size - 1)] do
+        for i in [1..(matrix.Size - 1)] do
+            let x = matrix.Matrix.[i,j]
+            sum <- sum + (float x) * (Math.Log10 (float x + EPSILON) / 0.301)
+    (0.0 - sum)  
+
+
+//fixed
+let GetDifferenceVariance (matrix :coMatrix) =
+    let mutable sum = 0.0
+    let mutable sum_sqr = 0.0
+    let mutable pxpy = Array.zeroCreate (2*(matrix.Size))
+    for j in [1..(matrix.Size - 1)] do
+        for i in [1..(matrix.Size - 1)] do
+             pxpy.[abs (i - j)] <- matrix.Matrix.[i,j]
+    for k in [1..(matrix.Size - 1)] do
+        sum <- sum + float pxpy.[k] * float pxpy.[k]
+        sum_sqr <- sum_sqr + float k * float k * float pxpy.[k]
+    sum_sqr - (sum*sum)
+
+//fixed
+let GetDifferenceEntropy (matrix :coMatrix) =
+    let mutable sum = 0.0
+    let mutable pxpy = Array.zeroCreate (2*(matrix.Size))
+    for j in [1..(matrix.Size - 1)] do
+        for i in [1..(matrix.Size - 1)] do
+             pxpy.[abs (i - j)] <- matrix.Matrix.[i,j] 
+    for k in [1..(matrix.Size - 1)] do
+        sum <- sum + float pxpy.[k] * (Math.Log10 (float pxpy.[k] + EPSILON) / 0.301)
+    -sum
+
+//fixed
+let GetIMCorrelation (matrix :coMatrix) =
+    let mutable hx = 0.0
+    let mutable hy = 0.0
+    let mutable hxy = 0.0
+    let mutable hxy1 = 0.0
+    let mutable hxy2 = 0.0
+    let px = Array.init (matrix.Size) (fun y -> Array.sum (Array.init (matrix.Size - 1) (fun x -> matrix.Matrix.[x,y])))
+    let py = Array.init (matrix.Size) (fun x -> Array.sum (Array.init (matrix.Size - 1) (fun y -> matrix.Matrix.[x,y])))
+    for j in [1..(matrix.Size - 1)] do
+        for i in [1..(matrix.Size - 1)] do
+            hxy1 <- hxy1 - float matrix.Matrix.[i,j] * (Math.Log10 (float px.[i] * float py.[j] + EPSILON) / 0.301)
+            hxy2 <- hxy2 - float px.[i] * float py.[j] * (Math.Log10 (float px.[i] * float py.[j] + EPSILON) / 0.301)
+            hxy <- hxy - float matrix.Matrix.[i,j] * (Math.Log10 (float matrix.Matrix.[i,j] + EPSILON) / 0.301)
+    for k in [1..(matrix.Size - 1)] do
+        hx <- hx - float px.[k] * (Math.Log10 (float px.[k] + EPSILON) / 0.301)
+        hy <- hy - float py.[k] * (Math.Log10 (float py.[k] + EPSILON) / 0.301)
+    if ((if hx > hy then hx else hy) = 0.0) then 1.0
+    else ((hxy - hxy1) / (if hx > hy then hx else hy))
+            
+let GetIM2Correlation (matrix :coMatrix) =
+    let mutable hx = 0.0
+    let mutable hy = 0.0
+    let mutable hxy = 0.0
+    let mutable hxy1 = 0.0
+    let mutable hxy2 = 0.0
+    let px = Array.init (matrix.Size) (fun y -> Array.sum (Array.init (matrix.Size - 1) (fun x -> matrix.Matrix.[x,y])))
+    let py = Array.init (matrix.Size) (fun x -> Array.sum (Array.init (matrix.Size - 1) (fun y -> matrix.Matrix.[x,y])))
+    for j in [1..(matrix.Size - 1)] do
+        for i in [1..(matrix.Size - 1)] do
+            hxy1 <- hxy1 - float matrix.Matrix.[i,j] * (Math.Log10 (float px.[i] * float py.[j] + EPSILON) / 0.301)
+            hxy2 <- hxy2 - float px.[i] * float py.[j] * (Math.Log10 (float px.[i] * float py.[j] + EPSILON) / 0.301)
+            hxy <- hxy - float matrix.Matrix.[i,j] * (Math.Log10 (float matrix.Matrix.[i,j] + EPSILON) / 0.301)
+    for k in [1..(matrix.Size - 1)] do
+        hx <- hx - float px.[k] * (Math.Log10 (float px.[k] + EPSILON) / 0.301)
+        hy <- hy - float py.[k] * (Math.Log10 (float py.[k] + EPSILON) / 0.301)
+    Math.Sqrt ( Math.Abs (1.0 - Math.Exp (-2.0 * (float hxy2 - float hxy))))
+(*
+let GetMaxCorrelationCoef (matrix :coMatrix) =
+    let px = Array.init (matrix.Size - 1) (fun y -> Array.sum (Array.init (matrix.Size - 1) (fun x -> matrix.Matrix.[x,y])))
+    let py = Array.init (matrix.Size - 1) (fun x -> Array.sum (Array.init (matrix.Size - 1) (fun y -> matrix.Matrix.[x,y])))
+    let mutable Q :float [,] = Array2D.zeroCreate (matrix.Size + 1) (matrix.Size + 1)
+    for j in [1..(matrix.Size - 1)] do
+        for i in [1..(matrix.Size - 1)] do
+            Q.[i+1,j+1] <- 0.0
+            for k in [1..(matrix.Size - 1)] do
+                if (not (px.[i] = 0) && not (py.[j] = 0)) then
+                    Q.[i+1,j+1] <- Q.[i+1,j+1] + ((float matrix.Matrix.[i,k] * float matrix.Matrix.[j,k]) / float px.[i]) / float py.[k]
+*)
+
+
+let GetResults (matrix :coMatrix) =
+    let ent = ("Entropy",(GetEntropy matrix))
+    let sam = ("SecondAngularMoment", (GetSecondAngularMoment matrix))
+    let con = ("Contrast", (GetContrast matrix))
+    let cor = ("Correlation", (GetCorrelation matrix))
+    let sqv = ("SumOfSquaresVariance", (GetSumOfSquaresVariance matrix))
+    let idm = ("InverseDifferenceMoment", (GetInverseDifferenceMoment matrix))
+    let avg = ("SumAverage", (GetSumAverage matrix))
+    let sen = ("SumEntropy", (GetSumEntropy matrix))
+    let sva = ("SumVariance", (GetSumVariance matrix (snd sen)))
+    let dva = ("DifferenceVariance", (GetDifferenceVariance matrix))
+    let den = ("DifferenceEntropy", (GetDifferenceEntropy matrix))
+    let imc = ("IMCorrelation", (GetIMCorrelation matrix))
+    let im2 = ("IMCorrelation2", (GetIM2Correlation matrix))
+    [|sam;con;cor;sqv;idm;avg;sva;dva;den;imc;im2|]

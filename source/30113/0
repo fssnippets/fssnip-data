@@ -1,0 +1,134 @@
+open System
+open Aether
+open Hopac
+open Hopac.Infixes
+open Hopac.Stream
+open Hopac.Infixes
+
+// PRIVATE ---------------------------------------------------------------------
+
+let private imp () = failwith "Impossible"
+let inline private tryAp x2y x yK eK =
+  let mutable e = null
+  let y = try x2y x with e' -> e <- e' ; Unchecked.defaultof<_>
+  match e with
+   | null -> yK y
+   | e -> eK e
+
+type private GcSignal (v: IVar<_>) =
+  member gcs.Suppress () = GC.SuppressFinalize gcs
+  override gcs.Finalize () = v *<= () |> start
+
+type private Tappable<'x> =
+  abstract Tap: unit -> Stream<'x>
+
+let private tappableMapNoDups x2y (xs: Stream<_>) =
+  let gc = IVar ()
+  let gcs = GcSignal (gc)
+  let tail = ref (IVar ())
+  let rec pull y' xs =
+        gc
+    <|> xs ^=> function
+         | Cons (x, xs) ->
+           let y = x2y x
+           if y' <> y then
+             let newTail = IVar ()
+             let oldTail = !tail
+             tail := newTail
+             oldTail *<= Cons (y, newTail) >>=. pull y xs
+           else
+             upcast pull y' xs
+         | Nil ->
+           !tail *<= Nil
+  let first xs =
+        gc
+    <|> xs ^=> function
+         | Cons (x, xs) ->
+           let y = x2y x
+           let newTail = IVar ()
+           let oldTail = !tail
+           tail := newTail
+           oldTail *<= Cons (y, newTail) >>=. pull y xs
+         | Nil ->
+           !tail *<= Nil
+  Job.tryWith (first xs) (fun e -> !tail *<=! e) |> start
+  {new Tappable<_> with
+    member __.Tap () =
+      let rec recur xs =
+        xs >>-* function Cons (x, xs) -> Cons (x, recur xs)
+                       | Nil -> gcs.Suppress () ; Nil
+      !tail |> recur}
+
+let inline private push mvar x' was (i: Promise<_>) x =
+  if x' <> x then
+    let c = Cons (x, IVar ())
+    (i :?> IVar<_>) *<= c >>=. MVar.fill mvar c
+  else
+    MVar.fill mvar was
+let inline private fail mvar c e = MVar.fill mvar c >>-! e
+
+// PUBLIC ----------------------------------------------------------------------
+
+type [<AbstractClass>] LVar<'x> () =
+  abstract Get: unit ->    Job<'x>
+  abstract Tap: unit -> Stream<'x>
+  abstract Set:                   'x   -> Job<unit>
+  abstract UpdateFun: ('x ->      'x)  -> Job<unit>
+  abstract UpdateJob: ('x -> #Job<'x>) -> Job<unit>
+
+module LVar =
+  let create x =
+    let mvar = MVar (Cons (x, IVar ()))
+    {new LVar<_> () with 
+      override __.Get () =
+        MVar.read mvar >>- function Cons (x, _) -> x | Nil -> imp ()
+      override __.Tap () =
+        let xs = memo (MVar.read mvar) in Job.Global.startIgnore xs ; xs
+      override __.Set x =
+        mvar >>= function
+         | Cons (x', i) as c -> push mvar x' c i x
+         | Nil -> imp ()
+      override __.UpdateFun x2x =
+        mvar >>= function
+         | Cons (x, i) as c -> tryAp x2x x (push mvar x c i) (fail mvar c)
+         | Nil -> imp ()
+      override __.UpdateJob x2xJ =
+        mvar >>= function
+         | Cons (x, i) as c ->
+           Job.tryInDelay (fun () -> x2xJ x) (push mvar x c i) (fail mvar c)
+         | Nil -> imp ()}
+  let get (xL: LVar<_>) = xL.Get ()
+  let tap (xL: LVar<_>) = xL.Tap ()
+  let set (xL: LVar<_>) x = xL.Set x
+  let updateFun (xL: LVar<_>) x2x = xL.UpdateFun x2x
+  let updateJob (xL: LVar<_>) x2xJ = xL.UpdateJob x2xJ
+  let lens (x2y, y2x2x) (xL: LVar<_>) =
+    let ysT = tap xL |> tappableMapNoDups x2y
+    {new LVar<_> () with
+      member __.Get () = get xL >>- x2y
+      member __.Tap () = __.Get () >>-* fun y -> Cons (y, ysT.Tap ())
+      member __.Set y = updateFun xL <| y2x2x y
+      member __.UpdateFun y2y = updateFun xL <| fun x -> y2x2x (y2y (x2y x)) x
+      member __.UpdateJob y2yJ =
+        updateJob xL <| fun x -> x2y x |> y2yJ >>- fun y -> y2x2x y x}
+
+// EXAMPLE ---------------------------------------------------------------------
+
+let x = LVar.create (1, "a")
+let y = LVar.lens fst_ x
+let z = LVar.lens snd_ x
+
+let m = obj ()
+
+do x |> LVar.tap |> Stream.consumeFun (fun x -> lock m <| fun () -> printfn "x: %A" x)
+do y |> LVar.tap |> Stream.consumeFun (fun x -> lock m <| fun () -> printfn "y: %A" x)
+do z |> LVar.tap |> Stream.consumeFun (fun x -> lock m <| fun () -> printfn "z: %A" x)
+
+let wait job =
+  job >>=. timeOutMillis 1000 |> run
+  printfn ""
+
+do Job.unit () |> wait
+   x.Set (2, "b") |> wait
+   y.Set 3 |> wait
+   z.Set "c" |> wait

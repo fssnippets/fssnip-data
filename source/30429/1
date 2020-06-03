@@ -1,0 +1,34 @@
+(* fn is a function which specifies how to join an item from list a to an item from list b *)
+    let rec outerProduct fn a b =
+        b |> List.collect (function h -> List.map (fn h) a)
+
+// And this is a sample of how I used this:
+
+type Name = { FirstName:string; LastName:string; Age:int}
+
+// makeName gets successively curried down the pipeline, until it finally generates the record at then end
+let makeName a b c = { FirstName = a; LastName = b; Age = c}
+
+let l1 = 
+    ["bill"; "Fred"; "James"]  
+    |> List.map (fun x -> makeName x) 
+    |> outerProduct (fun f p -> f p) ["Smith"; "Jones"]
+    |> outerProduct (fun f p -> f p) [21; 22]
+
+(* This produces the output:
+ [
+    {FirstName = "bill"; LastName = "Smith"; Age = 21;}; 
+    {FirstName = "bill"; LastName = "Smith"; Age = 22;}; 
+    {FirstName = "bill"; LastName = "Jones"; Age = 21;}; 
+    {FirstName = "bill"; LastName = "Jones"; Age = 22;}; 
+    {FirstName = "Fred"; LastName = "Smith"; Age = 21;};
+    {FirstName = "Fred";LastName = "Smith";Age = 22;}; 
+    {FirstName = "Fred";LastName = "Jones";Age = 21;}; 
+    {FirstName = "Fred"; LastName = "Jones"; Age = 22;}; 
+    {FirstName = "James"; LastName = "Smith"; Age = 21;}; 
+    {FirstName = "James"; LastName = "Smith"; Age = 22;};
+    {FirstName = "James";LastName = "Jones";Age = 21;}; 
+    {FirstName = "James";LastName = "Jones";Age = 22;}
+ ]
+
+*)

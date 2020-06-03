@@ -1,0 +1,12 @@
+module MonadHelpers=
+type Bind = Bind with
+        static member ($) (s, f) = Option.bind f s
+        static member ($) (s, f) = List.collect f s
+        static member ($) (s, f) = Array.collect f s
+        static member ($) (s, f) = Seq.collect f s
+        static member ($) (s: Lazy<'T1>, f: 'T1 -> Lazy<'T2>) = lazy (f s.Value).Value
+        static member ($) (s, f) = async.Bind(s f)
+    let inline (>>=) s f = Bind $ s <| f
+    let inline (<<=) f s = Bind $ s <| f
+    let inline (>=>)f g s = Bind $ (f s) <| g
+    let inline (<=<)g f s = Bind $ (f s) <| g

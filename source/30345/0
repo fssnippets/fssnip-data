@@ -1,0 +1,16 @@
+open System
+
+type Shape<'A> =
+    abstract member Area : 'A -> double
+
+type Circle = Circle of radius:double
+type Rectangle = Rectangle of width:double * length:double
+
+let CircleShape =
+    { new Shape<_> with
+        member this.Area(Circle(radius)) = Math.PI * Math.Pow(radius, 2.) }
+let RectangleShape =
+    { new Shape<_> with
+        member this.Area(Rectangle(width, length)) = width * length }
+
+let areaOf<'A> shape (shapeImpl:Shape<'A>) = shapeImpl.Area(shape)

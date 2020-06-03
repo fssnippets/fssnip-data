@@ -1,0 +1,15 @@
+let change =
+    let drawer = [2000;1000;500;100;25;10;5;1]
+    let rec change drawer amount =
+        if amount = 0 then [] else
+        match drawer with
+        | coin::rest ->
+            if coin <= amount then
+                coin::change drawer (amount - coin)
+            else
+                change rest amount
+        | [] -> failwith "smallest better be 1"
+    change drawer
+
+/// Prints [100; 100; 100; 100; 25; 25; 25; 10; 10]
+change 495 |> printfn "%A"

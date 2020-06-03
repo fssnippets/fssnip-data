@@ -1,0 +1,80 @@
+#if INTERACTIVE
+#r "System.Transactions.dll"
+#endif
+open System
+open System.Threading
+open System.Threading.Tasks
+open System.Transactions
+
+let logmsg act threadid transId =
+    let tidm = match String.IsNullOrEmpty threadid with | true -> "" | false -> " at thread " + threadid
+    let msg = "Transaction " + transId + " " + act + tidm
+    Console.WriteLine msg
+    //Logary.Logger.log (Logary.Logging.getCurrentLogger()) (Logary.Message.eventDebug msg) |> start
+
+let getTransactionId() =
+    match Transaction.Current <> null && Transaction.Current.TransactionInformation <> null with
+    | true -> Transaction.Current.TransactionInformation.LocalIdentifier
+    | false -> ""
+
+let transactionWithManualComplete<'T>() =
+    match Type.GetType ("Mono.Runtime") <> null with
+    | true -> new Transactions.TransactionScope()
+    | false ->
+        // Mono would fail to compilation, so we have to construct this via reflection:
+        // new Transactions.TransactionScope(Transactions.TransactionScopeAsyncFlowOption.Enabled)
+        let transactionAssembly = System.Reflection.Assembly.GetAssembly typeof<TransactionScope>
+        let asynctype = transactionAssembly.GetType "System.Transactions.TransactionScopeAsyncFlowOption"
+        let transaction = typeof<TransactionScope>.GetConstructor [|asynctype|]
+        transaction.Invoke [|1|] :?> TransactionScope
+
+let transactionWith<'T> (func: unit -> 'T) =
+    use scope = transactionWithManualComplete()
+    let transId = getTransactionId()
+    logmsg "started" Thread.CurrentThread.Name transId
+    let res = func()
+    match box res with
+    | :? Task as task -> 
+        let commit = Action<Task>(fun a -> 
+            logmsg "completed" Thread.CurrentThread.Name transId
+            scope.Complete()
+            )
+        let commitTran1 = task.ContinueWith(commit, TaskContinuationOptions.OnlyOnRanToCompletion)
+        let commitTran2 = task.ContinueWith((fun _ -> 
+            logmsg "failed" Thread.CurrentThread.Name transId), TaskContinuationOptions.NotOnRanToCompletion)
+        res
+    | item when item <> null && item.GetType().Name = "FSharpAsync`1" ->
+        let msg = "Use transactionWithAsync"
+        //Logary.Logger.log (Logary.Logging.getCurrentLogger()) (Logary.Message.eventError msg) |> start
+        failwith msg 
+    | _ -> 
+        logmsg "completed" System.Threading.Thread.CurrentThread.Name transId
+        scope.Complete()
+        res
+
+let transactionWithAsync<'T> (func: unit -> Async<'T>) =
+    async {
+        use scope = transactionWithManualComplete()
+        let transId = getTransactionId()
+        logmsg "started" Thread.CurrentThread.Name transId
+        let! res = func()
+        logmsg "completed" Thread.CurrentThread.Name transId
+        scope.Complete()
+        return res
+    }
+
+(*
+let ``example usage`` =
+    transactionWith <| fun () -> 
+        Console.WriteLine "Normal source code in transaction"
+        Console.WriteLine "e.g. database operations!"
+        Console.WriteLine "Return values and "
+        Console.WriteLine "C# Task classes supported."
+
+let ``example usage FSharpAsync`` =
+    transactionWithAsync <| fun () -> async {
+        Console.WriteLine "Async source code in transaction"
+        return "hello!"
+    }
+exampleusageFSharpAsync |> Async.RunSynchronously;;
+*)

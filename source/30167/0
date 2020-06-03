@@ -1,0 +1,27 @@
+open System
+open System.Text.RegularExpressions
+
+// create an active pattern to match an email address
+let (|EmailAddress|_|) input =
+    let m = Regex.Match(input,@".+@.+") 
+    if (m.Success) then Some input else None  
+
+// use the active pattern in the match   
+let classifyString aString = 
+    match aString with 
+    | EmailAddress x ->  //works same with | EmailAddress aString? where does it get x value from, why/How ddoes it match?
+         printfn "%s is an email" x
+        
+    // otherwise leave alone
+    | _ -> 
+        printfn "%s is something else" aString
+
+//test
+classifyString "alice@example.com"
+classifyString "google.com"
+
+let isMagicNumber magicNumber =
+    match magicNumber with
+    |9000 -> 9000
+    | x -> 2000 //error FS0039: The value or constructor 'x' is not defined
+    | _  -> x + 5

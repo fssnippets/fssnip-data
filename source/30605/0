@@ -1,0 +1,23 @@
+open System
+
+/// Push a [string] to the [int]-th element of a [string].
+let StrPush (sample : string) (cell : int) (input : string) : string = 
+     match cell with 
+        | cell when cell <= 0 
+            -> input.Insert( 0 , sample )
+        | cell when cell >= input.Length 
+            -> input.Insert( input.Length , sample )
+        | _ -> input.Insert( cell , sample )
+
+//  Normal case:
+
+"May the  be with you"
+    |>  StrPush "Force" 8
+    |>  printf "\n  >>  %s"
+
+//  Tricky cases:
+
+"F#"
+    |>  StrPush "I love " -999999
+    |>  StrPush " so much !" 999999
+    |>  printf "\n  >>  %s" 

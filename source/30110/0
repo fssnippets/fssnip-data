@@ -1,0 +1,29 @@
+module Mail =
+
+    open System
+    open System.Net.Mail
+    // open System.Configuration
+    let server = "smtp.myserver.com" // ConfigurationManager.AppSettings.["mailserver"]
+    let sender = "nospam@mydomain.com" // ConfigurationManager.AppSettings.["mailsender"]
+    let password = "abc123" // ConfigurationManager.AppSettings.["mailpassword"] |> my-decrypt
+    let port = 587
+    let sendMailMessage email name topic msg =
+        let msg = 
+            new MailMessage(
+                sender, email, topic, "Dear " + name + ", <br/><br/>\r\n\r\n" + msg)
+        msg.IsBodyHtml <- true
+        let client = new SmtpClient(server, port)
+        client.EnableSsl <- true
+        client.Credentials <- System.Net.NetworkCredential(sender, password)
+        client.SendCompleted |> Observable.add(fun e -> 
+            let msg = e.UserState :?> MailMessage
+            if e.Cancelled then
+                ("Mail message cancelled:\r\n" + msg.Subject) |> Console.WriteLine
+            if e.Error <> null then
+                ("Sending mail failed for message:\r\n" + msg.Subject + 
+                    ", reason:\r\n" + e.Error.ToString()) |> Console.WriteLine
+            if msg<>Unchecked.defaultof<MailMessage> then msg.Dispose()
+            if client<>Unchecked.defaultof<SmtpClient> then client.Dispose()
+        )
+        // Maybe some System.Threading.Thread.Sleep to prevent mail-server hammering
+        client.SendAsync(msg, msg)

@@ -1,0 +1,33 @@
+/// this is from fsharpforfunandprofit.com
+type RopResult<'TSuccess, 'TMessage> =
+    | Success of 'TSuccess * 'TMessage list
+    | Failure of 'TMessage list
+
+ // .. ... ..
+ let failIfNone message = function
+    | Some x -> succeed x
+    | None -> fail message 
+
+/// I whote this bit 
+let failIfSome message = function
+    | Some _ -> fail message 
+    | None ->  succeed ()
+
+
+
+let getProjectByTitle title = 
+    query { 
+        for p in ctx.Projects do
+            where (p.Title = title)
+            select p
+            take 1
+    }
+    |>  Seq.tryHead
+
+
+ /// I wanna add a project record if it does not exist in the table
+ getProjectByTitle p.ProjectTitle
+    |> failIfSome PojectAlreadyExists
+    // some more validation probalbly
+    |> liftR (fun _ -> p)  // now i wanna do somethign with p
+    |>   constructProjectFromMessage // from p 

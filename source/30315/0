@@ -1,0 +1,66 @@
+// Free monad-interpreter in F# (based on: http://programmers.stackexchange.com/a/242803/145941)
+
+type DSL<'next> =
+    | Get of key: string *       (string -> 'next)
+    | Set of key: string * value: string *  'next
+    | End
+
+let mapDSL: ('a -> 'b) -> DSL<'a> -> DSL<'b> = 
+        fun f             dsl     ->
+            match dsl with
+            | Get (k,    c) -> Get (k,      c >> f)
+            | Set (k, v, c) -> Set (k, v, f c     )
+            | End           -> End
+
+type FreeDSL<'a> =
+    | Free   of DSL<FreeDSL<'a>>
+    | Return of 'a
+
+let bindFree: ('a -> FreeDSL<'b>) -> FreeDSL<'a> -> FreeDSL<'b> =
+          fun f                   -> 
+              let rec boundF =
+                  function
+                  | Return a   -> f a
+                  | Free   dsl -> Free (mapDSL boundF dsl)
+              boundF
+
+let ex1  = Set ("alma", "bela", (Get ("alma", id)))
+let exF1 = Free (Set ("alma", "bela", (Free (Get ("alma", (fun s -> Return s))))))
+
+type FreeDSLBuilder () =
+    member this.Return     x = Return x
+    member this.ReturnFrom x = x
+    member this.Bind (ma, f) = bindFree f ma
+
+let domain = FreeDSLBuilder ()
+
+let liftFree (action : DSL<'a>) = Free (mapDSL Return action)
+
+let get key       = liftFree (Get (key, id))
+let set key value = liftFree (Set (key, value, ()))
+let end'<'a>      = liftFree End
+
+let exF2 = domain.Bind(set "foo" "bar", (fun _ -> get "foo"))
+
+let app<'a> = domain {
+    let! value = get "foo"
+    do! set "bar" value
+//    return! get "bar"
+    return value
+}
+
+
+let rec interpreter: FreeDSL<'a> -> unit =
+           fun free          ->
+               match free with
+               | Free(Get(key, nextF)) -> printfn "Get %s" key
+                                          nextF (sprintf "'get.%s'" key)
+                                          |> interpreter
+               | Free(Set(k, v, next)) -> printfn "Set %s = %s" k v
+                                          next |> interpreter
+               | Free(End)             -> printfn "End"
+               | Return v              -> printfn "return(%A)" v
+
+interpreter app
+interpreter exF1
+interpreter exF2

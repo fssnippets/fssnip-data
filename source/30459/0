@@ -1,0 +1,12 @@
+let oneByOne (tasks: 'a Async list): 'a list Async = 
+    let rec run tasks acc = async {
+        match tasks with
+        | [] -> 
+            return acc |> List.rev
+                
+        | h :: tail ->
+            let! r = h
+            return! run tail (r :: acc)
+    }
+
+    run tasks []

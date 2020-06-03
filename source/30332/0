@@ -1,0 +1,30 @@
+//#r "FSharp.Data.dll"
+open FSharp.Data
+open System
+
+[<Literal>]
+let projectrepo = "https://api.github.com/repos/fsprojects/paket/releases"
+
+type RepoData = JsonProvider<projectrepo>
+
+let items = RepoData.Load projectrepo
+
+/// Fetch download count per day:
+/// [|("2017-07-21", 6170); ("2017-07-20", 1043); ... |]
+let fetchDownloadCountFor filename =
+    items 
+    |> Array.map(fun pkg ->
+        pkg.Assets 
+        |> Array.filter(fun a -> a.BrowserDownloadUrl.EndsWith("/"+filename))
+        |> Array.map(fun a -> a.CreatedAt.ToString("yyyy-MM-dd"), a.DownloadCount)
+    ) |> Array.concat
+    |> Array.groupBy fst
+    |> Array.map(fun (k,v) -> k, (v |> Array.sumBy snd))
+    
+/// Data start day and total count.
+/// ("2017-07-07", 36158)
+let all =
+    let daily = fetchDownloadCountFor "paket.exe" 
+    let from = daily |> Array.minBy fst |> fst
+    let total = daily |> Array.sumBy snd
+    from, total

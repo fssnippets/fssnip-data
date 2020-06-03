@@ -1,0 +1,133 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+<span class="l">38: </span>
+<span class="l">39: </span>
+<span class="l">40: </span>
+<span class="l">41: </span>
+<span class="l">42: </span>
+<span class="l">43: </span>
+<span class="l">44: </span>
+<span class="l">45: </span>
+<span class="l">46: </span>
+<span class="l">47: </span>
+<span class="l">48: </span>
+<span class="l">49: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="prep">#if</span> <span class="i">INTERACTIVE</span>
+<span class="inactive">#r</span><span class="inactive"> </span><span class="inactive">&quot;System.Xml.Linq.dll&quot;</span>
+<span class="prep">#else</span>
+<span class="k">module</span> <span class="i">Rss</span>
+<span class="prep">#endif</span>
+
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">System</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 2)" onmouseover="showTip(event, 'fs1', 2)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 3)" onmouseover="showTip(event, 'fs2', 3)" class="i">Xml</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 4)" onmouseover="showTip(event, 'fs3', 4)" class="i">Linq</span>
+
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs4', 5)" onmouseover="showTip(event, 'fs4', 5)" class="t">NewsItem</span> <span class="o">=</span> { 
+    <span onmouseout="hideTip(event, 'fs5', 6)" onmouseover="showTip(event, 'fs5', 6)" class="i">Title</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs6', 7)" onmouseover="showTip(event, 'fs6', 7)" class="t">string</span>; 
+    <span onmouseout="hideTip(event, 'fs7', 8)" onmouseover="showTip(event, 'fs7', 8)" class="i">Link</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs6', 9)" onmouseover="showTip(event, 'fs6', 9)" class="t">string</span>; 
+    <span onmouseout="hideTip(event, 'fs8', 10)" onmouseover="showTip(event, 'fs8', 10)" class="i">ReleaseDate</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs9', 11)" onmouseover="showTip(event, 'fs9', 11)" class="t">DateTime</span>; 
+    <span onmouseout="hideTip(event, 'fs10', 12)" onmouseover="showTip(event, 'fs10', 12)" class="i">Description</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs6', 13)" onmouseover="showTip(event, 'fs6', 13)" class="t">string</span>; 
+}
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs11', 14)" onmouseover="showTip(event, 'fs11', 14)" class="f">myChannelFeed</span> 
+        (<span onmouseout="hideTip(event, 'fs12', 15)" onmouseover="showTip(event, 'fs12', 15)" class="i">channelTitle</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs6', 16)" onmouseover="showTip(event, 'fs6', 16)" class="t">string</span>) 
+        (<span onmouseout="hideTip(event, 'fs13', 17)" onmouseover="showTip(event, 'fs13', 17)" class="i">channelLink</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs6', 18)" onmouseover="showTip(event, 'fs6', 18)" class="t">string</span>) 
+        (<span onmouseout="hideTip(event, 'fs14', 19)" onmouseover="showTip(event, 'fs14', 19)" class="i">channelDescription</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs6', 20)" onmouseover="showTip(event, 'fs6', 20)" class="t">string</span>) (<span onmouseout="hideTip(event, 'fs15', 21)" onmouseover="showTip(event, 'fs15', 21)" class="i">items</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs4', 22)" onmouseover="showTip(event, 'fs4', 22)" class="t">NewsItem</span> <span onmouseout="hideTip(event, 'fs16', 23)" onmouseover="showTip(event, 'fs16', 23)" class="t">list</span>) <span class="o">=</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs17', 24)" onmouseover="showTip(event, 'fs17', 24)" class="f">xn</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs18', 25)" onmouseover="showTip(event, 'fs18', 25)" class="t">XName</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs19', 26)" onmouseover="showTip(event, 'fs19', 26)" class="f">Get</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs20', 27)" onmouseover="showTip(event, 'fs20', 27)" class="i">elems</span> <span class="o">=</span>
+        <span onmouseout="hideTip(event, 'fs15', 28)" onmouseover="showTip(event, 'fs15', 28)" class="i">items</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs21', 29)" onmouseover="showTip(event, 'fs21', 29)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs22', 30)" onmouseover="showTip(event, 'fs22', 30)" class="f">sortBy</span>(<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs23', 31)" onmouseover="showTip(event, 'fs23', 31)" class="i">i</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs23', 32)" onmouseover="showTip(event, 'fs23', 32)" class="i">i</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs8', 33)" onmouseover="showTip(event, 'fs8', 33)" class="i">ReleaseDate</span>) 
+        <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs21', 34)" onmouseover="showTip(event, 'fs21', 34)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs24', 35)" onmouseover="showTip(event, 'fs24', 35)" class="f">map</span>(<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs23', 36)" onmouseover="showTip(event, 'fs23', 36)" class="i">i</span> <span class="k">-&gt;</span>
+            <span onmouseout="hideTip(event, 'fs25', 37)" onmouseover="showTip(event, 'fs25', 37)" class="t">XElement</span>(<span onmouseout="hideTip(event, 'fs17', 38)" onmouseover="showTip(event, 'fs17', 38)" class="f">xn</span> <span class="s">&quot;item&quot;</span>,
+                <span onmouseout="hideTip(event, 'fs25', 39)" onmouseover="showTip(event, 'fs25', 39)" class="t">XElement</span>(<span onmouseout="hideTip(event, 'fs17', 40)" onmouseover="showTip(event, 'fs17', 40)" class="f">xn</span> <span class="s">&quot;title&quot;</span>, <span onmouseout="hideTip(event, 'fs23', 41)" onmouseover="showTip(event, 'fs23', 41)" class="i">i</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs5', 42)" onmouseover="showTip(event, 'fs5', 42)" class="i">Title</span>),
+                <span onmouseout="hideTip(event, 'fs25', 43)" onmouseover="showTip(event, 'fs25', 43)" class="t">XElement</span>(<span onmouseout="hideTip(event, 'fs17', 44)" onmouseover="showTip(event, 'fs17', 44)" class="f">xn</span> <span class="s">&quot;link&quot;</span>, <span onmouseout="hideTip(event, 'fs23', 45)" onmouseover="showTip(event, 'fs23', 45)" class="i">i</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs7', 46)" onmouseover="showTip(event, 'fs7', 46)" class="i">Link</span>),
+                <span onmouseout="hideTip(event, 'fs25', 47)" onmouseover="showTip(event, 'fs25', 47)" class="t">XElement</span>(<span onmouseout="hideTip(event, 'fs17', 48)" onmouseover="showTip(event, 'fs17', 48)" class="f">xn</span> <span class="s">&quot;guid&quot;</span>, <span onmouseout="hideTip(event, 'fs23', 49)" onmouseover="showTip(event, 'fs23', 49)" class="i">i</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs7', 50)" onmouseover="showTip(event, 'fs7', 50)" class="i">Link</span>),
+                <span onmouseout="hideTip(event, 'fs25', 51)" onmouseover="showTip(event, 'fs25', 51)" class="t">XElement</span>(<span onmouseout="hideTip(event, 'fs17', 52)" onmouseover="showTip(event, 'fs17', 52)" class="f">xn</span> <span class="s">&quot;pubDate&quot;</span>, <span onmouseout="hideTip(event, 'fs23', 53)" onmouseover="showTip(event, 'fs23', 53)" class="i">i</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs8', 54)" onmouseover="showTip(event, 'fs8', 54)" class="i">ReleaseDate</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs26', 55)" onmouseover="showTip(event, 'fs26', 55)" class="f">ToString</span>(<span class="s">&quot;r&quot;</span>)),
+                <span onmouseout="hideTip(event, 'fs25', 56)" onmouseover="showTip(event, 'fs25', 56)" class="t">XElement</span>(<span onmouseout="hideTip(event, 'fs17', 57)" onmouseover="showTip(event, 'fs17', 57)" class="f">xn</span> <span class="s">&quot;description&quot;</span>, <span onmouseout="hideTip(event, 'fs23', 58)" onmouseover="showTip(event, 'fs23', 58)" class="i">i</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs10', 59)" onmouseover="showTip(event, 'fs10', 59)" class="i">Description</span>)
+            ))
+    <span onmouseout="hideTip(event, 'fs27', 60)" onmouseover="showTip(event, 'fs27', 60)" class="t">XDocument</span>(
+        <span onmouseout="hideTip(event, 'fs28', 61)" onmouseover="showTip(event, 'fs28', 61)" class="t">XDeclaration</span>(<span class="s">&quot;1.0&quot;</span>, <span class="s">&quot;utf-8&quot;</span>, <span class="s">&quot;yes&quot;</span>),
+            <span onmouseout="hideTip(event, 'fs25', 62)" onmouseover="showTip(event, 'fs25', 62)" class="t">XElement</span>(<span onmouseout="hideTip(event, 'fs17', 63)" onmouseover="showTip(event, 'fs17', 63)" class="f">xn</span> <span class="s">&quot;rss&quot;</span>,
+                <span onmouseout="hideTip(event, 'fs29', 64)" onmouseover="showTip(event, 'fs29', 64)" class="t">XAttribute</span>(<span onmouseout="hideTip(event, 'fs17', 65)" onmouseover="showTip(event, 'fs17', 65)" class="f">xn</span> <span class="s">&quot;version&quot;</span>, <span class="s">&quot;2.0&quot;</span>),
+                <span onmouseout="hideTip(event, 'fs25', 66)" onmouseover="showTip(event, 'fs25', 66)" class="t">XElement</span>(<span onmouseout="hideTip(event, 'fs17', 67)" onmouseover="showTip(event, 'fs17', 67)" class="f">xn</span> <span class="s">&quot;title&quot;</span>, <span onmouseout="hideTip(event, 'fs12', 68)" onmouseover="showTip(event, 'fs12', 68)" class="i">channelTitle</span>),
+                <span onmouseout="hideTip(event, 'fs25', 69)" onmouseover="showTip(event, 'fs25', 69)" class="t">XElement</span>(<span onmouseout="hideTip(event, 'fs17', 70)" onmouseover="showTip(event, 'fs17', 70)" class="f">xn</span> <span class="s">&quot;link&quot;</span>, <span onmouseout="hideTip(event, 'fs13', 71)" onmouseover="showTip(event, 'fs13', 71)" class="i">channelLink</span>),
+                <span onmouseout="hideTip(event, 'fs25', 72)" onmouseover="showTip(event, 'fs25', 72)" class="t">XElement</span>(<span onmouseout="hideTip(event, 'fs17', 73)" onmouseover="showTip(event, 'fs17', 73)" class="f">xn</span> <span class="s">&quot;description&quot;</span>, <span onmouseout="hideTip(event, 'fs14', 74)" onmouseover="showTip(event, 'fs14', 74)" class="i">channelDescription</span>),
+                <span onmouseout="hideTip(event, 'fs25', 75)" onmouseover="showTip(event, 'fs25', 75)" class="t">XElement</span>(<span onmouseout="hideTip(event, 'fs17', 76)" onmouseover="showTip(event, 'fs17', 76)" class="f">xn</span> <span class="s">&quot;language&quot;</span>, <span class="s">&quot;en-us&quot;</span>),
+                <span onmouseout="hideTip(event, 'fs25', 77)" onmouseover="showTip(event, 'fs25', 77)" class="t">XElement</span>(<span onmouseout="hideTip(event, 'fs17', 78)" onmouseover="showTip(event, 'fs17', 78)" class="f">xn</span> <span class="s">&quot;channel&quot;</span>, <span onmouseout="hideTip(event, 'fs20', 79)" onmouseover="showTip(event, 'fs20', 79)" class="i">elems</span>)
+            ) <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs30', 80)" onmouseover="showTip(event, 'fs30', 80)" class="f">box</span>)
+
+
+<span class="c">// set mime-type to &quot;text/xml&quot; and deliver e.g. as rss.xml</span>
+
+<span class="c">//let generateFeed = myChannelFeed &quot;FSnip Test Feed&quot; &quot;http://www.fssnip.com&quot; &quot;Some independent F# functions and code&quot;</span>
+<span class="c">//let myXml =</span>
+<span class="c">//    [{Title = &quot;Welcome&quot;; Link=&quot;www.fssnip.net/9q&quot;; ReleaseDate=DateTime.UtcNow; Description=&quot;First item&quot;};</span>
+<span class="c">//     {Title = &quot;Hello&quot;; Link=&quot;www.fssnip.net/1q&quot;; ReleaseDate=DateTime.UtcNow; Description=&quot;Second item&quot;} ] |&gt; generateFeed</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace System</div>
+<div class="tip" id="fs2">namespace System.Xml</div>
+<div class="tip" id="fs3">namespace System.Xml.Linq</div>
+<div class="tip" id="fs4">type NewsItem =<br />&#160;&#160;{Title: string;<br />&#160;&#160;&#160;Link: string;<br />&#160;&#160;&#160;ReleaseDate: DateTime;<br />&#160;&#160;&#160;Description: string;}<br /><br />Full name: Script.NewsItem</div>
+<div class="tip" id="fs5">NewsItem.Title: string</div>
+<div class="tip" id="fs6">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />Full name: Microsoft.FSharp.Core.Operators.string<br /><br />--------------------<br />type string = String<br /><br />Full name: Microsoft.FSharp.Core.string</div>
+<div class="tip" id="fs7">NewsItem.Link: string</div>
+<div class="tip" id="fs8">NewsItem.ReleaseDate: DateTime</div>
+<div class="tip" id="fs9">Multiple items<br />type DateTime =<br />&#160;&#160;struct<br />&#160;&#160;&#160;&#160;new : ticks:int64 -&gt; DateTime + 10 overloads<br />&#160;&#160;&#160;&#160;member Add : value:TimeSpan -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddDays : value:float -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddHours : value:float -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddMilliseconds : value:float -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddMinutes : value:float -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddMonths : months:int -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddSeconds : value:float -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddTicks : value:int64 -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddYears : value:int -&gt; DateTime<br />&#160;&#160;&#160;&#160;...<br />&#160;&#160;end<br /><br />Full name: System.DateTime<br /><br />--------------------<br />DateTime()<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />DateTime(ticks: int64) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />DateTime(ticks: int64, kind: DateTimeKind) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />DateTime(year: int, month: int, day: int) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />DateTime(year: int, month: int, day: int, calendar: Globalization.Calendar) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />DateTime(year: int, month: int, day: int, hour: int, minute: int, second: int) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />DateTime(year: int, month: int, day: int, hour: int, minute: int, second: int, kind: DateTimeKind) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />DateTime(year: int, month: int, day: int, hour: int, minute: int, second: int, calendar: Globalization.Calendar) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />DateTime(year: int, month: int, day: int, hour: int, minute: int, second: int, millisecond: int) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />DateTime(year: int, month: int, day: int, hour: int, minute: int, second: int, millisecond: int, kind: DateTimeKind) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em></div>
+<div class="tip" id="fs10">NewsItem.Description: string</div>
+<div class="tip" id="fs11">val myChannelFeed : channelTitle:string -&gt; channelLink:string -&gt; channelDescription:string -&gt; items:NewsItem list -&gt; XDocument<br /><br />Full name: Script.myChannelFeed</div>
+<div class="tip" id="fs12">val channelTitle : string</div>
+<div class="tip" id="fs13">val channelLink : string</div>
+<div class="tip" id="fs14">val channelDescription : string</div>
+<div class="tip" id="fs15">val items : NewsItem list</div>
+<div class="tip" id="fs16">type &#39;T list = List&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.list&lt;_&gt;</div>
+<div class="tip" id="fs17">val xn : (string -&gt; XName)</div>
+<div class="tip" id="fs18">type XName =<br />&#160;&#160;member Equals : obj:obj -&gt; bool<br />&#160;&#160;member GetHashCode : unit -&gt; int<br />&#160;&#160;member LocalName : string<br />&#160;&#160;member Namespace : XNamespace<br />&#160;&#160;member NamespaceName : string<br />&#160;&#160;member ToString : unit -&gt; string<br />&#160;&#160;static member Get : expandedName:string -&gt; XName + 1 overload<br /><br />Full name: System.Xml.Linq.XName</div>
+<div class="tip" id="fs19">XName.Get(expandedName: string) : XName<br />XName.Get(localName: string, namespaceName: string) : XName</div>
+<div class="tip" id="fs20">val elems : XElement list</div>
+<div class="tip" id="fs21">Multiple items<br />module List<br /><br />from Microsoft.FSharp.Collections<br /><br />--------------------<br />type List&lt;&#39;T&gt; =<br />&#160;&#160;| ( [] )<br />&#160;&#160;| ( :: ) of Head: &#39;T * Tail: &#39;T list<br />&#160;&#160;interface IEnumerable<br />&#160;&#160;interface IEnumerable&lt;&#39;T&gt;<br />&#160;&#160;member GetSlice : startIndex:int option * endIndex:int option -&gt; &#39;T list<br />&#160;&#160;member Head : &#39;T<br />&#160;&#160;member IsEmpty : bool<br />&#160;&#160;member Item : index:int -&gt; &#39;T with get<br />&#160;&#160;member Length : int<br />&#160;&#160;member Tail : &#39;T list<br />&#160;&#160;static member Cons : head:&#39;T * tail:&#39;T list -&gt; &#39;T list<br />&#160;&#160;static member Empty : &#39;T list<br /><br />Full name: Microsoft.FSharp.Collections.List&lt;_&gt;</div>
+<div class="tip" id="fs22">val sortBy : projection:(&#39;T -&gt; &#39;Key) -&gt; list:&#39;T list -&gt; &#39;T list (requires comparison)<br /><br />Full name: Microsoft.FSharp.Collections.List.sortBy</div>
+<div class="tip" id="fs23">val i : NewsItem</div>
+<div class="tip" id="fs24">val map : mapping:(&#39;T -&gt; &#39;U) -&gt; list:&#39;T list -&gt; &#39;U list<br /><br />Full name: Microsoft.FSharp.Collections.List.map</div>
+<div class="tip" id="fs25">Multiple items<br />type XElement =<br />&#160;&#160;inherit XContainer<br />&#160;&#160;new : name:XName -&gt; XElement + 4 overloads<br />&#160;&#160;member AncestorsAndSelf : unit -&gt; IEnumerable&lt;XElement&gt; + 1 overload<br />&#160;&#160;member Attribute : name:XName -&gt; XAttribute<br />&#160;&#160;member Attributes : unit -&gt; IEnumerable&lt;XAttribute&gt; + 1 overload<br />&#160;&#160;member DescendantNodesAndSelf : unit -&gt; IEnumerable&lt;XNode&gt;<br />&#160;&#160;member DescendantsAndSelf : unit -&gt; IEnumerable&lt;XElement&gt; + 1 overload<br />&#160;&#160;member FirstAttribute : XAttribute<br />&#160;&#160;member GetDefaultNamespace : unit -&gt; XNamespace<br />&#160;&#160;member GetNamespaceOfPrefix : prefix:string -&gt; XNamespace<br />&#160;&#160;member GetPrefixOfNamespace : ns:XNamespace -&gt; string<br />&#160;&#160;...<br /><br />Full name: System.Xml.Linq.XElement<br /><br />--------------------<br />XElement(name: XName) : unit<br />XElement(other: XElement) : unit<br />XElement(other: XStreamingElement) : unit<br />XElement(name: XName, content: obj) : unit<br />XElement(name: XName, [&lt;ParamArray&gt;] content: obj []) : unit</div>
+<div class="tip" id="fs26">DateTime.ToString() : string<br />DateTime.ToString(provider: IFormatProvider) : string<br />DateTime.ToString(format: string) : string<br />DateTime.ToString(format: string, provider: IFormatProvider) : string</div>
+<div class="tip" id="fs27">Multiple items<br />type XDocument =<br />&#160;&#160;inherit XContainer<br />&#160;&#160;new : unit -&gt; XDocument + 3 overloads<br />&#160;&#160;member Declaration : XDeclaration with get, set<br />&#160;&#160;member DocumentType : XDocumentType<br />&#160;&#160;member NodeType : XmlNodeType<br />&#160;&#160;member Root : XElement<br />&#160;&#160;member Save : fileName:string -&gt; unit + 6 overloads<br />&#160;&#160;member WriteTo : writer:XmlWriter -&gt; unit<br />&#160;&#160;static member Load : uri:string -&gt; XDocument + 7 overloads<br />&#160;&#160;static member Parse : text:string -&gt; XDocument + 1 overload<br /><br />Full name: System.Xml.Linq.XDocument<br /><br />--------------------<br />XDocument() : unit<br />XDocument([&lt;ParamArray&gt;] content: obj []) : unit<br />XDocument(other: XDocument) : unit<br />XDocument(declaration: XDeclaration, [&lt;ParamArray&gt;] content: obj []) : unit</div>
+<div class="tip" id="fs28">Multiple items<br />type XDeclaration =<br />&#160;&#160;new : other:XDeclaration -&gt; XDeclaration + 1 overload<br />&#160;&#160;member Encoding : string with get, set<br />&#160;&#160;member Standalone : string with get, set<br />&#160;&#160;member ToString : unit -&gt; string<br />&#160;&#160;member Version : string with get, set<br /><br />Full name: System.Xml.Linq.XDeclaration<br /><br />--------------------<br />XDeclaration(other: XDeclaration) : unit<br />XDeclaration(version: string, encoding: string, standalone: string) : unit</div>
+<div class="tip" id="fs29">Multiple items<br />type XAttribute =<br />&#160;&#160;inherit XObject<br />&#160;&#160;new : other:XAttribute -&gt; XAttribute + 1 overload<br />&#160;&#160;member IsNamespaceDeclaration : bool<br />&#160;&#160;member Name : XName<br />&#160;&#160;member NextAttribute : XAttribute<br />&#160;&#160;member NodeType : XmlNodeType<br />&#160;&#160;member PreviousAttribute : XAttribute<br />&#160;&#160;member Remove : unit -&gt; unit<br />&#160;&#160;member SetValue : value:obj -&gt; unit<br />&#160;&#160;member ToString : unit -&gt; string<br />&#160;&#160;member Value : string with get, set<br />&#160;&#160;...<br /><br />Full name: System.Xml.Linq.XAttribute<br /><br />--------------------<br />XAttribute(other: XAttribute) : unit<br />XAttribute(name: XName, value: obj) : unit</div>
+<div class="tip" id="fs30">val box : value:&#39;T -&gt; obj<br /><br />Full name: Microsoft.FSharp.Core.Operators.box</div>
+

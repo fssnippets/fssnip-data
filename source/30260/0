@@ -1,0 +1,30 @@
+(**
+## Implementation
+*)
+
+module Array =
+    /// <summary>
+    /// The intersperse function takes an element and an array and
+    /// 'intersperses' that element between the elements of the array.
+    /// </summary>
+    /// <exception cref="System.ArgumentNullException"/>
+    let intersperse sep (array: 'a array) =
+        if isNull array then nullArg "arr"
+        elif array.Length = 0 then [||]
+        else
+            let interspersedArray = Array.zeroCreate ((array.Length * 2) - 1)
+            for i = 0 to array.Length - 1 do
+                let j = i * 2
+                interspersedArray.[j] <- array.[i]
+                if (j < interspersedArray.Length - 1) then
+                    interspersedArray.[j + 1] <- sep
+            interspersedArray
+
+(**
+Example
+*)
+
+Array.intersperse 0 [|1..10|]
+
+// throws a null arg exception, like any other Array module func
+Array.intersperse 0 null

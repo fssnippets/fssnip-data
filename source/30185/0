@@ -1,0 +1,13 @@
+open System.Text.RegularExpressions
+
+let spin s =
+    let pickRandom = Array.sortBy (fun _ -> System.Guid.NewGuid()) >> Array.head
+    let regEx = "\{(?>\{(?<c>)|[^{}]+|\}(?<-c>))*(?(c)(?!))\}"
+    let rec spinMatch (m:Match) =
+        let s' =
+            match m.Value.Substring(1, m.Value.Length-2) with
+            | s when s.Contains("{") -> 
+              Regex.Replace(s, regEx, spinMatch)
+            | s -> s
+        s'.Split('|') |> pickRandom
+    Regex.Replace(s, regEx, spinMatch)

@@ -1,0 +1,74 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">// The idea is that you will have a generic wrapper ID&lt;&#39;T&gt; and then use </span>
+<span class="c">// different types for &#39;T to represent different types of IDs. Those types </span>
+<span class="c">// are never actually instantiated, which is why they&#39;re called phantom types.</span>
+
+[&lt;<span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="t">Struct</span>&gt;]
+<span class="k">type</span> <span class="i">ID</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">T</span><span class="o">&gt;</span> <span class="o">=</span> <span class="i">ID</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="i">Guid</span>
+
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="t">CustomerID</span> <span class="o">=</span> <span class="k">interface</span> <span class="k">end</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="t">ProductID</span> <span class="o">=</span> <span class="k">interface</span> <span class="k">end</span>
+
+<span class="c">// Now you can create ID&lt;CustomerID&gt; and </span>
+<span class="c">// ID&lt;ProductID&gt; values to represent two kinds of IDs:</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="f">newCustomerID</span> () <span class="o">:</span> <span class="i">ID</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs4', 7)" onmouseover="showTip(event, 'fs4', 7)" class="i">CustomerID</span><span class="o">&gt;</span> <span class="o">=</span> <span class="i">ID</span>(<span onmouseout="hideTip(event, 'fs2', 8)" onmouseover="showTip(event, 'fs2', 8)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 9)" onmouseover="showTip(event, 'fs3', 9)" class="i">Guid</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs7', 10)" onmouseover="showTip(event, 'fs7', 10)" class="i">NewGuid</span>())
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs8', 11)" onmouseover="showTip(event, 'fs8', 11)" class="f">newProductID</span> () <span class="o">:</span> <span class="i">ID</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs5', 12)" onmouseover="showTip(event, 'fs5', 12)" class="i">ProductID</span><span class="o">&gt;</span> <span class="o">=</span> <span class="i">ID</span>(<span onmouseout="hideTip(event, 'fs2', 13)" onmouseover="showTip(event, 'fs2', 13)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 14)" onmouseover="showTip(event, 'fs3', 14)" class="i">Guid</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs7', 15)" onmouseover="showTip(event, 'fs7', 15)" class="i">NewGuid</span>())
+
+<span class="c">// The nice thing about this is that you can write functions that work with any ID easily:</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs9', 16)" onmouseover="showTip(event, 'fs9', 16)" class="f">printID</span> (<span class="i">ID</span> <span onmouseout="hideTip(event, 'fs10', 17)" onmouseover="showTip(event, 'fs10', 17)" class="i">g</span>) <span class="o">=</span> <span onmouseout="hideTip(event, 'fs11', 18)" onmouseover="showTip(event, 'fs11', 18)" class="i">printfn</span> <span class="s">&quot;%s&quot;</span> (<span class="i">g</span><span class="o">.</span><span class="i">ToString</span>())
+
+<span class="c">// For example, I can now create one customer ID, one product ID and print </span>
+<span class="c">// both, but I cannot do equality test on those IDs, because they&#39;re types do not match:</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs12', 19)" onmouseover="showTip(event, 'fs12', 19)" class="i">ci</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs6', 20)" onmouseover="showTip(event, 'fs6', 20)" class="f">newCustomerID</span> ()
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs13', 21)" onmouseover="showTip(event, 'fs13', 21)" class="i">pi</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs8', 22)" onmouseover="showTip(event, 'fs8', 22)" class="f">newProductID</span> ()
+<span onmouseout="hideTip(event, 'fs9', 23)" onmouseover="showTip(event, 'fs9', 23)" class="f">printID</span> <span onmouseout="hideTip(event, 'fs12', 24)" onmouseover="showTip(event, 'fs12', 24)" class="i">ci</span>
+<span onmouseout="hideTip(event, 'fs9', 25)" onmouseover="showTip(event, 'fs9', 25)" class="f">printID</span> <span onmouseout="hideTip(event, 'fs13', 26)" onmouseover="showTip(event, 'fs13', 26)" class="i">pi</span>
+<span onmouseout="hideTip(event, 'fs12', 27)" onmouseover="showTip(event, 'fs12', 27)" class="i">ci</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs13', 28)" onmouseover="showTip(event, 'fs13', 28)" class="i">pi</span> 
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">Multiple items<br />type StructAttribute =<br />&#160;&#160;inherit Attribute<br />&#160;&#160;new : unit -&gt; StructAttribute<br /><br />Full name: Microsoft.FSharp.Core.StructAttribute<br /><br />--------------------<br />new : unit -&gt; StructAttribute</div>
+<div class="tip" id="fs2">namespace System</div>
+<div class="tip" id="fs3">Multiple items<br />type Guid =<br />&#160;&#160;struct<br />&#160;&#160;&#160;&#160;new : b:byte[] -&gt; Guid + 4 overloads<br />&#160;&#160;&#160;&#160;member CompareTo : value:obj -&gt; int + 1 overload<br />&#160;&#160;&#160;&#160;member Equals : o:obj -&gt; bool + 1 overload<br />&#160;&#160;&#160;&#160;member GetHashCode : unit -&gt; int<br />&#160;&#160;&#160;&#160;member ToByteArray : unit -&gt; byte[]<br />&#160;&#160;&#160;&#160;member ToString : unit -&gt; string + 2 overloads<br />&#160;&#160;&#160;&#160;static val Empty : Guid<br />&#160;&#160;&#160;&#160;static member NewGuid : unit -&gt; Guid<br />&#160;&#160;&#160;&#160;static member Parse : input:string -&gt; Guid<br />&#160;&#160;&#160;&#160;static member ParseExact : input:string * format:string -&gt; Guid<br />&#160;&#160;&#160;&#160;...<br />&#160;&#160;end<br /><br />Full name: System.Guid<br /><br />--------------------<br />System.Guid()<br />System.Guid(b: byte []) : unit<br />System.Guid(g: string) : unit<br />System.Guid(a: int, b: int16, c: int16, d: byte []) : unit<br />System.Guid(a: uint32, b: uint16, c: uint16, d: byte, e: byte, f: byte, g: byte, h: byte, i: byte, j: byte, k: byte) : unit<br />System.Guid(a: int, b: int16, c: int16, d: byte, e: byte, f: byte, g: byte, h: byte, i: byte, j: byte, k: byte) : unit</div>
+<div class="tip" id="fs4">type CustomerID<br /><br />Full name: Script.CustomerID</div>
+<div class="tip" id="fs5">type ProductID<br /><br />Full name: Script.ProductID</div>
+<div class="tip" id="fs6">val newCustomerID : unit -&gt; &#39;a<br /><br />Full name: Script.newCustomerID</div>
+<div class="tip" id="fs7">System.Guid.NewGuid() : System.Guid</div>
+<div class="tip" id="fs8">val newProductID : unit -&gt; &#39;a<br /><br />Full name: Script.newProductID</div>
+<div class="tip" id="fs9">val printID : &#39;a -&gt; &#39;b<br /><br />Full name: Script.printID</div>
+<div class="tip" id="fs10">val _arg1 : &#39;a</div>
+<div class="tip" id="fs11">val printfn : format:Printf.TextWriterFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.printfn</div>
+<div class="tip" id="fs12">val ci : obj<br /><br />Full name: Script.ci</div>
+<div class="tip" id="fs13">val pi : obj<br /><br />Full name: Script.pi</div>
+

@@ -1,0 +1,26 @@
+// Caution!
+// Don't use in real code.
+
+module Domain =
+    type UnionType = 
+        | Int of int
+        | Long of int64
+        | String of string
+    with
+        static member ($) (UnionType, x:int) = Int(x)
+        static member ($) (UnionType, x:int64) = Long(x)
+        static member ($) (UnionType, x:string) = String(x) 
+
+    let inline (|UnionType|) x = Unchecked.defaultof<UnionType> $ x
+
+open Domain
+
+let show x = 
+  match x with
+  | Int x -> printfn "int: %d" x
+  | Long x -> printfn "long: %d" x
+  | String x -> printfn "string: %s" x
+
+let inline showImplicit (UnionType x) = show x
+
+showImplicit "Hello world!"

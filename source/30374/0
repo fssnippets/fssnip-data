@@ -1,0 +1,30 @@
+// First hand in - functional programming
+
+// Types for Clubmembers and arrangement predicate. 
+type NameOfMember = string;;
+type PhoneNumber = string;;
+type YearOfBirth = int;;
+type ThemeOfInterest = string list;;
+type NameOfArrangement = string;;
+
+// Type for description of a clubmember 
+type Description = (PhoneNumber * YearOfBirth * ThemeOfInterest);;
+
+// Type for the register containing the clubmembers.
+type Register = (NameOfMember * Description) list;;
+
+// Type for the list of arrangements. 
+type Arrangements = (NameOfArrangement * Description) list;;
+
+// A declaration of a register containing some test members.
+let reg = [("Mads", ("6666", 1987, ["coding" ; "surfing" ; "longwalksonthebeach" ; "gaming"] ));
+           ("Ulfur", ("2905", 1988, ["coding" ; "gaming"; "vikings"; "beinganImmigrant"])) ];;
+
+// Auxiliary function thats finds the individual members. 
+let rec findMember nom = function
+    | (nom',adesc)::_ when nom=nom' -> adesc
+    | _::reg                        -> findMember nom reg
+    | _                             -> failwith(nom + " is an unknown member.");; 
+
+
+let whatever(phone, year, _) = findMember "Mads";;

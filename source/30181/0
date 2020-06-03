@@ -1,0 +1,37 @@
+module Rop = 
+    
+    type Failure<'e> = 
+        | FunctionalError of 'e
+        | ExceptionError of exn
+
+    type Result<'a, 'e> = 
+        | Success of 'a 
+        | Failure of Failure<'e>
+
+    let ret = Success
+
+    //The basic
+    let bind2 f x y = 
+        match x, y with
+        | Success xR, Success yR -> f xR yR
+        | Failure e, _ | _, Failure e -> Failure e
+    
+    //If you have only exception for eg with C# interop
+    //You can build your own result style but if you use it with map2 the type of failure (without the Failure type) will be always exn. 
+    let tryF f x y =
+        try f x y |> Success
+        with ex -> ex |> ExceptionError |> Failure
+
+    //Compose map2 with tryF and bind2 to eraise the result type from the return of f
+    let map2 f x y = bind2 (tryF f) x y
+
+    //Partial application for continuation or in order to build map
+    let apply f x = map2 (fun f x -> f x) f x
+
+    //Build map thanks to apply
+    let map f x = apply (ret f) x
+
+    //A more pragmatical bind to avoid composition
+    let bind f = function
+        | Success x -> f x
+        | Failure e -> Failure e

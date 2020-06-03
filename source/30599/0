@@ -1,0 +1,62 @@
+open FSharp.Compiler.CodeDom
+open System.CodeDom
+open System.CodeDom.Compiler
+open System.IO
+open System.Linq
+open System.Xml
+open System.Xml.Schema
+open System.Xml.Serialization
+
+module XsdGenerator =
+    let private printValidationError step =
+        ValidationEventHandler(fun _ error ->
+            if error.Severity = XmlSeverityType.Error 
+            then printfn "ERROR  --  %s: %s" step error.Message 
+            else printfn "Warning -- %s: %s" step error.Message)        
+
+    let importTypes (xsd: XmlSchema) =
+        let schemas = XmlSchemas()
+        schemas.Add(xsd) |> ignore
+        schemas.Compile(printValidationError "Compiling XSD", true)
+        let importer = XmlSchemaImporter(schemas)
+        [
+            for schemaType in xsd.SchemaTypes.Values.OfType<XmlSchemaType>() do
+                yield importer.ImportSchemaType(schemaType.QualifiedName)
+            for schemaElement in xsd.Elements.Values.OfType<XmlSchemaElement>() do
+                yield importer.ImportTypeMapping(schemaElement.QualifiedName)
+        ]
+
+    let readXsd (xsdFile: FileInfo) =
+        use inputStream = xsdFile.OpenRead()
+        use schemaReader = new XmlTextReader(inputStream)
+        XmlSchema.Read(schemaReader, printValidationError "Reading XSD")
+
+    let exportCode (``namespace``: string option) (typeMappings: XmlTypeMapping list) =
+        let codeNamespace = ``namespace`` |> Option.defaultValue "Xsd.Generated" |> CodeNamespace
+        let exporter = XmlCodeExporter(codeNamespace)
+        typeMappings |> List.iter exporter.ExportTypeMapping
+        codeNamespace
+
+    let validateCode (codeNamespace: CodeNamespace) =
+        codeNamespace.Types.OfType<CodeTypeDeclaration>() 
+        |> Seq.iter (fun t -> 
+            let xmlType = t.CustomAttributes.OfType<CodeAttributeDeclaration>() |> Seq.tryFind (fun a -> a.Name = "System.Xml.Serialization.XmlTypeAttribute")
+            t.CustomAttributes.Clear()
+            xmlType |> Option.iter (t.CustomAttributes.Add >> ignore))
+        CodeGenerator.ValidateIdentifiers(codeNamespace)
+        codeNamespace
+
+    let saveToFile (outputFile: FileInfo) (codeNamespace: CodeNamespace) =
+        use codeProvider = new FSharpCodeProvider()
+        use writer = new StreamWriter(outputFile.FullName, false)
+        let options = CodeGeneratorOptions(VerbatimOrder = true)
+        codeProvider.GenerateCodeFromNamespace(codeNamespace, writer, options)
+
+    let generateClasses ``namespace`` outputFile xsdFile =
+        xsdFile
+        |> readXsd
+        |> importTypes
+        |> exportCode ``namespace``
+        |> validateCode
+        |> saveToFile outputFile
+

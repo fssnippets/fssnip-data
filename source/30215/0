@@ -1,0 +1,95 @@
+module Exercises // Tasks from http://stackoverflow.com/a/117891.
+
+let private tokenize (s : string) =
+    s.Split () |> Seq.filter (fun w -> String.length w <> 0)
+
+// 1. Reverse a string
+let reverseString str = str |> Seq.rev |> Seq.toArray |> System.String
+
+let manualReverseString str =
+    let a = str |> Seq.toArray
+
+    let swap i j =
+        let tmp = a.[i]
+        a.[i] <- a.[j]
+        a.[j] <- tmp
+    
+    let n = Array.length a - 1
+    {0..(Array.length a / 2 - 1)} |> Seq.iter (fun i -> n - i |> swap i)
+    System.String a
+
+// 1a. Reverse a string (manually)
+let manualReverseString2 str =
+    let a = str |> Seq.toArray
+
+    let inline swap i j =
+        let tmp = a.[i]
+        a.[i] <- a.[j]
+        a.[j] <- tmp
+    
+    let rec flip i j =
+        if i < j then
+            swap i j
+            flip (i + 1) (j - 1)
+        else
+            ()
+    
+    Array.length a - 1 |> flip 0
+    System.String a
+
+// 2. Reverse a sentence
+let reverseSentence = tokenize >> Seq.rev >> String.concat " "
+
+// 3. Find the minimum value in a list
+let minOf = List.min
+
+// 3a. Find the minimum value in a list (manually)
+let manualMinOf = function
+| []    ->
+    failwith "empty container has no minimum"
+| x::xs ->
+    let rec minval acc = function
+    | []    -> acc
+    | y::ys -> minval (if acc < y then acc else y) ys
+    
+    minval x xs
+
+// 4. Find the maximum value in a list
+let maxOf = List.max
+
+// 4a. Find the maximum value in a list (manually)
+let manualMaxOf = function
+| []    ->
+    failwith "empty container has no minimum"
+| x::xs ->
+    let rec minval acc = function
+    | []    -> acc
+    | y::ys -> minval (if acc > y then acc else y) ys
+    
+    minval x xs
+
+// 5. Calculate a remainder
+let inline remainder x y = x % y
+
+// 6. Return distinct values from a list that may have duplicates
+let distinct = List.distinct
+
+// 6. Return distinct values from a list that may have duplicates (manually)
+let manualDistinct xs =
+    let rec dedup acc s = function
+    | []    -> acc
+    | y::ys ->
+        if s |> Set.contains y then
+            dedup acc s ys
+        else
+            dedup (y::acc) (s |> Set.add y) ys
+    
+    xs |> dedup [] Set.empty |> List.rev
+
+let parseManualDistinct<'a when 'a:comparison> (fn:string->'a) =
+    tokenize
+    >> Seq.map fn
+    >> Seq.toList
+    >> manualDistinct
+    >> Seq.map (sprintf "%O")
+    >> String.concat " "

@@ -1,0 +1,13 @@
+open Nessos.FsPickler
+
+let typeConverter = { new ITypeNameConverter with
+                         member __.OfSerializedType t = let newName = if (t.Name.StartsWith("FSI_")) then
+                                                                          let index = t.Name.IndexOf(".")
+                                                                          t.Name.Substring(index+1)
+                                                                      else
+                                                                          t.Name
+                                                        { t with Name = newName }
+                         member __.ToDeserializedType t = t
+                    }
+
+let pickler = FsPickler.CreateBinarySerializer(typeConverter = typeConverter)

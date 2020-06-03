@@ -1,0 +1,81 @@
+open FSharp.Data
+
+
+type HestOgRytter = HtmlProvider<"http://www.hestogrytter.dk/find-udstillere/se-alle-udstillere?PageSize=1001">
+type HestOgRytterVip = HtmlProvider<"http://www.hestogrytter.dk/find-udstillere/udstiller/24-7-rideudstyr">
+type Supplier = {
+    CompanyName : string
+    Address : string
+    Hall : string
+    Stand : int
+    Contact : string
+    Phone : string
+    Email : string
+    Website : string
+    ``HestOgRytter URL`` : string
+}
+
+let sample' = HestOgRytter.GetSample()
+
+let s_trim (s : string) =
+    s.Trim()
+
+let suppliers =
+    sample'.Lists.List6.Html.CssSelect(".e-productlist-images.span3 a")
+    |> List.map (fun li -> HtmlNode.attributeValue "href" li)
+
+let write (s : string) =
+    printfn "Writing: %s" s
+    use tw = new System.IO.StreamWriter(@"C:\1\HestOgRytter.csv", true)
+    tw.WriteLine(s)
+
+write "\"Firmanavn\",\"Adresse\",\"Hald\",\"Stand\",\"Kontaktperson\",\"Telefon\",\"Email\",\"Website\",\"HestOgRytter URL\""
+for supplierUrl in suppliers do
+    let vipData = HestOgRytterVip.Load("http://www.hestogrytter.dk" + supplierUrl)
+    let address =
+        vipData.Html.CssSelect(".row-fluid.supplier-framework.topinfo em").Head
+        |> HtmlNode.innerText
+        |> s_trim
+
+    let compName =
+        vipData.Html.CssSelect(".row-fluid.supplier-framework.topinfo h1").Head
+        |> HtmlNode.innerText
+        |> s_trim
+
+    let hall =
+        vipData.Html.CssSelect(".row-fluid.supplier-framework.topinfo .span9 div.popsign span").Head
+        |> HtmlNode.innerText
+        |> s_trim
+
+    let stand =
+        vipData.Html.CssSelect(".row-fluid.supplier-framework.topinfo .span9 div.popsign span")
+        |> List.skip 1
+        |> List.head
+        |> HtmlNode.innerText
+        |> int
+
+
+    let i =
+        vipData.Html.CssSelect(".row-fluid.supplier-framework.topinfo ul li")
+        |> List.map(fun li -> HtmlNode.innerText li |> s_trim)
+
+    let i2 =
+        match i with
+        | i when i.Length >= 4 -> i
+        | i when i.Length >= 1 -> printfn "%A" i; List.init 4 (fun _ -> "")
+        | _ -> List.init 4 (fun _ -> "")
+
+    let supl : Supplier = {
+        CompanyName = compName
+        Address = address
+        Hall = hall
+        Stand = stand
+        Contact = i2.[0]
+        Phone = i2.[1]
+        Email = i2.[2]
+        Website = i2.[3]
+        ``HestOgRytter URL`` = "http://www.hestogrytter.dk" + supplierUrl
+    }
+
+    write (sprintf "\"%s\",\"%s\",\"%s\",\"%d\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\"" supl.CompanyName supl.Address supl.Hall supl.Stand supl.Contact supl.Phone supl.Email supl.Website supl.``HestOgRytter URL``)
+

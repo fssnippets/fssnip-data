@@ -1,0 +1,14 @@
+// ResizeArray is not synchronized: Array.Parallel.map shows a race condition
+
+let a = ResizeArray<int> 100000
+let b = ResizeArray<int> 100000
+
+[|1..50000|] |> Array.iter(fun x -> a.Add(1) )
+[|1..50000|] |> Array.Parallel.iter(fun x -> b.Add(1))
+
+printfn "a.length is: %d \nb.length is %d" (a.ToArray().Length) (b.ToArray().Length;)
+
+b.Clear()
+[|1..50000|] |> Array.Parallel.iter(fun x -> lock b (fun () -> b.Add(1)) )
+
+printfn "a.length is: %d \nb.length is %d" (a.ToArray().Length) (b.ToArray().Length;)

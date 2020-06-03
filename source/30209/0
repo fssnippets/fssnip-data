@@ -1,0 +1,94 @@
+// 1. Install: http://www.graphviz.org/Download..php
+//
+// 2. Add <appSettings> under <configuration> to app.config/web.config
+//    Add Nuget / Paket: GraphViz.NET 
+//
+// 3. Add under <configuration><appSettings>:
+// <add key="graphVizLocation" value="C:\Program Files (x86)\Graphviz2.38\bin" />
+//
+// Add references to System.Configuration.dll and System.Drawing.dll
+
+module GraphVizSample
+
+open GraphVizWrapper
+open GraphVizWrapper.Commands
+open GraphVizWrapper.Queries
+open System
+open System.Configuration
+open System.Drawing
+open System.IO
+
+/// Creates some pngs
+let genereateGraphFile (path:string) graphVizImageData =
+    let procqry = GetStartProcessQuery()
+    let infoqry = GetProcessStartInfoQuery()
+    let wrapper = GraphGeneration(procqry, infoqry, 
+                    RegisterLayoutPluginCommand(infoqry, procqry))
+    
+    // You probably don't need all 7:
+    //[1] // different layout of graphs, e.g.: Enums.RenderingEngine.Neato
+    [0..7] |> List.map(fun i ->
+        wrapper.RenderingEngine <- enum<Enums.RenderingEngine> i
+        let output = wrapper.GenerateGraph(graphVizImageData, Enums.GraphReturnType.Png)
+
+        use image = System.Drawing.Image.FromStream(new MemoryStream(output))
+        let filename = sprintf "%sgraph-%i-%i.png" path (output.GetHashCode()) i
+        do image.Save(filename, System.Drawing.Imaging.ImageFormat.Png)
+        let creationtime = File.GetLastWriteTime filename
+        filename, creationtime
+    )
+
+/// Replace your version of data generation. 
+/// This is just a silly example to give some starting point.
+/// Note: If you use Guid based Ids, it's better to use some text-prefix!
+let sampleGraphData items1 items2 =
+    // shapes: box, diamond, circle, ...
+    // colors: lightgray, lightblue, goldenrod2, thistle2, ...
+    // Click on picture under http://www.graphviz.org/Gallery.php 
+    // ...and picture again to get the sample txt-file.
+    let idPrefix = "item"
+    let nodes1 = 
+        let items = items1 |> Array.map(fun (id,name,_) ->
+            sprintf "%s%s [label=\"%s\"]; " idPrefix id name)
+        "node [shape=box,style=filled,color=lightblue]; " + 
+            (items |> String.Concat)
+
+    let nodes2 = 
+        let printStr = 
+            sprintf "%s%s [label=\"&euro;%s\",color=%s]; " idPrefix
+        "node [shape=circle,style=filled]; " + 
+            (items2 |> Array.map(function
+                | id, name, true,  _ -> printStr id name "goldenrod2"
+                | id, name, false, _ -> printStr id name "lightgray"
+                ) |> String.Concat)
+            
+    let graphPart =
+        let printArrow aFrom aTo = 
+            sprintf "%s%s -> %s%s;" idPrefix aFrom idPrefix aTo
+        let arrows1 = 
+            items1 |> Array.filter(fun (i,_,lnk) -> lnk<>"") 
+            |> Array.map(fun (item,_,lnk) -> printArrow item lnk)
+        let arrows2 = 
+            items2 |> Array.filter(fun (i,_,_,lnk) -> lnk<>"") 
+            |> Array.map(fun (item,_,_,lnk) -> printArrow item lnk)
+        (String.Concat arrows1) + (String.Concat arrows2)
+            
+    "digraph myDiagram { " + nodes1 + nodes2 + graphPart + "overlap=false}"
+
+// Create some data.
+let doSample() =
+    let genId() = Guid.NewGuid().ToString("N")
+    let someId1 = genId()
+    let someId2 = genId()
+    let someId3 = genId()
+
+    let ten = someId1, "10", true, "";
+    let five = genId(), "5", false, someId2;
+    let six = someId3, "6", false, "";
+
+    let fork = genId(), "Fork", someId3;
+    let spoon = someId2, "Spoon", someId1;
+    let knife = genId(), "Knife", someId1;
+
+    let graphdata = sampleGraphData [|fork; spoon; knife|] [|ten; five; six; |]
+    genereateGraphFile AppDomain.CurrentDomain.BaseDirectory graphdata

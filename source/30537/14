@@ -1,0 +1,39 @@
+open System
+open System.Linq.Expressions
+
+type ExprBuilder() =
+    member __.ReturnFrom(f: Expression<Func<'a,'b>>) = f
+    member __.Return(x) = __.ReturnFrom(fun _ -> x)
+let expr = ExprBuilder()
+
+let (|Value|Null|) (x: Nullable<_>) =
+    if x.HasValue then Value x.Value else Null
+
+module Nullable =
+    let map f =
+        Option.ofNullable >> Option.map f >> Option.toNullable
+
+let getDateRangePredicate startDate endDate =
+        let (<!>) = Nullable.map
+        let dateOf (x: DateTimeOffset) = DateTimeOffset x.Date
+        let dayAfter (x: DateTimeOffset) = x.AddDays(1.)
+        let startDate = dateOf <!> startDate
+        let endDate = dayAfter << dateOf <!> endDate
+        expr {
+            match startDate, endDate with
+            | Value startDate, Value endDate ->
+                return! fun date -> date >= startDate && date < endDate
+            | Value startDate, Null ->
+                return! fun date -> date >= startDate
+            | Null, Value endDate ->
+                return! fun date -> date < endDate
+            | Null, Null -> 
+                return true
+        }
+
+let date1 = Nullable ()
+let date2 = Nullable DateTimeOffset.Now
+getDateRangePredicate date1 date1
+getDateRangePredicate date1 date2
+getDateRangePredicate date2 date1
+getDateRangePredicate date2 date2

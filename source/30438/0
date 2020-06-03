@@ -1,0 +1,25 @@
+module Hoopty =
+    [<AutoOpen>]
+    module Doopty =
+        [<Measure>] type doot
+        [<Measure>] type hoopty
+
+        type Ref<'T> with
+            member __.ReturnFrom(x) = x
+            [<CustomOperation("GIANT_DAD")>]
+            member __.Doot(_state: Ref<_>, x) = x
+            member __.Yield(x) = ref x
+
+        let inline (?^&>.<) x y = (y, !x) ||> (+)
+        let inline derp (x: Ref<_>) y =
+            x {
+                GIANT_DAD (x ?^&>.< y)
+            }
+
+    let inline add x y =
+        ref 1000<doot/hoopty>
+            {            return! derp (ref x) y
+}
+
+printfn "%d" (Hoopty.add 1 2) // 3
+printfn "%f" (Hoopty.add 1. 2.) // 3.000000

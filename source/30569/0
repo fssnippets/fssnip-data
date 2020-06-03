@@ -1,0 +1,19 @@
+
+// Multiple aggregates has to be done via groupBy constant even when SQL doesn't have it:
+// SELECT COUNT(1), SUM(UnitPrice) FROM Products
+let countAndSum = 
+	query {
+		for p in context.Main.Products do
+		groupBy 1 into g
+		select (g.Count(), g.Sum(fun p -> p.UnitPrice))
+	} |> Seq.head
+
+// Basic Group by:
+// SELECT ShipCity, SUM(Freight) FROM Orders GROUP BY ShipCity
+let freightsByCity =
+    query {
+        for o in context.Main.Orders do
+        groupBy o.ShipCity into cites
+        select (cites.Key, cites.Sum(fun order -> order.Freight))
+    } |> Seq.toList
+

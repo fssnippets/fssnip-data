@@ -1,0 +1,123 @@
+module SampleModelP
+open System
+open Microsoft.ML
+open Microsoft.ML.StaticPipe
+open Microsoft.ML.Data.IO
+open System.IO
+
+(*
+Contrast two snippets of code to highlight usefulness of 
+F# anonymous records. 
+
+Evquivalent code, based on F# 4.5 syntax, is here: http://fssnip.net/7VS 
+
+The  marker '//***' is used to explain anonmyous record usage 
+in comments below
+
+*)
+
+module Train =
+    (* 
+    Data:
+        download test / train datasets from here:
+        https://github.com/dotnet/machinelearning/blob/master/test/data/wikipedia-detox-250-line-data.tsv
+    *)
+
+    //*** change this for your run
+    let dataPath = @"C:\s\repodata\hpto\train.txt" 
+
+    //train the model using the supplied hyperparameters
+    //and print its performance results
+    let trainModel (hp:{|Trees:int; Leaves:int; LearningRate:float |}) = //*** anonymous rec as function args
+
+        let ctx = MLContext(Nullable 10)
+
+        let reader  = 
+                TextLoaderStatic.CreateReader(
+                                ctx, 
+                                (fun (c:TextLoaderStatic.Context) -> 
+                                    
+                                        {|                          //***
+                                            Label=c.LoadBool(0)     //create anonymous record
+                                            Text =c.LoadText(1)     //with labeled fields
+                                        |}),
+                                    separator = '\t',
+                                    hasHeader = true)
+
+
+                          
+        let trainData = reader.Read(dataPath)
+
+        let pipeline = 
+            (reader :> SchemaBearing<_>).MakeNewEstimator()                    //*** upcasting required here as inference does not work
+                .Append(fun  a_rec -> 
+                    let features = a_rec.Text.FeaturizeText()                   //***  get field of a-rec by name
+                    let score =                                                 //     (no need to deconstruct tuple)
+                            ctx.BinaryClassification.Trainers.FastTree(
+                                    a_rec.Label,                                //*** same here 
+                                    features,
+                                    numTrees= hp.Trees,
+                                    numLeaves = hp.Leaves,
+                                    learningRate = hp.LearningRate,
+                                    minDatapointsInLeaves=20
+                                    )
+                    {| a_rec with                                               //*** extend a_rec to include
+                        Features = features                                     //    features and score values
+                        Score = score
+                    |})
+
+        //perform 5-fold crossvalidation and print results to gauge model performance
+        let metrics = ctx.BinaryClassification.CrossValidate(trainData, pipeline, (fun x->x.Label) , numFolds=5)
+        let m = metrics |> Seq.map(fun struct(m,a,b)->m.Auc) |> Seq.average                    
+        printfn "trees=%d, leaves=%d, lr=%f -> %f" hp.Trees hp.Leaves hp.LearningRate m
+
+        {| Metric=m; Model=pipeline; Data=trainData|} //*** return anonymous record with info needed for prediction
+
+
+    //generate predictions from the model
+    let pred() =
+
+        let hp = {|Trees=50; Leaves=50; LearningRate=0.1 |} //*** model hyperparameters
+
+        let modelInfo = trainModel hp          //play with hyperparameters to get better performance results 
+                                               //try various values for #trees #leaves and learning rate
+                                               //alternatively try a hyperparameter optimization framework
+                                               //e.g. https://github.com/fwaris/hpopt
+
+        let mdl = modelInfo.Model.Fit(modelInfo.Data)          //fit model to data using the chosen hyperparameters
+
+        let predictions = mdl.Transform(modelInfo.Data)        //generate predictions using same data for now
+                                                               //in reality you will likely generate predcitions
+                                                               //a record at a time with new data as 
+                                                               //it becomes available
+
+                                                               //code below saves predictions to a text file
+        let ctx = MLContext(Nullable 10)
+        let txa = TextSaver.Arguments()              
+        txa.OutputHeader <-true
+        txa.OutputSchema <- true
+        let tx = TextSaver(ctx,txa)
+        use fn = File.Create(@"C:\repodata\hpopt\t1.txt")
+
+        let s = predictions.AsDynamic.Schema                    //***  *very useful* 
+                                                                //     field names from anonymous records are
+                                                                //     are preserved in the schema for the data
+
+        for c in 0 .. s.Count-1 do                              //*** print field names - these come from 
+           printfn "%A - %A" (s.Item(c).Name) (s.[c].Type)      //    anonymous records used before
+
+                                                                //actual field names printed by code:
+
+                                                                //"Label" - Bool
+                                                                //"Text" - Text
+                                                                //"Features" - Vec<R4, 9141>
+                                                                //"PredictedLabel" - Bool
+                                                                //"Score" - R4
+                                                                //"Probability" - R4
+                                                                //"Score.Item1" - R4
+                                                                //"Score.Item2" - R4
+                                                                //"Score.Item3" - Bool
+
+        tx.SaveData(fn,predictions.AsDynamic,0,3,4)              //save selected fields from the schema to text file
+                                                                 //Note: Here (for now) you have to switch to dynamic DataView
+                                                                 //and use indices for the columns you want output

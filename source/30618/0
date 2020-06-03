@@ -1,0 +1,22 @@
+let accList<'a> =
+    let mutable list : 'a list = []
+    let accum x = list <- x :: list
+    let extract () = List.rev list
+    accum, extract
+
+let inline multiplyParts list a =
+    let accum, extract = accList<_>
+    let rec multiplyParts' x list a _ =
+        match list with
+        | t :: ts -> accum (a * (t - x) + x) |> multiplyParts' t ts a
+        | [] -> accum (x - a * x)
+    match list with
+        | x :: xs -> accum (a * x) |> multiplyParts' x xs a |> extract
+        | [] -> []
+
+let foldS folder state list =
+    match list with
+    | [] -> []
+    | x :: xs -> List.fold folder (state x) xs
+
+let genFun = foldS multiplyParts (fun x -> [x; 1.0 - x])

@@ -1,0 +1,158 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+<span class="l">38: </span>
+<span class="l">39: </span>
+<span class="l">40: </span>
+<span class="l">41: </span>
+<span class="l">42: </span>
+<span class="l">43: </span>
+<span class="l">44: </span>
+<span class="l">45: </span>
+<span class="l">46: </span>
+<span class="l">47: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">module</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="t">Pivot</span>
+
+<span class="k">module</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="t">Seq</span> <span class="o">=</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="f">pivot</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="f">rowPrjctn</span> <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="f">colPrjctn</span> <span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="f">valPrjctn</span> <span onmouseout="hideTip(event, 'fs7', 7)" onmouseover="showTip(event, 'fs7', 7)" class="i">defaultVal</span> <span onmouseout="hideTip(event, 'fs8', 8)" onmouseover="showTip(event, 'fs8', 8)" class="f">agg</span> (<span onmouseout="hideTip(event, 'fs9', 9)" onmouseover="showTip(event, 'fs9', 9)" class="i">s</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs10', 10)" onmouseover="showTip(event, 'fs10', 10)" class="t">seq</span><span class="o">&lt;</span>_<span class="o">&gt;</span>) <span class="o">=</span>
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs11', 11)" onmouseover="showTip(event, 'fs11', 11)" class="i">tabular</span> <span class="o">=</span>
+            <span onmouseout="hideTip(event, 'fs9', 12)" onmouseover="showTip(event, 'fs9', 12)" class="i">s</span>
+            <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs12', 13)" onmouseover="showTip(event, 'fs12', 13)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs13', 14)" onmouseover="showTip(event, 'fs13', 14)" class="f">groupBy</span> <span onmouseout="hideTip(event, 'fs4', 15)" onmouseover="showTip(event, 'fs4', 15)" class="f">rowPrjctn</span>
+            <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs12', 16)" onmouseover="showTip(event, 'fs12', 16)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs14', 17)" onmouseover="showTip(event, 'fs14', 17)" class="f">map</span> (<span class="k">fun</span> (<span onmouseout="hideTip(event, 'fs15', 18)" onmouseover="showTip(event, 'fs15', 18)" class="i">g</span>,<span onmouseout="hideTip(event, 'fs16', 19)" onmouseover="showTip(event, 'fs16', 19)" class="i">xs</span>) <span class="k">-&gt;</span>
+                <span onmouseout="hideTip(event, 'fs15', 20)" onmouseover="showTip(event, 'fs15', 20)" class="i">g</span>,
+                <span onmouseout="hideTip(event, 'fs16', 21)" onmouseover="showTip(event, 'fs16', 21)" class="i">xs</span> 
+                <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs12', 22)" onmouseover="showTip(event, 'fs12', 22)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs13', 23)" onmouseover="showTip(event, 'fs13', 23)" class="f">groupBy</span> <span onmouseout="hideTip(event, 'fs5', 24)" onmouseover="showTip(event, 'fs5', 24)" class="f">colPrjctn</span>
+                <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs12', 25)" onmouseover="showTip(event, 'fs12', 25)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs14', 26)" onmouseover="showTip(event, 'fs14', 26)" class="f">map</span> (<span class="k">fun</span> (<span onmouseout="hideTip(event, 'fs17', 27)" onmouseover="showTip(event, 'fs17', 27)" class="i">k</span>,<span onmouseout="hideTip(event, 'fs18', 28)" onmouseover="showTip(event, 'fs18', 28)" class="i">vs</span>) <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs17', 29)" onmouseover="showTip(event, 'fs17', 29)" class="i">k</span>, <span onmouseout="hideTip(event, 'fs18', 30)" onmouseover="showTip(event, 'fs18', 30)" class="i">vs</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs12', 31)" onmouseover="showTip(event, 'fs12', 31)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs14', 32)" onmouseover="showTip(event, 'fs14', 32)" class="f">map</span> <span onmouseout="hideTip(event, 'fs6', 33)" onmouseover="showTip(event, 'fs6', 33)" class="f">valPrjctn</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs8', 34)" onmouseover="showTip(event, 'fs8', 34)" class="f">agg</span>)
+                )
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs19', 35)" onmouseover="showTip(event, 'fs19', 35)" class="i">keySet</span> <span class="o">=</span> 
+            <span onmouseout="hideTip(event, 'fs11', 36)" onmouseover="showTip(event, 'fs11', 36)" class="i">tabular</span> 
+            <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs12', 37)" onmouseover="showTip(event, 'fs12', 37)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs20', 38)" onmouseover="showTip(event, 'fs20', 38)" class="f">collect</span> (<span onmouseout="hideTip(event, 'fs21', 39)" onmouseover="showTip(event, 'fs21', 39)" class="f">snd</span><span class="o">&gt;</span><span class="o">&gt;</span>(<span onmouseout="hideTip(event, 'fs12', 40)" onmouseover="showTip(event, 'fs12', 40)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs14', 41)" onmouseover="showTip(event, 'fs14', 41)" class="f">map</span> <span onmouseout="hideTip(event, 'fs22', 42)" onmouseover="showTip(event, 'fs22', 42)" class="f">fst</span>)) 
+            <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs23', 43)" onmouseover="showTip(event, 'fs23', 43)" class="f">set</span> 
+            <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs12', 44)" onmouseover="showTip(event, 'fs12', 44)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs24', 45)" onmouseover="showTip(event, 'fs24', 45)" class="f">mapi</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs25', 46)" onmouseover="showTip(event, 'fs25', 46)" class="i">i</span> <span onmouseout="hideTip(event, 'fs17', 47)" onmouseover="showTip(event, 'fs17', 47)" class="i">k</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs17', 48)" onmouseover="showTip(event, 'fs17', 48)" class="i">k</span>,<span onmouseout="hideTip(event, 'fs25', 49)" onmouseover="showTip(event, 'fs25', 49)" class="i">i</span>)
+            <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs26', 50)" onmouseover="showTip(event, 'fs26', 50)" class="f">dict</span>
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs27', 51)" onmouseover="showTip(event, 'fs27', 51)" class="i">crosstab</span> <span class="o">=</span>
+            <span onmouseout="hideTip(event, 'fs11', 52)" onmouseover="showTip(event, 'fs11', 52)" class="i">tabular</span>
+            <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs12', 53)" onmouseover="showTip(event, 'fs12', 53)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs14', 54)" onmouseover="showTip(event, 'fs14', 54)" class="f">map</span> (<span class="k">fun</span> (<span onmouseout="hideTip(event, 'fs15', 55)" onmouseover="showTip(event, 'fs15', 55)" class="i">g</span>,<span onmouseout="hideTip(event, 'fs28', 56)" onmouseover="showTip(event, 'fs28', 56)" class="i">xs</span>) <span class="k">-&gt;</span> 
+                <span class="k">let</span> <span onmouseout="hideTip(event, 'fs29', 57)" onmouseover="showTip(event, 'fs29', 57)" class="i">a</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs30', 58)" onmouseover="showTip(event, 'fs30', 58)" class="t">Array</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs31', 59)" onmouseover="showTip(event, 'fs31', 59)" class="f">create</span> <span onmouseout="hideTip(event, 'fs19', 60)" onmouseover="showTip(event, 'fs19', 60)" class="i">keySet</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs32', 61)" onmouseover="showTip(event, 'fs32', 61)" class="i">Count</span> <span onmouseout="hideTip(event, 'fs7', 62)" onmouseover="showTip(event, 'fs7', 62)" class="i">defaultVal</span>
+                <span onmouseout="hideTip(event, 'fs28', 63)" onmouseover="showTip(event, 'fs28', 63)" class="i">xs</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs12', 64)" onmouseover="showTip(event, 'fs12', 64)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs33', 65)" onmouseover="showTip(event, 'fs33', 65)" class="f">iter</span>(<span class="k">fun</span> (<span onmouseout="hideTip(event, 'fs17', 66)" onmouseover="showTip(event, 'fs17', 66)" class="i">k</span>,<span onmouseout="hideTip(event, 'fs34', 67)" onmouseover="showTip(event, 'fs34', 67)" class="i">sm</span>)<span class="k">-&gt;</span><span onmouseout="hideTip(event, 'fs29', 68)" onmouseover="showTip(event, 'fs29', 68)" class="i">a</span><span class="o">.</span>[<span onmouseout="hideTip(event, 'fs19', 69)" onmouseover="showTip(event, 'fs19', 69)" class="i">keySet</span><span class="o">.</span>[<span onmouseout="hideTip(event, 'fs17', 70)" onmouseover="showTip(event, 'fs17', 70)" class="i">k</span>]] <span class="o">&lt;-</span> <span onmouseout="hideTip(event, 'fs34', 71)" onmouseover="showTip(event, 'fs34', 71)" class="i">sm</span>)
+                <span onmouseout="hideTip(event, 'fs15', 72)" onmouseover="showTip(event, 'fs15', 72)" class="i">g</span>,<span onmouseout="hideTip(event, 'fs29', 73)" onmouseover="showTip(event, 'fs29', 73)" class="i">a</span>)
+        <span onmouseout="hideTip(event, 'fs19', 74)" onmouseover="showTip(event, 'fs19', 74)" class="i">keySet</span>,<span onmouseout="hideTip(event, 'fs27', 75)" onmouseover="showTip(event, 'fs27', 75)" class="i">crosstab</span>
+
+    <span class="k">let</span> <span class="k">inline</span> <span onmouseout="hideTip(event, 'fs35', 76)" onmouseover="showTip(event, 'fs35', 76)" class="f">toPivotTable</span> (<span onmouseout="hideTip(event, 'fs36', 77)" onmouseover="showTip(event, 'fs36', 77)" class="i">groupColName</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs37', 78)" onmouseover="showTip(event, 'fs37', 78)" class="t">string</span>) (<span onmouseout="hideTip(event, 'fs38', 79)" onmouseover="showTip(event, 'fs38', 79)" class="i">keySet</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs39', 80)" onmouseover="showTip(event, 'fs39', 80)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs40', 81)" onmouseover="showTip(event, 'fs40', 81)" class="i">Collections</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs41', 82)" onmouseover="showTip(event, 'fs41', 82)" class="i">Generic</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs42', 83)" onmouseover="showTip(event, 'fs42', 83)" class="t">IDictionary</span><span class="o">&lt;</span>_,_<span class="o">&gt;</span>,(<span onmouseout="hideTip(event, 'fs43', 84)" onmouseover="showTip(event, 'fs43', 84)" class="i">crosstab</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs10', 85)" onmouseover="showTip(event, 'fs10', 85)" class="t">seq</span><span class="o">&lt;</span>_<span class="o">*</span>_[]<span class="o">&gt;</span>)) <span class="o">=</span>
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs44', 86)" onmouseover="showTip(event, 'fs44', 86)" class="i">dt</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs39', 87)" onmouseover="showTip(event, 'fs39', 87)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs45', 88)" onmouseover="showTip(event, 'fs45', 88)" class="i">Data</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs46', 89)" onmouseover="showTip(event, 'fs46', 89)" class="t">DataTable</span>()
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs47', 90)" onmouseover="showTip(event, 'fs47', 90)" class="i">gnCol</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs44', 91)" onmouseover="showTip(event, 'fs44', 91)" class="i">dt</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs48', 92)" onmouseover="showTip(event, 'fs48', 92)" class="i">Columns</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs49', 93)" onmouseover="showTip(event, 'fs49', 93)" class="f">Add</span>(<span onmouseout="hideTip(event, 'fs36', 94)" onmouseover="showTip(event, 'fs36', 94)" class="i">groupColName</span>) 
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs50', 95)" onmouseover="showTip(event, 'fs50', 95)" class="i">valColMap</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs10', 96)" onmouseover="showTip(event, 'fs10', 96)" class="i">seq</span>{<span class="k">for</span> <span onmouseout="hideTip(event, 'fs51', 97)" onmouseover="showTip(event, 'fs51', 97)" class="i">kv</span>  <span class="k">in</span> <span onmouseout="hideTip(event, 'fs38', 98)" onmouseover="showTip(event, 'fs38', 98)" class="i">keySet</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs51', 99)" onmouseover="showTip(event, 'fs51', 99)" class="i">kv</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs52', 100)" onmouseover="showTip(event, 'fs52', 100)" class="i">Key</span>,<span onmouseout="hideTip(event, 'fs44', 101)" onmouseover="showTip(event, 'fs44', 101)" class="i">dt</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs48', 102)" onmouseover="showTip(event, 'fs48', 102)" class="i">Columns</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs49', 103)" onmouseover="showTip(event, 'fs49', 103)" class="f">Add</span>(<span onmouseout="hideTip(event, 'fs37', 104)" onmouseover="showTip(event, 'fs37', 104)" class="f">string</span> <span onmouseout="hideTip(event, 'fs51', 105)" onmouseover="showTip(event, 'fs51', 105)" class="i">kv</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs52', 106)" onmouseover="showTip(event, 'fs52', 106)" class="i">Key</span>)} <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs26', 107)" onmouseover="showTip(event, 'fs26', 107)" class="f">dict</span>
+        <span class="k">for</span> (<span onmouseout="hideTip(event, 'fs53', 108)" onmouseover="showTip(event, 'fs53', 108)" class="i">g</span>,<span onmouseout="hideTip(event, 'fs54', 109)" onmouseover="showTip(event, 'fs54', 109)" class="i">a</span>) <span class="k">in</span> <span onmouseout="hideTip(event, 'fs43', 110)" onmouseover="showTip(event, 'fs43', 110)" class="i">crosstab</span> <span class="k">do</span> 
+            <span class="k">let</span> <span onmouseout="hideTip(event, 'fs55', 111)" onmouseover="showTip(event, 'fs55', 111)" class="i">r</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs44', 112)" onmouseover="showTip(event, 'fs44', 112)" class="i">dt</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs56', 113)" onmouseover="showTip(event, 'fs56', 113)" class="f">NewRow</span>()
+            <span onmouseout="hideTip(event, 'fs55', 114)" onmouseover="showTip(event, 'fs55', 114)" class="i">r</span><span class="o">.</span>[<span onmouseout="hideTip(event, 'fs36', 115)" onmouseover="showTip(event, 'fs36', 115)" class="i">groupColName</span>] <span class="o">&lt;-</span> <span onmouseout="hideTip(event, 'fs53', 116)" onmouseover="showTip(event, 'fs53', 116)" class="i">g</span>
+            <span class="k">for</span> <span onmouseout="hideTip(event, 'fs51', 117)" onmouseover="showTip(event, 'fs51', 117)" class="i">kv</span> <span class="k">in</span> <span onmouseout="hideTip(event, 'fs38', 118)" onmouseover="showTip(event, 'fs38', 118)" class="i">keySet</span> <span class="k">do</span>
+                <span onmouseout="hideTip(event, 'fs55', 119)" onmouseover="showTip(event, 'fs55', 119)" class="i">r</span><span class="o">.</span>[<span onmouseout="hideTip(event, 'fs50', 120)" onmouseover="showTip(event, 'fs50', 120)" class="i">valColMap</span><span class="o">.</span>[<span onmouseout="hideTip(event, 'fs51', 121)" onmouseover="showTip(event, 'fs51', 121)" class="i">kv</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs52', 122)" onmouseover="showTip(event, 'fs52', 122)" class="i">Key</span>]] <span class="o">&lt;-</span> <span onmouseout="hideTip(event, 'fs54', 123)" onmouseover="showTip(event, 'fs54', 123)" class="i">a</span><span class="o">.</span>[<span onmouseout="hideTip(event, 'fs51', 124)" onmouseover="showTip(event, 'fs51', 124)" class="i">kv</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs57', 125)" onmouseover="showTip(event, 'fs57', 125)" class="i">Value</span>]
+            <span onmouseout="hideTip(event, 'fs44', 126)" onmouseover="showTip(event, 'fs44', 126)" class="i">dt</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs58', 127)" onmouseover="showTip(event, 'fs58', 127)" class="i">Rows</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs59', 128)" onmouseover="showTip(event, 'fs59', 128)" class="f">Add</span>(<span onmouseout="hideTip(event, 'fs55', 129)" onmouseover="showTip(event, 'fs55', 129)" class="i">r</span>)
+        <span onmouseout="hideTip(event, 'fs44', 130)" onmouseover="showTip(event, 'fs44', 130)" class="i">dt</span>
+<span class="c">(*</span>
+<span class="c">Usage:</span>
+<span class="c">let flatData = [(&quot;g1&quot;,&quot;a&quot;,1); (&quot;g1&quot;,&quot;b&quot;,0); (&quot;g2&quot;,&quot;a&quot;,3); (&quot;g1&quot;,&quot;d&quot;,4); (&quot;g2&quot;,&quot;b&quot;,5); (&quot;g2&quot;,&quot;d&quot;,2)]</span>
+<span class="c">let rowPrjctn (g,_,_) = g</span>
+<span class="c">let colPrjctn (_,k,_) = k</span>
+<span class="c">let valPrjctn (_,_,v) = v</span>
+<span class="c">let (ks,xtab) = flatData |&gt;  Seq.pivot rowPrjctn colPrjctn valPrjctn 0 Seq.sum</span>
+<span class="c">let dt = Seq.toPivotTable &quot;Group&quot; (ks,xtab)</span>
+<span class="c">*)</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">module Pivot</div>
+<div class="tip" id="fs2">Multiple items<br />module Seq<br /><br />from Pivot<br /><br />--------------------<br />module Seq<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs3">val pivot : rowPrjctn:(&#39;a -&gt; &#39;b) -&gt; colPrjctn:(&#39;a -&gt; &#39;c) -&gt; valPrjctn:(&#39;a -&gt; &#39;d) -&gt; defaultVal:&#39;e -&gt; agg:(seq&lt;&#39;d&gt; -&gt; &#39;e) -&gt; s:seq&lt;&#39;a&gt; -&gt; System.Collections.Generic.IDictionary&lt;&#39;c,int&gt; * seq&lt;&#39;b * &#39;e []&gt; (requires equality and comparison)<br /><br />Full name: Pivot.Seq.pivot</div>
+<div class="tip" id="fs4">val rowPrjctn : (&#39;a -&gt; &#39;b) (requires equality)</div>
+<div class="tip" id="fs5">val colPrjctn : (&#39;a -&gt; &#39;c) (requires comparison)</div>
+<div class="tip" id="fs6">val valPrjctn : (&#39;a -&gt; &#39;d)</div>
+<div class="tip" id="fs7">val defaultVal : &#39;e</div>
+<div class="tip" id="fs8">val agg : (seq&lt;&#39;d&gt; -&gt; &#39;e)</div>
+<div class="tip" id="fs9">val s : seq&lt;&#39;a&gt;</div>
+<div class="tip" id="fs10">Multiple items<br />val seq : sequence:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Core.Operators.seq<br /><br />--------------------<br />type seq&lt;&#39;T&gt; = System.Collections.Generic.IEnumerable&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.seq&lt;_&gt;</div>
+<div class="tip" id="fs11">val tabular : seq&lt;&#39;b * seq&lt;&#39;c * &#39;e&gt;&gt; (requires equality and comparison)</div>
+<div class="tip" id="fs12">module Seq<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs13">val groupBy : projection:(&#39;T -&gt; &#39;Key) -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;Key * seq&lt;&#39;T&gt;&gt; (requires equality)<br /><br />Full name: Microsoft.FSharp.Collections.Seq.groupBy</div>
+<div class="tip" id="fs14">val map : mapping:(&#39;T -&gt; &#39;U) -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;U&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.map</div>
+<div class="tip" id="fs15">val g : &#39;b (requires equality)</div>
+<div class="tip" id="fs16">val xs : seq&lt;&#39;a&gt;</div>
+<div class="tip" id="fs17">val k : &#39;c (requires comparison)</div>
+<div class="tip" id="fs18">val vs : seq&lt;&#39;a&gt;</div>
+<div class="tip" id="fs19">val keySet : System.Collections.Generic.IDictionary&lt;&#39;c,int&gt; (requires comparison)</div>
+<div class="tip" id="fs20">val collect : mapping:(&#39;T -&gt; #seq&lt;&#39;U&gt;) -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;U&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.collect</div>
+<div class="tip" id="fs21">val snd : tuple:(&#39;T1 * &#39;T2) -&gt; &#39;T2<br /><br />Full name: Microsoft.FSharp.Core.Operators.snd</div>
+<div class="tip" id="fs22">val fst : tuple:(&#39;T1 * &#39;T2) -&gt; &#39;T1<br /><br />Full name: Microsoft.FSharp.Core.Operators.fst</div>
+<div class="tip" id="fs23">val set : elements:seq&lt;&#39;T&gt; -&gt; Set&lt;&#39;T&gt; (requires comparison)<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.set</div>
+<div class="tip" id="fs24">val mapi : mapping:(int -&gt; &#39;T -&gt; &#39;U) -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;U&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.mapi</div>
+<div class="tip" id="fs25">val i : int</div>
+<div class="tip" id="fs26">val dict : keyValuePairs:seq&lt;&#39;Key * &#39;Value&gt; -&gt; System.Collections.Generic.IDictionary&lt;&#39;Key,&#39;Value&gt; (requires equality)<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.dict</div>
+<div class="tip" id="fs27">val crosstab : seq&lt;&#39;b * &#39;e []&gt; (requires equality)</div>
+<div class="tip" id="fs28">val xs : seq&lt;&#39;c * &#39;e&gt; (requires comparison)</div>
+<div class="tip" id="fs29">val a : &#39;e []</div>
+<div class="tip" id="fs30">module Array<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs31">val create : count:int -&gt; value:&#39;T -&gt; &#39;T []<br /><br />Full name: Microsoft.FSharp.Collections.Array.create</div>
+<div class="tip" id="fs32">property System.Collections.Generic.ICollection.Count: int</div>
+<div class="tip" id="fs33">val iter : action:(&#39;T -&gt; unit) -&gt; source:seq&lt;&#39;T&gt; -&gt; unit<br /><br />Full name: Microsoft.FSharp.Collections.Seq.iter</div>
+<div class="tip" id="fs34">val sm : &#39;e</div>
+<div class="tip" id="fs35">val toPivotTable : groupColName:string -&gt; keySet:System.Collections.Generic.IDictionary&lt;&#39;a,int&gt; * crosstab:seq&lt;&#39;b * &#39;c []&gt; -&gt; System.Data.DataTable (requires equality)<br /><br />Full name: Pivot.Seq.toPivotTable</div>
+<div class="tip" id="fs36">val groupColName : string</div>
+<div class="tip" id="fs37">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />Full name: Microsoft.FSharp.Core.Operators.string<br /><br />--------------------<br />type string = System.String<br /><br />Full name: Microsoft.FSharp.Core.string</div>
+<div class="tip" id="fs38">val keySet : System.Collections.Generic.IDictionary&lt;&#39;a,int&gt; (requires equality)</div>
+<div class="tip" id="fs39">namespace System</div>
+<div class="tip" id="fs40">namespace System.Collections</div>
+<div class="tip" id="fs41">namespace System.Collections.Generic</div>
+<div class="tip" id="fs42">type IDictionary&lt;&#39;TKey,&#39;TValue&gt; =<br />&#160;&#160;member Add : key:&#39;TKey * value:&#39;TValue -&gt; unit<br />&#160;&#160;member ContainsKey : key:&#39;TKey -&gt; bool<br />&#160;&#160;member Item : &#39;TKey -&gt; &#39;TValue with get, set<br />&#160;&#160;member Keys : ICollection&lt;&#39;TKey&gt;<br />&#160;&#160;member Remove : key:&#39;TKey -&gt; bool<br />&#160;&#160;member TryGetValue : key:&#39;TKey * value:&#39;TValue -&gt; bool<br />&#160;&#160;member Values : ICollection&lt;&#39;TValue&gt;<br /><br />Full name: System.Collections.Generic.IDictionary&lt;_,_&gt;</div>
+<div class="tip" id="fs43">val crosstab : seq&lt;&#39;b * &#39;c []&gt;</div>
+<div class="tip" id="fs44">val dt : System.Data.DataTable</div>
+<div class="tip" id="fs45">namespace System.Data</div>
+<div class="tip" id="fs46">Multiple items<br />type DataTable =<br />&#160;&#160;inherit MarshalByValueComponent<br />&#160;&#160;new : unit -&gt; DataTable + 2 overloads<br />&#160;&#160;member AcceptChanges : unit -&gt; unit<br />&#160;&#160;member BeginInit : unit -&gt; unit<br />&#160;&#160;member BeginLoadData : unit -&gt; unit<br />&#160;&#160;member CaseSensitive : bool with get, set<br />&#160;&#160;member ChildRelations : DataRelationCollection<br />&#160;&#160;member Clear : unit -&gt; unit<br />&#160;&#160;member Clone : unit -&gt; DataTable<br />&#160;&#160;member Columns : DataColumnCollection<br />&#160;&#160;member Compute : expression:string * filter:string -&gt; obj<br />&#160;&#160;...<br /><br />Full name: System.Data.DataTable<br /><br />--------------------<br />System.Data.DataTable() : unit<br />System.Data.DataTable(tableName: string) : unit<br />System.Data.DataTable(tableName: string, tableNamespace: string) : unit</div>
+<div class="tip" id="fs47">val gnCol : System.Data.DataColumn</div>
+<div class="tip" id="fs48">property System.Data.DataTable.Columns: System.Data.DataColumnCollection</div>
+<div class="tip" id="fs49">System.Data.DataColumnCollection.Add() : System.Data.DataColumn<br />System.Data.DataColumnCollection.Add(columnName: string) : System.Data.DataColumn<br />System.Data.DataColumnCollection.Add(column: System.Data.DataColumn) : unit<br />System.Data.DataColumnCollection.Add(columnName: string, type: System.Type) : System.Data.DataColumn<br />System.Data.DataColumnCollection.Add(columnName: string, type: System.Type, expression: string) : System.Data.DataColumn</div>
+<div class="tip" id="fs50">val valColMap : System.Collections.Generic.IDictionary&lt;&#39;a,System.Data.DataColumn&gt; (requires equality)</div>
+<div class="tip" id="fs51">val kv : System.Collections.Generic.KeyValuePair&lt;&#39;a,int&gt; (requires equality)</div>
+<div class="tip" id="fs52">property System.Collections.Generic.KeyValuePair.Key: &#39;a</div>
+<div class="tip" id="fs53">val g : &#39;b</div>
+<div class="tip" id="fs54">val a : &#39;c []</div>
+<div class="tip" id="fs55">val r : System.Data.DataRow</div>
+<div class="tip" id="fs56">System.Data.DataTable.NewRow() : System.Data.DataRow</div>
+<div class="tip" id="fs57">property System.Collections.Generic.KeyValuePair.Value: int</div>
+<div class="tip" id="fs58">property System.Data.DataTable.Rows: System.Data.DataRowCollection</div>
+<div class="tip" id="fs59">System.Data.DataRowCollection.Add([&lt;System.ParamArray&gt;] values: obj []) : System.Data.DataRow<br />System.Data.DataRowCollection.Add(row: System.Data.DataRow) : unit</div>
+

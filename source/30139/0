@@ -1,0 +1,13 @@
+type Pythia = private | Results of int list with
+
+    static member Create() = Results []
+    
+    member p.Generate() =
+        let (Results r) = p
+        let rec aux () =
+            let mynum = int(System.Random().NextDouble() * 9007199254740992.)
+            if r |> List.exists ((=) mynum) then aux ()
+            else
+                mynum, Results(mynum :: r)
+
+        aux ()

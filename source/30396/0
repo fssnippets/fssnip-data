@@ -1,0 +1,21 @@
+#!/usr/bin/env fsharpi
+#I "../../build/bin"
+#r "Hopac.Core"
+#r "Hopac"
+#r "HttpFs"
+open Hopac
+open Hopac.Infixes
+open HttpFs.Client
+
+let rec doit () =
+  job {
+    printf "."
+    let! body = Request.responseAsString (Request.createUrl Get "https://www.nuget.org/packages/Fakta/")
+    if body.Contains "This package has not been indexed yet" then
+      return! chill () :> Job<_>
+    else
+      return "DONE"
+  }
+
+and chill () = timeOutMillis 500 ^=> doit
+run (doit ())

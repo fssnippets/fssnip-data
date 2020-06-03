@@ -1,0 +1,89 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// this is from fsharpforfunandprofit.com</span>
+<span class="k">type</span> <span class="t">RopResult</span><span class="o">&lt;</span><span class="o">&#39;</span><span class="i">TSuccess</span>, <span class="o">&#39;</span><span class="i">TMessage</span><span class="o">&gt;</span> <span class="o">=</span>
+    | <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="p">Success</span> <span class="k">of</span> <span class="o">&#39;</span><span class="i">TSuccess</span> <span class="o">*</span> <span class="o">&#39;</span><span class="i">TMessage</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="t">list</span>
+    | <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="p">Failure</span> <span class="k">of</span> <span class="o">&#39;</span><span class="i">TMessage</span> <span onmouseout="hideTip(event, 'fs2', 4)" onmouseover="showTip(event, 'fs2', 4)" class="t">list</span>
+
+ <span class="c">// .. ... ..</span>
+ <span class="k">let</span> <span onmouseout="hideTip(event, 'fs4', 5)" onmouseover="showTip(event, 'fs4', 5)" class="f">failIfNone</span> <span onmouseout="hideTip(event, 'fs5', 6)" onmouseover="showTip(event, 'fs5', 6)" class="i">message</span> <span class="o">=</span> <span class="k">function</span>
+    | <span onmouseout="hideTip(event, 'fs6', 7)" onmouseover="showTip(event, 'fs6', 7)" class="p">Some</span> <span onmouseout="hideTip(event, 'fs7', 8)" onmouseover="showTip(event, 'fs7', 8)" class="i">x</span> <span class="k">-&gt;</span> <span class="i">succeed</span> <span onmouseout="hideTip(event, 'fs7', 9)" onmouseover="showTip(event, 'fs7', 9)" class="i">x</span>
+    | <span onmouseout="hideTip(event, 'fs8', 10)" onmouseover="showTip(event, 'fs8', 10)" class="p">None</span> <span class="k">-&gt;</span> <span class="i">fail</span> <span onmouseout="hideTip(event, 'fs5', 11)" onmouseover="showTip(event, 'fs5', 11)" class="i">message</span> 
+
+<span class="c">/// I whote this bit </span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs9', 12)" onmouseover="showTip(event, 'fs9', 12)" class="f">failIfSome</span> <span onmouseout="hideTip(event, 'fs5', 13)" onmouseover="showTip(event, 'fs5', 13)" class="i">message</span> <span class="o">=</span> <span class="k">function</span>
+    | <span onmouseout="hideTip(event, 'fs6', 14)" onmouseover="showTip(event, 'fs6', 14)" class="p">Some</span> _ <span class="k">-&gt;</span> <span class="i">fail</span> <span onmouseout="hideTip(event, 'fs5', 15)" onmouseover="showTip(event, 'fs5', 15)" class="i">message</span> 
+    | <span onmouseout="hideTip(event, 'fs8', 16)" onmouseover="showTip(event, 'fs8', 16)" class="p">None</span> <span class="k">-&gt;</span>  <span class="i">succeed</span> ()
+
+
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs10', 17)" onmouseover="showTip(event, 'fs10', 17)" class="f">getProjectByTitle</span> <span onmouseout="hideTip(event, 'fs11', 18)" onmouseover="showTip(event, 'fs11', 18)" class="i">title</span> <span class="o">=</span> 
+    <span onmouseout="hideTip(event, 'fs12', 19)" onmouseover="showTip(event, 'fs12', 19)" class="i">query</span> { 
+        <span class="k">for</span> <span onmouseout="hideTip(event, 'fs13', 20)" onmouseover="showTip(event, 'fs13', 20)" class="i">p</span> <span class="k">in</span> <span class="i">ctx</span><span class="o">.</span><span class="i">Projects</span> <span class="k">do</span>
+            <span onmouseout="hideTip(event, 'fs14', 21)" onmouseover="showTip(event, 'fs14', 21)" class="k">where</span> (<span onmouseout="hideTip(event, 'fs13', 22)" onmouseover="showTip(event, 'fs13', 22)" class="i">p</span><span class="o">.</span><span class="i">Title</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs11', 23)" onmouseover="showTip(event, 'fs11', 23)" class="i">title</span>)
+            <span onmouseout="hideTip(event, 'fs15', 24)" onmouseover="showTip(event, 'fs15', 24)" class="k">select</span> <span onmouseout="hideTip(event, 'fs13', 25)" onmouseover="showTip(event, 'fs13', 25)" class="i">p</span>
+            <span onmouseout="hideTip(event, 'fs16', 26)" onmouseover="showTip(event, 'fs16', 26)" class="k">take</span> <span class="n">1</span>
+    }
+    <span class="o">|&gt;</span>  <span onmouseout="hideTip(event, 'fs17', 27)" onmouseover="showTip(event, 'fs17', 27)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs18', 28)" onmouseover="showTip(event, 'fs18', 28)" class="f">tryHead</span>
+
+
+ <span class="c">/// I wanna add a project record if it does not exist in the table</span>
+ <span class="i">getProjectByTitle</span> <span class="i">p</span><span class="o">.</span><span class="i">ProjectTitle</span>
+    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs9', 29)" onmouseover="showTip(event, 'fs9', 29)" class="i">failIfSome</span> <span class="i">PojectAlreadyExists</span>
+    <span class="c">// some more validation probalbly</span>
+    <span class="o">|&gt;</span> <span class="i">liftR</span> (<span class="k">fun</span> _ <span class="k">-&gt;</span> <span class="i">p</span>)  <span class="c">// now i wanna do somethign with p</span>
+    <span class="o">|&gt;</span>   <span class="i">constructProjectFromMessage</span> <span class="c">// from p </span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">union case RopResult.Success: &#39;TSuccess * &#39;TMessage list -&gt; RopResult&lt;&#39;TSuccess,&#39;TMessage&gt;</div>
+<div class="tip" id="fs2">type &#39;T list = List&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.list&lt;_&gt;</div>
+<div class="tip" id="fs3">Multiple items<br />union case RopResult.Failure: &#39;TMessage list -&gt; RopResult&lt;&#39;TSuccess,&#39;TMessage&gt;<br /><br />--------------------<br />active recognizer Failure: exn -&gt; string option<br /><br />Full name: Microsoft.FSharp.Core.Operators.( |Failure|_| )</div>
+<div class="tip" id="fs4">val failIfNone : message:&#39;a -&gt; _arg1:&#39;b option -&gt; &#39;c<br /><br />Full name: Script.failIfNone</div>
+<div class="tip" id="fs5">val message : &#39;a</div>
+<div class="tip" id="fs6">union case Option.Some: Value: &#39;T -&gt; Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs7">val x : &#39;b</div>
+<div class="tip" id="fs8">union case Option.None: Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs9">val failIfSome : message:&#39;a -&gt; _arg1:&#39;b option -&gt; &#39;c<br /><br />Full name: Script.failIfSome<br /><em><br /><br />&#160;I whote this bit </em></div>
+<div class="tip" id="fs10">val getProjectByTitle : title:&#39;a -&gt; &#39;b option (requires equality)<br /><br />Full name: Script.getProjectByTitle</div>
+<div class="tip" id="fs11">val title : &#39;a (requires equality)</div>
+<div class="tip" id="fs12">val query : Linq.QueryBuilder<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.query</div>
+<div class="tip" id="fs13">val p : &#39;b</div>
+<div class="tip" id="fs14">custom operation: where (bool)<br /><br />Calls Linq.QueryBuilder.Where </div>
+<div class="tip" id="fs15">custom operation: select (&#39;Result)<br /><br />Calls Linq.QueryBuilder.Select </div>
+<div class="tip" id="fs16">custom operation: take (int)<br /><br />Calls Linq.QueryBuilder.Take </div>
+<div class="tip" id="fs17">module Seq<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs18">val tryHead : source:seq&lt;&#39;T&gt; -&gt; &#39;T option<br /><br />Full name: Microsoft.FSharp.Collections.Seq.tryHead</div>
+

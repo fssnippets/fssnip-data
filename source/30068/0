@@ -1,0 +1,21 @@
+open System
+
+let fetchUrl callback url =
+    use resp = (url |> Uri |> Net.WebRequest.Create).GetResponse ()
+    use stream = resp.GetResponseStream ()
+    use reader = new IO.StreamReader (stream)
+    callback reader url
+
+let myCallback (reader:IO.StreamReader) url =
+    let len = 1000
+    let doc = reader.ReadToEnd ()
+    printfn "Downloaded %s. First %d is:" url len
+    doc.Substring (0, len) |> printfn "%s"
+    doc // return all the HTML
+
+let sites = ["https://encrypted.google.com"
+             "http://news.bbc.co.uk"
+             "http://www.bing.com"
+             "http://www.yahoo.com"]
+
+sites |> List.map (fetchUrl myCallback) |> Dump

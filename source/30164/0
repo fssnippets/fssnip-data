@@ -1,0 +1,21 @@
+open System
+open System.Reflection
+open MongoDB.Bson
+open MongoDB.Bson.Serialization
+open MongoDB.Bson.Serialization.Serializers
+open MongoDB.Driver
+open MongoDB.Driver.Core
+
+type YourImmutableRecord = { id : Guid; text : string }
+
+let ctor = (typeof<YourImmutableRecord >).GetConstructors().[0]
+
+let map (a : BsonClassMap<YourImmutableRecord>) =
+    a.AutoMap()
+    a.MapIdMember(fun (a) -> a.id).SetSerializer(new GuidSerializer(BsonType.String)) |> ignore
+    a.MapProperty(fun (a) -> a.text) |> ignore
+    a.MapConstructor(ctor, ctor.GetParameters() |> Array.map (fun (a) -> a.Name)) |> ignore
+
+let mapper = Action<_>(fun (a : BsonClassMap<YourImmutableRecord>) -> map a)
+
+BsonClassMap.RegisterClassMap<YourImmutableRecord> mapper |> ignore

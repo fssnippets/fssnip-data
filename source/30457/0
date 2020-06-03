@@ -1,0 +1,166 @@
+open System
+
+/// Path to a node.
+type Path =
+    | Left
+    | Right
+
+/// An inner node.
+type Inner<'a> =
+    {
+        /// Value of this node.
+        Value : 'a
+
+        /// Left child node.
+        Left : Node<'a>
+
+        /// Right child node.
+        Right : Node<'a>
+
+        /// Path to this node.
+        Path : Path
+    }
+
+/// Nodes in a tree.
+and Node<'a> =
+    | Leaf of 'a
+    | Inner of Inner<'a>
+
+module Node =
+
+    /// Extracts the value from a node.
+    let value =
+        function
+            | Leaf v -> v
+            | Inner inner -> inner.Value
+
+    /// Creates an inner node. This is where the actual comparison happens.
+    let createInner comparer left right =
+        let leftVal = value left
+        let rightVal = value right
+        let value, path =
+            if comparer leftVal rightVal < 0 then
+                leftVal, Left
+            else
+                rightVal, Right
+        Inner {
+            Value = value
+            Left = left
+            Right = right
+            Path = path
+        }
+
+/// A tree of nodes.
+type Tree<'a> =
+    {
+        Root : Node<'a>
+        Comparer : 'a -> 'a -> int
+    }
+
+module Tree =
+
+    /// Creates a tree containing the given values.
+    let create comparer values =
+
+            // recursively builds a layer in the tree
+        let rec loop (nodes : _[]) =
+            let parents =
+                let isOdd = nodes.Length % 2 = 1
+                let n = nodes.Length / 2 + if isOdd then 1 else 0
+                Array.init n (fun i ->
+                    if i < nodes.Length / 2 then
+                        Node.createInner
+                            comparer
+                            nodes.[2 * i]
+                            nodes.[2 * i + 1]
+                    else
+                        assert(isOdd)
+                        assert(i = n - 1)
+                        nodes.[2 * i])
+            if parents.Length = 1 then parents.[0]
+            else loop parents
+
+        {
+            Root =
+                values
+                    |> Seq.map Leaf
+                    |> Seq.toArray
+                    |> loop
+            Comparer = comparer
+        }
+
+    /// Adds a value to a tree, replacing the current root value.
+    let rec add value tree =
+        let rec loop node =
+            match node with
+                | Leaf _ -> Leaf value
+                | Inner inner ->
+                    match inner.Path with
+                        | Left ->
+                            let left = loop inner.Left
+                            Node.createInner tree.Comparer left inner.Right
+                        | Right ->
+                            let right = loop inner.Right
+                            Node.createInner tree.Comparer inner.Left right
+        { tree with Root = loop tree.Root }
+
+module Select =
+
+    /// Answers the top k values.
+    let top comparer k (values : _[]) =
+
+        assert(k >= 2)
+        let n = values.Length
+        assert(n >= k)
+
+            // a tree's root value
+        let value tree =
+            tree.Root
+                |> Node.value
+                |> Option.get
+
+            // compare options instead of raw values
+        let optComparer aOpt bOpt =
+            match (aOpt, bOpt) with
+                | Some a, Some b -> comparer a b
+                | None, Some _ -> 1
+                | Some _, None -> -1
+                | _ -> failwith "Unexpected"
+
+            // initial tree
+        let tree =
+            values.[0 .. n - k + 1]
+                |> Array.map Some
+                |> Tree.create optComparer
+
+        let result =
+            [|
+                    // obtain results iteratively
+                let trees =
+                    (tree, values.[n - k + 2 ..])
+                        ||> Array.scan (fun tr value ->
+                            tr |> Tree.add (Some value))
+                yield! trees |> Seq.map value
+
+                    // add a value that always loses to get the last result
+                yield
+                    trees
+                        |> Array.last
+                        |> Tree.add None
+                        |> value
+            |]
+        assert(result.Length = k)
+        assert(
+            let sorted = values |> Array.sortWith comparer |> Array.take k
+            Array.compareWith comparer result sorted = 0)
+        result
+
+[<EntryPoint>]
+let main argv =
+    let rng = Random(0)
+    let n = 1000000
+    let values = Array.init n (fun _ -> rng.Next())
+    let k = 20
+    let selected = values |> Select.top compare k
+    printfn "%A" selected
+    0

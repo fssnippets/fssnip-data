@@ -1,0 +1,228 @@
+namespace CEDictFS
+
+module Utils =
+    let subStrInc start' end' (str:string) = str.Substring(start', end' - start' + 1)
+    let subStrExc start' end' (str:string) = str.Substring(start', end' - start')
+    let splitStr separators (str:string) = str.Split(separators)
+    let strNotEmpty (str:string) = not(System.String.IsNullOrEmpty(str))
+    let strPrefix charCount (str:string) = System.Globalization.StringInfo(str).SubstringByTextElements(0, charCount)
+    
+
+    // getPrefixLens - for given word (as array of segments) returns available prefix lengths, sorted downwards
+    let rec decomposeAllVariants (str:string) getPrefixLens =
+        seq { for prefixLen in getPrefixLens str do
+                if prefixLen = str.Length then yield [str]
+                else
+                    let prefix = str.Substring(0, prefixLen)
+                    let restDecomposed = decomposeAllVariants (str.Substring(prefixLen)) getPrefixLens
+                    yield! restDecomposed |> Seq.map (fun rest -> prefix::rest) }
+
+    let decomposeSinglePass (str:string) getPrefixLens =
+        let getMaxPrefixLen str =
+            let prefixLens = getPrefixLens str
+            if Array.length prefixLens = 0 then 0
+            else prefixLens.[0]
+        
+        let rec searchNextWord startPos =
+            if startPos >= str.Length then str.Length, 0
+            else
+                let maxPrefixLen = getMaxPrefixLen (str.Substring(startPos, str.Length - startPos))
+                if maxPrefixLen > 0 then startPos, maxPrefixLen
+                else searchNextWord (startPos + 1)
+
+        let rec decomposeSinglePass' pos = 
+            let wordPos, wordLen = searchNextWord pos
+            if wordLen > 0 then 
+                let word = str.Substring(wordPos, wordLen)
+                let decomposed =
+                    let endPos = wordPos + wordLen
+                    if  endPos = str.Length then [word]
+                    else word :: decomposeSinglePass' endPos
+                if wordPos = pos then decomposed
+                else System.String('?', wordPos - pos):: decomposed
+            else [System.String('?', str.Length - pos)]
+
+        seq { yield decomposeSinglePass' 0 }
+            
+    let decompose (str:string) getPrefixLens =
+        let allVariants = decomposeAllVariants str getPrefixLens
+        if Seq.isEmpty allVariants then 
+            decomposeSinglePass str getPrefixLens
+        else allVariants
+
+
+    let punctuation = "，！？；：（ ）［］【 】。、‧" 
+
+    let private punctuationAsStr = punctuation |> Seq.map (fun chr -> chr.ToString()) |> Seq.toList
+
+    let removePunctuation (str:string) =
+        let sb = System.Text.StringBuilder(str)
+        for punctuationChar in punctuationAsStr do
+            sb.Replace(punctuationChar, "") |> ignore
+        sb.ToString()
+
+
+type DictionaryItem = { Traditional:string; Simplified:string; Pronunciation:string; Meanings:string[] }
+
+module DictionaryItem =
+    open Utils
+    open System.Collections.Generic
+    
+    let parse (definition:string) = 
+        let argError() = failwith "Invalid dictionary entry definition"
+        let checkCharIndex idx = if idx >= 0 then idx else argError()
+        
+        let definition = definition.Trim()
+        let phoneticsStart =  checkCharIndex (definition.IndexOf('['))
+        let phoneticsEnd = checkCharIndex (definition.IndexOf(']', phoneticsStart + 1))
+
+        let meaningBoundaries = 
+            let meaningBoundaries' = new List<int>()
+            let mutable meaningBoundary = definition.IndexOf('/', phoneticsEnd + 1)
+            meaningBoundaries'.Add(meaningBoundary)
+            
+            while meaningBoundary > 0 do
+                meaningBoundary <- definition.IndexOf('/', meaningBoundary + 1)
+                if meaningBoundary >= 0 then meaningBoundaries'.Add(meaningBoundary)
+            
+            meaningBoundaries'
+
+        let writing, writingSegmentCount = 
+            let writing' = definition |> subStrInc 0 (phoneticsStart - 1) |> splitStr [|' '|] 
+                           |> Array.filter strNotEmpty
+            if writing'.Length % 2 <> 0 then argError()
+            writing', writing'.Length / 2
+        
+        let pronunciation =
+            definition |> subStrInc (phoneticsStart + 1) (phoneticsEnd - 1) 
+            
+        let meanings = 
+            seq { 0..meaningBoundaries.Count - 2 } 
+            |> Seq.map (fun i -> (subStrInc (meaningBoundaries.[i] + 1) (meaningBoundaries.[i + 1] - 1) definition).Trim())
+            |> Seq.toArray
+
+        { Traditional = writing |> Array.take writingSegmentCount |> String.concat "";
+          Simplified = writing |> Array.skip writingSegmentCount |> Array.take writingSegmentCount |> String.concat  "";
+          Pronunciation = pronunciation;
+          Meanings = meanings }
+    
+    
+    let normalizedWriting (writing:string) = Utils.removePunctuation writing
+
+    let normalizedWritings item = [normalizedWriting item.Traditional; normalizedWriting item.Simplified]
+
+    let writingIndex item =
+        normalizedWritings item |> Seq.map (fun writing -> writing, item)
+    
+open System.Collections.Generic
+
+type Translation = { Items:DictionaryItem[] }
+
+
+type Dictionary(data:string) = class
+    let wrongDefinitions = List<string>()
+
+    let parseLine definition =
+        try Some (DictionaryItem.parse definition)
+        with | _ -> wrongDefinitions.Add(definition); None
+
+    let lines = data.Split('\n') 
+                |> Array.map (fun line -> line.Trim()) 
+                |> Array.filter (fun line -> not(line.StartsWith("#")))
+
+    let items = lines |> Array.map parseLine 
+                |> Array.filter Option.isSome |> Array.map Option.get
+
+    let writingIndexItems = seq { for item in items do
+                                    yield! DictionaryItem.writingIndex item }
+                            |> Seq.toArray
+
+
+    let writingIndex = writingIndexItems |> dict
+    
+    let maxPrefixLen = 4
+
+    let shortWritingIndex = writingIndexItems
+                            |> Seq.filter (fun (key, item) -> 
+                                let glb = System.Globalization.StringInfo(key)
+                                glb.LengthInTextElements <= maxPrefixLen) 
+                            |> dict
+
+    let longWritingIndex = writingIndexItems
+                            |> Seq.filter (fun (key, item) -> 
+                                let glb = System.Globalization.StringInfo(key)
+                                glb.LengthInTextElements > maxPrefixLen)
+                            |> Seq.groupBy (fun (writing, _) -> Utils.strPrefix maxPrefixLen writing)
+                            |> Seq.map (fun (key, value) -> 
+                                    let value' = value |> Seq.map (fun (_, item) -> item) |> Seq.toList
+                                    key, value')
+                            |> dict
+
+    let getPrefixLens (str:string) =
+        let prefixes = 
+            let strInfo = System.Globalization.StringInfo(str)
+            seq { for i in strInfo.LengthInTextElements .. -1 .. 1 ->  strInfo.SubstringByTextElements(0, i) }
+        
+        let itemsForPrefix prefix items = 
+            seq { for item in items do
+                    let writings = DictionaryItem.normalizedWritings item
+                    yield! writings |> Seq.filter (fun writing -> writing.StartsWith(prefix)) }
+        
+        let foundPrefixes = 
+            seq { for prefix in prefixes do
+                    let found, items = longWritingIndex.TryGetValue(prefix)
+                    if found then 
+                        yield! itemsForPrefix prefix items 
+                    else
+                        if shortWritingIndex.ContainsKey(prefix) then
+                            yield prefix }
+         
+        foundPrefixes 
+        |> Seq.map (fun prefix -> prefix.Length)
+        |> Seq.toArray
+        |> Array.sortDescending
+
+
+    do
+        printfn "ShortWritingIndex: %d" shortWritingIndex.Count
+        printfn "LongWritingIndex: %d" longWritingIndex.Count
+ 
+        (* let multiItemKeys = 
+            seq { for key in longWritingIndex.Keys do
+                    let dictItems = longWritingIndex.[key]
+                    if dictItems.Length > 1 then
+                        yield key, dictItems.Length }
+
+        printfn "LongWritingIndex multiple-item keys: %d" (Seq.length multiItemKeys)
+        for key, count in multiItemKeys do
+            printfn "%s: %d" key count *)
+
+    //let longPrefix = items |> Seq.map (fun item -> 
+
+    member x.Items = items
+
+    member x.GetPrefixLens(str) = getPrefixLens str
+
+    member x.TranslateWriting(str:string) =
+        let decomposedVariants = Utils.decompose str getPrefixLens |> Seq.toList
+        
+        let translations = 
+            seq { for variant in decomposedVariants do
+                    let knownPhrases = variant |> Seq.filter (fun phrase -> phrase.IndexOf('?') < 0) |> Seq.toArray
+                    yield knownPhrases |> Array.map (fun item -> writingIndex.[item]) }
+        
+        translations |> Seq.toArray
+end
+
+module Text =
+    let describeTranslations translations =
+        let sb = System.Text.StringBuilder()
+        let numbers = seq { 1..translations |> Seq.length }
+        for translation, num in Seq.zip translations numbers do
+            let segments = String.concat "--" (translation |> Seq.map (fun tr -> tr.Simplified))
+            sb.AppendFormat("Translation #{0}: {1}\r\n", num, segments) |> ignore
+            for segment in translation do
+                sb.AppendFormat("{0}: [{1}] - {2}\r\n", segment.Simplified, segment.Pronunciation, String.concat "/" segment.Meanings) |> ignore
+            sb.AppendLine() |> ignore
+            
+        sb.ToString()

@@ -1,0 +1,55 @@
+#load "SetupML.fsx" //get it from here: http://fssnip.net/7Wi
+
+open System.Threading
+open Microsoft.ML
+open Microsoft.ML.AutoML
+
+let ctx = MLContext()
+
+//data from here: https://www.kaggle.com/mlg-ulb/creditcardfraud
+let trainFile = @"C:\Users\fwaris\Downloads\creditcardfraud\creditcard.csv"
+let labelCol = "Class"
+
+let colSelection = ctx.Auto().InferColumns(trainFile, labelCol)
+
+let textLoader = ctx.Data.CreateTextLoader(colSelection.TextLoaderOptions)
+
+let trainView = textLoader.Load(trainFile)
+let testView = textLoader.Load(trainFile)
+
+
+
+let cts = new CancellationTokenSource()
+
+let expSettings = BinaryExperimentSettings()
+expSettings.OptimizingMetric <- BinaryClassificationMetric.AreaUnderRocCurve
+expSettings.CancellationToken <- cts.Token
+
+let experiment = ctx.Auto().CreateBinaryClassificationExperiment(expSettings)
+
+let results = ref None                                                                                      
+async { 
+    let r = experiment.Execute(trainView, colSelection.ColumnInformation)
+    results := Some r
+    }
+    |> Async.Start
+(*
+cts.Cancel()      // cancel to get results (can still take a while)
+
+
+
+results.Value.Value.RunDetails
+|> Seq.sortByDescending (fun x->x.ValidationMetrics.AreaUnderRocCurve)
+|> Seq.iter (fun dtl -> printfn "%s %f" dtl.TrainerName dtl.ValidationMetrics.AreaUnderRocCurve)
+
+*)
+
+
+
+
+
+
+
+
+
+

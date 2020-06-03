@@ -1,0 +1,91 @@
+open System
+open System.IO
+
+type Count =
+    { LOC:int
+      comments:int
+      emptyLines:int }
+
+/// Add or remove the file extensions you want.
+/// Set to both .fs and .fsx files by default.
+let fileExtentions =
+    ["fs";"fsx"]
+    |> Seq.map (fun s -> "*." + s)
+
+let printCount count =
+    printfn "Total LOC: %A" count.LOC
+    printfn "Total comment lines: %A" count.comments
+    printfn "Total empty lines: %A" count.emptyLines
+    printfn "Total LOC + comments: %A" (count.LOC + count.comments)
+    printfn "Total lines: %A" (count.LOC + count.comments + count.emptyLines)
+
+let printFileList fileList =
+    printfn "Total files counted: %A" (Seq.length fileList)
+    printfn "List of files counted:"
+    fileList
+    |> Seq.iter (printfn "  %s")
+
+let getFiles path wildcards recurse =
+    wildcards
+    |> Seq.map (fun wildcard ->
+        Directory.EnumerateFiles(
+            path, 
+            wildcard, 
+            if recurse then 
+                SearchOption.AllDirectories 
+            else 
+                SearchOption.TopDirectoryOnly
+        )
+    )
+    |> Seq.concat
+
+let lineCount file =
+    let isEmpty (line:string) = 
+        line.Trim() = ""
+
+    let isComment (line:string) = 
+        line.Trim()
+        |> fun s ->
+        s.StartsWith("//") 
+        || s.StartsWith("(*")
+        || s.EndsWith("*)")
+
+    let isCode (line:string) = 
+        not (isEmpty line) && not (isComment line)
+
+    let getNumLines lineType file =
+        File.ReadAllLines file 
+        |> Seq.filter lineType
+        |> Seq.length
+
+    let LOC = getNumLines isCode file
+    let comments = getNumLines isComment file
+    let emptyLines = getNumLines isEmpty file
+    //return
+    {LOC=LOC;comments=comments;emptyLines=emptyLines}
+
+let countLines files =
+    files
+    |> Seq.map lineCount
+    |> Seq.reduce(fun acc elem ->
+        { LOC = acc.LOC + elem.LOC
+          comments = acc.comments + elem.comments
+          emptyLines = acc.emptyLines + elem.emptyLines })
+
+let runCounter fileType =
+    let files = getFiles Environment.CurrentDirectory fileType true
+    printFileList files
+    countLines files
+    |> printCount
+    printfn "Hit enter to continue..."
+    stdin.ReadLine()
+    |> ignore
+
+#if COMPILED
+[<EntryPoint>]
+let main _ =
+    runCounter fileExtentions
+    0
+#else
+runCounter fileExtentions
+#endif

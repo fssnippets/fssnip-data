@@ -1,0 +1,11 @@
+let rec perms = function
+    | [] -> [[]]
+    | x  -> [ for a in x do
+                 for y in perms(x--a) do
+                     yield a::y ]
+
+and (--) lst elm =
+    match lst, elm with
+    | [], _       -> []
+    | (b :: x), a -> if a = b then x
+                     else b :: (x--a)

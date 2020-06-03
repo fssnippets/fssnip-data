@@ -1,0 +1,14 @@
+module Rng = 
+    let randPcg32 (initState: uint64) (initInc: uint64) =
+        let mutable state = initState
+        let mutable inc = initInc
+        let rand () =
+            let oldState = state
+            state <- oldState * 6364136223846793005UL + (inc ||| 1UL)
+            let xorshifted = (uint32)(((oldState >>> 18) ^^^ oldState) >>> 27)
+            let rot = (uint32)(oldState >>> 59)
+            (xorshifted >>> (int32)rot) ||| (xorshifted <<< ((-(int32)rot) &&& 31))
+        let next () =
+            let x = float32 (rand())
+            x * 2.0f**(-32.0f)
+        next

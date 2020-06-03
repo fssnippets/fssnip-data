@@ -1,0 +1,117 @@
+
+//Add reference to NBitcoin
+#if INTERACTIVE
+#I "./packages/NBitcoin.3.0.1.6/lib/net45/"
+#I "./packages/Newtonsoft.Json.9.0.1/lib/net45"
+#r "NBitcoin.dll"
+#r "Newtonsoft.Json.dll"
+#endif
+
+open System
+open NBitcoin
+open NBitcoin.Protocol
+
+// --------------- CREATING A TRANSACTION --------------- // 
+
+let network = 
+    // Select your network
+    Network.Main
+    // Network.Test
+
+    // Or create your own:
+    // let builder = NetworkBuilder()
+    // builder.CopyFrom(Network.Main)
+    // builder.SetName("MyBlockChain").BuildAndRegister()
+
+// Create a new wallet:
+let newWallet() = Key()
+let alice = BitcoinSecret(newWallet(), network)
+let bob = BitcoinSecret(newWallet(), network)
+    
+// You can also use existing wallets.
+// to test you can create wallets e.g. in https://rushwallet.com/
+let tuomas = BitcoinSecret("5JACYRvADrPzrzFNoGMUsV8UJYTsNbswaZWxjDT2GuMAUYGfG3w", network)
+
+let bobPublic = 
+    //bob.ScriptPubKey
+    // or use existing:
+    BitcoinAddress.Create("117GQHu6kUJSudEZSv7Bjv4FbK5ZBCgBy", network)
+    
+let builder = TransactionBuilder()
+let transaction =
+    let sum = Money.Coins 0.0001m
+    let fee = Money.Coins 0.00002m
+    let coin = 
+        Coin(
+            OutPoint(
+                // Previous Transaction-ID, get it from your wallet.
+                new uint256("86dfe9fd88e3ee7024c9fa36ec8a47845e591c14d7c7913150877a269ab4f8dc"), 
+                // Coin-order-number
+                1
+            ), TxOut(sum, tuomas.ScriptPubKey)
+        ) :> ICoin
+    builder
+        .AddCoins([|coin|])
+        .AddKeys(tuomas)
+        .Send(bobPublic, (sum - fee))
+        .SendFees(fee)
+        .SetChange(tuomas.GetAddress())
+        .BuildTransaction(true)
+    
+let ``check if transaction is valid``() =
+    let hash = transaction.GetHash()
+    let isOk, errs = builder.Verify(transaction)
+    hash, isOk, errs
+    
+// You can broadcast it e.g. from http://blockr.io
+let transactionToBroadcast = transaction.ToHex()
+
+
+// --------------- SENDING TRANSACTION TO SERVER --------------- // 
+
+/// Connect to public Bitcoin network:
+#if INTERACTIVE
+let node = 
+#else
+use node = 
+#endif
+    // get a bit-node server address, e.g. from: https://bitnodes.21.co/
+    // Not all the nodes work.
+    let n = Node.Connect(network, "81.109.119.97:8333")
+    n.VersionHandshake()
+    n
+
+// Channel for getting back messages
+let getListener() = node.CreateListener()
+
+// Do the trade
+let sendSync() =
+    // Notify server
+    node.SendMessage(new InvPayload(transaction)) 
+    System.Threading.Thread.Sleep 1000
+    // Send transaction
+    node.SendMessage(new TxPayload(transaction))
+    System.Threading.Thread.Sleep 4000
+    node.Disconnect()
+    
+//let sendAsync() =
+//    async {
+//        do! node.SendMessageAsync(new InvPayload(transaction)) 
+//            |> Async.AwaitTask
+//        do! Async.Sleep 1000
+//        do! node.SendMessageAsync(new TxPayload(transaction)) 
+//            |> Async.AwaitTask
+//        do! Async.Sleep 4000
+//        node.DisconnectAsync()
+//    }
+//sendAsync() |> Async.Start
+//
+
+Console.WriteLine "Press any key"
+Console.ReadLine() |> ignore
+0
+
+// Some resources:
+// Open book: https://programmingblockchain.gitbooks.io/programmingblockchain/content/
+// A video: https://www.youtube.com/watch?v=X4ZwRWIF49w
+// Article: https://www.codeproject.com/articles/835098/nbitcoin-build-them-all

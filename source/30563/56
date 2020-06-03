@@ -1,0 +1,763 @@
+// http://www.fssnip.net/7WX
+// https://math.stackexchange.com/questions/3337570/
+//         the-kth-derivative-of-sinn-x-as-n-sinn-k-x-times-a-polynomial-in/
+
+namespace Adhemar.Polynomials
+
+open System
+open System.Diagnostics.Contracts
+open System.Numerics
+open System.Text
+
+module Complex =
+
+    let fromFloat64 f =
+        Complex (f, 0.0)
+
+    let fromInt32 n =
+        fromFloat64 (float n)
+
+    let fromInt64 (n : int64) =
+        fromFloat64 (float n)
+
+    let fromUInt32 (n : uint32) =
+        fromFloat64 (float n)
+
+module Polynomials =
+
+    type ICoefficient =
+
+        // InvalidCastExceptions may occur when adding or multiplying with ICoefficients of different types
+        // ArgumentExceptions may occur when adding or multiplying with incompatible ICoefficients
+
+        abstract member Zero : ICoefficient
+        abstract member IsOne : bool
+        abstract member Add : ICoefficient -> ICoefficient
+        abstract member Scale64 : int64 -> ICoefficient
+        abstract member Multiply : ICoefficient -> ICoefficient
+        abstract member IsNegative : bool
+        abstract member CoefficientString : bool * bool -> string
+        abstract member Apply : Map<string, float> -> float
+        abstract member ApplyComplex : Map<string, Complex> -> Complex
+
+    type Coefficient64 (value : int64) =
+
+        member this.Value =
+            value
+
+        static member Zero =
+            Coefficient64 0L
+
+        member this.IsOne =
+            this.Value = 1L
+
+        static member (+) (m : Coefficient64, n : Coefficient64) =
+            Coefficient64 (m.Value + n.Value)
+
+        static member (*) (scalingFactor : int64, m : Coefficient64) =
+            Coefficient64 (scalingFactor * m.Value)
+
+        static member (*) (m : Coefficient64, n : Coefficient64) =
+            Coefficient64 (m.Value * n.Value)
+
+        member this.IsNegative =
+            this.Value < 0L
+
+        static member (~-) (m : Coefficient64) =
+            -1L * m
+
+        override this.ToString () =
+            sprintf "%d" this.Value
+
+        member this.CoefficientString (first : bool, explicitOne : bool) =
+            if explicitOne || (not this.IsOne && not (-this).IsOne) then
+                if first then
+                    this.ToString ()
+                elif this.IsNegative then
+                    sprintf " - %d" (-this).Value
+                else
+                    sprintf " + %d" this.Value
+            else
+                if this.IsOne then
+                    if first then
+                        String.Empty
+                    else
+                        " + "
+                else
+                    if first then
+                        "-"
+                    else
+                        " - "
+
+        interface ICoefficient with
+            member this.Zero =
+                upcast Coefficient64.Zero
+            member this.IsOne =
+                this.IsOne
+            member this.Add (t : ICoefficient) =
+                upcast (this + downcast t)
+            member this.Scale64 (scalingFactor : int64) =
+                upcast (scalingFactor * this)
+            member this.Multiply (t : ICoefficient) =
+                upcast (this * downcast t)
+            member this.IsNegative =
+                this.IsNegative
+            member this.CoefficientString (first : bool, explicitOne : bool) =
+                this.CoefficientString (first, explicitOne)
+            member this.Apply (_m : Map<string, float>) =
+                float this.Value
+            member this.ApplyComplex (m : Map<string, Complex>) =
+                Complex.fromInt64 this.Value
+
+        member this.IsZero =
+            this = Coefficient64.Zero
+
+        static member (-) (m : Coefficient64, n : Coefficient64) =
+            m + (-n)
+
+        static member One =
+            Coefficient64 1L
+
+        static member MinusOne =
+            -Coefficient64.One
+
+        override this.GetHashCode () =
+            this.Value.GetHashCode ()
+
+        member this.Equals (that : Coefficient64) =
+            this.Value = that.Value
+
+        interface IEquatable<Coefficient64> with
+            member this.Equals (that : Coefficient64) =
+                this.Equals that
+
+        override this.Equals (that : obj) =
+            match that with
+                | null ->
+                    false
+                | :? Coefficient64 as thatCoefficient64 ->
+                    this.Equals thatCoefficient64
+                | _ ->
+                    false
+
+        static member op_Equality (r : Coefficient64, t : Coefficient64) =
+            r.Equals t
+
+        static member op_Inequality (r : Coefficient64, t : Coefficient64) =
+            not (Coefficient64.op_Equality (r, t))
+
+        static member op_Implicit (value : int64) =
+            Coefficient64 value
+
+    type Polynomial<'T when 'T : equality and 'T :> ICoefficient>
+            (x : string, ys : string list option,
+             f : (string list option -> Map<string, float> -> float) option,
+             g : (string list option -> Map<string, Complex> -> Complex) option,
+             coefficients : 'T list) =
+
+        static let isEmptyOrSingleton cs =
+            match cs with
+                | []
+                | [_] ->
+                    true
+                | _ ->
+                    false
+
+        static let isZero (t : 'T) =
+            let x = t :> ICoefficient
+            x = x.Zero
+
+        static let rec exactlyOneNonZero (cs : 'T list) =
+            match cs with
+                | [] ->
+                    None
+                | [c] ->
+                    Some c
+                | h :: ts ->
+                    if isZero h then
+                        exactlyOneNonZero ts
+                    else
+                        None
+
+        static let rec add (cs, ds) =
+            match cs, ds with
+                | _, [] ->
+                    cs
+                | [], _ ->
+                    ds
+                | g :: ts, h :: rs ->
+                    downcast ((g :> ICoefficient).Add h) :: add (ts, rs)
+
+        static let rec shiftRank k (cs : 'T list) =
+            if k <= 0 then
+                List.skip (-k) cs
+            elif List.isEmpty cs then
+                List.empty
+            else
+                downcast (List.head cs).Zero :: (shiftRank (k - 1) cs)
+
+        static let rec hasOnlyEvenIndexedItems (cs : 'T list) =
+            match cs with
+                | [] ->
+                    true
+                | h :: ts ->
+                    hasOnlyOddIndexedItems ts
+
+        and hasOnlyOddIndexedItems (cs : 'T list) =
+            match cs with
+                | [] ->
+                    true
+                | h :: ts ->
+                    isZero h && hasOnlyEvenIndexedItems ts
+
+        do
+            let rec nonZeroHighestCoefficient cs =
+                match cs with
+                    | [] ->
+                        true
+                    | [c] when isZero c ->
+                        false
+                    | _ :: ts ->
+                        nonZeroHighestCoefficient ts
+            let isNoneOrAllAreNotEmpty zs =
+                match zs with
+                    | None ->
+                        true
+                    | Some bs ->
+                        let isNeitherNullNorEmpty s =
+                            not (String.IsNullOrEmpty s)
+                        List.forall isNeitherNullNorEmpty bs
+            let distinct v ws =
+                let allDistinct mySequence =
+                    let folder state element =
+                        match state with
+                            | Some elementsSoFar when not (Set.contains element elementsSoFar) ->
+                                Some (Set.add element elementsSoFar)
+                            | _ ->
+                                None
+                    let initialState = Some Set.empty
+                    let scanning = Seq.scan folder initialState mySequence
+                    Seq.forall Option.isSome scanning
+                match ws with
+                    | None ->
+                        true
+                    | Some zs ->
+                        allDistinct (v :: zs)
+            if isNull x then
+                nullArg "x"
+            elif not (nonZeroHighestCoefficient coefficients) then
+                invalidArg "coefficients" "Zero highest coefficient"
+            elif not (isNoneOrAllAreNotEmpty ys) then
+                invalidArg "ys" "At least one empty y in ys"
+            elif isEmptyOrSingleton coefficients && x <> String.Empty then
+                invalidArg "x" "Non-empty variable x for constant Polynomial"
+            elif isEmptyOrSingleton coefficients && Option.isSome ys then
+                invalidArg "ys" "Some arguments ys for constant Polynomial"
+            elif isEmptyOrSingleton coefficients && Option.isSome f then
+                invalidArg "ys" "Some function f for constant Polynomial"
+            elif not (isEmptyOrSingleton coefficients) && x = String.Empty then
+                invalidArg "x" "Empty x for non-constant Polynomial"
+            elif not (distinct x ys) then
+                invalidArg "ys" ("Some duplicate argument y" +
+                    " or argument y with same name as variable function x")
+            elif Option.isSome ys && Option.isNone f then
+                invalidArg "f" "Some argument y but no function f"
+
+        static member Create
+                (x : string, ys : string list option,
+                 f : (string list option -> Map<string, float> -> float) option,
+                 g : (string list option -> Map<string, Complex> -> Complex) option,
+                 coefficients : 'T list) =
+            let rec deZeroHighestCoefficient cs =
+                match cs with
+                    | [] ->
+                        List.empty
+                    | [c] when isZero c ->
+                        List.empty
+                    | h :: ts ->
+                        let deZeroTail = deZeroHighestCoefficient ts
+                        if isZero h && List.isEmpty (deZeroHighestCoefficient ts) then
+                            List.empty
+                        else
+                            h :: deZeroTail
+            let deZeroCoefficients = deZeroHighestCoefficient coefficients
+            if isEmptyOrSingleton deZeroCoefficients then
+                Polynomial (String.Empty, None, None, None, deZeroCoefficients)
+            else
+                let emptyInsteadOfNull (s : string) =
+                    if isNull s then
+                        String.Empty
+                    else
+                        s
+                Polynomial (emptyInsteadOfNull x, ys, f, g, coefficients)
+
+        member this.X =
+            x
+
+        member this.Ys =
+            ys
+
+        member this.F =
+            f
+
+        member this.G =
+            g
+
+        member this.Coefficients =
+            coefficients
+
+        static member Zero =
+            Polynomial (String.Empty, None, None, None, List.empty<'T>)
+
+        member this.IsOne =
+            match this.Coefficients with
+                | [c] ->
+                    (c :> ICoefficient).IsOne
+                | _ ->
+                    false
+
+        member this.IsConstant =
+            isEmptyOrSingleton this.Coefficients
+
+        static member AreCompatible (p : Polynomial<'T>, q : Polynomial<'T>) =
+            p.X = q.X && p.Ys = q.Ys || p.IsConstant || q.IsConstant
+
+        static member Compatibleness (p : Polynomial<'T>, q : Polynomial<'T>) =
+            if not (Polynomial.AreCompatible (p, q)) then
+                invalidArg "q" "Polynomial p and q are incompatible"
+            Contract.EndContractBlock ()
+            if p.IsConstant then
+                q.X, q.Ys, q.F, q.G
+            else
+                p.X, p.Ys, p.F, p.G
+
+        static member (+) (p : Polynomial<'T>, q : Polynomial<'T>) =
+            if not (Polynomial.AreCompatible (p, q)) then
+                invalidArg "q" "Polynomial p and q are incompatible"
+            Contract.EndContractBlock ()
+            let x, y, f, g = Polynomial.Compatibleness (p, q)
+            Polynomial.Create (x, y, f, g, add (p.Coefficients, q.Coefficients))
+
+        static member (*) (scalingFactor : int64, p : Polynomial<'T>) =
+            let mapper f (t : 'T) =
+                ((t :> ICoefficient).Scale64 f) :?> 'T
+            Polynomial.Create (p.X, p.Ys, p.F, p.G, List.map (mapper scalingFactor) p.Coefficients)
+
+        static member (*) (p : Polynomial<'T>, q : Polynomial<'T>) =
+            if not (Polynomial.AreCompatible (p, q)) then
+                invalidArg "q" "Polynomial p and q are incompatible"
+            Contract.EndContractBlock ()
+            let rec multiply (cs : 'T list, ds : 'T list) =
+                match cs with
+                    | [] ->
+                        List.empty
+                    | h :: ts ->
+                        let multiplyTerm g d =
+                            downcast ((g :> ICoefficient).Multiply d)
+                        add (List.map (multiplyTerm h) ds, shiftRank 1 (multiply (ts, ds)))
+            let x, y, f, g = Polynomial.Compatibleness (p, q)
+            Polynomial.Create (x, y, f, g, multiply (p.Coefficients, q.Coefficients))
+
+        member this.IsNegative =
+            match exactlyOneNonZero this.Coefficients with
+                | Some c ->
+                    (c :> ICoefficient).IsNegative
+                | None ->
+                    false
+
+        member this.IsZero =
+            List.isEmpty this.Coefficients
+
+        member this.Rank =
+            List.length coefficients - 1
+
+        member this.IsMonomial =
+            Option.isSome (exactlyOneNonZero this.Coefficients)
+
+        static member (~-) (p : Polynomial<'T>) =
+            -1L * p
+
+        member this.YsString =
+            match this.Ys with
+                | None ->
+                    String.Empty
+                | Some zs ->
+                    let separator = ","
+                    sprintf "(%s)" (String.Join (separator, zs))
+
+        override this.ToString () =
+            if this.IsZero then
+                "0"
+            else
+                let PolynomialTerms = seq {
+                    for k = this.Rank downto 0 do
+                        let d = List.item k this.Coefficients
+                        if not (isZero d) then
+                            yield (k = this.Rank), (k = 0), k, d
+                }
+                let stringBuilder = StringBuilder ()
+                for fi, eo, p, c in PolynomialTerms do
+                    let t = c.CoefficientString (fi, eo)
+                    ignore (stringBuilder.Append t)
+                    if p <> 0 then
+                        if not (String.IsNullOrEmpty t) &&
+                                t <> "-" && not (t.EndsWith " ") then
+                            ignore (stringBuilder.Append " ")
+                        ignore (stringBuilder.Append this.X)
+                        if p <> 1 then
+                            ignore (stringBuilder.Append (sprintf "^%d" p))
+                        ignore (stringBuilder.Append this.YsString)
+                stringBuilder.ToString ()
+
+        member this.CoefficientString (first : bool, explicitOne : bool) =
+            if explicitOne || (not this.IsOne && not (-this).IsOne) then
+                if this.IsZero || this.IsMonomial then
+                    if this.IsNegative then
+                        if first then
+                            sprintf "-%s" ((-this).ToString ())
+                        else
+                            sprintf " - %s" ((-this).ToString ())
+                    else
+                        if first then
+                            sprintf "%s" (this.ToString ())
+                        else
+                            sprintf " + %s" (this.ToString ())
+                else
+                    if first then
+                        if explicitOne then
+                            this.ToString ()
+                        else
+                            sprintf "(%s)" (this.ToString ())
+                    else
+                        sprintf " + (%s)" (this.ToString ())
+            else
+                if this.IsOne then
+                    if first then
+                        String.Empty
+                    else
+                        " + "
+                else
+                    if first then
+                        "-"
+                    else
+                        " - "
+
+        member this.Apply (m : Map<string, float>) =
+            if this.IsZero then
+                0.0
+            elif this.IsConstant then
+                (List.exactlyOne this.Coefficients :> ICoefficient).Apply m
+            else
+                let mapper u a (i : int) c =
+                    ((c :> ICoefficient).Apply a) * Math.Pow (u, float i)
+                let v =
+                    match Map.tryFind this.X m with
+                        | None ->
+                            (Option.get f) this.Ys m
+                        | Some w ->
+                            w
+                Seq.sum (Seq.mapi (mapper v m) this.Coefficients)
+
+        member this.ApplyComplex (m : Map<string, Complex>) =
+            if this.IsZero then
+                Complex.Zero
+            elif this.IsConstant then
+                (List.exactlyOne this.Coefficients :> ICoefficient).ApplyComplex m
+            else
+                let seqAddComplex (zs : Complex seq) =
+                    Seq.fold (+) Complex.Zero zs
+                let mapper u a (i : int) c =
+                    ((c :> ICoefficient).ApplyComplex a) * Complex.Pow (u, float i)
+                let v =
+                    match Map.tryFind this.X m with
+                        | None ->
+                            (Option.get g) this.Ys m
+                        | Some w ->
+                            w
+                seqAddComplex (Seq.mapi (mapper v m) this.Coefficients)
+
+        interface ICoefficient with
+            member this.Zero =
+                upcast Polynomial<'T>.Zero
+            member this.IsOne =
+                this.IsOne
+            member this.Add (t : ICoefficient) =
+                upcast (this + downcast t)
+            member this.Scale64 (scalingFactor : int64) =
+                upcast (scalingFactor * this)
+            member this.Multiply (t : ICoefficient) =
+                upcast (this * downcast t)
+            member this.IsNegative =
+                this.IsNegative
+            member this.CoefficientString (first : bool, explicitOne : bool) =
+                this.CoefficientString (first, explicitOne)
+            member this.Apply (m : Map<string, float>) =
+                this.Apply m
+            member this.ApplyComplex (m : Map<string, Complex>) =
+                this.ApplyComplex m
+
+        static member (-) (p : Polynomial<'T>, q : Polynomial<'T>) =
+            p + (-q)
+
+        static member (<<<) (p : Polynomial<'T>, k : int) =
+            if p.IsConstant && not (p.IsZero) && k > 0 then
+                invalidArg "k" ("Cannot shift rank of non-zero constant polynomial" +
+                    " (as constant polynomials have no variable)")
+            Polynomial.Create (p.X, p.Ys, p.F, p.G, shiftRank k p.Coefficients)
+
+        static member (>>>) (p : Polynomial<'T>, k : int) =
+            p <<< -k
+
+        member this.Derivative =
+            if this.IsConstant then
+                Polynomial<'T>.Zero
+            else
+                let mapper p (t : 'T) =
+                    (t :> ICoefficient).Scale64 (int64 p) :?> 'T
+                let coefficients = List.mapi mapper this.Coefficients
+                (Polynomial.Create (this.X, this.Ys, this.F, this.G, coefficients)) >>> 1
+
+        static member Constant (t : 'T) =
+            Polynomial<'T>.Create (String.Empty, None, None, None, [t])
+
+        member this.HasOnlyEvenPowers =
+            hasOnlyEvenIndexedItems this.Coefficients
+
+        member this.HasOnlyOddPowers =
+            hasOnlyOddIndexedItems this.Coefficients
+
+        override this.GetHashCode () =
+            this.Coefficients.GetHashCode () ^^^
+                (this.X.GetHashCode () <<< 1) ^^^ (this.Ys.GetHashCode () <<< 2)
+
+        member this.Equals (that : Polynomial<'T>) =
+            this.X = that.X && this.Ys = that.Ys && this.Coefficients = that.Coefficients
+
+        interface IEquatable<Polynomial<'T>> with
+            member this.Equals (that : Polynomial<'T>) =
+                this.Equals that
+
+        override this.Equals (that : obj) =
+            match that with
+                | null ->
+                    false
+                | :? Polynomial<'T> as thatPolynomial ->
+                    this.Equals thatPolynomial
+                | _ ->
+                    false
+
+        static member op_Equality (p : Polynomial<'T>, q : Polynomial<'T>) =
+            p.Equals q
+
+        static member op_Inequality (p : Polynomial<'T>, q : Polynomial<'T>) =
+            not (Polynomial.op_Equality (p, q))
+
+    let singleVariableFunction (h : float -> float) (ys : string list option) (m : Map<string, float>) =
+        h (Map.find (List.head (Option.get ys)) m)
+
+    let singleVariableFunctionComplex (h : Complex -> Complex) (ys : string list option)
+            (m : Map<string, Complex>) =
+        h (Map.find (List.head (Option.get ys)) m)
+
+    let rec derivativeSinPowerPolynomialInCos (k : uint32) =
+        let one = Polynomial.Constant Coefficient64.One
+        if k = 0u then
+            Polynomial.Constant one
+        else
+            let n = "n"
+            let x = "cos"
+            let ys = Some ["x"]
+            let f = Some (singleVariableFunction Math.Cos)
+            let g = Some (singleVariableFunctionComplex Complex.Cos)
+            let zero = Polynomial<Coefficient64>.Zero
+            let minusOne = Polynomial.Constant Coefficient64.MinusOne
+            let p (j : uint32) =
+                let oneMinusJ = Coefficient64 (1L - int64 j)
+                let nPlusOneMinusJ = Polynomial (n, None, None, None, [oneMinusJ; Coefficient64.One])
+                Polynomial (x, ys, f, g, [zero; nPlusOneMinusJ])
+            let q = Polynomial (x, ys, f, g, [minusOne; zero; one])
+            let previousPolynomial = derivativeSinPowerPolynomialInCos (k - 1u)
+            p k * previousPolynomial + q * previousPolynomial.Derivative
+
+    let derivativeSinPowerPolynomialInSin (k : uint32) =
+        let derivativeSinPowerPolynomialInSinFromPolynomialInCos
+                (p : Polynomial<Polynomial<Coefficient64>>) =
+            if not p.HasOnlyEvenPowers then
+                invalidArg "p" "Polynomial p has at least one odd power"
+            elif not (p.X = "cos" && Option.isSome p.Ys || p.IsConstant) then
+                invalidArg "p" "Polynomial p is not compatible with a polynomial in cos"
+            Contract.EndContractBlock ()
+            let mapper i t =
+                let rec powerOfSinSquaredMinusOne n =
+                    let one = Polynomial.Constant Coefficient64.One
+                    if n = 0u then
+                        Polynomial.Constant one
+                    else
+                        let x = "sin"
+                        let ys = p.Ys
+                        let f = Some (singleVariableFunction Math.Sin)
+                        let g = Some (singleVariableFunctionComplex Complex.Sin)
+                        let minusOne = Polynomial.Constant Coefficient64.MinusOne
+                        let zero = Polynomial<Coefficient64>.Zero
+                        let r = Polynomial (x, ys, f, g, [one; zero; minusOne])
+                        if n = 1u then
+                            r
+                        else
+                            r * powerOfSinSquaredMinusOne (n - 1u)
+                (Polynomial.Constant t) * powerOfSinSquaredMinusOne ((uint32 i) / 2u)
+            Seq.sum (Seq.mapi mapper p.Coefficients)
+        let q =
+            if k % 2u = 0u then
+                derivativeSinPowerPolynomialInCos k
+            else
+                (derivativeSinPowerPolynomialInCos k) >>> 1
+        derivativeSinPowerPolynomialInSinFromPolynomialInCos q
+
+    let printDerivativeOfSin stream k =
+        let cosOrEmpty =
+            if k % 2u = 0u then
+                String.Empty
+            else
+                " cos(x)"
+        fprintfn stream "d^%d/dx^%d sin^n(x)" k k
+        fprintfn stream " = sin^(n-%d)(x) [%A]" k (derivativeSinPowerPolynomialInCos k)
+        if (k / 2u) % 2u = 0u then
+            fprintfn stream " = sin^(n-%d)(x)%s [%A]" k cosOrEmpty (derivativeSinPowerPolynomialInSin k)
+        else
+            fprintfn stream " = -sin^(n-%d)(x)%s [%A]" k cosOrEmpty -(derivativeSinPowerPolynomialInSin k)
+        if k = 0u then
+            fprintfn stream " = sin^n(x)"
+
+    let printDerivativesOfSinUpto stream (lastK : uint32) =
+        fprintfn stream "Derivatives of sin^n(x)"
+        fprintfn stream ""
+        for k = 0 to int lastK do
+            printDerivativeOfSin stream (uint32 k)
+
+    let rec derivativeCosPowerPolynomialInSin (k : uint32) =
+        let one = Polynomial.Constant Coefficient64.One
+        if k = 0u then
+            Polynomial.Constant one
+        else
+            let n = "n"
+            let x = "sin"
+            let ys = Some ["x"]
+            let f = Some (singleVariableFunction Math.Cos)
+            let g = Some (singleVariableFunctionComplex Complex.Cos)
+            let zero = Polynomial<Coefficient64>.Zero
+            let minusOne = Polynomial.Constant Coefficient64.MinusOne
+            let p (j : uint32) =
+                let oneMinusJ = Coefficient64 (1L - int64 j)
+                let nPlusOneMinusJ = Polynomial (n, None, None, None, [oneMinusJ; Coefficient64.One])
+                Polynomial (x, ys, f, g, [zero; nPlusOneMinusJ])
+            let q = Polynomial (x, ys, f, g, [minusOne; zero; one])
+            let previousPolynomial = derivativeCosPowerPolynomialInSin (k - 1u)
+            -(p k * previousPolynomial + q * previousPolynomial.Derivative)
+
+    let derivativeCosPowerPolynomialInCos (k : uint32) =
+        let derivativeCosPowerPolynomialInCosFromPolynomialInSin
+                (p : Polynomial<Polynomial<Coefficient64>>) =
+            if not p.HasOnlyEvenPowers then
+                invalidArg "p" "Polynomial p has at least one odd power"
+            elif not (p.X = "sin" && Option.isSome p.Ys || p.IsConstant) then
+                invalidArg "p" "Polynomial p is not compatible with a polynomial in cos"
+            Contract.EndContractBlock ()
+            let mapper i t =
+                let rec powerOfCosSquaredMinusOne n =
+                    let one = Polynomial.Constant Coefficient64.One
+                    if n = 0u then
+                        Polynomial.Constant one
+                    else
+                        let x = "cos"
+                        let ys = p.Ys
+                        let f = Some (singleVariableFunction Math.Sin)
+                        let g = Some (singleVariableFunctionComplex Complex.Sin)
+                        let minusOne = Polynomial.Constant Coefficient64.MinusOne
+                        let zero = Polynomial<Coefficient64>.Zero
+                        let r = Polynomial (x, ys, f, g, [one; zero; minusOne])
+                        if n = 1u then
+                            r
+                        else
+                            r * powerOfCosSquaredMinusOne (n - 1u)
+                (Polynomial.Constant t) * powerOfCosSquaredMinusOne ((uint32 i) / 2u)
+            Seq.sum (Seq.mapi mapper p.Coefficients)
+        let q =
+            if k % 2u = 0u then
+                derivativeCosPowerPolynomialInSin k
+            else
+                (derivativeCosPowerPolynomialInSin k) >>> 1
+        derivativeCosPowerPolynomialInCosFromPolynomialInSin q
+
+    let printDerivativeOfCos stream k =
+        let sinOrEmpty =
+            if k % 2u = 0u then
+                String.Empty
+            else
+                " sin(x)"
+        fprintfn stream "d^%d/dx^%d cos^n(x)" k k
+        if k % 2u = 0u then
+            fprintfn stream " = cos^(n-%d)(x) [%A]" k (derivativeCosPowerPolynomialInSin k)
+        else
+            fprintfn stream " = -cos^(n-%d)(x) [%A]" k -(derivativeCosPowerPolynomialInSin k)
+        if ((k + 1u) / 2u) % 2u = 0u then
+            fprintfn stream " = cos^(n-%d)(x)%s [%A]" k sinOrEmpty (derivativeCosPowerPolynomialInCos k)
+        else
+            fprintfn stream " = -cos^(n-%d)(x)%s [%A]" k sinOrEmpty -(derivativeCosPowerPolynomialInCos k)
+        if k = 0u then
+            fprintfn stream " = cos^n(x)"
+
+    let printDerivativesOfCosUpto stream (lastK : uint32) =
+        fprintfn stream "Derivatives of cos^n(x)"
+        fprintfn stream ""
+        for k = 0 to int lastK do
+            printDerivativeOfCos stream (uint32 k)
+
+    let derivativeOfPowerOfSin k n x =
+       let s = Math.Sin x
+       let p = derivativeSinPowerPolynomialInSin k
+       let m = Map.ofList [ "sin", s; "n", float n ]
+       let a = Math.Pow (s, float (n - int k)) * p.Apply m
+       if k % 2u = 0u then
+           a
+       else
+           Math.Cos x * a
+
+    let derivativeOfPowerOfSinComplex k n x =
+       let s = Complex.Sin x
+       let p = derivativeSinPowerPolynomialInSin k
+       let m = Map.ofList [ "sin", s; "n", Complex.fromInt32 n ]
+       let a = Complex.Pow (s, Complex.fromInt32 (n - int k)) * p.ApplyComplex m
+       if k % 2u = 0u then
+           a
+       else
+           Complex.Cos x * a
+
+    let derivativeOfPowerOfCos k n x =
+       let c = Math.Cos x
+       let p = derivativeCosPowerPolynomialInCos k
+       let m = Map.ofList [ "cos", c; "n", float n ]
+       let a = Math.Pow (c, float (n - int k)) * p.Apply m
+       if ((k + 1u) / 2u) % 2u = 0u then
+           a
+       else
+           Math.Sin x * a
+
+    let derivativeOfPowerOfCosComplex k n x =
+       let c = Complex.Cos x
+       let p = derivativeCosPowerPolynomialInCos k
+       let m = Map.ofList [ "cos", c; "n", Complex.fromInt32 n ]
+       let a = Complex.Pow (c, Complex.fromInt32 (n - int k)) * p.ApplyComplex m
+       if ((k + 1u) / 2u) % 2u = 0u then
+           a
+       else
+           Complex.Sin x * a
+
+    [<EntryPoint>]
+    let main _args =
+        let lastK = 10u
+        let stream = Console.Out
+        printDerivativesOfSinUpto stream lastK
+        fprintfn stream ""
+        printDerivativesOfCosUpto stream lastK
+        ignore (Console.ReadKey ())
+        0

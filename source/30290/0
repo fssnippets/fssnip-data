@@ -1,0 +1,21 @@
+let service = 
+    choose [
+        request(fun req -> 
+            match (req.header "X-AuthToken") with
+            // If X-AuthToken is set; k1 has value, if not Choice2Of2
+            | Choice1Of2 k1 ->
+                printfn "1 of 2 -- %A" k1
+                OK "OK"
+            | Choice2Of2 k2 ->
+                printfn "2 of 2 -- no header, bad request"
+                RequestErrors.BAD_REQUEST "ASDF"
+        )
+        RequestErrors.BAD_REQUEST "HEI"
+    ]
+    >=> choose [
+        GET >=> choose [
+            path "/v1/get" >=> request (fun req -> OK (getEntrepreneurs (req)))
+            path "/v1/test" >=> RequestErrors.NOT_FOUND ".. 4o4"
+        ]
+    ]
+    >=> setMimeType "application/json; charset=utf-8"

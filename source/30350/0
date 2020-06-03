@@ -1,0 +1,47 @@
+module Pivot
+
+module Seq =
+    let pivot rowPrjctn colPrjctn valPrjctn defaultVal agg (s:seq<_>) =
+        let tabular =
+            s
+            |> Seq.groupBy rowPrjctn
+            |> Seq.map (fun (g,xs) ->
+                g,
+                xs 
+                |> Seq.groupBy colPrjctn
+                |> Seq.map (fun (k,vs) -> k, vs |> Seq.map valPrjctn |> agg)
+                )
+        let keySet = 
+            tabular 
+            |> Seq.collect (snd>>(Seq.map fst)) 
+            |> set 
+            |> Seq.mapi (fun i k -> k,i)
+            |> dict
+        let crosstab =
+            tabular
+            |> Seq.map (fun (g,xs) -> 
+                let a = Array.create keySet.Count defaultVal
+                xs |> Seq.iter(fun (k,sm)->a.[keySet.[k]] <- sm)
+                g,a)
+        keySet,crosstab
+
+    let inline toPivotTable (groupColName:string) (keySet:System.Collections.Generic.IDictionary<_,_>,(crosstab:seq<_*_[]>)) =
+        let dt = new System.Data.DataTable()
+        let gnCol = dt.Columns.Add(groupColName) 
+        let valColMap = seq{for kv  in keySet -> kv.Key,dt.Columns.Add(string kv.Key)} |> dict
+        for (g,a) in crosstab do 
+            let r = dt.NewRow()
+            r.[groupColName] <- g
+            for kv in keySet do
+                r.[valColMap.[kv.Key]] <- a.[kv.Value]
+            dt.Rows.Add(r)
+        dt
+(*
+Usage:
+let flatData = [("g1","a",1); ("g1","b",0); ("g2","a",3); ("g1","d",4); ("g2","b",5); ("g2","d",2)]
+let rowPrjctn (g,_,_) = g
+let colPrjctn (_,k,_) = k
+let valPrjctn (_,_,v) = v
+let (ks,xtab) = flatData |>  Seq.pivot rowPrjctn colPrjctn valPrjctn 0 Seq.sum
+let dt = Seq.toPivotTable "Group" (ks,xtab)
+*)

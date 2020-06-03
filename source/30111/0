@@ -1,0 +1,62 @@
+//------------------------------- Create Network ------------------------------- 
+type Neuron  = { Weights : float  list ; Bias : float }
+type Layer   = { Neurons : Neuron list }
+type Network = { Layers  : Layer  list }
+
+let rnd = System.Random()
+
+let randomWeight _ = (2.0 * rnd.NextDouble()) - 1.0
+
+let buildNeuron inputs =
+    { Neuron.Weights = List.init inputs randomWeight ; Bias = randomWeight ()}
+
+let buildLayer inputs neurons =
+    { Layer.Neurons = List.init neurons (fun i -> buildNeuron inputs) }
+
+let buildNetwork inputs layerSizes =
+    let rec createLayers acc inputs layers =
+        match layers with
+        | [] -> acc
+        | neurons :: nextSizes ->
+            let newLayer = buildLayer inputs neurons
+            createLayers (newLayer :: acc) neurons nextSizes
+    { Network.Layers = List.rev (createLayers [] inputs layerSizes) }
+
+//------------------------------- Compute Result ------------------------------- 
+let activation x = System.Math.Tanh(x)
+
+let neuronOutput neuron inputs =
+    let weightedSum = 
+        List.zip neuron.Weights inputs 
+        |> List.sumBy (fun (w, i) -> w * i)
+    activation (weightedSum + neuron.Bias)
+
+let layerOutput layer inputs =
+    layer.Neurons 
+    |> List.map (fun neuron -> neuronOutput neuron inputs)
+
+let feedForwardResult network inputs =
+    let rec ff activationResult layers =
+        match layers with
+        | [] -> activationResult
+        | layer :: remainingLayers -> 
+            let nextLayerInput = layerOutput layer activationResult
+            ff nextLayerInput remainingLayers 
+    ff inputs network.Layers
+
+//------------------------------- Compute Errors ------------------------------- 
+type TrainingCase = { Inputs : float list; Outputs : float list }
+
+let neuronError (expected, computed) =
+    let error = expected - computed
+    error * error
+
+let layerError (expectedLastLayer, actualLastLayer) =
+    List.zip actualLastLayer expectedLastLayer
+    |> List.sumBy neuronError
+
+let networkError network trainingCases =
+    let expectedResults = trainingCases |> List.map (fun case -> case.Outputs)
+    let networkResults  = trainingCases |> List.map (fun case -> feedForwardResult network case.Inputs)
+    List.zip expectedResults networkResults
+    |> List.sumBy layerError

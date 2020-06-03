@@ -1,0 +1,83 @@
+open System
+
+#r "node_modules/fable-core/Fable.Core.dll"
+
+open Fable.Core
+open Fable.Core.JsInterop
+module Browser = Fable.Import.Browser
+
+#load "node_modules/fable-arch/Fable.Arch.Html.fs"
+#load "node_modules/fable-arch/Fable.Arch.App.fs"
+#load "node_modules/fable-arch/Fable.Arch.Virtualdom.fs"
+
+open Fable.Arch
+open Fable.Arch.App.Types
+open Fable.Arch.App
+open Fable.Arch.Html
+
+type Model = {
+    Input: string
+    SavedInput: string
+}
+with
+    static member Empty = {
+        Input = ""
+        SavedInput = ""
+    }
+
+    override x.ToString () = sprintf "Input: %s, SavedInput: %s" x.Input x.SavedInput
+
+type Action =
+    | InputChanged of string
+    | Save
+    | Revert
+with
+    override x.ToString () =
+        match x with
+        | InputChanged value -> sprintf "InputChanged %s" value
+        | Save -> "Saved"
+        | Revert -> "Revert"
+
+let view model = 
+    div [] [
+        div [] [
+            text model.Input
+        ]
+        div [] [
+            button [ onMouseClick (fun _ -> Revert) ]
+                [ text "Revert" ]
+        ]
+        div [] [
+            button [ onMouseClick (fun _ -> Save) ]
+                [ text "Save" ]
+        ]
+        div [] [
+            label [] [ Text "Input" ]
+            input [ 
+                attribute "value" model.Input
+                onInput (fun e -> 
+                    e?preventDefault() |> ignore
+                    let value = unbox<string> e?target?value
+                    let modifiedValue = new string(Array.rev (value.ToCharArray()))
+                    // DIRTY
+                    //e?target?value <- modifiedValue
+                    InputChanged modifiedValue
+                )
+            ]
+        ]
+    ]
+
+let update model action =
+    match action with
+    | InputChanged value -> { model with Input = value }
+    | Save -> { model with SavedInput = model.Input }
+    | Revert -> { model with Input = model.SavedInput }
+
+createSimpleApp Model.Empty view update Virtualdom.createRender
+|> withStartNodeSelector "#fable-body"
+|> withSubscriber (fun x ->
+    printfn "Message: %s" (string x.Message)
+    printfn "Prev: %s" (string x.PreviousState)
+    printfn "Current: %s" (string x.CurrentState)
+)
+|> start

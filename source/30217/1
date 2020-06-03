@@ -1,0 +1,85 @@
+#r @"..\packages\FSharp.Charting.0.90.14\lib\net40\FSharp.Charting.dll"
+#r @"..\packages\System.Reactive.Core.3.0.0\lib\net45\System.Reactive.Core.dll"
+#r @"..\packages\System.Reactive.Linq.3.0.0\lib\net45\System.Reactive.Linq.dll"
+#r @"..\packages\System.Reactive.Interfaces.3.0.0\lib\net45\System.Reactive.Interfaces.dll"
+#r @"..\packages\FSharp.Control.Reactive.3.5.0\lib\net45\FSharp.Control.Reactive.dll"
+#r @"System.Windows.Forms.DataVisualization"
+#load "ObservableExtensions.fs" // http://fssnip.net/nC
+#load "CNTLLogParser.fs"        // http://fssnip.net/7Rm
+open CNTLLogParser
+open System
+open FSharp.Control.Reactive
+open System.Windows.Forms
+open FSharp.Charting
+open System.IO
+open FSharp.Control
+
+module FsiAutoShow = 
+    fsi.AddPrinter(fun (ch:FSharp.Charting.ChartTypes.GenericChart) -> ch.ShowChart() |> ignore; "(Chart)")
+
+let private containerize ch = new ChartTypes.ChartControl(ch,Dock=DockStyle.Fill)
+
+let show chlist =
+    let form = new Form()
+    form.Width  <- 400
+    form.Height <- 300
+    form.Visible <- true 
+    form.Text <- "CNTK Charts"
+    let grid = new TableLayoutPanel()
+    grid.AutoSize <- true
+//    grid.ColumnCount <- 2
+//    grid.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50.f)) |> ignore
+//    grid.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50.f)) |> ignore
+    grid.RowCount <- 2
+    grid.RowStyles.Add(new RowStyle(SizeType.Percent,50.f)) |> ignore
+    grid.RowStyles.Add(new RowStyle(SizeType.Percent,50.f)) |> ignore
+    grid.GrowStyle <-  TableLayoutPanelGrowStyle.AddRows
+    grid.Dock <- DockStyle.Fill
+    chlist |> List.map containerize |> List.iter grid.Controls.Add
+    form.Controls.Add(grid)
+    form.Show()
+
+let track file =
+    let cts = new System.Threading.CancellationTokenSource()
+    let obs,fPost = Observable.createObservableAgent 100 cts.Token
+    do tail tailFilterWihoutMB cts file fPost
+    let obsCntk = obs |> Observable.map cntkParse |> Observable.choose excludeUnk
+    let obsEE = obsCntk |> Observable.choose chooseEE
+    obsEE |> Observable.subscribe (printfn "%A") |> ignore 
+    let c1 = 
+        LiveChart.FastLineIncremental(obsEE |> Observable.map (fun x->x.Epoch,x.CE),Title="Epoch CE")
+        |> Chart.WithXAxis(Title="Epoch")
+    let c2 =  
+        LiveChart.FastLineIncremental(obsEE |> Observable.map (fun x->x.Epoch,x.Err),Title="Epoch Err")
+        |> Chart.WithXAxis(Title="Epoch")
+    show [c1;c2]
+    cts
+;;
+(*
+let ct1 = track @"C:\CNTK\Models\M1\err"
+ct1.Cancel() 
+
+let ct2 = track @" track @"C:\CNTK\Models\M2\err"
+ct2.Cancel() 
+
+*)
+
+(* minibatch error rate display chart note use the 'tailFilterWithMB' filter to include data for this chart
+
+let pctArray() = [|for i in 0 .. 9 -> i,0.|]
+let collectMB (acc:(int*float)array) m1 = let i = int ((m1.Percent - 1. |> max 0.) * 0.1) % 10 in acc.[i] <- i,m1.CE; acc
+let majorPctChanged (m1,m2) = floor (m1.Percent / 10.) <> floor (m2.Percent / 10.)
+
+let obsMBP = obsCntk |> Observable.choose chooseMB 
+let obsMB = obsMBP |> Observable.scan collectMB (pctArray())
+
+let every x i _ = i % !x = 0 //every 10th item
+let updateEvery = ref 100 //updateEvery := 300
+
+let obsMBCE = obsMB |> Observable.filteri (every updateEvery) |> Observable.map Array.copy
+;;
+LiveChart.FastLine (obsMBCE,Title="MB CE");;
+*)
+
+
+

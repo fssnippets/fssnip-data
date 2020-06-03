@@ -1,0 +1,53 @@
+open FSharp.Data
+open MathNet.Numerics
+open FSharp.Plotly
+
+(*
+Sample based on NY Taxi data 
+
+https://www1.nyc.gov/site/tlc/about/tlc-trip-record-data.page
+*)
+
+
+type Trip = CsvProvider< @"C:\s\AutoMLDemo\taxi-fare-test.csv" >
+
+let trips = Trip.GetSample()
+
+let trows = trips.Rows |> Seq.toArray
+
+let fareByPaymentType =
+    trows
+    |> Array.groupBy(fun x->x.Payment_type)
+    |> Array.map (fun (p,xs)->p, xs |> Array.map (fun x->float x.Fare_amount))
+
+let histograms() =
+    fareByPaymentType
+    |> Array.map (fun (v,fs)->
+        Chart.Histogram fs
+        |> Chart.withTitle v
+        |> Chart.Show
+    )
+
+open MathNet.Numerics.Statistics
+
+let densityByPaymentType() =
+    let dsByV = 
+        fareByPaymentType 
+        |> Array.map(fun (v,fares) ->
+            let frs = fares //|> Seq.sample (0.5) |> Seq.toArray
+            let sfrs = Array.sort frs
+            let xs = [|for i in 0.0 .. 0.1 .. 100.0 -> i|]
+            let ds = xs |> Array.map (fun x -> KernelDensity.EstimateGaussian(x,1.0,sfrs))
+            v,xs,ds)
+
+    let area  xs = Chart.Area(xs, Opacity=0.1)
+    let colors = [|"blue"; "red"|]
+                                                        
+    dsByV
+    |> Array.mapi (fun i (v,xs,ds) -> 
+        Array.zip xs ds
+        |> area 
+        |> Chart.withTraceName v)
+    |> Chart.Combine
+    |> Chart.withTitle "Fare Density by Payment Type"
+    |> Chart.Show

@@ -1,0 +1,119 @@
+//as of ML.Net 1.1
+(* generate refs - shoud net most of the required libs
+
+open System.IO
+
+let includeSet = [ 
+     "System.Collections.Immutable"
+     "System.Runtime.CompilerServices.Unsafe"
+     "System.Memory"
+     "System.Numerics.Vector"
+     "Microsoft.ML"
+    ] 
+let excludeSet = [
+         "LightGbm.2.2.3"
+         "Mkl.Redist"
+         "ML.OnnxRuntime"
+    ]
+let dirs = Directory.EnumerateDirectories(__SOURCE_DIRECTORY__ + @"\..\packages")
+;;
+dirs 
+|> Seq.map (fun d->d.Replace(__SOURCE_DIRECTORY__+ @"\","")) 
+|> Seq.filter(fun dir -> includeSet |> List.exists(fun y -> dir.Contains(y)))
+|> Seq.filter(fun dir -> excludeSet |> List.exists(fun y -> dir.Contains(y)) |> not)
+|> Seq.iter (printfn """#I @"%s\lib\netstandard2.0" """)
+;;
+let platform = @"*win-x64*"
+let nativeDirs = Directory.EnumerateDirectories(__SOURCE_DIRECTORY__ + @"\..\packages",platform,SearchOption.AllDirectories)
+;;
+nativeDirs 
+|> Seq.map (fun d->d.Replace(__SOURCE_DIRECTORY__+ @"\","")) 
+|> Seq.iter (printfn """+ ";" + combine current @"%s\native" """)
+
+*)
+
+(*
+<?xml version="1.0" encoding="utf-8"?>
+<packages>
+  <package id="FSharp.Core" version="4.6.2" targetFramework="net472" />
+  <package id="LightGBM" version="2.2.3" targetFramework="net472" />
+  <package id="Microsoft.ML" version="1.1.0" targetFramework="net472" />
+  <package id="Microsoft.ML.AutoML" version="0.3.0" targetFramework="net472" />
+  <package id="Microsoft.ML.CpuMath" version="1.1.0" targetFramework="net472" />
+  <package id="Microsoft.ML.DataView" version="1.1.0" targetFramework="net472" />
+  <package id="Microsoft.ML.Ensemble" version="0.13.0" targetFramework="net472" />
+  <package id="Microsoft.ML.FastTree" version="1.1.0" targetFramework="net472" />
+  <package id="Microsoft.ML.ImageAnalytics" version="1.1.0" targetFramework="net472" />
+  <package id="Microsoft.ML.LightGbm" version="1.1.0" targetFramework="net472" />
+  <package id="Microsoft.ML.Mkl.Components" version="1.1.0" targetFramework="net472" />
+  <package id="Microsoft.ML.Mkl.Redist" version="1.1.0" targetFramework="net472" />
+  <package id="Microsoft.ML.Recommender" version="0.13.0" targetFramework="net472" />
+  <package id="Microsoft.ML.StaticPipe" version="0.13.0" targetFramework="net472" />
+  <package id="Microsoft.ML.TimeSeries" version="0.13.0" targetFramework="net472" />
+  <package id="Newtonsoft.Json" version="12.0.2" targetFramework="net472" />
+  <package id="System.Buffers" version="4.5.0" targetFramework="net472" />
+  <package id="System.CodeDom" version="4.5.0" targetFramework="net472" />
+  <package id="System.Collections.Immutable" version="1.5.0" targetFramework="net472" />
+  <package id="System.Drawing.Common" version="4.5.1" targetFramework="net472" />
+  <package id="System.Memory" version="4.5.3" targetFramework="net472" />
+  <package id="System.Numerics.Vectors" version="4.5.0" targetFramework="net472" />
+  <package id="System.Reflection.Emit.Lightweight" version="4.3.0" targetFramework="net472" />
+  <package id="System.Runtime.CompilerServices.Unsafe" version="4.5.2" targetFramework="net472" />
+  <package id="System.Threading.Tasks.Dataflow" version="4.9.0" targetFramework="net472" />
+  <package id="System.ValueTuple" version="4.5.0" targetFramework="net472" />
+</packages>
+*)
+
+#I @"..\packages\Microsoft.ML.1.1.0\lib\netstandard2.0" 
+#I @"..\packages\Microsoft.ML.AutoML.0.3.0\lib\netstandard2.0" 
+#I @"..\packages\Microsoft.ML.CpuMath.1.1.0\lib\netstandard2.0" 
+#I @"..\packages\Microsoft.ML.DataView.1.1.0\lib\netstandard2.0" 
+#I @"..\packages\Microsoft.ML.Ensemble.0.13.0\lib\netstandard2.0" 
+#I @"..\packages\Microsoft.ML.FastTree.1.1.0\lib\netstandard2.0" 
+#I @"..\packages\Microsoft.ML.ImageAnalytics.1.1.0\lib\netstandard2.0" 
+#I @"..\packages\Microsoft.ML.LightGbm.1.1.0\lib\netstandard2.0" 
+#I @"..\packages\Microsoft.ML.Mkl.Components.1.1.0\lib\netstandard2.0" 
+#I @"..\packages\Microsoft.ML.Recommender.0.13.0\lib\netstandard2.0" 
+#I @"..\packages\Microsoft.ML.StaticPipe.0.13.0\lib\netstandard2.0" 
+#I @"..\packages\Microsoft.ML.TimeSeries.0.13.0\lib\netstandard2.0" 
+#I @"..\packages\System.Collections.Immutable.1.5.0\lib\netstandard2.0" 
+#I @"..\packages\System.Memory.4.5.3\lib\netstandard2.0" 
+#I @"..\packages\System.Numerics.Vectors.4.5.0\lib\netstandard2.0" 
+#I @"..\packages\System.Runtime.CompilerServices.Unsafe.4.5.2\lib\netstandard2.0" 
+
+#r "System.Collections.Immutable.dll"
+#r "System.Runtime.CompilerServices.Unsafe.dll"
+#r "Microsoft.ML.CpuMath.dll"
+#r "Microsoft.ML.Core.dll"
+#r "Microsoft.ML.DataView.dll"
+#r "Microsoft.ML.Data.dll"
+#r "Microsoft.ML.FastTree.dll"
+#r "Microsoft.ML.LightGBM.dll"
+#r "Microsoft.ML.StaticPipe.dll"
+#r "System.Memory.dll"
+#r "Microsoft.ML.Transforms.dll"
+#r "Microsoft.ML.Ensemble.dll"
+#r "Microsoft.ML.PCA.dll"
+#r "Microsoft.ML.TimeSeries.dll"
+#r "Microsoft.ML.AutoML"
+
+//need specific version  - by default fsi binds to system version
+#r @"..\packages\System.Numerics.Vectors.4.5.0\lib\netstandard2.0\System.Numerics.Vectors.dll"
+
+open System
+let path = Environment.GetEnvironmentVariable("path")
+let current = __SOURCE_DIRECTORY__
+let combine a b = IO.Path.GetFullPath(IO.Path.Combine(a,b))
+
+let path' = 
+    path 
+    + ";" + combine current @"..\packages\LightGBM.2.2.3\runtimes\win-x64\native" 
+    + ";" + combine current @"..\packages\Microsoft.ML.1.1.0\runtimes\win-x64\native" 
+    + ";" + combine current @"..\packages\Microsoft.ML.CpuMath.1.1.0\runtimes\win-x64\native" 
+    + ";" + combine current @"..\packages\Microsoft.ML.FastTree.1.1.0\runtimes\win-x64\native" 
+    + ";" + combine current @"..\packages\Microsoft.ML.Mkl.Components.1.1.0\runtimes\win-x64\native" 
+    + ";" + combine current @"..\packages\Microsoft.ML.Mkl.Redist.1.1.0\runtimes\win-x64\native" 
+    + ";" + combine current @"..\packages\Microsoft.ML.Recommender.0.13.0\runtimes\win-x64\native" 
+
+Environment.SetEnvironmentVariable("path",path')
+

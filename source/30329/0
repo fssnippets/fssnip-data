@@ -1,0 +1,28 @@
+// Make sure you include "react-select-picker":"^0.0.7", in package.json
+
+open System
+open System.Text.RegularExpressions
+open Fable.Core
+open Fable.Import
+open Fable.Import.JS
+open Fable.Import.React
+open Fable.Core.JsInterop
+
+[<AutoOpen>]
+module Props =
+    type SelectProps =
+        | ClassName of string
+        | Title of string
+        | Disabled of bool
+        | DefaultValue of string
+        | OnChange of (string -> unit)
+        interface Fable.Helpers.React.Props.IHTMLProp
+
+open Props
+
+let inline rtEl<[<Pojo>]'P when 'P :> Fable.Helpers.React.Props.IHTMLProp> (a:ComponentClass<'P>) (b:Fable.Helpers.React.Props.IHTMLProp list) c = Fable.Helpers.React.from a (keyValueList CaseRules.LowerFirst b |> unbox) c
+
+let Select = importDefault<ComponentClass<Fable.Helpers.React.Props.IHTMLProp>> "react-select-picker"
+//let Bootstrap : unit = importAll "react-bootstrap"
+//let Select = importDefault<ComponentClass<Fable.Helpers.React.Props.IHTMLProp>> "react-bootstrap-select"
+let inline select b c = rtEl Select b c

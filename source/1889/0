@@ -1,0 +1,56 @@
+
+open System
+
+// neighbours: int * int -> (int * int) list
+let neighbours (x,y) =
+    [ for dx in -1 .. 1 do
+      for dy in -1 .. 1 do
+      if not (dx = 0 && dy = 0) then yield (x + dx, y + dy) ]
+
+// frequencies: seq<'a> -> Map<'a,int>
+let frequencies xs =
+    xs
+    |> Seq.groupBy (fun c -> c)
+    |> Map.ofSeq
+    |> Map.map (fun k v -> Seq.length v)
+
+// step: Set<int * int> -> Set<int * int>
+let step cells =
+    cells 
+    |> Set.toList 
+    |> List.collect neighbours
+    |> frequencies
+    |> Map.filter (fun pos counter -> counter = 3 || 
+                                      (counter = 2 && (Set.contains pos cells)))
+    |> Map.toSeq 
+    |> Seq.map fst
+    |> Set.ofSeq
+
+// printBoard: int -> int -> Set<int * int> -> unit
+let printBoard width height cells =
+    let xs = [0 .. (width-1)]
+    let ys = [0 .. (height-1)]
+    for y in ys do
+        for x in xs do
+            if Set.contains (x,y) cells 
+            then Console.Write "*"
+            else Console.Write "."
+        Console.WriteLine ""
+
+let glider = Set.ofList [(2,0); (2,1); (2,2); (1,2); (0,1)]
+
+let g1 = step glider
+let g2 = step g1
+let g3 = step g2
+let g4 = step g3
+
+printBoard 10 10 glider
+Console.WriteLine "----------------------------"
+printBoard 10 10 g1
+Console.WriteLine "----------------------------"
+printBoard 10 10 g2
+Console.WriteLine "----------------------------"
+printBoard 10 10 g3
+Console.WriteLine "----------------------------"
+printBoard 10 10 g4
+Console.WriteLine "----------------------------"

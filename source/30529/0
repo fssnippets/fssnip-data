@@ -1,0 +1,78 @@
+//[snippet:HKT Encoding]
+// Higher-style HKT encoding, c.f. https://github.com/palladin/Higher
+
+type App<'F, 't> = App of 'F * obj
+type App<'F, 't1, 't2> = App<App<'F, 't1>, 't2> 
+    
+/// Arrow HKT encoding
+type Hom private () =
+    static let w = new Hom()
+    static member Pack(value : 'a -> 'b) : App<Hom, 'a, 'b> = App(App(w, value), null)
+    static member Unpack(App(App(_,value),_) : App<Hom, 'a, 'b>) : 'a -> 'b = value :?> _
+    
+/// Used for flipping arguments to HKTs
+type Flip<'F> private () =
+    static let w = new Flip<'F>()
+    static member Pack(value : App<'F, 'a, 'b>) : App<Flip<'F>, 'b, 'a> = App(App(w, value), null)
+    static member Unpack(App(App(_,value),_) : App<Flip<'F>, 'b, 'a>) : App<'F, 'a, 'b> = value :?> _
+//[/snippet]
+
+//[snippet:Defining a Type Algebra]
+// c.f. http://fssnip.net/7Sx/title/Extensibility-for-the-Masses
+
+type TypeAlg<'F> =
+    abstract Int : App<'F, int>
+    abstract Bool : App<'F, bool>
+    abstract Tuple : App<'F, 't1> -> App<'F, 't2> -> App<'F, 't1 * 't2> 
+    abstract List : App<'F, 't> -> App<'F, 't list>
+    abstract Option : App<'F, 't> -> App<'F, 't option>
+
+// defining types as church encodings
+type TypeExpr<'F, 't> = TypeAlg<'F> -> App<'F, 't>
+
+let int : TypeExpr<_, _> = fun alg -> alg.Int
+let bool : TypeExpr<_, _> = fun alg -> alg.Bool
+let tuple t1 t2 : TypeExpr<_,_> = fun alg -> alg.Tuple (t1 alg) (t2 alg)
+let list ts : TypeExpr<_,_> = fun alg -> alg.List (ts alg)
+let option topt : TypeExpr<_,_> = fun alg -> alg.Option (topt alg)
+
+// church encoding of (int option * (int * bool) list)
+let test () = tuple (option int) (list (tuple int bool))
+//[/snippet]
+
+//[snippet:Example, Defining a Generic PrettyPrinter]
+type PrettyPrinter = App<Flip<Hom>, string> // Hom(_,string)
+
+module PrettyP =
+    let pack (f : 't -> string) : App<PrettyPrinter, 't> = f |> Hom.Pack |> Flip.Pack
+    let unpack (f : App<PrettyPrinter, 't>) : 't -> string = f |> Flip.Unpack |> Hom.Unpack
+    
+type PrettyPrinterAlg() =
+    interface TypeAlg<PrettyPrinter> with
+        member __.Bool = PrettyP.pack (function true -> "true" | false -> "false")
+        member __.Int = PrettyP.pack (fun i -> i.ToString())
+        member __.Tuple f1 f2 =
+            let f1 = PrettyP.unpack f1
+            let f2 = PrettyP.unpack f2
+            PrettyP.pack (fun (t1,t2) -> sprintf "(%s, %s)" (f1 t1) (f2 t2))
+            
+        member __.List f =
+            let f = PrettyP.unpack f
+            PrettyP.pack (fun ts -> ts |> Seq.map f |> String.concat "; " |> sprintf "[%s]")
+
+        member __.Option f =
+            let f = PrettyP.unpack f
+            PrettyP.pack (function None -> "None" | Some s -> sprintf "Some(%s)" (f s))
+            
+let eval (expr : TypeExpr<_,_>) : 't -> string = expr (new PrettyPrinterAlg()) |> PrettyP.unpack
+//[/snippet]
+
+//[snippet:Tests]
+let p1 = eval (tuple int bool)
+
+p1 (42, false)
+
+let p2 = eval (list (option int))
+
+p2 ([Some 42; None])
+//[/snippet]

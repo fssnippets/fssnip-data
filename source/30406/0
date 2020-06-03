@@ -1,0 +1,30 @@
+module Recursor
+
+type Recursor<'a> (enumerable:System.Collections.Generic.IEnumerable<'a>) =
+    let enumerator = enumerable.GetEnumerator ()
+
+    let mutable moreData = enumerator.MoveNext ()
+
+    member __.TryGetValue ([<System.Runtime.InteropServices.OutAttribute>] out:byref<'a>) =
+        if moreData then
+            out <- enumerator.Current
+            true
+        else
+            false
+
+    member this.Next =
+        moreData <- enumerator.MoveNext ()
+        this
+
+type System.Collections.Generic.IEnumerable<'a> with
+    member this.Recursor = Recursor this
+    
+// example
+let inline sum (e:System.Collections.Generic.IEnumerable<int>) =
+    let rec f (cursor:Recursor<int>) total =
+        match cursor.TryGetValue () with
+        | false, _-> total
+        | true, value -> f cursor.Next (total+value)
+
+    f e.Recursor 0
+

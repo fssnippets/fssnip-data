@@ -1,0 +1,44 @@
+module Recursor
+
+type Recursor<'a> (enumerable:System.Collections.Generic.IEnumerable<'a>) =
+    let enumerator = enumerable.GetEnumerator ()
+
+    let mutable moreData = enumerator.MoveNext ()
+
+    member __.TryGetValue ([<System.Runtime.InteropServices.OutAttribute>] out:byref<'a>) =
+        if moreData then
+            out <- enumerator.Current
+            true
+        else
+            false
+
+    member this.Next =
+        moreData <- enumerator.MoveNext ()
+        this
+
+type System.Collections.Generic.IEnumerable<'a> with
+    member this.Recursor = Recursor this
+
+// example
+// min_original is (basically) the version in FSharp.Core
+// min_recursor is rewritten using this helper
+
+let inline min_original (source:seq<_>) =
+    use e = source.GetEnumerator()
+    if not (e.MoveNext()) then
+        raise (System.ArgumentException ("source", "InputSequenceEmptyString"))
+    let mutable acc = e.Current
+    while e.MoveNext() do
+        let curr = e.Current
+        if curr < acc then
+            acc <- curr
+    acc
+
+let inline min_recursor (source:seq<'a>) =
+    let rec minimum (x:Recursor<'a>) first acc =
+        match x.TryGetValue () with
+        | true, curr when first || curr < acc -> minimum x.Next false curr
+        | true, _ -> minimum x.Next false acc
+        | false, _ when first -> raise (System.ArgumentException ("source", "InputSequenceEmptyString"))
+        | false, _ -> acc
+    minimum source.Recursor true Unchecked.defaultof<_>

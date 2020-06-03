@@ -1,0 +1,199 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+<span class="l">38: </span>
+<span class="l">39: </span>
+<span class="l">40: </span>
+<span class="l">41: </span>
+<span class="l">42: </span>
+<span class="l">43: </span>
+<span class="l">44: </span>
+<span class="l">45: </span>
+<span class="l">46: </span>
+<span class="l">47: </span>
+<span class="l">48: </span>
+<span class="l">49: </span>
+<span class="l">50: </span>
+<span class="l">51: </span>
+<span class="l">52: </span>
+<span class="l">53: </span>
+<span class="l">54: </span>
+<span class="l">55: </span>
+<span class="l">56: </span>
+<span class="l">57: </span>
+<span class="l">58: </span>
+<span class="l">59: </span>
+<span class="l">60: </span>
+<span class="l">61: </span>
+<span class="l">62: </span>
+<span class="l">63: </span>
+<span class="l">64: </span>
+<span class="l">65: </span>
+<span class="l">66: </span>
+<span class="l">67: </span>
+<span class="l">68: </span>
+<span class="l">69: </span>
+<span class="l">70: </span>
+<span class="l">71: </span>
+<span class="l">72: </span>
+<span class="l">73: </span>
+<span class="l">74: </span>
+<span class="l">75: </span>
+<span class="l">76: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">(*</span>
+
+<span class="c">Install-Package FSharp.Data</span>
+<span class="c">Install-Package Accord</span>
+<span class="c">Install-Package Accord.MachineLearning</span>
+<span class="c">Install-Package Accord.Math</span>
+<span class="c">Install-Package Accord.Statistics</span>
+
+<span class="c">*)</span>
+<span class="prep">#if</span> <span class="i">INTERACTIVE</span>
+<span class="inactive">#I</span><span class="inactive"> </span><span class="inactive">@&quot;./packages&quot;</span>
+<span class="inactive">#r</span><span class="inactive"> </span><span class="inactive">@&quot;FSharp.Data.2.3.3/lib/net40/FSharp.Data.dll&quot;</span>
+<span class="inactive">#r</span><span class="inactive"> </span><span class="inactive">@&quot;Accord.3.7.0/lib/net45/Accord.dll&quot;</span>
+<span class="inactive">#r</span><span class="inactive"> </span><span class="inactive">@&quot;Accord.MachineLearning.3.7.0/lib/net45/Accord.MachineLearning.dll&quot;</span>
+<span class="inactive">#r</span><span class="inactive"> </span><span class="inactive">@&quot;Accord.Math.3.7.0/lib/net45/Accord.Math.Core.dll&quot;</span>
+<span class="inactive">#r</span><span class="inactive"> </span><span class="inactive">@&quot;Accord.Math.3.7.0/lib/net45/Accord.Math.dll&quot;</span>
+<span class="inactive">#r</span><span class="inactive"> </span><span class="inactive">@&quot;Accord.Statistics.3.7.0/lib/net45/Accord.Statistics.dll&quot;</span>
+<span class="inactive">#time</span>
+<span class="prep">#else</span>
+<span class="k">module</span> <span class="i">DecisionTree</span>
+<span class="prep">#endif</span>
+
+
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">System</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">FSharp</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="i">Data</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="i">Accord</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="i">MachineLearning</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="i">DecisionTrees</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs7', 7)" onmouseover="showTip(event, 'fs7', 7)" class="i">Learning</span>
+
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs8', 8)" onmouseover="showTip(event, 'fs8', 8)" class="t">Wines</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs9', 9)" onmouseover="showTip(event, 'fs9', 9)" class="t">CsvProvider</span><span class="o">&lt;</span><span class="s">&quot;https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-red.csv&quot;</span>,<span class="s">&quot;;&quot;</span>,<span class="i">InferRows</span><span class="o">=</span><span class="n">2000</span><span class="o">&gt;</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs10', 10)" onmouseover="showTip(event, 'fs10', 10)" class="i">inputs</span>, <span onmouseout="hideTip(event, 'fs11', 11)" onmouseover="showTip(event, 'fs11', 11)" class="i">output</span> <span class="o">=</span> 
+    <span onmouseout="hideTip(event, 'fs8', 12)" onmouseover="showTip(event, 'fs8', 12)" class="t">Wines</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs12', 13)" onmouseover="showTip(event, 'fs12', 13)" class="f">Load</span>(<span class="s">@&quot;https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-red.csv&quot;</span>)<span class="o">.</span><span class="i">Rows</span>
+    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs13', 14)" onmouseover="showTip(event, 'fs13', 14)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs14', 15)" onmouseover="showTip(event, 'fs14', 15)" class="f">map</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs15', 16)" onmouseover="showTip(event, 'fs15', 16)" class="i">row</span> <span class="k">-&gt;</span> 
+        ([| 
+            <span onmouseout="hideTip(event, 'fs15', 17)" onmouseover="showTip(event, 'fs15', 17)" class="i">row</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs16', 18)" onmouseover="showTip(event, 'fs16', 18)" class="i">Alcohol</span>;
+            <span onmouseout="hideTip(event, 'fs15', 19)" onmouseover="showTip(event, 'fs15', 19)" class="i">row</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs17', 20)" onmouseover="showTip(event, 'fs17', 20)" class="i">Chlorides</span>;
+            <span onmouseout="hideTip(event, 'fs15', 21)" onmouseover="showTip(event, 'fs15', 21)" class="i">row</span><span class="o">.</span><span class="i">``Citric acid``</span>;
+            <span onmouseout="hideTip(event, 'fs15', 22)" onmouseover="showTip(event, 'fs15', 22)" class="i">row</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs18', 23)" onmouseover="showTip(event, 'fs18', 23)" class="i">Density</span>;
+            <span onmouseout="hideTip(event, 'fs15', 24)" onmouseover="showTip(event, 'fs15', 24)" class="i">row</span><span class="o">.</span><span class="i">``Fixed acidity``</span>;
+            <span onmouseout="hideTip(event, 'fs15', 25)" onmouseover="showTip(event, 'fs15', 25)" class="i">row</span><span class="o">.</span><span class="i">``Free sulfur dioxide``</span>;
+            <span onmouseout="hideTip(event, 'fs15', 26)" onmouseover="showTip(event, 'fs15', 26)" class="i">row</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs19', 27)" onmouseover="showTip(event, 'fs19', 27)" class="i">Sulphates</span>;
+            <span onmouseout="hideTip(event, 'fs15', 28)" onmouseover="showTip(event, 'fs15', 28)" class="i">row</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs20', 29)" onmouseover="showTip(event, 'fs20', 29)" class="i">PH</span>;
+            <span onmouseout="hideTip(event, 'fs15', 30)" onmouseover="showTip(event, 'fs15', 30)" class="i">row</span><span class="o">.</span><span class="i">``Residual sugar``</span>;
+            <span onmouseout="hideTip(event, 'fs15', 31)" onmouseover="showTip(event, 'fs15', 31)" class="i">row</span><span class="o">.</span><span class="i">``Total sulfur dioxide``</span>;
+            <span onmouseout="hideTip(event, 'fs15', 32)" onmouseover="showTip(event, 'fs15', 32)" class="i">row</span><span class="o">.</span><span class="i">``Volatile acidity``</span>
+        |] <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs21', 33)" onmouseover="showTip(event, 'fs21', 33)" class="t">Array</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs22', 34)" onmouseover="showTip(event, 'fs22', 34)" class="f">map</span> <span onmouseout="hideTip(event, 'fs23', 35)" onmouseover="showTip(event, 'fs23', 35)" class="t">Convert</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs24', 36)" onmouseover="showTip(event, 'fs24', 36)" class="f">ToDouble</span>), <span onmouseout="hideTip(event, 'fs15', 37)" onmouseover="showTip(event, 'fs15', 37)" class="i">row</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs25', 38)" onmouseover="showTip(event, 'fs25', 38)" class="i">Quality</span>)
+    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs13', 39)" onmouseover="showTip(event, 'fs13', 39)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs26', 40)" onmouseover="showTip(event, 'fs26', 40)" class="f">toArray</span>
+    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs21', 41)" onmouseover="showTip(event, 'fs21', 41)" class="t">Array</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs27', 42)" onmouseover="showTip(event, 'fs27', 42)" class="f">unzip</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs28', 43)" onmouseover="showTip(event, 'fs28', 43)" class="i">learner</span> <span class="o">=</span> 
+    <span class="c">/// There are multiple algorithms available.</span>
+    <span class="c">/// http://scikit-learn.org/stable/_static/ml_map.png</span>
+    <span class="k">new</span> <span onmouseout="hideTip(event, 'fs4', 44)" onmouseover="showTip(event, 'fs4', 44)" class="i">Accord</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs5', 45)" onmouseover="showTip(event, 'fs5', 45)" class="i">MachineLearning</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs6', 46)" onmouseover="showTip(event, 'fs6', 46)" class="i">DecisionTrees</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs7', 47)" onmouseover="showTip(event, 'fs7', 47)" class="i">Learning</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs29', 48)" onmouseover="showTip(event, 'fs29', 48)" class="t">C45Learning</span>()
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs30', 49)" onmouseover="showTip(event, 'fs30', 49)" class="i">source</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs1', 50)" onmouseover="showTip(event, 'fs1', 50)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs31', 51)" onmouseover="showTip(event, 'fs31', 51)" class="i">Threading</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs32', 52)" onmouseover="showTip(event, 'fs32', 52)" class="t">CancellationTokenSource</span>()
+
+<span class="c">/// Teach the model in background thread. This may take some time.</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs33', 53)" onmouseover="showTip(event, 'fs33', 53)" class="i">modelTask</span> <span class="o">=</span> 
+    <span onmouseout="hideTip(event, 'fs1', 54)" onmouseover="showTip(event, 'fs1', 54)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs31', 55)" onmouseover="showTip(event, 'fs31', 55)" class="i">Threading</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs34', 56)" onmouseover="showTip(event, 'fs34', 56)" class="i">Tasks</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs35', 57)" onmouseover="showTip(event, 'fs35', 57)" class="i">Task</span><span class="o">.</span><span class="i">Run</span>(<span class="k">fun</span> () <span class="k">-&gt;</span>
+        <span onmouseout="hideTip(event, 'fs28', 58)" onmouseover="showTip(event, 'fs28', 58)" class="i">learner</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs36', 59)" onmouseover="showTip(event, 'fs36', 59)" class="i">Learn</span>(<span onmouseout="hideTip(event, 'fs10', 60)" onmouseover="showTip(event, 'fs10', 60)" class="i">inputs</span>, <span onmouseout="hideTip(event, 'fs11', 61)" onmouseover="showTip(event, 'fs11', 61)" class="i">output</span>)
+    , <span onmouseout="hideTip(event, 'fs30', 62)" onmouseover="showTip(event, 'fs30', 62)" class="i">source</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs37', 63)" onmouseover="showTip(event, 'fs37', 63)" class="i">Token</span>) <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs38', 64)" onmouseover="showTip(event, 'fs38', 64)" class="t">Async</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs39', 65)" onmouseover="showTip(event, 'fs39', 65)" class="f">AwaitTask</span>
+
+<span class="c">// When running background, you could cancel the task:</span>
+<span class="c">//source.Cancel()</span>
+
+<span class="c">// For now, let&#39;s just run as non-async:</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs40', 66)" onmouseover="showTip(event, 'fs40', 66)" class="i">model</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs33', 67)" onmouseover="showTip(event, 'fs33', 67)" class="i">modelTask</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs38', 68)" onmouseover="showTip(event, 'fs38', 68)" class="t">Async</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs41', 69)" onmouseover="showTip(event, 'fs41', 69)" class="f">RunSynchronously</span>
+
+<span class="c">// Test with current items. There is no point of course:</span>
+<span class="c">// You should split your sample data to two sets, and use the other to train</span>
+<span class="c">// the model, and the other to test the accuracy of predictions.</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs42', 70)" onmouseover="showTip(event, 'fs42', 70)" class="i">predicted</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs40', 71)" onmouseover="showTip(event, 'fs40', 71)" class="i">model</span><span class="o">.</span><span class="i">Decide</span>(<span onmouseout="hideTip(event, 'fs10', 72)" onmouseover="showTip(event, 'fs10', 72)" class="i">inputs</span>)
+
+<span class="c">// Actual vs expected, 10 first ones:</span>
+<span class="c">// [1..10] |&gt; List.iter (fun i -&gt; printfn &quot;Actual %d vs %d&quot; output.[i] predicted.[i])</span>
+
+<span class="c">// The classification error</span>
+<span class="c">// let err = Accord.Math.Optimization.Losses.ZeroOneLoss(output).Loss(predicted)</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace System</div>
+<div class="tip" id="fs2">Multiple items<br />namespace FSharp<br /><br />--------------------<br />namespace Microsoft.FSharp</div>
+<div class="tip" id="fs3">Multiple items<br />namespace FSharp.Data<br /><br />--------------------<br />namespace Microsoft.FSharp.Data</div>
+<div class="tip" id="fs4">namespace Accord</div>
+<div class="tip" id="fs5">namespace Accord.MachineLearning</div>
+<div class="tip" id="fs6">namespace Accord.MachineLearning.DecisionTrees</div>
+<div class="tip" id="fs7">namespace Accord.MachineLearning.DecisionTrees.Learning</div>
+<div class="tip" id="fs8">type Wines = CsvProvider&lt;...&gt;<br /><br />Full name: Script.Wines</div>
+<div class="tip" id="fs9">type CsvProvider<br /><br />Full name: FSharp.Data.CsvProvider<br /><em><br /><br />&lt;summary&gt;Typed representation of a CSV file.&lt;/summary&gt;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&lt;param name=&#39;Sample&#39;&gt;Location of a CSV sample file or a string containing a sample CSV document.&lt;/param&gt;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&lt;param name=&#39;Separators&#39;&gt;Column delimiter(s). Defaults to `,`.&lt;/param&gt;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&lt;param name=&#39;InferRows&#39;&gt;Number of rows to use for inference. Defaults to `1000`. If this is zero, all rows are used.&lt;/param&gt;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&lt;param name=&#39;Schema&#39;&gt;Optional column types, in a comma separated list. Valid types are `int`, `int64`, `bool`, `float`, `decimal`, `date`, `guid`, `string`, `int?`, `int64?`, `bool?`, `float?`, `decimal?`, `date?`, `guid?`, `int option`, `int64 option`, `bool option`, `float option`, `decimal option`, `date option`, `guid option` and `string option`.<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;You can also specify a unit and the name of the column like this: `Name (type&amp;lt;unit&amp;gt;)`, or you can override only the name. If you don&#39;t want to specify all the columns, you can reference the columns by name like this: `ColumnName=type`.&lt;/param&gt;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&lt;param name=&#39;HasHeaders&#39;&gt;Whether the sample contains the names of the columns as its first line.&lt;/param&gt;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&lt;param name=&#39;IgnoreErrors&#39;&gt;Whether to ignore rows that have the wrong number of columns or which can&#39;t be parsed using the inferred or specified schema. Otherwise an exception is thrown when these rows are encountered.&lt;/param&gt;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&lt;param name=&#39;SkipRows&#39;&gt;SKips the first n rows of the CSV file.&lt;/param&gt;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&lt;param name=&#39;AssumeMissingValues&#39;&gt;When set to true, the type provider will assume all columns can have missing values, even if in the provided sample all values are present. Defaults to false.&lt;/param&gt;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&lt;param name=&#39;PreferOptionals&#39;&gt;When set to true, inference will prefer to use the option type instead of nullable types, `double.NaN` or `&quot;&quot;` for missing values. Defaults to false.&lt;/param&gt;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&lt;param name=&#39;Quote&#39;&gt;The quotation mark (for surrounding values containing the delimiter). Defaults to `&quot;`.&lt;/param&gt;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&lt;param name=&#39;MissingValues&#39;&gt;The set of strings recogized as missing values. Defaults to `NaN,NA,N/A,#N/A,:,-,TBA,TBD`.&lt;/param&gt;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&lt;param name=&#39;CacheRows&#39;&gt;Whether the rows should be caches so they can be iterated multiple times. Defaults to true. Disable for large datasets.&lt;/param&gt;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&lt;param name=&#39;Culture&#39;&gt;The culture used for parsing numbers and dates. Defaults to the invariant culture.&lt;/param&gt;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&lt;param name=&#39;Encoding&#39;&gt;The encoding used to read the sample. You can specify either the character set name or the codepage number. Defaults to UTF8 for files, and to ISO-8859-1 the for HTTP requests, unless `charset` is specified in the `Content-Type` response header.&lt;/param&gt;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&lt;param name=&#39;ResolutionFolder&#39;&gt;A directory that is used when resolving relative file references (at design time and in hosted execution).&lt;/param&gt;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&lt;param name=&#39;EmbeddedResource&#39;&gt;When specified, the type provider first attempts to load the sample from the specified resource <br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;(e.g. &#39;MyCompany.MyAssembly, resource_name.csv&#39;). This is useful when exposing types generated by the type provider.&lt;/param&gt;</em></div>
+<div class="tip" id="fs10">val inputs : float [] []<br /><br />Full name: Script.inputs</div>
+<div class="tip" id="fs11">val output : int []<br /><br />Full name: Script.output</div>
+<div class="tip" id="fs12">CsvProvider&lt;...&gt;.Load(uri: string) : CsvProvider&lt;...&gt;<br /><em><br /><br />Loads CSV from the specified uri</em><br />CsvProvider&lt;...&gt;.Load(reader: IO.TextReader) : CsvProvider&lt;...&gt;<br /><em><br /><br />Loads CSV from the specified reader</em><br />CsvProvider&lt;...&gt;.Load(stream: IO.Stream) : CsvProvider&lt;...&gt;<br /><em><br /><br />Loads CSV from the specified stream</em></div>
+<div class="tip" id="fs13">module Seq<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs14">val map : mapping:(&#39;T -&gt; &#39;U) -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;U&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.map</div>
+<div class="tip" id="fs15">val row : CsvProvider&lt;...&gt;.Row</div>
+<div class="tip" id="fs16">property CsvProvider&lt;...&gt;.Row.Alcohol: decimal</div>
+<div class="tip" id="fs17">property CsvProvider&lt;...&gt;.Row.Chlorides: decimal</div>
+<div class="tip" id="fs18">property CsvProvider&lt;...&gt;.Row.Density: decimal</div>
+<div class="tip" id="fs19">property CsvProvider&lt;...&gt;.Row.Sulphates: decimal</div>
+<div class="tip" id="fs20">property CsvProvider&lt;...&gt;.Row.PH: decimal</div>
+<div class="tip" id="fs21">type Array =<br />&#160;&#160;member Clone : unit -&gt; obj<br />&#160;&#160;member CopyTo : array:Array * index:int -&gt; unit + 1 overload<br />&#160;&#160;member GetEnumerator : unit -&gt; IEnumerator<br />&#160;&#160;member GetLength : dimension:int -&gt; int<br />&#160;&#160;member GetLongLength : dimension:int -&gt; int64<br />&#160;&#160;member GetLowerBound : dimension:int -&gt; int<br />&#160;&#160;member GetUpperBound : dimension:int -&gt; int<br />&#160;&#160;member GetValue : [&lt;ParamArray&gt;] indices:int[] -&gt; obj + 7 overloads<br />&#160;&#160;member Initialize : unit -&gt; unit<br />&#160;&#160;member IsFixedSize : bool<br />&#160;&#160;...<br /><br />Full name: System.Array</div>
+<div class="tip" id="fs22">val map : mapping:(&#39;T -&gt; &#39;U) -&gt; array:&#39;T [] -&gt; &#39;U []<br /><br />Full name: Microsoft.FSharp.Collections.Array.map</div>
+<div class="tip" id="fs23">type Convert =<br />&#160;&#160;static val DBNull : obj<br />&#160;&#160;static member ChangeType : value:obj * typeCode:TypeCode -&gt; obj + 3 overloads<br />&#160;&#160;static member FromBase64CharArray : inArray:char[] * offset:int * length:int -&gt; byte[]<br />&#160;&#160;static member FromBase64String : s:string -&gt; byte[]<br />&#160;&#160;static member GetTypeCode : value:obj -&gt; TypeCode<br />&#160;&#160;static member IsDBNull : value:obj -&gt; bool<br />&#160;&#160;static member ToBase64CharArray : inArray:byte[] * offsetIn:int * length:int * outArray:char[] * offsetOut:int -&gt; int + 1 overload<br />&#160;&#160;static member ToBase64String : inArray:byte[] -&gt; string + 3 overloads<br />&#160;&#160;static member ToBoolean : value:obj -&gt; bool + 17 overloads<br />&#160;&#160;static member ToByte : value:obj -&gt; byte + 18 overloads<br />&#160;&#160;...<br /><br />Full name: System.Convert</div>
+<div class="tip" id="fs24">Convert.ToDouble(value: DateTime) : float<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Convert.ToDouble(value: bool) : float<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Convert.ToDouble(value: string) : float<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Convert.ToDouble(value: decimal) : float<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Convert.ToDouble(value: float) : float<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Convert.ToDouble(value: float32) : float<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Convert.ToDouble(value: uint64) : float<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Convert.ToDouble(value: int64) : float<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Convert.ToDouble(value: uint32) : float<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />Convert.ToDouble(value: int) : float<br />&#160;&#160;&#160;<em>(+0 other overloads)</em></div>
+<div class="tip" id="fs25">property CsvProvider&lt;...&gt;.Row.Quality: int</div>
+<div class="tip" id="fs26">val toArray : source:seq&lt;&#39;T&gt; -&gt; &#39;T []<br /><br />Full name: Microsoft.FSharp.Collections.Seq.toArray</div>
+<div class="tip" id="fs27">val unzip : array:(&#39;T1 * &#39;T2) [] -&gt; &#39;T1 [] * &#39;T2 []<br /><br />Full name: Microsoft.FSharp.Collections.Array.unzip</div>
+<div class="tip" id="fs28">val learner : C45Learning<br /><br />Full name: Script.learner</div>
+<div class="tip" id="fs29">Multiple items<br />type C45Learning =<br />&#160;&#160;inherit DecisionTreeLearningBase<br />&#160;&#160;new : unit -&gt; C45Learning + 2 overloads<br />&#160;&#160;member ComputeError : inputs:float[][] * outputs:int[] -&gt; float<br />&#160;&#160;member Learn : x:float[][] * y:int[] * ?weights:float[] -&gt; DecisionTree + 2 overloads<br />&#160;&#160;member MaxVariables : int with get, set<br />&#160;&#160;member Run : inputs:float[][] * outputs:int[] -&gt; float<br />&#160;&#160;member SplitStep : int with get, set<br /><br />Full name: Accord.MachineLearning.DecisionTrees.Learning.C45Learning<br /><br />--------------------<br />C45Learning() : unit<br />C45Learning(attributes: Accord.MachineLearning.DecisionTrees.DecisionVariable []) : unit<br />C45Learning(tree: Accord.MachineLearning.DecisionTrees.DecisionTree) : unit</div>
+<div class="tip" id="fs30">val source : Threading.CancellationTokenSource<br /><br />Full name: Script.source<br /><em><br /><br />&#160;There are multiple algorithms available.<br />&#160;http://scikit-learn.org/stable/_static/ml_map.png</em></div>
+<div class="tip" id="fs31">namespace System.Threading</div>
+<div class="tip" id="fs32">Multiple items<br />type CancellationTokenSource =<br />&#160;&#160;new : unit -&gt; CancellationTokenSource<br />&#160;&#160;member Cancel : unit -&gt; unit + 1 overload<br />&#160;&#160;member Dispose : unit -&gt; unit<br />&#160;&#160;member IsCancellationRequested : bool<br />&#160;&#160;member Token : CancellationToken<br />&#160;&#160;static member CreateLinkedTokenSource : [&lt;ParamArray&gt;] tokens:CancellationToken[] -&gt; CancellationTokenSource + 1 overload<br /><br />Full name: System.Threading.CancellationTokenSource<br /><br />--------------------<br />Threading.CancellationTokenSource() : unit</div>
+<div class="tip" id="fs33">val modelTask : Async&lt;obj&gt;<br /><br />Full name: Script.modelTask<br /><em><br /><br />&#160;Teach the model in background thread. This may take some time.</em></div>
+<div class="tip" id="fs34">namespace System.Threading.Tasks</div>
+<div class="tip" id="fs35">Multiple items<br />type Task&lt;&#39;TResult&gt; =<br />&#160;&#160;inherit Task<br />&#160;&#160;new : function:Func&lt;&#39;TResult&gt; -&gt; Task&lt;&#39;TResult&gt; + 7 overloads<br />&#160;&#160;member ContinueWith : continuationAction:Action&lt;Task&lt;&#39;TResult&gt;&gt; -&gt; Task + 9 overloads<br />&#160;&#160;member Result : &#39;TResult with get, set<br />&#160;&#160;static member Factory : TaskFactory&lt;&#39;TResult&gt;<br /><br />Full name: System.Threading.Tasks.Task&lt;_&gt;<br /><br />--------------------<br />type Task =<br />&#160;&#160;new : action:Action -&gt; Task + 7 overloads<br />&#160;&#160;member AsyncState : obj<br />&#160;&#160;member ContinueWith : continuationAction:Action&lt;Task&gt; -&gt; Task + 9 overloads<br />&#160;&#160;member CreationOptions : TaskCreationOptions<br />&#160;&#160;member Dispose : unit -&gt; unit<br />&#160;&#160;member Exception : AggregateException<br />&#160;&#160;member Id : int<br />&#160;&#160;member IsCanceled : bool<br />&#160;&#160;member IsCompleted : bool<br />&#160;&#160;member IsFaulted : bool<br />&#160;&#160;...<br /><br />Full name: System.Threading.Tasks.Task<br /><br />--------------------<br />Threading.Tasks.Task(function: Func&lt;&#39;TResult&gt;) : unit<br />Threading.Tasks.Task(function: Func&lt;&#39;TResult&gt;, cancellationToken: Threading.CancellationToken) : unit<br />Threading.Tasks.Task(function: Func&lt;&#39;TResult&gt;, creationOptions: Threading.Tasks.TaskCreationOptions) : unit<br />Threading.Tasks.Task(function: Func&lt;obj,&#39;TResult&gt;, state: obj) : unit<br />Threading.Tasks.Task(function: Func&lt;&#39;TResult&gt;, cancellationToken: Threading.CancellationToken, creationOptions: Threading.Tasks.TaskCreationOptions) : unit<br />Threading.Tasks.Task(function: Func&lt;obj,&#39;TResult&gt;, state: obj, cancellationToken: Threading.CancellationToken) : unit<br />Threading.Tasks.Task(function: Func&lt;obj,&#39;TResult&gt;, state: obj, creationOptions: Threading.Tasks.TaskCreationOptions) : unit<br />Threading.Tasks.Task(function: Func&lt;obj,&#39;TResult&gt;, state: obj, cancellationToken: Threading.CancellationToken, creationOptions: Threading.Tasks.TaskCreationOptions) : unit<br /><br />--------------------<br />Threading.Tasks.Task(action: Action) : unit<br />Threading.Tasks.Task(action: Action, cancellationToken: Threading.CancellationToken) : unit<br />Threading.Tasks.Task(action: Action, creationOptions: Threading.Tasks.TaskCreationOptions) : unit<br />Threading.Tasks.Task(action: Action&lt;obj&gt;, state: obj) : unit<br />Threading.Tasks.Task(action: Action, cancellationToken: Threading.CancellationToken, creationOptions: Threading.Tasks.TaskCreationOptions) : unit<br />Threading.Tasks.Task(action: Action&lt;obj&gt;, state: obj, cancellationToken: Threading.CancellationToken) : unit<br />Threading.Tasks.Task(action: Action&lt;obj&gt;, state: obj, creationOptions: Threading.Tasks.TaskCreationOptions) : unit<br />Threading.Tasks.Task(action: Action&lt;obj&gt;, state: obj, cancellationToken: Threading.CancellationToken, creationOptions: Threading.Tasks.TaskCreationOptions) : unit</div>
+<div class="tip" id="fs36">C45Learning.Learn(x: int [] [], y: int [], ?weights: float []) : Accord.MachineLearning.DecisionTrees.DecisionTree<br />C45Learning.Learn(x: Nullable&lt;int&gt; [] [], y: int [], ?weights: float []) : Accord.MachineLearning.DecisionTrees.DecisionTree<br />C45Learning.Learn(x: float [] [], y: int [], ?weights: float []) : Accord.MachineLearning.DecisionTrees.DecisionTree</div>
+<div class="tip" id="fs37">property Threading.CancellationTokenSource.Token: Threading.CancellationToken</div>
+<div class="tip" id="fs38">Multiple items<br />type Async<br />static member AsBeginEnd : computation:(&#39;Arg -&gt; Async&lt;&#39;T&gt;) -&gt; (&#39;Arg * AsyncCallback * obj -&gt; IAsyncResult) * (IAsyncResult -&gt; &#39;T) * (IAsyncResult -&gt; unit)<br />static member AwaitEvent : event:IEvent&lt;&#39;Del,&#39;T&gt; * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt; (requires delegate and &#39;Del :&gt; Delegate)<br />static member AwaitIAsyncResult : iar:IAsyncResult * ?millisecondsTimeout:int -&gt; Async&lt;bool&gt;<br />static member AwaitTask : task:Task -&gt; Async&lt;unit&gt;<br />static member AwaitTask : task:Task&lt;&#39;T&gt; -&gt; Async&lt;&#39;T&gt;<br />static member AwaitWaitHandle : waitHandle:WaitHandle * ?millisecondsTimeout:int -&gt; Async&lt;bool&gt;<br />static member CancelDefaultToken : unit -&gt; unit<br />static member Catch : computation:Async&lt;&#39;T&gt; -&gt; Async&lt;Choice&lt;&#39;T,exn&gt;&gt;<br />static member FromBeginEnd : beginAction:(AsyncCallback * obj -&gt; IAsyncResult) * endAction:(IAsyncResult -&gt; &#39;T) * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member FromBeginEnd : arg:&#39;Arg1 * beginAction:(&#39;Arg1 * AsyncCallback * obj -&gt; IAsyncResult) * endAction:(IAsyncResult -&gt; &#39;T) * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member FromBeginEnd : arg1:&#39;Arg1 * arg2:&#39;Arg2 * beginAction:(&#39;Arg1 * &#39;Arg2 * AsyncCallback * obj -&gt; IAsyncResult) * endAction:(IAsyncResult -&gt; &#39;T) * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member FromBeginEnd : arg1:&#39;Arg1 * arg2:&#39;Arg2 * arg3:&#39;Arg3 * beginAction:(&#39;Arg1 * &#39;Arg2 * &#39;Arg3 * AsyncCallback * obj -&gt; IAsyncResult) * endAction:(IAsyncResult -&gt; &#39;T) * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member FromContinuations : callback:((&#39;T -&gt; unit) * (exn -&gt; unit) * (OperationCanceledException -&gt; unit) -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member Ignore : computation:Async&lt;&#39;T&gt; -&gt; Async&lt;unit&gt;<br />static member OnCancel : interruption:(unit -&gt; unit) -&gt; Async&lt;IDisposable&gt;<br />static member Parallel : computations:seq&lt;Async&lt;&#39;T&gt;&gt; -&gt; Async&lt;&#39;T []&gt;<br />static member RunSynchronously : computation:Async&lt;&#39;T&gt; * ?timeout:int * ?cancellationToken:CancellationToken -&gt; &#39;T<br />static member Sleep : millisecondsDueTime:int -&gt; Async&lt;unit&gt;<br />static member Start : computation:Async&lt;unit&gt; * ?cancellationToken:CancellationToken -&gt; unit<br />static member StartAsTask : computation:Async&lt;&#39;T&gt; * ?taskCreationOptions:TaskCreationOptions * ?cancellationToken:CancellationToken -&gt; Task&lt;&#39;T&gt;<br />static member StartChild : computation:Async&lt;&#39;T&gt; * ?millisecondsTimeout:int -&gt; Async&lt;Async&lt;&#39;T&gt;&gt;<br />static member StartChildAsTask : computation:Async&lt;&#39;T&gt; * ?taskCreationOptions:TaskCreationOptions -&gt; Async&lt;Task&lt;&#39;T&gt;&gt;<br />static member StartImmediate : computation:Async&lt;unit&gt; * ?cancellationToken:CancellationToken -&gt; unit<br />static member StartWithContinuations : computation:Async&lt;&#39;T&gt; * continuation:(&#39;T -&gt; unit) * exceptionContinuation:(exn -&gt; unit) * cancellationContinuation:(OperationCanceledException -&gt; unit) * ?cancellationToken:CancellationToken -&gt; unit<br />static member SwitchToContext : syncContext:SynchronizationContext -&gt; Async&lt;unit&gt;<br />static member SwitchToNewThread : unit -&gt; Async&lt;unit&gt;<br />static member SwitchToThreadPool : unit -&gt; Async&lt;unit&gt;<br />static member TryCancelled : computation:Async&lt;&#39;T&gt; * compensation:(OperationCanceledException -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />static member CancellationToken : Async&lt;CancellationToken&gt;<br />static member DefaultCancellationToken : CancellationToken<br /><br />Full name: Microsoft.FSharp.Control.Async<br /><br />--------------------<br />type Async&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Control.Async&lt;_&gt;</div>
+<div class="tip" id="fs39">static member Async.AwaitTask : task:Threading.Tasks.Task -&gt; Async&lt;unit&gt;<br />static member Async.AwaitTask : task:Threading.Tasks.Task&lt;&#39;T&gt; -&gt; Async&lt;&#39;T&gt;</div>
+<div class="tip" id="fs40">val model : obj<br /><br />Full name: Script.model</div>
+<div class="tip" id="fs41">static member Async.RunSynchronously : computation:Async&lt;&#39;T&gt; * ?timeout:int * ?cancellationToken:Threading.CancellationToken -&gt; &#39;T</div>
+<div class="tip" id="fs42">val predicted : obj<br /><br />Full name: Script.predicted</div>
+

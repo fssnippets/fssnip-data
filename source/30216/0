@@ -1,0 +1,190 @@
+module CNTLLogParser
+
+type MiniBatch = 
+    {
+        Epoch   : int
+        Epochs  : int 
+        MbFrom  : int 
+        MbTo    : int 
+        Percent : float
+        CE      : float
+        Times   : float
+        Err     : float
+        Time    : System.TimeSpan
+        SPS     : float //samples per second
+        }
+
+type EpochEnd = 
+    {
+        Epoch           : int
+        Mode            : string //train, test
+        CE              : float
+        Times           : float
+        Err             : float
+        TotalSamples    : int
+        LR              : float
+        EpochTime       : System.TimeSpan
+    }
+
+type EpochStart = 
+    {
+        Epoch           : int
+        LRSample        : float
+        Momentum        : float
+        MConstSamples   : float
+    }
+
+type LogMsg =
+    | MB of MiniBatch 
+    | EE of EpochEnd 
+    | Unk of string 
+    | SE of EpochStart
+
+let delims = 
+    [|
+        '['; ']'; ' '; '-'; ':'; 
+        '='; ';'; '*'; ','; '%'
+    |]
+
+let private parseMinibatch (l:string) =
+//  let l = "Epoch[ 1 of 100]-Minibatch[18481-18490]: CE = 0.48781250 * 250; Err = 0.18800000 * 250; time = 0.0271s; samplesPerSecond = 9216.3"
+//  let l =  "Epoch[83 of 100]-Minibatch[11591-11600, 62.43%]: CE = 0.55243750 * 250; Err = 0.24800000 * 250; time = 0.0344s; samplesPerSecond = 7276.3"
+    let xs = l.Split(delims, System.StringSplitOptions.RemoveEmptyEntries)
+// pattern 1
+//  [|"Epoch";0 "1";1 "of";2 "100";3 "Minibatch";4 "18481";5 "18490";6 "CE";7
+//    "0.48781250";8 "250";9 "Err";10 "0.18800000";11 "250";12 "time";13 "0.0271s";14
+//    "samplesPerSecond";15 "9216.3";16|]
+    if xs.[7] = "CE" then
+        {
+            Epoch   = int xs.[1]
+            Epochs  = int xs.[3]
+            MbFrom  = int xs.[5]
+            MbTo    = int xs.[6]
+            Percent = 0.
+            CE      = float xs.[8]
+            Times   = float xs.[9]
+            Err     = float xs.[11]
+            Time    = System.TimeSpan.FromSeconds(xs.[14].Replace("s","") |> float) //System.TimeSpan.FromSeconds("0.0271s".Replace("s","") |> float)
+            SPS     = float xs.[16] //samples per second
+        
+        }
+// pattern 2
+//  [|"Epoch";0 "83";1 "of";2 "100";3 "Minibatch";4 "11591";5 "11600";6 "62.43%";7 "CE";8
+//    "0.55243750";9 "250";10 "Err";11 "0.24800000";12 "250";13 "time";14 "0.0344s";15
+//    "samplesPerSecond";16 "7276.3";17|]    
+    else
+        {
+            Epoch   = int xs.[1]
+            Epochs  = int xs.[3]
+            MbFrom  = int xs.[5]
+            MbTo    = int xs.[6]
+            Percent = float xs.[7]
+            CE      = float xs.[9]
+            Times   = float xs.[10]
+            Err     = float xs.[12]
+            Time    = System.TimeSpan.FromSeconds(xs.[15].Replace("s","") |> float) //System.TimeSpan.FromSeconds("0.0271s".Replace("s","") |> float)
+            SPS     = float xs.[17] //samples per second
+        
+        }
+        
+let private parseEndEpoch (l:string) =
+//    let l = "Finished Epoch[21 of 100]: [Training] CE = 0.47475340 * 464505; Err = 0.19504419 * 464505; totalSamplesSeen = 9754605; learningRatePerSample = 0.0080000004; epochTime=58.2492s"
+    let xs = l.Split(delims, System.StringSplitOptions.RemoveEmptyEntries)
+//      [|"Finished";0 "Epoch";1 "21";2 "of";3 "100";4 "Training";5 "CE";6 "0.47475340";7
+//    "464505"8; "Err";9 "0.19504419";10 "464505";11 "totalSamplesSeen"12; "9754605";13
+//    "learningRatePerSample";14 "0.0080000004";15 "epochTime";16 "58.2492s";17 |]
+    {
+        Epoch           = int xs.[2]
+        Mode            = xs.[5]
+        CE              = float xs.[7]
+        Times           = float xs.[8]
+        Err             = float xs.[10]
+        TotalSamples    = int xs.[13]
+        LR              = float xs.[15]
+        EpochTime       = System.TimeSpan.FromSeconds(xs.[17].Replace("s","") |> float)
+    }
+
+let private parseStartEpoch (l:string) =
+//    let l = "Starting Epoch 9: learning rate per sample = 0.008000  effective momentum = 0.900000  momentum as time constant = 237.3 samples"
+    let xs = l.Split(delims, System.StringSplitOptions.RemoveEmptyEntries)
+//    [|"Starting";0 "Epoch";1 "9";2 "learning";3 "rate";4 "per";5 "sample";6 "0.008000";7
+//    "effective";8 "momentum";9 "0.900000";10 "momentum";11 "as";12 "time";13 "constant";14
+//    "237.3";15 "samples";16|]
+    {
+        Epoch           = int xs.[2]
+        LRSample        = float xs.[7]
+        Momentum        = float xs.[10]
+        MConstSamples   = float xs.[15]
+    }
+
+let cntkParse (l:string) =
+//    printfn "parsing '%s'"l
+    try
+        if l.Length > 16 && l.IndexOf("Finished Epoch",0,16) >= 0 then
+            parseEndEpoch l |> EE
+        elif l.Length > 10 && l.IndexOf("Epoch", 0, 10) >= 0 then 
+            parseMinibatch l |> MB
+        elif l.Length > 20 && l.IndexOf("Starting Epoch",0,16) >= 0 then
+            parseStartEpoch l |> SE
+        else
+            Unk l
+    with ex ->
+        printfn "error: %s - in parsing '%s'" ex.Message l
+        Unk l
+
+let filterMB = function MB _ -> true | _  -> false
+let filterEE = function EE _ -> true | _  -> false
+let chooseMB = function MB b -> Some b | _ -> None
+let chooseEE = function EE e -> Some e | _ -> None
+let chooseSE = function SE e -> Some e | _ -> None
+let excludeUnk = function Unk _ -> None | x -> Some x
+
+///filter to use with tail function to reduce processing burden - excludes minibatch updates
+let tailFilterWihoutMB (s:string) = s.StartsWith("Finished") || s.StartsWith("Starting Epoch")
+
+///warning: generates too much data for parsing to keep pace in most cases but may work for some models
+let tailFilterWithMB (s:string) = tailFilterWihoutMB s || s.StartsWith(" Epoch[")
+
+(*
+let mb = "Epoch[ 1 of 100]-Minibatch[18481-18490]: CE = 0.48781250 * 250; Err = 0.18800000 * 250; time = 0.0271s; samplesPerSecond = 9216.3"
+let mb2 = " Epoch[83 of 100]-Minibatch[11591-11600, 62.43%]: CE = 0.55243750 * 250; Err = 0.24800000 * 250; time = 0.0344s; samplesPerSecond = 7276.3"
+let ee = "Finished Epoch[21 of 100]: [Training] CE = 0.47475340 * 464505; Err = 0.19504419 * 464505; totalSamplesSeen = 9754605; learningRatePerSample = 0.0080000004; epochTime=58.2492s"
+cntkParse mb
+cntkParse ee
+cntkParse mb2
+*)
+
+open System.IO
+//tail function to read the CNTK Error log file; cancel token to stop
+let tail filter (cts:System.Threading.CancellationTokenSource) file fPost =
+    let rdr = new StreamReader(new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+    let off = ref rdr.BaseStream.Length
+    let go = ref true
+    let loop = 
+        async {
+            try
+                while true do
+                    do! Async.Sleep 100
+                    if rdr.BaseStream.Length <> !off then
+                        rdr.BaseStream.Seek(!off,SeekOrigin.Begin) |> ignore
+                        let mutable l = rdr.ReadLine()
+                        while l <> null do
+                            if not cts.IsCancellationRequested then
+                                if filter l then fPost l
+                                l <- rdr.ReadLine()
+            finally
+                    rdr.Close()
+                    printfn "closed tail %s" file
+            }
+    Async.Start(loop,cts.Token)
+
+(* tail usage:
+let file = @"C:\cntk\err\hoderr"
+let cts = new System.Threading.CancellationTokenSource()
+let obs,fPost = Observable.createObservableAgent 100 cts.Token 
+//http://fssnip.net/nC/title/Observable-Agent
+do tail tailFilterWihoutMB cts file fPost
+
+//cancel reading
+cts.Cancel()
+*)

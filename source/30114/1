@@ -1,0 +1,33 @@
+#!/usr/bin/fsharpi
+open System
+
+let fac (n : bigint) =
+  let rec fac acc = function
+    | x when x = 0I -> acc
+    | n -> fac (acc * n) (n - 1I)
+  fac 1I n
+
+let bincof (n : bigint) (k : bigint) =
+  [ 0I .. min k (n-k) - 1I ]
+  |> List.fold (fun acc i -> acc * (n - i) / (i + 1I)) 1I
+
+let birthday' pool domain =
+  float (fac pool * bincof domain pool) /
+    float (domain ** (int pool))
+
+let birthday pool domain =
+  1. - birthday' pool domain
+
+let pool = 5I
+let domain = 365I
+
+bincof 4I 2I
+365I ** 11
+birthday 23I 365I
+// doesn't work: birthday 1000I (bigint 1e6)
+
+let birthdayApprox (pool : bigint) (domain : bigint) =
+  float (pool ** 2) / float (2I * domain)
+
+// CRC32 collision after 10000 checksums
+birthdayApprox 10000I (bigint UInt32.MaxValue)

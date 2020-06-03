@@ -1,0 +1,19 @@
+open Suave
+open Suave.Filters
+open Suave.Operators
+
+
+let getSomething urlParam headerParam =
+    sprintf "url: %s  - header: %s" urlParam headerParam
+
+let addHeader fn =
+    request(fun r ->
+        r.header("headername")
+        |> function
+        | Choice1Of2 c | Choice2Of2 c -> fn c
+        |> Successful.OK
+        )
+
+let app = pathScan "/get/%s" (getSomething >> addHeader)
+
+startWebServer defaultConfig app

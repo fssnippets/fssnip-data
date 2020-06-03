@@ -1,0 +1,135 @@
+// [snippet:Implementation]
+type FSharpNullable<'T when 'T : struct> =
+    | Value of 'T
+    | Null
+
+module FSharpNullable =
+    let bind f x =
+        match x with
+        | Null -> Null
+        | Value x' -> f x'
+
+type FSharpNullableBuilder() =
+    member __.Bind(x, f) = x |> FSharpNullable.bind f
+    member __.Return(x) = Value x
+
+[<AutoOpen>]
+module FSharpNullableOps =
+    let nullable = FSharpNullableBuilder()
+
+    let inline ( .+. ) (a: FSharpNullable<'T>) (b: FSharpNullable<'T>) : FSharpNullable<'T> =
+        nullable {
+            let! x = a
+            let! y = b
+            return x + y
+        }
+
+    let inline ( .+ ) (a: FSharpNullable<'T>) (b: 'T) : FSharpNullable<'T> =
+        nullable {
+            let! x = a
+            return x + b
+        }
+
+    let inline ( +. ) (a: 'T) (b: FSharpNullable<'T>) : FSharpNullable<'T> =
+        nullable {
+            let! y = b
+            return a + y
+        }
+
+    let inline ( .-. ) (a: FSharpNullable<'T>) (b: FSharpNullable<'T>) : FSharpNullable<'T> =
+        nullable {
+            let! x = a
+            let! y = b
+            return x - y
+        }
+
+    let inline ( .- ) (a: FSharpNullable<'T>) (b: 'T) : FSharpNullable<'T> =
+        nullable {
+            let! x = a
+            return x - b
+        }
+
+    let inline ( -. ) (a: 'T) (b: FSharpNullable<'T>) : FSharpNullable<'T> =
+        nullable {
+            let! y = b
+            return a - y
+        }
+
+    let inline ( .*. ) (a: FSharpNullable<'T>) (b: FSharpNullable<'T>) : FSharpNullable<'T> =
+        nullable {
+            let! x = a
+            let! y = b
+            return x * y
+        }
+
+    let inline ( .* ) (a: FSharpNullable<'T>) (b: 'T) : FSharpNullable<'T> =
+        nullable {
+            let! x = a
+            return x * b
+        }
+
+    let inline ( *. ) (a: 'T) (b: FSharpNullable<'T>) : FSharpNullable<'T> =
+        nullable {
+            let! y = b
+            return a * y
+        }
+
+    let inline ( ./. ) (a: FSharpNullable<'T>) (b: FSharpNullable<'T>) : FSharpNullable<'T> =
+        nullable {
+            let! x = a
+            let! y = b
+            return x / y
+        }
+
+    let inline ( ./ ) (a: FSharpNullable<'T>) (b: 'T) : FSharpNullable<'T> =
+        nullable {
+            let! x = a
+            return x / b
+        }
+
+    let inline ( /. ) (a: 'T) (b: FSharpNullable<'T>) : FSharpNullable<'T> =
+        nullable {
+            let! y = b
+            return a / y
+        }
+
+type FSharpNullable<'T when 'T : struct> with
+    member this.Bind(f) = this |> FSharpNullable.bind f
+
+    member this.HasValue =
+        match this with
+        | Null -> false
+        | Value _ -> true
+
+    static member inline op_Explicit(this) : 'T =
+        match this with
+        | Null -> raise <| System.InvalidOperationException(
+                               "Nullable object must have a value.")
+        | Value x -> x
+
+    static member inline ( <??> ) (lhs, rhs) =
+        match lhs with
+        | Null -> rhs
+        | Value x -> x
+
+    static member inline (+) (a, b) = a .+. b
+    static member inline (-) (a, b) = a .-. b
+    static member inline (*) (a, b) = a .*. b
+    static member inline (/) (a, b) = a ./. b
+// [/snippet]
+
+// [snippet:Examples]
+let a = Value 19 + Value 23 // val a : FSharpNullable<int> = Value 42
+let b = Value 13 .+. Value 29 // val b : FSharpNullable<int> = Value 42
+a = b // val it : bool = true
+let c = a .+ 42 // val c : FSharpNullable<int> = Value 84
+let n = a + Null // val n : FSharpNullable<int> = Null
+
+a + c <??> 42 // val it : int = 126
+a + c + n <??> 42 //val it : int = 42
+
+int a // val it : int = 42
+int64 a // error FS0001: The type 'FSharpNullable<int>' does not support a conversion to the type 'int64'
+int64 (Value 42L) // val it : int64 = 42L
+int n // System.InvalidOperationException: Nullable object must have a value.
+// [/snippet]

@@ -1,0 +1,9 @@
+module Seq =
+    let tryTake (n : int) (s : _ seq) =
+        seq {
+            use e = s.GetEnumerator ()
+            let mutable i = 0
+            while e.MoveNext () && i < n do
+                i <- i + 1
+                yield e.Current
+        }

@@ -1,0 +1,155 @@
+// Example follows this, translated to FSharp:
+// https://msdn.microsoft.com/en-us/library/dn903708.aspx 
+
+// Just instead of copy&pasting C#, add a new F# class library and paste this code to there,
+// then add that to reference to your C#-project.
+
+// If you want to deploy without C# project, see e.g. this:
+// You need to use some VSIX-package to deploy the code:
+// https://github.com/fsharp-vsix/FsVSIX
+
+// One more thing to get this to work: Open the source.extension.vsixmanifest file
+// Go to Assets -> Edit -> Project and change your fsharp dll to dropdown.
+// This tells MEF to which dll to use to inject dependencies to Visual Studio.
+// Corresponding XML: 
+// <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="..." Path="|...|" />
+
+#if INTERACTIVE
+#I @"C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\VSSDK\VisualStudioIntegration\Common\Assemblies\v4.0\"
+
+#r "Microsoft.VisualStudio.Imaging.Interop.14.0.DesignTime.dll"
+#r "Microsoft.VisualStudio.Language.Intellisense.dll"
+#r "Microsoft.VisualStudio.CoreUtility.dll"
+#r "Microsoft.VisualStudio.Text.Data.dll"
+#r "Microsoft.VisualStudio.Text.Logic.dll"
+#r "Microsoft.VisualStudio.Text.UI.dll"
+#r "Microsoft.VisualStudio.Text.UI.Wpf.dll"
+
+#I @"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.6\"
+
+#r "PresentationFramework.Core.dll"
+#r "PresentationFramework.dll"
+#r "WindowsBase.dll"
+
+#r "System.ComponentModel.Composition.dll"
+
+
+#endif
+namespace VisualStudioTooltips
+
+open Microsoft.VisualStudio.Imaging.Interop
+open System.Windows
+open System.Windows.Controls
+open System.Windows.Documents
+open Microsoft.VisualStudio.Text
+
+open System.Threading.Tasks
+
+open System
+open System.Collections.Generic
+open Microsoft.VisualStudio.Language.Intellisense
+open Microsoft.VisualStudio.Text.Editor
+open Microsoft.VisualStudio.Text.Operations
+open Microsoft.VisualStudio.Utilities
+open System.ComponentModel.Composition
+
+type internal UpperCaseSuggestedAction (span:ITrackingSpan) =
+    let snapshot = span.TextBuffer.CurrentSnapshot
+    let upper = span.GetText(snapshot).ToUpper()
+    let display = sprintf "Convert '%s' to upper case" (span.GetText snapshot)
+    
+    interface ISuggestedAction with
+
+        member __.GetPreviewAsync (_) =
+            let textBlock = TextBlock(Padding = Thickness(5.)) 
+            textBlock.Inlines.Add (Run upper)
+            Task.FromResult<obj> textBlock
+    
+        member __.GetActionSetsAsync (_) =
+            Task.FromResult<IEnumerable<SuggestedActionSet>>(null)
+
+        member val HasActionSets = false with get
+        member val DisplayText = display with get
+        member val IconMoniker = Unchecked.defaultof<ImageMoniker> with get
+        member val IconAutomationText = Unchecked.defaultof<string> with get
+        member val InputGestureText = Unchecked.defaultof<string> with get
+        member val HasPreview = true with get
+
+        member __.Invoke (_) =
+            span.TextBuffer.Replace(span.GetSpan(snapshot).Span, upper) |> ignore
+            ()
+
+        member __.TryGetTelemetryId
+                ([<System.Runtime.InteropServices.Out>] telemetryId : Guid byref) =
+            telemetryId <- Guid.Empty
+            false
+
+        member __.Dispose() = ()
+
+//type internal LowerCaseSuggestedAction : ISuggestedAction
+
+[<Export(typeof<ISuggestedActionsSourceProvider>)>]
+[<Name "Test Suggested Actions">]
+[<ContentType "text">]
+type internal TestSuggestedActionsSourceProvider() as this = 
+    [<Import(typeof<ITextStructureNavigatorSelectorService>)>]  
+    member val NavigatorService = 
+        Unchecked.defaultof<ITextStructureNavigatorSelectorService> with get, set
+
+    interface ISuggestedActionsSourceProvider with 
+        member this.CreateSuggestedActionsSource(textView, textBuffer) =
+            if textBuffer = null && textView = null then
+                Unchecked.defaultof<ISuggestedActionsSource>
+            else 
+                new TestSuggestedActionsSource(this, textView, textBuffer)
+                :> ISuggestedActionsSource
+
+
+and internal TestSuggestedActionsSource
+        ( prov:TestSuggestedActionsSourceProvider, 
+          textView:ITextView, textBuffer:ITextBuffer) =
+
+    let event = DelegateEvent<EventHandler<EventArgs>>()
+
+    let tryGetWordUnderCaret() =
+        let caret = textView.Caret
+        if caret.Position.BufferPosition.Position <= 0 then
+            false, Unchecked.defaultof<TextExtent>
+        else  
+        let point = caret.Position.BufferPosition - 1
+        let navigator = prov.NavigatorService.GetTextStructureNavigator textBuffer
+        true, navigator.GetExtentOfWord point
+
+    interface ISuggestedActionsSource with 
+
+        member __.HasSuggestedActionsAsync(requestedActionCategories, range, cToken) =
+            System.Threading.Tasks.Task.Factory.StartNew(fun () ->
+                let ok, extent = tryGetWordUnderCaret()
+                if ok then  // don't display the action if the extent has whitespace  
+                    extent.IsSignificant
+                else false
+            )
+
+        member __.GetSuggestedActions(requestedActionCategories, range, cToken) =
+            let ok, extent = tryGetWordUnderCaret()
+            if ok && extent.IsSignificant then
+                let trackingSpan = 
+                    range.Snapshot.CreateTrackingSpan(
+                        extent.Span.Span, SpanTrackingMode.EdgeInclusive)
+                use upperAction = new UpperCaseSuggestedAction(trackingSpan)
+                //let lowerAction = LowerCaseSuggestedAction trackingSpan :> ISuggestedAction
+                [| (SuggestedActionSet [| upperAction; (* lowerAction *) |]) |] 
+                :> IEnumerable<SuggestedActionSet>
+            else 
+                [||] :> IEnumerable<SuggestedActionSet>
+
+        [<CLIEvent>]
+        member __.SuggestedActionsChanged = event.Publish
+
+        member __.TryGetTelemetryId(
+                [<System.Runtime.InteropServices.Out>] telemetryId : Guid byref) =
+            telemetryId <- Guid.Empty
+            false
+
+    interface IDisposable with 
+        member __.Dispose() = ()

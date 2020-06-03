@@ -1,0 +1,229 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+<span class="l">38: </span>
+<span class="l">39: </span>
+<span class="l">40: </span>
+<span class="l">41: </span>
+<span class="l">42: </span>
+<span class="l">43: </span>
+<span class="l">44: </span>
+<span class="l">45: </span>
+<span class="l">46: </span>
+<span class="l">47: </span>
+<span class="l">48: </span>
+<span class="l">49: </span>
+<span class="l">50: </span>
+<span class="l">51: </span>
+<span class="l">52: </span>
+<span class="l">53: </span>
+<span class="l">54: </span>
+<span class="l">55: </span>
+<span class="l">56: </span>
+<span class="l">57: </span>
+<span class="l">58: </span>
+<span class="l">59: </span>
+<span class="l">60: </span>
+<span class="l">61: </span>
+<span class="l">62: </span>
+<span class="l">63: </span>
+<span class="l">64: </span>
+<span class="l">65: </span>
+<span class="l">66: </span>
+<span class="l">67: </span>
+<span class="l">68: </span>
+<span class="l">69: </span>
+<span class="l">70: </span>
+<span class="l">71: </span>
+<span class="l">72: </span>
+<span class="l">73: </span>
+<span class="l">74: </span>
+<span class="l">75: </span>
+<span class="l">76: </span>
+<span class="l">77: </span>
+<span class="l">78: </span>
+<span class="l">79: </span>
+<span class="l">80: </span>
+<span class="l">81: </span>
+<span class="l">82: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="prep">#r</span> <span class="s">@&quot;..\packages\FSharp.Charting.0.90.14\lib\net40\FSharp.Charting.dll&quot;</span>
+<span class="prep">#r</span> <span class="s">@&quot;..\packages\System.Reactive.Core.3.0.0\lib\net45\System.Reactive.Core.dll&quot;</span>
+<span class="prep">#r</span> <span class="s">@&quot;..\packages\System.Reactive.Linq.3.0.0\lib\net45\System.Reactive.Linq.dll&quot;</span>
+<span class="prep">#r</span> <span class="s">@&quot;..\packages\System.Reactive.Interfaces.3.0.0\lib\net45\System.Reactive.Interfaces.dll&quot;</span>
+<span class="prep">#r</span> <span class="s">@&quot;..\packages\FSharp.Control.Reactive.3.5.0\lib\net45\FSharp.Control.Reactive.dll&quot;</span>
+<span class="prep">#r</span> <span class="s">@&quot;System.Windows.Forms.DataVisualization&quot;</span>
+<span class="prep">#load</span> <span class="s">&quot;ObservableExtensions.fs&quot;</span> <span class="c">// http://fssnip.net/nC</span>
+<span class="prep">#load</span> <span class="s">&quot;CNTLLogParser.fs&quot;</span>        <span class="c">// http://fssnip.net/7Rm</span>
+<span class="k">open</span> <span class="i">CNTLLogParser</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">System</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">FSharp</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="i">Control</span><span class="o">.</span><span class="i">Reactive</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 4)" onmouseover="showTip(event, 'fs1', 4)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs4', 5)" onmouseover="showTip(event, 'fs4', 5)" class="i">Windows</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs5', 6)" onmouseover="showTip(event, 'fs5', 6)" class="i">Forms</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs2', 7)" onmouseover="showTip(event, 'fs2', 7)" class="i">FSharp</span><span class="o">.</span><span class="i">Charting</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 8)" onmouseover="showTip(event, 'fs1', 8)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs6', 9)" onmouseover="showTip(event, 'fs6', 9)" class="i">IO</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs2', 10)" onmouseover="showTip(event, 'fs2', 10)" class="i">FSharp</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 11)" onmouseover="showTip(event, 'fs3', 11)" class="i">Control</span>
+
+<span class="k">module</span> <span class="t">FsiAutoShow</span> <span class="o">=</span> 
+    <span onmouseout="hideTip(event, 'fs7', 12)" onmouseover="showTip(event, 'fs7', 12)" class="i">fsi</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs8', 13)" onmouseover="showTip(event, 'fs8', 13)" class="f">AddPrinter</span>(<span class="k">fun</span> (<span onmouseout="hideTip(event, 'fs9', 14)" onmouseover="showTip(event, 'fs9', 14)" class="i">ch</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs2', 15)" onmouseover="showTip(event, 'fs2', 15)" class="i">FSharp</span><span class="o">.</span><span class="i">Charting</span><span class="o">.</span><span class="i">ChartTypes</span><span class="o">.</span><span class="i">GenericChart</span>) <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs9', 16)" onmouseover="showTip(event, 'fs9', 16)" class="i">ch</span><span class="o">.</span><span class="i">ShowChart</span>() <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs10', 17)" onmouseover="showTip(event, 'fs10', 17)" class="f">ignore</span>; <span class="s">&quot;(Chart)&quot;</span>)
+
+<span class="k">let</span> <span class="k">private</span> <span onmouseout="hideTip(event, 'fs11', 18)" onmouseover="showTip(event, 'fs11', 18)" class="f">containerize</span> <span onmouseout="hideTip(event, 'fs12', 19)" onmouseover="showTip(event, 'fs12', 19)" class="i">ch</span> <span class="o">=</span> <span class="k">new</span> <span class="i">ChartTypes</span><span class="o">.</span><span class="i">ChartControl</span>(<span onmouseout="hideTip(event, 'fs12', 20)" onmouseover="showTip(event, 'fs12', 20)" class="i">ch</span>,<span class="i">Dock</span><span class="o">=</span><span onmouseout="hideTip(event, 'fs13', 21)" onmouseover="showTip(event, 'fs13', 21)" class="i">DockStyle</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs14', 22)" onmouseover="showTip(event, 'fs14', 22)" class="i">Fill</span>)
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs15', 23)" onmouseover="showTip(event, 'fs15', 23)" class="f">show</span> <span onmouseout="hideTip(event, 'fs16', 24)" onmouseover="showTip(event, 'fs16', 24)" class="i">chlist</span> <span class="o">=</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs17', 25)" onmouseover="showTip(event, 'fs17', 25)" class="i">form</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs18', 26)" onmouseover="showTip(event, 'fs18', 26)" class="t">Form</span>()
+    <span onmouseout="hideTip(event, 'fs17', 27)" onmouseover="showTip(event, 'fs17', 27)" class="i">form</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs19', 28)" onmouseover="showTip(event, 'fs19', 28)" class="i">Width</span>  <span class="o">&lt;-</span> <span class="n">400</span>
+    <span onmouseout="hideTip(event, 'fs17', 29)" onmouseover="showTip(event, 'fs17', 29)" class="i">form</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs20', 30)" onmouseover="showTip(event, 'fs20', 30)" class="i">Height</span> <span class="o">&lt;-</span> <span class="n">300</span>
+    <span onmouseout="hideTip(event, 'fs17', 31)" onmouseover="showTip(event, 'fs17', 31)" class="i">form</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs21', 32)" onmouseover="showTip(event, 'fs21', 32)" class="i">Visible</span> <span class="o">&lt;-</span> <span class="k">true</span> 
+    <span onmouseout="hideTip(event, 'fs17', 33)" onmouseover="showTip(event, 'fs17', 33)" class="i">form</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs22', 34)" onmouseover="showTip(event, 'fs22', 34)" class="i">Text</span> <span class="o">&lt;-</span> <span class="s">&quot;CNTK Charts&quot;</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs23', 35)" onmouseover="showTip(event, 'fs23', 35)" class="i">grid</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs24', 36)" onmouseover="showTip(event, 'fs24', 36)" class="t">TableLayoutPanel</span>()
+    <span onmouseout="hideTip(event, 'fs23', 37)" onmouseover="showTip(event, 'fs23', 37)" class="i">grid</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs25', 38)" onmouseover="showTip(event, 'fs25', 38)" class="i">AutoSize</span> <span class="o">&lt;-</span> <span class="k">true</span>
+<span class="c">//    grid.ColumnCount &lt;- 2</span>
+<span class="c">//    grid.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50.f)) |&gt; ignore</span>
+<span class="c">//    grid.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50.f)) |&gt; ignore</span>
+    <span onmouseout="hideTip(event, 'fs23', 39)" onmouseover="showTip(event, 'fs23', 39)" class="i">grid</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs26', 40)" onmouseover="showTip(event, 'fs26', 40)" class="i">RowCount</span> <span class="o">&lt;-</span> <span class="n">2</span>
+    <span onmouseout="hideTip(event, 'fs23', 41)" onmouseover="showTip(event, 'fs23', 41)" class="i">grid</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs27', 42)" onmouseover="showTip(event, 'fs27', 42)" class="i">RowStyles</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs28', 43)" onmouseover="showTip(event, 'fs28', 43)" class="f">Add</span>(<span class="k">new</span> <span onmouseout="hideTip(event, 'fs29', 44)" onmouseover="showTip(event, 'fs29', 44)" class="t">RowStyle</span>(<span onmouseout="hideTip(event, 'fs30', 45)" onmouseover="showTip(event, 'fs30', 45)" class="t">SizeType</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs31', 46)" onmouseover="showTip(event, 'fs31', 46)" class="i">Percent</span>,<span class="n">50.f</span>)) <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs10', 47)" onmouseover="showTip(event, 'fs10', 47)" class="f">ignore</span>
+    <span onmouseout="hideTip(event, 'fs23', 48)" onmouseover="showTip(event, 'fs23', 48)" class="i">grid</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs27', 49)" onmouseover="showTip(event, 'fs27', 49)" class="i">RowStyles</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs28', 50)" onmouseover="showTip(event, 'fs28', 50)" class="f">Add</span>(<span class="k">new</span> <span onmouseout="hideTip(event, 'fs29', 51)" onmouseover="showTip(event, 'fs29', 51)" class="t">RowStyle</span>(<span onmouseout="hideTip(event, 'fs30', 52)" onmouseover="showTip(event, 'fs30', 52)" class="t">SizeType</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs31', 53)" onmouseover="showTip(event, 'fs31', 53)" class="i">Percent</span>,<span class="n">50.f</span>)) <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs10', 54)" onmouseover="showTip(event, 'fs10', 54)" class="f">ignore</span>
+    <span onmouseout="hideTip(event, 'fs23', 55)" onmouseover="showTip(event, 'fs23', 55)" class="i">grid</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs32', 56)" onmouseover="showTip(event, 'fs32', 56)" class="i">GrowStyle</span> <span class="o">&lt;-</span>  <span onmouseout="hideTip(event, 'fs33', 57)" onmouseover="showTip(event, 'fs33', 57)" class="t">TableLayoutPanelGrowStyle</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs34', 58)" onmouseover="showTip(event, 'fs34', 58)" class="i">AddRows</span>
+    <span onmouseout="hideTip(event, 'fs23', 59)" onmouseover="showTip(event, 'fs23', 59)" class="i">grid</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs35', 60)" onmouseover="showTip(event, 'fs35', 60)" class="i">Dock</span> <span class="o">&lt;-</span> <span onmouseout="hideTip(event, 'fs13', 61)" onmouseover="showTip(event, 'fs13', 61)" class="t">DockStyle</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs14', 62)" onmouseover="showTip(event, 'fs14', 62)" class="i">Fill</span>
+    <span onmouseout="hideTip(event, 'fs16', 63)" onmouseover="showTip(event, 'fs16', 63)" class="i">chlist</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs36', 64)" onmouseover="showTip(event, 'fs36', 64)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs37', 65)" onmouseover="showTip(event, 'fs37', 65)" class="f">map</span> <span onmouseout="hideTip(event, 'fs11', 66)" onmouseover="showTip(event, 'fs11', 66)" class="f">containerize</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs36', 67)" onmouseover="showTip(event, 'fs36', 67)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs38', 68)" onmouseover="showTip(event, 'fs38', 68)" class="f">iter</span> <span onmouseout="hideTip(event, 'fs23', 69)" onmouseover="showTip(event, 'fs23', 69)" class="i">grid</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs39', 70)" onmouseover="showTip(event, 'fs39', 70)" class="i">Controls</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs40', 71)" onmouseover="showTip(event, 'fs40', 71)" class="f">Add</span>
+    <span onmouseout="hideTip(event, 'fs17', 72)" onmouseover="showTip(event, 'fs17', 72)" class="i">form</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs41', 73)" onmouseover="showTip(event, 'fs41', 73)" class="i">Controls</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs42', 74)" onmouseover="showTip(event, 'fs42', 74)" class="f">Add</span>(<span onmouseout="hideTip(event, 'fs23', 75)" onmouseover="showTip(event, 'fs23', 75)" class="i">grid</span>)
+    <span onmouseout="hideTip(event, 'fs17', 76)" onmouseover="showTip(event, 'fs17', 76)" class="i">form</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs43', 77)" onmouseover="showTip(event, 'fs43', 77)" class="f">Show</span>()
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs44', 78)" onmouseover="showTip(event, 'fs44', 78)" class="f">track</span> <span onmouseout="hideTip(event, 'fs45', 79)" onmouseover="showTip(event, 'fs45', 79)" class="i">file</span> <span class="o">=</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs46', 80)" onmouseover="showTip(event, 'fs46', 80)" class="i">cts</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs1', 81)" onmouseover="showTip(event, 'fs1', 81)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs47', 82)" onmouseover="showTip(event, 'fs47', 82)" class="i">Threading</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs48', 83)" onmouseover="showTip(event, 'fs48', 83)" class="t">CancellationTokenSource</span>()
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs49', 84)" onmouseover="showTip(event, 'fs49', 84)" class="i">obs</span>,<span onmouseout="hideTip(event, 'fs50', 85)" onmouseover="showTip(event, 'fs50', 85)" class="i">fPost</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs51', 86)" onmouseover="showTip(event, 'fs51', 86)" class="i">Observable</span><span class="o">.</span><span class="i">createObservableAgent</span> <span class="n">100</span> <span onmouseout="hideTip(event, 'fs46', 87)" onmouseover="showTip(event, 'fs46', 87)" class="i">cts</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs52', 88)" onmouseover="showTip(event, 'fs52', 88)" class="i">Token</span>
+    <span class="k">do</span> <span class="i">tail</span> <span class="i">tailFilterWihoutMB</span> <span onmouseout="hideTip(event, 'fs46', 89)" onmouseover="showTip(event, 'fs46', 89)" class="i">cts</span> <span onmouseout="hideTip(event, 'fs45', 90)" onmouseover="showTip(event, 'fs45', 90)" class="i">file</span> <span onmouseout="hideTip(event, 'fs50', 91)" onmouseover="showTip(event, 'fs50', 91)" class="i">fPost</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs53', 92)" onmouseover="showTip(event, 'fs53', 92)" class="i">obsCntk</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs49', 93)" onmouseover="showTip(event, 'fs49', 93)" class="i">obs</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs51', 94)" onmouseover="showTip(event, 'fs51', 94)" class="t">Observable</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs54', 95)" onmouseover="showTip(event, 'fs54', 95)" class="f">map</span> <span class="i">cntkParse</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs51', 96)" onmouseover="showTip(event, 'fs51', 96)" class="t">Observable</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs55', 97)" onmouseover="showTip(event, 'fs55', 97)" class="f">choose</span> <span class="i">excludeUnk</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs56', 98)" onmouseover="showTip(event, 'fs56', 98)" class="i">obsEE</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs53', 99)" onmouseover="showTip(event, 'fs53', 99)" class="i">obsCntk</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs51', 100)" onmouseover="showTip(event, 'fs51', 100)" class="t">Observable</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs55', 101)" onmouseover="showTip(event, 'fs55', 101)" class="f">choose</span> <span class="i">chooseEE</span>
+    <span onmouseout="hideTip(event, 'fs56', 102)" onmouseover="showTip(event, 'fs56', 102)" class="i">obsEE</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs51', 103)" onmouseover="showTip(event, 'fs51', 103)" class="t">Observable</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs57', 104)" onmouseover="showTip(event, 'fs57', 104)" class="f">subscribe</span> (<span onmouseout="hideTip(event, 'fs58', 105)" onmouseover="showTip(event, 'fs58', 105)" class="f">printfn</span> <span class="s">&quot;</span><span class="pf">%A</span><span class="s">&quot;</span>) <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs10', 106)" onmouseover="showTip(event, 'fs10', 106)" class="f">ignore</span> 
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs59', 107)" onmouseover="showTip(event, 'fs59', 107)" class="i">c1</span> <span class="o">=</span> 
+        <span class="i">LiveChart</span><span class="o">.</span><span class="i">FastLineIncremental</span>(<span onmouseout="hideTip(event, 'fs56', 108)" onmouseover="showTip(event, 'fs56', 108)" class="i">obsEE</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs51', 109)" onmouseover="showTip(event, 'fs51', 109)" class="i">Observable</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs54', 110)" onmouseover="showTip(event, 'fs54', 110)" class="i">map</span> (<span class="k">fun</span> <span class="i">x</span><span class="k">-&gt;</span><span class="i">x</span><span class="o">.</span><span class="i">Epoch</span>,<span class="i">x</span><span class="o">.</span><span class="i">CE</span>),<span class="i">Title</span><span class="o">=</span><span class="s">&quot;Epoch CE&quot;</span>)
+        <span class="o">|&gt;</span> <span class="i">Chart</span><span class="o">.</span><span class="i">WithXAxis</span>(<span class="i">Title</span><span class="o">=</span><span class="s">&quot;Epoch&quot;</span>)
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs60', 111)" onmouseover="showTip(event, 'fs60', 111)" class="i">c2</span> <span class="o">=</span>  
+        <span class="i">LiveChart</span><span class="o">.</span><span class="i">FastLineIncremental</span>(<span onmouseout="hideTip(event, 'fs56', 112)" onmouseover="showTip(event, 'fs56', 112)" class="i">obsEE</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs51', 113)" onmouseover="showTip(event, 'fs51', 113)" class="i">Observable</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs54', 114)" onmouseover="showTip(event, 'fs54', 114)" class="i">map</span> (<span class="k">fun</span> <span class="i">x</span><span class="k">-&gt;</span><span class="i">x</span><span class="o">.</span><span class="i">Epoch</span>,<span class="i">x</span><span class="o">.</span><span class="i">Err</span>),<span class="i">Title</span><span class="o">=</span><span class="s">&quot;Epoch Err&quot;</span>)
+        <span class="o">|&gt;</span> <span class="i">Chart</span><span class="o">.</span><span class="i">WithXAxis</span>(<span class="i">Title</span><span class="o">=</span><span class="s">&quot;Epoch&quot;</span>)
+    <span onmouseout="hideTip(event, 'fs15', 115)" onmouseover="showTip(event, 'fs15', 115)" class="f">show</span> [<span onmouseout="hideTip(event, 'fs59', 116)" onmouseover="showTip(event, 'fs59', 116)" class="i">c1</span>;<span onmouseout="hideTip(event, 'fs60', 117)" onmouseover="showTip(event, 'fs60', 117)" class="i">c2</span>]
+    <span onmouseout="hideTip(event, 'fs46', 118)" onmouseover="showTip(event, 'fs46', 118)" class="i">cts</span>
+;;
+<span class="c">(*</span>
+<span class="c">let ct1 = track @&quot;C:\CNTK\Models\M1\err&quot;</span>
+<span class="c">ct1.Cancel() </span>
+
+<span class="c">let ct2 = track @&quot; track @&quot;C:\CNTK\Models\M2\err&quot;</span>
+<span class="c">ct2.Cancel() </span>
+
+<span class="c">*)</span>
+
+<span class="c">(* minibatch error rate display chart note use the &#39;tailFilterWithMB&#39; filter to include data for this chart</span>
+
+<span class="c">let pctArray() = [|for i in 0 .. 9 -&gt; i,0.|]</span>
+<span class="c">let collectMB (acc:(int*float)array) m1 = let i = int ((m1.Percent - 1. |&gt; max 0.) * 0.1) % 10 in acc.[i] &lt;- i,m1.CE; acc</span>
+<span class="c">let majorPctChanged (m1,m2) = floor (m1.Percent / 10.) &lt;&gt; floor (m2.Percent / 10.)</span>
+
+<span class="c">let obsMBP = obsCntk |&gt; Observable.choose chooseMB </span>
+<span class="c">let obsMB = obsMBP |&gt; Observable.scan collectMB (pctArray())</span>
+
+<span class="c">let every x i _ = i % !x = 0 //every 10th item</span>
+<span class="c">let updateEvery = ref 100 //updateEvery := 300</span>
+
+<span class="c">let obsMBCE = obsMB |&gt; Observable.filteri (every updateEvery) |&gt; Observable.map Array.copy</span>
+<span class="c">;;</span>
+<span class="c">LiveChart.FastLine (obsMBCE,Title=&quot;MB CE&quot;);;</span>
+<span class="c">*)</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace System</div>
+<div class="tip" id="fs2">namespace Microsoft.FSharp</div>
+<div class="tip" id="fs3">namespace Microsoft.FSharp.Control</div>
+<div class="tip" id="fs4">namespace System.Windows</div>
+<div class="tip" id="fs5">namespace System.Windows.Forms</div>
+<div class="tip" id="fs6">namespace System.IO</div>
+<div class="tip" id="fs7">val fsi : Compiler.Interactive.InteractiveSession<br /><br />Full name: Microsoft.FSharp.Compiler.Interactive.Settings.fsi</div>
+<div class="tip" id="fs8">member Compiler.Interactive.InteractiveSession.AddPrinter : (&#39;T -&gt; string) -&gt; unit</div>
+<div class="tip" id="fs9">val ch : obj</div>
+<div class="tip" id="fs10">val ignore : value:&#39;T -&gt; unit<br /><br />Full name: Microsoft.FSharp.Core.Operators.ignore</div>
+<div class="tip" id="fs11">val private containerize : ch:&#39;a -&gt; &#39;b<br /><br />Full name: Script.containerize</div>
+<div class="tip" id="fs12">val ch : &#39;a</div>
+<div class="tip" id="fs13">type DockStyle =<br />&#160;&#160;| None = 0<br />&#160;&#160;| Top = 1<br />&#160;&#160;| Bottom = 2<br />&#160;&#160;| Left = 3<br />&#160;&#160;| Right = 4<br />&#160;&#160;| Fill = 5<br /><br />Full name: System.Windows.Forms.DockStyle</div>
+<div class="tip" id="fs14">field DockStyle.Fill = 5</div>
+<div class="tip" id="fs15">val show : chlist:&#39;a list -&gt; unit<br /><br />Full name: Script.show</div>
+<div class="tip" id="fs16">val chlist : &#39;a list</div>
+<div class="tip" id="fs17">val form : Form</div>
+<div class="tip" id="fs18">Multiple items<br />type Form =<br />&#160;&#160;inherit ContainerControl<br />&#160;&#160;new : unit -&gt; Form<br />&#160;&#160;member AcceptButton : IButtonControl with get, set<br />&#160;&#160;member Activate : unit -&gt; unit<br />&#160;&#160;member ActiveMdiChild : Form<br />&#160;&#160;member AddOwnedForm : ownedForm:Form -&gt; unit<br />&#160;&#160;member AllowTransparency : bool with get, set<br />&#160;&#160;member AutoScale : bool with get, set<br />&#160;&#160;member AutoScaleBaseSize : Size with get, set<br />&#160;&#160;member AutoScroll : bool with get, set<br />&#160;&#160;member AutoSize : bool with get, set<br />&#160;&#160;...<br />&#160;&#160;nested type ControlCollection<br /><br />Full name: System.Windows.Forms.Form<br /><br />--------------------<br />Form() : unit</div>
+<div class="tip" id="fs19">property Control.Width: int</div>
+<div class="tip" id="fs20">property Control.Height: int</div>
+<div class="tip" id="fs21">property Control.Visible: bool</div>
+<div class="tip" id="fs22">property Form.Text: string</div>
+<div class="tip" id="fs23">val grid : TableLayoutPanel</div>
+<div class="tip" id="fs24">Multiple items<br />type TableLayoutPanel =<br />&#160;&#160;inherit Panel<br />&#160;&#160;new : unit -&gt; TableLayoutPanel<br />&#160;&#160;member BorderStyle : BorderStyle with get, set<br />&#160;&#160;member CellBorderStyle : TableLayoutPanelCellBorderStyle with get, set<br />&#160;&#160;member ColumnCount : int with get, set<br />&#160;&#160;member ColumnStyles : TableLayoutColumnStyleCollection<br />&#160;&#160;member Controls : TableLayoutControlCollection<br />&#160;&#160;member GetCellPosition : control:Control -&gt; TableLayoutPanelCellPosition<br />&#160;&#160;member GetColumn : control:Control -&gt; int<br />&#160;&#160;member GetColumnSpan : control:Control -&gt; int<br />&#160;&#160;member GetColumnWidths : unit -&gt; int[]<br />&#160;&#160;...<br /><br />Full name: System.Windows.Forms.TableLayoutPanel<br /><br />--------------------<br />TableLayoutPanel() : unit</div>
+<div class="tip" id="fs25">property Panel.AutoSize: bool</div>
+<div class="tip" id="fs26">property TableLayoutPanel.RowCount: int</div>
+<div class="tip" id="fs27">property TableLayoutPanel.RowStyles: TableLayoutRowStyleCollection</div>
+<div class="tip" id="fs28">TableLayoutStyleCollection.Add(style: TableLayoutStyle) : int<br />TableLayoutRowStyleCollection.Add(rowStyle: RowStyle) : int</div>
+<div class="tip" id="fs29">Multiple items<br />type RowStyle =<br />&#160;&#160;inherit TableLayoutStyle<br />&#160;&#160;new : unit -&gt; RowStyle + 2 overloads<br />&#160;&#160;member Height : float32 with get, set<br /><br />Full name: System.Windows.Forms.RowStyle<br /><br />--------------------<br />RowStyle() : unit<br />RowStyle(sizeType: SizeType) : unit<br />RowStyle(sizeType: SizeType, height: float32) : unit</div>
+<div class="tip" id="fs30">type SizeType =<br />&#160;&#160;| AutoSize = 0<br />&#160;&#160;| Absolute = 1<br />&#160;&#160;| Percent = 2<br /><br />Full name: System.Windows.Forms.SizeType</div>
+<div class="tip" id="fs31">field SizeType.Percent = 2</div>
+<div class="tip" id="fs32">property TableLayoutPanel.GrowStyle: TableLayoutPanelGrowStyle</div>
+<div class="tip" id="fs33">type TableLayoutPanelGrowStyle =<br />&#160;&#160;| FixedSize = 0<br />&#160;&#160;| AddRows = 1<br />&#160;&#160;| AddColumns = 2<br /><br />Full name: System.Windows.Forms.TableLayoutPanelGrowStyle</div>
+<div class="tip" id="fs34">field TableLayoutPanelGrowStyle.AddRows = 1</div>
+<div class="tip" id="fs35">property Control.Dock: DockStyle</div>
+<div class="tip" id="fs36">Multiple items<br />module List<br /><br />from Microsoft.FSharp.Collections<br /><br />--------------------<br />type List&lt;&#39;T&gt; =<br />&#160;&#160;| ( [] )<br />&#160;&#160;| ( :: ) of Head: &#39;T * Tail: &#39;T list<br />&#160;&#160;interface IEnumerable<br />&#160;&#160;interface IEnumerable&lt;&#39;T&gt;<br />&#160;&#160;member GetSlice : startIndex:int option * endIndex:int option -&gt; &#39;T list<br />&#160;&#160;member Head : &#39;T<br />&#160;&#160;member IsEmpty : bool<br />&#160;&#160;member Item : index:int -&gt; &#39;T with get<br />&#160;&#160;member Length : int<br />&#160;&#160;member Tail : &#39;T list<br />&#160;&#160;static member Cons : head:&#39;T * tail:&#39;T list -&gt; &#39;T list<br />&#160;&#160;static member Empty : &#39;T list<br /><br />Full name: Microsoft.FSharp.Collections.List&lt;_&gt;</div>
+<div class="tip" id="fs37">val map : mapping:(&#39;T -&gt; &#39;U) -&gt; list:&#39;T list -&gt; &#39;U list<br /><br />Full name: Microsoft.FSharp.Collections.List.map</div>
+<div class="tip" id="fs38">val iter : action:(&#39;T -&gt; unit) -&gt; list:&#39;T list -&gt; unit<br /><br />Full name: Microsoft.FSharp.Collections.List.iter</div>
+<div class="tip" id="fs39">property TableLayoutPanel.Controls: TableLayoutControlCollection</div>
+<div class="tip" id="fs40">Control.ControlCollection.Add(value: Control) : unit<br />TableLayoutControlCollection.Add(control: Control, column: int, row: int) : unit</div>
+<div class="tip" id="fs41">property Control.Controls: Control.ControlCollection</div>
+<div class="tip" id="fs42">Control.ControlCollection.Add(value: Control) : unit</div>
+<div class="tip" id="fs43">Control.Show() : unit<br />Form.Show(owner: IWin32Window) : unit</div>
+<div class="tip" id="fs44">val track : file:&#39;a -&gt; Threading.CancellationTokenSource<br /><br />Full name: Script.track</div>
+<div class="tip" id="fs45">val file : &#39;a</div>
+<div class="tip" id="fs46">val cts : Threading.CancellationTokenSource</div>
+<div class="tip" id="fs47">namespace System.Threading</div>
+<div class="tip" id="fs48">Multiple items<br />type CancellationTokenSource =<br />&#160;&#160;new : unit -&gt; CancellationTokenSource<br />&#160;&#160;member Cancel : unit -&gt; unit + 1 overload<br />&#160;&#160;member Dispose : unit -&gt; unit<br />&#160;&#160;member IsCancellationRequested : bool<br />&#160;&#160;member Token : CancellationToken<br />&#160;&#160;static member CreateLinkedTokenSource : [&lt;ParamArray&gt;] tokens:CancellationToken[] -&gt; CancellationTokenSource + 1 overload<br /><br />Full name: System.Threading.CancellationTokenSource<br /><br />--------------------<br />Threading.CancellationTokenSource() : unit</div>
+<div class="tip" id="fs49">val obs : IObservable&lt;obj&gt;</div>
+<div class="tip" id="fs50">val fPost : obj</div>
+<div class="tip" id="fs51">module Observable<br /><br />from Microsoft.FSharp.Control</div>
+<div class="tip" id="fs52">property Threading.CancellationTokenSource.Token: Threading.CancellationToken</div>
+<div class="tip" id="fs53">val obsCntk : IObservable&lt;obj&gt;</div>
+<div class="tip" id="fs54">val map : mapping:(&#39;T -&gt; &#39;U) -&gt; source:IObservable&lt;&#39;T&gt; -&gt; IObservable&lt;&#39;U&gt;<br /><br />Full name: Microsoft.FSharp.Control.Observable.map</div>
+<div class="tip" id="fs55">val choose : chooser:(&#39;T -&gt; &#39;U option) -&gt; source:IObservable&lt;&#39;T&gt; -&gt; IObservable&lt;&#39;U&gt;<br /><br />Full name: Microsoft.FSharp.Control.Observable.choose</div>
+<div class="tip" id="fs56">val obsEE : IObservable&lt;obj&gt;</div>
+<div class="tip" id="fs57">val subscribe : callback:(&#39;T -&gt; unit) -&gt; source:IObservable&lt;&#39;T&gt; -&gt; IDisposable<br /><br />Full name: Microsoft.FSharp.Control.Observable.subscribe</div>
+<div class="tip" id="fs58">val printfn : format:Printf.TextWriterFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.printfn</div>
+<div class="tip" id="fs59">val c1 : obj</div>
+<div class="tip" id="fs60">val c2 : obj</div>
+

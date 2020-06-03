@@ -1,0 +1,40 @@
+// server
+
+    let testFile<'entity> 
+        (testFn: string -> 'entity) (filename: string) 
+        : Result<'entity, string> =
+        try
+            testFn filename
+            |> Ok
+        with
+        | exc ->
+            Error exc.Message
+    
+    let showFn 
+        (getValidData: string ->  'a[]) 
+        (showLine: 'a -> 'entity)
+        (filename: string) 
+        : 'entity[] =
+        getValidData filename
+        |> Array.map showLine
+
+// client
+
+    let reactiveButton 
+        (reactiveFn: unit -> Async<'entity>) (showVar: 'entity -> Doc) 
+        (initial: 'entity) (label:string) (descr:string) 
+        : Doc =
+        let reactVar = Var.Create initial
+        div [] [
+            p [] [
+                Doc.Button 
+                    label [attr.``class``"btn btn-info"] (fun () ->
+                        async {
+                            let! test = reactiveFn()
+                            reactVar.Set test
+                        } |> Async.StartImmediate)
+                text <| " " + descr + " "]
+            Doc.BindView 
+                showVar
+                reactVar.View
+        ]

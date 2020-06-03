@@ -1,0 +1,98 @@
+open System
+open System.IO
+open System.Threading.Tasks
+
+open CsvHelper
+open CsvHelper.Configuration
+
+open NetMQ
+open NetMQ.Sockets
+
+open MBrace.FsPickler
+open MBrace.FsPickler.Json
+
+// Ventilator (CSV -> PushSocket)  -> Worker: (Pull -> Push) -> Sink (Pull)
+//                                    Worker: (Pull -> Push)
+//                                    Worker: (Pull -> Push)
+//                                    Worker: (Pull -> Push)
+//                                    Worker: (Pull -> Push)
+
+
+let pushVentilator = new PushSocket("@tcp://*:5557")
+let pullSink = new PullSocket("@tcp://*:5558")
+
+let mutable batchId = 0
+let sync = obj()
+
+let getBatchId () =
+    lock (sync) (fun _ ->
+        batchId <- batchId + 1
+        batchId
+    )
+
+type Message<'T> =
+    | StartBatch of int
+    | Body       of 'T
+    | Processed  of int * 'T
+    | EndBatch   of int
+
+[<CLIMutable>]
+type Name = 
+    {
+        UID: int
+        First: string
+        Last: string
+    }
+
+let serializer = MBrace.FsPickler.Json.FsPickler.CreateJsonSerializer()
+
+/// Serializes using FsPickler
+let des<'t> json = 
+    use stringReader = new StringReader(json)
+    serializer.Deserialize<'t>(stringReader)
+
+/// Serializes using FsPickler
+let ser item = 
+    use stringWriter = new StringWriter()
+    serializer.Serialize(stringWriter, item)
+    stringWriter.ToString()
+
+/// Generates a random csv file
+let writeCsv () =
+    let batchId = getBatchId()
+    let records = [|1..1000|] |> Array.map (fun x ->  { UID = x; First = "Robert"; Last = "Dole" })
+    let fileName = Path.Combine(__SOURCE_DIRECTORY__, "Names.csv")
+    use writer = new StreamWriter(fileName)
+    use csv = new CsvWriter(writer)
+    csv.WriteRecords records
+
+/// Reads the CSV file
+let readCsv () =
+    let batchId = getBatchId()
+    let fileName = Path.Combine(__SOURCE_DIRECTORY__, "Names.csv")
+    use reader = new StreamReader(fileName)
+    use csv = new CsvReader(reader)
+    for r in csv.GetRecords<Name>() |> Seq.chunkBySize 10 do 
+        pushVentilator.SendFrame(r |> Body |> ser)
+
+/// The worker
+let worker workerId =
+    use pullSocket = new PullSocket(">tcp://localhost:5557")
+    use pushSocket = new PushSocket(">tcp://localhost:5558")
+    
+    while true do
+        let str = pullSocket.ReceiveFrameString()
+        match des<Message<Name[]>> str with
+        | Body b -> pushSocket.SendFrame((workerId, b) |> Processed |> ser)
+        | otherwise -> pushSocket.SendFrame(otherwise |> ser)
+
+/// The sink
+let sink () =
+    while true do
+        let str = pullSink.ReceiveFrameString()
+        let item = des<Message<Name[]>> str
+        stdout.WriteLine(item)
+
+let ventilatorTasks = [1..8] |> List.map (fun x -> Task.Run(fun _ -> readCsv()))
+let sinkTask        = Task.Run(fun _ -> sink())
+let workerTasks     = [1..8] |> List.map (fun x -> Task.Run(fun _ -> worker x))

@@ -1,0 +1,77 @@
+//Binet's formula F(n) = ( (1 + sqrt(5))^n/2^n) - (1 - sqrt(5))^n/2^n))/sqrt(5)
+//(a+b sqrt(5)) <=> (a,b)
+
+type Fpair (a:bigint,b:bigint) =
+  //private Map-Reduce functions 
+  static let mapReduce arg mappers reducers = 
+     //mapping
+     let pMap arg mappers = mappers
+                                   |> List.map (fun mapper -> async {return arg |> mapper }) 
+                                   |> Async.Parallel 
+                                   |> Async.RunSynchronously
+     //reducing
+     let reduce mapResult reducers = reducers |> List.map ((|>) mapResult) 
+     
+     //map, reduce
+     let mapRes = mappers |> pMap arg in          //do parallel mapping first with mappers
+     reducers |> reduce mapRes                    //and then reduce with reducers
+
+  member this.a=a
+  member this.b=b
+  //Alt constructor
+  new(L:bigint list) = Fpair(L.Item 0,L.Item 1)
+
+  //Fpair multiplication
+  static member (.*) (left:Fpair,right:Fpair) = 
+      //make 4 mapping tasks
+      let mappers = [ 
+                      fun ((l:Fpair), (r:Fpair)) -> let bb = l.b*r.b in bb + (bb <<< 2)
+                      fun ((l:Fpair), (r:Fpair)) -> l.a*r.a
+                      fun ((l:Fpair), (r:Fpair)) -> l.b*r.a
+                      fun ((l:Fpair), (r:Fpair)) -> l.a*r.b
+                    ]
+      //make 2 reducing tasks
+      let reducers = [ 
+                       fun (a:bigint array) -> a.[0] + a.[1]
+                       fun (a:bigint array) -> a.[2] + a.[3]
+                     ]      
+      //reduce to new Fpair
+      mapReduce (left,right) mappers reducers |> Fpair 
+
+  //square Fpair (a + b sqrt(5))^2 = a^2 + 5b^2 + 2(ab)sqrt(5)
+  static member (~+) (arg:Fpair) =
+      //make 3 mapping tasks
+      let mappers = [ 
+                      fun (arg:Fpair) -> let bb = arg.b*arg.b in bb + (bb <<< 2) //5b^2
+                      fun (arg:Fpair) -> arg.a*arg.a                             //a^2
+                      fun (arg:Fpair) -> arg.a*arg.b <<< 1                       //2ab
+                    ]
+     
+     //make 2 reducing tasks
+      let reducers = [ 
+                       fun (a:bigint array) -> a.[0] + a.[1]
+                       fun (a:bigint array) -> a.[2] 
+                     ]   
+      //reduce to new Fpair
+      mapReduce arg mappers reducers |> Fpair
+
+  //Fpair division by pow of 2
+  static member (./) (left:int,right:Fpair) =
+    Fpair(right.a >>> left,right.b >>> left)
+
+  //First Fpair 1 + sqrt(5)
+  static member one = Fpair(1I,1I)
+
+let fastFib (n:int) =
+   let ans = new System.Collections.BitArray([|n|]) 
+            |> Seq.cast<bool>                     //convert binary array to seq of booleans
+            |> Seq.rev
+            |> Seq.skipWhile (fun x -> not x)     //skip all false bits
+            |> Seq.skip 1                         //skip one true bit
+            |> Seq.fold (
+                 fun a x -> if x then             //if true bit
+                              + a |> (.*) Fpair.one |> (./) 2   //squaring and then multiplying  
+                            else                  //if false bit
+                              + a |> (./) 1)                    //only squaring
+                 Fpair.one
+   ans.b   //second component of Fpair is the result F[n]

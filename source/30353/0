@@ -1,0 +1,77 @@
+(*
+
+Install-Package FSharp.Data
+Install-Package Accord
+Install-Package Accord.MachineLearning
+Install-Package Accord.Math
+Install-Package Accord.Statistics
+
+*)
+#if INTERACTIVE
+#I @"./packages"
+#r @"FSharp.Data.2.3.3/lib/net40/FSharp.Data.dll"
+#r @"Accord.3.7.0/lib/net45/Accord.dll"
+#r @"Accord.MachineLearning.3.7.0/lib/net45/Accord.MachineLearning.dll"
+#r @"Accord.Math.3.7.0/lib/net45/Accord.Math.Core.dll"
+#r @"Accord.Math.3.7.0/lib/net45/Accord.Math.dll"
+#r @"Accord.Statistics.3.7.0/lib/net45/Accord.Statistics.dll"
+#time
+#else
+module DecisionTree
+#endif
+
+open System
+open FSharp.Data
+open Accord.MachineLearning.DecisionTrees.Learning
+
+type Wines = CsvProvider<"https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-red.csv",";",InferRows=2000>
+let inputs, output = 
+    Wines.Load(@"https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-red.csv").Rows
+    |> Seq.map (fun row -> 
+        ([| 
+            row.Alcohol;
+            row.Chlorides;
+            row.``Citric acid``;
+            row.Density;
+            row.``Fixed acidity``;
+            row.``Free sulfur dioxide``;
+            row.Sulphates;
+            row.PH;
+            row.``Residual sugar``;
+            row.``Total sulfur dioxide``;
+            row.``Volatile acidity``
+        |] |> Array.map Convert.ToDouble), row.Quality)
+    |> Seq.toArray
+    |> Array.unzip
+
+let learner = 
+    let cancellationToken, source = 
+        let s = new System.Threading.CancellationTokenSource()
+        s.Token, s
+    
+    /// There are multiple algorithms available.
+    /// http://scikit-learn.org/stable/_static/ml_map.png
+    new Accord.MachineLearning.DecisionTrees.Learning.C45Learning()
+
+/// Teach the model in background thread. This may take some time.
+let modelTask = 
+    System.Threading.Tasks.Task.Run(fun () ->
+        learner.Learn(inputs, output)
+    ) |> Async.AwaitTask
+
+// When running background, you could cancel the task:
+// source.Cancel()
+
+// For now, let's just run as non-async:
+let model = modelTask |> Async.RunSynchronously
+
+// Test with current items. There is no point of course:
+// You should split your sample data to two sets, and use the other to train
+// the model, and the other to test the accuracy of predictions.
+let predicted = model.Decide(inputs)
+
+// Actual vs expected, 10 first ones:
+// [1..10] |> List.iter (fun i -> printfn "Actual %d vs %d" output.[i] predicted.[i])
+
+// The classification error
+//let err = Accord.Math.Optimization.Losses.ZeroOneLoss(output).Loss(predicted)

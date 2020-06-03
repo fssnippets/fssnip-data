@@ -1,0 +1,69 @@
+module Komik
+
+open System
+open FSharp.Core
+open System.IO
+open System.Net
+open System.Threading.Tasks
+open FSharp.Data
+open System.Drawing
+
+type Card (setName : string, name : string, number : int, text : Option<string>) =
+    member this.SetName = setName
+    member this.Name =  name
+    member this.Number = number
+    member this.Text = text
+
+type CardSet = JsonProvider<"http://mtgjson.com/json/OGW.json">
+type SetCodes = JsonProvider<"http://mtgjson.com/json/SetCodes.json">
+
+let Set (name : string) =
+  CardSet.Load
+    ( "http://mtgjson.com/json/"
+    + name
+    + ".json"
+    )
+
+let GetData (location : string) =
+  let wc = new WebClient()
+  let task = wc.DownloadData(location)
+  task
+
+let ImageUrl (card : Card) =
+  String.Format
+    ( @"http://magiccards.info/scans/en/{0}/{1}.jpg"
+    , card.SetName.ToLower
+    , card.Number
+    )
+
+let CardId (card : Card) =
+  String.Format
+    ( @"{0}_{1}"
+    , card.SetName
+    , card.Number
+    )
+
+let ImageName (card : Card) = String.Format(@"./{0}.jpg", CardId(card))
+
+let GetCards (name : string) =
+  let set = Set name
+  let cards = set.Cards
+            |> Array.map (fun c -> new Card(set.Code, c.Name, c.Number, c.Text))
+  cards
+
+let GetImageUrls (cards : Card[]) =
+  cards |> Array.map ImageUrl
+
+let GetBitmaps (imageUrls : string[]) =
+  imageUrls |> Array.map GetData |> Array.map (fun i -> new Bitmap(new MemoryStream(i)))
+
+let Safe (cards : Card[]) =
+  let imageUrls = GetImageUrls cards
+  let bitmaps = GetBitmaps imageUrls
+  bitmaps |> Array.zip cards |> Array.map (fun (c, b) -> b.Save (ImageName c)) |> ignore
+
+[<EntryPoint>]
+let main argv =
+  let cards = GetCards "OGW"
+  Safe cards
+  0 // return an integer exit code

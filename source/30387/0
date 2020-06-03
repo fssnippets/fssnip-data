@@ -1,0 +1,68 @@
+// for FSharp-Interactive:
+#r "../packages/SSH.NET/lib/net40/Renci.SshNet.dll"
+
+open Renci.SshNet
+open System.IO
+
+/// FSharp Async wrapper for SSH.NET SFTP
+type SftpClient with
+    member x.ListDirectoryAsync path =
+        Async.FromBeginEnd((fun(iar,state) ->
+            x.BeginListDirectory(path, iar, state)), x.EndListDirectory)
+
+    member x.DownloadFileAsync path output =
+        Async.FromBeginEnd((fun(iar,state) ->
+            x.BeginDownloadFile(path, output, iar, state)), x.EndDownloadFile)
+
+    member x.UploadFileAsync input path =
+        Async.FromBeginEnd((fun(iar,state) ->
+            x.BeginUploadFile(input, path, iar, state)), x.EndUploadFile)
+        |> Async.Catch
+
+    member x.SynchronizeDirectoriesAsync sourcePath destinationPath searchPattern =
+        Async.FromBeginEnd((fun(iar,state) ->
+            x.BeginSynchronizeDirectories(
+                sourcePath, destinationPath, searchPattern, iar, state)),
+            x.EndSynchronizeDirectories)
+        |> Async.Catch
+
+let downloadDir = @"c:\temp"
+let uploadfile = @"c:\temp\file.txt"
+
+let sftpExample host port username (password:string) =
+    async {
+        let workDir = "."
+        use client = new SftpClient(host, port, username, password)
+        client.Connect()
+        printfn "Connected to %s" host
+
+        // Change directory:
+        client.ChangeDirectory workDir
+
+        // List files in directory:
+        let! listDirectory = client.ListDirectoryAsync workDir
+        listDirectory |> Seq.iter(fun file ->
+            if file.IsDirectory then printfn "/%s" file.Name
+            else printfn "%s" file.Name)
+
+        // Download a file:
+        let fileName = "manual_en.pdf"
+        use fileStream = File.OpenWrite(Path.Combine(downloadDir, fileName))
+        printfn "Downloading %s..." fileName
+        do! client.DownloadFileAsync ("./download/"+fileName) fileStream
+        printfn "Downloaded %s (%i bytes)" fileName fileStream.Length
+
+        // Upload a file:
+        client.ChangeDirectory "upload"
+        use fileStream = new FileStream(uploadfile, FileMode.Open)
+        printfn "Uploading %s (%i bytes)" uploadfile fileStream.Length
+        client.BufferSize <- 4096u // bypass Payload error large files
+        let! r = client.UploadFileAsync fileStream (Path.GetFileName uploadfile)
+        match r with
+        | Choice1Of2 _ -> printfn "Uploaded %s" uploadfile
+        | Choice2Of2 err -> printf "Error uploading %s: %O" uploadfile err
+
+    } |> Async.StartAsTask
+
+let test =
+   sftpExample "demo.wftpserver.com" 2222 "demo-user" "demo-user"

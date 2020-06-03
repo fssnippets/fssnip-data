@@ -1,0 +1,15 @@
+open Suave
+open Suave.Filters
+open Suave.Successful
+open System.Threading
+
+
+let app : WebPart = OK "All good"
+
+let cancellationTokenSource = new CancellationTokenSource ()
+let config =  { defaultConfig with cancellationToken = cancellationTokenSource.Token }
+let _, webServer = startWebServerAsync config app
+Async.Start (webServer, cancellationTokenSource.Token) |> ignore
+
+(* stops the server *)
+cancellationTokenSource.Cancel ()

@@ -1,0 +1,77 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">FSharp</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">Data</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="f">metaTitle</span> (<span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="i">doc</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="t">HtmlDocument</span>) <span class="o">=</span>
+    <span onmouseout="hideTip(event, 'fs4', 6)" onmouseover="showTip(event, 'fs4', 6)" class="i">doc</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs6', 7)" onmouseover="showTip(event, 'fs6', 7)" class="f">Descendants</span> <span class="s">&quot;meta&quot;</span>
+    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs7', 8)" onmouseover="showTip(event, 'fs7', 8)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs8', 9)" onmouseover="showTip(event, 'fs8', 9)" class="f">choose</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs9', 10)" onmouseover="showTip(event, 'fs9', 10)" class="i">x</span> <span class="k">-&gt;</span>
+        <span class="k">match</span> <span onmouseout="hideTip(event, 'fs9', 11)" onmouseover="showTip(event, 'fs9', 11)" class="i">x</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs10', 12)" onmouseover="showTip(event, 'fs10', 12)" class="f">AttributeValue</span>(<span class="s">&quot;name&quot;</span>), <span onmouseout="hideTip(event, 'fs9', 13)" onmouseover="showTip(event, 'fs9', 13)" class="i">x</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs10', 14)" onmouseover="showTip(event, 'fs10', 14)" class="f">AttributeValue</span>(<span class="s">&quot;property&quot;</span>) <span class="k">with</span>
+        | <span class="s">&quot;title&quot;</span>, _
+        | <span class="s">&quot;headline&quot;</span>, _
+        | <span class="s">&quot;twitter:title&quot;</span>, _
+        | _, <span class="s">&quot;og:title&quot;</span> <span class="k">-&gt;</span>
+            <span onmouseout="hideTip(event, 'fs11', 15)" onmouseover="showTip(event, 'fs11', 15)" class="p">Some</span>(<span onmouseout="hideTip(event, 'fs9', 16)" onmouseover="showTip(event, 'fs9', 16)" class="i">x</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs10', 17)" onmouseover="showTip(event, 'fs10', 17)" class="f">AttributeValue</span>(<span class="s">&quot;content&quot;</span>))
+        | _, _ <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs12', 18)" onmouseover="showTip(event, 'fs12', 18)" class="p">None</span>
+    )
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs13', 19)" onmouseover="showTip(event, 'fs13', 19)" class="f">titles</span> (<span onmouseout="hideTip(event, 'fs4', 20)" onmouseover="showTip(event, 'fs4', 20)" class="i">doc</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs5', 21)" onmouseover="showTip(event, 'fs5', 21)" class="t">HtmlDocument</span>) <span class="o">=</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs14', 22)" onmouseover="showTip(event, 'fs14', 22)" class="f">tagged</span> (<span onmouseout="hideTip(event, 'fs15', 23)" onmouseover="showTip(event, 'fs15', 23)" class="i">tag</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs16', 24)" onmouseover="showTip(event, 'fs16', 24)" class="t">string</span>) <span class="o">=</span>
+        <span onmouseout="hideTip(event, 'fs4', 25)" onmouseover="showTip(event, 'fs4', 25)" class="i">doc</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs6', 26)" onmouseover="showTip(event, 'fs6', 26)" class="f">Descendants</span> <span onmouseout="hideTip(event, 'fs15', 27)" onmouseover="showTip(event, 'fs15', 27)" class="i">tag</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs7', 28)" onmouseover="showTip(event, 'fs7', 28)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs17', 29)" onmouseover="showTip(event, 'fs17', 29)" class="f">map</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs9', 30)" onmouseover="showTip(event, 'fs9', 30)" class="i">x</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs9', 31)" onmouseover="showTip(event, 'fs9', 31)" class="i">x</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs18', 32)" onmouseover="showTip(event, 'fs18', 32)" class="f">InnerText</span>())
+    <span onmouseout="hideTip(event, 'fs7', 33)" onmouseover="showTip(event, 'fs7', 33)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs19', 34)" onmouseover="showTip(event, 'fs19', 34)" class="f">concat</span> [<span onmouseout="hideTip(event, 'fs14', 35)" onmouseover="showTip(event, 'fs14', 35)" class="f">tagged</span> <span class="s">&quot;title&quot;</span>; <span onmouseout="hideTip(event, 'fs3', 36)" onmouseover="showTip(event, 'fs3', 36)" class="f">metaTitle</span> <span onmouseout="hideTip(event, 'fs4', 37)" onmouseover="showTip(event, 'fs4', 37)" class="i">doc</span>; <span onmouseout="hideTip(event, 'fs14', 38)" onmouseover="showTip(event, 'fs14', 38)" class="f">tagged</span> <span class="s">&quot;h1&quot;</span>]
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs20', 39)" onmouseover="showTip(event, 'fs20', 39)" class="f">title</span> (<span onmouseout="hideTip(event, 'fs4', 40)" onmouseover="showTip(event, 'fs4', 40)" class="i">doc</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs5', 41)" onmouseover="showTip(event, 'fs5', 41)" class="t">HtmlDocument</span>) <span class="o">=</span>
+    <span onmouseout="hideTip(event, 'fs13', 42)" onmouseover="showTip(event, 'fs13', 42)" class="f">titles</span> <span onmouseout="hideTip(event, 'fs4', 43)" onmouseover="showTip(event, 'fs4', 43)" class="i">doc</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs7', 44)" onmouseover="showTip(event, 'fs7', 44)" class="t">Seq</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs21', 45)" onmouseover="showTip(event, 'fs21', 45)" class="f">tryHead</span>
+
+<span class="s">&quot;http://www.telegraph.co.uk&quot;</span>
+<span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs5', 46)" onmouseover="showTip(event, 'fs5', 46)" class="t">HtmlDocument</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs22', 47)" onmouseover="showTip(event, 'fs22', 47)" class="f">Load</span>
+<span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs13', 48)" onmouseover="showTip(event, 'fs13', 48)" class="f">titles</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">Multiple items<br />namespace FSharp<br /><br />--------------------<br />namespace Microsoft.FSharp</div>
+<div class="tip" id="fs2">Multiple items<br />namespace FSharp.Data<br /><br />--------------------<br />namespace Microsoft.FSharp.Data</div>
+<div class="tip" id="fs3">val metaTitle : doc:HtmlDocument -&gt; seq&lt;string&gt;<br /><br />Full name: Script.metaTitle</div>
+<div class="tip" id="fs4">val doc : HtmlDocument</div>
+<div class="tip" id="fs5">Multiple items<br />module HtmlDocument<br /><br />from FSharp.Data<br /><br />--------------------<br />type HtmlDocument =<br />&#160;&#160;private | HtmlDocument of docType: string * elements: HtmlNode list<br />&#160;&#160;override ToString : unit -&gt; string<br />&#160;&#160;static member AsyncLoad : uri:string -&gt; Async&lt;HtmlDocument&gt;<br />&#160;&#160;static member Load : uri:string -&gt; HtmlDocument<br />&#160;&#160;static member Load : reader:TextReader -&gt; HtmlDocument<br />&#160;&#160;static member Load : stream:Stream -&gt; HtmlDocument<br />&#160;&#160;static member New : children:seq&lt;HtmlNode&gt; -&gt; HtmlDocument<br />&#160;&#160;static member New : docType:string * children:seq&lt;HtmlNode&gt; -&gt; HtmlDocument<br />&#160;&#160;static member Parse : text:string -&gt; HtmlDocument<br /><br />Full name: FSharp.Data.HtmlDocument</div>
+<div class="tip" id="fs6">static member HtmlDocumentExtensions.Descendants : doc:HtmlDocument -&gt; seq&lt;HtmlNode&gt;<br />static member HtmlDocumentExtensions.Descendants : doc:HtmlDocument * predicate:(HtmlNode -&gt; bool) -&gt; seq&lt;HtmlNode&gt;<br />static member HtmlDocumentExtensions.Descendants : doc:HtmlDocument * names:seq&lt;string&gt; -&gt; seq&lt;HtmlNode&gt;<br />static member HtmlDocumentExtensions.Descendants : doc:HtmlDocument * name:string -&gt; seq&lt;HtmlNode&gt;<br />static member HtmlDocumentExtensions.Descendants : doc:HtmlDocument * predicate:(HtmlNode -&gt; bool) * recurseOnMatch:bool -&gt; seq&lt;HtmlNode&gt;<br />static member HtmlDocumentExtensions.Descendants : doc:HtmlDocument * names:seq&lt;string&gt; * recurseOnMatch:bool -&gt; seq&lt;HtmlNode&gt;<br />static member HtmlDocumentExtensions.Descendants : doc:HtmlDocument * name:string * recurseOnMatch:bool -&gt; seq&lt;HtmlNode&gt;</div>
+<div class="tip" id="fs7">module Seq<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs8">val choose : chooser:(&#39;T -&gt; &#39;U option) -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;U&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.choose</div>
+<div class="tip" id="fs9">val x : HtmlNode</div>
+<div class="tip" id="fs10">static member HtmlNodeExtensions.AttributeValue : n:HtmlNode * name:string -&gt; string</div>
+<div class="tip" id="fs11">union case Option.Some: Value: &#39;T -&gt; Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs12">union case Option.None: Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs13">val titles : doc:HtmlDocument -&gt; seq&lt;string&gt;<br /><br />Full name: Script.titles</div>
+<div class="tip" id="fs14">val tagged : (string -&gt; seq&lt;string&gt;)</div>
+<div class="tip" id="fs15">val tag : string</div>
+<div class="tip" id="fs16">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />Full name: Microsoft.FSharp.Core.Operators.string<br /><br />--------------------<br />type string = System.String<br /><br />Full name: Microsoft.FSharp.Core.string</div>
+<div class="tip" id="fs17">val map : mapping:(&#39;T -&gt; &#39;U) -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;U&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.map</div>
+<div class="tip" id="fs18">static member HtmlNodeExtensions.InnerText : n:HtmlNode -&gt; string</div>
+<div class="tip" id="fs19">val concat : sources:seq&lt;#seq&lt;&#39;T&gt;&gt; -&gt; seq&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Collections.Seq.concat</div>
+<div class="tip" id="fs20">val title : doc:HtmlDocument -&gt; string option<br /><br />Full name: Script.title</div>
+<div class="tip" id="fs21">val tryHead : source:seq&lt;&#39;T&gt; -&gt; &#39;T option<br /><br />Full name: Microsoft.FSharp.Collections.Seq.tryHead</div>
+<div class="tip" id="fs22">static member HtmlDocument.Load : uri:string -&gt; HtmlDocument<br />static member HtmlDocument.Load : reader:System.IO.TextReader -&gt; HtmlDocument<br />static member HtmlDocument.Load : stream:System.IO.Stream -&gt; HtmlDocument</div>
+

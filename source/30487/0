@@ -1,0 +1,6 @@
+let objRegex(pattern:string)(input:string)(replacement:MatchEvaluator) =
+   Regex.Replace(input,pattern,replacement)
+
+let objRegexEvaluator = MatchEvaluator(fun m -> String.concat "" ["""<span class="special-fs">""";m.Value;"</span>"])
+    
+objRegex("(?<![A-Za-z1-9])(Seq|List|Array|float|int)(?![A-Za-z1-9])")("NewtonRahpson(f:float-&gt;float)(fDiff:float-&gt;float)(a0:float)")(objRegexEvaluator)

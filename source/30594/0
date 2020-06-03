@@ -1,0 +1,27 @@
+open System
+
+let compress s =
+    let rec compressInner seen curChar curCharCount rest =
+        match rest with
+        | x::xs when x = curChar ->
+            compressInner seen x (curCharCount + 1) xs
+        | x::xs ->
+            match curCharCount with
+            | 1 -> compressInner (seen @ [string curChar]) x 1 xs
+            | n -> compressInner (seen @ [string curChar] @ [string n]) x 1 xs
+        | [] ->
+            match curCharCount with
+            | 1 -> sprintf "%s%c" (String.Concat seen) curChar
+            | _ -> sprintf "%s%c%d" (String.Concat seen) curChar curCharCount
+
+    match List.ofSeq s with
+    | []    -> ""
+    | [x]   -> x.ToString()
+    | x::xs -> compressInner [] x 1 xs
+
+let solve() =
+    Console.ReadLine()
+    |> compress
+    |> printfn "%s"
+
+solve()

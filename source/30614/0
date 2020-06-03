@@ -1,0 +1,92 @@
+/// Canonical list definition, just for comparison.
+type List<'item> =
+    | Cons of 'item * List<'item>
+    | Nil
+
+/// A link consists of an item followed by a tail of some type.
+type Link<'item, 'tail> =
+
+    /// Just like Cons, but not recursive.
+    | Link of 'item * 'tail
+
+    /// Just like Nil.
+    | Done
+
+module Link =
+
+    /// An example of length 0.
+    let example0 = Done
+
+    /// An example of length 1.
+    let example1 = Link ('A', Done)
+
+    /// An example of length 2.
+    let example2 = Link ('A', Link ('B', Done))
+
+    /// We can map over a link (which means it's a functor). Since the item
+    /// and the tail are two different types, we choose to leave the item
+    /// alone and map over the tail.
+    let map f = function
+        | Link (item, tail) -> Link (item, f tail)
+        | Done -> Done
+
+/// A recursive chain of links (i.e. its free monad).
+type Chain<'item, 'next> =
+
+    /// Link's "fixed point".
+    | Free of Link<'item, Chain<'item, 'next>>
+
+    /// Lifts a value directly into the monad.
+    | Pure of 'next
+
+module Chain =
+
+    /// Binds two chains together.
+    let rec bind f = function
+        | Free link ->
+            link
+                |> Link.map (bind f)   // pass the given function along to the next link
+                |> Free
+        | Pure next -> f next          // we're at the end: glue the two chains together
+
+/// Workflow builder for chains.
+type ChainBuilder() =
+    member __.Bind(chain, func) = chain |> Chain.bind func
+    member __.Return(value) = Pure value
+    member __.ReturnFrom(value) = value
+    member __.Zero() = Pure ()
+
+/// Workflow builder for chains.
+let chain = ChainBuilder()
+
+/// Creates a one-link chain with the given item, ready for binding.
+let toChain item =
+    Free (Link (item, Pure ()))
+
+/// Example: Creates a chain the verbose way.
+let chainPlain =
+    toChain 'A'
+        |> Chain.bind (fun () -> toChain 'B')   // replace chain A's tail with chain B
+
+/// Example: Creates a chain using the builder.
+let chainSugar =
+    chain {
+        do! toChain 'A'
+        do! toChain 'B'
+        return ()
+    }
+
+/// These two chains are the same.
+///
+/// Output:
+/// Free (Link ('A', Free (Link ('B', Pure ()))))
+/// Free (Link ('A', Free (Link ('B', Pure ()))))
+[<EntryPoint>]
+let main argv =
+    printfn "%A" chainPlain
+    printfn "%A" chainSugar
+    0
+
+// For more information:
+// * http://www.haskellforall.com/2012/06/you-could-have-invented-free-monads.html
+// * https://blog.ploeh.dk/2017/08/07/f-free-monad-recipe/

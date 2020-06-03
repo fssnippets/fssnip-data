@@ -1,0 +1,52 @@
+#r @"..\packages\FSharp.Charting\lib\net40\FSharp.Charting.dll"
+#r @"..\packages\System.Reactive.Core.3.0.0\lib\net45\System.Reactive.Core.dll"
+#r @"..\packages\System.Reactive.Linq.3.0.0\lib\net45\System.Reactive.Linq.dll"
+#r @"..\packages\System.Reactive.Interfaces.3.0.0\lib\net45\System.Reactive.Interfaces.dll"
+#r @"..\packages\FSharp.Control.Reactive.3.5.0\lib\net45\FSharp.Control.Reactive.dll"
+#r @"System.Windows.Forms.DataVisualization"
+#load "ObservableExtensions.fs" // http://fssnip.net/nC
+#load "CNTLLogParser.fs"        // http://fssnip.net/7Rm
+open CNTLLogParser
+open System
+open FSharp.Control.Reactive
+
+open FSharp.Charting
+open System.IO
+open FSharp.Control
+
+module FsiAutoShow = 
+    fsi.AddPrinter(fun (ch:FSharp.Charting.ChartTypes.GenericChart) -> ch.ShowChart() |> ignore; "(Chart)")
+
+let file = @"C:\< cntk log file reference>"
+
+let cts = new System.Threading.CancellationTokenSource()
+let obs,fPost = Observable.createObservableAgent 100 cts.Token
+do tail tailFilterWihoutMB cts file fPost
+let obsCntk = obs |> Observable.map cntkParse |> Observable.choose excludeUnk
+let obsEE = obsCntk |> Observable.choose chooseEE
+LiveChart.FastLineIncremental(obsEE |> Observable.map (fun x->x.Epoch,x.CE),Title="Epoch CE")
+|> Chart.WithXAxis(Title="Epoch");;
+
+(*
+cts.Cancel() 
+*)
+
+(* minibatch error rate display chart note use the 'tailFilterWithMB' filter to include data for this chart
+
+let pctArray() = [|for i in 0 .. 9 -> i,0.|]
+let collectMB (acc:(int*float)array) m1 = let i = int ((m1.Percent - 1. |> max 0.) * 0.1) % 10 in acc.[i] <- i,m1.CE; acc
+let majorPctChanged (m1,m2) = floor (m1.Percent / 10.) <> floor (m2.Percent / 10.)
+
+let obsMBP = obsCntk |> Observable.choose chooseMB 
+let obsMB = obsMBP |> Observable.scan collectMB (pctArray())
+
+let every x i _ = i % !x = 0 //every 10th item
+let updateEvery = ref 100 //updateEvery := 300
+
+let obsMBCE = obsMB |> Observable.filteri (every updateEvery) |> Observable.map Array.copy
+;;
+LiveChart.FastLine (obsMBCE,Title="MB CE");;
+*)
+
+
+

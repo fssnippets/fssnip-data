@@ -1,0 +1,102 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">(* fn is a function which specifies how to join an item from list a to an item from list b *)</span>
+<span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="f">outerProduct</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="f">fn</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="i">a</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="i">b</span> <span class="o">=</span>
+    <span class="k">match</span> <span onmouseout="hideTip(event, 'fs4', 5)" onmouseover="showTip(event, 'fs4', 5)" class="i">b</span> <span class="k">with</span> 
+    |[] <span class="k">-&gt;</span> []
+    |<span onmouseout="hideTip(event, 'fs5', 6)" onmouseover="showTip(event, 'fs5', 6)" class="i">h</span><span class="o">::</span><span onmouseout="hideTip(event, 'fs6', 7)" onmouseover="showTip(event, 'fs6', 7)" class="i">t</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs7', 8)" onmouseover="showTip(event, 'fs7', 8)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs8', 9)" onmouseover="showTip(event, 'fs8', 9)" class="f">append</span> (<span onmouseout="hideTip(event, 'fs7', 10)" onmouseover="showTip(event, 'fs7', 10)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs9', 11)" onmouseover="showTip(event, 'fs9', 11)" class="f">map</span> (<span onmouseout="hideTip(event, 'fs2', 12)" onmouseover="showTip(event, 'fs2', 12)" class="f">fn</span> <span onmouseout="hideTip(event, 'fs5', 13)" onmouseover="showTip(event, 'fs5', 13)" class="i">h</span>) <span onmouseout="hideTip(event, 'fs3', 14)" onmouseover="showTip(event, 'fs3', 14)" class="i">a</span>) (<span onmouseout="hideTip(event, 'fs1', 15)" onmouseover="showTip(event, 'fs1', 15)" class="f">outerProduct</span> <span onmouseout="hideTip(event, 'fs2', 16)" onmouseover="showTip(event, 'fs2', 16)" class="f">fn</span> <span onmouseout="hideTip(event, 'fs3', 17)" onmouseover="showTip(event, 'fs3', 17)" class="i">a</span> <span onmouseout="hideTip(event, 'fs6', 18)" onmouseover="showTip(event, 'fs6', 18)" class="i">t</span>)
+
+<span class="c">// And this is a sample of how I used this:</span>
+
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs10', 19)" onmouseover="showTip(event, 'fs10', 19)" class="t">Name</span> <span class="o">=</span> { <span onmouseout="hideTip(event, 'fs11', 20)" onmouseover="showTip(event, 'fs11', 20)" class="i">FirstName</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs12', 21)" onmouseover="showTip(event, 'fs12', 21)" class="t">string</span>; <span onmouseout="hideTip(event, 'fs13', 22)" onmouseover="showTip(event, 'fs13', 22)" class="i">LastName</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs12', 23)" onmouseover="showTip(event, 'fs12', 23)" class="t">string</span>; <span onmouseout="hideTip(event, 'fs14', 24)" onmouseover="showTip(event, 'fs14', 24)" class="i">Age</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs15', 25)" onmouseover="showTip(event, 'fs15', 25)" class="t">int</span>}
+
+<span class="c">// makeName gets successively curried down the pipeline, until it finally generates the record at then end</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs16', 26)" onmouseover="showTip(event, 'fs16', 26)" class="f">makeName</span> <span onmouseout="hideTip(event, 'fs17', 27)" onmouseover="showTip(event, 'fs17', 27)" class="i">a</span> <span onmouseout="hideTip(event, 'fs18', 28)" onmouseover="showTip(event, 'fs18', 28)" class="i">b</span> <span onmouseout="hideTip(event, 'fs19', 29)" onmouseover="showTip(event, 'fs19', 29)" class="i">c</span> <span class="o">=</span> { <span class="i">FirstName</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs17', 30)" onmouseover="showTip(event, 'fs17', 30)" class="i">a</span>; <span class="i">LastName</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs18', 31)" onmouseover="showTip(event, 'fs18', 31)" class="i">b</span>; <span class="i">Age</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs19', 32)" onmouseover="showTip(event, 'fs19', 32)" class="i">c</span>}
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs20', 33)" onmouseover="showTip(event, 'fs20', 33)" class="i">l1</span> <span class="o">=</span> 
+    [<span class="s">&quot;bill&quot;</span>; <span class="s">&quot;Fred&quot;</span>; <span class="s">&quot;James&quot;</span>]  
+    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs7', 34)" onmouseover="showTip(event, 'fs7', 34)" class="t">List</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs9', 35)" onmouseover="showTip(event, 'fs9', 35)" class="f">map</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs21', 36)" onmouseover="showTip(event, 'fs21', 36)" class="i">x</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs16', 37)" onmouseover="showTip(event, 'fs16', 37)" class="f">makeName</span> <span onmouseout="hideTip(event, 'fs21', 38)" onmouseover="showTip(event, 'fs21', 38)" class="i">x</span>) 
+    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs1', 39)" onmouseover="showTip(event, 'fs1', 39)" class="f">outerProduct</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs22', 40)" onmouseover="showTip(event, 'fs22', 40)" class="f">f</span> <span onmouseout="hideTip(event, 'fs23', 41)" onmouseover="showTip(event, 'fs23', 41)" class="i">p</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs22', 42)" onmouseover="showTip(event, 'fs22', 42)" class="f">f</span> <span onmouseout="hideTip(event, 'fs23', 43)" onmouseover="showTip(event, 'fs23', 43)" class="i">p</span>) [<span class="s">&quot;Smith&quot;</span>; <span class="s">&quot;Jones&quot;</span>]
+    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs1', 44)" onmouseover="showTip(event, 'fs1', 44)" class="f">outerProduct</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs24', 45)" onmouseover="showTip(event, 'fs24', 45)" class="f">f</span> <span onmouseout="hideTip(event, 'fs25', 46)" onmouseover="showTip(event, 'fs25', 46)" class="i">p</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs24', 47)" onmouseover="showTip(event, 'fs24', 47)" class="f">f</span> <span onmouseout="hideTip(event, 'fs25', 48)" onmouseover="showTip(event, 'fs25', 48)" class="i">p</span>) [<span class="n">21</span>; <span class="n">22</span>]
+
+<span class="c">(* This produces the output:</span>
+<span class="c"> [</span>
+<span class="c">    {FirstName = &quot;bill&quot;; LastName = &quot;Smith&quot;; Age = 21;}; </span>
+<span class="c">    {FirstName = &quot;bill&quot;; LastName = &quot;Smith&quot;; Age = 22;}; </span>
+<span class="c">    {FirstName = &quot;bill&quot;; LastName = &quot;Jones&quot;; Age = 21;}; </span>
+<span class="c">    {FirstName = &quot;bill&quot;; LastName = &quot;Jones&quot;; Age = 22;}; </span>
+<span class="c">    {FirstName = &quot;Fred&quot;; LastName = &quot;Smith&quot;; Age = 21;};</span>
+<span class="c">    {FirstName = &quot;Fred&quot;;LastName = &quot;Smith&quot;;Age = 22;}; </span>
+<span class="c">    {FirstName = &quot;Fred&quot;;LastName = &quot;Jones&quot;;Age = 21;}; </span>
+<span class="c">    {FirstName = &quot;Fred&quot;; LastName = &quot;Jones&quot;; Age = 22;}; </span>
+<span class="c">    {FirstName = &quot;James&quot;; LastName = &quot;Smith&quot;; Age = 21;}; </span>
+<span class="c">    {FirstName = &quot;James&quot;; LastName = &quot;Smith&quot;; Age = 22;};</span>
+<span class="c">    {FirstName = &quot;James&quot;;LastName = &quot;Jones&quot;;Age = 21;}; </span>
+<span class="c">    {FirstName = &quot;James&quot;;LastName = &quot;Jones&quot;;Age = 22;}</span>
+<span class="c"> ]</span>
+
+<span class="c">*)</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">val outerProduct : fn:(&#39;a -&gt; &#39;b -&gt; &#39;c) -&gt; a:&#39;b list -&gt; b:&#39;a list -&gt; &#39;c list<br /><br />Full name: Script.outerProduct</div>
+<div class="tip" id="fs2">val fn : (&#39;a -&gt; &#39;b -&gt; &#39;c)</div>
+<div class="tip" id="fs3">val a : &#39;b list</div>
+<div class="tip" id="fs4">val b : &#39;a list</div>
+<div class="tip" id="fs5">val h : &#39;a</div>
+<div class="tip" id="fs6">val t : &#39;a list</div>
+<div class="tip" id="fs7">Multiple items<br />module List<br /><br />from Microsoft.FSharp.Collections<br /><br />--------------------<br />type List&lt;&#39;T&gt; =<br />&#160;&#160;| ( [] )<br />&#160;&#160;| ( :: ) of Head: &#39;T * Tail: &#39;T list<br />&#160;&#160;interface IEnumerable<br />&#160;&#160;interface IEnumerable&lt;&#39;T&gt;<br />&#160;&#160;member GetSlice : startIndex:int option * endIndex:int option -&gt; &#39;T list<br />&#160;&#160;member Head : &#39;T<br />&#160;&#160;member IsEmpty : bool<br />&#160;&#160;member Item : index:int -&gt; &#39;T with get<br />&#160;&#160;member Length : int<br />&#160;&#160;member Tail : &#39;T list<br />&#160;&#160;static member Cons : head:&#39;T * tail:&#39;T list -&gt; &#39;T list<br />&#160;&#160;static member Empty : &#39;T list<br /><br />Full name: Microsoft.FSharp.Collections.List&lt;_&gt;</div>
+<div class="tip" id="fs8">val append : list1:&#39;T list -&gt; list2:&#39;T list -&gt; &#39;T list<br /><br />Full name: Microsoft.FSharp.Collections.List.append</div>
+<div class="tip" id="fs9">val map : mapping:(&#39;T -&gt; &#39;U) -&gt; list:&#39;T list -&gt; &#39;U list<br /><br />Full name: Microsoft.FSharp.Collections.List.map</div>
+<div class="tip" id="fs10">type Name =<br />&#160;&#160;{FirstName: string;<br />&#160;&#160;&#160;LastName: string;<br />&#160;&#160;&#160;Age: int;}<br /><br />Full name: Script.Name</div>
+<div class="tip" id="fs11">Name.FirstName: string</div>
+<div class="tip" id="fs12">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />Full name: Microsoft.FSharp.Core.Operators.string<br /><br />--------------------<br />type string = System.String<br /><br />Full name: Microsoft.FSharp.Core.string</div>
+<div class="tip" id="fs13">Name.LastName: string</div>
+<div class="tip" id="fs14">Name.Age: int</div>
+<div class="tip" id="fs15">Multiple items<br />val int : value:&#39;T -&gt; int (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.int<br /><br />--------------------<br />type int = int32<br /><br />Full name: Microsoft.FSharp.Core.int<br /><br />--------------------<br />type int&lt;&#39;Measure&gt; = int<br /><br />Full name: Microsoft.FSharp.Core.int&lt;_&gt;</div>
+<div class="tip" id="fs16">val makeName : a:string -&gt; b:string -&gt; c:int -&gt; Name<br /><br />Full name: Script.makeName</div>
+<div class="tip" id="fs17">val a : string</div>
+<div class="tip" id="fs18">val b : string</div>
+<div class="tip" id="fs19">val c : int</div>
+<div class="tip" id="fs20">val l1 : Name list<br /><br />Full name: Script.l1</div>
+<div class="tip" id="fs21">val x : string</div>
+<div class="tip" id="fs22">val f : (string -&gt; int -&gt; Name)</div>
+<div class="tip" id="fs23">val p : string</div>
+<div class="tip" id="fs24">val f : (int -&gt; Name)</div>
+<div class="tip" id="fs25">val p : int</div>
+

@@ -1,0 +1,50 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">#!/usr/bin/env fsharpi</span>
+<span class="prep">#I</span> <span class="s">&quot;../../build/bin&quot;</span>
+<span class="prep">#r</span> <span class="s">&quot;Hopac.Core&quot;</span>
+<span class="prep">#r</span> <span class="s">&quot;Hopac&quot;</span>
+<span class="prep">#r</span> <span class="s">&quot;HttpFs&quot;</span>
+<span class="k">open</span> <span class="i">Hopac</span>
+<span class="k">open</span> <span class="i">Hopac</span><span class="o">.</span><span class="i">Infixes</span>
+<span class="k">open</span> <span class="i">HttpFs</span><span class="o">.</span><span class="i">Client</span>
+
+<span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="f">doit</span> () <span class="o">=</span>
+  <span class="i">job</span> {
+    <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">printf</span> <span class="s">&quot;.&quot;</span>
+    <span class="k">let!</span> <span class="i">body</span> <span class="o">=</span> <span class="i">Request</span><span class="o">.</span><span class="i">responseAsString</span> (<span class="i">Request</span><span class="o">.</span><span class="i">createUrl</span> <span class="i">Get</span> <span class="s">&quot;https://www.nuget.org/packages/Fakta/&quot;</span>)
+    <span class="k">if</span> <span class="i">body</span><span class="o">.</span><span class="i">Contains</span> <span class="s">&quot;This package has not been indexed yet&quot;</span> <span class="k">then</span>
+      <span class="k">return!</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="i">chill</span> () <span class="o">:&gt;</span> <span class="i">Job</span><span class="o">&lt;</span>_<span class="o">&gt;</span>
+    <span class="k">else</span>
+      <span class="k">return</span> <span class="s">&quot;DONE&quot;</span>
+  }
+
+<span class="k">and</span> <span onmouseout="hideTip(event, 'fs3', 4)" onmouseover="showTip(event, 'fs3', 4)" class="f">chill</span> () <span class="o">=</span> <span class="i">timeOutMillis</span> <span class="n">500</span> <span class="o">^=&gt;</span> <span onmouseout="hideTip(event, 'fs1', 5)" onmouseover="showTip(event, 'fs1', 5)" class="f">doit</span>
+<span class="i">run</span> (<span onmouseout="hideTip(event, 'fs1', 6)" onmouseover="showTip(event, 'fs1', 6)" class="i">doit</span> ())
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">val doit : unit -&gt; &#39;a<br /><br />Full name: Script.doit</div>
+<div class="tip" id="fs2">val printf : format:Printf.TextWriterFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.printf</div>
+<div class="tip" id="fs3">val chill : unit -&gt; obj<br /><br />Full name: Script.chill</div>
+

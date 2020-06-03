@@ -1,0 +1,31 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+<span class="l">6: </span>
+<span class="l">7: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">let</span> (|<span class="p">Between</span>|_|) <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">low</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">up</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="i">i</span> <span class="o">=</span> <span class="k">if</span> <span onmouseout="hideTip(event, 'fs3', 4)" onmouseover="showTip(event, 'fs3', 4)" class="i">i</span> <span class="o">&gt;</span><span class="o">=</span> <span onmouseout="hideTip(event, 'fs1', 5)" onmouseover="showTip(event, 'fs1', 5)" class="i">low</span> <span class="o">&amp;&amp;</span> <span onmouseout="hideTip(event, 'fs3', 6)" onmouseover="showTip(event, 'fs3', 6)" class="i">i</span> <span class="o">&lt;=</span> <span onmouseout="hideTip(event, 'fs2', 7)" onmouseover="showTip(event, 'fs2', 7)" class="i">up</span> <span class="k">then</span> <span onmouseout="hideTip(event, 'fs4', 8)" onmouseover="showTip(event, 'fs4', 8)" class="p">Some</span> () <span class="k">else</span> <span onmouseout="hideTip(event, 'fs5', 9)" onmouseover="showTip(event, 'fs5', 9)" class="p">None</span>
+<span class="k">let</span> (|<span class="p">MoreThan</span>|_|) <span onmouseout="hideTip(event, 'fs2', 10)" onmouseover="showTip(event, 'fs2', 10)" class="i">up</span> <span onmouseout="hideTip(event, 'fs3', 11)" onmouseover="showTip(event, 'fs3', 11)" class="i">i</span> <span class="o">=</span> <span class="k">if</span> <span onmouseout="hideTip(event, 'fs3', 12)" onmouseover="showTip(event, 'fs3', 12)" class="i">i</span> <span class="o">&gt;</span> <span onmouseout="hideTip(event, 'fs2', 13)" onmouseover="showTip(event, 'fs2', 13)" class="i">up</span> <span class="k">then</span> <span onmouseout="hideTip(event, 'fs4', 14)" onmouseover="showTip(event, 'fs4', 14)" class="p">Some</span> () <span class="k">else</span> <span onmouseout="hideTip(event, 'fs5', 15)" onmouseover="showTip(event, 'fs5', 15)" class="p">None</span>
+<span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs6', 16)" onmouseover="showTip(event, 'fs6', 16)" class="f">excelColumnName</span> <span onmouseout="hideTip(event, 'fs7', 17)" onmouseover="showTip(event, 'fs7', 17)" class="i">zeroBasedIndex</span> <span class="o">=</span>
+  <span class="k">match</span> <span onmouseout="hideTip(event, 'fs7', 18)" onmouseover="showTip(event, 'fs7', 18)" class="i">zeroBasedIndex</span> <span class="k">with</span>
+  | <span onmouseout="hideTip(event, 'fs8', 19)" onmouseover="showTip(event, 'fs8', 19)" class="p">Between</span> <span class="n">0</span> <span class="n">25</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs9', 20)" onmouseover="showTip(event, 'fs9', 20)" class="f">string</span> (<span class="s">&#39;A&#39;</span> <span class="o">+</span> (<span onmouseout="hideTip(event, 'fs10', 21)" onmouseover="showTip(event, 'fs10', 21)" class="f">char</span> <span onmouseout="hideTip(event, 'fs7', 22)" onmouseover="showTip(event, 'fs7', 22)" class="i">zeroBasedIndex</span>))
+  | <span onmouseout="hideTip(event, 'fs11', 23)" onmouseover="showTip(event, 'fs11', 23)" class="p">MoreThan</span> <span class="n">25</span>  <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs6', 24)" onmouseover="showTip(event, 'fs6', 24)" class="f">excelColumnName</span>(<span onmouseout="hideTip(event, 'fs7', 25)" onmouseover="showTip(event, 'fs7', 25)" class="i">zeroBasedIndex</span> <span class="o">/</span> <span class="n">26</span>) <span class="o">+</span> <span onmouseout="hideTip(event, 'fs6', 26)" onmouseover="showTip(event, 'fs6', 26)" class="f">excelColumnName</span>(<span onmouseout="hideTip(event, 'fs7', 27)" onmouseover="showTip(event, 'fs7', 27)" class="i">zeroBasedIndex</span> <span class="o">%</span> <span class="n">26</span> <span class="o">+</span> <span class="n">1</span>)
+  | _ <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs12', 28)" onmouseover="showTip(event, 'fs12', 28)" class="f">failwithf</span> <span class="s">&quot;couldn&#39;t translate </span><span class="pf">%i</span><span class="s"> into excel column name&quot;</span> <span onmouseout="hideTip(event, 'fs7', 29)" onmouseover="showTip(event, 'fs7', 29)" class="i">zeroBasedIndex</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">val low : &#39;a (requires comparison)</div>
+<div class="tip" id="fs2">val up : &#39;a (requires comparison)</div>
+<div class="tip" id="fs3">val i : &#39;a (requires comparison)</div>
+<div class="tip" id="fs4">union case Option.Some: Value: &#39;T -&gt; Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs5">union case Option.None: Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs6">val excelColumnName : zeroBasedIndex:int -&gt; string<br /><br />Full name: Script.excelColumnName</div>
+<div class="tip" id="fs7">val zeroBasedIndex : int</div>
+<div class="tip" id="fs8">active recognizer Between: &#39;a -&gt; &#39;a -&gt; &#39;a -&gt; unit option<br /><br />Full name: Script.( |Between|_| )</div>
+<div class="tip" id="fs9">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />Full name: Microsoft.FSharp.Core.Operators.string<br /><br />--------------------<br />type string = System.String<br /><br />Full name: Microsoft.FSharp.Core.string</div>
+<div class="tip" id="fs10">Multiple items<br />val char : value:&#39;T -&gt; char (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.char<br /><br />--------------------<br />type char = System.Char<br /><br />Full name: Microsoft.FSharp.Core.char</div>
+<div class="tip" id="fs11">active recognizer MoreThan: &#39;a -&gt; &#39;a -&gt; unit option<br /><br />Full name: Script.( |MoreThan|_| )</div>
+<div class="tip" id="fs12">val failwithf : format:Printf.StringFormat&lt;&#39;T,&#39;Result&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.failwithf</div>
+

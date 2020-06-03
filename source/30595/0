@@ -1,0 +1,71 @@
+
+let charset = "qpzry9x8gf2tvdw0s3jn54khce6mua7l"
+let generator: int list = [0x3b6a57b2; 0x26508e6d; 0x1ea119fa; 0x3d4233dd; 0x2a1462b3]
+
+(*
+    Bitcoin Bech32 address decode / validation
+*)
+
+let bech32Polymod (values:int list) =
+    let mutable chk = 1
+    for v in values do
+        let b = chk >>> 25
+        chk <- ((chk &&& 0x1ffffff) <<< 5) ^^^ v 
+        for i in [0..4] do
+            if ((b >>> i) &&& 1) = 1 then
+                chk <- chk ^^^ generator.[i]
+    chk
+
+
+
+let bech32PolymodFold (values:int list) =
+    (1,values)
+    ||> List.fold (fun chk v ->
+        let b = chk >>> 25
+        let chk = ((chk &&& 0x1ffffff) <<< 5) ^^^ v
+        let chk =
+            (chk,[0..4])
+            ||> List.fold (fun chk i -> if (b >>> i) &&& 1 = 1 then chk ^^^ generator.[i] else chk)
+        chk
+    )
+
+
+let hrpExpand (hrp:string) =
+    (hrp |> Seq.map (fun c -> c |> int >>> 5) |> Seq.toList)
+    @
+    [0]
+    @
+    (hrp |> Seq.map (fun c -> c |> int &&& 31) |> Seq.toList)
+
+
+
+let verifyChecksum hrp data =
+    let hrpExpand = hrp |> hrpExpand
+    bech32PolymodFold (hrpExpand @ data) = 1
+
+
+let decode (str:string) =
+    let lastOneIndex = str.IndexOf('1')
+    let hrp = str.[0..lastOneIndex-1]
+    let data = str.[lastOneIndex+1..]
+    let data =
+        data
+        |> Seq.map (fun c ->
+            let v = charset.IndexOf c
+            if v = -1 then 
+                failwith "invalid bech32 address"
+            else
+                v
+        )
+        |> Seq.toList
+    
+    if verifyChecksum hrp data then
+        hrp, data
+    else
+        failwith "invalid bech32 address"
+
+
+
+decode "bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4"
+
+decode "abcdef1qpzry9x8gf2tvdw0s3jn54khce6mua7lmqqqxw"

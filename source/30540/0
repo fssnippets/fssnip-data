@@ -1,0 +1,88 @@
+open System
+open System.IO
+open System.Xml
+open System.Text
+open System.Net
+open System.Globalization
+open System.Text.RegularExpressions
+
+let UnixTimestampToDateTime unixTimeStamp =
+    DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddSeconds(unixTimeStamp).ToLocalTime()
+
+let DateTimeToUnixTimestamp (dateTime: DateTime) =
+    (dateTime.ToUniversalTime() - DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds
+
+let GetHistoricalData symbol (startDate: DateTime) (endDate: DateTime) =
+    let url1 = new Uri("https://finance.yahoo.com/quote/" + symbol + "/history?p=" + symbol)
+    let request = WebRequest.Create (url1) :?> HttpWebRequest
+    request.CookieContainer <- new CookieContainer()
+    request.Method <- "GET"
+    let response = request.GetResponse() :?> HttpWebResponse
+    let cookie = response.GetResponseHeader("Set-Cookie").Split(';').[0]
+    use stream = response.GetResponseStream()
+    use reader = new StreamReader(stream)
+    let html = reader.ReadToEnd()
+    let regexCrumb = new Regex("CrumbStore\":{\"crumb\":\"(?<crumb>.+?)\"}", 
+                        RegexOptions.CultureInvariant ||| RegexOptions.Compiled, TimeSpan.FromSeconds(5.0))
+    let matches = regexCrumb.Matches(html)
+    
+    let crumb = 
+        match matches.Count with
+        | 0 -> None
+        | _ -> Some (matches.Item(0).Groups.["crumb"].Value)
+
+    let url2 = "https://query1.finance.yahoo.com/v7/finance/download/" + symbol +
+                "?period1=" + Math.Round(DateTimeToUnixTimestamp(startDate), 0).ToString() + "&period2=" +
+                Math.Round(DateTimeToUnixTimestamp(endDate), 0).ToString() + 
+                "&interval=1d&events=history&crumb=" + crumb.Value
+
+    use wc = new WebClient()
+    wc.Headers.Add(HttpRequestHeader.Cookie, cookie)
+    wc.DownloadString(url2).Split('\n')
+    |> Array.skip 1
+
+let AsyncGetHistData symbol (startDate: DateTime) (endDate: DateTime) =
+    async {
+        printfn "Downloading symbol %s..." symbol
+        let mutable data = Array.empty
+
+        while data.Length = 0 do
+            let url1 = new Uri("https://finance.yahoo.com/quote/" + symbol + "/history?p=" + symbol)
+            let request = WebRequest.Create (url1) :?> HttpWebRequest
+            request.CookieContainer <- new CookieContainer()
+            request.Method <- "GET"
+            use! response = request.AsyncGetResponse()
+            let resp = response :?> HttpWebResponse
+            let cookie = resp.GetResponseHeader("Set-Cookie").Split(';').[0]
+            use stream = resp.GetResponseStream()
+            use reader = new StreamReader(stream)
+            let html = reader.ReadToEnd()
+            let regexCrumb = new Regex("CrumbStore\":{\"crumb\":\"(?<crumb>.+?)\"}", 
+                                RegexOptions.CultureInvariant ||| RegexOptions.Compiled, TimeSpan.FromSeconds(5.0))
+            let matches = regexCrumb.Matches(html)
+    
+            let crumb = 
+                match matches.Count with
+                | 0 -> None
+                | _ -> Some (matches.Item(0).Groups.["crumb"].Value)
+
+            let url2 = "https://query1.finance.yahoo.com/v7/finance/download/" + symbol +
+                        "?period1=" + Math.Round(DateTimeToUnixTimestamp(startDate), 0).ToString() + "&period2=" +
+                        Math.Round(DateTimeToUnixTimestamp(endDate), 0).ToString() + 
+                        "&interval=1d&events=history&crumb=" + crumb.Value
+
+            use wc = new WebClient()
+            wc.Headers.Add(HttpRequestHeader.Cookie, cookie)
+
+            data <- 
+                try
+                    wc.DownloadString(url2).Split('\n')
+                    |> Array.skip 1
+                with
+                | _ -> 
+                    printfn "Symbol %s download failed, retrying..." symbol
+                    Array.empty
+        
+        printfn "Symbol download %s succeeded." symbol
+        return (symbol, data)
+    }

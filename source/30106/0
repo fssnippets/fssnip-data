@@ -1,0 +1,72 @@
+
+type Constraint2<'a,'b> = interface end
+type Constraint3<'a,'b,'c> = interface end
+
+type ListStackImpl<'t> () =
+    interface Constraint3<ListStackImpl<'t>, 't list, 't>
+    member inline __.empty () = []
+    member inline __.push (lst: List<'t>, v) = v :: lst
+    member inline __.pop (lst: List<'t>) = lst.Head, lst.Tail
+    member inline __.length (lst: List<'t>) = lst.Length
+    
+type ArrayStackImpl<'t> () =
+    interface Constraint3<ArrayStackImpl<'t>, 't array, 't>
+    member inline __.empty () = [||]
+    member inline __.push (arr: 't array, v) = Array.append arr [| v |]
+    member inline __.pop  (arr: 't array)    = arr.[arr.Length - 1], arr.[0 .. arr.Length - 2]
+    member inline __.length (arr: 't array)  = arr.Length
+
+type StackImpl< ^Impl, ^Stack, ^Elem    when ^Impl : (new : unit -> ^Impl) 
+                                        and ^Impl :> Constraint3< ^Impl, ^Stack, ^Elem>
+                                        and ^Impl : (member empty : unit -> ^Stack)
+                                        and ^Impl : (member push : ^Stack * ^Elem -> ^Stack)
+                                        and ^Impl : (member pop  : ^Stack -> ^Elem * ^Stack)
+                                        and ^Impl : (member length : ^Stack -> int)
+                > = Constraint3< ^Impl, ^Stack, ^Elem>
+                  
+module Test1 = 
+    let inline pop (constr : StackImpl< ^Impl, ^Stack, ^Elem>) = fun (list: ^Stack) ->
+        let impl = (^Impl : (new : unit -> ^Impl) ())
+        (^Impl : (member pop  : ^Stack -> ^Elem * ^Stack) (impl, list)) 
+      
+    let inline push (constr : StackImpl< ^Impl, ^Stack, ^Elem>) = fun (elem: ^Elem) (list: ^Stack) ->
+        let impl = (^Impl : (new : unit -> ^Impl) ())
+        (^Impl : (member push : ^Stack * ^Elem -> ^Stack) (impl, list, elem)) 
+
+    let inline length (constr : StackImpl< ^Impl, ^Stack, ^Elem>) = fun (list: ^Stack) ->
+        let impl = (^Impl : (new : unit -> ^Impl) ())
+        (^Impl : (member length : ^Stack -> int) (impl, list))
+
+    let inline empty (constr : StackImpl< ^Impl, ^Stack, ^Elem>) =
+        let impl = (^Impl : (new : unit -> ^Impl) ())
+        (^Impl : (member empty : unit -> ^Stack) (impl))
+        
+    let inline singleton (constr : StackImpl< ^Impl, ^Stack, ^Elem>) = fun (elem: ^Elem) ->
+        empty constr
+        |> push constr elem
+
+let single1 : int list  = Test1.singleton { new Constraint3<ListStackImpl<_>, _, _>  } 1
+let single2 : int array = Test1.singleton { new Constraint3<ArrayStackImpl<_>, _, _> } 1
+
+type Stacks<'t> () =
+    member inline __.GetImpl (_ : 't[])    = ArrayStackImpl<'t> ()
+    member inline __.GetImpl (_ : 't list) = ListStackImpl<'t> ()
+
+type StackImpls< ^Stacks, ^Stack, ^Impl  when ^Stacks : (new : unit -> ^Stacks) 
+                                            and ^Stacks : (member GetImpl : ^Stack -> ^Impl)
+                > = Constraint3< ^Stacks, ^Stack, ^Impl>
+
+module Test2 = 
+    let inline reverse (constr : StackImpls< ^Stacks, ^Stack, ^Impl>) = fun (stack) ->
+        let stacks = (^Stacks : (new : unit -> ^Stacks) ())
+        let impl  = (^Stacks : (member GetImpl : ^Stack -> ^Impl) (stacks, stack))
+        let mutable result = Test1.empty impl
+        let mutable state  = stack
+        while Test1.length impl state > 0 do
+            let h, t = Test1.pop impl state
+            result <- Test1.push impl h result
+            state <- t
+        result
+            
+let r1 : int list  = Test2.reverse { new Constraint3<Stacks<_>,_,_> } [ 1; 2; 3 ]
+let r2 : int array = Test2.reverse { new Constraint3<Stacks<_>,_,_> } [| 1; 2; 3 |]

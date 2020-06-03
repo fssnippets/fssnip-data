@@ -1,0 +1,43 @@
+module Memoize
+
+//More generic variant of http://www.fssnip.net/c4  
+open System.Collections.Concurrent  
+let cache = ConcurrentDictionary<(string * obj),Lazy<obj>>()  
+let memoizeConcurrent (caller:string) (f: ('a -> 'b)) =  
+    fun x -> (cache.GetOrAdd((caller, x|>box), lazy ((f x)|>box)).Force() |> unbox) : 'b
+
+// and this works also with F# async functions.
+let internal memoizeAsync f =
+    let cache = System.Collections.Concurrent.ConcurrentDictionary<'a, System.Threading.Tasks.Task<'b>>()
+    fun (x: 'a) -> // task.Result serialization to sync after done.
+        cache.GetOrAdd(x, fun x -> // Lazy is needed for "if managed to start multiple before added"
+            let threadfix = lazy( f(x) |> Async.StartAsTask )
+            threadfix.Force()) |> Async.AwaitTask
+
+(*
+[<Test>]
+let ``async cache should work``() =
+    let mutable x = 0
+    let someSlowFunc mykey = async { 
+        Console.WriteLine "Simulated downloading..."
+        do! Async.Sleep 400
+        Console.WriteLine "Simulated downloading Done."
+        x <- x + 1 // Side effect!
+        return "" }
+    let memFunc = memoizeAsync <| someSlowFunc
+    async {
+        do! memFunc "a" |> Async.Ignore
+        do! memFunc "a" |> Async.Ignore
+        do! memFunc "a" |> Async.Ignore
+        for i = 1 to 30 do
+            Async.Start( memFunc "a" |> Async.Ignore )
+            Async.Start( memFunc "a" |> Async.Ignore )
+        do! Async.Sleep 500
+        do! memFunc "a" |> Async.Ignore
+        do! memFunc "a" |> Async.Ignore
+        for i = 1 to 30 do
+            Async.Start( memFunc "a" |> Async.Ignore )
+    } |> Async.RunSynchronously
+    x |> shouldEqual 1
+
+*)

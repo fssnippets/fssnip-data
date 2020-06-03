@@ -1,0 +1,22 @@
+open System.IO
+
+let search fileName dirName =
+    match Directory.Exists(dirName) with
+    | true ->
+        let stopWatch = System.Diagnostics.Stopwatch.StartNew()
+        let extension = "*" + Path.GetExtension(fileName)
+        let fileName = Path.GetFileName(fileName)
+        Directory.GetFiles(dirName, extension, SearchOption.AllDirectories) 
+        |> Array.Parallel.choose (fun path -> if Path.GetFileName(path) = fileName 
+                                              then Some (Path.GetFullPath path) else None) 
+        |> Array.iter (printfn "%s") 
+        printfn "Execution took: %.3f seconds" ((float32 stopWatch.Elapsed.Milliseconds) / 1000.0f)
+    | _ -> printfn "File \n%s or directory \n%s don't exist." fileName dirName
+   
+[<EntryPoint>]
+let main argv =
+    match argv with
+    | [| fileName; dirName |] -> search fileName dirName     
+    | [| fileName |] -> search fileName (Directory.GetCurrentDirectory())  
+    | _ -> printfn "Usage: \n\t find filename dir \n\t find fileName"
+    0

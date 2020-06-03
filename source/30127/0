@@ -1,0 +1,37 @@
+open System
+open System.Runtime.CompilerServices
+
+/// Provides helpers for using `Option<'T>` instances from CLR languages other than F#
+[<Extension>]
+type Option =
+  /// If option is `Some v` execute `withSome` (passing it `v`), otherwise execute `withNone`
+  [<Extension>]
+  static member Match (option   :Option<'T>
+                      ,withSome :Action<'T>
+                      ,withNone :Action) :Unit =
+    match option with
+    | Some value  -> withSome.Invoke value
+    | None        -> withNone.Invoke ()
+  
+  /// If option is `Some v` execute `withSome` (passing it `v`), otherwise execute `withNone`
+  [<Extension>]
+  static member Match (option   :Option<'T>
+                      ,withSome :Func<'T,'R>
+                      ,withNone :Func<'R>) :'R =
+    match option with
+    | Some value  -> withSome.Invoke value
+    | None        -> withNone.Invoke ()
+
+  /// Returns true if given option is `Some _`
+  [<Extension>]
+  static member IsSome (option:Option<'T>) :bool =
+    match option with
+    | Some _ -> true
+    | None   -> false
+
+  /// Returns true if given option is `None`
+  [<Extension>]
+  static member IsNone (option:Option<'T>) :bool =
+    match option with
+    | Some _ -> false
+    | None   -> true

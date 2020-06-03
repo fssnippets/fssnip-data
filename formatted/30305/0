@@ -1,0 +1,70 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">type</span> <span class="t">TraceType</span> <span class="o">=</span> 
+| <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="p">Debug</span>
+| <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="p">Exception</span>
+| <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="p">Etc</span>
+
+<span class="k">type</span> <span class="k">internal</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="t">Result</span> <span class="o">=</span>
+	{ <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="i">Instance</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="i">string</span> <span onmouseout="hideTip(event, 'fs7', 7)" onmouseover="showTip(event, 'fs7', 7)" class="i">option</span>
+      <span class="i">Context</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs6', 8)" onmouseover="showTip(event, 'fs6', 8)" class="i">string</span> <span onmouseout="hideTip(event, 'fs7', 9)" onmouseover="showTip(event, 'fs7', 9)" class="i">option</span>
+	  <span class="i">Tag</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs6', 10)" onmouseover="showTip(event, 'fs6', 10)" class="i">string</span> <span onmouseout="hideTip(event, 'fs7', 11)" onmouseover="showTip(event, 'fs7', 11)" class="i">option</span>
+	  <span class="i">Type</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs8', 12)" onmouseover="showTip(event, 'fs8', 12)" class="i">TraceType</span> <span onmouseout="hideTip(event, 'fs7', 13)" onmouseover="showTip(event, 'fs7', 13)" class="i">option</span>}
+	  
+<span class="k">let</span> <span class="i">wildcard</span> <span class="o">=</span> <span class="i">pstring</span> <span class="s">&quot;*&quot;</span>
+<span class="k">let</span> <span class="i">delimiter</span> <span class="o">=</span> <span class="i">pstring</span> <span class="s">&quot;&gt;&quot;</span>
+<span class="k">let</span> <span class="i">stringLiteral</span> <span class="o">=</span> 
+	<span class="k">let</span> <span class="i">escape</span> <span class="o">=</span> <span class="i">anyOf</span> <span class="s">&quot;</span><span class="e">\b</span><span class="s">fnrt*&gt;&quot;</span>
+					<span class="o">|&gt;&gt;</span> <span class="k">function</span>
+						| <span class="s">&#39;b&#39;</span> <span class="k">-&gt;</span> <span class="s">&quot;\b&quot;</span>
+						| <span class="s">&#39;f&#39;</span> <span class="k">-&gt;</span> <span class="s">&quot;\u000c&quot;</span>
+						| <span class="s">&#39;n&#39;</span> <span class="k">-&gt;</span> <span class="s">&quot;\n&quot;</span>
+						| <span class="s">&#39;r&#39;</span> <span class="k">-&gt;</span> <span class="s">&quot;\r&quot;</span>
+						| <span class="s">&#39;t&#39;</span> <span class="k">-&gt;</span> <span class="s">&quot;\t&quot;</span>
+						| <span class="i">c</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs6', 14)" onmouseover="showTip(event, 'fs6', 14)" class="i">string</span> <span class="i">c</span>
+	<span class="k">let</span> <span class="i">escapedCharSnippet</span> <span class="o">=</span> <span class="i">pstring</span> <span class="s">&quot;\\&quot;</span> <span class="o">&gt;</span><span class="o">&gt;</span><span class="o">.</span> <span class="i">escape</span>
+	<span class="k">let</span> <span class="i">normalCharSnippet</span> <span class="o">=</span> <span class="i">manySatisfy</span> (<span class="k">fun</span> <span class="i">c</span> <span class="k">-&gt;</span> <span class="i">c</span> <span class="o">&lt;&gt;</span> <span class="s">&quot;</span><span class="e">\\</span><span class="s">&quot;</span>)
+	<span class="i">stringsSepBy</span> <span class="i">normalCharSnippet</span> <span class="i">escapedCharSnippet</span>
+<span class="k">let</span> <span class="i">value</span> <span class="o">=</span> <span class="i">wildcard</span> <span class="o">&lt;|&gt;</span> <span class="i">stringLiteral</span>
+<span class="k">let</span> <span class="i">typeValue</span> <span class="o">=</span> <span class="i">pstring</span> <span class="s">&quot;*&quot;</span>  <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs9', 15)" onmouseover="showTip(event, 'fs9', 15)" class="i">None</span> <span class="o">&lt;|&gt;</span> <span class="i">pstring</span> <span class="s">&quot;Debug&quot;</span> <span class="o">|&gt;&gt;</span> <span onmouseout="hideTip(event, 'fs1', 16)" onmouseover="showTip(event, 'fs1', 16)" class="i">Debug</span> <span class="o">&lt;|&gt;</span> <span class="i">pstring</span> <span class="s">&quot;Exception&quot;</span> <span class="o">|&gt;&gt;</span> <span onmouseout="hideTip(event, 'fs2', 17)" onmouseover="showTip(event, 'fs2', 17)" class="i">Exception</span> <span class="o">&lt;|&gt;</span> <span class="s">&quot;Etc&quot;</span> <span class="o">|&gt;&gt;</span> <span onmouseout="hideTip(event, 'fs3', 18)" onmouseover="showTip(event, 'fs3', 18)" class="i">Etc</span>
+<span class="k">let</span> <span class="i">result</span> <span class="o">=</span> <span class="i">pipe4</span> (<span class="i">spaces</span> <span class="o">&gt;</span><span class="o">&gt;</span><span class="o">.</span> <span class="i">value</span> <span class="o">.</span><span class="o">&gt;&gt;</span> <span class="i">spaces</span> <span class="o">.</span><span class="o">&gt;&gt;</span> <span class="i">delimiter</span>) (<span class="i">spaces</span> <span class="o">&gt;</span><span class="o">&gt;</span><span class="o">.</span> <span class="i">value</span> <span class="o">.</span><span class="o">&gt;&gt;</span> <span class="i">spaces</span> <span class="o">.</span><span class="o">&gt;&gt;</span> <span class="i">delimiter</span>) (<span class="i">spaces</span> <span class="o">&gt;</span><span class="o">&gt;</span><span class="o">.</span> <span class="i">value</span> <span class="o">.</span><span class="o">&gt;&gt;</span> <span class="i">spaces</span> <span class="o">.</span><span class="o">&gt;&gt;</span> <span class="i">delimiter</span>) (<span class="i">spaces</span> <span class="o">&gt;</span><span class="o">&gt;</span><span class="o">.</span> <span class="i">typeValue</span> <span class="o">.</span><span class="o">&gt;&gt;</span> <span class="i">spaces</span>) (<span class="k">fun</span> <span class="i">a</span> <span class="i">b</span> <span class="i">c</span> <span class="i">d</span> <span class="k">-&gt;</span> {<span onmouseout="hideTip(event, 'fs5', 19)" onmouseover="showTip(event, 'fs5', 19)" class="i">Instance</span> <span class="o">=</span> <span class="i">a</span>; <span class="i">Context</span> <span class="o">=</span> <span class="i">b</span>; <span class="i">Tag</span> <span class="o">=</span> <span class="i">c</span>; <span class="i">Type</span> <span class="o">=</span> <span class="i">d</span>}) 
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">union case TraceType.Debug: TraceType</div>
+<div class="tip" id="fs2">union case TraceType.Exception: TraceType</div>
+<div class="tip" id="fs3">union case TraceType.Etc: TraceType</div>
+<div class="tip" id="fs4">type internal Result =<br />&#160;&#160;{Instance: obj;}<br /><br />Full name: Script.Result</div>
+<div class="tip" id="fs5">Result.Instance: obj</div>
+<div class="tip" id="fs6">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />Full name: Microsoft.FSharp.Core.Operators.string<br /><br />--------------------<br />type string = System.String<br /><br />Full name: Microsoft.FSharp.Core.string</div>
+<div class="tip" id="fs7">type &#39;T option = Option&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Core.option&lt;_&gt;</div>
+<div class="tip" id="fs8">type TraceType =<br />&#160;&#160;| Debug<br />&#160;&#160;| Exception<br />&#160;&#160;| Etc<br /><br />Full name: Script.TraceType</div>
+<div class="tip" id="fs9">union case Option.None: Option&lt;&#39;T&gt;</div>
+

@@ -1,0 +1,119 @@
+//[snippet:HKT Encoding]
+type HKT = interface end
+
+//[Struct] no F# 4.1 here!
+type App<'F, 't when 'F :> HKT> = private App of payload : obj
+
+type App<'F, 't1, 't2 when 'F :> HKT> = App<'F, TCons<'t1, 't2>>
+and  App<'F, 't1, 't2, 't3 when 'F :> HKT> = App<'F, TCons<'t1, 't2, 't3>>
+and  App<'F, 't1, 't2, 't3, 't4 when 'F :> HKT> = App<'F, TCons<'t1, 't2, 't3, 't4>>
+
+and  TCons<'T1, 'T2> = class end
+and  TCons<'T1, 'T2, 'T3> = TCons<TCons<'T1, 'T2>, 'T3>
+and  TCons<'T1, 'T2, 'T3, 'T4> = TCons<TCons<'T1, 'T2, 'T3>, 'T4>
+
+[<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
+module HKT =
+    let inline pack (value : 'Fa) : App<'F, 'a>
+        when 'F : (static member Assign : App<'F, 'a> * 'Fa -> unit) =
+        App value
+        
+    let inline unpack (App value : App<'F, 'a>) : 'Fa
+        when 'F : (static member Assign : App<'F, 'a> * 'Fa -> unit) =
+        value :?> _
+        
+    let inline (|Unpack|) app = unpack app
+//[/snippet]
+
+//[snippet:Expression Builder]
+type Expression<'M when 'M :> Expression<'M> and 'M : struct> =
+    inherit HKT
+    abstract Zero : unit -> App<'M, unit>
+    abstract Return : 'a -> App<'M, 'a>
+    abstract ReturnFrom : App<'M, 'a> -> App<'M, 'a>
+    abstract Combine : App<'M, unit> -> App<'M, 'a> -> App<'M, 'a>
+    abstract Bind : App<'M, 'a> -> ('a -> App<'M, 'b>) -> App<'M, 'b>
+    abstract Delay : (unit -> App<'M, 'a>) -> App<'M, 'a>
+    abstract TryWith : App<'M, 'a> -> (exn -> App<'M, 'a>) -> App<'M, 'a>
+    abstract TryFinally : App<'M, 'a> -> (unit -> unit) -> App<'M, 'a>
+    abstract For : seq<'T> -> ('T -> App<'M, unit>) -> App<'M, unit>
+    abstract While : (unit -> bool) -> App<'M, unit> -> App<'M, unit>
+    abstract Using : 'a -> ('a -> App<'M, 'b>) -> App<'M, 'b> when 'a :> System.IDisposable
+
+
+type ExpressionBuilder() =
+    // rely on structness of the expression builder to obtain an instance of the interface
+    static let mkBuilder() : 'M when 'M :> Expression<'M> = Unchecked.defaultof<'M>
+    member __.Zero() = mkBuilder().Zero()
+    member __.Return x = mkBuilder().Return x
+    member __.ReturnFrom x = mkBuilder().ReturnFrom x
+    member __.Combine (f,g) = mkBuilder().Combine f g
+    member __.Delay f = mkBuilder().Delay f
+    member __.Bind(f, g) = mkBuilder().Bind f g
+    member __.TryWith (f, h) = mkBuilder().TryWith f h
+    member __.TryFinally(f, comp) = mkBuilder().TryFinally f comp
+    member __.For (xs, body) = mkBuilder().For xs body
+    member __.While(c, body) = mkBuilder().While c body
+    member __.Using(c, f) = mkBuilder().Using c f
+
+let expr = new ExpressionBuilder()
+
+let test () = expr {
+    for i in 1 .. 10 do printfn "%d" i
+
+    try
+        try
+            let! x = expr { return 41 }
+            return x + 1
+        with e -> 
+            return 0
+
+    finally printfn "finally"
+}
+//[/snippet]
+
+//[snippet:Thunk Semantics]
+[<Struct>]
+type Thunk =
+
+    static member Assign (_ : App<Thunk, 'a>, _ : unit -> 'a) = ()
+    static member Run (f : App<Thunk, 'a>) = HKT.unpack f ()
+
+    interface Expression<Thunk> with
+        member __.Zero() = HKT.pack id
+        member __.Return t = HKT.pack (fun () -> t)
+        member __.ReturnFrom x = x
+        member __.Combine (HKT.Unpack f) (HKT.Unpack g) = HKT.pack (fun () -> f () ; g ())
+        member __.Bind (HKT.Unpack f) g = HKT.pack (fun () -> let x = f () in HKT.unpack (g x) ())
+        member __.Delay f = HKT.pack (fun () -> let (HKT.Unpack f) = f () in f ())
+        member __.TryWith (HKT.Unpack f) h = HKT.pack (fun () -> try f () with e -> HKT.unpack (h e) ())
+        member __.TryFinally (HKT.Unpack f) comp = HKT.pack (fun () -> try f () finally comp ())
+        member __.For xs body = HKT.pack (fun () -> for x in xs do HKT.unpack (body x) ())
+        member __.While c (HKT.Unpack body) = HKT.pack (fun () -> while c () do body ())
+        member __.Using c f = HKT.pack (fun () -> use c = c in HKT.unpack (f c) ())
+
+
+let f = test () |> Thunk.Run
+//[/snippet]
+
+//[snippet:Async Semantics]
+[<Struct>]
+type Async =
+    static member Assign (_ : App<Async, 'a>, _ : Async<'a>) = ()
+    static member Run (f : App<Async, 'a>) = HKT.unpack f |> FSharp.Control.Async.RunSynchronously
+
+    interface Expression<Async> with
+        member __.Zero() = async.Zero() |> HKT.pack
+        member __.Return t = async.Return t |> HKT.pack
+        member __.ReturnFrom x = x
+        member __.Combine (HKT.Unpack f) (HKT.Unpack g) = async.Combine(f,g) |> HKT.pack
+        member __.Bind (HKT.Unpack f) g = async.Bind(f, g >> HKT.unpack) |> HKT.pack
+        member __.Delay f = async.Delay(fun () -> f () |> HKT.unpack) |> HKT.pack
+        member __.TryWith (HKT.Unpack f) h = async.TryWith(f, fun e -> HKT.unpack (h e)) |> HKT.pack
+        member __.TryFinally (HKT.Unpack f) comp = async.TryFinally(f, comp) |> HKT.pack
+        member __.For xs body = async.For(xs, fun x -> HKT.unpack (body x)) |> HKT.pack
+        member __.While c (HKT.Unpack body) = async.While(c, body) |> HKT.pack
+        member __.Using c f = async.Using(c, fun c -> f c |> HKT.unpack) |> HKT.pack
+
+let gAsync = test () |> Async.Run
+//[/snippet]

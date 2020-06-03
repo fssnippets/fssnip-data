@@ -1,0 +1,24 @@
+open Deedle
+open FSharp.Data
+open XPlot.GoogleCharts
+
+// Download the number of signitures from the petition GOV web site
+// See: https://petition.parliament.uk/petitions/131215
+type Ref = JsonProvider<"https://petition.parliament.uk/petitions/131215.json">
+let ref = Ref.GetSample()
+
+// Look at signatures by country - sorting the data shows
+// that there is -3605 signatures from Andorra :-/
+ref.Data.Attributes.SignaturesByCountry
+|> Seq.map (fun i -> i.Name, i.SignatureCount)
+|> series 
+|> Series.sort
+|> Series.rev
+
+// Draw a chart of signatures coming from non-UK countries
+let ca = ColorAxis(colors=[|"#30d020"; "#e0e030"; "#e08030"; "#ff3000" |])
+ref.Data.Attributes.SignaturesByCountry
+|> Seq.filter (fun i -> i.Name <> "United Kingdom")
+|> Seq.map (fun i -> i.Name, i.SignatureCount)
+|> Chart.Geo
+|> Chart.WithOptions(Options(colorAxis=ca))

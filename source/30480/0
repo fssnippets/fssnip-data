@@ -1,0 +1,13 @@
+let (|SeqEmpty|SeqCons|) (xs: 'a seq) = //'
+  if Seq.isEmpty xs then SeqEmpty
+  else SeqCons(Seq.head xs, Seq.skip 1 xs)
+
+// freqs is an infinite sequence of integers, and this function iterates through it and stops when it finds a duplicate number
+let findDupe (freqs : seq<int>) =
+    let rec loop loopPos (nums : seq<int>) (acc : Set<int>) =
+        match nums with
+            | SeqCons(x, xs) -> 
+                printf "%d: %d, %s\n" loopPos x (if acc.Contains(x) then "Yes" else "No")
+                if (acc.Contains(x)) then x else (loop (loopPos + 1) xs (acc)) // (if ((acc.Item(x) + 1) >= 2) then x else (loop xs (acc.Add(x, acc.Item(x) + 1)))) else (loop xs (acc.Add(x, 1)))
+            | SeqEmpty -> -1
+    loop 0 freqs Set.empty

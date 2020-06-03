@@ -1,0 +1,99 @@
+open System
+
+#r "node_modules/fable-core/Fable.Core.dll"
+
+open Fable.Core
+open Fable.Core.JsInterop
+module Browser = Fable.Import.Browser
+
+#load "node_modules/fable-aether/Aether.fs"
+
+open Aether
+
+#r "node_modules/fable-arch/Fable.Arch.dll"
+
+open Fable.Arch
+open Fable.Arch.App.Types
+open Fable.Arch.App
+open Fable.Arch.Html
+
+type Form<'model> = {
+    Current: 'model
+    Saved: 'model
+}
+with
+    static member New<'model> (model: 'model) = {
+        Current = model
+        Saved = model
+    }
+
+type Model = {
+    A: string
+    B: string
+}
+with
+    static member Empty = {
+        A = "A"
+        B = "B"
+    }
+
+    override x.ToString () =
+        sprintf "A: %s, B: %s" x.A x.B
+
+    // Aether
+    static member A_ : Lens<Model, string> = (fun x -> x.A), (fun value x -> { x with A = value })
+    static member B_ : Lens<Model, string> = (fun x -> x.B), (fun value x -> { x with B = value })
+
+type Action =
+    | InputChanged of Id: string * Value: string * Lens: Lens<Model, string>
+with
+    override x.ToString () =
+        match x with
+        | InputChanged (id, value, _) -> sprintf "InputChanged (%s, %s)" id value
+
+let makeInput id form (lens: Lens<Model, string>) =
+    let model = form.Current
+    let value = Optic.get lens model
+    div [] [
+        label [] [ Text id ]
+        input [
+            property "value" value
+            onInput (fun e ->
+                e?preventDefault() |> ignore
+                let value = unbox<string> e?target?value
+                InputChanged (id, value, lens)
+            )
+        ]
+    ]
+
+let view (form: Form<Model>) = 
+    div [] [
+        yield div [] [
+            text "Aether test"
+        ]
+        yield div [] [
+            text "First field"
+        ]
+        yield makeInput "A" form Model.A_
+        yield div [] [
+            text "Second field"
+        ]
+        yield makeInput "B" form Model.B_
+    ]
+
+let update (form: Form<Model>) action =
+    match action with
+    | InputChanged (id, value, lens) ->
+        let model = form.Current
+        let newModel = Optic.set lens value model
+        let newForm = { form with Current = newModel }
+        newForm, []
+
+createApp (Form.New<Model> Model.Empty) view update Virtualdom.createRender
+|> withStartNodeSelector "#fable-body"
+|> withSubscriber (fun x ->
+    printfn "Message: %s" (string x.Message)
+    printfn "Prev: %s" (string x.PreviousState)
+    printfn "Current: %s" (string x.CurrentState)
+)
+|> start

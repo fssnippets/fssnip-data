@@ -1,0 +1,83 @@
+/// Inclusive choice type based on Haskell's "These" type.
+type Both<'left, 'right> =
+    | Left of 'left
+    | Right of 'right
+    | Both of ('left * 'right)
+
+module Both =
+
+    /// Zips two sequences together, producing a new sequence that
+    /// is the same length as the *longer* of the two inputs.
+    let align lefts rights =
+
+        let pad items =
+            seq {
+                yield! items |> Seq.map Some
+                yield! Seq.initInfinite (fun _ -> None)
+            }
+
+        Seq.zip (pad lefts) (pad rights)
+            |> Seq.takeWhile (fun (leftOpt, rightOpt) ->
+                leftOpt.IsSome || rightOpt.IsSome)
+            |> Seq.map (function
+                | (Some left, None) -> Left left
+                | (None, Some right) -> Right right
+                | (Some left, Some right) -> Both (left, right)
+                | (None, None) -> failwith "Impossible")
+
+    /// Splits a sequence of boths into its component parts.
+    let unalign boths =
+        boths
+            |> Seq.map (function
+                | Left left -> Some left, None
+                | Right right -> None, Some right
+                | Both (left, right) -> Some left, Some right)
+
+    /// Aligns and combines two sequences.
+    let malign (+) lefts rights =
+        align lefts rights
+            |> Seq.map (function
+                | Left left -> left
+                | Right right -> right
+                | Both (left, right) -> left + right)
+
+[<EntryPoint>]
+let main argv =
+
+    assert(
+        let actual =
+            Both.align [1; 2; 3] [4; 5]
+                |> Seq.toList
+        let expected =
+            [
+                Both (1, 4)
+                Both (2, 5)
+                Left 3
+            ]
+        actual = expected)
+
+    assert(
+        let actual =
+            Both.unalign [
+                Both (1, "one")
+                Left 2
+                Both (3, "three")
+                Right "four"
+            ] |> Seq.toList
+        let expected =
+            [
+                Some 1, Some "one"
+                Some 2, None
+                Some 3, Some "three"
+                None, Some "four"
+            ]
+        actual = expected)
+
+    assert(
+        let actual =
+            Both.malign (+) [1; 2; 3] [4; 5]
+                |> Seq.toList
+        let expected = [5; 7; 3]
+        actual = expected)
+
+    0

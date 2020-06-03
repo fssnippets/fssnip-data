@@ -1,0 +1,64 @@
+// Railway-style builder but with minor differences:
+// * Reader monad that carries a mutable resize array for aggregating error messages. Avoid blowup of list concatenations in complex workflows.
+// * Bind has different error semantics: a logged error has yield semantics, not exception semantics. This enables logging of multiple error messages.
+
+// Result type definition
+
+type Result<'T,'E> = Choice<'T,'E>
+let inline (|Success|Failure|) x = x
+let inline Success x : Result<'T,'E> = Choice1Of2 x
+let inline Failure e : Result<'T,'E> = Choice2Of2 e
+
+/// Validator builder
+
+type Validator<'T,'E> = ResizeArray<'E> -> 'T
+
+let error (e : 'E) : Validator<unit,'E> = fun acc -> acc.Add e
+let errorf fmt = Printf.ksprintf error fmt
+let run (f : Validator<'T,'E>) : Result<'T,'E list> = 
+    let acc = new ResizeArray<_>()
+    let t = f acc
+    if acc.Count > 0 then Failure (Seq.toList acc)
+    else Success t
+
+type ValidationBuilder() =
+    member __.Zero() : Validator<unit,'E> = fun _ -> ()
+    member __.Delay(f : unit -> Validator<'T,'E>) : Validator<'T,'E> = fun acc -> f () acc
+    member __.Return(t : 'T) : Validator<'T,'E> = fun _ -> t
+    member __.Yield(e : 'E) : Validator<unit,'E> = error e
+    member __.Bind(f : Validator<'T,'E>, g : 'T -> Validator<'S,'E>) : Validator<'S,'E> =
+        fun acc -> let t = f acc in g t acc
+
+    member __.For(ts : seq<'T>, body : 'T -> Validator<unit, 'E>) : Validator<unit, 'E> =
+        fun acc -> for t in ts do body t acc
+            
+    member __.While(pred : unit -> bool, body : unit -> Validator<unit, 'E>) : Validator<unit, 'E> =
+        fun acc -> while pred() do body () acc
+
+    member __.Combine(f : Validator<unit,'E>, g : Validator<'T,'E>) : Validator<'T,'E> = 
+        fun acc -> f acc; g acc
+
+    member __.ReturnFrom (t : Validator<'T,'E>) : Validator<'T,'E> = t
+
+let validate = new ValidationBuilder()
+
+/// Example
+
+type Foo = { PositiveInts : int list ; NonEmptyArray : string [] ; NotNullValue : string }
+
+let test (input : Foo) = validate {
+    for i in input.PositiveInts do 
+        if i <= 0 then do! errorf "Oh noes! %d is not positive" i
+
+    match input.NonEmptyArray with
+    | null | [||] -> do! errorf "Oh noes! NonEmptyArray is empty!"
+    | _ -> ()
+
+    if isNull input.NotNullValue then do! errorf "Oh noes! NotNullValue is null!"
+}
+
+test { PositiveInts = [1;2;-3] ; NonEmptyArray = [||] ; NotNullValue = null } |> run
+//val it : Result<unit,string list> =
+//  Choice2Of2
+//    ["Oh noes! -3 is not positive"; "Oh noes! NonEmptyArray is empty!";
+//     "Oh noes! NotNullValue is null!"]

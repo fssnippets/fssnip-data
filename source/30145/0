@@ -1,0 +1,23 @@
+open System
+open System.Numerics
+
+type Array with    
+    static member inline SIMDFold f h (start:'T) (values : 'T[]) =        
+        let mutable i = 0;
+        let mutable v = Vector<'T>(start)
+        while i < values.Length - Vector<'T>.Count do            
+            v <- f v (Vector<'T>(values,i))
+            i <- i + Vector<'T>.Count
+        i <- 0
+        let mutable result = start        
+        while i < Vector<'T>.Count do
+            result <- h result v.[i]
+            i <- i+1
+        result
+
+let example =
+  let r = Random()
+  Array.init 1000 (fun _ -> r.NextDouble())    
+  |> Array.SIMDFold (fun a e -> a + e*e) (+) 0.0
+
+

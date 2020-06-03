@@ -1,0 +1,66 @@
+[<AutoOpen>]
+module Probability =
+
+   type Probability = double
+   type Distribution<'a> = ('a * Probability) array
+   type Event<'a> = 'a -> bool
+
+   let printDistribution (v : Distribution<'a>) =
+        let negate x = -x
+        v |> Array.sortBy (snd >> negate) |> Array.iter (fun (a,p) -> printfn "%A: %.2f%%" a (p * 100.0))
+
+   let sureEventDistribution (a : 'a) : Distribution<'a> =
+        [|a, 1.0|]
+
+   let uniformDistribution (ls : 'a array) =
+        let ws = 1.0 / float (Array.length ls)
+        Array.map (fun l -> (l, ws)) ls
+
+   let calcEventProbability (e : Event<'a>) (vs : Distribution<'a>) : Probability =
+        vs |> Array.filter (fst >> e)
+           |> Array.sumBy snd
+   
+   let (>?) a b = calcEventProbability b a
+
+   [<AutoOpen>]
+    module internal Operations =
+
+       let normalize (v : Distribution<'a>) =
+            let dict = new System.Collections.Generic.Dictionary<_,_>()
+            let get a = if dict.ContainsKey a then dict.[a] else 0.0
+            let add (a,p) = dict.[a] <- get a + p
+            v |> Array.iter add
+            dict |> Seq.map (fun kvp -> (kvp.Key, kvp.Value))
+                 |> Array.ofSeq
+
+   [<AutoOpen>]
+   module Monad =
+       let returnM (a : 'a) : Distribution<'a> =
+            sureEventDistribution a
+
+       let bind (v : Distribution<'a>) (f : 'a -> Distribution<'b>) : Distribution<'b> =
+            [| 
+              for (a,p) in v do
+              for (b,p') in f a do
+              yield (b, p*p')
+            |] |> normalize
+
+       let (>>=) f m =
+            bind f m
+
+       type DistributionBuilder internal () =
+            member x.Bind(m, f) = m >>= f
+            member x.Return(v) = returnM v
+            member x.ReturnFrom(v) = v
+            member x.Delay(f) = f ()
+
+   
+   let distribution = Monad.DistributionBuilder()    
+
+   let rec takeN (v : Distribution<'a>) (n : int) : Distribution<'a list> =
+        distribution {
+            if n <= 0 then return [] else
+            let! value = v
+            let! rest = takeN v (n-1)
+            return (value::rest)
+        }

@@ -1,0 +1,105 @@
+//------------------------------- Create Network ------------------------------- 
+type Neuron  = { Weights : float  list ; Bias : float }
+type Layer   = { Neurons : Neuron list }
+type Network = { Layers  : Layer  list }
+
+let rnd = System.Random()
+
+let randomWeight _ = (2.0 * rnd.NextDouble()) - 1.0
+
+let buildNeuron inputs =
+    { Neuron.Weights = List.init inputs randomWeight ; Bias = randomWeight ()}
+
+let buildLayer inputs neurons =
+    { Layer.Neurons = List.init neurons (fun i -> buildNeuron inputs) }
+
+let buildNetwork inputs layerSizes =
+    let rec createLayers acc inputs layers =
+        match layers with
+        | [] -> acc
+        | neurons :: nextSizes ->
+            let newLayer = buildLayer inputs neurons
+            createLayers (newLayer :: acc) neurons nextSizes
+    { Network.Layers = List.rev (createLayers [] inputs layerSizes) }
+
+//------------------------------- Compute Result ------------------------------- 
+let activation = tanh
+
+let neuronOutput neuron inputs =
+    let weightedSum = 
+        List.zip neuron.Weights inputs 
+        |> List.sumBy (fun (w, i) -> w * i)
+    activation (weightedSum + neuron.Bias)
+
+let layerOutput layer inputs =
+    layer.Neurons 
+    |> List.map (fun neuron -> neuronOutput neuron inputs)
+
+let feedForwardResult network inputs =
+    let rec ff activationResult layers =
+        match layers with
+        | [] -> activationResult
+        | layer :: remainingLayers -> 
+            let nextLayerInput = layerOutput layer activationResult
+            ff nextLayerInput remainingLayers 
+    ff inputs network.Layers
+
+//------------------------------- Compute Errors ------------------------------- 
+type TrainingCase = { Inputs : float list; Outputs : float list }
+
+let neuronError (expected, computed) =
+    let error = expected - computed
+    error * error
+
+let layerError (expectedLastLayer, actualLastLayer) =
+    List.zip actualLastLayer expectedLastLayer
+    |> List.sumBy neuronError
+
+let networkError network trainingCases =
+    let expectedResults = trainingCases |> List.map (fun case -> case.Outputs)
+    let networkResults  = trainingCases |> List.map (fun case -> feedForwardResult network case.Inputs)
+    List.zip expectedResults networkResults
+    |> List.sumBy layerError
+
+//------------------------------- Modify Network ------------------------------- 
+// TODO: Implement gradient/feature based algorithm for complex problems
+//------------------------------- Train Network ------------------------------- 
+let randomSearch (trainingSet : TrainingCase list) maxSeconds  =
+    let inputs = trainingSet.Head.Inputs.Length
+    let outputs = trainingSet.Head.Outputs.Length
+
+    let createNetwork () = buildNetwork inputs [inputs;inputs;outputs]
+    let stopwatch = System.Diagnostics.Stopwatch.StartNew()
+
+    let rec findNext bestNetwork oldError =
+        match stopwatch.Elapsed.TotalSeconds with
+        | timeSpent when timeSpent > maxSeconds -> bestNetwork
+        | _ ->
+            let nn = createNetwork ()
+            let newError = networkError nn trainingSet
+            match newError < oldError with
+            | true ->
+                printfn "Better network found! %f" newError
+                findNext nn newError
+            |false ->
+                findNext bestNetwork oldError
+    findNext (createNetwork ()) System.Double.MaxValue
+
+//----------------------------------- Test  ----------------------------------- 
+let case1 = {Inputs = [1.0;1.0] ; Outputs = [0.0]}
+let case2 = {Inputs = [0.0;1.0] ; Outputs = [1.0]}
+let case3 = {Inputs = [1.0;0.0] ; Outputs = [1.0]}
+let case4 = {Inputs = [0.0;0.0] ; Outputs = [0.0]}
+
+let xorGate = [case1;case2;case3;case4]
+
+let trainedNetwork = randomSearch xorGate 10.0
+
+let computedValues = 
+    xorGate 
+    |> List.map (fun case -> feedForwardResult trainedNetwork case.Inputs)
+    |> List.sortDescending
+
+let xorOutput case = (feedForwardResult trainedNetwork case.Inputs).[0] > (computedValues).[2].[0]
+
+xorGate |> List.iter (fun case -> printfn "XOR result of %A is %A" case.Inputs (xorOutput case))

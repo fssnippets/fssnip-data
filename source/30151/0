@@ -1,0 +1,54 @@
+open System
+open System.Collections
+open System.Collections.Generic
+
+/// Adjacency list representation of a graph, mapping each vertex to its successors
+type Graph<'a when 'a : comparison> = Map<'a, 'a[]>
+
+/// A standard rose tree
+type Tree<'a when 'a : comparison> = 
+    { root : 'a ; sub : Tree<'a>[] }
+
+    member this.ToSeq() =
+        seq { yield this.root
+              for t in this.sub do
+                yield! t }
+
+    interface IEnumerable<'a> with
+        member this.GetEnumerator() : IEnumerator<'a> = 
+           this.ToSeq().GetEnumerator()
+        member this.GetEnumerator() : IEnumerator =
+            (this.ToSeq() :> IEnumerable).GetEnumerator()
+
+/// Depth first search from the given root
+let dfs (g: Graph<'a>) (root:'a) = 
+    let rec go (n:'a) = 
+        match g.TryFind n with
+        | None    -> failwithf "node %A not found in graph" n
+        | Some nn -> { root = n ; sub = Array.map go nn}
+    
+    go root
+
+/// The transitive reduction of a graph is the minimal set of edges with the same transitive closure
+let transitiveReduction(g:Graph<'a>) : Graph<'a> =
+    let dfss = Map.map (fun _ -> Seq.collect (dfs g) >> Set.ofSeq) g
+   
+    let reachable n = Set.add n (dfss.[n])
+
+    g |> Map.map(fun n ss -> 
+            ss
+            |> Array.mapi (fun i s -> 
+                if Seq.exists (fun i -> reachable(ss.[i]).Contains s) (Seq.append [0..i-1] [i+1..ss.Length-1])
+                then None
+                 else Some s
+                 )
+            |> Array.choose id)
+
+let g1 = Map.ofSeq <|
+            [ 0, [|1;2;3|]
+              1, [|2|]
+              2, [|3|]
+              3, [| |]
+            ]        
+
+let g1' = transitiveReduction g1

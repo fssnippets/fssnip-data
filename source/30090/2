@@ -1,0 +1,152 @@
+// So called van Laarhoven lenses, named after their discoverer, have a number
+// of nice properties as explained by Russell O'Connor:
+//
+//   http://r6.ca/blog/20120623T104901Z.html
+//
+// Unfortunately their typing (in Haskell)
+//
+//   type Lens s t a b = forall f. Functor f => (a -> f b) -> (s -> f t)
+//
+// seems to be well outside of what can be achieved in F#.
+//
+// Is it possible to encode van Laarhoven lenses in F#?
+//
+// The first thing to notice about van Laarhoven lenses is that, while the above
+// type definition is polymorphic in the functor f, only two concrete functor
+// instances are actually used, namely
+//
+// - Identity, by the over operation, and
+// - Const, by the view operation.
+//
+// We can define a unified functor that simultaneously implements both Identity
+// and Const:
+
+type LensPolyFunctor<'k, 'a> =
+  | Identity of 'a
+  | Const of 'k
+  member t.map a2b =
+    match t with
+     | Identity a -> Identity (a2b a)
+     | Const k -> Const k
+
+// The astute reader recognizes that the above is isomorphic to the binary
+// Choice type.
+//
+// This avoids the need to use higher-kinded types.  We are left with
+// higher-rank polymorphism (again in Haskell notation):
+//
+//   type LensPoly s t a b =
+//     forall k. (a -> LensPolyFunctor k b) -> (s -> LensPolyFunctor k t)
+//
+// This can be encoded in F# using an interface or class type with a polymorphic
+// method:
+
+type LensPoly<'s, 't, 'a, 'b> =
+  abstract Apply<'k> : ('a -> LensPolyFunctor<'k, 'b>)
+                    -> ('s -> LensPolyFunctor<'k, 't>)
+
+// And we can implement the desired operations:
+
+module LensPoly =
+  let view (l: LensPoly<'s,'t,'a,'b>) =
+    l.Apply Const
+    >> function Const k -> k | _ -> failwith "Impossible"
+  let over (l: LensPoly<'s,'t,'a,'b>) a2b =
+    l.Apply (a2b >> Identity)
+    >> function Identity b -> b | _ -> failwith "Impossible"
+  let set l b = over l <| fun _ -> b
+
+// The astute reader is worried about the partial functions above.  If a safe
+// implementation is desired, the `LensPolyFunctor` type can be made abstract
+// or private.
+
+  let lens<'s,'t,'a,'b> (get: 's -> 'a) (set: 'b -> 's -> 't) =
+    {new LensPoly<'s,'t,'a,'b> with
+      override r.Apply f = fun s -> (get s |> f).map(fun x -> set x s)}
+  let (>->) (l1: LensPoly<_,_,_,_>) (l2: LensPoly<_,_,_,_>) =
+    {new LensPoly<'s,'t,'a,'b> with
+      override t.Apply f = l1.Apply (l2.Apply f)}
+
+// Everything works up and until this point, but now we run into a difficulty
+// with the value restriction.  If we just try to define lenses for pairs as
+
+//  let fstL' = lens fst <| fun x (_, y) -> (x, y)
+//  let sndL' = lens snd <| fun y (x, _) -> (x, y)
+   
+// their types will not be generalized.  In F#, a workaround is to use explicit
+// type parameters:
+
+  let fstL<'a, 'b, 'c> : LensPoly<'a * 'b, 'c * 'b, 'a, 'c> =
+    lens fst <| fun x (_, y) -> (x, y)
+  let sndL<'a, 'b, 'c> : LensPoly<'a * 'b, 'a * 'c, 'b, 'c> =
+    lens snd <| fun y (x, _) -> (x, y)
+
+// to get the desired polymorphic types.  (Another workaround would be to add a
+// dummy unit parameter.)  We can now compose lenses to perform polymorphic
+// updates:
+
+  do ((1, (2.0, '3')), true)
+     |> over (fstL >-> sndL >-> fstL) (fun x -> x + 3.0 |> string)
+     |> printfn "%A"
+
+// The above encoding works, but it is rather heavy.  Is there a simpler
+// encoding?
+//
+// One of the things that F# allows us to do is to use effects and those can
+// often be used to work around lack of higher-rank types.  The need to have a
+// higher-rank type in the above encoding arose from the parameter to the Const
+// functor and the only use of the Const functor is in the view function.  We
+// can eliminate that parameter by using effects.  Here are the simplified
+// functor and lens types:
+
+type LensFunctor<'a> =
+  | Over of 'a
+  | View
+  member t.map a2b =
+    match t with
+     | Over a -> Over (a2b a)
+     | View -> View
+
+// The astute reader recognizes the above as isomorphic to the Option type.
+
+type Lens<'s,'t,'a,'b> = ('a -> LensFunctor<'b>) -> 's -> LensFunctor<'t>
+
+// Now polymorphic lenses are just functions.
+//
+// Let's then see the rest of the implementation.
+
+module Lens =
+  let view l s =
+    let r = ref Unchecked.defaultof<_>
+    s |> l (fun a -> r := a; View) |> ignore
+    !r
+
+// As mentioned, the view function now uses an effect internally.
+
+  let over l f =
+    l (f >> Over) >> function Over t -> t | _ -> failwith "Impossible"
+  let set l b = over l <| fun _ -> b
+  let (>->) a b = a << b
+
+// As seen above, we can now use ordinary function composition to compose
+// polymorphic lenses.  In fact, we could leave `>->` as undefined and just use
+// `<<`.
+
+  let lens get set = fun f s ->
+    (get s |> f : LensFunctor<_>).map (fun f -> set f s)
+
+// Now that lenses are just functions, we can use eta-expansion to define
+// polymorphic lenses:
+
+  let fstL f = lens fst (fun x (_, y) -> (x, y)) f
+  let sndL f = lens snd (fun y (x, _) -> (x, y)) f
+
+  do ((1, (2.0, '3')), true)
+     |> over (fstL >-> sndL >-> fstL) (fun x -> x + 3.0 |> string)
+     |> printfn "%A"
+
+// One potential problem with this approach is that the manipulation of values
+// of the lens functor type, which is like the Option type, may be expensive,
+// because F# tends to generate memory allocations when dealing with such types.
+// The lens functor type can be encoded as a struct type and it might help the
+// F# compiler to eliminate allocations.  But let's leave that for further work.

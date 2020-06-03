@@ -1,0 +1,14 @@
+open System.Linq.Expressions
+open System.Linq
+open System
+
+type ExprBuilder() =
+    member private __.ReturnFrom(f: Expression<Func<_,_>>) = f
+    member __.Return(f) = __.ReturnFrom(fun x -> f(x))
+    member __.Yield(x) = __.ReturnFrom(fun _ -> x)
+let expr = ExprBuilder()
+
+let predicate = expr { yield true }
+let selector = expr { return (+) 1 >> (*) 2 }
+
+let a = [|1; 2; 3|].AsQueryable().Select(selector).Where(predicate)

@@ -1,0 +1,57 @@
+open System.Text.RegularExpressions
+
+// See: http://en.wikipedia.org/wiki/International_Securities_Identification_Number
+
+[<Literal>]
+let private AsciiZero = 48
+[<Literal>]
+let private AsciiNine = 57
+[<Literal>]
+let private AsciiA = 65
+
+let private digitsForChar (char : char) : int list =
+    let charNum = int char
+    if charNum >= AsciiZero && charNum <= AsciiNine then
+        [ charNum - AsciiZero ]
+    else
+        let ordinal = charNum - AsciiA + 10
+        let tens = ordinal / 10
+        let units = ordinal % 10
+        [ tens; units ]
+
+let private getDigits (chars : char seq) : int list =
+    chars
+    |> Seq.map digitsForChar
+    |> Seq.fold (fun digits nextDigits -> // Append to start to create reversed list
+        nextDigits |> List.fold (fun d2 d -> d :: d2) digits)
+        []
+
+let private doublingSum (digits : int list) : int =
+    digits
+    |> List.fold
+        (fun (isEven, total) next ->
+            let scaled = if isEven then next * 2 else next
+            (not isEven), total + (scaled / 10) + (scaled % 10)
+        )
+        (true, 0)
+    |> snd
+
+let private calculateLuhn (digits : int list) : int =
+    let sum = doublingSum digits
+    if sum % 10 = 0 then 0
+    else (((sum / 10) + 1) * 10) - sum
+
+let private calculateChecksum (chars : char seq) : int =
+    chars
+    |> getDigits
+    |> calculateLuhn
+
+let private matchesChecksum (isin : string) : bool =
+    let checkDigit = (int isin.[11]) - AsciiZero
+    let checkSum = calculateChecksum (isin |> Seq.take 11)
+    checkSum = checkDigit
+
+let private isinRegex = new Regex("^[A-Z]{2}([A-Z0-9]){9}[0-9]$", RegexOptions.Compiled)
+
+let isValid (isin : string) =
+    isinRegex.IsMatch(isin) && matchesChecksum isin

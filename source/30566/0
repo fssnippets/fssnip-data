@@ -1,0 +1,21 @@
+let singleVariableFunction (g : float -> float) (ys : string list option) (m : Map<string, float) =
+    g (Map.find (Option.get (List.head ys)) m)
+
+let cos =
+    singleVariableFunction Math.Cos
+
+let sin =
+    singleVariableFunction Math.Sin
+
+f : (string list option -> Map<string, float -> float) option
+
+member this.Apply (m : Map<string, float) =
+    let mapper a i c =
+        Math.Pow((upcast c).Apply a, i)
+    let v = match Map.tryFind this.X m with
+        | None ->
+            (Option.get f) this.Ys m
+        | Some w ->
+            w
+    Seq.sum (Seq.mapi (mapper m) this.Coefficients)
+    

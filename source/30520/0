@@ -1,0 +1,30 @@
+[<AutoOpen>]
+module ArrExtensions = 
+    
+    type ``[,]``<'a> with
+        member this.Item
+            with get(struct(x,y)):'a = this.[x,y]
+            and set(struct(x,y)) (v:'a) = this.[x,y] <- v
+
+
+// create an array
+// type is string [,]
+let arr:string[,] = Array2D.create 2 2 "";;
+
+/// update an item in the array
+arr.[0,0] <- "test";;
+
+// update an item in the array using the struct indexer:
+arr.[struct(1,0)] <- "test2";;
+
+(*
+arr.[struct(1,0)] <- "test2";;
+  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+stdin(3,1): error FS0001: This expression was expected to have type
+    ''a []'    
+but here has type
+    'string [,]'    
+
+*)
+

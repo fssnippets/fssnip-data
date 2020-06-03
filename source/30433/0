@@ -1,0 +1,40 @@
+module Seq =
+
+    let inline collapseBy f s = 
+        seq {
+            let mutable prev = None
+            for x in s do
+                match prev with
+                | None ->
+                    yield x
+                | Some p when f p x ->
+                    yield x
+                | _ -> 
+                    ()
+                prev <- Some x
+        }
+
+    let inline collapse s = 
+        s |> collapseBy (<>)
+
+module Demo = 
+
+    [ 1; 2; 2; 3; 1; 2; 2; 2 ] 
+    |> Seq.collapse
+    |> Seq.iter (printfn "%A")
+
+    Seq.empty<int>
+    |> Seq.collapse
+    |> Seq.iter (printfn "%A")
+
+    [ "a" ] |> Seq.collapse
+    |> Seq.iter (printfn "%A")
+
+    type LatLon = { Lat : float; Lon : float }
+
+    [ { Lat = 0.1; Lon = 1.2 }
+      { Lat = 0.1; Lon = 1.3 }
+      { Lat = 0.2; Lon = 1.2 }
+      { Lat = 0.1; Lon = 1.2 } ]
+    |> Seq.collapseBy (fun ll1 ll2 -> ll1.Lat <> ll2.Lat)
+    |> Seq.iter (printfn "%A")

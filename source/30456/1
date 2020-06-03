@@ -1,0 +1,80 @@
+open System.Numerics
+
+// I wanted to share this neat trick for making recursive types countable. Let's say you had tree of integers like so:
+
+type Tree = 
+    | Empty
+    | Node of BigInteger * Tree * Tree
+
+//  Before we continue, let's we're going to need a sqrt function for BigIntegers (Pardon the shoddy implementation)
+
+module BigInteger = begin
+
+    let sqrt (A:BigInteger) =
+        let rec f(x:BigInteger) (maxCount:int) =
+            let b = A/x
+            let x' = (x + b) / 2I
+            let t = abs(x' - x)
+            let thresh = abs(x / 100000000I)
+            if x = x' + 1I && (x * x) >= A && (x' * x') <= A then x'
+            elif x = x' then x'
+            elif t < thresh then x'
+            elif maxCount <= 0 then x'
+            else f x' (maxCount - 1)
+        if A = 0I then 0I
+        elif A < 4I then 1I 
+        else (f (A / 2I) 1000)
+
+end
+
+module Cantor = begin
+
+    open BigInteger
+
+    let cantor(k1:BigInteger, k2:BigInteger) = 
+        ((k1 + k2) * (k1 + k2 + 1I) / 2I) + k2
+
+    // We can write a function that will turn any integer into a unique instance of our tree type.
+
+    //  Let's use the Cantor's inv pairing function (https://en.wikipedia.org/wiki/Pairing_function):
+
+    let invCantor(z:BigInteger) = 
+        let w = ((sqrt(8I * z + 1I) - 1I) / 2I)
+        let t = (w * w + w) / 2I
+        let y = z - t
+        let x = w - y
+        (x, y)
+
+    //  Cantor's pairing function maps all unique pairs of natural numbers to a unique natural number.  
+    //  The inverted function has the signature: int -> int * int.
+
+    //  Using invCantor, we can make a function that maps any integer to an integer list of any size:
+
+    let rec invCantorList (length:uint32) (n:BigInteger) : BigInteger list =
+        match length with
+        | 0u -> []
+        | 1u -> [n]
+        | l -> let (x, y) = invCantor(n)
+               x::invCantorList (l - 1u) y
+
+
+
+end
+
+open Cantor
+open System
+
+// We're almost done. With invCantorList, we can use it to map the set of integers to our Tree type.
+
+let rec intToTree (n:BigInteger) : Tree = 
+    if n = 0I then Empty
+    else
+        let n = n - 1I
+        let max = BigInteger(UInt32.MaxValue)
+        let i = n % max
+        let [x;y;z] = n |> invCantorList 3u
+        Node(x, intToTree y, intToTree z)
+
+// Now you have a predictable and deterministic method for enumerating test cases for recursive types.
+
+[ for x in 0I..10000I -> x, intToTree x ] |> List.iter (printfn "%A")

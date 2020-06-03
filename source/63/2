@@ -1,0 +1,15 @@
+#r "FSharp.Quotations.Evaluator.dll"
+open FSharp.Quotations
+open FSharp.Quotations.Evaluator.QuotationEvaluationExtensions
+    
+// Create a part of expression using "Expr" calls 
+// (this creates arbitrary untyped quotation)
+let expr = Expr.Value(13)
+
+// Create a part using quotation syntax 
+// (splicing untyped part in using %%)
+let expr2 = <@ (fun x -> x * %%expr) @>
+    
+// Compile the quotation & run returned function
+let f = expr2.Compile()
+f 10

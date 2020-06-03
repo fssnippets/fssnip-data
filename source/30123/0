@@ -1,0 +1,219 @@
+module String = begin
+  //  Implements 4 new functions to encode/decode UTF8 strings as
+  //  Base16, Base32, and Base64 as per RFC 4648
+  //  https://tools.ietf.org/html/rfc4648
+  
+
+  
+  /// Encodes a UTF8 string as a Base16 string
+  let encodeBase16 text =
+    // RFC 4648: The Base 16 Alphabet
+    let A = "012345678ABCDEF"
+    let byteToChar (i:byte) = A.[int i]
+    (text:string)
+    |> System.Text.Encoding.UTF8.GetBytes
+    |> Array.collect (fun x -> [| x &&& 0xF0uy >>> 4; x &&& 0x0Fuy; |])
+    |> Array.map byteToChar
+    |> System.String.Concat
+
+
+
+  /// Decodes a Base16 string to a UTF8 string
+  let decodeBase16 text =
+    if (text:string).Length % 2 <> 0 then "" else
+      // RFC 4648: The Base 16 Alphabet
+      let A = [for c in "012345678ABCDEF" -> c]
+              |> List.mapi (fun i a -> a, byte i)
+              |> Map.ofList
+
+      let (.@) (m: Map<char, byte>) key = try m.[System.Char.ToUpper key] |> byte with _ -> 0uy
+
+      let rec parse result input =
+        match input with
+        | x :: y :: tail -> parse (result @ [ (A.@ x <<< 4) ||| (A.@ y) ]) tail
+        | _              -> result
+
+      [for c in text -> c]
+      |> parse []
+      |> List.toArray
+      |> System.Text.Encoding.UTF8.GetString
+
+
+
+  /// Encodes a UTF8 string as a Base32 string
+  let encodeBase32 text =
+    let quintupletToList ending (x0, x1, x2, x3, x4) =
+      // RFC 4648: The Base 32 Alphabet
+      let A = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567="
+
+      // RFC 4648: The "Extended Hex" Base 32 Alphabet
+      // let A = "0123456789ABCDEFGHIJKLMNOPQRSTUV="
+
+      let quintuplet = (int64 x0 <<< 32)
+                   ||| (int64 x1 <<< 24)
+                   ||| (int64 x2 <<< 16)
+                   ||| (int64 x3 <<<  8)
+                   ||| (int64 x4)
+      let a0 = (quintuplet &&& 0xF800000000L) >>> 35 |> int
+      let a1 = (quintuplet &&& 0x07C0000000L) >>> 30 |> int
+      let a2 = (quintuplet &&& 0x003E000000L) >>> 25 |> int
+      let a3 = (quintuplet &&& 0x0001F00000L) >>> 20 |> int
+      let a4 = (quintuplet &&& 0x00000F8000L) >>> 15 |> int
+      let a5 = (quintuplet &&& 0x0000007C00L) >>> 10 |> int
+      let a6 = (quintuplet &&& 0x00000003E0L) >>>  5 |> int
+      let a7 = (quintuplet &&& 0x000000001FL)        |> int
+      match ending with
+      | 1 -> [A.[a0]; A.[a1];   '=' ;   '=' ;   '=' ;   '=' ;   '=' ;   '=' ;] // 01======
+      | 2 -> [A.[a0]; A.[a1]; A.[a2]; A.[a3];   '=' ;   '=' ;   '=' ;   '=' ;] // 0123====
+      | 3 -> [A.[a0]; A.[a1]; A.[a2]; A.[a3]; A.[a4];   '=' ;   '=' ;   '=' ;] // 01234===
+      | 4 -> [A.[a0]; A.[a1]; A.[a2]; A.[a3]; A.[a4]; A.[a5]; A.[a6];   '=' ;] // 0123456=
+      | _ -> [A.[a0]; A.[a1]; A.[a2]; A.[a3]; A.[a4]; A.[a5]; A.[a6]; A.[a7];] // 01234567
+
+    let rec parse result input =
+      match input with
+      | x0 :: x1 :: x2 :: x3 :: x4 :: tail -> parse (result @ quintupletToList 5 (x0, x1, x2, x3, x4)) tail
+      | x0 :: x1 :: x2 :: x3 :: []         -> result @ quintupletToList 4 (x0,  x1,  x2,  x3, 0uy)
+      | x0 :: x1 :: x2 :: []               -> result @ quintupletToList 3 (x0,  x1,  x2, 0uy, 0uy)
+      | x0 :: x1 :: []                     -> result @ quintupletToList 2 (x0,  x1, 0uy, 0uy, 0uy)
+      | x0 :: []                           -> result @ quintupletToList 1 (x0, 0uy, 0uy, 0uy, 0uy)
+      | []                                 -> result
+  
+    (text:string)
+    |> System.Text.Encoding.UTF8.GetBytes
+    |> Array.toList
+    |> parse []
+    |> List.toArray
+    |> System.String.Concat
+
+
+
+  /// Decodes a Base32 string to a UTF8 string
+  let decodeBase32 text = 
+    if (text:string).Length % 8 <> 0 then "" else
+      // RFC 4648: The Base 32 alphabet
+      let A = [for c in "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567=" -> c]
+              |> List.mapi (fun i a -> a, i)
+              |> Map.ofList
+
+      // RFC 4648: The "Extended Hex" Base 32 alphabet
+      // let A = [for c in "0123456789ABCDEFGHIJKLMNOPQRSTUV=" -> c]
+      //         |> List.mapi (fun i a -> a, i)
+      //         |> Map.ofList
+                  
+      let (.@) (m: Map<char, int>) key = try m.[System.Char.ToUpper key] |> int64 with _ -> 0L
+    
+      let octetToList ending (a0, a1, a2, a3, a4, a5, a6, a7) =
+        let octet = (A.@ a0 &&& 0x1FL <<< 35)
+                ||| (A.@ a1 &&& 0x1FL <<< 30)
+                ||| (A.@ a2 &&& 0x1FL <<< 25)
+                ||| (A.@ a3 &&& 0x1FL <<< 20)
+                ||| (A.@ a4 &&& 0x1FL <<< 15)
+                ||| (A.@ a5 &&& 0x1FL <<< 10)
+                ||| (A.@ a6 &&& 0x1FL <<<  5)
+                ||| (A.@ a7 &&& 0x1FL)
+        let x0 = (octet &&& 0xFF00000000L) >>> 32 |> byte
+        let x1 = (octet &&& 0x00FF000000L) >>> 24 |> byte
+        let x2 = (octet &&& 0x0000FF0000L) >>> 16 |> byte
+        let x3 = (octet &&& 0x000000FF00L) >>>  8 |> byte
+        let x4 = (octet &&& 0x00000000FFL)        |> byte
+        match ending with
+        | 2 -> [x0;]
+        | 4 -> [x0; x1;]
+        | 5 -> [x0; x1; x2;]
+        | 7 -> [x0; x1; x2; x3;]
+        | _ -> [x0; x1; x2; x3; x4;]
+    
+      let rec parse result input =
+        match input with
+        | a0 :: a1 :: '=':: '=':: '=':: '=':: '=':: '=':: _    -> result @ octetToList 2 (a0, a1,'=','=','=','=','=','=')
+        | a0 :: a1 :: a2 :: a3 :: '=':: '=':: '=':: '=':: _    -> result @ octetToList 4 (a0, a1, a2, a3,'=','=','=','=')
+        | a0 :: a1 :: a2 :: a3 :: a4 :: '=':: '=':: '=':: _    -> result @ octetToList 5 (a0, a1, a2, a3, a4,'=','=','=')
+        | a0 :: a1 :: a2 :: a3 :: a4 :: a5 :: a6 :: '=':: _    -> result @ octetToList 7 (a0, a1, a2, a3, a4, a5, a6,'=')
+        | a0 :: a1 :: a2 :: a3 :: a4 :: a5 :: a6 :: a7 :: tail -> parse (result @ octetToList 8 (a0, a1, a2, a3, a4, a5, a6, a7)) tail
+        | _                                                    -> result
+
+      [for c in text -> c]
+      |> parse []
+      |> List.toArray
+      |> System.Text.Encoding.UTF8.GetString
+
+
+
+  /// Encodes a UTF8 string as a Base64 string
+  let encodeBase64 text =
+    let tripletToList ending (x, y, z) =
+      // RFC 4648: The Base 64 Alphabet
+      let A = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/="
+
+      // RFC 4648: The "URL and Filename safe" Base 64 Alphabet
+      // let A = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_="
+
+      let triplet = (int x <<< 16)
+                ||| (int y <<<  8)
+                ||| (int z)
+      let a = (triplet &&& 0xFC0000) >>> 18
+      let b = (triplet &&& 0x03F000) >>> 12
+      let c = (triplet &&& 0x000FC0) >>>  6
+      let d = (triplet &&& 0x00003F)
+      match ending with
+      | 1 -> [A.[a]; A.[b];  '=' ;  '=' ;] // 01==
+      | 2 -> [A.[a]; A.[b]; A.[c];  '=' ;] // 
+      | _ -> [A.[a]; A.[b]; A.[c]; A.[d];] // 
+
+    let rec parse result input =
+      match input with
+      | a :: b :: c :: tail -> parse (result @ tripletToList 3 (a, b, c)) tail
+      | a :: b :: []        -> result @ tripletToList 2 (a,   b, 0uy)
+      | a :: []             -> result @ tripletToList 1 (a, 0uy, 0uy)
+      | []                  -> result
+  
+    (text:string)
+    |> System.Text.Encoding.UTF8.GetBytes
+    |> Array.toList
+    |> parse []
+    |> List.toArray
+    |> System.String.Concat
+
+
+
+  /// Decodes a Base64 string to a UTF8 string
+  let decodeBase64 text = 
+    if (text:string).Length % 4 <> 0 then "" else
+      // RFC 4648: The Base 64 Alphabet
+      let A = [for c in "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=" -> c]
+              |> List.mapi (fun i a -> a, i)
+              |> Map.ofList
+
+      // RFC 4648: The "URL and Filename safe" Base 64 Alphabet
+      // let A = [for c in "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_=" -> c]
+      //         |> List.mapi (fun i a -> a, i)
+      //         |> Map.ofList
+
+      let (.@) (m: Map<char, int>) key = try m.[key] with _ -> 0
+    
+      let quadToList ending (a, b, c, d) =
+        let quad = (A.@ a &&& 0x3F <<< 18)
+               ||| (A.@ b &&& 0x3F <<< 12)
+               ||| (A.@ c &&& 0x3F <<<  6)
+               ||| (A.@ d &&& 0x3F)
+        let x = (quad &&& 0xFF0000) >>> 16
+        let y = (quad &&& 0x00FF00) >>>  8
+        let z = (quad &&& 0x0000FF)
+        match ending with
+        | 2 -> [byte x;]
+        | 3 -> [byte x; byte y;]
+        | _ -> [byte x; byte y; byte z;]
+    
+      let rec parse result input =
+        match input with
+        | a :: b ::'='::'=':: []   -> result @ quadToList 2 (a, b, '=', '=')
+        | a :: b :: c ::'=':: []   -> result @ quadToList 3 (a, b,  c , '=')
+        | a :: b :: c :: d :: tail -> parse (result @ quadToList 4 (a, b, c, d)) tail
+        | _                        -> result
+
+      [for c in text -> c]
+      |> parse []
+      |> List.toArray
+      |> System.Text.Encoding.UTF8.GetString
+
+end

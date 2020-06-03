@@ -1,0 +1,52 @@
+type Result<'Err, 'Value> = 
+    | Error of 'Err
+    | Success of 'Value
+
+[<AutoOpen>]
+[<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
+module Prelude = 
+    let inline always value = fun () -> value
+    let inline always' value = fun _ -> value
+
+[<AutoOpen>]
+[<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
+module ResultPrelude = 
+    let guard f formatError = 
+        try 
+            Success(f())
+        with e -> Error(formatError e)
+
+module Result = 
+    let inline substitute (forError : 'Err -> 'Outcome) (forSuccess : 'Value -> 'Outcome) (result : Result<'Err, 'Value>) = 
+        match result with
+        | Error err -> forError err
+        | Success value -> forSuccess value
+    
+    let andThen f (result : Result<'Err, 'ValueA>) : Result<'Err, 'ValueB> = result |> substitute Error f
+    
+    let andGuard f formatError (result : Result<'Err, 'ValueA>) : Result<'Err, 'ValueB> = 
+        result |> andThen (fun value -> 
+                      try 
+                          Success(f value)
+                      with e -> Error(formatError e))
+    
+    let andTry f formatError finally' (result : Result<'Err, 'ValueA>) : Result<'Err, 'ValueB> = 
+        result |> andThen (fun value -> 
+                      try 
+                          try 
+                              Success(f value)
+                          with e -> Error(formatError e)
+                      finally
+                          finally' value)
+    
+    let andError f (result : Result<'ErrA, 'Value>) : Result<'ErrB, 'Value> = result |> substitute f Success
+    let map f (result : Result<'Err, 'A>) : Result<'Err, 'B> = result |> andThen (f >> Success)
+    let formatError f (result : Result<'ErrA, 'Value>) : Result<'ErrB, 'Value> = result |> andError (f >> Error)
+    let isError result = result |> substitute (always' true) (always' false)
+    let isSuccess result = result |> substitute (always' false) (always' true)
+    let withDefault def (result : Result<'Err, 'Value>) = result |> substitute (always' def) id
+    let asError (result : Result<'Err, 'Value>) = result |> substitute Some (always' None)
+    let asSuccess (result : Result<'Err, 'Value>) = result |> substitute (always' None) Some
+    let toOption (result : Result<'Err, 'Value>) = asSuccess result
+    let iter f (result : Result<'Err, 'Value>) = result |> substitute (always'()) f
+    let sinkError f (result : Result<'Err, 'Value>) = result |> substitute f (always'()) 

@@ -1,0 +1,22 @@
+open System
+open System.IO
+
+type Data() =
+    member x.Read() =
+        // Read in a file with StreamReader.
+        use stream = new StreamReader @"airports.dat" 
+
+        // Continue reading while valid lines.
+        let mutable valid = true
+        while (valid) do
+            let line = stream.ReadLine()
+            if (line = null) then
+                valid <- false
+            else
+                // Display line.
+                printfn "%A" line
+
+// Create instance of Data and Read in the file.
+let data = Data()
+                            
+data.Read()

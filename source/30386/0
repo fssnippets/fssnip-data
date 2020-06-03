@@ -1,0 +1,102 @@
+// Azure Cosmos DB GraphGetStarted example 
+// https://github.com/Azure-Samples/azure-cosmos-db-graph-dotnet-getting-started/tree/master/GraphGetStarted
+ 
+#r @"..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll"
+#r @"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\System.Configuration.dll"
+//#r @"..\packages\FSharp.Interop.Dynamic.3.0.0.0\lib\portable-net45+sl50+win\FSharp.Interop.Dynamic.dll"
+//#r @"..\packages\FSharp.Data.2.4.2\lib\net45\FSharp.Data.dll"
+
+// Microsoft.Azure
+// ===============
+#r @"..\packages\Microsoft.Azure.DocumentDB.1.17.0\lib\net45\Microsoft.Azure.Documents.Client.dll"
+// #I @"..\packages\Microsoft.Azure.DocumentDB.1.17.0\runtimes\win7-x64\native"
+// #r @"..\packages\Microsoft.Azure.Graphs.0.2.0-preview\lib\net451\Microsoft.Azure.Graphs.dll" // Superceded (but includes .net graph traversal)
+#r @"..\packages\Microsoft.Azure.Graphs.0.2.4-preview\lib\net451\Microsoft.Azure.Graphs.dll"    // Latest (only string Gremlin)
+//#r @"..\packages\Microsoft.Azure.DocumentDB.1.17.0\runtimes\win7-x64\native\Microsoft.Azure.Documents.ServiceInterop.dll" // This one is native! Can't "#r" it.
+
+open System
+open Microsoft.Azure
+open Microsoft.Azure.Documents
+open Microsoft.Azure.Documents.Client
+open Microsoft.Azure.Documents.Linq
+open Microsoft.Azure.Graphs
+open Microsoft.Azure.Graphs.Elements
+open Newtonsoft.Json
+
+
+// Add path to native DLL in F# interactive 
+let pathToAdd = @"C:\Users\UserName\Source\Repos\azure-cosmos-db-graph-dotnet-getting-started\packages\Microsoft.Azure.DocumentDB.1.17.0\runtimes\win7-x64\native"
+Environment.SetEnvironmentVariable("Path", 
+    Environment.GetEnvironmentVariable("Path") + ";" + pathToAdd)
+
+
+let endpoint = "https://insert-endpoint-name-here.documents.azure.com:443/"
+let authKey = "INSERT-AUTH-KEY-HERE=="
+       
+// Create Document Client
+// "The DocumentClient class provides a client-side logical representation of the Azure DocumentDB service." 
+let client:DocumentClient = 
+    new DocumentClient(
+        new Uri(endpoint),
+        authKey,
+        new ConnectionPolicy ( ConnectionMode = ConnectionMode.Direct, ConnectionProtocol = Protocol.Tcp ))
+    
+// Create database            
+let database:ResourceResponse<Database> = 
+    client.CreateDatabaseIfNotExistsAsync( new Database ( Id = "graphdb" )).Result
+
+// Create graph
+let (graph:DocumentCollection) =
+    client.CreateDocumentCollectionIfNotExistsAsync(    // Task<ResourceResponse<DocumentCollection>>
+            UriFactory.CreateDatabaseUri("graphdb"),
+            new DocumentCollection ( Id = "graphcollz" ),
+            new RequestOptions ( OfferThroughput = Nullable<int>(1000) ))
+    |> Async.AwaitTask          // Task<T>->Async<T>, where T is ResourceResponse<DocumentCollection>
+    |> Async.RunSynchronously   // Async<T> -> T (waits until the entire computation is completed)
+    |> (fun z->z.Resource)      // ResourceResponse<DocumentCollection> -> DocumentCollection
+
+let runGremlinQuery<'T> (dq:IDocumentQuery<'T>) : FeedResponse<'T> list = 
+    [
+        while (dq.HasMoreResults) 
+            do yield
+                dq.ExecuteNextAsync<'T>()
+                |> Async.AwaitTask          // Task<T>->Async<T>, where T is ResourceResponse<DocumentCollection>
+                |> Async.RunSynchronously
+    ]
+
+// Try single queries   
+let queryAddVThomas = "g.addV('person').property('id', 'thomas').property('firstName', 'Thomas').property('age', 44)"
+client.CreateGremlinQuery<Vertex>(graph, queryAddVThomas)       |> runGremlinQuery<Vertex>
+client.CreateGremlinQuery<Vertex>(graph, "g.V()")               |> runGremlinQuery<Vertex>
+
+let gremlinQueries = 
+    dict [
+            "Cleanup",        "g.V().drop()" ;
+            "AddVertex 1",    "g.addV('person').property('id', 'thomas').property('firstName', 'Thomas').property('age', 44)" ;
+            "AddVertex 2",    "g.addV('person').property('id', 'mary').property('firstName', 'Mary').property('lastName', 'Andersen').property('age', 39)" ;
+            "AddVertex 3",    "g.addV('person').property('id', 'ben').property('firstName', 'Ben').property('lastName', 'Miller')" ;
+            "AddVertex 4",    "g.addV('person').property('id', 'robin').property('firstName', 'Robin').property('lastName', 'Wakefield')" ;
+            "AddEdge 1",      "g.V('thomas').addE('knows').to(g.V('mary'))" ;
+            "AddEdge 2",      "g.V('thomas').addE('knows').to(g.V('ben'))" ;
+            "AddEdge 3",      "g.V('ben').addE('knows').to(g.V('robin'))" ;
+            "UpdateVertex",   "g.V('thomas').property('age', 44)" ;
+            "CountVertices",  "g.V().count()" ;
+            "Filter Range",   "g.V().hasLabel('person').has('age', gt(40))" ;
+            "Project",        "g.V().hasLabel('person').values('firstName')" ;
+            "Sort",           "g.V().hasLabel('person').order().by('firstName', decr)" ;
+            "Traverse",       "g.V('thomas').outE('knows').inV().hasLabel('person')" ;
+            "Traverse 2x",    "g.V('thomas').outE('knows').inV().hasLabel('person').outE('knows').inV().hasLabel('person')" ;
+            "Loop",           "g.V('thomas').repeat(out()).until(has('id', 'robin')).path()" ;
+            "DropEdge",       "g.V('thomas').outE('knows').where(inV().has('id', 'mary')).drop()" ;
+            "CountEdges",     "g.E().count()" ;
+            //"DropVertex",     "g.V('thomas').drop()";
+            ]
+
+// Run all of the queries 
+gremlinQueries 
+    |> Seq.map (fun queryKVP -> 
+                    printf "%A" queryKVP.Key; 
+                    client.CreateGremlinQuery<obj>(graph, queryKVP.Value) 
+                    |> runGremlinQuery )                // Why does map stop after 4 iterations???
+    |> Seq.iter (fun z->printf "%A\r\n" z)              // Whereas iter carries on until the end!??
+

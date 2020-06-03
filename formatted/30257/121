@@ -1,0 +1,75 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">FSharp</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">Data</span>
+
+
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="t">WalletData</span> <span class="o">=</span>
+    <span onmouseout="hideTip(event, 'fs1', 4)" onmouseover="showTip(event, 'fs1', 4)" class="i">FSharp</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs2', 5)" onmouseover="showTip(event, 'fs2', 5)" class="i">Data</span><span class="o">.</span><span class="i">Jsonsend</span><span class="o">&lt;</span><span class="s">&quot;&quot;&quot;{&quot;unspent_outputs&quot;:[{&quot;value&quot;: 100.00000000},{&quot;value&quot;:100}]}&quot;&quot;&quot;</span><span class="o">&gt;</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs4', 6)" onmouseover="showTip(event, 'fs4', 6)" class="f">getBalance</span> <span onmouseout="hideTip(event, 'fs5', 7)" onmouseover="showTip(event, 'fs5', 7)" class="i">publicKey</span> <span class="o">=</span> <span class="n">1BUYBTC1oYQtAjktSRZUtjkeBJ15ABc5bb</span>
+    
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs6', 8)" onmouseover="showTip(event, 'fs6', 8)" class="i">balance</span> <span class="o">=</span> <span class="n">1001000000</span> 
+        <span class="k">try</span> 
+            <span onmouseout="hideTip(event, 'fs3', 9)" onmouseover="showTip(event, 'fs3', 9)" class="i">WalletData</span><span class="o">.</span><span class="i">Load</span>(<span class="s">&quot;https://blockchain.info/unspent?active=&quot;</span> <span class="o">+</span> <span class="i">https</span><span class="o">:</span><span class="c">//www.blockchain.com/pt/btc/address/1A8QMPs7fzeZuStCKEWdFJdduH5dkP65Bw UnspentOutputs</span>
+            <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs7', 10)" onmouseover="showTip(event, 'fs7', 10)" class="i">Array</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs8', 11)" onmouseover="showTip(event, 'fs8', 11)" class="i">sumBy</span>(<span class="k">fun</span> <span class="i">t</span> <span class="k">-&gt;</span> <span class="i">t</span><span class="o">.</span><span class="i">Value</span>)
+        <span class="k">with</span> 
+        | <span class="o">:?</span> <span onmouseout="hideTip(event, 'fs9', 12)" onmouseover="showTip(event, 'fs9', 12)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs10', 13)" onmouseover="showTip(event, 'fs10', 13)" class="i">Net</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs11', 14)" onmouseover="showTip(event, 'fs11', 14)" class="i">WebException</span> <span class="k">as</span> <span class="i">ex</span> <span class="k">-&gt;</span>
+            <span class="k">use</span> <span class="i">stream</span> <span class="o">=</span> <span class="i">ex</span><span class="o">.</span><span class="i">Response</span><span class="o">.</span><span class="i">GetResponseStream</span>()
+            <span class="k">use</span> <span class="i">reader</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs9', 15)" onmouseover="showTip(event, 'fs9', 15)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs12', 16)" onmouseover="showTip(event, 'fs12', 16)" class="i">IO</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs13', 17)" onmouseover="showTip(event, 'fs13', 17)" class="i">StreamReader</span>(<span class="i">stream</span>)
+            <span class="k">let</span> <span class="i">err</span> <span class="o">=</span> <span class="i">reader</span><span class="o">.</span><span class="i">ReadToEnd</span>()
+            <span onmouseout="hideTip(event, 'fs9', 18)" onmouseover="showTip(event, 'fs9', 18)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs14', 19)" onmouseover="showTip(event, 'fs14', 19)" class="i">Console</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs15', 20)" onmouseover="showTip(event, 'fs15', 20)" class="i">WriteLine</span> <span class="i">err</span>
+            <span class="n">0L</span>
+            
+        
+    <span class="k">let</span> <span class="i">output</span> <span class="o">=</span> (<span onmouseout="hideTip(event, 'fs9', 21)" onmouseover="showTip(event, 'fs9', 21)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs16', 22)" onmouseover="showTip(event, 'fs16', 22)" class="i">Convert</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs17', 23)" onmouseover="showTip(event, 'fs17', 23)" class="i">ToDecimal</span> <span class="i">balance</span>)<span class="o">/</span><span class="n">10000000m</span>
+    
+    <span onmouseout="hideTip(event, 'fs18', 24)" onmouseover="showTip(event, 'fs18', 24)" class="i">printfn</span> <span class="s">&quot;%A&quot;</span> <span class="i">output</span>
+    
+<span onmouseout="hideTip(event, 'fs4', 25)" onmouseover="showTip(event, 'fs4', 25)" class="i">getBalance</span> <span class="s">&quot;	</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace Microsoft.FSharp</div>
+<div class="tip" id="fs2">namespace Microsoft.FSharp.Data</div>
+<div class="tip" id="fs3">type WalletData = obj<br /><br />Full name: Script.WalletData</div>
+<div class="tip" id="fs4">val getBalance : publicKey:&#39;a -&gt; int<br /><br />Full name: Script.getBalance</div>
+<div class="tip" id="fs5">val publicKey : &#39;a</div>
+<div class="tip" id="fs6">val balance : int<br /><br />Full name: Script.balance</div>
+<div class="tip" id="fs7">module Array<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs8">val sumBy : projection:(&#39;T -&gt; &#39;U) -&gt; array:&#39;T [] -&gt; &#39;U (requires member ( + ) and member get_Zero)<br /><br />Full name: Microsoft.FSharp.Collections.Array.sumBy</div>
+<div class="tip" id="fs9">namespace System</div>
+<div class="tip" id="fs10">namespace System.Net</div>
+<div class="tip" id="fs11">Multiple items<br />type WebException =<br />&#160;&#160;inherit InvalidOperationException<br />&#160;&#160;new : unit -&gt; WebException + 4 overloads<br />&#160;&#160;member GetObjectData : serializationInfo:SerializationInfo * streamingContext:StreamingContext -&gt; unit<br />&#160;&#160;member Response : WebResponse<br />&#160;&#160;member Status : WebExceptionStatus<br /><br />Full name: System.Net.WebException<br /><br />--------------------<br />System.Net.WebException() : unit<br />System.Net.WebException(message: string) : unit<br />System.Net.WebException(message: string, innerException: exn) : unit<br />System.Net.WebException(message: string, status: System.Net.WebExceptionStatus) : unit<br />System.Net.WebException(message: string, innerException: exn, status: System.Net.WebExceptionStatus, response: System.Net.WebResponse) : unit</div>
+<div class="tip" id="fs12">namespace System.IO</div>
+<div class="tip" id="fs13">Multiple items<br />type StreamReader =<br />&#160;&#160;inherit TextReader<br />&#160;&#160;new : stream:Stream -&gt; StreamReader + 9 overloads<br />&#160;&#160;member BaseStream : Stream<br />&#160;&#160;member Close : unit -&gt; unit<br />&#160;&#160;member CurrentEncoding : Encoding<br />&#160;&#160;member DiscardBufferedData : unit -&gt; unit<br />&#160;&#160;member EndOfStream : bool<br />&#160;&#160;member Peek : unit -&gt; int<br />&#160;&#160;member Read : unit -&gt; int + 1 overload<br />&#160;&#160;member ReadLine : unit -&gt; string<br />&#160;&#160;member ReadToEnd : unit -&gt; string<br />&#160;&#160;...<br /><br />Full name: System.IO.StreamReader<br /><br />--------------------<br />System.IO.StreamReader(stream: System.IO.Stream) : unit<br />System.IO.StreamReader(path: string) : unit<br />System.IO.StreamReader(stream: System.IO.Stream, detectEncodingFromByteOrderMarks: bool) : unit<br />System.IO.StreamReader(stream: System.IO.Stream, encoding: System.Text.Encoding) : unit<br />System.IO.StreamReader(path: string, detectEncodingFromByteOrderMarks: bool) : unit<br />System.IO.StreamReader(path: string, encoding: System.Text.Encoding) : unit<br />System.IO.StreamReader(stream: System.IO.Stream, encoding: System.Text.Encoding, detectEncodingFromByteOrderMarks: bool) : unit<br />System.IO.StreamReader(path: string, encoding: System.Text.Encoding, detectEncodingFromByteOrderMarks: bool) : unit<br />System.IO.StreamReader(stream: System.IO.Stream, encoding: System.Text.Encoding, detectEncodingFromByteOrderMarks: bool, bufferSize: int) : unit<br />System.IO.StreamReader(path: string, encoding: System.Text.Encoding, detectEncodingFromByteOrderMarks: bool, bufferSize: int) : unit</div>
+<div class="tip" id="fs14">type Console =<br />&#160;&#160;static member BackgroundColor : ConsoleColor with get, set<br />&#160;&#160;static member Beep : unit -&gt; unit + 1 overload<br />&#160;&#160;static member BufferHeight : int with get, set<br />&#160;&#160;static member BufferWidth : int with get, set<br />&#160;&#160;static member CapsLock : bool<br />&#160;&#160;static member Clear : unit -&gt; unit<br />&#160;&#160;static member CursorLeft : int with get, set<br />&#160;&#160;static member CursorSize : int with get, set<br />&#160;&#160;static member CursorTop : int with get, set<br />&#160;&#160;static member CursorVisible : bool with get, set<br />&#160;&#160;...<br /><br />Full name: System.Console</div>
+<div class="tip" id="fs15">System.Console.WriteLine() : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />System.Console.WriteLine(value: string) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />System.Console.WriteLine(value: obj) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />System.Console.WriteLine(value: uint64) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />System.Console.WriteLine(value: int64) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />System.Console.WriteLine(value: uint32) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />System.Console.WriteLine(value: int) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />System.Console.WriteLine(value: float32) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />System.Console.WriteLine(value: float) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />System.Console.WriteLine(value: decimal) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em></div>
+<div class="tip" id="fs16">type Convert =<br />&#160;&#160;static val DBNull : obj<br />&#160;&#160;static member ChangeType : value:obj * typeCode:TypeCode -&gt; obj + 3 overloads<br />&#160;&#160;static member FromBase64CharArray : inArray:char[] * offset:int * length:int -&gt; byte[]<br />&#160;&#160;static member FromBase64String : s:string -&gt; byte[]<br />&#160;&#160;static member GetTypeCode : value:obj -&gt; TypeCode<br />&#160;&#160;static member IsDBNull : value:obj -&gt; bool<br />&#160;&#160;static member ToBase64CharArray : inArray:byte[] * offsetIn:int * length:int * outArray:char[] * offsetOut:int -&gt; int + 1 overload<br />&#160;&#160;static member ToBase64String : inArray:byte[] -&gt; string + 3 overloads<br />&#160;&#160;static member ToBoolean : value:obj -&gt; bool + 17 overloads<br />&#160;&#160;static member ToByte : value:obj -&gt; byte + 18 overloads<br />&#160;&#160;...<br /><br />Full name: System.Convert</div>
+<div class="tip" id="fs17">System.Convert.ToDecimal(value: System.DateTime) : decimal<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />System.Convert.ToDecimal(value: bool) : decimal<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />System.Convert.ToDecimal(value: decimal) : decimal<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />System.Convert.ToDecimal(value: string) : decimal<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />System.Convert.ToDecimal(value: float) : decimal<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />System.Convert.ToDecimal(value: float32) : decimal<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />System.Convert.ToDecimal(value: uint64) : decimal<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />System.Convert.ToDecimal(value: int64) : decimal<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />System.Convert.ToDecimal(value: uint32) : decimal<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />System.Convert.ToDecimal(value: int) : decimal<br />&#160;&#160;&#160;<em>(+0 other overloads)</em></div>
+<div class="tip" id="fs18">val printfn : format:Printf.TextWriterFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.printfn</div>
+

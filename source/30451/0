@@ -1,0 +1,14 @@
+        use! rdr = Async.AwaitTask (cmd.ExecuteReaderAsync())
+        
+        let results = 
+            // rdr.ReadAsync fails with "[FS0001] This expression was expected to have type 'bool' but here has type 'Threading.Tasks.Task<bool>'"
+            [while rdr.ReadAsync() do
+                yield { 
+                        symbol = rdr.GetString(0)
+                        sec_id = rdr.GetInt32(1) 
+                        description = rdr.GetString(2) 
+                        exchange_id = rdr.GetInt32(3)
+                        exchange = rdr.GetString(4)
+                 
+                      }
+            ] |> Seq.map (fun a -> a.symbol, a) |> Map.ofSeq

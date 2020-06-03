@@ -1,0 +1,8 @@
+let inline diff (a: char) (b: char) = int a - int b
+let capitalDiff = diff 'a' 'A' |> abs
+let inline areOpposite a b = diff a b |> abs = capitalDiff
+
+let transform =
+  Seq.fold (fun acc c1 -> match acc with c2::tail when areOpposite c1 c2 -> tail | _ -> c1::acc) []
+
+transform "dabCBAcaDA"

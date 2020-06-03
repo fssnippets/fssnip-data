@@ -1,0 +1,36 @@
+// simple port of the python code
+// from this excellent article 
+// https://www.quantstart.com/articles/Basics-of-Statistical-Mean-Reversion-Testing
+open System
+
+let gbmts ()  =
+    let random =  MathNet.Numerics.Random.SystemRandomSource.FastDoubles(10000)
+    random |> Array.fold (fun st x -> st@[((List.last st)+(x-0.5))] ) [1000.0]  |> Seq.toArray
+
+let mrevts ()  =
+    MathNet.Numerics.Random.SystemRandomSource.FastDoubles(10000)
+       
+let trendts ()  =
+    let random =  MathNet.Numerics.Random.SystemRandomSource.FastDoubles(10000)
+    random |> Array.fold (fun st x -> st@[((List.last st)+(x+1.0))] ) [1000.0]  |> Seq.toArray
+
+let difvec (vecin:float []) lag =
+    let vsub = vecin |> Array.skip lag 
+    let dif = vsub |> Array.mapi(fun i x -> x - vecin.[i]  )
+    MathNet.Numerics.Statistics.ArrayStatistics.StandardDeviation(dif) |> sqrt
+
+let hurst (vecpriceraw:double array) =
+    let vecprice = vecpriceraw |> Array.map(log)
+    let range = [|2..100|]
+    let lagvec = range |> Array.map (difvec vecprice)
+    let logvec = lagvec |> Array.map (log)
+    let loglag = range |>  Array.map(float >> log)
+    let (_,slope) = MathNet.Numerics.LinearRegression.SimpleRegression.Fit (loglag,logvec)
+    slope*2.0
+/// test the hurst exponent
+/// > gbmts() |> hurst;;
+/// val it : float = 0.5092820778
+/// > mrevts() |> hurst;;
+/// val it : float = -0.0003832790107
+/// > trendts() |> hurst;;
+/// val it : float = 0.9824236056

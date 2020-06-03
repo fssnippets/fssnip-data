@@ -1,0 +1,35 @@
+
+let mergeSort a = 
+    let rec split a n l r =
+        match a with
+        | [] -> (l, r)
+        | h::t when n > 0 -> split t (n - 1) (h::l) r
+        | h::t            -> split t (n - 1) l (h::r)
+    
+    and merge l r acc =
+        match l, r with
+        | [], [] -> acc
+        | lh::lt, [] -> merge lt [] (lh::acc)
+        | [], rh::rt -> merge rt [] (rh::acc)
+        | lh::lt, rh::rt ->
+            if lh < rh 
+            then merge lt r (lh::acc)
+            else merge l rt (rh::acc)
+            
+    and sort a =
+        match a with
+        | [] -> []
+        | [x] -> [x]
+        | a ->
+            let m = a.Length / 2
+            let (l, r) = split a m [] []
+            let l = sort l 
+            let r = sort r
+            merge l r []
+            
+    sort a
+    
+let rng = (new System.Random(int System.DateTime.Now.Ticks)).Next
+let l = List.init 1000000 rng
+
+l |> mergeSort

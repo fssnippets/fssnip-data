@@ -1,0 +1,111 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">// see also </span>
+<span class="c">// http://stackoverflow.com/questions/4949941/convert-string-to-system-datetime-in-f</span>
+
+<span class="k">module</span> <span class="t">TryParser</span> <span class="o">=</span>
+    <span class="c">// convenient, functional TryParse wrappers returning option&lt;&#39;a&gt;</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="f">tryParseWith</span> (<span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="f">tryParseFunc</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="t">string</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="t">bool</span> <span class="o">*</span> _) <span class="o">=</span> <span onmouseout="hideTip(event, 'fs2', 5)" onmouseover="showTip(event, 'fs2', 5)" class="f">tryParseFunc</span> <span class="o">&gt;</span><span class="o">&gt;</span> <span class="k">function</span>
+        | <span class="k">true</span>, <span onmouseout="hideTip(event, 'fs5', 6)" onmouseover="showTip(event, 'fs5', 6)" class="i">v</span>    <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs6', 7)" onmouseover="showTip(event, 'fs6', 7)" class="p">Some</span> <span onmouseout="hideTip(event, 'fs5', 8)" onmouseover="showTip(event, 'fs5', 8)" class="i">v</span>
+        | <span class="k">false</span>, _   <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs7', 9)" onmouseover="showTip(event, 'fs7', 9)" class="p">None</span>
+
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs8', 10)" onmouseover="showTip(event, 'fs8', 10)" class="f">parseDate</span>   <span class="o">=</span> <span onmouseout="hideTip(event, 'fs1', 11)" onmouseover="showTip(event, 'fs1', 11)" class="f">tryParseWith</span> <span onmouseout="hideTip(event, 'fs9', 12)" onmouseover="showTip(event, 'fs9', 12)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs10', 13)" onmouseover="showTip(event, 'fs10', 13)" class="t">DateTime</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs11', 14)" onmouseover="showTip(event, 'fs11', 14)" class="f">TryParse</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs12', 15)" onmouseover="showTip(event, 'fs12', 15)" class="f">parseInt</span>    <span class="o">=</span> <span onmouseout="hideTip(event, 'fs1', 16)" onmouseover="showTip(event, 'fs1', 16)" class="f">tryParseWith</span> <span onmouseout="hideTip(event, 'fs9', 17)" onmouseover="showTip(event, 'fs9', 17)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs13', 18)" onmouseover="showTip(event, 'fs13', 18)" class="t">Int32</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs14', 19)" onmouseover="showTip(event, 'fs14', 19)" class="f">TryParse</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs15', 20)" onmouseover="showTip(event, 'fs15', 20)" class="f">parseSingle</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs1', 21)" onmouseover="showTip(event, 'fs1', 21)" class="f">tryParseWith</span> <span onmouseout="hideTip(event, 'fs9', 22)" onmouseover="showTip(event, 'fs9', 22)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs16', 23)" onmouseover="showTip(event, 'fs16', 23)" class="t">Single</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs17', 24)" onmouseover="showTip(event, 'fs17', 24)" class="f">TryParse</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs18', 25)" onmouseover="showTip(event, 'fs18', 25)" class="f">parseDouble</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs1', 26)" onmouseover="showTip(event, 'fs1', 26)" class="f">tryParseWith</span> <span onmouseout="hideTip(event, 'fs9', 27)" onmouseover="showTip(event, 'fs9', 27)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs19', 28)" onmouseover="showTip(event, 'fs19', 28)" class="t">Double</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs20', 29)" onmouseover="showTip(event, 'fs20', 29)" class="f">TryParse</span>
+    <span class="c">// etc.</span>
+
+    <span class="c">// active patterns for try-parsing strings</span>
+    <span class="k">let</span> (|<span class="p">Date</span>|_|)   <span class="o">=</span> <span onmouseout="hideTip(event, 'fs8', 30)" onmouseover="showTip(event, 'fs8', 30)" class="f">parseDate</span>
+    <span class="k">let</span> (|<span class="p">Int</span>|_|)    <span class="o">=</span> <span onmouseout="hideTip(event, 'fs12', 31)" onmouseover="showTip(event, 'fs12', 31)" class="f">parseInt</span>
+    <span class="k">let</span> (|<span class="p">Single</span>|_|) <span class="o">=</span> <span onmouseout="hideTip(event, 'fs15', 32)" onmouseover="showTip(event, 'fs15', 32)" class="f">parseSingle</span>
+    <span class="k">let</span> (|<span class="p">Double</span>|_|) <span class="o">=</span> <span onmouseout="hideTip(event, 'fs18', 33)" onmouseover="showTip(event, 'fs18', 33)" class="f">parseDouble</span>
+
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs21', 34)" onmouseover="showTip(event, 'fs21', 34)" class="i">TryParser</span>
+
+<span class="c">// tests</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs22', 35)" onmouseover="showTip(event, 'fs22', 35)" class="f">parseMe</span> <span class="o">=</span> <span class="k">function</span>
+    | <span onmouseout="hideTip(event, 'fs23', 36)" onmouseover="showTip(event, 'fs23', 36)" class="p">Date</span> <span onmouseout="hideTip(event, 'fs24', 37)" onmouseover="showTip(event, 'fs24', 37)" class="i">d</span>   <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs25', 38)" onmouseover="showTip(event, 'fs25', 38)" class="f">printfn</span> <span class="s">&quot;DateTime </span><span class="pf">%A</span><span class="s">&quot;</span> <span onmouseout="hideTip(event, 'fs24', 39)" onmouseover="showTip(event, 'fs24', 39)" class="i">d</span>
+    | <span onmouseout="hideTip(event, 'fs26', 40)" onmouseover="showTip(event, 'fs26', 40)" class="p">Int</span> <span class="n">42</span>   <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs25', 41)" onmouseover="showTip(event, 'fs25', 41)" class="f">printfn</span> <span class="s">&quot;Bingo!&quot;</span>
+    | <span onmouseout="hideTip(event, 'fs26', 42)" onmouseover="showTip(event, 'fs26', 42)" class="p">Int</span> <span onmouseout="hideTip(event, 'fs27', 43)" onmouseover="showTip(event, 'fs27', 43)" class="i">i</span>    <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs25', 44)" onmouseover="showTip(event, 'fs25', 44)" class="f">printfn</span> <span class="s">&quot;Int32 </span><span class="pf">%i</span><span class="s">&quot;</span> <span onmouseout="hideTip(event, 'fs27', 45)" onmouseover="showTip(event, 'fs27', 45)" class="i">i</span>
+    | <span onmouseout="hideTip(event, 'fs28', 46)" onmouseover="showTip(event, 'fs28', 46)" class="p">Single</span> <span onmouseout="hideTip(event, 'fs29', 47)" onmouseover="showTip(event, 'fs29', 47)" class="i">f</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs25', 48)" onmouseover="showTip(event, 'fs25', 48)" class="f">printfn</span> <span class="s">&quot;Single </span><span class="pf">%g</span><span class="s">&quot;</span> <span onmouseout="hideTip(event, 'fs29', 49)" onmouseover="showTip(event, 'fs29', 49)" class="i">f</span>
+    | <span onmouseout="hideTip(event, 'fs30', 50)" onmouseover="showTip(event, 'fs30', 50)" class="p">Double</span> <span onmouseout="hideTip(event, 'fs31', 51)" onmouseover="showTip(event, 'fs31', 51)" class="i">d</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs25', 52)" onmouseover="showTip(event, 'fs25', 52)" class="f">printfn</span> <span class="s">&quot;Double </span><span class="pf">%g</span><span class="s">&quot;</span> <span onmouseout="hideTip(event, 'fs31', 53)" onmouseover="showTip(event, 'fs31', 53)" class="i">d</span> <span class="c">// never hit, always parsed as float32</span>
+    | <span onmouseout="hideTip(event, 'fs32', 54)" onmouseover="showTip(event, 'fs32', 54)" class="i">s</span>        <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs25', 55)" onmouseover="showTip(event, 'fs25', 55)" class="f">printfn</span> <span class="s">&quot;Don&#39;t know how to parse </span><span class="pf">%A</span><span class="s">&quot;</span> <span onmouseout="hideTip(event, 'fs32', 56)" onmouseover="showTip(event, 'fs32', 56)" class="i">s</span>
+
+<span onmouseout="hideTip(event, 'fs22', 57)" onmouseover="showTip(event, 'fs22', 57)" class="f">parseMe</span> <span class="s">&quot;213&quot;</span>
+<span onmouseout="hideTip(event, 'fs22', 58)" onmouseover="showTip(event, 'fs22', 58)" class="f">parseMe</span> <span class="s">&quot;2010-02-22&quot;</span>
+<span onmouseout="hideTip(event, 'fs22', 59)" onmouseover="showTip(event, 'fs22', 59)" class="f">parseMe</span> <span class="s">&quot;3,0&quot;</span>
+<span onmouseout="hideTip(event, 'fs22', 60)" onmouseover="showTip(event, 'fs22', 60)" class="f">parseMe</span> <span class="s">&quot;jslkdfjlkj&quot;</span>
+<span onmouseout="hideTip(event, 'fs22', 61)" onmouseover="showTip(event, 'fs22', 61)" class="f">parseMe</span> <span class="s">&quot;42&quot;</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">val tryParseWith : tryParseFunc:(string -&gt; bool * &#39;a) -&gt; (string -&gt; &#39;a option)<br /><br />Full name: Script.TryParser.tryParseWith</div>
+<div class="tip" id="fs2">val tryParseFunc : (string -&gt; bool * &#39;a)</div>
+<div class="tip" id="fs3">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />Full name: Microsoft.FSharp.Core.Operators.string<br /><br />--------------------<br />type string = System.String<br /><br />Full name: Microsoft.FSharp.Core.string</div>
+<div class="tip" id="fs4">type bool = System.Boolean<br /><br />Full name: Microsoft.FSharp.Core.bool</div>
+<div class="tip" id="fs5">val v : &#39;a</div>
+<div class="tip" id="fs6">union case Option.Some: Value: &#39;T -&gt; Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs7">union case Option.None: Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs8">val parseDate : (string -&gt; System.DateTime option)<br /><br />Full name: Script.TryParser.parseDate</div>
+<div class="tip" id="fs9">namespace System</div>
+<div class="tip" id="fs10">Multiple items<br />type DateTime =<br />&#160;&#160;struct<br />&#160;&#160;&#160;&#160;new : ticks:int64 -&gt; DateTime + 10 overloads<br />&#160;&#160;&#160;&#160;member Add : value:TimeSpan -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddDays : value:float -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddHours : value:float -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddMilliseconds : value:float -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddMinutes : value:float -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddMonths : months:int -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddSeconds : value:float -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddTicks : value:int64 -&gt; DateTime<br />&#160;&#160;&#160;&#160;member AddYears : value:int -&gt; DateTime<br />&#160;&#160;&#160;&#160;...<br />&#160;&#160;end<br /><br />Full name: System.DateTime<br /><br />--------------------<br />System.DateTime()<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />System.DateTime(ticks: int64) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />System.DateTime(ticks: int64, kind: System.DateTimeKind) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />System.DateTime(year: int, month: int, day: int) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />System.DateTime(year: int, month: int, day: int, calendar: System.Globalization.Calendar) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />System.DateTime(year: int, month: int, day: int, hour: int, minute: int, second: int) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />System.DateTime(year: int, month: int, day: int, hour: int, minute: int, second: int, kind: System.DateTimeKind) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />System.DateTime(year: int, month: int, day: int, hour: int, minute: int, second: int, calendar: System.Globalization.Calendar) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />System.DateTime(year: int, month: int, day: int, hour: int, minute: int, second: int, millisecond: int) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em><br />System.DateTime(year: int, month: int, day: int, hour: int, minute: int, second: int, millisecond: int, kind: System.DateTimeKind) : unit<br />&#160;&#160;&#160;<em>(+0 other overloads)</em></div>
+<div class="tip" id="fs11">System.DateTime.TryParse(s: string, result: byref&lt;System.DateTime&gt;) : bool<br />System.DateTime.TryParse(s: string, provider: System.IFormatProvider, styles: System.Globalization.DateTimeStyles, result: byref&lt;System.DateTime&gt;) : bool</div>
+<div class="tip" id="fs12">val parseInt : (string -&gt; int option)<br /><br />Full name: Script.TryParser.parseInt</div>
+<div class="tip" id="fs13">type Int32 =<br />&#160;&#160;struct<br />&#160;&#160;&#160;&#160;member CompareTo : value:obj -&gt; int + 1 overload<br />&#160;&#160;&#160;&#160;member Equals : obj:obj -&gt; bool + 1 overload<br />&#160;&#160;&#160;&#160;member GetHashCode : unit -&gt; int<br />&#160;&#160;&#160;&#160;member GetTypeCode : unit -&gt; TypeCode<br />&#160;&#160;&#160;&#160;member ToString : unit -&gt; string + 3 overloads<br />&#160;&#160;&#160;&#160;static val MaxValue : int<br />&#160;&#160;&#160;&#160;static val MinValue : int<br />&#160;&#160;&#160;&#160;static member Parse : s:string -&gt; int + 3 overloads<br />&#160;&#160;&#160;&#160;static member TryParse : s:string * result:int -&gt; bool + 1 overload<br />&#160;&#160;end<br /><br />Full name: System.Int32</div>
+<div class="tip" id="fs14">System.Int32.TryParse(s: string, result: byref&lt;int&gt;) : bool<br />System.Int32.TryParse(s: string, style: System.Globalization.NumberStyles, provider: System.IFormatProvider, result: byref&lt;int&gt;) : bool</div>
+<div class="tip" id="fs15">val parseSingle : (string -&gt; float32 option)<br /><br />Full name: Script.TryParser.parseSingle</div>
+<div class="tip" id="fs16">type Single =<br />&#160;&#160;struct<br />&#160;&#160;&#160;&#160;member CompareTo : value:obj -&gt; int + 1 overload<br />&#160;&#160;&#160;&#160;member Equals : obj:obj -&gt; bool + 1 overload<br />&#160;&#160;&#160;&#160;member GetHashCode : unit -&gt; int<br />&#160;&#160;&#160;&#160;member GetTypeCode : unit -&gt; TypeCode<br />&#160;&#160;&#160;&#160;member ToString : unit -&gt; string + 3 overloads<br />&#160;&#160;&#160;&#160;static val MinValue : float32<br />&#160;&#160;&#160;&#160;static val Epsilon : float32<br />&#160;&#160;&#160;&#160;static val MaxValue : float32<br />&#160;&#160;&#160;&#160;static val PositiveInfinity : float32<br />&#160;&#160;&#160;&#160;static val NegativeInfinity : float32<br />&#160;&#160;&#160;&#160;...<br />&#160;&#160;end<br /><br />Full name: System.Single</div>
+<div class="tip" id="fs17">System.Single.TryParse(s: string, result: byref&lt;float32&gt;) : bool<br />System.Single.TryParse(s: string, style: System.Globalization.NumberStyles, provider: System.IFormatProvider, result: byref&lt;float32&gt;) : bool</div>
+<div class="tip" id="fs18">val parseDouble : (string -&gt; float option)<br /><br />Full name: Script.TryParser.parseDouble</div>
+<div class="tip" id="fs19">type Double =<br />&#160;&#160;struct<br />&#160;&#160;&#160;&#160;member CompareTo : value:obj -&gt; int + 1 overload<br />&#160;&#160;&#160;&#160;member Equals : obj:obj -&gt; bool + 1 overload<br />&#160;&#160;&#160;&#160;member GetHashCode : unit -&gt; int<br />&#160;&#160;&#160;&#160;member GetTypeCode : unit -&gt; TypeCode<br />&#160;&#160;&#160;&#160;member ToString : unit -&gt; string + 3 overloads<br />&#160;&#160;&#160;&#160;static val MinValue : float<br />&#160;&#160;&#160;&#160;static val MaxValue : float<br />&#160;&#160;&#160;&#160;static val Epsilon : float<br />&#160;&#160;&#160;&#160;static val NegativeInfinity : float<br />&#160;&#160;&#160;&#160;static val PositiveInfinity : float<br />&#160;&#160;&#160;&#160;...<br />&#160;&#160;end<br /><br />Full name: System.Double</div>
+<div class="tip" id="fs20">System.Double.TryParse(s: string, result: byref&lt;float&gt;) : bool<br />System.Double.TryParse(s: string, style: System.Globalization.NumberStyles, provider: System.IFormatProvider, result: byref&lt;float&gt;) : bool</div>
+<div class="tip" id="fs21">module TryParser<br /><br />from Script</div>
+<div class="tip" id="fs22">val parseMe : _arg1:string -&gt; unit<br /><br />Full name: Script.parseMe</div>
+<div class="tip" id="fs23">active recognizer Date: string -&gt; System.DateTime option<br /><br />Full name: Script.TryParser.( |Date|_| )</div>
+<div class="tip" id="fs24">val d : System.DateTime</div>
+<div class="tip" id="fs25">val printfn : format:Printf.TextWriterFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.printfn</div>
+<div class="tip" id="fs26">active recognizer Int: string -&gt; int option<br /><br />Full name: Script.TryParser.( |Int|_| )</div>
+<div class="tip" id="fs27">val i : int</div>
+<div class="tip" id="fs28">active recognizer Single: string -&gt; float32 option<br /><br />Full name: Script.TryParser.( |Single|_| )</div>
+<div class="tip" id="fs29">val f : float32</div>
+<div class="tip" id="fs30">active recognizer Double: string -&gt; float option<br /><br />Full name: Script.TryParser.( |Double|_| )</div>
+<div class="tip" id="fs31">val d : float</div>
+<div class="tip" id="fs32">val s : string</div>
+

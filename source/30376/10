@@ -1,0 +1,8 @@
+let p = ["a","b"; "a","c"; "b","d"]
+let rec p2e    =function []->[]    |(a,b)::ps ->a::b:: p2e ps
+
+let rec rNb i l=function []->false |p::ps -> (l,i)=p ||(i,l)=p || rNb l i ps
+let rec cXl i  =function []->true  |l::ls -> not( rNb i l p)   && cXl   i ls
+
+let rec xCg i  =function []->[[i]] |cl::cls -> if (cXl i cl) then (i::cl)::cls else cl:: xCg i cls
+List.fold(fun a i->xCg i a) [] (p2e p |> List.distinct)//[["d";"a"];["c";"b"]]Musa.Jahanghir@Live.com

@@ -1,0 +1,51 @@
+// Configure Argu to read from hosted Microsoft.Extensions.Configuration
+// and pass a ParseResult<'T> through dependency injection.
+// This allows you to combine Argu's full-featured command-line handling and strong typing
+// with M.E.C's multiple sources (appSettings.<environment>.json, environment variables, etc).
+
+open Microsoft.Extensions.Configuration
+open Microsoft.Extensions.DependencyInjection
+open Argu
+
+type HostedConfigurationReader(config: IConfiguration) =
+    interface IConfigurationReader with
+        member this.GetValue(k) = config.[k]
+        member this.Name = ".NET Core hosted configuration"
+
+type IServiceCollection with
+    member this.AddArgu<'T when 'T : not struct and 'T :> IArgParserTemplate>(configure: IConfigurationReader -> ParseResults<'T>) =
+        this.AddSingleton<IConfigurationReader, HostedConfigurationReader>()
+        this.AddSingleton<ParseResults<'T>>(fun services ->
+            services.GetRequiredService<IConfiguration>()
+            |> HostedConfigurationReader
+            |> configure)
+
+//// Example use:
+
+type Args =
+    // Passed as --file XXX on the CLI
+    // or { "file": XXX } in appSettings.json
+    // or FILE environment variable
+    | File of string
+    // Passed as --url on the CLI
+    // or { "myService": { "url": XXX } } in appSettings.json
+    // or MYSERVICE__URL envirenment variable
+    | [<CustomAppSettings "myService:url">] Url of string
+
+    interface IArgParserTemplate with
+        member this.Usage =
+            match this with
+            | File _ -> "a file."
+            | Url _ -> "the url of my service."
+
+// Service using it:
+type MyService(args: ParseResults<Args>) =
+    let file = args.GetResult Args.File
+    let url = args.GetResult Args.Url
+
+// App startup config:
+type Startup() =
+    member this.ConfigureServices(services: IServiceCollection) =
+        services.AddArgu<Args>(fun config ->
+            ArgumentParser.Create<Args>().Parse(configurationReader = config))
+        |> ignore

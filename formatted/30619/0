@@ -1,0 +1,43 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">(*</span>
+<span class="c">Sieve of Eratosthenes.</span>
+<span class="c">*)</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="f">generatePrimes</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="i">limit</span> <span class="o">=</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="i">candidates</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="f">set</span> [ <span class="n">2</span> <span class="o">..</span> <span onmouseout="hideTip(event, 'fs2', 5)" onmouseover="showTip(event, 'fs2', 5)" class="i">limit</span> ]
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs5', 6)" onmouseover="showTip(event, 'fs5', 6)" class="i">bases</span> <span class="o">=</span> [| <span class="n">2</span> <span class="o">..</span> (<span onmouseout="hideTip(event, 'fs2', 7)" onmouseover="showTip(event, 'fs2', 7)" class="i">limit</span> <span class="o">/</span> <span class="n">2</span> <span class="o">+</span> <span class="n">1</span>) |]
+
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs6', 8)" onmouseover="showTip(event, 'fs6', 8)" class="i">nonPrimes</span> <span class="o">=</span>
+        <span onmouseout="hideTip(event, 'fs5', 9)" onmouseover="showTip(event, 'fs5', 9)" class="i">bases</span>
+        <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs7', 10)" onmouseover="showTip(event, 'fs7', 10)" class="t">Array</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs8', 11)" onmouseover="showTip(event, 'fs8', 11)" class="f">map</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs9', 12)" onmouseover="showTip(event, 'fs9', 12)" class="i">b</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs4', 13)" onmouseover="showTip(event, 'fs4', 13)" class="f">set</span> [ (<span onmouseout="hideTip(event, 'fs9', 14)" onmouseover="showTip(event, 'fs9', 14)" class="i">b</span> <span class="o">*</span> <span class="n">2</span>) <span class="o">..</span> <span onmouseout="hideTip(event, 'fs9', 15)" onmouseover="showTip(event, 'fs9', 15)" class="i">b</span> <span class="f">..</span> <span onmouseout="hideTip(event, 'fs2', 16)" onmouseover="showTip(event, 'fs2', 16)" class="i">limit</span> ])
+        <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs7', 17)" onmouseover="showTip(event, 'fs7', 17)" class="t">Array</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs10', 18)" onmouseover="showTip(event, 'fs10', 18)" class="f">reduce</span> (<span class="o">+</span>)
+
+    <span onmouseout="hideTip(event, 'fs3', 19)" onmouseover="showTip(event, 'fs3', 19)" class="i">candidates</span> <span class="o">-</span> <span onmouseout="hideTip(event, 'fs6', 20)" onmouseover="showTip(event, 'fs6', 20)" class="i">nonPrimes</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">val generatePrimes : limit:int -&gt; Set&lt;int&gt;<br /><br />Full name: Script.generatePrimes</div>
+<div class="tip" id="fs2">val limit : int</div>
+<div class="tip" id="fs3">val candidates : Set&lt;int&gt;</div>
+<div class="tip" id="fs4">val set : elements:seq&lt;&#39;T&gt; -&gt; Set&lt;&#39;T&gt; (requires comparison)<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.set</div>
+<div class="tip" id="fs5">val bases : int []</div>
+<div class="tip" id="fs6">val nonPrimes : Set&lt;int&gt;</div>
+<div class="tip" id="fs7">module Array<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs8">val map : mapping:(&#39;T -&gt; &#39;U) -&gt; array:&#39;T [] -&gt; &#39;U []<br /><br />Full name: Microsoft.FSharp.Collections.Array.map</div>
+<div class="tip" id="fs9">val b : int</div>
+<div class="tip" id="fs10">val reduce : reduction:(&#39;T -&gt; &#39;T -&gt; &#39;T) -&gt; array:&#39;T [] -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Collections.Array.reduce</div>
+

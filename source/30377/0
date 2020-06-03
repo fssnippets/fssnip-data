@@ -1,0 +1,40 @@
+open System
+open System.Windows
+open System.Windows.Controls
+open System.Windows.Markup
+ 
+ // Use a single-threaded apartment COM threading model
+[<STAThread>]
+// Mark this as the EXE assembly entry point for execution
+[<EntryPoint>]
+// Set up MVVM relationships and launch WPF application for debugging purposes
+let main _ = 
+    // Launch application context to hold the WPF application and UI thread
+    let application = new Application()
+    // Startup is an event that will fire in this thread, when this main function calls application.Run() as its final operation
+    application.Startup |> // The |> operator applies a function to a value, with the value being on left instead of the normal convention
+        // The add() function is provided the handle to the Startup event by the pipe operator
+        Event.add( // At this line, we provide the second argument to the add() function to complete the function call 
+            // The second argument is a function that acts as the Startup event's delegate
+            // The line below is syntax to create an anonymous function (lamda) that will be executed later on application.Run() for the ViewModel thread
+            fun _ -> 
+                 // Create reference to XAML Visual tree
+                let mainWindow = 
+                    // View layer of MVVM is expressed in the MainWindow XAML tree
+                    Application.LoadComponent(
+                        new System.Uri("/GRAIL.Testing;component/MainWindow.xaml", UriKind.Relative)) :?> Window
+                // The DataContext is a mutable value for purposes for binding
+                mainWindow.DataContext 
+                    // The "<-" operator assigns a type expression to a mutable value
+                    <-
+                        // ViewModel layer of MVVM is expressed in this type
+                        new MainWindowViewModel() 
+                // The application needs a reference to the MainWindow type expression
+                application.MainWindow <- mainWindow
+                // Show the View to the user and return execution to the UI thread by returning the unit type
+                mainWindow.Show()
+            // Finish the call to Event.add() and return a unit type at this point in the main() function
+            // There is no purpose in saving the value of a unit type as an expression in the main() function
+            )
+    // Use the application context to load the WPF application and yield execution on this thread to the user
+    application.Run()

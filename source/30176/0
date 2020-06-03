@@ -1,0 +1,49 @@
+#if INTERACTIVE
+#r "System.Xml.Linq.dll"
+#else
+module Rss
+#endif
+
+open System
+open System.Xml.Linq
+
+type NewsItem = { 
+    Title : string; 
+    Link: string; 
+    ReleaseDate: DateTime; 
+    Description: string; 
+}
+
+let myChannelFeed 
+        (channelTitle:string) 
+        (channelLink:string) 
+        (channelDescription:string) (items : NewsItem list) =
+    let xn = XName.Get
+    let elems =
+        items |> List.sortBy(fun i -> i.ReleaseDate) 
+        |> List.map(fun i ->
+            XElement(xn "item",
+                XElement(xn "title", i.Title),
+                XElement(xn "link", i.Link),
+                XElement(xn "guid", i.Link),
+                XElement(xn "pubDate", i.ReleaseDate.ToString("r")),
+                XElement(xn "description", i.Description)
+            ))
+    XDocument(
+        XDeclaration("1.0", "utf-8", "yes"),
+            XElement(xn "rss",
+                XAttribute(xn "version", "2.0"),
+                XElement(xn "title", channelTitle),
+                XElement(xn "link", channelLink),
+                XElement(xn "description", channelDescription),
+                XElement(xn "language", "en-us"),
+                XElement(xn "channel", elems)
+            ) |> box)
+
+
+// set mime-type to "text/xml" and deliver e.g. as rss.xml
+
+//let generateFeed = myChannelFeed "FSnip Test Feed" "http://www.fssnip.com" "Some independent F# functions and code"
+//let myXml =
+//    [{Title = "Welcome"; Link="www.fssnip.net/9q"; ReleaseDate=DateTime.UtcNow; Description="First item"};
+//     {Title = "Hello"; Link="www.fssnip.net/1q"; ReleaseDate=DateTime.UtcNow; Description="Second item"} ] |> generateFeed
