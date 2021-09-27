@@ -1,0 +1,7 @@
+let convertToBinaryString bytes =
+    let rec loop (acc : string) (lst : byte list) =
+        match lst with
+        | [] -> acc
+        | _ -> loop (acc + (Convert.ToString(lst.Head, 2).PadLeft(8, '0'))) lst.Tail
+
+    loop "" (Array.toList bytes)

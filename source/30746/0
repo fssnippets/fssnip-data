@@ -1,0 +1,38 @@
+namespace Architecture
+
+// 1) Pure - no side effects
+module Domain =
+    let add x y = x + y
+
+// 2) Think about IO but not its implementation - it knows its going to receive an int from an Async source
+module App =
+    let add (getX: unit -> int Async) y =
+        async {
+            let! x = getX ()
+            return Domain.add x y
+        }
+
+// 3) IO Implementation
+module Infra =
+    open System.Data.SqlClient
+    open Dapper
+
+    let newConnection connectionString = new SqlConnection(connectionString)
+
+    let getX (conn: SqlConnection) =
+        async {
+            do! conn.OpenAsync() |> Async.AwaitTask
+            let! x =
+                conn.QueryFirstAsync<int>("SELECT 1")
+                |> Async.AwaitTask
+
+            return x
+        }
+
+// 4) Bootstrap - DI etc..
+module Startup =
+    let add y =
+        async {
+            use conn = Infra.newConnection "MY CONNECTION STRING"
+            return! App.add (fun () -> Infra.getX conn) y
+        }

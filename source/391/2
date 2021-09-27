@@ -1,0 +1,14 @@
+type Lista<'a>=
+| Pusta
+| Wezel of 'a*Lista<'a>;;
+let agregacja agregat wartoscPoczatkowa drzew =
+let rec agregacja wynik =
+function
+|Puste ->wynik
+|Galezie(x,p,Puste) -> agregacja( agregat wynik x) p
+|Galezie(x,Puste,p) -> agregacja( agregat wynik x) p
+|Galezie(x,l,p)->
+agregacja (agregat wynik x) l + agregacja (agregat wynik 0.0) p
+agregacja wartoscPoczatkowa drzew
+let drzewo=Galezie(2.0,Galezie(2.5,Puste,Puste),Galezie(3.5,Puste,Puste))
+let x=agregacja suma 0.0 drzewo

@@ -1,0 +1,151 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+<span class="l">38: </span>
+<span class="l">39: </span>
+<span class="l">40: </span>
+<span class="l">41: </span>
+<span class="l">42: </span>
+<span class="l">43: </span>
+<span class="l">44: </span>
+<span class="l">45: </span>
+<span class="l">46: </span>
+<span class="l">47: </span>
+<span class="l">48: </span>
+<span class="l">49: </span>
+<span class="l">50: </span>
+<span class="l">51: </span>
+<span class="l">52: </span>
+<span class="l">53: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="id">System</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="id">Collections</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 3)" onmouseover="showTip(event, 'fs1', 3)" class="id">System</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs2', 4)" onmouseover="showTip(event, 'fs2', 4)" class="id">Collections</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs3', 5)" onmouseover="showTip(event, 'fs3', 5)" class="id">Generic</span>
+
+<span class="k">type</span> <span class="rt">InfiniteLazyList</span><span class="pn">&lt;</span><span class="ta">&#39;</span><span class="id">T</span><span class="pn">&gt;</span> <span class="o">=</span>
+    <span class="pn">|</span> <span class="pn">(</span><span class="uc">::</span><span class="pn">)</span> <span class="k">of</span> <span class="pn">(</span><span class="ta">&#39;</span><span class="id">T</span> <span class="pn">*</span> <span onmouseout="hideTip(event, 'fs4', 6)" onmouseover="showTip(event, 'fs4', 6)" class="rt">Lazy</span><span class="pn">&lt;</span><span onmouseout="hideTip(event, 'fs5', 7)" onmouseover="showTip(event, 'fs5', 7)" class="rt">InfiniteLazyList</span><span class="pn">&lt;</span><span class="ta">&#39;</span><span class="id">T</span><span class="pn">&gt;</span><span class="pn">&gt;</span><span class="pn">)</span>
+
+    <span class="k">interface</span> <span onmouseout="hideTip(event, 'fs6', 8)" onmouseover="showTip(event, 'fs6', 8)" class="if">IEnumerable</span><span class="pn">&lt;</span><span class="ta">&#39;</span><span class="id">T</span><span class="pn">&gt;</span> <span class="k">with</span>
+        <span class="k">member</span> <span onmouseout="hideTip(event, 'fs7', 9)" onmouseover="showTip(event, 'fs7', 9)" class="id">this</span><span class="pn">.</span><span class="fn">GetEnumerator</span><span class="pn">(</span><span class="pn">)</span> <span class="o">=</span>
+            <span class="k">let</span> <span onmouseout="hideTip(event, 'fs8', 10)" onmouseover="showTip(event, 'fs8', 10)" class="id">head</span> <span class="uc">::</span> <span onmouseout="hideTip(event, 'fs9', 11)" onmouseover="showTip(event, 'fs9', 11)" class="id">tail</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs7', 12)" onmouseover="showTip(event, 'fs7', 12)" class="id">this</span>
+            <span class="k">let</span> <span onmouseout="hideTip(event, 'fs10', 13)" onmouseover="showTip(event, 'fs10', 13)" class="id">s</span> <span class="o">=</span>
+                <span onmouseout="hideTip(event, 'fs11', 14)" onmouseover="showTip(event, 'fs11', 14)" class="k">seq</span> <span class="pn">{</span>
+                    <span class="k">yield</span> <span onmouseout="hideTip(event, 'fs8', 15)" onmouseover="showTip(event, 'fs8', 15)" class="id">head</span>
+                    <span class="k">yield!</span> <span onmouseout="hideTip(event, 'fs9', 16)" onmouseover="showTip(event, 'fs9', 16)" class="id">tail</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs12', 17)" onmouseover="showTip(event, 'fs12', 17)" class="id">Value</span> <span class="o">:&gt;</span> <span onmouseout="hideTip(event, 'fs6', 18)" onmouseover="showTip(event, 'fs6', 18)" class="if">IEnumerable</span><span class="pn">&lt;</span><span class="id">_</span><span class="pn">&gt;</span>
+                <span class="pn">}</span>
+            <span onmouseout="hideTip(event, 'fs10', 19)" onmouseover="showTip(event, 'fs10', 19)" class="fn">s</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs13', 20)" onmouseover="showTip(event, 'fs13', 20)" class="id">GetEnumerator</span><span class="pn">(</span><span class="pn">)</span>
+
+    <span class="k">interface</span> <span onmouseout="hideTip(event, 'fs6', 21)" onmouseover="showTip(event, 'fs6', 21)" class="if">IEnumerable</span> <span class="k">with</span>
+        <span class="k">member</span> <span onmouseout="hideTip(event, 'fs7', 22)" onmouseover="showTip(event, 'fs7', 22)" class="id">this</span><span class="pn">.</span><span class="fn">GetEnumerator</span><span class="pn">(</span><span class="pn">)</span> <span class="o">=</span>
+            <span class="fn">(</span><span onmouseout="hideTip(event, 'fs7', 23)" onmouseover="showTip(event, 'fs7', 23)" class="id">this</span> <span class="o">:&gt;</span> <span onmouseout="hideTip(event, 'fs6', 24)" onmouseover="showTip(event, 'fs6', 24)" class="if">IEnumerable</span><span class="pn">&lt;</span><span class="ta">&#39;</span><span class="id">T</span><span class="pn">&gt;</span><span class="pn">)</span><span class="pn">.</span><span class="id">GetEnumerator</span><span class="pn">(</span><span class="pn">)</span> <span class="o">:&gt;</span> <span class="id">_</span>
+
+<span class="k">module</span> <span onmouseout="hideTip(event, 'fs5', 25)" onmouseover="showTip(event, 'fs5', 25)" class="m">InfiniteLazyList</span> <span class="o">=</span>
+
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs14', 26)" onmouseover="showTip(event, 'fs14', 26)" class="fn">initInfinite</span> <span onmouseout="hideTip(event, 'fs15', 27)" onmouseover="showTip(event, 'fs15', 27)" class="fn">initializer</span> <span class="o">=</span>
+        <span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs16', 28)" onmouseover="showTip(event, 'fs16', 28)" class="fn">loop</span> <span onmouseout="hideTip(event, 'fs17', 29)" onmouseover="showTip(event, 'fs17', 29)" class="id">i</span> <span class="o">=</span>
+            <span onmouseout="hideTip(event, 'fs15', 30)" onmouseover="showTip(event, 'fs15', 30)" class="fn">initializer</span> <span onmouseout="hideTip(event, 'fs17', 31)" onmouseover="showTip(event, 'fs17', 31)" class="id">i</span> <span class="uc">::</span> <span class="k">lazy</span> <span onmouseout="hideTip(event, 'fs16', 32)" onmouseover="showTip(event, 'fs16', 32)" class="fn">loop</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs17', 33)" onmouseover="showTip(event, 'fs17', 33)" class="id">i</span> <span class="o">+</span> <span class="n">1</span><span class="pn">)</span>
+        <span onmouseout="hideTip(event, 'fs16', 34)" onmouseover="showTip(event, 'fs16', 34)" class="fn">loop</span> <span class="n">0</span>
+
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs18', 35)" onmouseover="showTip(event, 'fs18', 35)" class="fn">where</span> <span onmouseout="hideTip(event, 'fs19', 36)" onmouseover="showTip(event, 'fs19', 36)" class="fn">pred</span> <span onmouseout="hideTip(event, 'fs20', 37)" onmouseover="showTip(event, 'fs20', 37)" class="id">list</span> <span class="o">=</span>
+        <span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs21', 38)" onmouseover="showTip(event, 'fs21', 38)" class="fn">loop</span> <span class="o">=</span> <span class="k">function</span>
+            <span class="pn">|</span> <span onmouseout="hideTip(event, 'fs22', 39)" onmouseover="showTip(event, 'fs22', 39)" class="id">head</span> <span class="uc">::</span> <span onmouseout="hideTip(event, 'fs23', 40)" onmouseover="showTip(event, 'fs23', 40)" class="id">tail</span> <span class="k">-&gt;</span>
+                <span class="k">if</span> <span onmouseout="hideTip(event, 'fs19', 41)" onmouseover="showTip(event, 'fs19', 41)" class="fn">pred</span> <span onmouseout="hideTip(event, 'fs22', 42)" onmouseover="showTip(event, 'fs22', 42)" class="id">head</span> <span class="k">then</span> <span onmouseout="hideTip(event, 'fs22', 43)" onmouseover="showTip(event, 'fs22', 43)" class="id">head</span> <span class="uc">::</span> <span class="k">lazy</span> <span onmouseout="hideTip(event, 'fs21', 44)" onmouseover="showTip(event, 'fs21', 44)" class="fn">loop</span> <span onmouseout="hideTip(event, 'fs23', 45)" onmouseover="showTip(event, 'fs23', 45)" class="id">tail</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs24', 46)" onmouseover="showTip(event, 'fs24', 46)" class="id">Value</span>
+                <span class="k">else</span> <span onmouseout="hideTip(event, 'fs21', 47)" onmouseover="showTip(event, 'fs21', 47)" class="fn">loop</span> <span onmouseout="hideTip(event, 'fs23', 48)" onmouseover="showTip(event, 'fs23', 48)" class="id">tail</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs24', 49)" onmouseover="showTip(event, 'fs24', 49)" class="id">Value</span>
+        <span onmouseout="hideTip(event, 'fs21', 50)" onmouseover="showTip(event, 'fs21', 50)" class="fn">loop</span> <span onmouseout="hideTip(event, 'fs20', 51)" onmouseover="showTip(event, 'fs20', 51)" class="id">list</span>
+
+<span class="c">/// https://literateprograms.org/sieve_of_eratosthenes__haskell_.html</span>
+<span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs25', 52)" onmouseover="showTip(event, 'fs25', 52)" class="fn">sieve</span> <span class="o">=</span> <span class="k">function</span>
+    <span class="pn">|</span> <span onmouseout="hideTip(event, 'fs26', 53)" onmouseover="showTip(event, 'fs26', 53)" class="id">head</span> <span class="uc">::</span> <span onmouseout="hideTip(event, 'fs27', 54)" onmouseover="showTip(event, 'fs27', 54)" class="id">tail</span> <span class="k">-&gt;</span>
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs28', 55)" onmouseover="showTip(event, 'fs28', 55)" class="id">tail&#39;</span> <span class="o">=</span>
+            <span onmouseout="hideTip(event, 'fs27', 56)" onmouseover="showTip(event, 'fs27', 56)" class="id">tail</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs29', 57)" onmouseover="showTip(event, 'fs29', 57)" class="id">Value</span>
+                <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs30', 58)" onmouseover="showTip(event, 'fs30', 58)" class="m">InfiniteLazyList</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs18', 59)" onmouseover="showTip(event, 'fs18', 59)" class="id">where</span> <span class="pn">(</span><span class="k">fun</span> <span onmouseout="hideTip(event, 'fs31', 60)" onmouseover="showTip(event, 'fs31', 60)" class="id">n</span> <span class="k">-&gt;</span>
+                    <span onmouseout="hideTip(event, 'fs31', 61)" onmouseover="showTip(event, 'fs31', 61)" class="id">n</span> <span class="o">%</span> <span onmouseout="hideTip(event, 'fs26', 62)" onmouseover="showTip(event, 'fs26', 62)" class="id">head</span> <span class="o">&gt;</span> <span class="n">0</span><span class="pn">)</span>
+        <span onmouseout="hideTip(event, 'fs26', 63)" onmouseover="showTip(event, 'fs26', 63)" class="id">head</span> <span class="uc">::</span> <span class="k">lazy</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs25', 64)" onmouseover="showTip(event, 'fs25', 64)" class="fn">sieve</span> <span onmouseout="hideTip(event, 'fs28', 65)" onmouseover="showTip(event, 'fs28', 65)" class="id">tail&#39;</span><span class="pn">)</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs32', 66)" onmouseover="showTip(event, 'fs32', 66)" class="fn">primes</span> <span onmouseout="hideTip(event, 'fs33', 67)" onmouseover="showTip(event, 'fs33', 67)" class="id">count</span> <span class="o">=</span>
+    <span onmouseout="hideTip(event, 'fs30', 68)" onmouseover="showTip(event, 'fs30', 68)" class="m">InfiniteLazyList</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs14', 69)" onmouseover="showTip(event, 'fs14', 69)" class="id">initInfinite</span> <span class="pn">(</span><span class="k">fun</span> <span onmouseout="hideTip(event, 'fs31', 70)" onmouseover="showTip(event, 'fs31', 70)" class="id">n</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs31', 71)" onmouseover="showTip(event, 'fs31', 71)" class="id">n</span> <span class="o">+</span> <span class="n">2</span><span class="pn">)</span>
+        <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs25', 72)" onmouseover="showTip(event, 'fs25', 72)" class="fn">sieve</span>
+        <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs34', 73)" onmouseover="showTip(event, 'fs34', 73)" class="m">Seq</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs35', 74)" onmouseover="showTip(event, 'fs35', 74)" class="id">take</span> <span onmouseout="hideTip(event, 'fs33', 75)" onmouseover="showTip(event, 'fs33', 75)" class="id">count</span>
+        <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs34', 76)" onmouseover="showTip(event, 'fs34', 76)" class="m">Seq</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs36', 77)" onmouseover="showTip(event, 'fs36', 77)" class="id">toArray</span>
+
+<span class="pn">[&lt;</span><span onmouseout="hideTip(event, 'fs37', 78)" onmouseover="showTip(event, 'fs37', 78)" class="rt">EntryPoint</span><span class="pn">&gt;]</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs38', 79)" onmouseover="showTip(event, 'fs38', 79)" class="fn">main</span> <span onmouseout="hideTip(event, 'fs39', 80)" onmouseover="showTip(event, 'fs39', 80)" class="id">argv</span> <span class="o">=</span>
+    <span onmouseout="hideTip(event, 'fs40', 81)" onmouseover="showTip(event, 'fs40', 81)" class="fn">printfn</span> <span class="s">&quot;</span><span class="pf">%A</span><span class="s">&quot;</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs32', 82)" onmouseover="showTip(event, 'fs32', 82)" class="fn">primes</span> <span class="n">100</span><span class="pn">)</span>
+    <span class="n">0</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace System</div>
+<div class="tip" id="fs2">namespace System.Collections</div>
+<div class="tip" id="fs3">namespace System.Collections.Generic</div>
+<div class="tip" id="fs4">Multiple items<br />active recognizer Lazy: Lazy&lt;&#39;T&gt; -&gt; &#39;T<br /><br />--------------------<br />type Lazy&lt;&#39;T&gt; = System.Lazy&lt;&#39;T&gt;</div>
+<div class="tip" id="fs5">type InfiniteLazyList&lt;&#39;T&gt; =<br />&#160;&#160;| ( :: ) of (&#39;T * Lazy&lt;InfiniteLazyList&lt;&#39;T&gt;&gt;)<br />&#160;&#160;&#160;&#160;interface IEnumerable<br />&#160;&#160;&#160;&#160;interface IEnumerable&lt;&#39;T&gt;</div>
+<div class="tip" id="fs6">Multiple items<br />type IEnumerable =<br />&#160;&#160;member GetEnumerator : unit -&gt; IEnumerator<br /><br />--------------------<br />type IEnumerable&lt;&#39;T&gt; =<br />&#160;&#160;inherit IEnumerable<br />&#160;&#160;member GetEnumerator : unit -&gt; IEnumerator&lt;&#39;T&gt;</div>
+<div class="tip" id="fs7">val this : InfiniteLazyList&lt;&#39;T&gt;</div>
+<div class="tip" id="fs8">val head : &#39;T</div>
+<div class="tip" id="fs9">val tail : Lazy&lt;InfiniteLazyList&lt;&#39;T&gt;&gt;</div>
+<div class="tip" id="fs10">val s : seq&lt;&#39;T&gt;</div>
+<div class="tip" id="fs11">Multiple items<br />val seq : sequence:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt;<br /><br />--------------------<br />type seq&lt;&#39;T&gt; = IEnumerable&lt;&#39;T&gt;</div>
+<div class="tip" id="fs12">property System.Lazy.Value: InfiniteLazyList&lt;&#39;T&gt; with get</div>
+<div class="tip" id="fs13">IEnumerable.GetEnumerator() : IEnumerator&lt;&#39;T&gt;</div>
+<div class="tip" id="fs14">val initInfinite : initializer:(int -&gt; &#39;a) -&gt; InfiniteLazyList&lt;&#39;a&gt;</div>
+<div class="tip" id="fs15">val initializer : (int -&gt; &#39;a)</div>
+<div class="tip" id="fs16">val loop : (int -&gt; InfiniteLazyList&lt;&#39;a&gt;)</div>
+<div class="tip" id="fs17">val i : int</div>
+<div class="tip" id="fs18">val where : pred:(&#39;a -&gt; bool) -&gt; list:InfiniteLazyList&lt;&#39;a&gt; -&gt; InfiniteLazyList&lt;&#39;a&gt;</div>
+<div class="tip" id="fs19">val pred : (&#39;a -&gt; bool)</div>
+<div class="tip" id="fs20">Multiple items<br />val list : InfiniteLazyList&lt;&#39;a&gt;<br /><br />--------------------<br />type &#39;T list = List&lt;&#39;T&gt;</div>
+<div class="tip" id="fs21">val loop : (InfiniteLazyList&lt;&#39;a&gt; -&gt; InfiniteLazyList&lt;&#39;a&gt;)</div>
+<div class="tip" id="fs22">val head : &#39;a</div>
+<div class="tip" id="fs23">val tail : Lazy&lt;InfiniteLazyList&lt;&#39;a&gt;&gt;</div>
+<div class="tip" id="fs24">property System.Lazy.Value: InfiniteLazyList&lt;&#39;a&gt; with get</div>
+<div class="tip" id="fs25">val sieve : _arg1:InfiniteLazyList&lt;int&gt; -&gt; InfiniteLazyList&lt;int&gt;<br /><em><br /><br />&#160;https://literateprograms.org/sieve_of_eratosthenes__haskell_.html</em></div>
+<div class="tip" id="fs26">val head : int</div>
+<div class="tip" id="fs27">val tail : Lazy&lt;InfiniteLazyList&lt;int&gt;&gt;</div>
+<div class="tip" id="fs28">val tail&#39; : InfiniteLazyList&lt;int&gt;</div>
+<div class="tip" id="fs29">property System.Lazy.Value: InfiniteLazyList&lt;int&gt; with get</div>
+<div class="tip" id="fs30">Multiple items<br />module InfiniteLazyList<br /><br />from Script<br /><br />--------------------<br />type InfiniteLazyList&lt;&#39;T&gt; =<br />&#160;&#160;| ( :: ) of (&#39;T * Lazy&lt;InfiniteLazyList&lt;&#39;T&gt;&gt;)<br />&#160;&#160;&#160;&#160;interface IEnumerable<br />&#160;&#160;&#160;&#160;interface IEnumerable&lt;&#39;T&gt;</div>
+<div class="tip" id="fs31">val n : int</div>
+<div class="tip" id="fs32">val primes : count:int -&gt; int []</div>
+<div class="tip" id="fs33">val count : int</div>
+<div class="tip" id="fs34">module Seq<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs35">val take : count:int -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt;</div>
+<div class="tip" id="fs36">val toArray : source:seq&lt;&#39;T&gt; -&gt; &#39;T []</div>
+<div class="tip" id="fs37">Multiple items<br />type EntryPointAttribute =<br />&#160;&#160;inherit Attribute<br />&#160;&#160;new : unit -&gt; EntryPointAttribute<br /><br />--------------------<br />new : unit -&gt; EntryPointAttribute</div>
+<div class="tip" id="fs38">val main : argv:string [] -&gt; int</div>
+<div class="tip" id="fs39">val argv : string []</div>
+<div class="tip" id="fs40">val printfn : format:Printf.TextWriterFormat&lt;&#39;T&gt; -&gt; &#39;T</div>
+

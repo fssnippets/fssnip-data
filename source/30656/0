@@ -1,0 +1,39 @@
+// The model for our UI
+type Model = {
+    Count: int
+}
+
+// A function that returns a model
+let initModel () =
+    { Count = 0 }
+
+// An enum
+type Message =
+    | Increment
+    | Decrement
+
+// Given a message, produce a new model
+let update (message: Message) (model: Model) : Model =
+    match message with
+    | Increment ->
+        { model with Count = model.Count + 1 }
+    | Decrement ->
+        { model with Count = model.Count - 1 }
+
+// Given a model, return an HTML node.
+// Calls to the dispatch function will be forwarded to update,
+// and the new model will be passed to view, rendering the new UI
+let view (model: Model) (dispatch: Dispatch<Message>) : Node =
+    div [] [
+        button
+            [ on.click (fun _ -> dispatch Decrement) ]
+            [ text "-" ]
+
+        text model.Count
+
+        button
+            [ on.click (fun _ -> dispatch Increment) ]
+            [ text "+" ]
+    ]
+
+let program = Program.mkSimple initModel update view

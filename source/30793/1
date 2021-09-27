@@ -1,0 +1,91 @@
+#r "nuget: Elmish,3.0.1"
+
+//[snippet:Prelude]
+open Elmish
+
+module Program =
+    /// <summary>
+    /// Program with user-defined orders instead of usual command.
+    /// Orders are processed by <code>execute</code> which can dispatch messages,
+    /// called in place of usual command processing.
+    /// </summary>
+    let mkProgramWithOrderExecute
+            (init: 'arg' -> 'model * 'order)
+            (update: 'msg -> 'model -> 'model * 'order)
+            (view: 'model -> Dispatch<'msg> -> 'view)
+            (execute: 'order -> Dispatch<'msg> -> unit) =
+        let convert (model, order) = 
+            model, order |> execute |> Cmd.ofSub 
+        Program.mkProgram
+            (init >> convert)
+            (fun msg model -> update msg model |> convert)
+            view
+
+//[snippet:Example]
+open type System.Console
+let description = "Count-o-matic : watch integers being counted on your console.
+Press Space to start, pause or resume.
+Press Enter to step while in pause.
+Press +/- to increase/decrease speed while running.
+Press Q to quit."
+
+type Model = { Running: bool ; Count: int ; Interval: int }
+type Msg = 
+    | TimerTick
+    | KeyboardTick
+    | Toggle
+    | ChangeInterval of offset: int
+/// user-defined order type
+type Order =
+    | StartKeyListener
+    | Print of value: int
+    | DelayTick of delay: int
+    | CancelDelayedTick
+    | Orders of Order list
+    | NoOrder
+
+let init (running, interval) =
+    let model = { Running=running ; Count=0 ; Interval=interval }
+    model, Orders [ StartKeyListener ; if running then DelayTick 0 ]
+let update msg model =
+    match msg, model.Running with
+    | TimerTick, true
+    | Toggle, false ->
+        let model' = { model with Running = true; Count = model.Count+1 }
+        model', Orders [ Print (model.Count+1) ; DelayTick model.Interval ]
+    | Toggle, true ->
+        { model with Running = false }, CancelDelayedTick
+    | KeyboardTick, false -> 
+        { model with Count = model.Count+1 }, Print (model.Count+1)
+    | ChangeInterval x, true ->
+        { model with Interval = model.Interval+x |> min 2500 |> max 50 }, NoOrder
+    | KeyboardTick, true | ChangeInterval _, false | TimerTick, false -> 
+        model, NoOrder
+let view _ _ = ()
+/// Function executing orders, with a dispatch function as second argument.
+let rec execute order dispatch =
+    match order with
+    | StartKeyListener ->
+        async {
+            seq { while true do (ReadKey true).KeyChar }
+            |> Seq.takeWhile (fun key -> key <> 'q' && key <> 'Q')  // press q to quit
+            |> Seq.iter (function
+                | ' ' -> dispatch Toggle
+                | '\013' -> dispatch KeyboardTick   // Enter key
+                | '-' -> dispatch (ChangeInterval 50)
+                | '+' -> dispatch (ChangeInterval -50)
+                | _ -> ())
+            Async.CancelDefaultToken () }
+        |> Async.StartImmediate
+    | Print value -> WriteLine value
+    | DelayTick delay ->
+        async { do! Async.Sleep delay
+                dispatch TimerTick }
+        |> Async.Start
+    | CancelDelayedTick -> Async.CancelDefaultToken ()
+    | Orders orders -> for order in orders do execute order dispatch
+    | NoOrder -> ()
+
+WriteLine description
+Program.mkProgramWithOrderExecute init update view execute
+|> Program.runWith (false, 350)

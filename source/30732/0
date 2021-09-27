@@ -1,0 +1,23 @@
+open System
+open System.Globalization
+open System.Collections
+
+let seqOfEnumerator<'T> (e: IEnumerator) = seq {
+    while e.MoveNext() do yield e.Current :?> 'T
+}
+
+let reverse (s: string) =
+    s
+    |> StringInfo.GetTextElementEnumerator
+    |> seqOfEnumerator<string>
+    |> Seq.rev
+    |> String.concat ""
+
+let display (s) =
+  printfn "original: %s" s
+  printfn "ok      : %s" (reverse s)
+  printfn "naive   : %s" (s.ToCharArray() |> Array.rev |> System.String)
+
+display "foo 𝌆 bar mañana mañana"
+display "𠈓"
+display "Les Mise\u0301rables"

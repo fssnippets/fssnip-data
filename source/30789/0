@@ -1,0 +1,81 @@
+open System.Collections.Generic
+
+open FParsec
+
+type UrlScheme =
+    | Http
+    | Https
+    | Ftp
+    | File
+
+type Url =
+    {
+        Scheme : UrlScheme
+        HostName : string
+        Port : int option
+        Path : string 
+        Query : KeyValuePair<string, string> list option
+        Fragment : string option
+    }
+
+let schemeParser : Parser<UrlScheme, unit> =
+    [
+        skipStringCI "http://" >>% Http
+        skipStringCI "https://" >>% Https
+        skipStringCI "ftp://" >>% Ftp
+        skipStringCI "file:///" >>% File
+    ]
+    |> choice
+
+let hostNameParser : Parser<string, unit> =
+    many1Chars2 letter (noneOf [| '/'; ':' |])
+
+let maybePortParser : Parser<int option, unit> =
+    opt (skipChar ':' >>. pint32)
+
+let pathParser : Parser<string, unit> =
+    many1Chars (noneOf [| '#'; '?' |])
+
+let maybeQueryParser : Parser<KeyValuePair<string, string> list option, unit> =
+    skipChar '?'
+    >>. sepBy (manyCharsTill anyChar (skipChar '=') .>>. many1Chars (noneOf [| '&'; '#' |])) (skipChar '&')
+    |>> List.map (KeyValuePair)
+    |> opt
+
+let maybeFragmentParser : Parser<string option, unit> =
+    skipChar '#'
+    >>. restOfLine false
+    |> opt
+
+
+let url = "https://myhost.com:1234/de/asd?1=2&Qwe=Asd+2#top"
+
+run (
+    schemeParser
+    .>>. hostNameParser
+    .>>. maybePortParser
+    .>>. pathParser
+    .>>. maybeQueryParser
+    .>>. maybeFragmentParser
+    |>> (fun (((((scheme, host), port), path), query), fragment) ->
+            {
+                Scheme = scheme
+                HostName = host
+                Port = port
+                Path = path
+                Query = query
+                Fragment = fragment
+            }
+    
+    )
+) url
+
+(*
+val it : ParserResult<Url,unit> =
+  Success: { Scheme = Https
+  HostName = "myhost.com"
+  Port = Some 1234
+  Path = "/de/asd"
+  Query = Some [[1, 2]; [Qwe, Asd+2]]
+  Fragment = Some "top" }
+*)

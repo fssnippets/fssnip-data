@@ -1,0 +1,19 @@
+#r "FSharp.Plotly.dll"
+open FSharp.Plotly
+
+let vectors = [|
+    for x in -2.0 .. 0.25 .. 2.0 do
+        for y in -2.0 .. 0.25 .. 2.0 do
+            let s = 0.1
+            let vX, vY = y, -x
+            let mag = sqrt( vX**2.0 + vY**2.0  )
+            let vX, vY = s * vX / mag, s * vY / mag
+            yield (x, x+vX , y, y+vY)   |]
+let vectorsShapes = vectors |> Array.map (fun (x0, x1 , y0, y1) -> Shape.init( StyleParam.ShapeType.Line, x0, x1 , y0, y1 ))
+let vectorsTips = vectors |> Array.map (fun (x0, x1 , y0, y1) -> x1, y1 )
+
+vectorsTips
+|> Chart.Point
+|> Chart.withShapes vectorsShapes
+|> Chart.withSize (1000.0, 1000.0)
+|> Chart.Show

@@ -1,0 +1,19 @@
+open FSharp.Quotations
+open FSharp.Quotations.Patters
+
+let rec (|List|_|) =
+        let isListType (u:UnionCaseInfo) = u.DeclaringType.IsGenericType && u.DeclaringType.GetGenericTypeDefinition() = typedefof<list<_>>
+        function
+        | NewUnionCase(uci, []) when isListType uci -> Some []
+        | NewUnionCase(uci, lhs::(NewUnionCase(_, []))::[]) when isListType uci  -> Some (lhs::[])
+        | NewUnionCase(uci, lhs::List(rhs)::[]) when isListType uci  -> Some (lhs::rhs)
+        | _ -> None
+
+// Usage
+match <@[5.;6.;7.;8.]@> with
+| List e -> printf "%A" e
+| _ -> ()
+
+match <@[[5.;6.;7.];[8.]]@> with
+| List e -> e |> List.map (function |List ee-> printf "%A" ee | _ ->())
+| _ -> []

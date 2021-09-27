@@ -1,0 +1,25 @@
+#if INTERACTIVE
+#r "System.Drawing.dll"
+#endif
+
+open System.Drawing
+
+let drawTo (image:Bitmap) n (dx,dy) =
+   for y = 0 to 4 do
+      for x = 0 to 4 do
+         let bit = [|0;5;10;5;0|].[x] + y
+         if n &&& (1 <<< bit) <> 0
+         then image.SetPixel(x+dx,y+dy, Color.Black)
+
+let generate (cols,rows) =
+   let rnd = System.Random()
+   let width, height = 7*cols, 7 * rows
+   let image = new Bitmap(width, height)   
+   for y = 0 to rows-1 do
+      for x = 0 to cols-1 do
+         let n = rnd.Next()
+         drawTo image n (7*x+1, 7*y+1)
+   image
+
+let sheet = generate (80,60)
+sheet.Save("invaders.png", Imaging.ImageFormat.Png)

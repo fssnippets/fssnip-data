@@ -1,0 +1,14 @@
+let inline (|Parse|_|) (str: string): ^a option =
+    let mutable value = Unchecked.defaultof< ^a>
+    let result = (^a: (static member TryParse: string * byref< ^a> -> bool) str, &value)
+    if result then Some value
+    else None
+   
+let foobar str =
+    match str with
+    | Parse(x: int) -> "int"
+    | Parse(x: float) -> "float"
+    | Parse(x: System.Guid) -> "guid"
+    | _ -> "other"
+    
+printfn "%s" (foobar "42")

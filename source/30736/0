@@ -1,0 +1,25 @@
+type Person = 
+  { Name : string
+    Age : int }
+
+module CheckedPerson = 
+  type CheckedPerson = 
+    private | CP of Person
+    member x.Person = let (CP p) = x in p
+    static member Create(p:Person) = 
+      if p.Name = "Yoda" then Some (CP p)
+      elif p.Age < 100 then Some (CP p)
+      else None
+
+open CheckedPerson
+
+// CP is not publicly accessible; we cannot 
+// create CheckedPerson directly
+CP { Name = "Tomas"; Age = 999 }
+
+// This compiles, but returns None
+CheckedPerson.Create { Name = "Tomas"; Age = 999 }
+
+// This works, extra business rules satisfied
+CheckedPerson.Create { Name = "Tomas"; Age = 99 }
+CheckedPerson.Create { Name = "Yoda"; Age = 700 }

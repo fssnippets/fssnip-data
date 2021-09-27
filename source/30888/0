@@ -1,0 +1,32 @@
+open System.Windows.Forms
+open System
+
+let btn = Button()
+let check = CheckBox()
+
+let onOffs = 
+  check.CheckedChanged |> Observable.map (fun _ -> check.Checked)
+
+// ('T -> IObservable<'R>) -> IObservable<'T> -> IObservable<'R>
+let switchMap (f:'T -> IObservable<'R>) (obs:IObservable<'T>) : IObservable<'R>
+  = failwith "Not defined"
+
+let upOrDown = 
+  Observable.merge
+    (Observable.map Choice1Of2 btn.MouseUp)
+    (Observable.map Choice2Of2 btn.MouseDown)
+
+let empty = Event<_>().Publish :> IObservable<_>
+
+let switchedOnOffs =
+  onOffs |> switchMap (fun isOn ->
+    if isOn then 
+      printfn "Starting"
+      upOrDown
+    else 
+      printfn "Stopping"
+      empty )
+  
+switchedOnOffs |> Observable.subscribe (function
+  | Choice1Of2 _ -> printfn "Up"
+  | Choice2Of2 _ -> printfn "Down")

@@ -1,0 +1,110 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+<span class="l">38: </span>
+<span class="l">39: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">type</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="rt">System</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="id">Random</span> <span class="k">with</span>
+  <span class="k">member</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="id">x</span><span class="pn">.</span><span class="prop">PickDoor</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs3', 4)" onmouseover="showTip(event, 'fs3', 4)" class="fn">x</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs4', 5)" onmouseover="showTip(event, 'fs4', 5)" class="id">Next</span> <span class="n">3</span> <span class="o">+</span> <span class="n">1</span>
+  <span class="k">member</span> <span onmouseout="hideTip(event, 'fs3', 6)" onmouseover="showTip(event, 'fs3', 6)" class="id">x</span><span class="pn">.</span><span class="prop">Bool</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs3', 7)" onmouseover="showTip(event, 'fs3', 7)" class="fn">x</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs4', 8)" onmouseover="showTip(event, 'fs4', 8)" class="id">Next</span> <span class="n">2</span> <span class="o">=</span> <span class="n">0</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs5', 9)" onmouseover="showTip(event, 'fs5', 9)" class="id">rng</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs1', 10)" onmouseover="showTip(event, 'fs1', 10)" class="rt">System</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs2', 11)" onmouseover="showTip(event, 'fs2', 11)" class="id">Random</span> <span class="pn">(</span><span class="pn">)</span>
+
+<span class="c">/// strategy function is passed the door initially picked and the remainging closed door,</span>
+<span class="c">/// and must return one of these values</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs6', 12)" onmouseover="showTip(event, 'fs6', 12)" class="rt">Strategy</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs6', 13)" onmouseover="showTip(event, 'fs6', 13)" class="uc">Strategy</span> <span class="k">of</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs7', 14)" onmouseover="showTip(event, 'fs7', 14)" class="vt">int</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs7', 15)" onmouseover="showTip(event, 'fs7', 15)" class="vt">int</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs7', 16)" onmouseover="showTip(event, 'fs7', 16)" class="vt">int</span><span class="pn">)</span>
+
+<span class="c">/// plays a Monty Hall game.</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs8', 17)" onmouseover="showTip(event, 'fs8', 17)" class="fn">play</span> <span onmouseout="hideTip(event, 'fs9', 18)" onmouseover="showTip(event, 'fs9', 18)" class="id">doorWithPrize</span> <span onmouseout="hideTip(event, 'fs10', 19)" onmouseover="showTip(event, 'fs10', 19)" class="id">firstChoice</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs6', 20)" onmouseover="showTip(event, 'fs6', 20)" class="uc">Strategy</span> <span onmouseout="hideTip(event, 'fs11', 21)" onmouseover="showTip(event, 'fs11', 21)" class="fn">strategy</span><span class="pn">)</span> <span class="o">=</span>
+  <span class="k">let</span> <span onmouseout="hideTip(event, 'fs12', 22)" onmouseover="showTip(event, 'fs12', 22)" class="id">remainingClosedDoor</span> <span class="o">=</span>
+    <span class="k">if</span> <span onmouseout="hideTip(event, 'fs10', 23)" onmouseover="showTip(event, 'fs10', 23)" class="id">firstChoice</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs9', 24)" onmouseover="showTip(event, 'fs9', 24)" class="id">doorWithPrize</span> <span class="k">then</span>
+      <span class="pn">[</span> <span class="n">1</span> <span class="o">..</span> <span class="n">3</span> <span class="pn">]</span> 
+      <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs13', 25)" onmouseover="showTip(event, 'fs13', 25)" class="m">List</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs14', 26)" onmouseover="showTip(event, 'fs14', 26)" class="id">filter</span> <span class="pn">(</span><span class="pn">(</span><span class="o">&lt;&gt;</span><span class="pn">)</span> <span onmouseout="hideTip(event, 'fs10', 27)" onmouseover="showTip(event, 'fs10', 27)" class="id">firstChoice</span><span class="pn">)</span>
+      <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs13', 28)" onmouseover="showTip(event, 'fs13', 28)" class="m">List</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs15', 29)" onmouseover="showTip(event, 'fs15', 29)" class="id">item</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs5', 30)" onmouseover="showTip(event, 'fs5', 30)" class="fn">rng</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs4', 31)" onmouseover="showTip(event, 'fs4', 31)" class="id">Next</span> <span class="n">2</span><span class="pn">)</span>
+    <span class="k">else</span>
+      <span onmouseout="hideTip(event, 'fs9', 32)" onmouseover="showTip(event, 'fs9', 32)" class="id">doorWithPrize</span>
+  <span class="pn">(</span><span onmouseout="hideTip(event, 'fs11', 33)" onmouseover="showTip(event, 'fs11', 33)" class="fn">strategy</span> <span onmouseout="hideTip(event, 'fs10', 34)" onmouseover="showTip(event, 'fs10', 34)" class="id">firstChoice</span> <span onmouseout="hideTip(event, 'fs12', 35)" onmouseover="showTip(event, 'fs12', 35)" class="id">remainingClosedDoor</span><span class="pn">)</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs9', 36)" onmouseover="showTip(event, 'fs9', 36)" class="id">doorWithPrize</span>
+  
+<span class="c">/// plays number Monty Hall games with given strategy and random initial state,</span>
+<span class="c">/// and returns the percentage of wins</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs16', 37)" onmouseover="showTip(event, 'fs16', 37)" class="fn">test</span> <span onmouseout="hideTip(event, 'fs17', 38)" onmouseover="showTip(event, 'fs17', 38)" class="id">number</span> <span onmouseout="hideTip(event, 'fs18', 39)" onmouseover="showTip(event, 'fs18', 39)" class="id">strategy</span> <span class="o">=</span>
+  <span class="k">let</span> <span onmouseout="hideTip(event, 'fs19', 40)" onmouseover="showTip(event, 'fs19', 40)" class="id">wins</span> <span class="o">=</span>
+    <span class="pn">[</span> <span class="n">1</span> <span class="o">..</span> <span onmouseout="hideTip(event, 'fs17', 41)" onmouseover="showTip(event, 'fs17', 41)" class="id">number</span> <span class="pn">]</span>
+    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs13', 42)" onmouseover="showTip(event, 'fs13', 42)" class="m">List</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs20', 43)" onmouseover="showTip(event, 'fs20', 43)" class="id">fold</span> <span class="pn">(</span><span class="k">fun</span> <span onmouseout="hideTip(event, 'fs19', 44)" onmouseover="showTip(event, 'fs19', 44)" class="id">wins</span> <span class="id">_</span> <span class="k">-&gt;</span> <span class="k">if</span> <span onmouseout="hideTip(event, 'fs8', 45)" onmouseover="showTip(event, 'fs8', 45)" class="fn">play</span> <span onmouseout="hideTip(event, 'fs5', 46)" onmouseover="showTip(event, 'fs5', 46)" class="id">rng</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs21', 47)" onmouseover="showTip(event, 'fs21', 47)" class="id">PickDoor</span> <span onmouseout="hideTip(event, 'fs5', 48)" onmouseover="showTip(event, 'fs5', 48)" class="id">rng</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs21', 49)" onmouseover="showTip(event, 'fs21', 49)" class="id">PickDoor</span> <span onmouseout="hideTip(event, 'fs18', 50)" onmouseover="showTip(event, 'fs18', 50)" class="id">strategy</span> <span class="k">then</span> <span onmouseout="hideTip(event, 'fs19', 51)" onmouseover="showTip(event, 'fs19', 51)" class="id">wins</span> <span class="o">+</span> <span class="n">1</span> <span class="k">else</span> <span onmouseout="hideTip(event, 'fs19', 52)" onmouseover="showTip(event, 'fs19', 52)" class="id">wins</span><span class="pn">)</span> <span class="n">0</span>
+  <span onmouseout="hideTip(event, 'fs22', 53)" onmouseover="showTip(event, 'fs22', 53)" class="fn">float</span> <span onmouseout="hideTip(event, 'fs19', 54)" onmouseover="showTip(event, 'fs19', 54)" class="id">wins</span> <span class="o">/</span> <span onmouseout="hideTip(event, 'fs22', 55)" onmouseover="showTip(event, 'fs22', 55)" class="fn">float</span> <span onmouseout="hideTip(event, 'fs17', 56)" onmouseover="showTip(event, 'fs17', 56)" class="id">number</span> <span class="o">*</span> <span class="n">100.0</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs23', 57)" onmouseover="showTip(event, 'fs23', 57)" class="fn">case</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs6', 58)" onmouseover="showTip(event, 'fs6', 58)" class="uc">Strategy</span> <span class="o">&gt;</span><span class="pn">&gt;</span> <span onmouseout="hideTip(event, 'fs16', 59)" onmouseover="showTip(event, 'fs16', 59)" class="fn">test</span> <span class="n">10000</span>
+
+<span onmouseout="hideTip(event, 'fs24', 60)" onmouseover="showTip(event, 'fs24', 60)" class="fn">printfn</span> <span class="s">&quot;keep first door : </span><span class="pf">%.2f</span><span class="s"></span><span class="pf">%%</span><span class="s"> success&quot;</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs23', 61)" onmouseover="showTip(event, 'fs23', 61)" class="fn">case</span> <span class="pn">(</span><span class="k">fun</span> <span onmouseout="hideTip(event, 'fs25', 62)" onmouseover="showTip(event, 'fs25', 62)" class="id">first</span> <span class="id">_</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs25', 63)" onmouseover="showTip(event, 'fs25', 63)" class="id">first</span><span class="pn">)</span><span class="pn">)</span>
+<span onmouseout="hideTip(event, 'fs24', 64)" onmouseover="showTip(event, 'fs24', 64)" class="fn">printfn</span> <span class="s">&quot;switch door : </span><span class="pf">%.2f</span><span class="s"></span><span class="pf">%%</span><span class="s"> success&quot;</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs23', 65)" onmouseover="showTip(event, 'fs23', 65)" class="fn">case</span> <span class="pn">(</span><span class="k">fun</span> <span class="id">_</span> <span onmouseout="hideTip(event, 'fs26', 66)" onmouseover="showTip(event, 'fs26', 66)" class="id">other</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs26', 67)" onmouseover="showTip(event, 'fs26', 67)" class="id">other</span><span class="pn">)</span><span class="pn">)</span>
+<span onmouseout="hideTip(event, 'fs24', 68)" onmouseover="showTip(event, 'fs24', 68)" class="fn">printfn</span> <span class="s">&quot;choose randomly : </span><span class="pf">%.2f</span><span class="s"></span><span class="pf">%%</span><span class="s"> success&quot;</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs23', 69)" onmouseover="showTip(event, 'fs23', 69)" class="fn">case</span> <span class="pn">(</span><span class="k">fun</span> <span onmouseout="hideTip(event, 'fs25', 70)" onmouseover="showTip(event, 'fs25', 70)" class="id">first</span> <span onmouseout="hideTip(event, 'fs26', 71)" onmouseover="showTip(event, 'fs26', 71)" class="id">other</span> <span class="k">-&gt;</span> <span class="k">if</span> <span onmouseout="hideTip(event, 'fs5', 72)" onmouseover="showTip(event, 'fs5', 72)" class="id">rng</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs27', 73)" onmouseover="showTip(event, 'fs27', 73)" class="id">Bool</span> <span class="k">then</span> <span onmouseout="hideTip(event, 'fs25', 74)" onmouseover="showTip(event, 'fs25', 74)" class="id">first</span> <span class="k">else</span> <span onmouseout="hideTip(event, 'fs26', 75)" onmouseover="showTip(event, 'fs26', 75)" class="id">other</span><span class="pn">)</span><span class="pn">)</span>
+
+<span class="c">// example output</span>
+<span class="c">// keep first door : 33.21% success</span>
+<span class="c">// switch door : 67.43% success</span>
+<span class="c">// choose randomly : 50.67% success</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace System</div>
+<div class="tip" id="fs2">Multiple items<br />type Random =<br />&#160;&#160;new : unit -&gt; Random + 1 overload<br />&#160;&#160;member Next : unit -&gt; int + 2 overloads<br />&#160;&#160;member NextBytes : buffer:byte[] -&gt; unit + 1 overload<br />&#160;&#160;member NextDouble : unit -&gt; float<br /><br />--------------------<br />System.Random() : System.Random<br />System.Random(Seed: int) : System.Random</div>
+<div class="tip" id="fs3">val x : System.Random</div>
+<div class="tip" id="fs4">System.Random.Next() : int<br />System.Random.Next(maxValue: int) : int<br />System.Random.Next(minValue: int, maxValue: int) : int</div>
+<div class="tip" id="fs5">val rng : System.Random</div>
+<div class="tip" id="fs6">Multiple items<br />union case Strategy.Strategy: (int -&gt; int -&gt; int) -&gt; Strategy<br /><br />--------------------<br />type Strategy = | Strategy of (int -&gt; int -&gt; int)<br /><em><br /><br />&#160;strategy function is passed the door initially picked and the remainging closed door,<br />&#160;and must return one of these values</em></div>
+<div class="tip" id="fs7">Multiple items<br />val int : value:&#39;T -&gt; int (requires member op_Explicit)<br /><br />--------------------<br />type int = int32<br /><br />--------------------<br />type int&lt;&#39;Measure&gt; = int</div>
+<div class="tip" id="fs8">val play : doorWithPrize:int -&gt; firstChoice:int -&gt; Strategy -&gt; bool<br /><em><br /><br />&#160;plays a Monty Hall game.</em></div>
+<div class="tip" id="fs9">val doorWithPrize : int</div>
+<div class="tip" id="fs10">val firstChoice : int</div>
+<div class="tip" id="fs11">val strategy : (int -&gt; int -&gt; int)</div>
+<div class="tip" id="fs12">val remainingClosedDoor : int</div>
+<div class="tip" id="fs13">Multiple items<br />module List<br /><br />from Microsoft.FSharp.Collections<br /><br />--------------------<br />type List&lt;&#39;T&gt; =<br />&#160;&#160;| ( [] )<br />&#160;&#160;| ( :: ) of Head: &#39;T * Tail: &#39;T list<br />&#160;&#160;&#160;&#160;interface IReadOnlyList&lt;&#39;T&gt;<br />&#160;&#160;&#160;&#160;interface IReadOnlyCollection&lt;&#39;T&gt;<br />&#160;&#160;&#160;&#160;interface IEnumerable<br />&#160;&#160;&#160;&#160;interface IEnumerable&lt;&#39;T&gt;<br />&#160;&#160;&#160;&#160;member GetReverseIndex : rank:int * offset:int -&gt; int<br />&#160;&#160;&#160;&#160;member GetSlice : startIndex:int option * endIndex:int option -&gt; &#39;T list<br />&#160;&#160;&#160;&#160;member Head : &#39;T<br />&#160;&#160;&#160;&#160;member IsEmpty : bool<br />&#160;&#160;&#160;&#160;member Item : index:int -&gt; &#39;T with get<br />&#160;&#160;&#160;&#160;member Length : int<br />&#160;&#160;&#160;&#160;...</div>
+<div class="tip" id="fs14">val filter : predicate:(&#39;T -&gt; bool) -&gt; list:&#39;T list -&gt; &#39;T list</div>
+<div class="tip" id="fs15">val item : index:int -&gt; list:&#39;T list -&gt; &#39;T</div>
+<div class="tip" id="fs16">val test : number:int -&gt; strategy:Strategy -&gt; float<br /><em><br /><br />&#160;plays number Monty Hall games with given strategy and random initial state,<br />&#160;and returns the percentage of wins</em></div>
+<div class="tip" id="fs17">val number : int</div>
+<div class="tip" id="fs18">val strategy : Strategy</div>
+<div class="tip" id="fs19">val wins : int</div>
+<div class="tip" id="fs20">val fold : folder:(&#39;State -&gt; &#39;T -&gt; &#39;State) -&gt; state:&#39;State -&gt; list:&#39;T list -&gt; &#39;State</div>
+<div class="tip" id="fs21">property System.Random.PickDoor: int with get</div>
+<div class="tip" id="fs22">Multiple items<br />val float : value:&#39;T -&gt; float (requires member op_Explicit)<br /><br />--------------------<br />type float = System.Double<br /><br />--------------------<br />type float&lt;&#39;Measure&gt; = float</div>
+<div class="tip" id="fs23">val case : ((int -&gt; int -&gt; int) -&gt; float)</div>
+<div class="tip" id="fs24">val printfn : format:Printf.TextWriterFormat&lt;&#39;T&gt; -&gt; &#39;T</div>
+<div class="tip" id="fs25">val first : int</div>
+<div class="tip" id="fs26">val other : int</div>
+<div class="tip" id="fs27">property System.Random.Bool: bool with get</div>
+

@@ -1,0 +1,25 @@
+open Microsoft.FSharp.Quotations.Patterns
+
+module Test =
+    // https://stackoverflow.com/a/26621814
+    // relies on at least surface-level knowledge of how F# quotations work
+    let rec private moduleType = <@ moduleType @> |> function PropertyGet (_, info, _) -> info.DeclaringType
+    let ModuleTypeQt = moduleType
+
+    // https://stackoverflow.com/a/14706890
+    // relies on the fact that Modules are actually implemented as static classes
+    type private IAssemblyLocator = interface end
+    let ModuleTypeTo = typeof<IAssemblyLocator>.DeclaringType
+
+    let sayHi<'a> () =
+        printfn "Hello %A" (typeof<'a>.Name)
+
+// not a module, but is perhaps the most understandable to most devs coming in
+[<AbstractClass; Sealed>]
+type Test private () =
+    static member sayHi<'a> () =
+        printfn "Hello %A" (typeof<'a>.Name)
+
+Test.ModuleTypeQt.GetMethod(nameof Test.sayHi).MakeGenericMethod(typeof<unit>).Invoke(null, [| |])
+Test.ModuleTypeTo.GetMethod(nameof Test.sayHi).MakeGenericMethod(typeof<unit>).Invoke(null, [| |])
+typeof<Test>.GetMethod(nameof Test.sayHi).MakeGenericMethod(typeof<unit>).Invoke(null, [| |])

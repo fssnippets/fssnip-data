@@ -1,0 +1,101 @@
+module Memoize =
+
+    /// returns 3 functions:
+    ///    checkO  : ('p->'v option) 
+    ///    getOrAdd: ('p->('p->'v)->'v) 
+    ///    clear   : (unit->unit)
+    let getStoreWithDict (cache: System.Collections.Generic.Dictionary<_, _>) =
+        let checkO v     = let mutable res = Unchecked.defaultof<_>
+                           let ok          = cache.TryGetValue(v, &res)
+                           if  ok then Some res else None
+        let store  v res = cache.[v] <- res
+                           res
+        let getOrAdd p f = checkO p |> Option.defaultWith (fun () -> f p |> store p )
+        (checkO, getOrAdd), cache.Clear
+
+    /// creates a Dictionary to store memoized values
+    /// returns 3 functions:
+    ///    checkO  : ('p->'v option) 
+    ///    getOrAdd: ('p->('p->'v)->'v) 
+    ///    clear   : (unit->unit)
+    let getStore() = getStoreWithDict (System.Collections.Generic.Dictionary<_, _>() )
+
+    /// Memoizes function f using the provided cache
+    /// getCache() returns 1 function:
+    ///    getOrAdd: ('p->('p->'v)->'v) 
+    let memoizeStore (getOrAdd:('key -> ('key -> 'value) -> 'value) ) f =
+        fun p -> getOrAdd p f
+
+
+    /// Memoizes the function f using a Dictionary
+    /// Returns the memoized function and a clear() function
+    /// The dictionary can be reset using the clear() function
+    let memoizeResetable f =
+        let (check, getOrAdd), clear = getStore()
+        let memoF = memoizeStore getOrAdd f
+        memoF, clear
+
+    /// Memoizes the function f using the provided Dictionary
+    let memoizeWithDict dict f =
+        let (check, getOrAdd), clear = getStoreWithDict dict
+        let memoF = memoizeStore getOrAdd f
+        memoF
+
+    /// Memoizes the function f and returns Dictionary
+    let memoizeDict f =
+        let dict = System.Collections.Generic.Dictionary<_, _>() 
+        let (check, getOrAdd), clear = getStoreWithDict dict
+        let memoF = memoizeStore getOrAdd f
+        memoF, dict
+
+    /// Memoizes the function f using a Dictionary
+    let memoize f = memoizeResetable f |> fst
+
+//-----------------
+// Sample code for Advent of Code 2020 Day 20 part 2
+//
+
+let inputT = [|
+    16
+    10
+    15
+    5
+    1
+    11
+    7
+    19
+    6
+    12
+    4
+|]
+
+let countOptions (adapsI: int[]) : bigint =
+    let adaps =
+        adapsI
+        |> Seq.append [0 ; Seq.max adapsI + 3]
+        |> Seq.sort
+        |> Seq.toArray
+
+    let rec countOptions(last, i) : bigint =           // THIS NEEDS TO BE MEMOIZED OR ELSE ....
+        if i = adaps.Length - 1 then bigint 1 else  // return 1
+        let n = countOptionsM(adaps.[i], i + 1)
+        if adaps.[i + 1] - last > 3 then n else
+        n + countOptionsM(last, i + 1)
+
+    and countOptionsM = Memoize.memoize countOptions // MEMOIZED!!!! :)
+
+    countOptionsM(0, 1)
+
+inputT |> countOptions |> printfn "Test 2a = %A"   // Answer = 8
+
+(*
+
+ with my problem data :
+
+Answer  = 259172170858496  // that is:  259,172,170,858,496 
+                                                      // how does a 1 in line 80: become this?!
+Real: 00:00:00.001, CPU: 00:00:00.015, GC gen0: 0, gen1: 0, gen2: 0
+
+without memoization, it never finished....
+
+*)

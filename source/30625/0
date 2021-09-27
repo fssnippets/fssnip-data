@@ -1,0 +1,57 @@
+open System
+
+let rep times letter = [for _ in 1 .. times -> letter]
+
+let div n divisor letter =
+    let q = n / divisor
+    if q > 0 then 
+        let roman = rep q letter
+        let rem = n % divisor
+        Some(roman,rem)
+    else
+        None
+        
+let sub n divisor letterList = if n / divisor > 0 then Some(letterList,n - divisor) else None
+        
+let (|Thousand|_|) n = div n 1000 'M'
+let (|NineH|_|) n    = sub n 900 ['C';'M']
+let (|FiveH|_|) n    = div n 500 'D'
+let (|FourH|_|) n    = sub n 400 ['C';'D']
+let (|Hundred|_|) n  = div n 100 'C'
+let (|Ninety|_|) n   = sub n 90 ['X';'C']
+let (|Fifty|_|) n    = div n 50 'L'
+let (|Forty|_|) n    = sub n 40 ['X';'L']
+let (|Ten|_|) n      = div n 10 'X'
+let (|Nine|_|) n     = sub n 9 ['I';'X']
+let (|Five|_|) n     = div n 5 'V'
+let (|Four|_|) n     = sub n 4 ['I';'V']
+let (|One|_|) n      = div n 1 'I'
+
+let toRoman (n:int) =
+
+    let rec loop acc dvnd =
+        match dvnd with
+        | 0                    -> String(acc |> List.rev |> List.collect (fun x->x) |> List.toArray)
+        | Thousand (roman,rem) 
+        | NineH (roman,rem)
+        | FiveH (roman,rem)
+        | FourH (roman,rem)
+        | Hundred (roman,rem)
+        | Ninety (roman,rem)
+        | Fifty (roman,rem)
+        | Forty (roman,rem)
+        | Ten (roman,rem)
+        | Nine (roman,rem)
+        | Five (roman,rem)
+        | Four (roman,rem)
+        | One (roman,rem) -> loop (roman::acc) rem
+        | _               -> failwithf "unable to convert %A" dvnd
+        
+
+    loop [] n
+    
+toRoman 3999         //"MMMCMXCIX" 
+toRoman 3000         //"MMM"
+toRoman 495          //"CDXCV"
+toRoman 1            // "I"
+toRoman 2            // "II"

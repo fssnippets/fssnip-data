@@ -1,0 +1,40 @@
+
+type System.Random with
+  member x.PickDoor = x.Next 3 + 1
+  member x.Bool = x.Next 2 = 0
+
+let rng = System.Random ()
+
+/// strategy function is passed the door initially picked and the remainging closed door,
+/// and must return one of these values
+type Strategy = Strategy of (int -> int -> int)
+
+/// plays a Monty Hall game.
+let play doorWithPrize firstChoice (Strategy strategy) =
+  let remainingClosedDoor =
+    if firstChoice = doorWithPrize then
+      [ 1 .. 3 ] 
+      |> List.filter ((<>) firstChoice)
+      |> List.item (rng.Next 2)
+    else
+      doorWithPrize
+  (strategy firstChoice remainingClosedDoor) = doorWithPrize
+  
+/// plays number Monty Hall games with given strategy and random initial state,
+/// and returns the percentage of wins
+let test number strategy =
+  let wins =
+    [ 1 .. number ]
+    |> List.fold (fun wins _ -> if play rng.PickDoor rng.PickDoor strategy then wins + 1 else wins) 0
+  float wins / float number * 100.0
+
+let case = Strategy >> test 10000
+
+printfn "keep first door : %.2f%% success" (case (fun first _ -> first))
+printfn "switch door : %.2f%% success" (case (fun _ other -> other))
+printfn "choose randomly : %.2f%% success" (case (fun first other -> if rng.Bool then first else other))
+
+// example output
+// keep first door : 33.21% success
+// switch door : 67.43% success
+// choose randomly : 50.67% success

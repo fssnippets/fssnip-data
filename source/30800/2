@@ -1,0 +1,9 @@
+module AsyncSeq =
+    let forkThrottled<'t> n (capacity:int) (xs:AsyncSeq<'t>) =
+        let pcs = [for _ in 1 .. n -> new System.Collections.Concurrent.BlockingCollection<'t>(capacity)]
+        pcs 
+            |> List.map(fun buf -> 
+                asyncSeq {
+                for x in buf.GetConsumingEnumerable() do
+                    yield x
+                })

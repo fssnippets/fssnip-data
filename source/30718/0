@@ -1,0 +1,93 @@
+type private InternalElement<'Key, 'Value when 'Key: comparison> =
+  { key: 'Key
+    data: 'Value
+    polygon: Polygon }
+
+[<Struct>]
+type STRtree<'Key, 'Value when 'Key: comparison> =
+  private { map: Map<'Key, InternalElement<'Key, 'Value>>
+            strTree: NetTopologySuite.Index.Strtree.STRtree<InternalElement<'Key, 'Value>> }
+
+[<RequireQualifiedAccess>]
+module STRtree =
+  [<AutoOpen>]
+  module private Helper =
+    /// Tests where a point is contained is polygon.
+    /// Adapted from https://corstianboerman.com/posts/2018-10-08/retrieving-all-polygons-that-overlap-a-single-point.html
+    let isPointInPolygon (testPoint: Coordinate) (polygon: Polygon) =
+      let polygon = polygon.Coordinates
+      
+      let mutable result = false
+      let mutable j = polygon.Length - 1
+      for i = 0 to polygon.Length - 1 do
+        if (polygon.[i].Y < testPoint.Y && polygon.[j].Y >= testPoint.Y ||
+            polygon.[j].Y < testPoint.Y && polygon.[i].Y >= testPoint.Y) then
+          if (polygon.[i].X + (testPoint.Y - polygon.[i].Y) / (polygon.[j].Y - polygon.[i].Y) * (polygon.[j].X - polygon.[i].X) < testPoint.X) then
+            result <- not result
+        j <- i
+        
+      result
+
+    let createInternalElem (entity: 'Key * 'Value * Geometry) =
+     let (key, element, geom) = entity
+     { key = key
+       data = element
+       polygon = geom.GetUnionizedPolygons() }
+      
+    let createEmptyTree () = NetTopologySuite.Index.Strtree.STRtree<InternalElement<_, _>>()
+
+  /// an empty type
+  [<GeneralizableValue>]
+  let empty<'Key, 'Value when 'Key: comparison> : STRtree<'Key, 'Value> =
+    let tree = createEmptyTree ()
+    { strTree = tree; map = Map.empty }
+
+  /// Constructs the tree from sequence of value and their geometries
+  let ofSeq (entities: seq<'Key * 'Value * Geometry>) =
+    let map =
+      Array.ofSeq entities
+      |> Array.map (createInternalElem)
+      |> Array.map (fun elem -> elem.key, elem)
+      |> Map.ofSeq
+
+    let _values = Map.values map
+    let tree = createEmptyTree ()
+    
+    for p in _values do
+      let envelope = p.polygon.EnvelopeInternal
+      tree.Insert(envelope, p)
+
+    tree.Build()
+    { strTree = tree; map = map }
+
+  /// Returns items whose polygons intersect the given envelope
+  let queryEnvelope (envelope: Envelope) (tree: STRtree<_, _>) =
+    tree.strTree.Query(envelope)
+    |> Seq.map (fun elem -> elem.data)
+    |> Seq.toList
+    
+  /// Returns items whose polygons intersect the given geometry
+  let queryGeometry (geometry: Geometry) (tree: STRtree<_, _>) =
+    tree.strTree.Query(geometry.EnvelopeInternal)
+    |> Seq.filter (fun item -> geometry.Intersects(item.polygon))
+    |> Seq.map (fun elem -> elem.data)
+    |> Seq.toList
+
+  /// Returns items whose polygons intersect geometry of the given key
+  let neighbours (key: 'Key) (tree: STRtree<_, _>) =
+    match tree.map.TryFind key with
+    | None -> []
+    | Some v ->
+        let keyPolygon = v.polygon
+        tree.strTree.Query(keyPolygon.EnvelopeInternal)
+        |> Seq.filter (fun item -> item.key <> key)
+        |> Seq.filter (fun item -> keyPolygon.Intersects(item.polygon))
+        |> Seq.map (fun elem -> elem.data)
+        |> Seq.toList
+
+  /// Returns items whose polygons contain the given point.
+  let queryContainingPoint (point: Coordinate) (tree: STRtree<_, _>) =
+    tree.strTree.Query(Envelope point)
+    |> Seq.where (fun elem -> isPointInPolygon point elem.polygon)
+    |> Seq.map (fun elem -> elem.data)
+    |> Seq.toList

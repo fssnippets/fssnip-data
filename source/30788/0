@@ -1,0 +1,32 @@
+open System
+
+// Regular nested loop
+let mutable sum = 0
+
+for i in 1 .. 10 do
+    for j in 1 .. 10 do
+        for k in 1 .. 10 do
+            sum <- sum + 1
+
+printfn "%A" sum
+
+// Nested recursive loop equivalent
+let rec loop1 c sum = 
+    if c >= 10 then
+        sum
+    else
+        loop1 (c + 1) (sum + 1)
+
+let rec loop2 c sum = 
+    if c >= 9 then
+        sum
+    else
+        loop2 (c + 1) (loop1 0 (sum + 1))
+
+let rec loop3 c sum = 
+    if c >= 10 then
+        sum
+    else
+        loop3 (c + 1) (loop2 0 (sum + 1))
+
+loop3 0 0

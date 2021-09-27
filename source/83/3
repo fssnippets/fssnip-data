@@ -1,0 +1,40 @@
+ 1: 
+ 2: 
+ 3: 
+ 4: 
+ 5: 
+ 6: 
+ 7: 
+ 8: 
+ 9: 
+10: 
+11: 
+12: 
+13: 
+14: 
+15: 
+16: 
+17: 
+18: 
+19: 
+20: 
+#r "System.Runtime.Serialization" // for interactive
+// Reference to assembly System.Runtime.Serialization and System.Xml
+
+open System.IO
+open System.Runtime.Serialization.Json
+open System.Xml
+open System.Text
+
+/// Object to Json 
+let internal json<'t> (myObj:'t) =   
+        use ms = new MemoryStream() 
+        (new DataContractJsonSerializer(typeof<'t>)).WriteObject(ms, myObj) 
+        Encoding.Default.GetString(ms.ToArray()) 
+
+
+/// Object from Json 
+let internal unjson<'t> (jsonString:string)  : 't =  
+        use ms = new MemoryStream(ASCIIEncoding.Default.GetBytes(jsonString)) 
+        let obj = (new DataContractJsonSerializer(typeof<'t>)).ReadObject(ms) 
+        obj :?> 't

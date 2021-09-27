@@ -1,0 +1,21 @@
+let inline (!>) (x:^a) : ^b = ((^a or ^b) : (static member op_Implicit : ^a -> ^b) x)
+
+(*
+//Example based on Tensorflow.Net
+
+open Tensorflow
+let tf = Tensorflow.Binding.tf
+let modelFile = @"uncased_L-12_H-768_A-12\bert_model.ckpt.meta"
+let graph = tf.Graph().as_default()
+let saver = tf.train.import_meta_graph(modelFile)
+
+//convert Operation to Tensor using implicit conversion operator
+
+let input_tensor : Tensor = !> graph.OperationByName("Placeholder") 
+
+//alternatively have to do this:
+let op = graph.OperationByName("Placeholder")
+let tensor = new Tensor(op,0,TF_DataType.TF_INT32)
+
+
+*)

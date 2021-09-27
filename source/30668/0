@@ -1,0 +1,57 @@
+open System
+
+let withTimeWindow<'T> (fnTime:'T-> DateTime) (window:TimeSpan) (xs:'T seq) =
+    let xs' = xs |> Seq.sortBy fnTime
+    let tFrom = xs' |> Seq.head |> fnTime
+    let tTo = tFrom.AddSeconds(window.TotalSeconds)
+    let ixs = xs'.GetEnumerator()
+
+    let rec nxt(f:DateTime,t) prevX = 
+        seq {
+            let x = 
+                prevX 
+                |> Option.map(fun _ -> prevX)
+                |> Option.defaultWith(fun () -> if ixs.MoveNext() then Some(ixs.Current) else None)
+            match x with
+            | Some x -> 
+                let tx = fnTime x
+                if tx < t then
+                    yield ((f,t),x)
+                    yield! nxt (f,t) None
+                else
+                    let f = f.AddSeconds(window.TotalSeconds)
+                    let t = t.AddSeconds(window.TotalSeconds)
+                    yield! nxt (f,t) (Some x)
+            | None -> ixs.Dispose()
+        }
+        
+    nxt (tFrom,tTo) None 
+
+(*
+let xs = seq{for i in 0 .. 100 -> i } |> Seq.scan (fun ((s:DateTime),_) t -> s.AddMinutes(1.0),t) (DateTime.Now,0)
+let wxs = xs |> withTimeWindow fst (TimeSpan.FromMinutes 5.)
+let wsg = wxs |> Seq.groupBy fst |> Seq.map (fun (interval,xs)->interval,Seq.length xs) |> Seq.toArray
+> 
+val wsg : ((DateTime * DateTime) * int) [] =
+  [|((8/26/2020 4:36:01 PM, 8/26/2020 4:41:01 PM), 5);
+    ((8/26/2020 4:41:01 PM, 8/26/2020 4:46:01 PM), 5);
+    ((8/26/2020 4:46:01 PM, 8/26/2020 4:51:01 PM), 5);
+    ((8/26/2020 4:51:01 PM, 8/26/2020 4:56:01 PM), 5);
+    ((8/26/2020 4:56:01 PM, 8/26/2020 5:01:01 PM), 5);
+    ((8/26/2020 5:01:01 PM, 8/26/2020 5:06:01 PM), 5);
+    ((8/26/2020 5:06:01 PM, 8/26/2020 5:11:01 PM), 5);
+    ((8/26/2020 5:11:01 PM, 8/26/2020 5:16:01 PM), 5);
+    ((8/26/2020 5:16:01 PM, 8/26/2020 5:21:01 PM), 5);
+    ((8/26/2020 5:21:01 PM, 8/26/2020 5:26:01 PM), 5);
+    ((8/26/2020 5:26:01 PM, 8/26/2020 5:31:01 PM), 5);
+    ((8/26/2020 5:31:01 PM, 8/26/2020 5:36:01 PM), 5);
+    ((8/26/2020 5:36:01 PM, 8/26/2020 5:41:01 PM), 5);
+    ((8/26/2020 5:41:01 PM, 8/26/2020 5:46:01 PM), 5);
+    ((8/26/2020 5:46:01 PM, 8/26/2020 5:51:01 PM), 5);
+    ((8/26/2020 5:51:01 PM, 8/26/2020 5:56:01 PM), 5);
+    ((8/26/2020 5:56:01 PM, 8/26/2020 6:01:01 PM), 5);
+    ((8/26/2020 6:01:01 PM, 8/26/2020 6:06:01 PM), 5);
+    ((8/26/2020 6:06:01 PM, 8/26/2020 6:11:01 PM), 5);
+    ((8/26/2020 6:11:01 PM, 8/26/2020 6:16:01 PM), 5);
+    ((8/26/2020 6:16:01 PM, 8/26/2020 6:21:01 PM), 2)|]
+*)

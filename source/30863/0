@@ -1,0 +1,12 @@
+[<AutoOpen>]
+module HttpContextExtensions
+
+open System.Security.Claims
+open Microsoft.AspNetCore.Http
+
+type HttpContext with
+    member ctx.GetSerilogLogger (sourceContext: string) =
+        ctx.GetService<Serilog.ILogger>().ForContext("SourceContext", sourceContext)
+
+    member ctx.GetSerilogLogger<'t> () =
+        ctx.GetService<Serilog.ILogger>().ForContext<'t>()

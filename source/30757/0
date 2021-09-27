@@ -1,0 +1,10 @@
+let rec lowerBound target (arr:int64 array) beg en =  
+  match sign <| compare en beg with
+  | -1 -> None  
+  | _ -> let mid = (beg+en)/2
+         match  sign <| compare target arr.[mid] with         
+         | 1  -> lowerBound target arr (mid+1) en
+         | _ -> if beg<mid then
+                    lowerBound target arr beg mid
+                 else
+                    Some(mid)

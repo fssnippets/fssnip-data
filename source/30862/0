@@ -1,0 +1,116 @@
+module MyThing.Sync.Support.Logging
+
+open System
+open Serilog
+open Serilog.Core
+open Sentry.Serilog
+open Serilog.Events
+open System.Reflection
+open System.Collections.Generic
+open Serilog.Extensions.Logging
+open MyThing.Config.ParsedConfig
+
+type MinimalClassNameEnricher (?maxLength: int) =
+    interface ILogEventEnricher with
+        member this.Enrich (logEvent: LogEvent, propertyFactory: ILogEventPropertyFactory) =
+            let sourceContext = logEvent.Properties.GetValueOrDefault "SourceContext"
+            let leaf =
+               (if isNull sourceContext then "" else string sourceContext)
+                   .Replace("\"", "")
+                   .Split(".")
+                   |> Array.last
+                           
+            let prop =
+                match maxLength with
+                | Some maxLength ->
+                    if leaf.Length > maxLength
+                    then leaf.[0..maxLength-2] + "~"
+                    else leaf
+                | None -> leaf
+                        
+            logEvent.AddOrUpdateProperty(propertyFactory.CreateProperty("AbbreviatedSourceContext", prop))
+
+
+let configureSeq (uri: string) (logger: LoggerConfiguration) =
+    logger.WriteTo.Seq uri
+
+let configureSentry dsn (loggerConfig: LoggerConfiguration) =
+    let release = Assembly.GetExecutingAssembly().GetName().Version.ToString()
+
+    loggerConfig.WriteTo.Sentry (fun (sentry: SentrySerilogOptions) ->
+        sentry.Dsn              <- dsn
+        sentry.AttachStacktrace <- true
+        sentry.Release          <- release
+        sentry.ShutdownTimeout  <- TimeSpan.FromSeconds 3.
+        sentry.MaxBreadcrumbs   <- 200
+    )
+    
+let withMinimumLevel level (loggerConfiguration: LoggerConfiguration) =
+    loggerConfiguration.MinimumLevel.Is level
+    
+let filterByExcluding (configureFun: LogEvent -> bool) (loggerConfiguration: LoggerConfiguration) =
+    loggerConfiguration.Filter.ByExcluding (Func<LogEvent,bool> configureFun)
+    
+let maybeConfigure configureFun = function
+    | Some config -> configureFun config
+    | None        -> id
+    
+let init () = LoggerConfiguration ()
+
+/// Base LoggerConfiguration which can be further enriched
+let baseLoggerConfig (loggerConfiguration: LoggerConfiguration) =
+    let outputTemplate =
+        sprintf "{Timestamp:HH:mm:ss} [{Level:u3}] {AbbreviatedSourceContext,%i:l} | {Message:lj}{NewLine}{Exception}" 20
+    loggerConfiguration
+        .Enrich.FromLogContext()
+        .Enrich.With(MinimalClassNameEnricher (20))
+        .WriteTo.ColoredConsole(outputTemplate=outputTemplate)
+           
+/// Build a Serilog `ILogger` from a LoggerConfiguration
+let build (loggerName: string) (loggerConfiguration: LoggerConfiguration) =
+    loggerConfiguration
+        .Enrich.WithProperty("SourceContext", loggerName)
+        .Enrich.With(MinimalClassNameEnricher (20)) // Must come after SourceContext
+        .CreateLogger() :> ILogger
+
+/// Build a Serilog `ILogger` from a `unit -> LoggerConfiguration`
+let buildWith (loggerName: string) (loggerConfigurationFun: unit -> LoggerConfiguration) =
+    loggerConfigurationFun () |> build loggerName
+
+let buildFor<'t> = build (typeof<'t>.Name)
+
+/// Build an MSE `ILogger` from a Serilog `ILogger`
+let toMseLogger (loggerName: string) (logger: ILogger) =
+    let loggerProvider = new SerilogLoggerProvider (logger)
+    loggerProvider.CreateLogger loggerName
+
+/// Make a basic Serilog `ILogger`
+let makeBasicLogger (loggerName: string) =
+    LoggerConfiguration ()
+    |> baseLoggerConfig
+    |> build loggerName
+
+(* Make a logger from the app's LoggingConfig *)
+
+let enrichFromLoggingConfig (config: LoggingConfig) loggerConfiguration =
+    loggerConfiguration
+    |> withMinimumLevel config.LogLevel
+    |> filterByExcluding (fun logEvent ->
+        logEvent.Properties.ContainsKey("SourceContext") &&
+        logEvent.Properties.["SourceContext"].ToString().Contains("Microsoft.") &&
+        logEvent.Level < config.FrameworkLogLevel
+    )
+    |> maybeConfigure configureSentry config.SentryDsn
+    |> maybeConfigure configureSeq config.SeqUri
+    
+let fromConfig (config: LoggingConfig) name =
+    LoggerConfiguration ()
+    |> baseLoggerConfig
+    |> enrichFromLoggingConfig config
+    |> build name
+   
+let fromConfigFor<'t> (config: LoggingConfig) =
+    LoggerConfiguration ()
+    |> baseLoggerConfig
+    |> enrichFromLoggingConfig config
+    |> buildFor<'t>

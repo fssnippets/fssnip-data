@@ -1,0 +1,74 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">module</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="m">Map</span> <span class="o">=</span>    
+    <span class="c">/// Left join lhs map with rhs using a rhs map key selector</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="fn">leftJoin2</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="fn">joinOn</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="id">left</span> <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="id">right</span> <span class="o">=</span>
+      <span class="k">let</span> <span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="id">leftKeyVal</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs1', 7)" onmouseover="showTip(event, 'fs1', 7)" class="m">Map</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs7', 8)" onmouseover="showTip(event, 'fs7', 8)" class="id">toSeq</span> <span onmouseout="hideTip(event, 'fs4', 9)" onmouseover="showTip(event, 'fs4', 9)" class="id">left</span>
+      <span onmouseout="hideTip(event, 'fs8', 10)" onmouseover="showTip(event, 'fs8', 10)" class="k">seq</span> <span class="pn">{</span>
+        <span class="k">for</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs9', 11)" onmouseover="showTip(event, 'fs9', 11)" class="id">key</span><span class="pn">,</span> <span onmouseout="hideTip(event, 'fs10', 12)" onmouseover="showTip(event, 'fs10', 12)" class="id">lv</span><span class="pn">)</span> <span class="k">in</span> <span onmouseout="hideTip(event, 'fs6', 13)" onmouseover="showTip(event, 'fs6', 13)" class="id">leftKeyVal</span> <span class="k">do</span>
+          <span class="k">let</span> <span onmouseout="hideTip(event, 'fs11', 14)" onmouseover="showTip(event, 'fs11', 14)" class="id">joinKey</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs3', 15)" onmouseover="showTip(event, 'fs3', 15)" class="fn">joinOn</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs9', 16)" onmouseover="showTip(event, 'fs9', 16)" class="id">key</span><span class="pn">,</span> <span onmouseout="hideTip(event, 'fs10', 17)" onmouseover="showTip(event, 'fs10', 17)" class="id">lv</span><span class="pn">)</span>
+          <span class="k">let</span> <span onmouseout="hideTip(event, 'fs12', 18)" onmouseover="showTip(event, 'fs12', 18)" class="id">rightValueOpt</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs1', 19)" onmouseover="showTip(event, 'fs1', 19)" class="m">Map</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs13', 20)" onmouseover="showTip(event, 'fs13', 20)" class="id">tryFind</span> <span onmouseout="hideTip(event, 'fs11', 21)" onmouseover="showTip(event, 'fs11', 21)" class="id">joinKey</span> <span onmouseout="hideTip(event, 'fs5', 22)" onmouseover="showTip(event, 'fs5', 22)" class="id">right</span>
+          <span class="k">yield</span> <span onmouseout="hideTip(event, 'fs9', 23)" onmouseover="showTip(event, 'fs9', 23)" class="id">key</span><span class="pn">,</span> <span onmouseout="hideTip(event, 'fs10', 24)" onmouseover="showTip(event, 'fs10', 24)" class="id">lv</span><span class="pn">,</span> <span onmouseout="hideTip(event, 'fs12', 25)" onmouseover="showTip(event, 'fs12', 25)" class="id">rightValueOpt</span>
+        <span class="pn">}</span>
+      
+    <span class="c">/// Inner join lhs map with 2 rhs maps with &#39;k key selection on lhs map</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs14', 26)" onmouseover="showTip(event, 'fs14', 26)" class="fn">innerJoin3</span> <span onmouseout="hideTip(event, 'fs15', 27)" onmouseover="showTip(event, 'fs15', 27)" class="fn">joinOn</span> <span onmouseout="hideTip(event, 'fs4', 28)" onmouseover="showTip(event, 'fs4', 28)" class="id">left</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs16', 29)" onmouseover="showTip(event, 'fs16', 29)" class="id">right1</span><span class="pn">:</span> <span onmouseout="hideTip(event, 'fs1', 30)" onmouseover="showTip(event, 'fs1', 30)" class="rt">Map</span><span class="pn">&lt;</span><span class="ta">&#39;</span><span class="id">k</span><span class="pn">,</span><span class="id">_</span><span class="pn">&gt;</span><span class="pn">)</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs17', 31)" onmouseover="showTip(event, 'fs17', 31)" class="id">right2</span><span class="pn">:</span> <span onmouseout="hideTip(event, 'fs1', 32)" onmouseover="showTip(event, 'fs1', 32)" class="rt">Map</span><span class="pn">&lt;</span><span class="ta">&#39;</span><span class="id">k</span><span class="pn">,</span><span class="id">_</span><span class="pn">&gt;</span><span class="pn">)</span> <span class="o">=</span>
+      <span class="k">let</span> <span onmouseout="hideTip(event, 'fs6', 33)" onmouseover="showTip(event, 'fs6', 33)" class="id">leftKeyVal</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs1', 34)" onmouseover="showTip(event, 'fs1', 34)" class="m">Map</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs7', 35)" onmouseover="showTip(event, 'fs7', 35)" class="id">toSeq</span> <span onmouseout="hideTip(event, 'fs4', 36)" onmouseover="showTip(event, 'fs4', 36)" class="id">left</span>
+      <span onmouseout="hideTip(event, 'fs8', 37)" onmouseover="showTip(event, 'fs8', 37)" class="k">seq</span> <span class="pn">{</span>
+        <span class="k">for</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs9', 38)" onmouseover="showTip(event, 'fs9', 38)" class="id">key</span><span class="pn">,</span> <span onmouseout="hideTip(event, 'fs10', 39)" onmouseover="showTip(event, 'fs10', 39)" class="id">lv</span><span class="pn">)</span> <span class="k">in</span> <span onmouseout="hideTip(event, 'fs6', 40)" onmouseover="showTip(event, 'fs6', 40)" class="id">leftKeyVal</span> <span class="k">do</span>
+          <span class="k">let</span> <span onmouseout="hideTip(event, 'fs18', 41)" onmouseover="showTip(event, 'fs18', 41)" class="id">joinKey</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs15', 42)" onmouseover="showTip(event, 'fs15', 42)" class="fn">joinOn</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs9', 43)" onmouseover="showTip(event, 'fs9', 43)" class="id">key</span><span class="pn">,</span> <span onmouseout="hideTip(event, 'fs10', 44)" onmouseover="showTip(event, 'fs10', 44)" class="id">lv</span><span class="pn">)</span>
+          <span class="k">let</span> <span onmouseout="hideTip(event, 'fs19', 45)" onmouseover="showTip(event, 'fs19', 45)" class="id">r1Value</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs1', 46)" onmouseover="showTip(event, 'fs1', 46)" class="m">Map</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs13', 47)" onmouseover="showTip(event, 'fs13', 47)" class="id">tryFind</span> <span onmouseout="hideTip(event, 'fs18', 48)" onmouseover="showTip(event, 'fs18', 48)" class="id">joinKey</span> <span onmouseout="hideTip(event, 'fs16', 49)" onmouseover="showTip(event, 'fs16', 49)" class="id">right1</span>
+          <span class="k">let</span> <span onmouseout="hideTip(event, 'fs20', 50)" onmouseover="showTip(event, 'fs20', 50)" class="id">r2Value</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs1', 51)" onmouseover="showTip(event, 'fs1', 51)" class="m">Map</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs13', 52)" onmouseover="showTip(event, 'fs13', 52)" class="id">tryFind</span> <span onmouseout="hideTip(event, 'fs18', 53)" onmouseover="showTip(event, 'fs18', 53)" class="id">joinKey</span> <span onmouseout="hideTip(event, 'fs17', 54)" onmouseover="showTip(event, 'fs17', 54)" class="id">right2</span>
+          <span class="k">match</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs19', 55)" onmouseover="showTip(event, 'fs19', 55)" class="id">r1Value</span><span class="pn">,</span> <span onmouseout="hideTip(event, 'fs20', 56)" onmouseover="showTip(event, 'fs20', 56)" class="id">r2Value</span><span class="pn">)</span> <span class="k">with</span>
+          <span class="pn">|</span> <span onmouseout="hideTip(event, 'fs21', 57)" onmouseover="showTip(event, 'fs21', 57)" class="uc">Some</span> <span onmouseout="hideTip(event, 'fs22', 58)" onmouseover="showTip(event, 'fs22', 58)" class="id">r1</span><span class="pn">,</span> <span onmouseout="hideTip(event, 'fs21', 59)" onmouseover="showTip(event, 'fs21', 59)" class="uc">Some</span> <span onmouseout="hideTip(event, 'fs23', 60)" onmouseover="showTip(event, 'fs23', 60)" class="id">r2</span> <span class="k">-&gt;</span> <span class="k">yield</span> <span onmouseout="hideTip(event, 'fs9', 61)" onmouseover="showTip(event, 'fs9', 61)" class="id">key</span><span class="pn">,</span> <span onmouseout="hideTip(event, 'fs10', 62)" onmouseover="showTip(event, 'fs10', 62)" class="id">lv</span><span class="pn">,</span> <span onmouseout="hideTip(event, 'fs22', 63)" onmouseover="showTip(event, 'fs22', 63)" class="id">r1</span><span class="pn">,</span> <span onmouseout="hideTip(event, 'fs23', 64)" onmouseover="showTip(event, 'fs23', 64)" class="id">r2</span>
+          <span class="pn">|</span> <span class="id">_</span> <span class="k">-&gt;</span> <span class="pn">(</span><span class="pn">)</span>
+        <span class="pn">}</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">Multiple items<br />module Map<br /><br />from Microsoft.FSharp.Collections<br /><br />--------------------<br />type Map&lt;&#39;Key,&#39;Value (requires comparison)&gt; =<br />&#160;&#160;interface IReadOnlyDictionary&lt;&#39;Key,&#39;Value&gt;<br />&#160;&#160;interface IReadOnlyCollection&lt;KeyValuePair&lt;&#39;Key,&#39;Value&gt;&gt;<br />&#160;&#160;interface IEnumerable<br />&#160;&#160;interface IComparable<br />&#160;&#160;interface IEnumerable&lt;KeyValuePair&lt;&#39;Key,&#39;Value&gt;&gt;<br />&#160;&#160;interface ICollection&lt;KeyValuePair&lt;&#39;Key,&#39;Value&gt;&gt;<br />&#160;&#160;interface IDictionary&lt;&#39;Key,&#39;Value&gt;<br />&#160;&#160;new : elements:seq&lt;&#39;Key * &#39;Value&gt; -&gt; Map&lt;&#39;Key,&#39;Value&gt;<br />&#160;&#160;member Add : key:&#39;Key * value:&#39;Value -&gt; Map&lt;&#39;Key,&#39;Value&gt;<br />&#160;&#160;member ContainsKey : key:&#39;Key -&gt; bool<br />&#160;&#160;...<br /><br />--------------------<br />new : elements:seq&lt;&#39;Key * &#39;Value&gt; -&gt; Map&lt;&#39;Key,&#39;Value&gt;</div>
+<div class="tip" id="fs2">val leftJoin2 : joinOn:(&#39;a * &#39;b -&gt; &#39;c) -&gt; left:Map&lt;&#39;a,&#39;b&gt; -&gt; right:Map&lt;&#39;c,&#39;d&gt; -&gt; seq&lt;&#39;a * &#39;b * &#39;d option&gt; (requires comparison and comparison)<br /><em><br /><br />&#160;Left join lhs map with rhs using a rhs map key selector</em></div>
+<div class="tip" id="fs3">val joinOn : (&#39;a * &#39;b -&gt; &#39;c) (requires comparison and comparison)</div>
+<div class="tip" id="fs4">val left : Map&lt;&#39;a,&#39;b&gt; (requires comparison)</div>
+<div class="tip" id="fs5">val right : Map&lt;&#39;c,&#39;d&gt; (requires comparison)</div>
+<div class="tip" id="fs6">val leftKeyVal : seq&lt;&#39;a * &#39;b&gt; (requires comparison)</div>
+<div class="tip" id="fs7">val toSeq : table:Map&lt;&#39;Key,&#39;T&gt; -&gt; seq&lt;&#39;Key * &#39;T&gt; (requires comparison)</div>
+<div class="tip" id="fs8">Multiple items<br />val seq : sequence:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt;<br /><br />--------------------<br />type seq&lt;&#39;T&gt; = System.Collections.Generic.IEnumerable&lt;&#39;T&gt;</div>
+<div class="tip" id="fs9">val key : &#39;a (requires comparison)</div>
+<div class="tip" id="fs10">val lv : &#39;b</div>
+<div class="tip" id="fs11">val joinKey : &#39;c (requires comparison)</div>
+<div class="tip" id="fs12">val rightValueOpt : &#39;d option</div>
+<div class="tip" id="fs13">val tryFind : key:&#39;Key -&gt; table:Map&lt;&#39;Key,&#39;T&gt; -&gt; &#39;T option (requires comparison)</div>
+<div class="tip" id="fs14">val innerJoin3 : joinOn:(&#39;a * &#39;b -&gt; &#39;k) -&gt; left:Map&lt;&#39;a,&#39;b&gt; -&gt; right1:Map&lt;&#39;k,&#39;c&gt; -&gt; right2:Map&lt;&#39;k,&#39;d&gt; -&gt; seq&lt;&#39;a * &#39;b * &#39;c * &#39;d&gt; (requires comparison and comparison)<br /><em><br /><br />&#160;Inner join lhs map with 2 rhs maps with &#39;k key selection on lhs map</em></div>
+<div class="tip" id="fs15">val joinOn : (&#39;a * &#39;b -&gt; &#39;k) (requires comparison and comparison)</div>
+<div class="tip" id="fs16">val right1 : Map&lt;&#39;k,&#39;c&gt; (requires comparison)</div>
+<div class="tip" id="fs17">val right2 : Map&lt;&#39;k,&#39;d&gt; (requires comparison)</div>
+<div class="tip" id="fs18">val joinKey : &#39;k (requires comparison)</div>
+<div class="tip" id="fs19">val r1Value : &#39;c option</div>
+<div class="tip" id="fs20">val r2Value : &#39;d option</div>
+<div class="tip" id="fs21">union case Option.Some: Value: &#39;T -&gt; Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs22">val r1 : &#39;c</div>
+<div class="tip" id="fs23">val r2 : &#39;d</div>
+

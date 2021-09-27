@@ -1,0 +1,17 @@
+let str = "somebabananbanana text babanana banana"
+let pattern = "banana"
+
+let str_len = str.Length
+let pattern_len = pattern.Length
+
+let mutable score = 0
+
+for i in 0..(str_len - 1) do
+    if str.[i] = pattern.[0] && i + pattern_len <= str_len then
+        let mutable isValid = true
+        for j in 0..(pattern_len - 1) do
+            isValid <- isValid && str.[i + j] = pattern.[j]
+        
+        if isValid then
+            score <- score + 1
+

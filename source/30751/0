@@ -1,0 +1,86 @@
+(*
+[CONTEXT] Trying to access box.com for file storage 
+          (in interactive console app)
+  Concept could be used for other OAuth providers
+Box.com has the following info:
+  To complete an OAuth 2.0 flow the following steps need to be completed.
+
+    1. Configure the Box SDK
+    2. Redirect the user to the Box website (with REDIRECT_URI)
+    3. The user grants the application access
+    4. Exchange the authorization code for an access token
+
+Step 4: "The user is redirected to your application's redirect URL 
+with a query parameter containing a short-lived authorization code."
+Needed to receive that request to exchange the code
+So have the console app create a 'webserver' and capture code [this script]. 
+
+*)
+
+open System
+open System.Net
+
+let host = "http://localhost:8888/"
+
+let hl = new HttpListener()
+hl.Prefixes.Add host
+hl.Start()
+printfn "Listening for HTTP on %s ..." host
+
+// Note: The GetContext method blocks while waiting for a request.
+let context = hl.GetContext()
+
+///incoming request
+let request = context.Request
+///querystring code key for OAuth2
+let code = request.QueryString.["code"]
+
+//printfn "Url.OriginalString: %O" request.Url.OriginalString
+//printfn "RawUrl: %O" request.RawUrl
+//printfn "%s" code
+
+// Obtain a response object to make outgoing response.
+//Already have what is needed (querystring code)
+//the response lets the sending server know I got it
+let response = context.Response
+
+let responseString = 
+  """
+  <!DOCTYPE html>
+  <html lang="en">
+    <head>
+      <meta charset="utf-8">
+      <title>OAuth2 Code Page</title>
+    </head>
+    <body>
+      <!-- page content -->
+      Got the code! @ """ + DateTime.Now.ToString() + """
+    </body>
+  </html>
+  """
+
+let encoding = System.Text.Encoding.UTF8
+let txt = encoding.GetBytes responseString
+
+//each are optional header options. Actually works ok without them
+response.ContentEncoding  <- encoding
+response.ContentLength64  <- Convert.ToInt64( txt.Length )
+response.ContentType      <- System.Net.Mime.MediaTypeNames.Text.Html
+response.KeepAlive        <- false
+
+//send response
+response.OutputStream.Write (txt, 0, txt.Length)
+//must close
+response.OutputStream.Close()
+
+//stop the HTTP listener
+hl.Stop();
+
+//the value I was wanting 
+//as part of a client side OAuth 2 ping pong
+printfn "%s" code
+
+
+//next use this to send new http request for exchange for Access Token
+
+

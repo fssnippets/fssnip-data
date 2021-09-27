@@ -1,0 +1,31 @@
+open Services
+open System.Threading
+open Microsoft.Extensions.Hosting
+open System.Threading.Tasks
+
+[<AbstractClass>]
+type BackgroundService () = 
+    let mutable BackgroundTask : Task = null
+    let CancelTokenSource : CancellationTokenSource = new CancellationTokenSource()
+    abstract Execute : CancellationToken -> unit
+    interface IHostedService with
+        override x.StartAsync (cancellationToken : CancellationToken) : Task =
+            let ct = CancelTokenSource.Token
+            BackgroundTask <- Task.Factory.StartNew(fun () -> x.Execute(ct), ct, TaskCreationOptions.LongRunning, TaskScheduler.Default)
+            Task.CompletedTask
+        override x.StopAsync (cancellationToken : CancellationToken) : Task =
+            CancelTokenSource.Cancel()
+            Task.CompletedTask
+
+type PeriodicService () =
+    inherit BackgroundService()
+    let delay = 15 * 1000
+    override x.Execute ct =
+        while not ct.IsCancellationRequested do
+            try
+                printfn "Periodic Executing..."
+                // do your thing
+                Task.Delay delay |> Async.AwaitTask |> Async.RunSynchronously
+            with
+            | e -> printfn "Caught %s %s" e.Message e.StackTrace
+        printfn "[CANCEL] Periodic service"

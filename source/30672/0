@@ -1,0 +1,12 @@
+type Z = struct end
+type S<'n> = struct end
+
+type List<'n,'b> = L of 'b list
+let nil : List<Z, 'b> = L []
+let cons (b:'b) ((L bs) : List<'n, 'b>) : List<S<'n>,'b> = L (b::bs)
+
+[<EntryPoint>]
+let main args =
+  let l3 : List<S<S<S<Z>>>,int> = cons 1 (cons 2 (cons 3 nil))
+  printfn "%A; %A" l3 (cons 3 nil)
+  0

@@ -1,0 +1,144 @@
+namespace Sink.Subscriptions
+
+module MatterMost =
+    open System
+    open Sink.Serdes
+    open System.Text
+    open Thoth.Json.Net
+    open System.Threading
+    open MatterMostAdapter
+    open Microsoft.Bot.Schema
+    open System.Net.WebSockets
+    open System.Threading.Tasks
+    open Sink.Config.ParsedConfig
+    open FSharp.Control.Websockets
+    open MatterMost.Types.Websockets
+    open Sink.Bot.BotHelpers.Proactive
+    open FSharp.Control.Tasks.V2.ContextInsensitive
+
+    module Bot = Sink.Bot.BotHelpers
+
+    let decodeResponse : Decoder<WebsocketResponse> =
+        Decode.oneOf [
+            WebsocketResponse.Decode EmptyResponse.Decode |> mapDecoder WebsocketResponse.Empty
+        ]
+
+    let decodeEventData : Decoder<WebsocketEvent> =
+        Decode.oneOf [
+            WebsocketEvent.Decode HelloEvent.Decode        |> mapDecoder WebsocketEvent.Hello
+            WebsocketEvent.Decode PostedEvent.Decode       |> mapDecoder WebsocketEvent.Posted
+            WebsocketEvent.Decode TypingEvent.Decode       |> mapDecoder WebsocketEvent.Typing
+            WebsocketEvent.Decode StatusChangeEvent.Decode |> mapDecoder WebsocketEvent.StatusChange
+        ]
+
+    let decodeIncomingMessage : Decoder<IncomingWebsocketMessage> =
+        Decode.oneOf [
+             decodeResponse  |> mapDecoder IncomingWebsocketMessage.Response
+             decodeEventData |> mapDecoder IncomingWebsocketMessage.Event
+        ]
+
+    // Testing
+    let handleTyping (botId, httpContext) (handler: ProactiveCallback -> Task) (event: WebsocketEvent<TypingEvent>) = task {
+        let user = ChannelAccount (id = event.Data.UserId, Name = "<to retrieve from MM>")
+
+        let callback: ProactiveCallback =
+            fun ctx cancellationToken ->
+                let activity =
+                    Activity (
+                        Type         = ActivityTypes.ConversationUpdate,
+                        // The 'Channel' identifier - "mattermost" in this case
+                        ChannelId    = MatterMostHelper.ChannelId,
+                        // The user who created the post
+                        From         = user,
+                        Recipient    = ChannelAccount (Id = botId),
+                        // The MatterMost channel the message was created in
+                        Conversation = ConversationAccount (Id = event.Broadcast.ChannelId),
+                        MembersAdded = [| user |]
+                    )
+                Bot.runSingle ctx activity :> Task
+
+        do! handler callback
+    }
+
+    let handleStatusChange (botId, httpContext) (handler: ProactiveCallback -> Task) (event: WebsocketEvent<StatusChangeEvent>) = task {
+        // TODO: Retrieve username
+        let user = ChannelAccount (Id = event.Data.UserId, Name = "<to retrieve from MM>")
+
+        let callback: ProactiveCallback =
+            fun ctx cancellationToken ->
+                let activity =
+                    Activity (
+                        Type         = "statusChange",
+                        Text         = event.Data.Status,
+                        // The 'Channel' identifier - "mattermost" in this case
+                        ChannelId    = MatterMostHelper.ChannelId,
+                        // The user who's status changed
+                        From         = user,
+                        Recipient    = ChannelAccount (Id = botId),
+                        // This will be empty as it refers to no channel!
+                        Conversation = ConversationAccount (Id = event.Broadcast.ChannelId),
+                        MembersAdded = [| user |]
+                    )
+                Bot.runSingle ctx activity :> Task
+
+        do! handler callback
+    }
+
+    let handleWebsocketEvent (botId, httpContext) (handler: ProactiveCallback -> Task) websocketEvent : Task = upcast task {
+        match websocketEvent with
+        | WebsocketEvent.StatusChange event -> do! handleStatusChange (botId, httpContext) handler event
+        | WebsocketEvent.Typing event       -> do! handleTyping (botId, httpContext) handler event
+        | _ -> ()
+    }
+
+    let rec subscribe (logger: Serilog.ILogger) (config: MatterMostWebsocketConfig) (websocketEventHandler: WebsocketEvent -> Task) = task {
+        let cancellationToken = CancellationToken.None
+
+        let auth =
+            (MatterMost.Websockets.generateAuthRequestBody config.Token)
+                .ToString (Newtonsoft.Json.Formatting.None)
+                |> Encoding.UTF8.GetBytes
+
+        let websocket = new ClientWebSocket ()
+
+        // Connect
+        do! websocket.ConnectAsync (Uri config.Uri, cancellationToken)
+
+        // Authenticate
+        do! websocket.SendAsync (ArraySegment auth, WebSocketMessageType.Text, true, cancellationToken)
+
+        let threadSafeWebSocket = ThreadSafeWebSocket.createFromWebSocket websocket
+
+        while threadSafeWebSocket.State = WebSocketState.Open do
+            try
+                match! threadSafeWebSocket |> ThreadSafeWebSocket.receiveMessageAsUTF8 with
+                | Ok (WebSocket.ReceiveUTF8Result.String text) ->
+                    logger.Verbose ("Received: {payload}", text)
+
+                    match text |> Decode.fromString decodeIncomingMessage with
+                    | Ok (IncomingWebsocketMessage.Response response) ->
+                        logger.Verbose ("Decoded response: {response}", response)
+
+                    | Ok (IncomingWebsocketMessage.Event event) ->
+                        logger.Verbose ("Decoded payload: {event}", event)
+                        try
+                            do! websocketEventHandler event
+                        with
+                        | e -> logger.Error (e, "Error handling event: {message}", e.Message)
+
+                    | Error err ->
+                        logger.Error ("Error decoding:\n{error}", err)
+
+                | Ok (WebSocket.ReceiveUTF8Result.Closed (status, reason)) ->
+                    logger.Warning ("Socket closed with status {status} - Reason: {reason}", status, reason)
+
+                | Error ex ->
+                    logger.Error (ex.SourceException, "Exception thrown while receiving")
+
+            with e ->
+                logger.Error (e, "Unhandled error: {err}", e.Message)
+
+        // TODO: Escape hatch? Back-off? CancellationToken?
+        do! subscribe logger config websocketEventHandler
+    }
+

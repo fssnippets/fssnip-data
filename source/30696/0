@@ -1,0 +1,159 @@
+type Token =
+  | Ident of string
+  | Operator of char
+  | Bracket of char
+  | Number of float
+  | String of string
+
+let str rcl = System.String(Array.rev(Array.ofSeq rcl))
+let isLetter c = (c >= 'A' && c <= 'Z') || c = '$'
+let isOp c = "+".Contains(string c)
+let isBracket c = "()".Contains(string c)
+let isNumber c = (c >= '0' && c <= '9')
+
+let rec tokenize toks = function
+  | c::cs when isLetter c -> ident toks [c] cs
+  | c::cs when isNumber c -> number toks [c] cs
+  | c::cs when isBracket c -> tokenize ((Bracket c)::toks) cs
+  | c::cs when isOp c -> tokenize ((Operator c)::toks) cs
+  | '"'::cs -> strend toks [] cs
+  | ' '::cs -> tokenize toks cs
+  | [] -> List.rev toks
+  | cs -> failwithf "Cannot tokenize: %s" (str (List.rev cs))
+
+and strend toks acc = function
+  | '"'::cs -> tokenize (String(str acc)::toks) cs
+  | c::cs -> strend toks (c::acc) cs
+  | [] -> failwith "End of string not found"
+
+and ident toks acc = function
+  | c::cs when isLetter c -> ident toks (c::acc) cs
+  | input -> tokenize (Ident(str acc)::toks) input
+
+and number toks acc = function
+  | c::cs when isNumber c -> number toks (c::acc) cs
+  | '.'::cs when not (List.contains '.' acc) -> number toks ('.'::acc) cs
+  | input -> tokenize (Number(float (str acc))::toks) input
+
+let tokenizeString s = tokenize [] (List.ofSeq s)
+
+tokenizeString "10 PRINT \"{CLR/HOME}\""
+tokenizeString "20 PRINT CHR$(205.5 + RND(1))"
+tokenizeString "40 GOTO 20"
+
+type Value =
+  | StringValue of string
+  | NumberValue of float
+
+type Expression = 
+  | Variable of string
+  | Const of Value
+  | Binary of char * Expression * Expression
+  | Function of string * Expression list
+
+type Command = 
+  | Print of Expression
+  | Goto of int
+  | List 
+  | Run 
+
+let rec parseBinary left = function
+  | (Operator o)::toks -> 
+      let right, toks = parseExpr toks
+      Binary(o, left, right), toks
+  | toks -> left, toks
+
+and parseExpr = function
+  | (String s)::toks -> parseBinary (Const(StringValue s)) toks
+  | (Number n)::toks -> parseBinary (Const(NumberValue n)) toks
+  | (Ident i)::(Bracket '(')::toks ->
+      let rec loop args toks = 
+        match toks with 
+        | (Bracket ')')::toks -> List.rev args, toks
+        | _ -> 
+            let arg, toks = parseExpr toks 
+            loop (arg::args) toks
+      let args, toks = loop [] toks
+      parseBinary (Function(i, args)) toks
+  | (Ident v)::toks -> parseBinary (Variable v) toks
+  | toks -> failwithf "Parsing expr failed. Unexpected: %A" toks
+
+let parseInput toks = 
+  let line, toks = 
+    match toks with
+    | (Number ln)::toks -> Some(int ln), toks
+    | _ -> None, toks
+  match toks with 
+  | (Ident "LIST")::[] -> line, List
+  | (Ident "RUN")::[] -> line, Run
+  | (Ident "GOTO")::(Number lbl)::[] -> line, Goto(int lbl)
+  | (Ident "PRINT")::toks -> 
+      let arg, toks = parseExpr toks
+      if toks <> [] then failwithf "Parsing print failed. Unexpected: %A" toks
+      line, Print(arg)
+  | _ -> failwithf "Parsing command failed. Unexpected: %A" toks
+
+parseInput (tokenizeString "10 PRINT \"{CLR/HOME}\"")
+parseInput (tokenizeString "20 PRINT CHR$(205.5 + RND(1))")
+parseInput (tokenizeString "30 GOTO 20")
+
+type Program = 
+  list<int * Command>
+
+let rec update (line, cmd) = function
+  | [] -> [line, cmd]
+  | (l, c)::p when line = l -> (l, cmd)::p
+  | (l, c)::p when line < l -> (line, cmd)::(l, c)::p
+  | (l, c)::p -> (l, c)::(update (line, cmd) p)
+
+let rnd = System.Random()
+
+let rec evaluate = function
+  | Const v -> v
+  | Binary('+', l, r) -> 
+      match evaluate l, evaluate r with 
+      | NumberValue l, NumberValue r -> NumberValue (l + r)
+      | _ -> failwith "Evaluating + failed"
+  | Function("RND", [arg]) ->
+      match evaluate arg with 
+      | NumberValue arg -> NumberValue(float (rnd.Next(int arg + 1)))
+      | _ -> failwith "RND requires numeric argument"
+  | Function("CHR$", [arg]) ->
+      match evaluate arg with 
+      | NumberValue arg when int arg = 205 -> StringValue("\\")
+      | NumberValue arg when int arg = 206 -> StringValue("//")
+      | _ -> failwith "CHR$ is hard"
+
+let format = function
+  | StringValue s -> s
+  | NumberValue n -> string n
+
+let rec run (ln, cmd) program = 
+  match cmd with 
+  | List ->
+      for n, l in program do 
+        printfn "%d %A" n l
+  | Run ->
+      if not (List.isEmpty program) then 
+        run (List.head program) program
+  | Goto lbl ->
+      match program |> List.tryFind (fun (l, _) -> l = lbl) with 
+      | Some ln -> run ln program
+      | None -> failwithf "Line %d not found in program: %A" lbl program
+  | Print e ->
+      printf "%s" (format (evaluate e))
+      if ln <> -1 then 
+        match program |> List.tryFind (fun (l, _) -> l > ln) with 
+        | Some ln -> run ln program
+        | _ -> ()
+
+let input cmd program = 
+  match parseInput (tokenizeString cmd) with 
+  | Some(ln), cmd -> update (ln, cmd) program
+  | None, cmd -> run (-1, cmd) program; program
+
+[]
+|> input "10 PRINT \"{CLR/HOME}\""
+|> input "20 PRINT CHR$(205.5 + RND(1))"
+|> input "30 GOTO 20"
+|> input "RUN"

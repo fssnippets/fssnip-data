@@ -1,0 +1,15 @@
+// take an order list of tuple key value and convert to a crosstab of key & values
+let crosstab set = Seq.fold (fun a (x,y) -> if (fst (List.head a)) = x then [(x,[y] @ (snd (List.head a)))] @ a.Tail else [(x,[y])] @ a) [(fst (Seq.head set),[])] set
+
+(*
+    takes advantage of tail of a single linked list being a list, to immutably accumulate without copying data.
+    example with type anotation 
+
+crosstab [(1,'a'); (1,'b');(1,'c');(2,'A');(2,'B');(3,'x')] = [(3, ['x']); (2, ['B'; 'A']); (1, ['c'; 'b'; 'a'])]
+
+let crosstab (set : ('a * 'b) seq) : ('a * 'b list) list = 
+    let keyofhead (a : ('a * 'b list) list) : 'a = fst (List.head a)
+    let crosshead (a : ('a * 'b list) list) : 'b list = snd (List.head a)
+    let statewithfirstkey : ('a * 'b list) list = [(fst (Seq.head set),[])]
+    Seq.fold (fun a (x,y) -> if (keyofhead a) = x then [(x,[y] @ (crosshead a))] @ a.Tail else [(x,[y])] @ a) statewithfirstkey set
+*)

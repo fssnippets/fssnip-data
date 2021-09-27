@@ -1,0 +1,37 @@
+// https://en.wikipedia.org/wiki/Monty_Hall_problem
+
+type Door = Door of int
+
+let rng = System.Random ()
+
+let play (prize: Door) (pick: Door) (strategy: Door -> Door -> Door) =
+  let remaining =
+    if pick = prize then
+      [ Door 1 ; Door 2 ; Door 3 ] 
+      |> List.except [pick]
+      |> List.item (rng.Next 2)
+    else
+      prize
+  (strategy pick remaining) = prize
+
+let test strategy number =
+  let randomDoor () = rng.Next 3 + 1 |> Door
+  let wins = 
+    [ 1 .. number ]
+    |> List.filter  (fun _ -> play (randomDoor ()) (randomDoor ()) strategy)
+    |> List.length
+  float wins / float number * 100.0
+
+test (fun first _ -> first) 1000
+|> printfn "Keep first door : %.2f%% success" 
+
+test (fun _ other -> other) 1000
+|> printfn "Switch door : %.2f%% success"
+
+test (fun first other -> if rng.Next 2 = 0 then first else other) 1000
+|> printfn "Choose randomly : %.2f%% success"
+
+// example output :
+// Keep first door : 33.60% success
+// Switch door : 66.80% success
+// Choose randomly : 49.30% success

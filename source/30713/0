@@ -1,0 +1,38 @@
+open System
+open System.Runtime.CompilerServices
+
+// See https://devblogs.microsoft.com/pfxteam/await-anything/ for more details on awaitables/awaiters.
+
+type Async with
+    static member inline AwaitCSharpAwaitable< ^TAwaitable, ^TAwaiter, ^TResult when
+                                               ^TAwaiter :> ICriticalNotifyCompletion and
+                                               ^TAwaitable : (member GetAwaiter : unit -> ^TAwaiter) and
+                                               ^TAwaiter : (member IsCompleted : bool) and
+                                               ^TAwaiter : (member GetResult : unit -> ^TResult)>
+                                               (awaitable : ^TAwaitable) : Async< ^TResult> =
+
+        Async.FromContinuations(fun (sk,ek,_) ->
+            let awaiter = (^TAwaitable : (member GetAwaiter : unit -> ^TAwaiter) awaitable)
+            let oncompleted () =
+                let result =
+                    try Ok (^TAwaiter : (member GetResult : unit -> ^TResult) awaiter)
+                    with e -> Error e
+
+                match result with
+                | Ok t -> sk t
+                | Error e -> ek e
+
+            if (^TAwaiter : (member IsCompleted : bool) awaiter) then 
+                oncompleted()
+            else
+                // NB does not flow the execution context
+                awaiter.UnsafeOnCompleted(Action oncompleted)
+        )
+
+// examples
+
+open System.Threading.Tasks
+
+let x = Async.AwaitCSharpAwaitable(Task.Delay(1000)) |> Async.RunSynchronously
+let y = Async.AwaitCSharpAwaitable(new ValueTask()) |> Async.RunSynchronously
+let z = Async.AwaitCSharpAwaitable(new ValueTask<_>(42)) |> Async.RunSynchronously

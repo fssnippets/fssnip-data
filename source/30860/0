@@ -1,0 +1,9 @@
+let getLogsForLastMonth () =
+    sprintf @"%s\%s" Licensing.getLicenseDirectoryPath "logs"
+    |> Directory.GetFiles
+    |> Array.sort
+    |> Array.rev
+    |> Array.take 2
+    |> Array.map (fun f -> File.ReadAllText f)
+    |> Array.rev
+    |> Array.fold (+) ""

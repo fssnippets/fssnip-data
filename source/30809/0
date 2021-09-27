@@ -1,0 +1,20 @@
+(* Project Euler: Problem 7: 10001st prime
+By listing the first six prime numbers: 2, 3, 5, 7, 11, 13,
+we can see that the 6th prime is 13.
+What is the 10001st prime number? *)
+
+// F#.Net Code
+let numPrimes = 10001
+let primes = Array.zeroCreate numPrimes // Create integer array of size 10001 elements
+primes.[0] <- 2 // Initialize first prime = 2
+let mutable primeIndex, oddNumber = 1, 3
+while primeIndex < numPrimes do // Iterate through odd numbers starting from 3
+    // if this oddNumber isn't divisible by every prime number we already added in the list
+    if primes.[0 .. primeIndex-1] |> Array.forall (fun divisor -> oddNumber % divisor <> 0) then
+        primes.[primeIndex] <- oddNumber // then add it
+        primeIndex <- primeIndex + 1
+    oddNumber <- oddNumber + 2 // Do the same check for the next odd Number
+primes |> Array.last
+
+// Answer = 104743
+

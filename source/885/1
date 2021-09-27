@@ -1,0 +1,10 @@
+
+let rec qsort  = function
+    | [] ->  []
+    | pivot::rest -> let left, right = rest |> List.partition(fun i -> i < pivot)
+                     (qsort left) @ [pivot] @ qsort right
+
+// Test
+qsort [-22;2;34;-2;0;9;-5;14;-55;74;13]
+// Results
+[-55; -22; -5; -2; 0; 2; 9; 13; 14; 34; 74]

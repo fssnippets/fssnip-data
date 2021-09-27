@@ -1,0 +1,33 @@
+open dotenv.net
+open Argu
+
+type DotenvReader(?trimValues) =
+    do DotEnv.Load(DotEnvOptions(?trimValues = trimValues))
+    let envVars = DotEnv.Read()
+    interface IConfigurationReader with
+        member _.Name = "dotenv"
+        member _.GetValue key = envVars.[key]
+
+type Args =
+    // Other arguments here...
+    | [<NoCommandLine; CustomAppSettings "API_KEY">] ApiKey of string
+    | [<NoCommandLine; CustomAppSettings "API_SECRET">] ApiSecret of string
+    interface IArgParserTemplate with
+        member self.Usage =
+            // for brevity
+            ""
+
+let getToken (apiKey, apiSecret) =
+    failwith "function that needs an API key and an API secret and returns a bearer token."
+
+let main argv =
+    let parser = ArgumentParser.Create(checkStructure = false, errorHandler = ProcessExiter())
+    let result = parser.Parse(argv, DotenvReader(trimValues = true))
+
+    let apiKey = result.GetResult <@ ApiKey @>
+    let apiSecret = result.GetResult <@ ApiSecret @>
+    let token = getToken (apiKey, apiSecret)
+
+    // ...
+
+    0

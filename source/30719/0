@@ -1,0 +1,23 @@
+module Map =    
+    /// Left join lhs map with rhs using a rhs map key selector
+    let leftJoin2 joinOn left right =
+      let leftKeyVal = Map.toSeq left
+      seq {
+        for (key, lv) in leftKeyVal do
+          let joinKey = joinOn (key, lv)
+          let rightValueOpt = Map.tryFind joinKey right
+          yield key, lv, rightValueOpt
+        }
+      
+    /// Inner join lhs map with 2 rhs maps with 'k key selection on lhs map
+    let innerJoin3 joinOn left (right1: Map<'k,_>) (right2: Map<'k,_>) =
+      let leftKeyVal = Map.toSeq left
+      seq {
+        for (key, lv) in leftKeyVal do
+          let joinKey = joinOn (key, lv)
+          let r1Value = Map.tryFind joinKey right1
+          let r2Value = Map.tryFind joinKey right2
+          match (r1Value, r2Value) with
+          | Some r1, Some r2 -> yield key, lv, r1, r2
+          | _ -> ()
+        }

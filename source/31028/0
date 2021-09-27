@@ -1,0 +1,60 @@
+(*
+In 1995, they introduced blue M&M’s. Before then, the color mix in a bag of plain M&M’s was 
+30% Brown, 20% Yellow, 20% Red, 10% Green, 10% Orange, 10% Tan. 
+Afterward it was 24% Blue, 20% Green, 16% Orange, 14% Yellow, 13% Red, 13% Brown. 
+Suppose a friend of mine has two bags of M&M’s, and he tells me that one is from 1994 and one from 1996. 
+He won’t tell me which is which, but he gives me one M&M from each bag. 
+One is yellow and one is green. What is the probability that the yellow one came from the 1994 bag?
+
+Downey, Allen B.. Think Bayes . O'Reilly Media. Kindle Edition. 
+*)
+
+#r "nuget: Microsoft.ML.Probabilistic.Compiler.Visualizers.Windows"
+#r @"../FsharpWrapper/bin/Debug/net48/Microsoft.ML.Probabilistic.FSharp.dll" //need to compile this from infer.net source
+
+open Microsoft.ML.Probabilistic.Models
+open Microsoft.ML.Probabilistic.FSharp
+open Microsoft.ML.Probabilistic.Distributions
+
+type Cls = Br | Bl | Y | R | G | T | O
+
+let check ls = (ls |> List.sumBy snd) - 1.0 |> abs  < 0.000000001
+
+let ``1994 mix`` = [Br, 0.3; Y, 0.2; R, 0.2; G, 0.1; O, 0.1; T, 0.1; Bl, 0.0]
+let ``1996 mix`` = [Br,0.13; Y,0.14; R,0.13; G,0.20; O,0.16; T, 0.0; Bl,0.24]
+
+check ``1994 mix`` 
+check ``1996 mix``
+
+let bag94Mix() = ``1994 mix`` |> Seq.map snd |> Seq.toArray |> Variable.Discrete
+let bag96Mix() = ``1996 mix`` |> Seq.map snd |> Seq.toArray |> Variable.Discrete
+
+let mutable bag1 = Variable.New<int>().Named("bag1")
+let mutable bag2 = Variable.New<int>().Named("bag2")
+
+let ``p(bag1=94)`` = Variable.Bernoulli(0.5).Named("p(bag1=94)")
+
+Variable.IfBlock ``p(bag1=94)`` 
+            (fun _ -> bag94Mix() |> bag1.SetTo; bag96Mix() |> bag2.SetTo)
+            (fun _ -> bag96Mix() |> bag1.SetTo; bag94Mix() |> bag2.SetTo)
+
+bag1.ObservedValue <- 1 //Y
+bag2.ObservedValue <- 3 //G
+
+let ie = InferenceEngine() 
+ie.ShowFactorGraph <- true  //need to install graphviz s.t. 'dot' command is available
+
+let ``p(bag1=94)_posterior`` = ie.Infer<Bernoulli>(``p(bag1=94)``) //, Microsoft.ML.Probabilistic.QueryTypes.Samples)
+
+module ManualMethod = 
+    //manual approach using the 'table' method (see book ref above)
+    let ``p(bag1=94)`` = 0.5 
+    let ``p(H|D,bag1=94)`` = 0.2 * 0.2    //likelihoods
+    let ``p(H|D,bag1=96)`` = 0.14 * 0.1 
+
+    let caseA_unormailzied = ``p(bag1=94)`` * ``p(H|D,bag1=94)``
+    let caseB_unormalized = (1.0 - ``p(bag1=94)``) * ``p(H|D,bag1=96)``
+    let ``p(D)`` = caseA_unormailzied + caseB_unormalized
+
+    let ``p(D|H,bag1=94)`` = caseA_unormailzied / ``p(D)``
+

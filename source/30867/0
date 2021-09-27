@@ -1,0 +1,155 @@
+/// Read from Neo4j and construct a read model
+namespace RealmWeaver.Server.WorldBuilding.Realm.Projection
+
+open Neo
+open System
+open FSharpPlus
+open FsToolkit.ErrorHandling
+open RealmWeaver.Common.General.Domain.Domain
+open RealmWeaver.Common.General.Domain.WorldBuilding.Realm.Types
+open RealmWeaver.Common.General.Domain.WorldBuilding.Realm.ReadModels
+open RealmWeaver.Common.General.Domain.WorldBuilding.SharedReadModels
+
+open type QueryBuilder
+
+module Helpers =
+    let asMemberSummary (props: EntityProperties) : MemberSummary =
+        RealmWeaver.Server.Users.Account.Projection.Helpers.asAccountSummaryProjection props
+
+module RealmQueryFilters =
+    let realmNameMatches (name: string) =
+        QueryBuilder.Where "r.Name =~ $Name" [ "Name", Neo.string name ]
+
+    let realmIdMatches (realmId: string) =
+        QueryBuilder.Where "r.Id = $Id" [ "Id", Neo.string realmId ]
+
+    let realmOwnerMatches (ownerId: string) =
+        QueryBuilder.Where "r.OwnerId =~ $OwnerId" [ "OwnerId", Neo.string ownerId ]
+
+    let realmCreatorMatches (creatorId: string) =
+        QueryBuilder.Where "r.CreatorId =~ $CreatorId" [ "CreatorId", Neo.string creatorId ]
+
+    let tagsMatch (themes: string list) =
+        QueryBuilder.Where "r.Tags IN $Tags" [ "Tags", Neo.stringList themes ]
+
+open RealmQueryFilters
+type ReadQueries =
+    static member GetRealmById (driver, RealmId realmId) =
+        ReadQueries.GetRealm (driver, realmIdMatches (string realmId))
+
+    static member GetRealmById (driver, realmId: Guid) =
+        ReadQueries.GetRealm (driver, realmIdMatches (string realmId))
+
+    static member GetRealmByName (driver, RealmName realmName) =
+        ReadQueries.GetRealm (driver, realmNameMatches realmName)
+
+    static member GetRealmByName (driver, realmName: string) =
+        ReadQueries.GetRealm (driver, realmNameMatches realmName)
+
+    static member GetRealm (driver, whereClause: QueryBuilderFun) =
+        [
+            Match      "(r:Realm)" []
+            whereClause (* WHERE ... *)
+            OptMatch   "(r) -[:HAS_TAG]-> (t:Tag)" []
+            OptMatch   "(r) -[:OWNED_BY]-> (o:Member)" []
+            OptMatch   "(r) -[:CREATED_BY]-> (cb:Member)" []
+            OptMatch   "(r) -[:HAS]-> (l:Location)" []
+            OptMatch   "(r) -[:HAS]-> (f:Faction)" []
+            Return     """
+                       r as Realm,
+                       collect(distinct t) as Tags,
+                       o as Owner,
+                       cb as CreatedBy,
+                       count(distinct l) as LocationCount,
+                       count(distinct f) as FactionCount
+                       """ []
+        ]
+        |> Neo.buildQuery
+        |> Neo.executeSession driver
+        |> Neo.returnOptional (fun (returns: QueryReturns) -> option {
+            let! realmNode    = returns.nodePropertiesOrNone "Realm"
+            let tagNodes      = returns.nodePropertiesList   "Tags"
+            let ownerNode     = returns.nodePropertiesOrNone "Owner"
+            let createdByNode = returns.nodePropertiesOrNone "CreatedBy"
+
+            return {
+                Id            = realmNode.string "Id" |> Guid.Parse
+                Name          = realmNode.string "Name"
+                Description   = realmNode.string "Description"
+                Members       = []
+                Tags          = tagNodes |> List.map (fun tagNode -> tagNode.string "Name")
+                CreatedAt     = realmNode.dateTime "CreatedAt"
+                Owner         = ownerNode |> Option.map Helpers.asMemberSummary
+                CreatedBy     = createdByNode |> Option.map Helpers.asMemberSummary
+                LocationCount = returns.int "LocationCount"
+                FactionCount  = returns.int "FactionCount"
+            }
+        })
+        |> Task.map (Result.map (Option.map snd))
+
+
+    static member GetRealms
+        (
+            driver, ?limit, ?skip,
+            ?realmWhereClause: QueryBuilderFun,
+            ?tagWhereClause: QueryBuilderFun,
+            ?ownerWhereClause: QueryBuilderFun,
+            ?creatorWhereClause: QueryBuilderFun,
+            ?orderByClause: QueryBuilderFun,
+            ?logger: Serilog.ILogger
+        ) =
+        let limit' = defaultArg limit 50
+        let skip' = defaultArg skip 0
+        let orderByClause = defaultArg orderByClause (OrderBy "r.Name DESC" [])
+
+        [
+            Match      "(r:Realm)" []
+            DynamicFun realmWhereClause
+            OptMatch   "(r) -[:HAS_TAG]-> (t:Tag)" []
+            DynamicFun tagWhereClause
+            OptMatch   "(r) -[:OWNED_BY]-> (o:Member)" []
+            DynamicFun ownerWhereClause
+            OptMatch   "(r) -[:CREATED_BY]-> (cb:Member)" []
+            DynamicFun creatorWhereClause
+            OptMatch   "(l) -[:HAS]-> (l:Location)" []
+            OptMatch   "(l) -[:HAS]-> (f:Faction)" []
+            Return     """
+                       r as Realm,
+                       collect(distinct t) as Tags,
+                       o as Owner,
+                       cb as CreatedBy,
+                       count(distinct l) as LocationCount,
+                       count(distinct f) as FactionCount
+                       """ []
+            orderByClause (* ORDER BY ... *)
+            Skip       "$Skip"  ["Skip",  Neo.int skip']
+            Limit      "$Limit" ["Limit", Neo.int limit']
+        ]
+        |> Neo.buildQuery
+        |> (fun ctx ->
+                match logger with
+                | Some logger -> Neo.showQuery logger.Debug ctx
+                | _ -> ctx
+        )
+        |> Neo.executeSession driver
+        |> Neo.chooseMultiple (fun returns -> option {
+            let! realmNode    = returns.nodePropertiesOrNone "Realm"
+            let tagNodes      = returns.nodePropertiesList   "Tags"
+            let ownerNode     = returns.nodePropertiesOrNone "Owner"
+            let createdByNode = returns.nodePropertiesOrNone "CreatedBy"
+
+            return {
+                Id            = realmNode.string "Id" |> Guid.Parse
+                Name          = realmNode.string "Name"
+                Description   = realmNode.string "Description"
+                Tags          = tagNodes |> List.map (fun tagNode -> tagNode.string "Name")
+                Members       = []
+                CreatedAt     = realmNode.dateTime "CreatedAt"
+                Owner         = ownerNode     |> Option.map Helpers.asMemberSummary
+                CreatedBy     = createdByNode |> Option.map Helpers.asMemberSummary
+                LocationCount = returns.int "LocationCount"
+                FactionCount  = returns.int "FactionCount"
+            }
+        })
+        |> Task.map (Result.map snd)
+

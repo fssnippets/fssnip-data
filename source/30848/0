@@ -1,0 +1,13 @@
+open System
+
+let goal = 0xF4240
+let amountToday = 0x9470
+let simulatedAmount = 0x32
+
+let howManyDonationsIsNeeded = fun goal amount simulatedAmount -> Math.Ceiling(((goal - amount) / simulatedAmount) |> decimal)
+
+(fun () -> printfn "Przy obecnej kwocie %A potrzeba jeszcze %A wpłat po %A żeby osiągnać %A. Pomożesz?
+                    #code16challange www.code16challenge.pl 
+                    Link do zbiórki: www.siepomaga.pl/code16challenge
+                    z pozdrowieniami dla Mai!" 
+                    amountToday (howManyDonationsIsNeeded goal amountToday simulatedAmount) simulatedAmount goal)()

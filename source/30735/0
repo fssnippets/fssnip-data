@@ -1,0 +1,101 @@
+
+// Install Soft-HSM2, e.g. https://github.com/disig/SoftHSM2-for-Windows/releases/download/v2.5.0/SoftHSM2-2.5.0.msi
+// Easiest way is to copy driver from lib-folder and config from etc-folder, all to bin-folder
+// then create user and pin, e.g. 1234
+// softhsm2-util.exe --init-token --slot 0 --label testing
+let userPin = "1234" 
+
+// Reference @"Pkcs11Interop.dll", e.g.:
+//#r "nuget:Pkcs11Interop"
+
+open System
+open Net.Pkcs11Interop.Common
+open Net.Pkcs11Interop.HighLevelAPI
+
+let pkcs11LibraryPath = @"C:\SoftHSM2\bin\softhsm2-x64.dll"
+let factories = new Pkcs11InteropFactories()
+let applicationName = "test"
+
+let publicKeyAttributes(ckaId:byte[]) = 
+    [   factories.ObjectAttributeFactory.Create(CKA.CKA_TOKEN, true)
+        factories.ObjectAttributeFactory.Create(CKA.CKA_PRIVATE, false)
+        factories.ObjectAttributeFactory.Create(CKA.CKA_LABEL, applicationName)
+        factories.ObjectAttributeFactory.Create(CKA.CKA_ID, ckaId)
+        factories.ObjectAttributeFactory.Create(CKA.CKA_ENCRYPT, true)
+        factories.ObjectAttributeFactory.Create(CKA.CKA_VERIFY, true)
+        factories.ObjectAttributeFactory.Create(CKA.CKA_VERIFY_RECOVER, true)
+        factories.ObjectAttributeFactory.Create(CKA.CKA_WRAP, true)
+        factories.ObjectAttributeFactory.Create(CKA.CKA_MODULUS_BITS, 1024UL)
+        factories.ObjectAttributeFactory.Create(CKA.CKA_PUBLIC_EXPONENT, [| 0x01uy; 0x00uy; 0x01uy |])
+    ] |> ResizeArray
+
+let privateKeyAttributes(ckaId:byte[]) = 
+    [   factories.ObjectAttributeFactory.Create(CKA.CKA_TOKEN, true)
+        factories.ObjectAttributeFactory.Create(CKA.CKA_PRIVATE, true)
+        factories.ObjectAttributeFactory.Create(CKA.CKA_LABEL, applicationName)
+        factories.ObjectAttributeFactory.Create(CKA.CKA_ID, ckaId)
+        factories.ObjectAttributeFactory.Create(CKA.CKA_SENSITIVE, true)
+        factories.ObjectAttributeFactory.Create(CKA.CKA_DECRYPT, true)
+        factories.ObjectAttributeFactory.Create(CKA.CKA_SIGN, true)
+        factories.ObjectAttributeFactory.Create(CKA.CKA_SIGN_RECOVER, true)
+        factories.ObjectAttributeFactory.Create(CKA.CKA_UNWRAP, true)
+    ] |> ResizeArray
+
+/// https://github.com/Pkcs11Interop/Pkcs11Interop/blob/master/doc/GETTING_STARTED.md
+let displayLibraryInfo() =
+    use pkcs11Library = factories.Pkcs11LibraryFactory.LoadPkcs11Library(factories, pkcs11LibraryPath, AppType.MultiThreaded)
+    let libraryInfo = pkcs11Library.GetInfo()
+    printfn "Library Manufacturer: %s" libraryInfo.ManufacturerId
+    printfn "Library Description: %s" libraryInfo.LibraryDescription
+    printfn "Library Version: %s" libraryInfo.LibraryVersion
+    let slots = pkcs11Library.GetSlotList(SlotsType.WithOrWithoutTokenPresent)
+    for slot in slots do
+        let slotInfo = slot.GetSlotInfo()
+        printfn "   Slot Manufacturer: %s" slotInfo.ManufacturerId
+        printfn "   Slot Description: %s" slotInfo.SlotDescription
+        printfn "   Slot Token present: %b" slotInfo.SlotFlags.TokenPresent
+        printfn "   Mechanisms: %s" (String.Join(",", slot.GetMechanismList() |> Seq.toArray))
+
+let signHSM (session:ISession) privateKey content =
+    let mechanism = session.Factories.MechanismFactory.Create CKM.CKM_SHA1_RSA_PKCS
+    let sourceData = content |> ConvertUtils.Utf8StringToBytes
+    let signature = session.Sign(mechanism, privateKey, sourceData)
+    signature
+
+let verifyHSM (session:ISession) publicKey content signature =
+    let mechanism = session.Factories.MechanismFactory.Create CKM.CKM_SHA1_RSA_PKCS
+    let sourceData = content |> ConvertUtils.Utf8StringToBytes
+    let isValid = session.Verify(mechanism, publicKey, sourceData, signature)
+    if not isValid then
+        failwith "Wrong signature"
+
+let authenticateAndRun content =
+    use pkcs11Library = factories.Pkcs11LibraryFactory.LoadPkcs11Library(factories, pkcs11LibraryPath, AppType.MultiThreaded)
+    let slots = pkcs11Library.GetSlotList(SlotsType.WithOrWithoutTokenPresent)
+    let slot = slots.[0]
+    use session = slot.OpenSession SessionType.ReadWrite
+    do session.Login(CKU.CKU_USER, userPin)
+    let ckaId = session.GenerateRandom 20
+    let publicKey, privateKey = 
+        session.GenerateKeyPair(
+            factories.MechanismFactory.Create(CKM.CKM_RSA_PKCS_KEY_PAIR_GEN),
+            publicKeyAttributes ckaId, privateKeyAttributes ckaId)
+
+    let signature = signHSM session privateKey content
+
+    // do verifyHSM session publicKey content signature
+
+    session.DestroyObject privateKey
+    session.DestroyObject publicKey
+    session.Logout()
+    signature
+
+[<EntryPoint>]
+let main argv =
+    do displayLibraryInfo()
+    printfn "-----------------------"
+    let payload =  "Hello World!"
+    let signature = authenticateAndRun payload
+    printfn "-----------------------"
+    printfn "Signature: %O" (System.Text.Encoding.UTF8.GetString(signature, 0, signature.Length))
+    0

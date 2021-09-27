@@ -1,0 +1,191 @@
+module MatterMost.Types.Websockets
+
+open System
+open FSharpPlus.Control
+open MatterMost.Types
+open MatterMost.Types.Channels
+open MatterMost.Types.Posts
+open Thoth.Json.Net
+open MatterMost.Serdes
+
+(* Marker interfaces *)
+
+/// Marker interface to identify websocket body types
+type IWebsocketEventBody = interface end
+
+/// Marker interface to identify websocket request types
+type IWebsocketRequest = interface end
+
+/// Marker interface to identify websocket response body types
+type IWebsocketResponseBody = interface end
+
+
+(*
+ * Request
+ *)
+
+type WebsocketRequest<'data when 'data :> IWebsocketRequest> =
+    {
+        Seq: int
+        Action: string
+        Data: 'data
+    }
+    static member Decode dataDecoder : Decoder<WebsocketRequest<'event>> =
+        Decode.object <| fun get ->
+            {
+                Seq    = get.Required.Field "seq"    Decode.int
+                Action = get.Required.Field "action" Decode.string
+                Data   = get.Required.Field "data"   dataDecoder
+            }
+            
+type Auth =
+    { Token: string }
+    static member Decode : Decoder<Auth> = autoDecoder
+    interface IWebsocketRequest
+
+
+(*
+ * Response
+ *)
+ 
+type RespError =
+    {
+        Id: string
+        Message: string
+    }
+    static member Decode : Decoder<RespError> = autoDecoder
+
+type WebsocketResponse<'data when 'data :> IWebsocketResponseBody> =
+    {
+        SeqReply: int
+        Status: string
+        Data: 'data option
+        Error: RespError option
+    }
+    static member Decode dataDecoder : Decoder<WebsocketResponse<'data>> =
+        Decode.object <| fun get ->
+            {
+                SeqReply = get.Required.Field "seq_reply" Decode.int
+                Status   = get.Required.Field "status"    Decode.string
+                Data     = get.Optional.Field "data"      dataDecoder
+                Error    = get.Optional.Field "error"     RespError.Decode
+            }
+            
+and [<RequireQualifiedAccess>] WebsocketResponse =
+    | Empty of WebsocketResponse<EmptyResponse>
+            
+// this is just to satisfy the marker interface IWebsocketResponseBody :(
+and EmptyResponse =
+    | EmptyResponse
+    static member Decode : Decoder<EmptyResponse> = (fun _ _ -> Ok EmptyResponse)
+    interface IWebsocketResponseBody
+
+(*
+ * Events
+*)
+
+type HelloEvent =
+    {
+        ServerVersion: string
+    }
+    static member Decode : Decoder<HelloEvent> = autoDecoder
+    interface IWebsocketEventBody
+
+type Post =
+    {
+        Id: string
+        CreateAt: DateTimeOffset
+        UpdateAt: DateTimeOffset option
+        EditAt: DateTimeOffset option
+        DeleteAt: DateTimeOffset option
+        IsPinned: bool
+        UserId: string
+        ChannelId: string
+        RootId: string
+        ParentId: string
+        OriginalId: string
+        Message: string
+        Type: string
+        Props: Map<string, string> option
+        Hashtags: string
+        PendingPostId: string
+        ReplyCount: int
+        Metadata: PostMetadata option
+        SenderName: string
+        SetOnline: bool
+        TeamId: string
+    }
+    static member Decode : Decoder<Post> = autoDecoder
+    interface IWebsocketEventBody
+
+/// Event of type 'posted'
+type PostedEvent =
+    {
+        ChannelDisplayName: string
+        ChannelName: string
+        ChannelType: ChannelType
+        Post: string // Needs manually decoding
+    }
+    static member Decode : Decoder<PostedEvent> = autoDecoderWithExtras [ChannelType.ExtraCoders]
+    interface IWebsocketEventBody
+
+/// Event of type 'status_change'
+type StatusChangeEvent =
+    {
+        Status: string
+        UserId: string
+    }
+    static member Decode : Decoder<StatusChangeEvent> = autoDecoder
+    interface IWebsocketEventBody
+
+/// Event of type 'typing'
+type TypingEvent =
+    {
+        ParentId: string
+        UserId: string
+    }
+    static member Decode : Decoder<TypingEvent> = autoDecoder
+    interface IWebsocketEventBody
+
+
+type Broadcast =
+    {
+        OmitUsers: Map<string, bool> option
+        // TODO: Make these `string option` and check for emptiness
+        UserId: string
+        ChannelId: string
+        TeamId: string
+    }
+    static member Decode : Decoder<Broadcast> = autoDecoder
+
+
+type WebsocketEvent<'event when 'event :> IWebsocketEventBody> =
+    {
+        Seq: int
+        Event: string
+        Data: 'event
+        Broadcast: Broadcast
+    }
+    static member Decode dataDecoder : Decoder<WebsocketEvent<'event>> =
+        Decode.object <| fun get ->
+            {
+                Seq       = get.Required.Field "seq"       Decode.int
+                Event     = get.Required.Field "event"     Decode.string
+                Data      = get.Required.Field "data"      dataDecoder
+                Broadcast = get.Required.Field "broadcast" Broadcast.Decode
+            }
+
+and [<RequireQualifiedAccess>] WebsocketEvent =
+    | Hello        of WebsocketEvent<HelloEvent>
+    | Posted       of WebsocketEvent<PostedEvent>
+    | StatusChange of WebsocketEvent<StatusChangeEvent>
+    | Typing       of WebsocketEvent<TypingEvent>
+
+
+
+(* All of the above *)
+
+[<RequireQualifiedAccess>]
+type IncomingWebsocketMessage =
+    | Response of WebsocketResponse
+    | Event    of WebsocketEvent

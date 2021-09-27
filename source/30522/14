@@ -1,0 +1,113 @@
+//as of ML.Net 1.7 with new Project types
+//Updated to reference packages from 'c:\users\%UserName%\.nuget'
+
+(* Script to generate: 
+    a) lib references for ML dlls
+    b) code that adds the required native libraries to Path
+
+open System
+open System.IO
+open System.Collections.Generic
+
+let __PKG_ROOT__ = Path.Combine( @"C:\Users\",Environment.UserName,".nuget")
+
+let includeSet = 
+    [ 
+        "System.Collections.Immutable"
+        "System.Runtime.CompilerServices.Unsafe"
+        "System.Memory"
+        "System.Numerics.Vector"
+        "Microsoft.ML"
+        "IronSnappy"
+        "Parquet"
+    ]
+    |> List.map (fun x->x.ToLower())
+
+let excludeSet = 
+    [                //exclude files that may get caught in the includeSet filter
+         //"LightGbm.2.2.3"
+        "Mkl.Redist"
+        "ML.OnnxRuntime"
+        "Probabilistic.Visualizers"
+    ]
+    |> List.map (fun x->x.ToLower())
+
+let dirs = Directory.EnumerateDirectories(__PKG_ROOT__ + @"\packages")  |> Seq.map (fun x->x.ToLower())
+let comp a b = Comparer<string>.Default.Compare(a, b) //> 0// String.Compare(a,b,StringComparison.OrdinalIgnoreCase)
+
+;;
+let dirVers =
+    dirs
+    //|> Seq.map (fun d->d.Replace()) 
+    |> Seq.filter(fun dir -> includeSet |> List.exists(fun y -> dir.Contains(y)))
+    |> Seq.filter(fun dir -> excludeSet |> List.exists(fun y -> dir.Contains(y)) |> not)
+    |> Seq.map(fun dir -> 
+        let ver = Directory.GetDirectories(dir) |> Seq.sortWith comp |> Seq.last
+        Path.Combine(dir,ver))
+
+    
+dirVers 
+|> Seq.collect(fun dir -> 
+    let p = Path.Combine(dir,"lib","netstandard2.0") 
+    Directory.GetFiles(p,"*.dll"))
+|> Seq.map (fun path ->  path.Replace(__PKG_ROOT__+ @"\",""))
+|> Seq.map (fun path -> sprintf "#r @\"%s\"" path)
+|> Seq.iter (printfn "%s")
+
+;;
+let platform = @"win-x64"
+let nativeLibs = 
+    dirVers
+    |> Seq.collect(fun dir -> 
+        let p1 = Path.Combine(dir,"runtimes",platform,"native")
+        let p2 = Path.Combine(dir,"runtimes",platform,"nativeassets","netstandard2.0")
+        [p1;p2]
+        |> Seq.collect (fun p ->
+            if Directory.Exists p then Directory.GetFiles(p,"*.dll")
+            else Array.empty))
+    |> Seq.toList
+;;
+nativeLibs |> Seq.iter (printfn """+ ";" + "%s" """)
+*)
+
+
+#r "netstandard"
+//need specific version otherwise fsi will bind to system versions
+#r @"c:\users\admin\.nuget\packages\ironsnappy\1.2.4\lib\netstandard2.0\IronSnappy.dll"
+#r @"c:\users\admin\.nuget\packages\microsoft.ml\1.5.2\lib\netstandard2.0\Microsoft.ML.Core.dll"
+#r @"c:\users\admin\.nuget\packages\microsoft.ml\1.5.2\lib\netstandard2.0\Microsoft.ML.Data.dll"
+#r @"c:\users\admin\.nuget\packages\microsoft.ml\1.5.2\lib\netstandard2.0\Microsoft.ML.KMeansClustering.dll"
+#r @"c:\users\admin\.nuget\packages\microsoft.ml\1.5.2\lib\netstandard2.0\Microsoft.ML.PCA.dll"
+#r @"c:\users\admin\.nuget\packages\microsoft.ml\1.5.2\lib\netstandard2.0\Microsoft.ML.StandardTrainers.dll"
+#r @"c:\users\admin\.nuget\packages\microsoft.ml\1.5.2\lib\netstandard2.0\Microsoft.ML.Transforms.dll"
+#r @"c:\users\admin\.nuget\packages\microsoft.ml.automl\0.17.2\lib\netstandard2.0\Microsoft.ML.AutoML.dll"
+#r @"c:\users\admin\.nuget\packages\microsoft.ml.cpumath\1.5.2\lib\netstandard2.0\Microsoft.ML.CpuMath.dll"
+#r @"c:\users\admin\.nuget\packages\microsoft.ml.dataview\1.5.2\lib\netstandard2.0\Microsoft.ML.DataView.dll"
+#r @"c:\users\admin\.nuget\packages\microsoft.ml.fasttree\1.5.2\lib\netstandard2.0\Microsoft.ML.FastTree.dll"
+#r @"c:\users\admin\.nuget\packages\microsoft.ml.imageanalytics\1.5.2\lib\netstandard2.0\Microsoft.ML.ImageAnalytics.dll"
+#r @"c:\users\admin\.nuget\packages\microsoft.ml.lightgbm\1.5.2\lib\netstandard2.0\Microsoft.ML.LightGbm.dll"
+#r @"c:\users\admin\.nuget\packages\microsoft.ml.mkl.components\1.5.2\lib\netstandard2.0\Microsoft.ML.Mkl.Components.dll"
+#r @"c:\users\admin\.nuget\packages\microsoft.ml.parquet\0.17.2\lib\netstandard2.0\Microsoft.ML.Parquet.dll"
+#r @"c:\users\admin\.nuget\packages\microsoft.ml.recommender\0.17.2\lib\netstandard2.0\Microsoft.ML.Recommender.dll"
+#r @"c:\users\admin\.nuget\packages\microsoft.ml.tensorflow\1.5.2\lib\netstandard2.0\Microsoft.ML.TensorFlow.dll"
+#r @"c:\users\admin\.nuget\packages\microsoft.ml.timeseries\1.5.2\lib\netstandard2.0\Microsoft.ML.TimeSeries.dll"
+#r @"c:\users\admin\.nuget\packages\microsoft.ml.vision\1.5.2\lib\netstandard2.0\Microsoft.ML.Vision.dll"
+#r @"c:\users\admin\.nuget\packages\parquet.net\3.7.7\lib\netstandard2.0\Parquet.dll"
+#r @"c:\users\admin\.nuget\packages\system.collections.immutable\5.0.0-preview.6.20305.6\lib\netstandard2.0\System.Collections.Immutable.dll"
+#r @"c:\users\admin\.nuget\packages\system.memory\4.5.4\lib\netstandard2.0\System.Memory.dll"
+#r @"c:\users\admin\.nuget\packages\system.numerics.vectors\4.5.0\lib\netstandard2.0\System.Numerics.Vectors.dll"
+#r @"c:\users\admin\.nuget\packages\system.runtime.compilerservices.unsafe\5.0.0-preview.6.20305.6\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll"
+
+open System
+let path = Environment.GetEnvironmentVariable("path")
+
+let path' = 
+    path 
+    + ";" + "c:\users\admin\.nuget\packages\microsoft.ml\1.5.2\runtimes\win-x64\native\LdaNative.dll" 
+    + ";" + "c:\users\admin\.nuget\packages\microsoft.ml.cpumath\1.5.2\runtimes\win-x64\nativeassets\netstandard2.0\CpuMathNative.dll" 
+    + ";" + "c:\users\admin\.nuget\packages\microsoft.ml.fasttree\1.5.2\runtimes\win-x64\native\FastTreeNative.dll" 
+    + ";" + "c:\users\admin\.nuget\packages\microsoft.ml.mkl.components\1.5.2\runtimes\win-x64\native\SymSgdNative.dll" 
+    + ";" + "c:\users\admin\.nuget\packages\microsoft.ml.recommender\0.17.2\runtimes\win-x64\native\MatrixFactorizationNative.dll" 
+
+Environment.SetEnvironmentVariable("path",path')
+

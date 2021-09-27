@@ -1,0 +1,110 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+<span class="l">38: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">namespace</span> <span class="id">Architecture</span>
+
+<span class="c">// 1) Pure - no side effects</span>
+<span class="k">module</span> <span class="m">Domain</span> <span class="o">=</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="fn">add</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="id">x</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="id">y</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs2', 4)" onmouseover="showTip(event, 'fs2', 4)" class="id">x</span> <span class="o">+</span> <span onmouseout="hideTip(event, 'fs3', 5)" onmouseover="showTip(event, 'fs3', 5)" class="id">y</span>
+
+<span class="c">// 2) Think about IO but not its implementation - it knows its going to receive an int from an Async source</span>
+<span class="k">module</span> <span class="m">App</span> <span class="o">=</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs4', 6)" onmouseover="showTip(event, 'fs4', 6)" class="fn">add</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs5', 7)" onmouseover="showTip(event, 'fs5', 7)" class="fn">getX</span><span class="pn">:</span> <span onmouseout="hideTip(event, 'fs6', 8)" onmouseover="showTip(event, 'fs6', 8)" class="rt">unit</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs7', 9)" onmouseover="showTip(event, 'fs7', 9)" class="vt">int</span> <span onmouseout="hideTip(event, 'fs8', 10)" onmouseover="showTip(event, 'fs8', 10)" class="rt">Async</span><span class="pn">)</span> <span onmouseout="hideTip(event, 'fs3', 11)" onmouseover="showTip(event, 'fs3', 11)" class="id">y</span> <span class="o">=</span>
+        <span onmouseout="hideTip(event, 'fs9', 12)" onmouseover="showTip(event, 'fs9', 12)" class="k">async</span> <span class="pn">{</span>
+            <span class="k">let!</span> <span onmouseout="hideTip(event, 'fs2', 13)" onmouseover="showTip(event, 'fs2', 13)" class="id">x</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs5', 14)" onmouseover="showTip(event, 'fs5', 14)" class="fn">getX</span> <span class="pn">(</span><span class="pn">)</span>
+            <span class="k">return</span> <span onmouseout="hideTip(event, 'fs10', 15)" onmouseover="showTip(event, 'fs10', 15)" class="m">Domain</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs1', 16)" onmouseover="showTip(event, 'fs1', 16)" class="id">add</span> <span onmouseout="hideTip(event, 'fs2', 17)" onmouseover="showTip(event, 'fs2', 17)" class="id">x</span> <span onmouseout="hideTip(event, 'fs3', 18)" onmouseover="showTip(event, 'fs3', 18)" class="id">y</span>
+        <span class="pn">}</span>
+
+<span class="c">// 3) IO Implementation</span>
+<span class="k">module</span> <span class="m">Infra</span> <span class="o">=</span>
+    <span class="k">open</span> <span onmouseout="hideTip(event, 'fs11', 19)" onmouseover="showTip(event, 'fs11', 19)" class="id">System</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs12', 20)" onmouseover="showTip(event, 'fs12', 20)" class="id">Data</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs13', 21)" onmouseover="showTip(event, 'fs13', 21)" class="id">SqlClient</span>
+    <span class="k">open</span> <span onmouseout="hideTip(event, 'fs14', 22)" onmouseover="showTip(event, 'fs14', 22)" class="id">Dapper</span>
+
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs15', 23)" onmouseover="showTip(event, 'fs15', 23)" class="fn">newConnection</span> <span onmouseout="hideTip(event, 'fs16', 24)" onmouseover="showTip(event, 'fs16', 24)" class="id">connectionString</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs17', 25)" onmouseover="showTip(event, 'fs17', 25)" class="d">SqlConnection</span><span class="pn">(</span><span onmouseout="hideTip(event, 'fs16', 26)" onmouseover="showTip(event, 'fs16', 26)" class="id">connectionString</span><span class="pn">)</span>
+
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs18', 27)" onmouseover="showTip(event, 'fs18', 27)" class="fn">getX</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs19', 28)" onmouseover="showTip(event, 'fs19', 28)" class="id">conn</span><span class="pn">:</span> <span onmouseout="hideTip(event, 'fs17', 29)" onmouseover="showTip(event, 'fs17', 29)" class="d">SqlConnection</span><span class="pn">)</span> <span class="o">=</span>
+        <span onmouseout="hideTip(event, 'fs9', 30)" onmouseover="showTip(event, 'fs9', 30)" class="k">async</span> <span class="pn">{</span>
+            <span class="k">do!</span> <span onmouseout="hideTip(event, 'fs19', 31)" onmouseover="showTip(event, 'fs19', 31)" class="fn">conn</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs20', 32)" onmouseover="showTip(event, 'fs20', 32)" class="id">OpenAsync</span><span class="pn">(</span><span class="pn">)</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs8', 33)" onmouseover="showTip(event, 'fs8', 33)" class="rt">Async</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs21', 34)" onmouseover="showTip(event, 'fs21', 34)" class="id">AwaitTask</span>
+            <span class="k">let!</span> <span onmouseout="hideTip(event, 'fs2', 35)" onmouseover="showTip(event, 'fs2', 35)" class="id">x</span> <span class="o">=</span>
+                <span onmouseout="hideTip(event, 'fs19', 36)" onmouseover="showTip(event, 'fs19', 36)" class="fn">conn</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs22', 37)" onmouseover="showTip(event, 'fs22', 37)" class="id">QueryFirstAsync</span><span class="pn">&lt;</span><span onmouseout="hideTip(event, 'fs7', 38)" onmouseover="showTip(event, 'fs7', 38)" class="vt">int</span><span class="pn">&gt;</span><span class="pn">(</span><span class="s">&quot;SELECT 1&quot;</span><span class="pn">)</span>
+                <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs8', 39)" onmouseover="showTip(event, 'fs8', 39)" class="rt">Async</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs21', 40)" onmouseover="showTip(event, 'fs21', 40)" class="id">AwaitTask</span>
+
+            <span class="k">return</span> <span onmouseout="hideTip(event, 'fs2', 41)" onmouseover="showTip(event, 'fs2', 41)" class="id">x</span>
+        <span class="pn">}</span>
+
+<span class="c">// 4) Bootstrap - DI etc..</span>
+<span class="k">module</span> <span onmouseout="hideTip(event, 'fs23', 42)" onmouseover="showTip(event, 'fs23', 42)" class="m">Startup</span> <span class="o">=</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs24', 43)" onmouseover="showTip(event, 'fs24', 43)" class="fn">add</span> <span onmouseout="hideTip(event, 'fs3', 44)" onmouseover="showTip(event, 'fs3', 44)" class="id">y</span> <span class="o">=</span>
+        <span onmouseout="hideTip(event, 'fs9', 45)" onmouseover="showTip(event, 'fs9', 45)" class="k">async</span> <span class="pn">{</span>
+            <span class="k">use</span> <span onmouseout="hideTip(event, 'fs25', 46)" onmouseover="showTip(event, 'fs25', 46)" class="id">conn</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs26', 47)" onmouseover="showTip(event, 'fs26', 47)" class="m">Infra</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs27', 48)" onmouseover="showTip(event, 'fs27', 48)" class="id">newConnection</span> <span class="s">&quot;MY CONNECTION STRING&quot;</span>
+            <span class="k">return!</span> <span onmouseout="hideTip(event, 'fs28', 49)" onmouseover="showTip(event, 'fs28', 49)" class="m">App</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs4', 50)" onmouseover="showTip(event, 'fs4', 50)" class="id">add</span> <span class="pn">(</span><span class="k">fun</span> <span class="pn">(</span><span class="pn">)</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs26', 51)" onmouseover="showTip(event, 'fs26', 51)" class="m">Infra</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs29', 52)" onmouseover="showTip(event, 'fs29', 52)" class="id">getX</span> <span onmouseout="hideTip(event, 'fs25', 53)" onmouseover="showTip(event, 'fs25', 53)" class="id">conn</span><span class="pn">)</span> <span onmouseout="hideTip(event, 'fs3', 54)" onmouseover="showTip(event, 'fs3', 54)" class="id">y</span>
+        <span class="pn">}</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">val add : x:int -&gt; y:int -&gt; int</div>
+<div class="tip" id="fs2">val x : int</div>
+<div class="tip" id="fs3">val y : int</div>
+<div class="tip" id="fs4">val add : getX:(unit -&gt; Async&lt;int&gt;) -&gt; y:int -&gt; Async&lt;int&gt;</div>
+<div class="tip" id="fs5">val getX : (unit -&gt; Async&lt;int&gt;)</div>
+<div class="tip" id="fs6">type unit = Unit</div>
+<div class="tip" id="fs7">Multiple items<br />val int : value:&#39;T -&gt; int (requires member op_Explicit)<br /><br />--------------------<br />type int = int32<br /><br />--------------------<br />type int&lt;&#39;Measure&gt; = int</div>
+<div class="tip" id="fs8">Multiple items<br />type Async =<br />&#160;&#160;static member AsBeginEnd : computation:(&#39;Arg -&gt; Async&lt;&#39;T&gt;) -&gt; (&#39;Arg * AsyncCallback * obj -&gt; IAsyncResult) * (IAsyncResult -&gt; &#39;T) * (IAsyncResult -&gt; unit)<br />&#160;&#160;static member AwaitEvent : event:IEvent&lt;&#39;Del,&#39;T&gt; * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt; (requires delegate and &#39;Del :&gt; Delegate)<br />&#160;&#160;static member AwaitIAsyncResult : iar:IAsyncResult * ?millisecondsTimeout:int -&gt; Async&lt;bool&gt;<br />&#160;&#160;static member AwaitTask : task:Task -&gt; Async&lt;unit&gt;<br />&#160;&#160;static member AwaitTask : task:Task&lt;&#39;T&gt; -&gt; Async&lt;&#39;T&gt;<br />&#160;&#160;static member AwaitWaitHandle : waitHandle:WaitHandle * ?millisecondsTimeout:int -&gt; Async&lt;bool&gt;<br />&#160;&#160;static member CancelDefaultToken : unit -&gt; unit<br />&#160;&#160;static member Catch : computation:Async&lt;&#39;T&gt; -&gt; Async&lt;Choice&lt;&#39;T,exn&gt;&gt;<br />&#160;&#160;static member Choice : computations:seq&lt;Async&lt;&#39;T option&gt;&gt; -&gt; Async&lt;&#39;T option&gt;<br />&#160;&#160;static member FromBeginEnd : beginAction:(AsyncCallback * obj -&gt; IAsyncResult) * endAction:(IAsyncResult -&gt; &#39;T) * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />&#160;&#160;...<br /><br />--------------------<br />type Async&lt;&#39;T&gt; =</div>
+<div class="tip" id="fs9">val async : AsyncBuilder</div>
+<div class="tip" id="fs10">module Domain<br /><br />from Architecture</div>
+<div class="tip" id="fs11">namespace System</div>
+<div class="tip" id="fs12">namespace System.Data</div>
+<div class="tip" id="fs13">namespace System.Data.SqlClient</div>
+<div class="tip" id="fs14">namespace Dapper</div>
+<div class="tip" id="fs15">val newConnection : connectionString:string -&gt; SqlConnection</div>
+<div class="tip" id="fs16">val connectionString : string</div>
+<div class="tip" id="fs17">Multiple items<br />type SqlConnection =<br />&#160;&#160;inherit DbConnection<br />&#160;&#160;new : unit -&gt; SqlConnection + 2 overloads<br />&#160;&#160;member AccessToken : string with get, set<br />&#160;&#160;member BeginTransaction : unit -&gt; SqlTransaction + 3 overloads<br />&#160;&#160;member ChangeDatabase : database:string -&gt; unit<br />&#160;&#160;member ClientConnectionId : Guid<br />&#160;&#160;member Close : unit -&gt; unit<br />&#160;&#160;member ConnectionString : string with get, set<br />&#160;&#160;member ConnectionTimeout : int<br />&#160;&#160;member CreateCommand : unit -&gt; SqlCommand<br />&#160;&#160;member Credential : SqlCredential with get, set<br />&#160;&#160;...<br /><br />--------------------<br />SqlConnection() : SqlConnection<br />SqlConnection(connectionString: string) : SqlConnection<br />SqlConnection(connectionString: string, credential: SqlCredential) : SqlConnection</div>
+<div class="tip" id="fs18">val getX : conn:SqlConnection -&gt; Async&lt;int&gt;</div>
+<div class="tip" id="fs19">val conn : SqlConnection</div>
+<div class="tip" id="fs20">System.Data.Common.DbConnection.OpenAsync() : System.Threading.Tasks.Task<br />SqlConnection.OpenAsync(cancellationToken: System.Threading.CancellationToken) : System.Threading.Tasks.Task</div>
+<div class="tip" id="fs21">static member Async.AwaitTask : task:System.Threading.Tasks.Task -&gt; Async&lt;unit&gt;<br />static member Async.AwaitTask : task:System.Threading.Tasks.Task&lt;&#39;T&gt; -&gt; Async&lt;&#39;T&gt;</div>
+<div class="tip" id="fs22">(extension) System.Data.IDbConnection.QueryFirstAsync(command: CommandDefinition) : System.Threading.Tasks.Task&lt;obj&gt;<br />(extension) System.Data.IDbConnection.QueryFirstAsync&lt;&#39;T&gt;(command: CommandDefinition) : System.Threading.Tasks.Task&lt;&#39;T&gt;<br />(extension) System.Data.IDbConnection.QueryFirstAsync(type: System.Type, command: CommandDefinition) : System.Threading.Tasks.Task&lt;obj&gt;<br />(extension) System.Data.IDbConnection.QueryFirstAsync&lt;&#39;T&gt;(sql: string,?param: obj,?transaction: System.Data.IDbTransaction,?commandTimeout: System.Nullable&lt;int&gt;,?commandType: System.Nullable&lt;System.Data.CommandType&gt;) : System.Threading.Tasks.Task&lt;&#39;T&gt;<br />(extension) System.Data.IDbConnection.QueryFirstAsync(sql: string,?param: obj,?transaction: System.Data.IDbTransaction,?commandTimeout: System.Nullable&lt;int&gt;,?commandType: System.Nullable&lt;System.Data.CommandType&gt;) : System.Threading.Tasks.Task&lt;obj&gt;<br />(extension) System.Data.IDbConnection.QueryFirstAsync(type: System.Type, sql: string,?param: obj,?transaction: System.Data.IDbTransaction,?commandTimeout: System.Nullable&lt;int&gt;,?commandType: System.Nullable&lt;System.Data.CommandType&gt;) : System.Threading.Tasks.Task&lt;obj&gt;</div>
+<div class="tip" id="fs23">module Startup<br /><br />from Architecture</div>
+<div class="tip" id="fs24">val add : y:int -&gt; Async&lt;int&gt;</div>
+<div class="tip" id="fs25">val conn : System.Data.SqlClient.SqlConnection</div>
+<div class="tip" id="fs26">module Infra<br /><br />from Architecture</div>
+<div class="tip" id="fs27">val newConnection : connectionString:string -&gt; System.Data.SqlClient.SqlConnection</div>
+<div class="tip" id="fs28">module App<br /><br />from Architecture</div>
+<div class="tip" id="fs29">val getX : conn:System.Data.SqlClient.SqlConnection -&gt; Async&lt;int&gt;</div>
+

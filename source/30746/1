@@ -1,0 +1,41 @@
+namespace Architecture
+
+open FSharp.Control.Tasks.V2
+
+// 1) Pure - no side effects
+module Domain =
+    let add x y = x + y
+
+// 2) Think about IO but not its implementation - it knows its going to receive an int from an Async source
+module App =
+
+    open System.Threading.Tasks
+
+    let add (getX: unit -> int Task) y =
+        task {
+            let! x = getX ()
+            return Domain.add x y
+        }
+
+// 3) IO Implementation
+module Infra =
+    open System.Data.SqlClient
+    open Dapper
+
+    let newConnection connectionString = new SqlConnection(connectionString)
+
+    let getX (conn: SqlConnection) =
+        task {
+            do! conn.OpenAsync()
+            let! x = conn.QueryFirstAsync<int>("SELECT 1")
+
+            return x
+        }
+
+// 4) Bootstrap - DI etc..
+module Startup =
+    let add y =
+        task {
+            use conn = Infra.newConnection ""
+            return! App.add (fun () -> Infra.getX conn) y
+        }

@@ -1,0 +1,247 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+<span class="l">38: </span>
+<span class="l">39: </span>
+<span class="l">40: </span>
+<span class="l">41: </span>
+<span class="l">42: </span>
+<span class="l">43: </span>
+<span class="l">44: </span>
+<span class="l">45: </span>
+<span class="l">46: </span>
+<span class="l">47: </span>
+<span class="l">48: </span>
+<span class="l">49: </span>
+<span class="l">50: </span>
+<span class="l">51: </span>
+<span class="l">52: </span>
+<span class="l">53: </span>
+<span class="l">54: </span>
+<span class="l">55: </span>
+<span class="l">56: </span>
+<span class="l">57: </span>
+<span class="l">58: </span>
+<span class="l">59: </span>
+<span class="l">60: </span>
+<span class="l">61: </span>
+<span class="l">62: </span>
+<span class="l">63: </span>
+<span class="l">64: </span>
+<span class="l">65: </span>
+<span class="l">66: </span>
+<span class="l">67: </span>
+<span class="l">68: </span>
+<span class="l">69: </span>
+<span class="l">70: </span>
+<span class="l">71: </span>
+<span class="l">72: </span>
+<span class="l">73: </span>
+<span class="l">74: </span>
+<span class="l">75: </span>
+<span class="l">76: </span>
+<span class="l">77: </span>
+<span class="l">78: </span>
+<span class="l">79: </span>
+<span class="l">80: </span>
+<span class="l">81: </span>
+<span class="l">82: </span>
+<span class="l">83: </span>
+<span class="l">84: </span>
+<span class="l">85: </span>
+<span class="l">86: </span>
+<span class="l">87: </span>
+<span class="l">88: </span>
+<span class="l">89: </span>
+<span class="l">90: </span>
+<span class="l">91: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="m">#r</span> <span class="s">&quot;nuget: Elmish,3.0.1&quot;</span>
+
+<span class="c">//[snippet:Prelude]</span>
+<span class="k">open</span> <span class="id">Elmish</span>
+
+<span class="k">module</span> <span class="m">Program</span> <span class="o">=</span>
+    <span class="c">/// &lt;summary&gt;</span>
+    <span class="c">/// Program with user-defined orders instead of usual command.</span>
+    <span class="c">/// Orders are processed by &lt;code&gt;execute&lt;/code&gt; which can dispatch messages,</span>
+    <span class="c">/// called in place of usual command processing.</span>
+    <span class="c">/// &lt;/summary&gt;</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="fn">mkProgramWithOrderExecute</span>
+            <span class="pn">(</span><span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="fn">init</span><span class="pn">:</span> <span class="ta">&#39;</span><span class="id">arg&#39;</span> <span class="k">-&gt;</span> <span class="ta">&#39;</span><span class="id">model</span> <span class="pn">*</span> <span class="ta">&#39;</span><span class="id">order</span><span class="pn">)</span>
+            <span class="pn">(</span><span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="fn">update</span><span class="pn">:</span> <span class="ta">&#39;</span><span class="id">msg</span> <span class="k">-&gt;</span> <span class="ta">&#39;</span><span class="id">model</span> <span class="k">-&gt;</span> <span class="ta">&#39;</span><span class="id">model</span> <span class="pn">*</span> <span class="ta">&#39;</span><span class="id">order</span><span class="pn">)</span>
+            <span class="pn">(</span><span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="fn">view</span><span class="pn">:</span> <span class="ta">&#39;</span><span class="id">model</span> <span class="k">-&gt;</span> <span class="id">Dispatch</span><span class="pn">&lt;</span><span class="id">&#39;</span><span class="id">msg</span><span class="pn">&gt;</span> <span class="k">-&gt;</span> <span class="ta">&#39;</span><span onmouseout="hideTip(event, 'fs4', 5)" onmouseover="showTip(event, 'fs4', 5)" class="id">view</span><span class="pn">)</span>
+            <span class="pn">(</span><span onmouseout="hideTip(event, 'fs5', 6)" onmouseover="showTip(event, 'fs5', 6)" class="fn">execute</span><span class="pn">:</span> <span class="ta">&#39;</span><span class="id">order</span> <span class="k">-&gt;</span> <span class="id">Dispatch</span><span class="pn">&lt;</span><span class="id">&#39;</span><span class="id">msg</span><span class="pn">&gt;</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs6', 7)" onmouseover="showTip(event, 'fs6', 7)" class="rt">unit</span><span class="pn">)</span> <span class="o">=</span>
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs7', 8)" onmouseover="showTip(event, 'fs7', 8)" class="fn">convert</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs8', 9)" onmouseover="showTip(event, 'fs8', 9)" class="id">model</span><span class="pn">,</span> <span onmouseout="hideTip(event, 'fs9', 10)" onmouseover="showTip(event, 'fs9', 10)" class="id">order</span><span class="pn">)</span> <span class="o">=</span> 
+            <span onmouseout="hideTip(event, 'fs8', 11)" onmouseover="showTip(event, 'fs8', 11)" class="id">model</span><span class="pn">,</span> <span onmouseout="hideTip(event, 'fs9', 12)" onmouseover="showTip(event, 'fs9', 12)" class="id">order</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs5', 13)" onmouseover="showTip(event, 'fs5', 13)" class="fn">execute</span> <span class="o">|&gt;</span> <span class="id">Cmd</span><span class="pn">.</span><span class="id">ofSub</span> 
+        <span class="id">Program</span><span class="pn">.</span><span class="id">mkProgram</span>
+            <span class="pn">(</span><span onmouseout="hideTip(event, 'fs2', 14)" onmouseover="showTip(event, 'fs2', 14)" class="id">init</span> <span class="pn">&gt;</span><span class="pn">&gt;</span> <span onmouseout="hideTip(event, 'fs7', 15)" onmouseover="showTip(event, 'fs7', 15)" class="id">convert</span><span class="pn">)</span>
+            <span class="pn">(</span><span class="k">fun</span> <span class="id">msg</span> <span class="id">model</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs3', 16)" onmouseover="showTip(event, 'fs3', 16)" class="id">update</span> <span class="id">msg</span> <span class="id">model</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs7', 17)" onmouseover="showTip(event, 'fs7', 17)" class="id">convert</span><span class="pn">)</span>
+            <span onmouseout="hideTip(event, 'fs4', 18)" onmouseover="showTip(event, 'fs4', 18)" class="id">view</span>
+
+<span class="c">//[snippet:Example]</span>
+<span class="k">open</span> <span class="k">type</span> <span onmouseout="hideTip(event, 'fs10', 19)" onmouseover="showTip(event, 'fs10', 19)" class="id">System</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs11', 20)" onmouseover="showTip(event, 'fs11', 20)" class="id">Console</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs12', 21)" onmouseover="showTip(event, 'fs12', 21)" class="id">description</span> <span class="o">=</span> <span class="s">&quot;Count-o-matic : watch integers being counted on your console.</span>
+<span class="s">Press Space to start, pause or resume.</span>
+<span class="s">Press Enter to step while in pause.</span>
+<span class="s">Press +/- to increase/decrease speed while running.</span>
+<span class="s">Press Q to quit.&quot;</span>
+
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs13', 22)" onmouseover="showTip(event, 'fs13', 22)" class="rt">Model</span> <span class="o">=</span> <span class="pn">{</span> <span onmouseout="hideTip(event, 'fs14', 23)" onmouseover="showTip(event, 'fs14', 23)" class="id">Running</span><span class="pn">:</span> <span onmouseout="hideTip(event, 'fs15', 24)" onmouseover="showTip(event, 'fs15', 24)" class="vt">bool</span> <span class="pn">;</span> <span onmouseout="hideTip(event, 'fs16', 25)" onmouseover="showTip(event, 'fs16', 25)" class="id">Count</span><span class="pn">:</span> <span onmouseout="hideTip(event, 'fs17', 26)" onmouseover="showTip(event, 'fs17', 26)" class="vt">int</span> <span class="pn">;</span> <span onmouseout="hideTip(event, 'fs18', 27)" onmouseover="showTip(event, 'fs18', 27)" class="id">Interval</span><span class="pn">:</span> <span onmouseout="hideTip(event, 'fs17', 28)" onmouseover="showTip(event, 'fs17', 28)" class="vt">int</span> <span class="pn">}</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs19', 29)" onmouseover="showTip(event, 'fs19', 29)" class="rt">Msg</span> <span class="o">=</span> 
+    <span class="pn">|</span> <span onmouseout="hideTip(event, 'fs20', 30)" onmouseover="showTip(event, 'fs20', 30)" class="uc">TimerTick</span>
+    <span class="pn">|</span> <span onmouseout="hideTip(event, 'fs21', 31)" onmouseover="showTip(event, 'fs21', 31)" class="uc">KeyboardTick</span>
+    <span class="pn">|</span> <span onmouseout="hideTip(event, 'fs22', 32)" onmouseover="showTip(event, 'fs22', 32)" class="uc">Toggle</span>
+    <span class="pn">|</span> <span onmouseout="hideTip(event, 'fs23', 33)" onmouseover="showTip(event, 'fs23', 33)" class="uc">ChangeInterval</span> <span class="k">of</span> <span class="id">offset</span><span class="pn">:</span> <span onmouseout="hideTip(event, 'fs17', 34)" onmouseover="showTip(event, 'fs17', 34)" class="vt">int</span>
+<span class="c">/// user-defined order type</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs24', 35)" onmouseover="showTip(event, 'fs24', 35)" class="rt">Order</span> <span class="o">=</span>
+    <span class="pn">|</span> <span onmouseout="hideTip(event, 'fs25', 36)" onmouseover="showTip(event, 'fs25', 36)" class="uc">StartKeyListener</span>
+    <span class="pn">|</span> <span onmouseout="hideTip(event, 'fs26', 37)" onmouseover="showTip(event, 'fs26', 37)" class="uc">Print</span> <span class="k">of</span> <span class="id">value</span><span class="pn">:</span> <span onmouseout="hideTip(event, 'fs17', 38)" onmouseover="showTip(event, 'fs17', 38)" class="vt">int</span>
+    <span class="pn">|</span> <span onmouseout="hideTip(event, 'fs27', 39)" onmouseover="showTip(event, 'fs27', 39)" class="uc">DelayTick</span> <span class="k">of</span> <span class="id">delay</span><span class="pn">:</span> <span onmouseout="hideTip(event, 'fs17', 40)" onmouseover="showTip(event, 'fs17', 40)" class="vt">int</span>
+    <span class="pn">|</span> <span onmouseout="hideTip(event, 'fs28', 41)" onmouseover="showTip(event, 'fs28', 41)" class="uc">CancelDelayedTick</span>
+    <span class="pn">|</span> <span onmouseout="hideTip(event, 'fs29', 42)" onmouseover="showTip(event, 'fs29', 42)" class="uc">Orders</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs24', 43)" onmouseover="showTip(event, 'fs24', 43)" class="rt">Order</span> <span onmouseout="hideTip(event, 'fs30', 44)" onmouseover="showTip(event, 'fs30', 44)" class="rt">list</span>
+    <span class="pn">|</span> <span onmouseout="hideTip(event, 'fs31', 45)" onmouseover="showTip(event, 'fs31', 45)" class="uc">NoOrder</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs32', 46)" onmouseover="showTip(event, 'fs32', 46)" class="fn">init</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs33', 47)" onmouseover="showTip(event, 'fs33', 47)" class="id">running</span><span class="pn">,</span> <span onmouseout="hideTip(event, 'fs34', 48)" onmouseover="showTip(event, 'fs34', 48)" class="id">interval</span><span class="pn">)</span> <span class="o">=</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs35', 49)" onmouseover="showTip(event, 'fs35', 49)" class="id">model</span> <span class="o">=</span> <span class="pn">{</span> <span class="id">Running</span><span class="o">=</span><span onmouseout="hideTip(event, 'fs33', 50)" onmouseover="showTip(event, 'fs33', 50)" class="id">running</span> <span class="pn">;</span> <span class="id">Count</span><span class="o">=</span><span class="n">0</span> <span class="pn">;</span> <span class="id">Interval</span><span class="o">=</span><span onmouseout="hideTip(event, 'fs34', 51)" onmouseover="showTip(event, 'fs34', 51)" class="id">interval</span> <span class="pn">}</span>
+    <span onmouseout="hideTip(event, 'fs35', 52)" onmouseover="showTip(event, 'fs35', 52)" class="id">model</span><span class="pn">,</span> <span onmouseout="hideTip(event, 'fs29', 53)" onmouseover="showTip(event, 'fs29', 53)" class="uc">Orders</span> <span class="pn">[</span> <span onmouseout="hideTip(event, 'fs25', 54)" onmouseover="showTip(event, 'fs25', 54)" class="uc">StartKeyListener</span> <span class="pn">;</span> <span class="k">if</span> <span onmouseout="hideTip(event, 'fs33', 55)" onmouseover="showTip(event, 'fs33', 55)" class="id">running</span> <span class="k">then</span> <span onmouseout="hideTip(event, 'fs27', 56)" onmouseover="showTip(event, 'fs27', 56)" class="uc">DelayTick</span> <span class="n">0</span> <span class="pn">]</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs36', 57)" onmouseover="showTip(event, 'fs36', 57)" class="fn">update</span> <span onmouseout="hideTip(event, 'fs37', 58)" onmouseover="showTip(event, 'fs37', 58)" class="id">msg</span> <span onmouseout="hideTip(event, 'fs35', 59)" onmouseover="showTip(event, 'fs35', 59)" class="id">model</span> <span class="o">=</span>
+    <span class="k">match</span> <span onmouseout="hideTip(event, 'fs37', 60)" onmouseover="showTip(event, 'fs37', 60)" class="id">msg</span><span class="pn">,</span> <span onmouseout="hideTip(event, 'fs35', 61)" onmouseover="showTip(event, 'fs35', 61)" class="id">model</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs14', 62)" onmouseover="showTip(event, 'fs14', 62)" class="id">Running</span> <span class="k">with</span>
+    <span class="pn">|</span> <span onmouseout="hideTip(event, 'fs20', 63)" onmouseover="showTip(event, 'fs20', 63)" class="uc">TimerTick</span><span class="pn">,</span> <span class="k">true</span>
+    <span class="pn">|</span> <span onmouseout="hideTip(event, 'fs22', 64)" onmouseover="showTip(event, 'fs22', 64)" class="uc">Toggle</span><span class="pn">,</span> <span class="k">false</span> <span class="k">-&gt;</span>
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs38', 65)" onmouseover="showTip(event, 'fs38', 65)" class="id">model&#39;</span> <span class="o">=</span> <span class="pn">{</span> <span onmouseout="hideTip(event, 'fs35', 66)" onmouseover="showTip(event, 'fs35', 66)" class="id">model</span> <span class="k">with</span> <span class="id">Running</span> <span class="o">=</span> <span class="k">true</span><span class="pn">;</span> <span class="id">Count</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs35', 67)" onmouseover="showTip(event, 'fs35', 67)" class="id">model</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs16', 68)" onmouseover="showTip(event, 'fs16', 68)" class="id">Count</span><span class="o">+</span><span class="n">1</span> <span class="pn">}</span>
+        <span onmouseout="hideTip(event, 'fs38', 69)" onmouseover="showTip(event, 'fs38', 69)" class="id">model&#39;</span><span class="pn">,</span> <span onmouseout="hideTip(event, 'fs29', 70)" onmouseover="showTip(event, 'fs29', 70)" class="uc">Orders</span> <span class="pn">[</span> <span onmouseout="hideTip(event, 'fs26', 71)" onmouseover="showTip(event, 'fs26', 71)" class="uc">Print</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs35', 72)" onmouseover="showTip(event, 'fs35', 72)" class="id">model</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs16', 73)" onmouseover="showTip(event, 'fs16', 73)" class="id">Count</span><span class="o">+</span><span class="n">1</span><span class="pn">)</span> <span class="pn">;</span> <span onmouseout="hideTip(event, 'fs27', 74)" onmouseover="showTip(event, 'fs27', 74)" class="uc">DelayTick</span> <span onmouseout="hideTip(event, 'fs35', 75)" onmouseover="showTip(event, 'fs35', 75)" class="id">model</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs18', 76)" onmouseover="showTip(event, 'fs18', 76)" class="id">Interval</span> <span class="pn">]</span>
+    <span class="pn">|</span> <span onmouseout="hideTip(event, 'fs22', 77)" onmouseover="showTip(event, 'fs22', 77)" class="uc">Toggle</span><span class="pn">,</span> <span class="k">true</span> <span class="k">-&gt;</span>
+        <span class="pn">{</span> <span onmouseout="hideTip(event, 'fs35', 78)" onmouseover="showTip(event, 'fs35', 78)" class="id">model</span> <span class="k">with</span> <span class="id">Running</span> <span class="o">=</span> <span class="k">false</span> <span class="pn">}</span><span class="pn">,</span> <span onmouseout="hideTip(event, 'fs28', 79)" onmouseover="showTip(event, 'fs28', 79)" class="uc">CancelDelayedTick</span>
+    <span class="pn">|</span> <span onmouseout="hideTip(event, 'fs21', 80)" onmouseover="showTip(event, 'fs21', 80)" class="uc">KeyboardTick</span><span class="pn">,</span> <span class="k">false</span> <span class="k">-&gt;</span> 
+        <span class="pn">{</span> <span onmouseout="hideTip(event, 'fs35', 81)" onmouseover="showTip(event, 'fs35', 81)" class="id">model</span> <span class="k">with</span> <span class="id">Count</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs35', 82)" onmouseover="showTip(event, 'fs35', 82)" class="id">model</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs16', 83)" onmouseover="showTip(event, 'fs16', 83)" class="id">Count</span><span class="o">+</span><span class="n">1</span> <span class="pn">}</span><span class="pn">,</span> <span onmouseout="hideTip(event, 'fs26', 84)" onmouseover="showTip(event, 'fs26', 84)" class="uc">Print</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs35', 85)" onmouseover="showTip(event, 'fs35', 85)" class="id">model</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs16', 86)" onmouseover="showTip(event, 'fs16', 86)" class="id">Count</span><span class="o">+</span><span class="n">1</span><span class="pn">)</span>
+    <span class="pn">|</span> <span onmouseout="hideTip(event, 'fs23', 87)" onmouseover="showTip(event, 'fs23', 87)" class="uc">ChangeInterval</span> <span onmouseout="hideTip(event, 'fs39', 88)" onmouseover="showTip(event, 'fs39', 88)" class="id">x</span><span class="pn">,</span> <span class="k">true</span> <span class="k">-&gt;</span>
+        <span class="pn">{</span> <span onmouseout="hideTip(event, 'fs35', 89)" onmouseover="showTip(event, 'fs35', 89)" class="id">model</span> <span class="k">with</span> <span class="id">Interval</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs35', 90)" onmouseover="showTip(event, 'fs35', 90)" class="id">model</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs18', 91)" onmouseover="showTip(event, 'fs18', 91)" class="id">Interval</span><span class="o">+</span><span onmouseout="hideTip(event, 'fs39', 92)" onmouseover="showTip(event, 'fs39', 92)" class="id">x</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs40', 93)" onmouseover="showTip(event, 'fs40', 93)" class="fn">min</span> <span class="n">2500</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs41', 94)" onmouseover="showTip(event, 'fs41', 94)" class="fn">max</span> <span class="n">50</span> <span class="pn">}</span><span class="pn">,</span> <span onmouseout="hideTip(event, 'fs31', 95)" onmouseover="showTip(event, 'fs31', 95)" class="uc">NoOrder</span>
+    <span class="pn">|</span> <span onmouseout="hideTip(event, 'fs21', 96)" onmouseover="showTip(event, 'fs21', 96)" class="uc">KeyboardTick</span><span class="pn">,</span> <span class="k">true</span> <span class="pn">|</span> <span onmouseout="hideTip(event, 'fs23', 97)" onmouseover="showTip(event, 'fs23', 97)" class="uc">ChangeInterval</span> <span class="id">_</span><span class="pn">,</span> <span class="k">false</span> <span class="pn">|</span> <span onmouseout="hideTip(event, 'fs20', 98)" onmouseover="showTip(event, 'fs20', 98)" class="uc">TimerTick</span><span class="pn">,</span> <span class="k">false</span> <span class="k">-&gt;</span> 
+        <span onmouseout="hideTip(event, 'fs35', 99)" onmouseover="showTip(event, 'fs35', 99)" class="id">model</span><span class="pn">,</span> <span onmouseout="hideTip(event, 'fs31', 100)" onmouseover="showTip(event, 'fs31', 100)" class="uc">NoOrder</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs42', 101)" onmouseover="showTip(event, 'fs42', 101)" class="fn">view</span> <span class="id">_</span> <span class="id">_</span> <span class="o">=</span> <span class="pn">(</span><span class="pn">)</span>
+<span class="c">/// Function executing orders, with a dispatch function as second argument.</span>
+<span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs43', 102)" onmouseover="showTip(event, 'fs43', 102)" class="fn">execute</span> <span onmouseout="hideTip(event, 'fs44', 103)" onmouseover="showTip(event, 'fs44', 103)" class="id">order</span> <span onmouseout="hideTip(event, 'fs45', 104)" onmouseover="showTip(event, 'fs45', 104)" class="fn">dispatch</span> <span class="o">=</span>
+    <span class="k">match</span> <span onmouseout="hideTip(event, 'fs44', 105)" onmouseover="showTip(event, 'fs44', 105)" class="id">order</span> <span class="k">with</span>
+    <span class="pn">|</span> <span onmouseout="hideTip(event, 'fs25', 106)" onmouseover="showTip(event, 'fs25', 106)" class="uc">StartKeyListener</span> <span class="k">-&gt;</span>
+        <span onmouseout="hideTip(event, 'fs46', 107)" onmouseover="showTip(event, 'fs46', 107)" class="k">async</span> <span class="pn">{</span>
+            <span onmouseout="hideTip(event, 'fs47', 108)" onmouseover="showTip(event, 'fs47', 108)" class="k">seq</span> <span class="pn">{</span> <span class="k">while</span> <span class="k">true</span> <span class="k">do</span> <span class="pn">(</span><span class="id">ReadKey</span> <span class="k">true</span><span class="pn">)</span><span class="pn">.</span><span class="id">KeyChar</span> <span class="pn">}</span>
+            <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs48', 109)" onmouseover="showTip(event, 'fs48', 109)" class="m">Seq</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs49', 110)" onmouseover="showTip(event, 'fs49', 110)" class="id">takeWhile</span> <span class="pn">(</span><span class="k">fun</span> <span onmouseout="hideTip(event, 'fs50', 111)" onmouseover="showTip(event, 'fs50', 111)" class="id">key</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs50', 112)" onmouseover="showTip(event, 'fs50', 112)" class="id">key</span> <span class="o">&lt;&gt;</span> <span class="s">&#39;q&#39;</span> <span class="o">&amp;&amp;</span> <span onmouseout="hideTip(event, 'fs50', 113)" onmouseover="showTip(event, 'fs50', 113)" class="id">key</span> <span class="o">&lt;&gt;</span> <span class="s">&#39;Q&#39;</span><span class="pn">)</span>  <span class="c">// press q to quit</span>
+            <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs48', 114)" onmouseover="showTip(event, 'fs48', 114)" class="m">Seq</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs51', 115)" onmouseover="showTip(event, 'fs51', 115)" class="id">iter</span> <span class="pn">(</span><span class="k">function</span>
+                <span class="pn">|</span> <span class="s">&#39; &#39;</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs45', 116)" onmouseover="showTip(event, 'fs45', 116)" class="fn">dispatch</span> <span onmouseout="hideTip(event, 'fs22', 117)" onmouseover="showTip(event, 'fs22', 117)" class="uc">Toggle</span>
+                <span class="pn">|</span> <span class="s">&#39;\013&#39;</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs45', 118)" onmouseover="showTip(event, 'fs45', 118)" class="fn">dispatch</span> <span onmouseout="hideTip(event, 'fs21', 119)" onmouseover="showTip(event, 'fs21', 119)" class="uc">KeyboardTick</span>   <span class="c">// Enter key</span>
+                <span class="pn">|</span> <span class="s">&#39;-&#39;</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs45', 120)" onmouseover="showTip(event, 'fs45', 120)" class="fn">dispatch</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs23', 121)" onmouseover="showTip(event, 'fs23', 121)" class="uc">ChangeInterval</span> <span class="n">50</span><span class="pn">)</span>
+                <span class="pn">|</span> <span class="s">&#39;+&#39;</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs45', 122)" onmouseover="showTip(event, 'fs45', 122)" class="fn">dispatch</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs23', 123)" onmouseover="showTip(event, 'fs23', 123)" class="uc">ChangeInterval</span> <span class="o">-</span><span class="n">50</span><span class="pn">)</span>
+                <span class="pn">|</span> <span class="id">_</span> <span class="k">-&gt;</span> <span class="pn">(</span><span class="pn">)</span><span class="pn">)</span>
+            <span onmouseout="hideTip(event, 'fs52', 124)" onmouseover="showTip(event, 'fs52', 124)" class="rt">Async</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs53', 125)" onmouseover="showTip(event, 'fs53', 125)" class="id">CancelDefaultToken</span> <span class="pn">(</span><span class="pn">)</span> <span class="pn">}</span>
+        <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs52', 126)" onmouseover="showTip(event, 'fs52', 126)" class="rt">Async</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs54', 127)" onmouseover="showTip(event, 'fs54', 127)" class="id">StartImmediate</span>
+    <span class="pn">|</span> <span onmouseout="hideTip(event, 'fs26', 128)" onmouseover="showTip(event, 'fs26', 128)" class="uc">Print</span> <span onmouseout="hideTip(event, 'fs55', 129)" onmouseover="showTip(event, 'fs55', 129)" class="id">value</span> <span class="k">-&gt;</span> <span class="id">WriteLine</span> <span onmouseout="hideTip(event, 'fs55', 130)" onmouseover="showTip(event, 'fs55', 130)" class="id">value</span>
+    <span class="pn">|</span> <span onmouseout="hideTip(event, 'fs27', 131)" onmouseover="showTip(event, 'fs27', 131)" class="uc">DelayTick</span> <span onmouseout="hideTip(event, 'fs56', 132)" onmouseover="showTip(event, 'fs56', 132)" class="id">delay</span> <span class="k">-&gt;</span>
+        <span onmouseout="hideTip(event, 'fs46', 133)" onmouseover="showTip(event, 'fs46', 133)" class="k">async</span> <span class="pn">{</span> <span class="k">do!</span> <span onmouseout="hideTip(event, 'fs52', 134)" onmouseover="showTip(event, 'fs52', 134)" class="rt">Async</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs57', 135)" onmouseover="showTip(event, 'fs57', 135)" class="id">Sleep</span> <span onmouseout="hideTip(event, 'fs56', 136)" onmouseover="showTip(event, 'fs56', 136)" class="id">delay</span>
+                <span onmouseout="hideTip(event, 'fs45', 137)" onmouseover="showTip(event, 'fs45', 137)" class="fn">dispatch</span> <span onmouseout="hideTip(event, 'fs20', 138)" onmouseover="showTip(event, 'fs20', 138)" class="uc">TimerTick</span> <span class="pn">}</span>
+        <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs52', 139)" onmouseover="showTip(event, 'fs52', 139)" class="rt">Async</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs58', 140)" onmouseover="showTip(event, 'fs58', 140)" class="id">Start</span>
+    <span class="pn">|</span> <span onmouseout="hideTip(event, 'fs28', 141)" onmouseover="showTip(event, 'fs28', 141)" class="uc">CancelDelayedTick</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs52', 142)" onmouseover="showTip(event, 'fs52', 142)" class="rt">Async</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs53', 143)" onmouseover="showTip(event, 'fs53', 143)" class="id">CancelDefaultToken</span> <span class="pn">(</span><span class="pn">)</span>
+    <span class="pn">|</span> <span onmouseout="hideTip(event, 'fs29', 144)" onmouseover="showTip(event, 'fs29', 144)" class="uc">Orders</span> <span onmouseout="hideTip(event, 'fs59', 145)" onmouseover="showTip(event, 'fs59', 145)" class="id">orders</span> <span class="k">-&gt;</span> <span class="k">for</span> <span onmouseout="hideTip(event, 'fs44', 146)" onmouseover="showTip(event, 'fs44', 146)" class="id">order</span> <span class="k">in</span> <span onmouseout="hideTip(event, 'fs59', 147)" onmouseover="showTip(event, 'fs59', 147)" class="id">orders</span> <span class="k">do</span> <span onmouseout="hideTip(event, 'fs43', 148)" onmouseover="showTip(event, 'fs43', 148)" class="fn">execute</span> <span onmouseout="hideTip(event, 'fs44', 149)" onmouseover="showTip(event, 'fs44', 149)" class="id">order</span> <span onmouseout="hideTip(event, 'fs45', 150)" onmouseover="showTip(event, 'fs45', 150)" class="fn">dispatch</span>
+    <span class="pn">|</span> <span onmouseout="hideTip(event, 'fs31', 151)" onmouseover="showTip(event, 'fs31', 151)" class="uc">NoOrder</span> <span class="k">-&gt;</span> <span class="pn">(</span><span class="pn">)</span>
+
+<span class="id">WriteLine</span> <span onmouseout="hideTip(event, 'fs12', 152)" onmouseover="showTip(event, 'fs12', 152)" class="id">description</span>
+<span onmouseout="hideTip(event, 'fs60', 153)" onmouseover="showTip(event, 'fs60', 153)" class="m">Program</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs1', 154)" onmouseover="showTip(event, 'fs1', 154)" class="id">mkProgramWithOrderExecute</span> <span onmouseout="hideTip(event, 'fs32', 155)" onmouseover="showTip(event, 'fs32', 155)" class="fn">init</span> <span onmouseout="hideTip(event, 'fs36', 156)" onmouseover="showTip(event, 'fs36', 156)" class="fn">update</span> <span onmouseout="hideTip(event, 'fs42', 157)" onmouseover="showTip(event, 'fs42', 157)" class="fn">view</span> <span onmouseout="hideTip(event, 'fs43', 158)" onmouseover="showTip(event, 'fs43', 158)" class="fn">execute</span>
+<span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs60', 159)" onmouseover="showTip(event, 'fs60', 159)" class="m">Program</span><span class="pn">.</span><span class="id">runWith</span> <span class="pn">(</span><span class="k">false</span><span class="pn">,</span> <span class="n">350</span><span class="pn">)</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">val mkProgramWithOrderExecute : init:(&#39;arg&#39; -&gt; &#39;model * &#39;order) -&gt; update:(&#39;msg -&gt; &#39;model -&gt; &#39;model * &#39;order) -&gt; view:(&#39;model -&gt; &#39;a -&gt; &#39;view) -&gt; execute:(&#39;order -&gt; &#39;b -&gt; unit) -&gt; &#39;c<br /><em><br /><br />&#160;&lt;summary&gt;<br />&#160;Program with user-defined orders instead of usual command.<br />&#160;Orders are processed by &lt;code&gt;execute&lt;/code&gt; which can dispatch messages,<br />&#160;called in place of usual command processing.<br />&#160;&lt;/summary&gt;</em></div>
+<div class="tip" id="fs2">val init : (&#39;arg&#39; -&gt; &#39;model * &#39;order)</div>
+<div class="tip" id="fs3">val update : (&#39;msg -&gt; &#39;model -&gt; &#39;model * &#39;order)</div>
+<div class="tip" id="fs4">val view : (&#39;model -&gt; &#39;a -&gt; &#39;view)</div>
+<div class="tip" id="fs5">val execute : (&#39;order -&gt; &#39;b -&gt; unit)</div>
+<div class="tip" id="fs6">type unit = Unit</div>
+<div class="tip" id="fs7">val convert : (&#39;d * &#39;order -&gt; &#39;d * &#39;e)</div>
+<div class="tip" id="fs8">val model : &#39;d</div>
+<div class="tip" id="fs9">val order : &#39;order</div>
+<div class="tip" id="fs10">namespace System</div>
+<div class="tip" id="fs11">type Console =<br />&#160;&#160;static member BackgroundColor : ConsoleColor with get, set<br />&#160;&#160;static member Beep : unit -&gt; unit + 1 overload<br />&#160;&#160;static member BufferHeight : int with get, set<br />&#160;&#160;static member BufferWidth : int with get, set<br />&#160;&#160;static member CapsLock : bool<br />&#160;&#160;static member Clear : unit -&gt; unit<br />&#160;&#160;static member CursorLeft : int with get, set<br />&#160;&#160;static member CursorSize : int with get, set<br />&#160;&#160;static member CursorTop : int with get, set<br />&#160;&#160;static member CursorVisible : bool with get, set<br />&#160;&#160;...</div>
+<div class="tip" id="fs12">val description : string</div>
+<div class="tip" id="fs13">type Model =<br />&#160;&#160;{ Running: bool<br />&#160;&#160;&#160;&#160;Count: int<br />&#160;&#160;&#160;&#160;Interval: int }</div>
+<div class="tip" id="fs14">Model.Running: bool</div>
+<div class="tip" id="fs15">type bool = System.Boolean</div>
+<div class="tip" id="fs16">Model.Count: int</div>
+<div class="tip" id="fs17">Multiple items<br />val int : value:&#39;T -&gt; int (requires member op_Explicit)<br /><br />--------------------<br />type int = int32<br /><br />--------------------<br />type int&lt;&#39;Measure&gt; = int</div>
+<div class="tip" id="fs18">Model.Interval: int</div>
+<div class="tip" id="fs19">type Msg =<br />&#160;&#160;| TimerTick<br />&#160;&#160;| KeyboardTick<br />&#160;&#160;| Toggle<br />&#160;&#160;| ChangeInterval of offset: int</div>
+<div class="tip" id="fs20">union case Msg.TimerTick: Msg</div>
+<div class="tip" id="fs21">union case Msg.KeyboardTick: Msg</div>
+<div class="tip" id="fs22">union case Msg.Toggle: Msg</div>
+<div class="tip" id="fs23">union case Msg.ChangeInterval: offset: int -&gt; Msg</div>
+<div class="tip" id="fs24">type Order =<br />&#160;&#160;| StartKeyListener<br />&#160;&#160;| Print of value: int<br />&#160;&#160;| DelayTick of delay: int<br />&#160;&#160;| CancelDelayedTick<br />&#160;&#160;| Orders of Order list<br />&#160;&#160;| NoOrder<br /><em><br /><br />&#160;user-defined order type</em></div>
+<div class="tip" id="fs25">union case Order.StartKeyListener: Order</div>
+<div class="tip" id="fs26">union case Order.Print: value: int -&gt; Order</div>
+<div class="tip" id="fs27">union case Order.DelayTick: delay: int -&gt; Order</div>
+<div class="tip" id="fs28">union case Order.CancelDelayedTick: Order</div>
+<div class="tip" id="fs29">union case Order.Orders: Order list -&gt; Order</div>
+<div class="tip" id="fs30">type &#39;T list = List&lt;&#39;T&gt;</div>
+<div class="tip" id="fs31">union case Order.NoOrder: Order</div>
+<div class="tip" id="fs32">val init : running:bool * interval:int -&gt; Model * Order</div>
+<div class="tip" id="fs33">val running : bool</div>
+<div class="tip" id="fs34">val interval : int</div>
+<div class="tip" id="fs35">val model : Model</div>
+<div class="tip" id="fs36">val update : msg:Msg -&gt; model:Model -&gt; Model * Order</div>
+<div class="tip" id="fs37">val msg : Msg</div>
+<div class="tip" id="fs38">val model&#39; : Model</div>
+<div class="tip" id="fs39">val x : int</div>
+<div class="tip" id="fs40">val min : e1:&#39;T -&gt; e2:&#39;T -&gt; &#39;T (requires comparison)</div>
+<div class="tip" id="fs41">val max : e1:&#39;T -&gt; e2:&#39;T -&gt; &#39;T (requires comparison)</div>
+<div class="tip" id="fs42">val view : &#39;a -&gt; &#39;b -&gt; unit</div>
+<div class="tip" id="fs43">val execute : order:Order -&gt; dispatch:(Msg -&gt; unit) -&gt; unit<br /><em><br /><br />&#160;Function executing orders, with a dispatch function as second argument.</em></div>
+<div class="tip" id="fs44">val order : Order</div>
+<div class="tip" id="fs45">val dispatch : (Msg -&gt; unit)</div>
+<div class="tip" id="fs46">val async : AsyncBuilder</div>
+<div class="tip" id="fs47">Multiple items<br />val seq : sequence:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt;<br /><br />--------------------<br />type seq&lt;&#39;T&gt; = System.Collections.Generic.IEnumerable&lt;&#39;T&gt;</div>
+<div class="tip" id="fs48">module Seq<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs49">val takeWhile : predicate:(&#39;T -&gt; bool) -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt;</div>
+<div class="tip" id="fs50">val key : char</div>
+<div class="tip" id="fs51">val iter : action:(&#39;T -&gt; unit) -&gt; source:seq&lt;&#39;T&gt; -&gt; unit</div>
+<div class="tip" id="fs52">Multiple items<br />type Async =<br />&#160;&#160;static member AsBeginEnd : computation:(&#39;Arg -&gt; Async&lt;&#39;T&gt;) -&gt; (&#39;Arg * AsyncCallback * obj -&gt; IAsyncResult) * (IAsyncResult -&gt; &#39;T) * (IAsyncResult -&gt; unit)<br />&#160;&#160;static member AwaitEvent : event:IEvent&lt;&#39;Del,&#39;T&gt; * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt; (requires delegate and &#39;Del :&gt; Delegate)<br />&#160;&#160;static member AwaitIAsyncResult : iar:IAsyncResult * ?millisecondsTimeout:int -&gt; Async&lt;bool&gt;<br />&#160;&#160;static member AwaitTask : task:Task -&gt; Async&lt;unit&gt;<br />&#160;&#160;static member AwaitTask : task:Task&lt;&#39;T&gt; -&gt; Async&lt;&#39;T&gt;<br />&#160;&#160;static member AwaitWaitHandle : waitHandle:WaitHandle * ?millisecondsTimeout:int -&gt; Async&lt;bool&gt;<br />&#160;&#160;static member CancelDefaultToken : unit -&gt; unit<br />&#160;&#160;static member Catch : computation:Async&lt;&#39;T&gt; -&gt; Async&lt;Choice&lt;&#39;T,exn&gt;&gt;<br />&#160;&#160;static member Choice : computations:seq&lt;Async&lt;&#39;T option&gt;&gt; -&gt; Async&lt;&#39;T option&gt;<br />&#160;&#160;static member FromBeginEnd : beginAction:(AsyncCallback * obj -&gt; IAsyncResult) * endAction:(IAsyncResult -&gt; &#39;T) * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />&#160;&#160;...<br /><br />--------------------<br />type Async&lt;&#39;T&gt; =</div>
+<div class="tip" id="fs53">static member Async.CancelDefaultToken : unit -&gt; unit</div>
+<div class="tip" id="fs54">static member Async.StartImmediate : computation:Async&lt;unit&gt; * ?cancellationToken:System.Threading.CancellationToken -&gt; unit</div>
+<div class="tip" id="fs55">val value : int</div>
+<div class="tip" id="fs56">val delay : int</div>
+<div class="tip" id="fs57">static member Async.Sleep : millisecondsDueTime:int -&gt; Async&lt;unit&gt;</div>
+<div class="tip" id="fs58">static member Async.Start : computation:Async&lt;unit&gt; * ?cancellationToken:System.Threading.CancellationToken -&gt; unit</div>
+<div class="tip" id="fs59">val orders : Order list</div>
+<div class="tip" id="fs60">module Program<br /><br />from Script</div>
+

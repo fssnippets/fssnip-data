@@ -1,0 +1,81 @@
+module Planner.Scheduler
+
+open Flips
+open Flips.Types
+open Flips.SliceMap
+
+type Day = Day of string
+type Engineer = Engineer of string
+
+let days =
+    [ "Monday"; "Tuesday"; "Wednesday"; "Thursday"; "Friday" ]
+    |> List.map Day
+
+let engineers =
+    [
+        "Robb"
+        "Jon"
+        "Sansa"
+        "Arya"
+        "Bran"
+        "Rickon"
+    ] |> List.map Engineer
+
+let engineerSchedulingDecision =
+    DecisionBuilder "EngineerScheduled" {
+        for day in days do
+        for engineer in engineers ->
+            DecisionType.Boolean
+    } |> SMap2
+
+let singleAssignmentPerDayConstraint =
+    ConstraintBuilder "SingleAssignmentPerDay" {
+        for day in days -> sum engineerSchedulingDecision.[day, All] <== 1.0
+    }
+
+let maxTwicePerWeekConstraint =
+    ConstraintBuilder "Max2AssignmentsPerWeek" {
+        for engineer in engineers ->
+            sum engineerSchedulingDecision.[All, engineer] <== 2.0
+    }
+
+let noConsecutiveAssignmentsConstraint =
+    ConstraintBuilder "NoConsecutiveAssignments" {
+        for day in days do
+            for engineer in engineers ->
+                let nextDayIndex = (List.findIndex ((=) day) days) + 1
+                if nextDayIndex > (List.length days - 1) then
+                    let twoDays = SliceType.In (set [day])
+                    sum engineerSchedulingDecision.[twoDays, engineer] <== 1.0
+                else
+                    let nextDay = days |> List.item nextDayIndex
+                    let twoDays = SliceType.In (set [day; nextDay])
+                    sum engineerSchedulingDecision.[twoDays, engineer] <== 1.0
+    }
+
+let assignmentValueExpr = sum (engineerSchedulingDecision.[All, All])
+let objective = Objective.create "MaxAssignmentValue" Maximize assignmentValueExpr
+
+let model =
+    Model.create objective
+    |> Model.addConstraints singleAssignmentPerDayConstraint
+    |> Model.addConstraints noConsecutiveAssignmentsConstraint
+    // |> Model.addConstraints maxTwicePerWeekConstraint
+
+let settings = {
+    SolverType = SolverType.CBC
+    MaxDuration = 10_000L
+    WriteLPFile = None
+}
+
+let solve () =
+    let result = Solver.solve settings model
+
+    match result with
+    | Optimal sln ->
+        Solution.getValues sln (engineerSchedulingDecision.AsMap())
+        |> Map.toSeq
+        |> Seq.filter (fun (_, v) -> v >= 1.0) // Get the Pairings that the solver selected
+        |> Seq.iter (printfn "%A")
+    | _ -> printfn "Error Solving"
+

@@ -1,0 +1,256 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+<span class="l">38: </span>
+<span class="l">39: </span>
+<span class="l">40: </span>
+<span class="l">41: </span>
+<span class="l">42: </span>
+<span class="l">43: </span>
+<span class="l">44: </span>
+<span class="l">45: </span>
+<span class="l">46: </span>
+<span class="l">47: </span>
+<span class="l">48: </span>
+<span class="l">49: </span>
+<span class="l">50: </span>
+<span class="l">51: </span>
+<span class="l">52: </span>
+<span class="l">53: </span>
+<span class="l">54: </span>
+<span class="l">55: </span>
+<span class="l">56: </span>
+<span class="l">57: </span>
+<span class="l">58: </span>
+<span class="l">59: </span>
+<span class="l">60: </span>
+<span class="l">61: </span>
+<span class="l">62: </span>
+<span class="l">63: </span>
+<span class="l">64: </span>
+<span class="l">65: </span>
+<span class="l">66: </span>
+<span class="l">67: </span>
+<span class="l">68: </span>
+<span class="l">69: </span>
+<span class="l">70: </span>
+<span class="l">71: </span>
+<span class="l">72: </span>
+<span class="l">73: </span>
+<span class="l">74: </span>
+<span class="l">75: </span>
+<span class="l">76: </span>
+<span class="l">77: </span>
+<span class="l">78: </span>
+<span class="l">79: </span>
+<span class="l">80: </span>
+<span class="l">81: </span>
+<span class="l">82: </span>
+<span class="l">83: </span>
+<span class="l">84: </span>
+<span class="l">85: </span>
+<span class="l">86: </span>
+<span class="l">87: </span>
+<span class="l">88: </span>
+<span class="l">89: </span>
+<span class="l">90: </span>
+<span class="l">91: </span>
+<span class="l">92: </span>
+<span class="l">93: </span>
+<span class="l">94: </span>
+<span class="l">95: </span>
+<span class="l">96: </span>
+<span class="l">97: </span>
+<span class="l">98: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">module</span> <span class="m">SQLCascadeTriggers</span> <span class="o">=</span>
+    <span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="id">FSharp</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="id">Data</span>
+
+    <span class="k">let</span> <span class="pn">[&lt;</span><span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="rt">Literal</span><span class="pn">&gt;]</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="id">ConnectionString</span>  <span class="o">=</span> <span class="s">@&quot;Data Source=DBSERVER;Initial Catalog=DB;UID=xxx;PWD=xxx;&quot;</span>
+
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="fn">generateTriggers</span> <span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="fn">filter</span> <span class="o">=</span>
+        <span class="k">use</span> <span onmouseout="hideTip(event, 'fs7', 7)" onmouseover="showTip(event, 'fs7', 7)" class="id">cmd</span> <span class="o">=</span> <span class="k">new</span> <span onmouseout="hideTip(event, 'fs8', 8)" onmouseover="showTip(event, 'fs8', 8)" class="rt">SqlCommandProvider</span><span class="pn">&lt;</span><span class="s">&quot;&quot;&quot;</span>
+<span class="s">    SELECT   PKSchema = PK.table_schema, PKTable = PK.table_name</span>
+<span class="s">           , FKSchema = FK.table_schema, FKTable = FK.table_name</span>
+<span class="s">           , PK.ordinal_position</span>
+<span class="s">           , PKColumn = PK.column_name</span>
+<span class="s">           , FKColumn = FK.column_name</span>
+<span class="s">           , RC.*</span>
+<span class="s">    FROM INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS RC</span>
+<span class="s">    JOIN INFORMATION_SCHEMA.key_column_usage        PK ON PK.constraint_catalog = RC.unique_constraint_catalog AND PK.constraint_schema = RC.unique_constraint_schema AND PK.constraint_name = RC.unique_constraint_name</span>
+<span class="s">    JOIN INFORMATION_SCHEMA.key_column_usage        FK ON FK.constraint_catalog = RC.constraint_catalog        AND FK.constraint_schema = RC.constraint_schema        AND FK.constraint_name = RC.constraint_name         AND FK.ordinal_position = PK.ordinal_position</span>
+<span class="s">    ORDER BY 1, 2, 3, 4, 5</span>
+<span class="s">&quot;&quot;&quot;</span> <span class="pn">,</span> <span onmouseout="hideTip(event, 'fs4', 9)" onmouseover="showTip(event, 'fs4', 9)" class="id">ConnectionString</span><span class="pn">,</span> <span onmouseout="hideTip(event, 'fs9', 10)" onmouseover="showTip(event, 'fs9', 10)" class="id">ResultType</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs9', 11)" onmouseover="showTip(event, 'fs9', 11)" class="vt">ResultType</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs10', 12)" onmouseover="showTip(event, 'fs10', 12)" class="id">Records</span><span class="pn">&gt;</span><span class="pn">(</span><span onmouseout="hideTip(event, 'fs4', 13)" onmouseover="showTip(event, 'fs4', 13)" class="id">ConnectionString</span><span class="pn">)</span>
+
+        
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs11', 14)" onmouseover="showTip(event, 'fs11', 14)" class="id">filteredRows</span> <span class="o">=</span> 
+            <span onmouseout="hideTip(event, 'fs7', 15)" onmouseover="showTip(event, 'fs7', 15)" class="id">cmd</span><span class="pn">.</span><span class="id">Execute</span><span class="pn">(</span><span class="pn">)</span>
+            <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs12', 16)" onmouseover="showTip(event, 'fs12', 16)" class="m">Seq</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs13', 17)" onmouseover="showTip(event, 'fs13', 17)" class="id">filter</span> <span onmouseout="hideTip(event, 'fs6', 18)" onmouseover="showTip(event, 'fs6', 18)" class="fn">filter</span>
+            <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs12', 19)" onmouseover="showTip(event, 'fs12', 19)" class="m">Seq</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs14', 20)" onmouseover="showTip(event, 'fs14', 20)" class="id">cache</span>
+
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs15', 21)" onmouseover="showTip(event, 'fs15', 21)" class="id">depths</span> <span class="o">=</span>
+            <span onmouseout="hideTip(event, 'fs11', 22)" onmouseover="showTip(event, 'fs11', 22)" class="id">filteredRows</span>
+            <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs12', 23)" onmouseover="showTip(event, 'fs12', 23)" class="m">Seq</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs16', 24)" onmouseover="showTip(event, 'fs16', 24)" class="id">map</span><span class="pn">(</span><span class="k">fun</span> <span onmouseout="hideTip(event, 'fs17', 25)" onmouseover="showTip(event, 'fs17', 25)" class="id">row</span> <span class="k">-&gt;</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs17', 26)" onmouseover="showTip(event, 'fs17', 26)" class="id">row</span><span class="pn">.</span><span class="id">PKSchema</span><span class="pn">.</span><span class="id">Value</span><span class="pn">,</span> <span onmouseout="hideTip(event, 'fs17', 27)" onmouseover="showTip(event, 'fs17', 27)" class="id">row</span><span class="pn">.</span><span class="id">PKTable</span><span class="pn">)</span><span class="pn">,</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs17', 28)" onmouseover="showTip(event, 'fs17', 28)" class="id">row</span><span class="pn">.</span><span class="id">FKSchema</span><span class="pn">.</span><span class="id">Value</span><span class="pn">,</span> <span onmouseout="hideTip(event, 'fs17', 29)" onmouseover="showTip(event, 'fs17', 29)" class="id">row</span><span class="pn">.</span><span class="id">FKTable</span><span class="pn">)</span><span class="pn">)</span>
+            <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs12', 30)" onmouseover="showTip(event, 'fs12', 30)" class="m">Seq</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs18', 31)" onmouseover="showTip(event, 'fs18', 31)" class="id">distinct</span>
+            <span class="o">|&gt;</span> <span class="pn">(</span><span class="k">fun</span> <span onmouseout="hideTip(event, 'fs19', 32)" onmouseover="showTip(event, 'fs19', 32)" class="id">rows</span> <span class="k">-&gt;</span>
+                <span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs20', 33)" onmouseover="showTip(event, 'fs20', 33)" class="fn">level</span> <span onmouseout="hideTip(event, 'fs21', 34)" onmouseover="showTip(event, 'fs21', 34)" class="id">table</span> <span class="o">=</span>
+                    <span onmouseout="hideTip(event, 'fs19', 35)" onmouseover="showTip(event, 'fs19', 35)" class="id">rows</span> 
+                    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs12', 36)" onmouseover="showTip(event, 'fs12', 36)" class="m">Seq</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs13', 37)" onmouseover="showTip(event, 'fs13', 37)" class="id">filter</span><span class="pn">(</span><span class="k">fun</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs22', 38)" onmouseover="showTip(event, 'fs22', 38)" class="id">p</span><span class="pn">,</span> <span onmouseout="hideTip(event, 'fs23', 39)" onmouseover="showTip(event, 'fs23', 39)" class="id">ch</span><span class="pn">)</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs23', 40)" onmouseover="showTip(event, 'fs23', 40)" class="id">ch</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs21', 41)" onmouseover="showTip(event, 'fs21', 41)" class="id">table</span><span class="pn">)</span>
+                    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs12', 42)" onmouseover="showTip(event, 'fs12', 42)" class="m">Seq</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs16', 43)" onmouseover="showTip(event, 'fs16', 43)" class="id">map</span>     <span onmouseout="hideTip(event, 'fs24', 44)" onmouseover="showTip(event, 'fs24', 44)" class="fn">fst</span>
+                    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs12', 45)" onmouseover="showTip(event, 'fs12', 45)" class="m">Seq</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs16', 46)" onmouseover="showTip(event, 'fs16', 46)" class="id">map</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs20', 47)" onmouseover="showTip(event, 'fs20', 47)" class="fn">level</span> <span class="o">&gt;</span><span class="pn">&gt;</span> <span class="pn">(</span><span class="o">+</span><span class="pn">)</span> <span class="n">1</span><span class="pn">)</span>
+                    <span class="o">|&gt;</span> <span class="k">function</span> 
+                    <span class="pn">|</span> <span onmouseout="hideTip(event, 'fs25', 48)" onmouseover="showTip(event, 'fs25', 48)" class="id">s</span> <span class="k">when</span> <span onmouseout="hideTip(event, 'fs12', 49)" onmouseover="showTip(event, 'fs12', 49)" class="m">Seq</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs26', 50)" onmouseover="showTip(event, 'fs26', 50)" class="id">isEmpty</span> <span onmouseout="hideTip(event, 'fs25', 51)" onmouseover="showTip(event, 'fs25', 51)" class="id">s</span> <span class="k">-&gt;</span> <span class="n">0</span>
+                    <span class="pn">|</span> <span onmouseout="hideTip(event, 'fs25', 52)" onmouseover="showTip(event, 'fs25', 52)" class="id">s</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs12', 53)" onmouseover="showTip(event, 'fs12', 53)" class="m">Seq</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs27', 54)" onmouseover="showTip(event, 'fs27', 54)" class="id">max</span> <span onmouseout="hideTip(event, 'fs25', 55)" onmouseover="showTip(event, 'fs25', 55)" class="id">s</span>
+                <span onmouseout="hideTip(event, 'fs19', 56)" onmouseover="showTip(event, 'fs19', 56)" class="id">rows</span>
+                <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs12', 57)" onmouseover="showTip(event, 'fs12', 57)" class="m">Seq</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs16', 58)" onmouseover="showTip(event, 'fs16', 58)" class="id">map</span> <span onmouseout="hideTip(event, 'fs28', 59)" onmouseover="showTip(event, 'fs28', 59)" class="fn">snd</span>
+                <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs12', 60)" onmouseover="showTip(event, 'fs12', 60)" class="m">Seq</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs18', 61)" onmouseover="showTip(event, 'fs18', 61)" class="id">distinct</span> 
+                <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs12', 62)" onmouseover="showTip(event, 'fs12', 62)" class="m">Seq</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs16', 63)" onmouseover="showTip(event, 'fs16', 63)" class="id">map</span> <span class="pn">(</span><span class="k">fun</span> <span onmouseout="hideTip(event, 'fs23', 64)" onmouseover="showTip(event, 'fs23', 64)" class="id">ch</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs23', 65)" onmouseover="showTip(event, 'fs23', 65)" class="id">ch</span><span class="pn">,</span> <span onmouseout="hideTip(event, 'fs20', 66)" onmouseover="showTip(event, 'fs20', 66)" class="fn">level</span> <span onmouseout="hideTip(event, 'fs23', 67)" onmouseover="showTip(event, 'fs23', 67)" class="id">ch</span><span class="pn">)</span>
+            <span class="pn">)</span>
+            <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs29', 68)" onmouseover="showTip(event, 'fs29', 68)" class="rt">Map</span>
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs30', 69)" onmouseover="showTip(event, 'fs30', 69)" class="fn">getDepth</span> <span onmouseout="hideTip(event, 'fs31', 70)" onmouseover="showTip(event, 'fs31', 70)" class="id">t</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs15', 71)" onmouseover="showTip(event, 'fs15', 71)" class="id">depths</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs29', 72)" onmouseover="showTip(event, 'fs29', 72)" class="m">Map</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs32', 73)" onmouseover="showTip(event, 'fs32', 73)" class="id">tryFind</span> <span onmouseout="hideTip(event, 'fs31', 74)" onmouseover="showTip(event, 'fs31', 74)" class="id">t</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs33', 75)" onmouseover="showTip(event, 'fs33', 75)" class="m">Option</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs34', 76)" onmouseover="showTip(event, 'fs34', 76)" class="id">defaultValue</span> <span class="n">0</span>
+
+        <span onmouseout="hideTip(event, 'fs11', 77)" onmouseover="showTip(event, 'fs11', 77)" class="id">filteredRows</span>
+        <span class="c">//|&gt; Seq.take 1</span>
+        <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs12', 78)" onmouseover="showTip(event, 'fs12', 78)" class="m">Seq</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs35', 79)" onmouseover="showTip(event, 'fs35', 79)" class="id">groupBy</span><span class="pn">(</span><span class="k">fun</span> <span onmouseout="hideTip(event, 'fs17', 80)" onmouseover="showTip(event, 'fs17', 80)" class="id">row</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs17', 81)" onmouseover="showTip(event, 'fs17', 81)" class="id">row</span><span class="pn">.</span><span class="id">PKSchema</span><span class="pn">.</span><span class="id">Value</span><span class="pn">,</span> <span onmouseout="hideTip(event, 'fs17', 82)" onmouseover="showTip(event, 'fs17', 82)" class="id">row</span><span class="pn">.</span><span class="id">PKTable</span><span class="pn">)</span>
+        <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs12', 83)" onmouseover="showTip(event, 'fs12', 83)" class="m">Seq</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs36', 84)" onmouseover="showTip(event, 'fs36', 84)" class="id">collect</span><span class="pn">(</span><span class="k">fun</span> <span class="pn">(</span><span class="pn">(</span><span onmouseout="hideTip(event, 'fs37', 85)" onmouseover="showTip(event, 'fs37', 85)" class="id">pschema</span><span class="pn">,</span> <span onmouseout="hideTip(event, 'fs38', 86)" onmouseover="showTip(event, 'fs38', 86)" class="id">ptable</span><span class="pn">)</span><span class="pn">,</span> <span onmouseout="hideTip(event, 'fs39', 87)" onmouseover="showTip(event, 'fs39', 87)" class="id">rows</span><span class="pn">)</span> <span class="k">-&gt;</span>
+            <span class="k">let</span> <span onmouseout="hideTip(event, 'fs40', 88)" onmouseover="showTip(event, 'fs40', 88)" class="id">constraints</span> <span class="o">=</span>
+                <span onmouseout="hideTip(event, 'fs39', 89)" onmouseover="showTip(event, 'fs39', 89)" class="id">rows</span>
+                <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs12', 90)" onmouseover="showTip(event, 'fs12', 90)" class="m">Seq</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs35', 91)" onmouseover="showTip(event, 'fs35', 91)" class="id">groupBy</span><span class="pn">(</span><span class="k">fun</span> <span onmouseout="hideTip(event, 'fs17', 92)" onmouseover="showTip(event, 'fs17', 92)" class="id">row</span> <span class="k">-&gt;</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs17', 93)" onmouseover="showTip(event, 'fs17', 93)" class="id">row</span><span class="pn">.</span><span class="id">CONSTRAINT_SCHEMA</span><span class="pn">,</span> <span onmouseout="hideTip(event, 'fs17', 94)" onmouseover="showTip(event, 'fs17', 94)" class="id">row</span><span class="pn">.</span><span class="id">CONSTRAINT_NAME</span><span class="pn">)</span><span class="pn">,</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs17', 95)" onmouseover="showTip(event, 'fs17', 95)" class="id">row</span><span class="pn">.</span><span class="id">FKSchema</span><span class="pn">.</span><span class="id">Value</span><span class="pn">,</span> <span onmouseout="hideTip(event, 'fs17', 96)" onmouseover="showTip(event, 'fs17', 96)" class="id">row</span><span class="pn">.</span><span class="id">FKTable</span><span class="pn">)</span><span class="pn">)</span>
+                <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs12', 97)" onmouseover="showTip(event, 'fs12', 97)" class="m">Seq</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs41', 98)" onmouseover="showTip(event, 'fs41', 98)" class="id">sortByDescending</span><span class="pn">(</span><span onmouseout="hideTip(event, 'fs24', 99)" onmouseover="showTip(event, 'fs24', 99)" class="fn">fst</span> <span class="o">&gt;</span><span class="pn">&gt;</span> <span onmouseout="hideTip(event, 'fs28', 100)" onmouseover="showTip(event, 'fs28', 100)" class="fn">snd</span> <span class="o">&gt;</span><span class="pn">&gt;</span> <span onmouseout="hideTip(event, 'fs30', 101)" onmouseover="showTip(event, 'fs30', 101)" class="fn">getDepth</span><span class="pn">)</span>
+            <span class="k">let</span> <span onmouseout="hideTip(event, 'fs42', 102)" onmouseover="showTip(event, 'fs42', 102)" class="id">foreigns</span> <span class="o">=</span>
+                <span onmouseout="hideTip(event, 'fs40', 103)" onmouseover="showTip(event, 'fs40', 103)" class="id">constraints</span>
+                <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs12', 104)" onmouseover="showTip(event, 'fs12', 104)" class="m">Seq</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs36', 105)" onmouseover="showTip(event, 'fs36', 105)" class="id">collect</span><span class="pn">(</span><span class="k">fun</span> <span class="pn">(</span><span class="pn">(</span><span class="pn">(</span><span onmouseout="hideTip(event, 'fs43', 106)" onmouseover="showTip(event, 'fs43', 106)" class="id">cschema</span><span class="pn">,</span> <span onmouseout="hideTip(event, 'fs44', 107)" onmouseover="showTip(event, 'fs44', 107)" class="id">ctable</span><span class="pn">)</span><span class="pn">,</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs45', 108)" onmouseover="showTip(event, 'fs45', 108)" class="id">fschema</span><span class="pn">,</span> <span onmouseout="hideTip(event, 'fs46', 109)" onmouseover="showTip(event, 'fs46', 109)" class="id">ftable</span><span class="pn">)</span><span class="pn">)</span><span class="pn">,</span> <span onmouseout="hideTip(event, 'fs39', 110)" onmouseover="showTip(event, 'fs39', 110)" class="id">rows</span><span class="pn">)</span><span class="k">-&gt;</span>
+                    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs47', 111)" onmouseover="showTip(event, 'fs47', 111)" class="id">condf</span> <span class="o">=</span>
+                        <span onmouseout="hideTip(event, 'fs40', 112)" onmouseover="showTip(event, 'fs40', 112)" class="id">constraints</span>
+                        <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs12', 113)" onmouseover="showTip(event, 'fs12', 113)" class="m">Seq</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs48', 114)" onmouseover="showTip(event, 'fs48', 114)" class="id">head</span>
+                        <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs28', 115)" onmouseover="showTip(event, 'fs28', 115)" class="fn">snd</span>
+                        <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs12', 116)" onmouseover="showTip(event, 'fs12', 116)" class="m">Seq</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs16', 117)" onmouseover="showTip(event, 'fs16', 117)" class="id">map</span><span class="pn">(</span><span class="k">fun</span> <span onmouseout="hideTip(event, 'fs17', 118)" onmouseover="showTip(event, 'fs17', 118)" class="id">row</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs49', 119)" onmouseover="showTip(event, 'fs49', 119)" class="fn">sprintf</span> <span class="s">&quot;FT.[</span><span class="pf">%s</span><span class="s">] = D.[</span><span class="pf">%s</span><span class="s">]&quot;</span> <span onmouseout="hideTip(event, 'fs17', 120)" onmouseover="showTip(event, 'fs17', 120)" class="id">row</span><span class="pn">.</span><span class="id">FKColumn</span><span class="pn">.</span><span class="id">Value</span>  <span onmouseout="hideTip(event, 'fs17', 121)" onmouseover="showTip(event, 'fs17', 121)" class="id">row</span><span class="pn">.</span><span class="id">PKColumn</span><span class="pn">.</span><span class="id">Value</span> <span class="pn">)</span>
+                        <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs50', 122)" onmouseover="showTip(event, 'fs50', 122)" class="m">String</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs51', 123)" onmouseover="showTip(event, 'fs51', 123)" class="id">concat</span> <span class="s">&quot; AND &quot;</span>
+                    <span class="pn">[</span>
+                        <span onmouseout="hideTip(event, 'fs49', 124)" onmouseover="showTip(event, 'fs49', 124)" class="fn">sprintf</span> <span class="s">&quot;    DELETE FROM [</span><span class="pf">%s</span><span class="s">].[</span><span class="pf">%s</span><span class="s">] &quot;</span>    <span onmouseout="hideTip(event, 'fs45', 125)" onmouseover="showTip(event, 'fs45', 125)" class="id">fschema</span> <span onmouseout="hideTip(event, 'fs46', 126)" onmouseover="showTip(event, 'fs46', 126)" class="id">ftable</span>
+                        <span onmouseout="hideTip(event, 'fs49', 127)" onmouseover="showTip(event, 'fs49', 127)" class="fn">sprintf</span> <span class="s">&quot;           FROM [</span><span class="pf">%s</span><span class="s">].[</span><span class="pf">%s</span><span class="s">] FT &quot;</span> <span onmouseout="hideTip(event, 'fs45', 128)" onmouseover="showTip(event, 'fs45', 128)" class="id">fschema</span> <span onmouseout="hideTip(event, 'fs46', 129)" onmouseover="showTip(event, 'fs46', 129)" class="id">ftable</span>
+                        <span onmouseout="hideTip(event, 'fs49', 130)" onmouseover="showTip(event, 'fs49', 130)" class="fn">sprintf</span> <span class="s">&quot;           JOIN deleted D ON </span><span class="pf">%s</span><span class="s">;&quot;</span> <span onmouseout="hideTip(event, 'fs47', 131)" onmouseover="showTip(event, 'fs47', 131)" class="id">condf</span>
+                    <span class="pn">]</span>
+                <span class="pn">)</span>
+            <span class="k">let</span> <span onmouseout="hideTip(event, 'fs52', 132)" onmouseover="showTip(event, 'fs52', 132)" class="id">condp</span> <span class="o">=</span>
+                <span onmouseout="hideTip(event, 'fs40', 133)" onmouseover="showTip(event, 'fs40', 133)" class="id">constraints</span>
+                <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs12', 134)" onmouseover="showTip(event, 'fs12', 134)" class="m">Seq</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs48', 135)" onmouseover="showTip(event, 'fs48', 135)" class="id">head</span>
+                <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs28', 136)" onmouseover="showTip(event, 'fs28', 136)" class="fn">snd</span>
+                <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs12', 137)" onmouseover="showTip(event, 'fs12', 137)" class="m">Seq</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs16', 138)" onmouseover="showTip(event, 'fs16', 138)" class="id">map</span><span class="pn">(</span><span class="k">fun</span> <span onmouseout="hideTip(event, 'fs17', 139)" onmouseover="showTip(event, 'fs17', 139)" class="id">row</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs49', 140)" onmouseover="showTip(event, 'fs49', 140)" class="fn">sprintf</span> <span class="s">&quot;PT.[</span><span class="pf">%s</span><span class="s">] = D.[</span><span class="pf">%s</span><span class="s">]&quot;</span> <span onmouseout="hideTip(event, 'fs17', 141)" onmouseover="showTip(event, 'fs17', 141)" class="id">row</span><span class="pn">.</span><span class="id">PKColumn</span><span class="pn">.</span><span class="id">Value</span>  <span onmouseout="hideTip(event, 'fs17', 142)" onmouseover="showTip(event, 'fs17', 142)" class="id">row</span><span class="pn">.</span><span class="id">PKColumn</span><span class="pn">.</span><span class="id">Value</span> <span class="pn">)</span>
+                <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs50', 143)" onmouseover="showTip(event, 'fs50', 143)" class="m">String</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs51', 144)" onmouseover="showTip(event, 'fs51', 144)" class="id">concat</span> <span class="s">&quot; AND &quot;</span>
+            <span class="pn">[</span>
+                <span class="k">yield</span>  <span onmouseout="hideTip(event, 'fs49', 145)" onmouseover="showTip(event, 'fs49', 145)" class="fn">sprintf</span> <span class="s">&quot;IF EXISTS (SELECT * FROM sys.objects o JOIN sys.schemas s ON s.schema_id = o.schema_id &quot;</span>
+                <span class="k">yield</span>  <span onmouseout="hideTip(event, 'fs49', 146)" onmouseover="showTip(event, 'fs49', 146)" class="fn">sprintf</span> <span class="s">&quot;    WHERE s.name = &#39;</span><span class="pf">%s</span><span class="s">&#39; AND  o.name = &#39;</span><span class="pf">%s</span><span class="s">_DELETE_TG&#39;)&quot;</span>  <span onmouseout="hideTip(event, 'fs37', 147)" onmouseover="showTip(event, 'fs37', 147)" class="id">pschema</span> <span onmouseout="hideTip(event, 'fs38', 148)" onmouseover="showTip(event, 'fs38', 148)" class="id">ptable</span>
+                <span class="k">yield</span>  <span onmouseout="hideTip(event, 'fs49', 149)" onmouseover="showTip(event, 'fs49', 149)" class="fn">sprintf</span> <span class="s">&quot;  DROP TRIGGER [</span><span class="pf">%s</span><span class="s">].[</span><span class="pf">%s</span><span class="s">_DELETE_TG]&quot;</span>                     <span onmouseout="hideTip(event, 'fs37', 150)" onmouseover="showTip(event, 'fs37', 150)" class="id">pschema</span> <span onmouseout="hideTip(event, 'fs38', 151)" onmouseover="showTip(event, 'fs38', 151)" class="id">ptable</span>
+                <span class="k">yield</span>  <span onmouseout="hideTip(event, 'fs49', 152)" onmouseover="showTip(event, 'fs49', 152)" class="fn">sprintf</span> <span class="s">&quot;GO&quot;</span>
+                <span class="k">yield</span>  <span onmouseout="hideTip(event, 'fs49', 153)" onmouseover="showTip(event, 'fs49', 153)" class="fn">sprintf</span> <span class="s">&quot;-- generated in F#Station: basic18.snippets FSI ZONE/SQLCascadeTriggers&quot;</span>
+                <span class="k">yield</span>  <span onmouseout="hideTip(event, 'fs49', 154)" onmouseover="showTip(event, 'fs49', 154)" class="fn">sprintf</span> <span class="s">&quot;CREATE TRIGGER [</span><span class="pf">%s</span><span class="s">].[</span><span class="pf">%s</span><span class="s">_DELETE_TG]&quot;</span>                     <span onmouseout="hideTip(event, 'fs37', 155)" onmouseover="showTip(event, 'fs37', 155)" class="id">pschema</span> <span onmouseout="hideTip(event, 'fs38', 156)" onmouseover="showTip(event, 'fs38', 156)" class="id">ptable</span>
+                <span class="k">yield</span>  <span onmouseout="hideTip(event, 'fs49', 157)" onmouseover="showTip(event, 'fs49', 157)" class="fn">sprintf</span> <span class="s">&quot;            ON [</span><span class="pf">%s</span><span class="s">].[</span><span class="pf">%s</span><span class="s">]&quot;</span>                               <span onmouseout="hideTip(event, 'fs37', 158)" onmouseover="showTip(event, 'fs37', 158)" class="id">pschema</span> <span onmouseout="hideTip(event, 'fs38', 159)" onmouseover="showTip(event, 'fs38', 159)" class="id">ptable</span>
+                <span class="k">yield</span>  <span onmouseout="hideTip(event, 'fs49', 160)" onmouseover="showTip(event, 'fs49', 160)" class="fn">sprintf</span> <span class="s">&quot;    INSTEAD OF DELETE AS &quot;</span>
+                <span class="k">yield</span>  <span onmouseout="hideTip(event, 'fs49', 161)" onmouseover="showTip(event, 'fs49', 161)" class="fn">sprintf</span> <span class="s">&quot;BEGIN&quot;</span>
+                <span class="k">yield</span>  <span onmouseout="hideTip(event, 'fs49', 162)" onmouseover="showTip(event, 'fs49', 162)" class="fn">sprintf</span> <span class="s">&quot;    SET NOCOUNT ON;&quot;</span>
+                <span class="k">yield!</span> <span onmouseout="hideTip(event, 'fs42', 163)" onmouseover="showTip(event, 'fs42', 163)" class="id">foreigns</span>
+                <span class="k">yield</span>  <span onmouseout="hideTip(event, 'fs49', 164)" onmouseover="showTip(event, 'fs49', 164)" class="fn">sprintf</span> <span class="s">&quot;    DELETE FROM [</span><span class="pf">%s</span><span class="s">].[</span><span class="pf">%s</span><span class="s">] &quot;</span>                             <span onmouseout="hideTip(event, 'fs37', 165)" onmouseover="showTip(event, 'fs37', 165)" class="id">pschema</span> <span onmouseout="hideTip(event, 'fs38', 166)" onmouseover="showTip(event, 'fs38', 166)" class="id">ptable</span>
+                <span class="k">yield</span>  <span onmouseout="hideTip(event, 'fs49', 167)" onmouseover="showTip(event, 'fs49', 167)" class="fn">sprintf</span> <span class="s">&quot;           FROM [</span><span class="pf">%s</span><span class="s">].[</span><span class="pf">%s</span><span class="s">] PT &quot;</span>                          <span onmouseout="hideTip(event, 'fs37', 168)" onmouseover="showTip(event, 'fs37', 168)" class="id">pschema</span> <span onmouseout="hideTip(event, 'fs38', 169)" onmouseover="showTip(event, 'fs38', 169)" class="id">ptable</span>
+                <span class="k">yield</span>  <span onmouseout="hideTip(event, 'fs49', 170)" onmouseover="showTip(event, 'fs49', 170)" class="fn">sprintf</span> <span class="s">&quot;           JOIN deleted D ON </span><span class="pf">%s</span><span class="s">;&quot;</span>                       <span onmouseout="hideTip(event, 'fs52', 171)" onmouseover="showTip(event, 'fs52', 171)" class="id">condp</span>
+                <span class="k">yield</span>  <span onmouseout="hideTip(event, 'fs49', 172)" onmouseover="showTip(event, 'fs49', 172)" class="fn">sprintf</span> <span class="s">&quot;END&quot;</span>
+                <span class="k">yield</span>  <span onmouseout="hideTip(event, 'fs49', 173)" onmouseover="showTip(event, 'fs49', 173)" class="fn">sprintf</span> <span class="s">&quot;GO&quot;</span>
+            <span class="pn">]</span>
+        <span class="pn">)</span> 
+        <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs12', 174)" onmouseover="showTip(event, 'fs12', 174)" class="m">Seq</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs53', 175)" onmouseover="showTip(event, 'fs53', 175)" class="id">iter</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs54', 176)" onmouseover="showTip(event, 'fs54', 176)" class="fn">printfn</span> <span class="s">&quot;</span><span class="pf">%s</span><span class="s">&quot;</span><span class="pn">)</span>
+        <span class="pn">(</span><span class="pn">)</span>
+
+    <span onmouseout="hideTip(event, 'fs5', 177)" onmouseover="showTip(event, 'fs5', 177)" class="fn">generateTriggers</span> <span class="pn">(</span><span class="k">fun</span> <span onmouseout="hideTip(event, 'fs55', 178)" onmouseover="showTip(event, 'fs55', 178)" class="id">row</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs55', 179)" onmouseover="showTip(event, 'fs55', 179)" class="id">row</span><span class="pn">.</span><span class="id">PKTable</span><span class="pn">.</span><span class="id">StartsWith</span> <span class="s">&quot;Clc_&quot;</span> <span class="o">||</span> <span onmouseout="hideTip(event, 'fs55', 180)" onmouseover="showTip(event, 'fs55', 180)" class="id">row</span><span class="pn">.</span><span class="id">PKTable</span><span class="pn">.</span><span class="id">StartsWith</span> <span class="s">&quot;RLE_&quot;</span> <span class="pn">)</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">Multiple items<br />namespace FSharp<br /><br />--------------------<br />namespace Microsoft.FSharp</div>
+<div class="tip" id="fs2">Multiple items<br />namespace FSharp.Data<br /><br />--------------------<br />namespace Microsoft.FSharp.Data</div>
+<div class="tip" id="fs3">Multiple items<br />type LiteralAttribute =<br />&#160;&#160;inherit Attribute<br />&#160;&#160;new : unit -&gt; LiteralAttribute<br /><br />--------------------<br />new : unit -&gt; LiteralAttribute</div>
+<div class="tip" id="fs4">val ConnectionString : string</div>
+<div class="tip" id="fs5">val generateTriggers : filter:(&#39;a -&gt; bool) -&gt; unit</div>
+<div class="tip" id="fs6">val filter : (&#39;a -&gt; bool)</div>
+<div class="tip" id="fs7">val cmd : System.IDisposable</div>
+<div class="tip" id="fs8">type SqlCommandProvider<br /><em><br /><br /><br />&lt;summary&gt;Typed representation of a T-SQL statement to execute against a SQL Server database.&lt;/summary&gt; <br />&lt;param name=&#39;CommandText&#39;&gt;Transact-SQL statement to execute at the data source.&lt;/param&gt;<br />&lt;param name=&#39;ConnectionStringOrName&#39;&gt;String used to open a SQL Server database or the name of the connection string in the configuration file in the form of “name=&amp;lt;connection string name&amp;gt;”.&lt;/param&gt;<br />&lt;param name=&#39;ResultType&#39;&gt;A value that defines structure of result: Records, Tuples, DataTable, or SqlDataReader.&lt;/param&gt;<br />&lt;param name=&#39;SingleRow&#39;&gt;If set the query is expected to return a single row of the result set. See MSDN documentation for details on CommandBehavior.SingleRow.&lt;/param&gt;<br />&lt;param name=&#39;ConfigFile&#39;&gt;The name of the configuration file that’s used for connection strings at DESIGN-TIME. The default value is app.config or web.config.&lt;/param&gt;<br />&lt;param name=&#39;AllParametersOptional&#39;&gt;If set all parameters become optional. NULL input values must be handled inside T-SQL.&lt;/param&gt;<br />&lt;param name=&#39;ResolutionFolder&#39;&gt;A folder to be used to resolve relative file paths to *.sql script files at compile time. The default value is the folder that contains the project or script.&lt;/param&gt;<br />&lt;param name=&#39;DataDirectory&#39;&gt;The name of the data directory that replaces |DataDirectory| in connection strings. The default value is the project or script directory.&lt;/param&gt;<br />&lt;param name=&#39;TempTableDefinitions&#39;&gt;Temp tables create command.&lt;/param&gt;<br />&lt;param name=&#39;TableVarMapping&#39;&gt;List table-valued parameters in the format of &quot;@tvp1=[dbo].[TVP_IDs]; @tvp2=[dbo].[TVP_IDs]&quot;&lt;/param&gt;<br /></em></div>
+<div class="tip" id="fs9">type ResultType =<br />&#160;&#160;| Records = 0<br />&#160;&#160;| Tuples = 1<br />&#160;&#160;| DataTable = 2<br />&#160;&#160;| DataReader = 3</div>
+<div class="tip" id="fs10">ResultType.Records: ResultType = 0</div>
+<div class="tip" id="fs11">val filteredRows : seq&lt;&#39;a&gt;</div>
+<div class="tip" id="fs12">module Seq<br /><br />from Microsoft.FSharp.Collections</div>
+<div class="tip" id="fs13">val filter : predicate:(&#39;T -&gt; bool) -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt;</div>
+<div class="tip" id="fs14">val cache : source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt;</div>
+<div class="tip" id="fs15">val depths : Map&lt;(string * string),int&gt;</div>
+<div class="tip" id="fs16">val map : mapping:(&#39;T -&gt; &#39;U) -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;U&gt;</div>
+<div class="tip" id="fs17">val row : &#39;a</div>
+<div class="tip" id="fs18">val distinct : source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt; (requires equality)</div>
+<div class="tip" id="fs19">val rows : seq&lt;(string * string) * (string * string)&gt;</div>
+<div class="tip" id="fs20">val level : (string * string -&gt; int)</div>
+<div class="tip" id="fs21">val table : string * string</div>
+<div class="tip" id="fs22">val p : string * string</div>
+<div class="tip" id="fs23">val ch : string * string</div>
+<div class="tip" id="fs24">val fst : tuple:(&#39;T1 * &#39;T2) -&gt; &#39;T1</div>
+<div class="tip" id="fs25">val s : seq&lt;int&gt;</div>
+<div class="tip" id="fs26">val isEmpty : source:seq&lt;&#39;T&gt; -&gt; bool</div>
+<div class="tip" id="fs27">val max : source:seq&lt;&#39;T&gt; -&gt; &#39;T (requires comparison)</div>
+<div class="tip" id="fs28">val snd : tuple:(&#39;T1 * &#39;T2) -&gt; &#39;T2</div>
+<div class="tip" id="fs29">Multiple items<br />module Map<br /><br />from Microsoft.FSharp.Collections<br /><br />--------------------<br />type Map&lt;&#39;Key,&#39;Value (requires comparison)&gt; =<br />&#160;&#160;interface IReadOnlyDictionary&lt;&#39;Key,&#39;Value&gt;<br />&#160;&#160;interface IReadOnlyCollection&lt;KeyValuePair&lt;&#39;Key,&#39;Value&gt;&gt;<br />&#160;&#160;interface IEnumerable<br />&#160;&#160;interface IComparable<br />&#160;&#160;interface IEnumerable&lt;KeyValuePair&lt;&#39;Key,&#39;Value&gt;&gt;<br />&#160;&#160;interface ICollection&lt;KeyValuePair&lt;&#39;Key,&#39;Value&gt;&gt;<br />&#160;&#160;interface IDictionary&lt;&#39;Key,&#39;Value&gt;<br />&#160;&#160;new : elements:seq&lt;&#39;Key * &#39;Value&gt; -&gt; Map&lt;&#39;Key,&#39;Value&gt;<br />&#160;&#160;member Add : key:&#39;Key * value:&#39;Value -&gt; Map&lt;&#39;Key,&#39;Value&gt;<br />&#160;&#160;member ContainsKey : key:&#39;Key -&gt; bool<br />&#160;&#160;...<br /><br />--------------------<br />new : elements:seq&lt;&#39;Key * &#39;Value&gt; -&gt; Map&lt;&#39;Key,&#39;Value&gt;</div>
+<div class="tip" id="fs30">val getDepth : (string * string -&gt; int)</div>
+<div class="tip" id="fs31">val t : string * string</div>
+<div class="tip" id="fs32">val tryFind : key:&#39;Key -&gt; table:Map&lt;&#39;Key,&#39;T&gt; -&gt; &#39;T option (requires comparison)</div>
+<div class="tip" id="fs33">module Option<br /><br />from Microsoft.FSharp.Core</div>
+<div class="tip" id="fs34">val defaultValue : value:&#39;T -&gt; option:&#39;T option -&gt; &#39;T</div>
+<div class="tip" id="fs35">val groupBy : projection:(&#39;T -&gt; &#39;Key) -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;Key * seq&lt;&#39;T&gt;&gt; (requires equality)</div>
+<div class="tip" id="fs36">val collect : mapping:(&#39;T -&gt; #seq&lt;&#39;U&gt;) -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;U&gt;</div>
+<div class="tip" id="fs37">val pschema : string</div>
+<div class="tip" id="fs38">val ptable : string</div>
+<div class="tip" id="fs39">val rows : seq&lt;&#39;a&gt;</div>
+<div class="tip" id="fs40">val constraints : seq&lt;((obj * obj) * (string * string)) * seq&lt;&#39;a&gt;&gt;</div>
+<div class="tip" id="fs41">val sortByDescending : projection:(&#39;T -&gt; &#39;Key) -&gt; source:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt; (requires comparison)</div>
+<div class="tip" id="fs42">val foreigns : seq&lt;string&gt;</div>
+<div class="tip" id="fs43">val cschema : obj</div>
+<div class="tip" id="fs44">val ctable : obj</div>
+<div class="tip" id="fs45">val fschema : string</div>
+<div class="tip" id="fs46">val ftable : string</div>
+<div class="tip" id="fs47">val condf : string</div>
+<div class="tip" id="fs48">val head : source:seq&lt;&#39;T&gt; -&gt; &#39;T</div>
+<div class="tip" id="fs49">val sprintf : format:Printf.StringFormat&lt;&#39;T&gt; -&gt; &#39;T</div>
+<div class="tip" id="fs50">module String<br /><br />from Microsoft.FSharp.Core</div>
+<div class="tip" id="fs51">val concat : sep:string -&gt; strings:seq&lt;string&gt; -&gt; string</div>
+<div class="tip" id="fs52">val condp : string</div>
+<div class="tip" id="fs53">val iter : action:(&#39;T -&gt; unit) -&gt; source:seq&lt;&#39;T&gt; -&gt; unit</div>
+<div class="tip" id="fs54">val printfn : format:Printf.TextWriterFormat&lt;&#39;T&gt; -&gt; &#39;T</div>
+<div class="tip" id="fs55">val row : obj</div>
+

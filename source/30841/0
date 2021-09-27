@@ -1,0 +1,53 @@
+open System.Collections
+open System.Collections.Generic
+
+type InfiniteLazyList<'T> =
+    | (::) of ('T * Lazy<InfiniteLazyList<'T>>)
+
+    interface IEnumerable<'T> with
+        member this.GetEnumerator() =
+            let head :: tail = this
+            let s =
+                seq {
+                    yield head
+                    yield! tail.Value :> IEnumerable<_>
+                }
+            s.GetEnumerator()
+
+    interface IEnumerable with
+        member this.GetEnumerator() =
+            (this :> IEnumerable<'T>).GetEnumerator() :> _
+
+module InfiniteLazyList =
+
+    let initInfinite initializer =
+        let rec loop i =
+            initializer i :: lazy loop (i + 1)
+        loop 0
+
+    let where pred list =
+        let rec loop = function
+            | head :: tail ->
+                if pred head then head :: lazy loop tail.Value
+                else loop tail.Value
+        loop list
+
+/// https://literateprograms.org/sieve_of_eratosthenes__haskell_.html
+let rec sieve = function
+    | head :: tail ->
+        let tail' =
+            tail.Value
+                |> InfiniteLazyList.where (fun n ->
+                    n % head > 0)
+        head :: lazy (sieve tail')
+
+let primes count =
+    InfiniteLazyList.initInfinite (fun n -> n + 2)
+        |> sieve
+        |> Seq.take count
+        |> Seq.toArray
+
+[<EntryPoint>]
+let main argv =
+    printfn "%A" (primes 100)
+    0

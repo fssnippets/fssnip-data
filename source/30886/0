@@ -1,0 +1,43 @@
+(* creates a web server in F# script *)
+
+#I @"C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\5.0.4"
+#r "Microsoft.AspNetCore"
+#r "Microsoft.AspNetCore.Routing"
+#r "Microsoft.AspNetCore.Http.Abstractions"
+#r "Microsoft.AspNetCore.Hosting"
+#r "Microsoft.AspNetCore.Diagnostics"
+#r "Microsoft.AspNetCore.Hosting.Abstractions"
+#r "Microsoft.Extensions.DependencyInjection.Abstractions"
+#r "Microsoft.Extensions.Hosting"
+#r "Microsoft.Extensions.Hosting.Abstractions"
+
+open Microsoft.AspNetCore.Builder
+open Microsoft.AspNetCore.Hosting
+open Microsoft.Extensions.Hosting
+open Microsoft.Extensions.DependencyInjection
+open Microsoft.AspNetCore.Http
+
+type Startup() =
+
+    member _.ConfigureServices(services: IServiceCollection) = ()
+
+    member _.Configure(app: IApplicationBuilder, env: IHostEnvironment) =
+        if env.IsDevelopment() then
+            app.UseDeveloperExceptionPage() |> ignore
+
+        app
+            .UseRouting()
+            .UseEndpoints(fun endpoints ->
+                endpoints.MapGet("/", (fun context -> context.Response.WriteAsync("Hello World!")))
+                |> ignore)
+        |> ignore
+
+
+let createHostBuilder (args: string []) =
+    Host
+        .CreateDefaultBuilder(args)
+        .ConfigureWebHostDefaults(fun webBuilder -> webBuilder.UseStartup<Startup>() |> ignore)
+
+let main args = createHostBuilder(args).Build().Run()
+
+main [||]

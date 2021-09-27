@@ -1,0 +1,41 @@
+type SchemeType = { Value: decimal; Rate: decimal }
+
+module ITax =
+    let relu = max 0m
+
+    let calc scheme x =
+        let rec calcRecursive scheme agg =
+            match scheme with
+            | [ y ] -> agg + (relu ((x - y.Value) * y.Rate))
+            | lb :: ub :: rest ->
+                if x <= ub.Value then
+                    agg + (relu ((x - lb.Value) * lb.Rate))
+                else
+                    calcRecursive (ub :: rest) (agg + (relu ((ub.Value - lb.Value) * lb.Rate)))
+            | _ -> agg
+
+        (calcRecursive (scheme |> List.sortBy (fun x -> x.Value)) 0m)
+        / 100m
+
+let tryDecimal x =
+    try
+        x |> decimal |> Some
+    with _ -> None
+
+[<EntryPoint>]
+let main argv =
+    let scheme =
+        [ { Value = 2_50_000m; Rate = 5m }
+          { Value = 5_00_000m; Rate = 10m }
+          { Value = 7_50_000m; Rate = 15m }
+          { Value = 10_00_000m; Rate = 20m }
+          { Value = 12_50_000m; Rate = 25m }
+          { Value = 15_00_000m; Rate = 30m } ]
+
+    let incomeTaxCalculator = ITax.calc scheme
+
+    argv
+    |> Seq.choose tryDecimal
+    |> Seq.iter (fun x -> printfn "Income tax for ammount- Rs. %.3f = Rs. %.3f Only/-" x (x |> incomeTaxCalculator))
+
+    0

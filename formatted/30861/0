@@ -1,0 +1,106 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="id">dotenv</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="id">net</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="id">Argu</span>
+
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="rt">DotenvReader</span><span class="pn">(</span><span class="o">?</span><span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="id">trimValues</span><span class="pn">)</span> <span class="o">=</span>
+    <span class="k">do</span> <span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="rt">DotEnv</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs7', 7)" onmouseover="showTip(event, 'fs7', 7)" class="id">Load</span><span class="pn">(</span><span onmouseout="hideTip(event, 'fs8', 8)" onmouseover="showTip(event, 'fs8', 8)" class="rt">DotEnvOptions</span><span class="pn">(</span><span class="o">?</span><span onmouseout="hideTip(event, 'fs5', 9)" onmouseover="showTip(event, 'fs5', 9)" class="id">trimValues</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs5', 10)" onmouseover="showTip(event, 'fs5', 10)" class="id">trimValues</span><span class="pn">)</span><span class="pn">)</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs9', 11)" onmouseover="showTip(event, 'fs9', 11)" class="id">envVars</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs6', 12)" onmouseover="showTip(event, 'fs6', 12)" class="rt">DotEnv</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs10', 13)" onmouseover="showTip(event, 'fs10', 13)" class="id">Read</span><span class="pn">(</span><span class="pn">)</span>
+    <span class="k">interface</span> <span onmouseout="hideTip(event, 'fs11', 14)" onmouseover="showTip(event, 'fs11', 14)" class="if">IConfigurationReader</span> <span class="k">with</span>
+        <span class="k">member</span> <span class="id">_</span><span class="pn">.</span><span class="prop">Name</span> <span class="o">=</span> <span class="s">&quot;dotenv&quot;</span>
+        <span class="k">member</span> <span class="id">_</span><span class="pn">.</span><span class="fn">GetValue</span> <span onmouseout="hideTip(event, 'fs12', 15)" onmouseover="showTip(event, 'fs12', 15)" class="id">key</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs9', 16)" onmouseover="showTip(event, 'fs9', 16)" class="id">envVars</span><span class="pn">.</span><span class="pn">[</span><span onmouseout="hideTip(event, 'fs12', 17)" onmouseover="showTip(event, 'fs12', 17)" class="id">key</span><span class="pn">]</span>
+
+<span class="k">type</span> <span class="rt">Args</span> <span class="o">=</span>
+    <span class="c">// Other arguments here...</span>
+    <span class="pn">|</span> <span class="pn">[&lt;</span><span onmouseout="hideTip(event, 'fs13', 18)" onmouseover="showTip(event, 'fs13', 18)" class="rt">NoCommandLine</span><span class="pn">;</span> <span onmouseout="hideTip(event, 'fs14', 19)" onmouseover="showTip(event, 'fs14', 19)" class="rt">CustomAppSettings</span> <span class="s">&quot;API_KEY&quot;</span><span class="pn">&gt;]</span> <span onmouseout="hideTip(event, 'fs15', 20)" onmouseover="showTip(event, 'fs15', 20)" class="uc">ApiKey</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs16', 21)" onmouseover="showTip(event, 'fs16', 21)" class="rt">string</span>
+    <span class="pn">|</span> <span class="pn">[&lt;</span><span onmouseout="hideTip(event, 'fs13', 22)" onmouseover="showTip(event, 'fs13', 22)" class="rt">NoCommandLine</span><span class="pn">;</span> <span onmouseout="hideTip(event, 'fs14', 23)" onmouseover="showTip(event, 'fs14', 23)" class="rt">CustomAppSettings</span> <span class="s">&quot;API_SECRET&quot;</span><span class="pn">&gt;]</span> <span onmouseout="hideTip(event, 'fs17', 24)" onmouseover="showTip(event, 'fs17', 24)" class="uc">ApiSecret</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs16', 25)" onmouseover="showTip(event, 'fs16', 25)" class="rt">string</span>
+    <span class="k">interface</span> <span onmouseout="hideTip(event, 'fs18', 26)" onmouseover="showTip(event, 'fs18', 26)" class="if">IArgParserTemplate</span> <span class="k">with</span>
+        <span class="k">member</span> <span onmouseout="hideTip(event, 'fs19', 27)" onmouseover="showTip(event, 'fs19', 27)" class="id">self</span><span class="pn">.</span><span class="prop">Usage</span> <span class="o">=</span>
+            <span class="c">// for brevity</span>
+            <span class="s">&quot;&quot;</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs20', 28)" onmouseover="showTip(event, 'fs20', 28)" class="fn">getToken</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs21', 29)" onmouseover="showTip(event, 'fs21', 29)" class="id">apiKey</span><span class="pn">,</span> <span onmouseout="hideTip(event, 'fs22', 30)" onmouseover="showTip(event, 'fs22', 30)" class="id">apiSecret</span><span class="pn">)</span> <span class="o">=</span>
+    <span onmouseout="hideTip(event, 'fs23', 31)" onmouseover="showTip(event, 'fs23', 31)" class="fn">failwith</span> <span class="s">&quot;function that needs an API key and an API secret and returns a bearer token.&quot;</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs24', 32)" onmouseover="showTip(event, 'fs24', 32)" class="fn">main</span> <span onmouseout="hideTip(event, 'fs25', 33)" onmouseover="showTip(event, 'fs25', 33)" class="id">argv</span> <span class="o">=</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs26', 34)" onmouseover="showTip(event, 'fs26', 34)" class="id">parser</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs27', 35)" onmouseover="showTip(event, 'fs27', 35)" class="rt">ArgumentParser</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs28', 36)" onmouseover="showTip(event, 'fs28', 36)" class="id">Create</span><span class="pn">(</span><span class="id">checkStructure</span> <span class="o">=</span> <span class="k">false</span><span class="pn">,</span> <span class="id">errorHandler</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs29', 37)" onmouseover="showTip(event, 'fs29', 37)" class="rt">ProcessExiter</span><span class="pn">(</span><span class="pn">)</span><span class="pn">)</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs30', 38)" onmouseover="showTip(event, 'fs30', 38)" class="id">result</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs26', 39)" onmouseover="showTip(event, 'fs26', 39)" class="fn">parser</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs31', 40)" onmouseover="showTip(event, 'fs31', 40)" class="id">Parse</span><span class="pn">(</span><span onmouseout="hideTip(event, 'fs25', 41)" onmouseover="showTip(event, 'fs25', 41)" class="id">argv</span><span class="pn">,</span> <span onmouseout="hideTip(event, 'fs4', 42)" onmouseover="showTip(event, 'fs4', 42)" class="rt">DotenvReader</span><span class="pn">(</span><span class="id">trimValues</span> <span class="o">=</span> <span class="k">true</span><span class="pn">)</span><span class="pn">)</span>
+
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs32', 43)" onmouseover="showTip(event, 'fs32', 43)" class="id">apiKey</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs30', 44)" onmouseover="showTip(event, 'fs30', 44)" class="fn">result</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs33', 45)" onmouseover="showTip(event, 'fs33', 45)" class="id">GetResult</span> <span class="pn">&lt;@</span> <span onmouseout="hideTip(event, 'fs15', 46)" onmouseover="showTip(event, 'fs15', 46)" class="uc">ApiKey</span> <span class="pn">@&gt;</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs34', 47)" onmouseover="showTip(event, 'fs34', 47)" class="id">apiSecret</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs30', 48)" onmouseover="showTip(event, 'fs30', 48)" class="fn">result</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs33', 49)" onmouseover="showTip(event, 'fs33', 49)" class="id">GetResult</span> <span class="pn">&lt;@</span> <span onmouseout="hideTip(event, 'fs17', 50)" onmouseover="showTip(event, 'fs17', 50)" class="uc">ApiSecret</span> <span class="pn">@&gt;</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs35', 51)" onmouseover="showTip(event, 'fs35', 51)" class="id">token</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs20', 52)" onmouseover="showTip(event, 'fs20', 52)" class="fn">getToken</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs32', 53)" onmouseover="showTip(event, 'fs32', 53)" class="id">apiKey</span><span class="pn">,</span> <span onmouseout="hideTip(event, 'fs34', 54)" onmouseover="showTip(event, 'fs34', 54)" class="id">apiSecret</span><span class="pn">)</span>
+
+    <span class="c">// ...</span>
+
+    <span class="n">0</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">namespace dotenv</div>
+<div class="tip" id="fs2">namespace dotenv.net</div>
+<div class="tip" id="fs3">namespace Argu</div>
+<div class="tip" id="fs4">Multiple items<br />type DotenvReader =<br />&#160;&#160;interface IConfigurationReader<br />&#160;&#160;new : ?trimValues:bool -&gt; DotenvReader<br /><br />--------------------<br />new : ?trimValues:bool -&gt; DotenvReader</div>
+<div class="tip" id="fs5">val trimValues : bool option</div>
+<div class="tip" id="fs6">type DotEnv =<br />&#160;&#160;static member AutoConfig : ?levelsToSearch:int -&gt; bool<br />&#160;&#160;static member Config : options:DotEnvOptions -&gt; unit<br />&#160;&#160;static member Fluent : unit -&gt; DotEnvOptions<br />&#160;&#160;static member Load : ?options:DotEnvOptions -&gt; unit<br />&#160;&#160;static member Read : ?options:DotEnvOptions -&gt; IDictionary&lt;string, string&gt;</div>
+<div class="tip" id="fs7">DotEnv.Load(?options: DotEnvOptions) : unit</div>
+<div class="tip" id="fs8">Multiple items<br />type DotEnvOptions =<br />&#160;&#160;new : ?ignoreExceptions:bool * ?envFilePaths:IEnumerable&lt;string&gt; * ?encoding:Encoding * ?trimValues:bool * ?overwriteExistingVars:bool * ?probeForEnv:bool * ?probeLevelsToSearch:int -&gt; DotEnvOptions<br />&#160;&#160;member Encoding : Encoding with get, set<br />&#160;&#160;member EnvFilePaths : IEnumerable&lt;string&gt; with get, set<br />&#160;&#160;member IgnoreExceptions : bool with get, set<br />&#160;&#160;member Load : unit -&gt; unit<br />&#160;&#160;member OverwriteExistingVars : bool with get, set<br />&#160;&#160;member ProbeForEnv : bool with get, set<br />&#160;&#160;member ProbeLevelsToSearch : int with get, set<br />&#160;&#160;member Read : unit -&gt; IDictionary&lt;string, string&gt;<br />&#160;&#160;member TrimValues : bool with get, set<br />&#160;&#160;...<br /><br />--------------------<br />DotEnvOptions(?ignoreExceptions: bool,?envFilePaths: System.Collections.Generic.IEnumerable&lt;string&gt;,?encoding: System.Text.Encoding,?trimValues: bool,?overwriteExistingVars: bool,?probeForEnv: bool,?probeLevelsToSearch: int) : DotEnvOptions</div>
+<div class="tip" id="fs9">val envVars : System.Collections.Generic.IDictionary&lt;string,string&gt;</div>
+<div class="tip" id="fs10">DotEnv.Read(?options: DotEnvOptions) : System.Collections.Generic.IDictionary&lt;string,string&gt;</div>
+<div class="tip" id="fs11">type IConfigurationReader =<br />&#160;&#160;interface<br />&#160;&#160;&#160;&#160;abstract member GetValue : key:string -&gt; string<br />&#160;&#160;&#160;&#160;abstract member Name : string<br />&#160;&#160;end</div>
+<div class="tip" id="fs12">val key : string</div>
+<div class="tip" id="fs13">Multiple items<br />type NoCommandLineAttribute =<br />&#160;&#160;inherit Attribute<br />&#160;&#160;new : unit -&gt; NoCommandLineAttribute<br /><br />--------------------<br />new : unit -&gt; NoCommandLineAttribute</div>
+<div class="tip" id="fs14">Multiple items<br />type CustomAppSettingsAttribute =<br />&#160;&#160;inherit Attribute<br />&#160;&#160;new : name:string -&gt; CustomAppSettingsAttribute<br />&#160;&#160;member Name : string<br /><br />--------------------<br />new : name:string -&gt; CustomAppSettingsAttribute</div>
+<div class="tip" id="fs15">union case Args.ApiKey: string -&gt; Args</div>
+<div class="tip" id="fs16">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />--------------------<br />type string = System.String</div>
+<div class="tip" id="fs17">union case Args.ApiSecret: string -&gt; Args</div>
+<div class="tip" id="fs18">type IArgParserTemplate =<br />&#160;&#160;interface<br />&#160;&#160;&#160;&#160;abstract member Usage : string<br />&#160;&#160;end</div>
+<div class="tip" id="fs19">val self : Args</div>
+<div class="tip" id="fs20">val getToken : apiKey:&#39;a * apiSecret:&#39;b -&gt; &#39;c</div>
+<div class="tip" id="fs21">val apiKey : &#39;a</div>
+<div class="tip" id="fs22">val apiSecret : &#39;b</div>
+<div class="tip" id="fs23">val failwith : message:string -&gt; &#39;T</div>
+<div class="tip" id="fs24">val main : argv:string [] -&gt; int</div>
+<div class="tip" id="fs25">val argv : string []</div>
+<div class="tip" id="fs26">val parser : ArgumentParser&lt;Args&gt;</div>
+<div class="tip" id="fs27">Multiple items<br />type ArgumentParser =<br />&#160;&#160;private new : argInfo:UnionArgInfo * _programName:string * helpTextMessage:string option * _usageStringCharacterWidth:int * errorHandler:IExiter -&gt; ArgumentParser<br />&#160;&#160;abstract member Accept : visitor:IArgumentParserVisitor&lt;&#39;R&gt; -&gt; &#39;R<br />&#160;&#160;member GetArgumentCases : unit -&gt; ArgumentCaseInfo list<br />&#160;&#160;member GetSubCommandParsers : unit -&gt; ArgumentParser list<br />&#160;&#160;member PrintCommandLineSyntax : ?programName:string * ?usageStringCharacterWidth:int -&gt; string<br />&#160;&#160;member PrintUsage : ?message:string * ?programName:string * ?hideSyntax:bool * ?usageStringCharacterWidth:int -&gt; string<br />&#160;&#160;member ErrorHandler : IExiter<br />&#160;&#160;member HelpDescription : string<br />&#160;&#160;member HelpFlags : string list<br />&#160;&#160;member HelpTextMessage : string option<br />&#160;&#160;...<br /><br />--------------------<br />type ArgumentParser&lt;&#39;Template (requires &#39;Template :&gt; IArgParserTemplate)&gt; =<br />&#160;&#160;inherit ArgumentParser<br />&#160;&#160;new : ?programName:string * ?helpTextMessage:string * ?usageStringCharacterWidth:int * ?errorHandler:IExiter * ?checkStructure:bool -&gt; ArgumentParser&lt;&#39;Template&gt;<br />&#160;&#160;private new : argInfo:UnionArgInfo * _programName:string * helpTextMessage:string option * _usageStringCharacterWidth:int * errorHandler:IExiter -&gt; ArgumentParser&lt;&#39;Template&gt;<br />&#160;&#160;override Accept : visitor:IArgumentParserVisitor&lt;&#39;a1&gt; -&gt; &#39;a1<br />&#160;&#160;member GetArgumentCaseInfo : ctorExpr:Expr&lt;(&#39;Fields -&gt; &#39;Template)&gt; -&gt; ArgumentCaseInfo<br />&#160;&#160;member GetArgumentCaseInfo : value:&#39;Template -&gt; ArgumentCaseInfo<br />&#160;&#160;member GetSubCommandParser : expr:Expr&lt;(ParseResults&lt;&#39;SubTemplate&gt; -&gt; &#39;Template)&gt; -&gt; ArgumentParser&lt;&#39;SubTemplate&gt; (requires &#39;SubTemplate :&gt; IArgParserTemplate)<br />&#160;&#160;member GetTag : value:&#39;Template -&gt; int<br />&#160;&#160;member Parse : ?inputs:string [] * ?configurationReader:IConfigurationReader * ?ignoreMissing:bool * ?ignoreUnrecognized:bool * ?raiseOnUsage:bool -&gt; ParseResults&lt;&#39;Template&gt;<br />&#160;&#160;member ParseCommandLine : ?inputs:string [] * ?ignoreMissing:bool * ?ignoreUnrecognized:bool * ?raiseOnUsage:bool -&gt; ParseResults&lt;&#39;Template&gt;<br />&#160;&#160;...<br /><br />--------------------<br />new : ?programName:string * ?helpTextMessage:string * ?usageStringCharacterWidth:int * ?errorHandler:IExiter * ?checkStructure:bool -&gt; ArgumentParser&lt;&#39;Template&gt;</div>
+<div class="tip" id="fs28">static member ArgumentParser.Create : ?programName:string * ?helpTextMessage:string * ?usageStringCharacterWidth:int * ?errorHandler:IExiter * ?checkStructure:bool -&gt; ArgumentParser&lt;#IArgParserTemplate&gt;</div>
+<div class="tip" id="fs29">Multiple items<br />type ProcessExiter =<br />&#160;&#160;interface IExiter<br />&#160;&#160;new : unit -&gt; ProcessExiter<br />&#160;&#160;new : colorizer:(ErrorCode -&gt; ConsoleColor option) -&gt; ProcessExiter<br />&#160;&#160;new : colorizerOption:(ErrorCode -&gt; ConsoleColor option) option -&gt; ProcessExiter<br /><br />--------------------<br />new : unit -&gt; ProcessExiter<br />new : colorizerOption:(ErrorCode -&gt; System.ConsoleColor option) option -&gt; ProcessExiter<br />new : colorizer:(ErrorCode -&gt; System.ConsoleColor option) -&gt; ProcessExiter</div>
+<div class="tip" id="fs30">val result : ParseResults&lt;Args&gt;</div>
+<div class="tip" id="fs31">member ArgumentParser.Parse : ?inputs:string [] * ?configurationReader:IConfigurationReader * ?ignoreMissing:bool * ?ignoreUnrecognized:bool * ?raiseOnUsage:bool -&gt; ParseResults&lt;&#39;Template&gt;</div>
+<div class="tip" id="fs32">val apiKey : string</div>
+<div class="tip" id="fs33">member ParseResults.GetResult : expr:Quotations.Expr&lt;(&#39;Fields -&gt; &#39;Template)&gt; * ?defaultValue:&#39;Fields * ?source:ParseSource -&gt; &#39;Fields<br />member ParseResults.GetResult : expr:Quotations.Expr&lt;&#39;Template&gt; * ?defaultValue:&#39;Template * ?source:ParseSource -&gt; &#39;Template</div>
+<div class="tip" id="fs34">val apiSecret : string</div>
+<div class="tip" id="fs35">val token : obj</div>
+

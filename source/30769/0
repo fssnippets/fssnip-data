@@ -1,0 +1,198 @@
+module List2D =
+    type 't list2d =
+      | A of 't list2d * 't list2d //above structure
+      | B of 't list2d * 't list2d //beside structure
+      | E of 't                    //container
+      | Empty                      //empty list
+    with 
+        /// <summary>
+        /// list2d transpose: swap A and B
+        /// </summary>
+        member this.transpose = let rec loop = function 
+                                  | A(x, Empty) | A(Empty,x) 
+                                  | B(x, Empty) | B(Empty,x) -> loop x
+                                  | A(a,b) -> B(loop a,loop b)
+                                  | B(a,b) -> A(loop a,loop b)
+                                  | a -> a
+                                loop this
+        /// <summary>
+        /// list2d height: number of A
+        /// </summary>
+        member this.height = let rec loop = function
+                                | E(_)  -> 1
+                                | Empty -> 0
+                                | A(x,y) -> (loop x) + (loop y)
+                                | B(x,_) -> (loop x)
+                             loop this
+        /// <summary>
+        /// list2d width: number of B
+        /// </summary>
+        member this.width = let rec loop = function
+                                | E(_)  -> 1
+                                | Empty -> 0
+                                | A(x,_) -> (loop x) 
+                                | B(x,y) -> (loop x) + (loop y)
+                            loop this
+        /// <summary>
+        /// list2d area
+        /// </summary>
+        member this.area = this.height * this.width
+
+    /// <summary>
+    /// list2d map: apply transformation to each element of list2d
+    /// </summary>
+    /// <param name="f">transformation</param>
+    let rec map f = function
+                    //| A(x,Empty) | A(Empty,x)              //strip Empty element if you don't really need it
+                    //| B(x,Empty) | B(Empty,x) -> map f x
+                    | E x -> E(f x)
+                    | A(x,y) -> A(map f x, map f y)
+                    | B(x,y) -> B(map f x, map f y)
+                    | Empty -> Empty
+    /// <summary>
+    /// list2d reduce: replace "above" and "beside" operators
+    /// </summary>
+    /// <param name="Af">replacement for above</param>
+    /// <param name="Bf">replacement for beside</param>
+    let rec reduce Af Bf  =   function
+                                  | E(x) -> x
+                                  | A(x,Empty) | A(Empty, x) 
+                                  | B(x,Empty) | B(Empty, x) -> reduce Af Bf x
+                                  | A(x,y) -> Af (reduce Af Bf x) (reduce Af Bf y)
+                                  | B(x,y) -> Bf (reduce Af Bf x) (reduce Af Bf y)
+                                  | Empty -> failwith "Empty list2d"
+
+    /// <summary>
+    /// list2d sum: matrix total
+    /// </summary>
+    let sum = reduce (+) (+)  
+    /// <summary>
+    /// Left operator
+    /// </summary>
+    /// <param name="a">returned parameter</param>
+    /// <param name="_b">omitted parameter</param>
+    let inline (<<|) (a:'t) (_b:'t) = a 
+    /// <summary>
+    /// Right operator
+    /// </summary>
+    /// <param name="_a">omitted parameter</param>
+    /// <param name="b">returned parameter</param>
+    let inline (|>>) (_a:'t) (b:'t) = b
+    /// <summary>
+    /// Most top left element of list2d
+    /// </summary>
+    /// <param name="M">list2d</param>
+    let topleft M = reduce (<<|) (<<|) M
+    /// <summary>
+    /// Most top right element of list2d
+    /// </summary>
+    /// <param name="M">list2d</param>
+    let topright M = reduce (<<|) (|>>) M 
+    /// <summary>
+    /// Most bottom left element of list2d
+    /// </summary>
+    /// <param name="M">list2d</param>
+    let bottomleft M = reduce (|>>) (<<|) M
+    /// <summary>
+    /// Most bottom right element of list2d
+    /// </summary>
+    /// <param name="M">list2d</param>
+    let bottomright M = reduce (|>>) (|>>) M
+    /// <summary>
+    /// Place one element above another element
+    /// </summary>
+    /// <param name="x">element</param>
+    /// <param name="y">element</param>
+    let above x y = A(x, y)
+    /// <summary>
+    /// Place one element beside another element
+    /// </summary>
+    /// <param name="x">element</param>
+    /// <param name="y">element</param>
+    let beside x y = B(x, y) 
+    /// <summary>
+    /// Place element
+    /// </summary>
+    /// <param name="x">element</param>
+    let place x = E x
+    /// <summary>
+    /// Extract value
+    /// </summary>
+    let the = function | E x -> x | _ -> failwith "Not a singleton list2d"
+    let rec topreduce f = function
+                           | E x -> E x
+                           | Empty -> Empty 
+                           | A(x,E y)
+                           | A(E y, x) -> let b = the (topreduce f x) in
+                                          E(f b y)
+                           | A(x,Empty) | A(Empty,x) -> topreduce f x
+                           | B(x,Empty) | B(Empty,x) -> topreduce f x
+                           | B(x, y) -> B(topreduce f x,topreduce f y)
+                           | a -> failwith (sprintf "%A" a)
+
+    /// <summary>
+    /// list2d zip with f: makes pairwise zipping of two list2d
+    /// </summary>
+    /// <param name="f">zip operator</param>
+    /// <param name="M1">first list2d</param>
+    /// <param name="M2">second list2d</param>
+    let zip f (M1:'t list2d) (M2:'t list2d) = let rec loop a b =
+                                                  match a,b with
+                                                     | Empty,Empty   -> Empty
+                                                     | E(x),E(y)     -> E(f x y)
+                                                     | A(x,y),A(u,v) -> A(loop x u,loop y v)
+                                                     | B(x,y),B(u,v) -> B(loop x u,loop y v)
+                                                     | _             -> failwith "Dimensions mismatch"
+                                              loop M1 M2
+
+    /// <summary>
+    /// list2d rows. Return list2d of rows
+    /// </summary>
+    /// <param name="M">list2d</param>
+    let rows M = M |> (map (place >> place) >> reduce above (zip beside))
+    /// <summary>
+    /// list2d columns. Return list2d of columns
+    /// </summary>
+    /// <param name="M">list2d</param>
+    let columns M = M |> (map (place >> place) >> reduce (zip above) beside)
+    let rec stripAB M = match M with
+                          | A(E x, E y) | B(E x, E y) -> [x; y]
+                          | A(E x, y)   | B(E x, y) -> x::(stripAB y)
+                          | _ -> failwith "Incorrect constructor"
+    /// <summary>
+    /// List of list2d rows
+    /// </summary>
+    /// <param name="M">list2d</param>
+    let listrows M = M |> (map (List.singleton >> place) >> reduce above (zip (@))  >> stripAB)
+    /// <summary>
+    /// List of list2d columns
+    /// </summary>
+    /// <param name="M">list2d</param>
+    let listcols M = M |> map (List.singleton >> place) |> reduce (zip (@)) beside|> stripAB
+
+//Examples
+let a = Array2D.zeroCreate<int> 5 5
+let mutable k = 0
+for i in 0..4 do
+      for j in 0..4 do
+        a.[i, j] <- k
+        k <- k + 1
+
+let toRow (a:'t array) =  
+         a.[0..] 
+            |> Array.rev 
+            |> Array.fold (fun acc el -> List2D.B(List2D.E(el),acc)) List2D.Empty
+
+let toMatrix (a:'t [,]) = 
+        let s = seq{for i in [(Array2D.length2 a)-1..-1..0] do
+                         yield a.[i,*] |> toRow }
+        s |> Seq.fold (fun acc r -> List2D.A(r, acc)) List2D.Empty
+
+let b =
+    a 
+    |> toMatrix
+    |> List2D.map (fun e -> e*2)
+
+b |> List2D.listrows
+b.width
+b |> List2D.sum

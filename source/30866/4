@@ -1,0 +1,22 @@
+
+
+let str : string = "somebabananbanana text babanana banana"
+let pattern : string = "banana"
+
+let str_len : int = str.Length
+let pattern_len :int = pattern.Length
+
+let mutable score = 0
+
+for i in 0..(str_len - 1) do
+    if str.[i] = pattern.[0] && i + pattern_len <= str_len then
+        let mutable isMatch : bool = true
+        for j in 0..(pattern_len - 1) do
+            if isMatch && str.[i + j] = pattern.[j] then
+                isMatch <- true
+            else
+                isMatch <- false
+        
+        if isMatch = true then
+            score <- score + 1
+

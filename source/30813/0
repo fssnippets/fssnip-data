@@ -1,0 +1,39 @@
+#r "MathNet.Numerics.dll"
+#r "MathNet.Numerics.FSharp.dll"
+open MathNet.Numerics
+#r "FSharp.Plotly.dll"
+open FSharp.Plotly
+open System
+
+
+// Newton's Law of Cooling
+// Te = Environment Temperature
+// T(t)  = Object Temperature at time t
+// c  = Heat Transfer Coefficient
+// T' = c ( Te - T )
+
+
+let heatTransferCoefficient, environmentTemperature = 2.0, 25.0
+let T' = Func<float,float,float> (fun t T -> heatTransferCoefficient * ( environmentTemperature - T ))
+let endTime, timeStep = 5.0, 0.05
+let minTemp, maxTemp = 0.0, 50.0
+[|
+    let t = [| 0.0 .. timeStep .. endTime |];
+    [|  for i in minTemp .. 10.0 .. maxTemp do
+            let f = OdeSolvers.AdamsBashforth.FourthOrder( i, t.[0], endTime , t.Length, T' )
+            yield Chart.Line ( t, f ) |]
+    [|  for i = 1 to int maxTemp / 10 - 1 do
+            let t = [| float i .. timeStep .. endTime |]
+            let f1 = OdeSolvers.AdamsBashforth.FourthOrder( minTemp, t.[0], endTime , t.Length, T' )
+            let f2 = OdeSolvers.AdamsBashforth.FourthOrder( maxTemp, t.[0], endTime , t.Length, T' )
+            yield! [| Chart.Line ( t, f1 ); Chart.Line ( t, f2 ) |] |]
+|]
+|> Array.concat
+|> Chart.Combine
+|> Chart.withLegend false
+|> Chart.withShape( Shape.init( StyleParam.ShapeType.Line, 0.0, endTime , environmentTemperature, environmentTemperature ) )
+|> Chart.withTitle "Newton's Law of Cooling"
+|> Chart.withX_AxisStyle "Time"
+|> Chart.withY_AxisStyle "Temperature"
+|> Chart.withSize ( 1000.0, 1000.0 )
+|> Chart.Show

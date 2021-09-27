@@ -1,0 +1,99 @@
+
+module SQLCascadeTriggers =
+    open FSharp.Data
+
+    let [<Literal>] ConnectionString  = @"Data Source=DBSERVER;Initial Catalog=DB;UID=xxx;PWD=xxx;"
+
+    let generateTriggers filter =
+        use cmd = new SqlCommandProvider<"""
+    SELECT   PKSchema = PK.table_schema, PKTable = PK.table_name
+           , FKSchema = FK.table_schema, FKTable = FK.table_name
+           , PK.ordinal_position
+           , PKColumn = PK.column_name
+           , FKColumn = FK.column_name
+           , RC.*
+    FROM INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS RC
+    JOIN INFORMATION_SCHEMA.key_column_usage        PK ON PK.constraint_catalog = RC.unique_constraint_catalog AND PK.constraint_schema = RC.unique_constraint_schema AND PK.constraint_name = RC.unique_constraint_name
+    JOIN INFORMATION_SCHEMA.key_column_usage        FK ON FK.constraint_catalog = RC.constraint_catalog        AND FK.constraint_schema = RC.constraint_schema        AND FK.constraint_name = RC.constraint_name         AND FK.ordinal_position = PK.ordinal_position
+    ORDER BY 1, 2, 3, 4, 5
+""" , ConnectionString, ResultType = ResultType.Records>(ConnectionString)
+
+        
+        let filteredRows = 
+            cmd.Execute()
+            |> Seq.filter filter
+            |> Seq.cache
+
+        let depths =
+            filteredRows
+            |> Seq.map(fun row -> (row.PKSchema.Value, row.PKTable), (row.FKSchema.Value, row.FKTable))
+            |> Seq.distinct
+            |> (fun rows ->
+                let rec level table =
+                    rows 
+                    |> Seq.filter(fun (p, ch) -> ch = table)
+                    |> Seq.map     fst
+                    |> Seq.map (level >> (+) 1)
+                    |> function 
+                    | s when Seq.isEmpty s -> 0
+                    | s -> Seq.max s
+                rows
+                |> Seq.map snd
+                |> Seq.distinct 
+                |> Seq.map (fun ch -> ch, level ch)
+            )
+            |> Map
+        let getDepth t = depths |> Map.tryFind t |> Option.defaultValue 0
+
+        filteredRows
+        //|> Seq.take 1
+        |> Seq.groupBy(fun row -> row.PKSchema.Value, row.PKTable)
+        |> Seq.collect(fun ((pschema, ptable), rows) ->
+            let constraints =
+                rows
+                |> Seq.groupBy(fun row -> (row.CONSTRAINT_SCHEMA, row.CONSTRAINT_NAME), (row.FKSchema.Value, row.FKTable))
+                |> Seq.sortByDescending(fst >> snd >> getDepth)
+            let foreigns =
+                constraints
+                |> Seq.collect(fun (((cschema, ctable), (fschema, ftable)), rows)->
+                    let condf =
+                        constraints
+                        |> Seq.head
+                        |> snd
+                        |> Seq.map(fun row -> sprintf "FT.[%s] = D.[%s]" row.FKColumn.Value  row.PKColumn.Value )
+                        |> String.concat " AND "
+                    [
+                        sprintf "    DELETE FROM [%s].[%s] "    fschema ftable
+                        sprintf "           FROM [%s].[%s] FT " fschema ftable
+                        sprintf "           JOIN deleted D ON %s;" condf
+                    ]
+                )
+            let condp =
+                constraints
+                |> Seq.head
+                |> snd
+                |> Seq.map(fun row -> sprintf "PT.[%s] = D.[%s]" row.PKColumn.Value  row.PKColumn.Value )
+                |> String.concat " AND "
+            [
+                yield  sprintf "IF EXISTS (SELECT * FROM sys.objects o JOIN sys.schemas s ON s.schema_id = o.schema_id "
+                yield  sprintf "    WHERE s.name = '%s' AND  o.name = '%s_DELETE_TG')"  pschema ptable
+                yield  sprintf "  DROP TRIGGER [%s].[%s_DELETE_TG]"                     pschema ptable
+                yield  sprintf "GO"
+                yield  sprintf "-- generated in F#Station: basic18.snippets FSI ZONE/SQLCascadeTriggers"
+                yield  sprintf "CREATE TRIGGER [%s].[%s_DELETE_TG]"                     pschema ptable
+                yield  sprintf "            ON [%s].[%s]"                               pschema ptable
+                yield  sprintf "    INSTEAD OF DELETE AS "
+                yield  sprintf "BEGIN"
+                yield  sprintf "    SET NOCOUNT ON;"
+                yield! foreigns
+                yield  sprintf "    DELETE FROM [%s].[%s] "                             pschema ptable
+                yield  sprintf "           FROM [%s].[%s] PT "                          pschema ptable
+                yield  sprintf "           JOIN deleted D ON %s;"                       condp
+                yield  sprintf "END"
+                yield  sprintf "GO"
+            ]
+        ) 
+        |> Seq.iter (printfn "%s")
+        ()
+
+    generateTriggers (fun row -> row.PKTable.StartsWith "Clc_" || row.PKTable.StartsWith "RLE_" )

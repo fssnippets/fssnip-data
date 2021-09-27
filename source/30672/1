@@ -1,0 +1,34 @@
+type Z = struct end
+type S<'n> = struct end
+
+type List<'n,'b> = L of 'b list
+let empty : List<Z, 'b> = L []
+let cons (b:'b) ((L bs) : List<'n, 'b>) : List<S<'n>,'b> = L (b::bs)
+let head ((L bs):List<S<'n>,'b>) = List.head bs
+let tail ((L bs):List<S<'n>,'b>) : List<'n,'b> = L(List.tail bs)
+
+type LT<'n> = I of int
+let z : LT<'n> = I 0
+let s ((I x):LT<'n>) : LT<S<'n>> = I (x+1)
+
+let rec lookup (i:LT<S<'n>>) (xs:List<S<'n>,'b>) : 'b =
+    match i, xs with
+    | I 0, L (x::_xs) -> x
+    | I lt, L (x::xs) -> lookup (I (lt-1)) (L xs)
+
+[<EntryPoint>]
+let main args =
+  let l3 : List<S<S<S<Z>>>,int> = cons 1 (cons 2 (cons 3 empty))
+  let l2 = cons 0 (cons 1 (cons 2 (cons 3 empty)))
+  
+  let snd = lookup (s (s z)) l3
+  
+  printfn "%A; %A; %A" l3 l2 snd
+  
+  // Compiler error and ide warning
+  // head empty
+  // tail empty
+  // lookup z empty
+  // lookup (s z) empty
+  // lookup (s(s(s z))) (cons 1 (cons 2 empty))
+  0

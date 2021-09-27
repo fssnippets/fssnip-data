@@ -1,0 +1,19 @@
+type AsyncBuilder with
+    member async.MergeSources(left : Async<'T>, right : Async<'S>) : Async<'T * 'S> = async {
+        let box f = async { let! x = f in return x :> obj }
+        let! results = Async.Parallel [|box left; box right|]
+        return (results.[0] :?> 'T, results.[1] :?> 'S)
+    }
+
+let test = async {
+    let f x = async { let! _ = Async.Sleep 10_000 in return x }
+    let! x = f false
+    and! y = f 42
+    and! z = f (nameof f)
+    return (x, y, z)
+}
+
+#time "on"
+// Real: 00:00:10.022, CPU: 00:00:00.000, GC gen0: 3, gen1: 3, gen2: 0
+// val it : bool * int * string = (false, 42, "f")
+Async.RunSynchronously test

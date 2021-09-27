@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>JavaScript Objects</h2>
+
+<p id="demo"></p>
+<p id="demo1"></p>
+<p id="demo2"></p>
+
+<script>
+    // Create an object:
+
+    function findDeepestLake(varLake) {
+        var LakeName;
+        var LakeDepth;
+
+        var len = varLake.length,
+            i, j, stop;
+
+        var text="";
+
+        for (i=0; i < len; i++){
+            for (j=0; j < len-i-1; j++){
+                if (varLake[j].Depth <= varLake[j+1].Depth){
+                    LakeName = varLake[j].Name;
+                    varLake[j].Name = varLake[j+1].Name;
+                    varLake[j+1].Name=LakeName;
+                    LakeDepth = varLake[j].Depth;
+                    varLake[j].Depth = varLake[j+1].Depth;
+                    varLake[j+1].Depth=LakeDepth;
+
+                }
+            }
+        }
+
+        for (i=0;i< len; i++){
+            text += varLake[i].Name + "&nbsp&nbsp&nbsp&nbsp&nbsp" + varLake[i].Depth+ "</br> ";
+        }
+        document.getElementById("demo").innerHTML = text;
+        console.log(text);
+        return varLake;
+    }
+
+    function printTotalLake(toSortLake) {
+        var sortedLake = findDeepestLake(toSortLake)
+        var count = ["Zero","One", "Two",            "Three","Four","Five","Six","Seven","Eight","Nine"];
+        var len = sortedLake.length;
+        document.getElementById("demo1").innerHTML = "There are "+"<i>"+count[len]+"</i> Lakes.";
+        return sortedLake;
+    }
+
+    function DeepestLake(){
+        let Lake = [
+            {
+                "Name": "Caspian Sea",
+                "Depth": 560
+            },
+            {
+                "Name": "Tarn Hows",
+                "Depth": 53
+            },
+            {
+                "Name": "Crater Lake",
+                "Depth": 324
+            },
+            {
+                "Name": "Lake Tanganyika",
+                "Depth": 803
+            },
+            {
+                "Name": "Lake Vostok",
+                "Depth": 546
+            },
+            {
+                "Name": "Lake Baikal",
+                "Depth": 897
+            }
+
+        ]
+
+        sortedLake = printTotalLake(Lake)
+        document.getElementById("demo2").innerHTML = "The deepest Lake is "+sortedLake[0].Name+". "+sortedLake[0].Name+" is "
+            +(sortedLake[0].Depth*1.8288).toFixed(2)+"m deep";
+    }
+
+    DeepestLake()
+
+</script>
+
+</body>
+</html>
