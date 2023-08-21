@@ -1,0 +1,27 @@
+module Seq =
+    let groupAdjacent f input = 
+        let prev = Seq.head input
+        let sgs,n = 
+            (([],prev),input |> Seq.tail)
+            ||> Seq.fold(fun (acc,prev) next -> 
+                if f (prev,next) then 
+                    match acc with
+                    | [] -> [[prev]],next
+                    | xs::rest -> (prev::xs)::rest,next
+                else
+                    match acc with 
+                    | [] -> [[];[prev]],next
+                    | xs::rest -> []::(prev::xs)::rest,next)
+        let sgs = 
+            match sgs with 
+            | [] -> [[n]]
+            | xs::rest -> 
+                match xs with
+                | [] -> [n]::rest
+                | ys -> (n::ys)::rest
+        sgs |> List.map List.rev |> List.rev
+
+(*
+["a"; "a"; "a"; "b"; "c"; "c"] |> Seq.groupAdjacent (fun (a,b)->a=b)
+val it : seq<seq<string>> = seq [["a"; "a"; "a"]; ["b"]; ["c"; "c"]]
+*)

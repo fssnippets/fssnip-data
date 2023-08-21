@@ -1,0 +1,57 @@
+open System
+type Stack = Collections.Generic.Queue<IDisposable>
+
+type Scope<'a> (value:'a) =
+    let stack = Stack()
+    member _.Value = value
+    member internal _.Stack = stack
+    member _.Close () =
+        for i in stack do
+        try
+            i.Dispose()
+        with 
+            _ -> ()    
+    interface IDisposable with
+        member this.Dispose () = this.Close()
+
+module Internals =
+    let getStack (x:Scope<_>) = x.Stack
+
+type ScopeBuilder () =
+    member _. Return x = new Scope<_>(x)
+    
+    member _.Using (res ,body) =
+        let mutable disposeNow = true
+        try
+            let (x:Scope<_>) = body res
+            disposeNow <- false
+            x.Stack.Enqueue res
+            x
+        finally
+            if  disposeNow then (res :> IDisposable).Dispose()  
+
+let scope = ScopeBuilder () 
+
+// usage
+open System.IO
+let somescope =
+    scope {
+        use ms = new MemoryStream() 
+        use sw = new StreamWriter(ms)        
+        sw.Write "this
+is
+multiline
+text"
+        sw.Flush()
+        ms.Seek (0L,SeekOrigin.Begin) |> ignore
+        use sr = new StreamReader(ms)
+        return 
+            {|
+                Next = sr.ReadLine 
+            |}
+
+    }
+
+somescope .Value.Next()  
+
+somescope .Close()

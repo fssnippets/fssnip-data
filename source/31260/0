@@ -1,0 +1,32 @@
+let fib5 (n : int64) (m : int64) = 
+    let mutable dead: List<int64> = [1L; 1L]
+    let mutable last = 0L
+    let mutable next = 1L
+    seq {
+        1L
+        for i in 1L .. (n - 1L) do
+            if i < m
+            then
+                let temp = last + next
+                dead <- dead @ [temp]
+                last <- next
+                next <- temp
+                next
+            else 
+                if i = m
+                then
+                    let temp = last + next - dead.Item 0
+                    dead <- dead.Tail
+                    dead <- dead @ [temp]
+                    last <- next
+                    next <- temp
+                    next
+                else
+                    let temp = last + next - dead.Item 0
+                    dead <- dead.Tail
+                    dead <- dead @ [temp]
+                    last <- next
+                    next <- temp
+                    next
+        }
+        |> Seq.toArray

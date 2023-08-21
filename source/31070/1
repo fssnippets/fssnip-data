@@ -1,0 +1,12 @@
+let getallcombinations n k =
+    let rec f k start =
+        [
+            for i in start .. n do
+                match k with
+                | 1 -> yield [i]
+                | _ -> yield! f (k-1) (i+1) |> List.map (fun ls -> i :: ls)
+        ]
+    f k 1
+
+// getallcombinations 4 2
+// [[1; 2]; [1; 3]; [1; 4]; [2; 3]; [2; 4]; [3; 4]]

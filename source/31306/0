@@ -1,0 +1,33 @@
+open System
+open System.Threading
+open System.Threading.Tasks
+#r "nuget: Websocket.Client, 4.4.43"
+#r "nuget: System.Reactive, 4.0.0"
+open Websocket.Client
+
+let websocketRequest (reqMsg: string): ResponseMessage =
+    let requestTask: Task<ResponseMessage> = 
+        task {
+            let responseReceivedEvent = new ManualResetEvent(false)
+            let mutable msgReceived = None
+            let url = new Uri("wss://ws.postman-echo.com/raw");
+            use client = new WebsocketClient(url)
+            client.ReconnectTimeout <- TimeSpan.FromSeconds(30)
+            client.ReconnectionHappened.Subscribe(fun msg ->
+                printfn $"Reconnection happened, type: {msg.Type}")
+            client.MessageReceived.Subscribe(fun msg ->
+                msgReceived <- Some msg
+                responseReceivedEvent.Set() |> ignore
+            )
+            do! client.Start()
+            
+            Task.Run(fun() -> client.Send(reqMsg)) |> ignore
+            responseReceivedEvent.WaitOne(10000) |> ignore
+            return Option.get msgReceived
+        }
+    requestTask.Wait()
+    requestTask.Result
+
+let result = websocketRequest "ECHO_MESSAGE"
+printfn $"Response text: {result.Text}"
+printfn $"Response binary: {result.Binary}"

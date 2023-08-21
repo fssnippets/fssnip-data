@@ -1,0 +1,24 @@
+// Based on http://www.fssnip.net/29/title/Regular-expression-active-pattern
+
+open System.Text.RegularExpressions
+
+let inline (|Parse|_|) (str: string) : 'a option =
+    let mutable value = Unchecked.defaultof<'a>
+    let result = (^a: (static member TryParse: string * byref< ^a> -> bool) str, &value)
+    if result then Some value
+    else None
+
+let (|Regex|_|) pattern input =
+    let m = Regex.Match(input, pattern)
+    if m.Success then Some(List.tail [ for g in m.Groups -> g.Value ])
+    else None
+
+//Example:
+let phone = "(555) 555-5555"
+match phone with
+| Regex 
+    @"\(([0-9]{3})\)[-. ]?([0-9]{3})[-. ]?([0-9]{4})" 
+    [ Parse area; Parse prefix; Parse suffix ] ->
+    printfn $"Area: %d{area}, Prefix: %d{prefix}, Suffix: %d{suffix}"
+| _ -> 
+    printfn "Not a phone number"

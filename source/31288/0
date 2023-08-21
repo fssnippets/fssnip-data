@@ -1,0 +1,29 @@
+module RobotSimulator
+type Direction = North | East | South | West
+type Position = int * int
+type Robot = { direction: Direction; position: Position }
+let create (direction:Direction) (position:Position) : Robot = {direction=direction; position=position}
+let turnR robot = match robot.direction with 
+                    | North -> create East robot.position
+                    | East -> create South robot.position
+                    | West -> create North robot.position
+                    |South ->create West robot.position
+let turnL robot = match robot.direction with 
+                    | North -> create West robot.position
+                    | East -> create North robot.position
+                    | West -> create South robot.position
+                    |South ->create East robot.position
+
+let moveone robot instruction= 
+        match instruction with
+            | 'R' ->  turnR robot
+            | 'L' -> turnL robot 
+            | _ -> match robot.direction with
+                       | North -> create North (fst robot.position, (snd robot.position)+1)
+                       | East -> create East ((fst robot.position)+1, snd robot.position)
+                       | South -> create South (fst robot.position, (snd robot.position)-1)
+                       | _ -> create West ((fst robot.position)-1, snd robot.position)
+
+let move (instructions:string)  robot = 
+    instructions|> Seq.fold moveone robot
+                                                       

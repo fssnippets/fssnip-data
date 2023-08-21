@@ -1,0 +1,58 @@
+namespace AsciiWaveRenderer
+open System
+open NAudio.Wave
+open FSharp
+
+module private AsciiWaveRenderer =
+    let garbageSeq =
+        let rand = new Random()
+        let b = Array.zeroCreate 4
+        Seq.initInfinite (fun _ ->
+            rand.NextBytes b
+            BitConverter.ToSingle (b, 0)
+        )
+        |> Seq.cache
+
+type AsciiWaveRenderer =
+    static member RenderSamples (buffer: float32[], waveFormat: WaveFormat, ?graphHeight) =
+        let h = defaultArg graphHeight 10
+
+        let channels = [|
+            for ci in 0 .. waveFormat.Channels - 1 -> [|
+                for si in 0 .. (buffer.Length / waveFormat.Channels) - 1 ->
+                    let i = (si * waveFormat.Channels) + ci
+                    buffer.[i]
+            |]
+        |]
+
+        let cs =
+            channels
+            |> Array.map (fun samples ->
+                let halfh = h/2
+                let halfhf = float32 halfh
+                [|
+                    for hi in halfh .. -1 .. -halfh -> String([|
+                        for si in 0 .. samples.Length - 1 ->
+                            if hi = (int (round (samples.[si] * halfhf))) then '*' else ' '
+                    |])
+                |]
+            )
+
+        cs
+
+    static member ReadAndRenderSamples ((sampleProvider: ISampleProvider), nSamples, ?buffSize, ?buffOffset, ?graphHeight, ?fillBufferWithGarbage) =
+        let count = nSamples * sampleProvider.WaveFormat.Channels
+        let buff = Array.zeroCreate<float32> (defaultArg buffSize count)
+        let garbage = AsciiWaveRenderer.garbageSeq |> Seq.take buff.Length |> Seq.toArray
+        garbage.CopyTo (buff, 0)
+        let count' = sampleProvider.Read (buff, defaultArg buffOffset 0, count)
+        
+        AsciiWaveRenderer.RenderSamples (buff, sampleProvider.WaveFormat, ?graphHeight = graphHeight)
+
+    static member MakeGarbageBufferForSampleReading ((sampleProvider: ISampleProvider), nSamples, ?buffSize) =
+        let count = nSamples * sampleProvider.WaveFormat.Channels
+        let buff = Array.zeroCreate<float32> (defaultArg buffSize count)
+        let garbage = AsciiWaveRenderer.garbageSeq |> Seq.take buff.Length |> Seq.toArray
+        garbage.CopyTo (buff, 0)
+        
+        buff

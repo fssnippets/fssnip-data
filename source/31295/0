@@ -1,0 +1,38 @@
+let parseAndReplaceTemplate
+    (startPosition: int)
+    (startTag: string)
+    (endTag: string)
+    (replacements: Map<string, string>)
+    (template: string)
+    : string =
+    // sanity checks (do once)
+    if System.String.IsNullOrWhiteSpace startTag
+       || System.String.IsNullOrWhiteSpace endTag
+       || System.String.IsNullOrWhiteSpace template
+       || replacements.IsEmpty
+       || startPosition > (template.Length - 1) then
+        template // return unaltered
+    else
+        let regexStr = startTag + "(.*?)" + endTag
+        let regex = System.Text.RegularExpressions.Regex (regexStr)
+
+        let rec replace (input: string) =
+            let regexMatch = regex.Match input
+
+            if regexMatch.Success then
+                let key = regexMatch.Groups.[1].Value
+                let value = replacements |> Map.tryFind key
+
+                match value with
+                | Some v ->
+                    let before = input.Substring (0, regexMatch.Index)
+                    let after = input.Substring (regexMatch.Index + regexMatch.Length)
+                    before + v + replace after
+                | None -> replace input
+            else
+                input
+
+        let skippedText = template.Substring (0, startPosition)
+        let output = replace (template.Substring startPosition)
+
+        skippedText + output

@@ -1,0 +1,22 @@
+let internal binSearch' (keySelector : 'a -> 'b) (selector : 'a -> 'c) (key : 'b) (arr : 'a array) (r : 'c byref) : bool =
+        let mutable indexStart = 0
+        let mutable indexEnd = arr.Length - 1
+        let mutable result = false
+        let mutable doContinue = true
+        while indexStart <= indexEnd && doContinue do
+            let indexMid = indexStart + ((indexEnd - indexStart) >>> 1)
+            let midItem = arr.[indexMid]
+            let midKey = keySelector midItem
+            let cr = sign (compare key midKey)
+            match cr with
+            | 0      -> r <- selector midItem
+                        doContinue <- false
+            | -1     -> indexEnd <- indexMid - 1
+            | 1 | _  -> indexStart <- indexMid + 1
+        result
+
+    let binSearch (keySelector : 'a -> 'b) (key : 'b) (arr : 'a array) =
+        let mutable r = None
+        binSearch' keySelector Some key arr &r
+        |> ignore
+        r

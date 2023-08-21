@@ -1,0 +1,163 @@
+(* Save humans, destroy zombies! *)
+open System
+
+let heroSpeed = 1000;
+let zombieSpeed = 400;
+let heroKillingDistance = 2000;
+let zombieKillingDistance = 400
+
+/// Prints a formatted string to DebugListeners.
+let inline dprintfn fmt =
+    Printf.ksprintf System.Console.Error.WriteLine fmt
+
+type Human = { Id: int; X: int; Y: int; HeroDistance: int }
+type Zombie = { Id: int; X: int; Y: int; NextX: int; NextY: int }
+
+// a^2 + b^2 = c^2 (pythagoras)
+let getDistance (x1:int) (y1:int) (x2:int) (y2:int) =
+    let a = abs (x2 - x1) |> float
+    let b = abs (y2 - y1) |> float
+    sqrt ((a**2.) + (b**2.)) |> int
+
+let rec parseHumans (heroX: int) (heroY: int) (humanCount: int) (humans: Human list) : Human list =
+    if humanCount = 0 then 
+        humans
+    else
+        let token1 = (Console.In.ReadLine()).Split [|' '|]
+        let humanId = int(token1.[0])
+        let humanX = int(token1.[1])
+        let humanY = int(token1.[2])
+        let heroDistance = getDistance heroX heroY humanX humanY
+        let human: Human = { Id = humanId; X = humanX; Y = humanY; HeroDistance = heroDistance }
+        parseHumans heroX heroY (humanCount - 1) (human :: humans)
+
+let rec parseZombies (zombieCount: int) (zombies: Zombie list) =
+    if zombieCount = 0 then
+        zombies
+    else
+        let token2 = (Console.In.ReadLine()).Split [|' '|]
+        let zombieId = int(token2.[0])
+        let zombieX = int(token2.[1])
+        let zombieY = int(token2.[2])
+        let zombieXNext = int(token2.[3])
+        let zombieYNext = int(token2.[4])
+        let zombie : Zombie = { Id = zombieId; X = zombieX; Y = zombieY; NextX = zombieXNext; NextY = zombieYNext }
+        parseZombies (zombieCount - 1) (zombie :: zombies)
+
+// Greedy zombie-killer
+let moveTowardsClosestZombie (heroX: int) (heroY: int) (humans: Human list) (zombies: Zombie list) =
+    let closestZombies =
+        zombies
+        |> List.sortBy (fun z -> getDistance heroX heroY z.NextX z.NextY)
+    
+    let (newX,newY) = 
+        closestZombies
+        |> List.tryHead
+        |> Option.map (fun z -> z.NextX, z.NextY)
+        |> Option.defaultValue (0,0)
+
+    (newX, newY)
+
+// Greedy human-saver
+let moveTowardsClosestHuman (heroX: int) (heroY: int) (humans: Human list) (zombies: Zombie list) =
+    let closestHumans =
+        humans
+        |> List.sortBy (fun h -> getDistance heroX heroY h.X h.Y)
+    
+    let (newX, newY) =
+        closestHumans
+        |> List.tryHead
+        |> Option.map (fun h -> h.X, h.Y)
+        |> Option.defaultValue (0,0)
+    
+    (newX, newY)
+
+// Works on all except "Split-second reflex"
+let moveTowardsClosestSaveableHuman (heroX: int) (heroY: int) (humans: Human list) (zombies: Zombie list) =
+    let isHumanPotentiallySaveable (heroX: int) (heroY: int) (zombies: Zombie list) (human: Human) =
+        let closestZombieOpt =
+            zombies
+            |> List.map (fun zombie -> zombie, getDistance human.X human.Y zombie.X zombie.Y)
+            |> List.sortBy snd
+            |> List.tryHead
+
+        match closestZombieOpt with
+        | Some closestZombie -> snd closestZombie >= zombieKillingDistance - 400
+        | None -> true
+            
+    let closestPotentiallySaveableHumanOpt =
+        humans
+        |> List.sortBy (fun human -> getDistance heroX heroY human.X human.Y)
+        |> List.filter (fun human -> isHumanPotentiallySaveable heroX heroY zombies human)
+        |> List.tryHead
+    
+    match closestPotentiallySaveableHumanOpt with
+    | Some human -> (human.X, human.Y)
+    | None -> (heroX,heroY)
+
+
+let predictSaveableHuman (heroX: int) (heroY: int) (humans: Human list) (zombies: Zombie list) =
+    let canHeroReachBeforeZombie (heroX: int) (heroY: int) (human: Human) (zombies: Zombie list) =
+        let isHumanWithinZombieKillingDistance =
+            zombies
+            |> List.exists (fun zombie -> getDistance human.X human.Y zombie.X zombie.Y < zombieKillingDistance)
+            
+        let heroProtectsHuman = getDistance human.X human.Y heroX heroY < (heroKillingDistance - zombieKillingDistance)
+
+        if heroProtectsHuman then
+            true
+        elif isHumanWithinZombieKillingDistance then
+            false
+        else
+            let stepsRequiredByHero =
+                let distance = getDistance heroX heroY human.X human.Y
+                distance / heroSpeed
+
+            let stepsRequiredByZombie = 
+                let closestZombie =
+                    zombies
+                    |> List.map (fun zombie -> zombie, getDistance zombie.X zombie.Y human.X human.Y)
+                    |> List.sortBy snd //distance
+                    |> List.tryHead
+                    |> Option.map fst
+
+                match closestZombie with
+                | Some zombie -> 
+                    let distance = getDistance zombie.X zombie.Y human.X human.Y
+                    distance / zombieSpeed
+                | None -> Int32.MaxValue
+            
+            let canHeroReachBefore = stepsRequiredByHero <= stepsRequiredByZombie
+
+            canHeroReachBefore
+
+    let closestHumans = humans |> List.sortBy (fun human -> getDistance heroX heroY human.X human.Y)
+
+    let closestSaveableHuman =
+        closestHumans
+        |> List.filter (fun human -> canHeroReachBeforeZombie heroX heroY human zombies)
+        |> List.tryHead
+        |> Option.defaultValue (closestHumans |> List.head)
+    
+    (closestSaveableHuman.X, closestSaveableHuman.Y)
+
+
+(* game loop *)
+while true do
+    let token = (Console.In.ReadLine()).Split [|' '|]
+    let heroX = int(token.[0])
+    let heroY = int(token.[1])
+    
+    let humanCount = int(Console.In.ReadLine())
+    let humans = parseHumans heroX heroY humanCount []
+
+    let zombieCount = int(Console.In.ReadLine())
+    let zombies = parseZombies zombieCount []
+
+    //let (moveX, moveY) = moveTowardsClosestZombie x y humans zombies
+    //let (moveX, moveY) = moveTowardsClosestHuman x y humans zombies
+    //let (moveX, moveY) = moveTowardsClosestSaveableHuman heroX heroY humans zombies
+    let (moveX, moveY) = predictSaveableHuman heroX heroY humans zombies
+
+    printfn "%i %i" moveX moveY 
+    ()

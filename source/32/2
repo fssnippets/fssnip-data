@@ -1,0 +1,20 @@
+// Create an infinite list of fibonacci numbers.
+let fibs =
+    let generator state =
+        let (cur, prev) = state
+        let next = cur + prev
+        let state' = (next, cur)
+        Some (cur, state')
+    let more =
+        (1, 0)
+        |> Seq.unfold generator
+    seq {
+        0
+        yield! more
+    }
+
+// Take the first twenty items from the list.
+let first20 = Seq.take 20 fibs
+
+// Print the finite list.
+printfn "%A" first20

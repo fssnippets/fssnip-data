@@ -1,0 +1,21 @@
+module RobotSimulator
+
+type Direction = North | East | South | West
+type Position = int * int
+type Robot = { direction: Direction; position: Position }
+
+let create direction position = 
+    {Direction = direction; Position = position}
+    
+
+let move instructions robot = 
+    let dirVec dir = 
+        match dir with
+        | North -> (0, 1)
+        | East -> (-1, 0)
+        | South -> (0, -1)
+        | West -> (1, 0)
+    let move' i robot =
+        let v = dirVec i
+        {robot with Position = vecadd robot.Position v}
+    fold move' robot instructions

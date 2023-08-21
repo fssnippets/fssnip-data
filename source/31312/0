@@ -1,0 +1,23 @@
+open LiteDB
+
+[<CLIMutable>]
+type Customer =
+    {
+        Id: int
+        Name: string
+        Phones: string[]
+        IsActive: bool
+    }
+
+let db = new LiteDatabase(@"C:\Temp\MyData.db")
+let col = db.GetCollection<Customer>("customers")
+let customer = { Id = 0; Name = "John Doe"; Phones = [| "867-5309" |]; IsActive = true }
+col.Insert(customer)
+
+let reader = db.Execute("SELECT $ FROM customers")
+let mapper = BsonMapper()
+let customers = 
+    [|
+        while reader.Read() do
+            mapper.Deserialize<Customer>(reader.Current)
+    |]

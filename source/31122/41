@@ -1,0 +1,138 @@
+namespace Shootout
+open System.Collections.Generic
+open System.Numerics
+
+[<AutoOpen>]
+module Prelude =
+
+    type Undefined = unit // denotes that a term is 'not defined in this document', usually for brevity.
+    type 'a BackRef = 'a // denotes that a field is a back reference rather than, say, an object whose lifetime is managed by the containing type.
+    type 'a GlobalRef = 'a // denotes that a field doesn't actually exist, but the containing type does reference the global type's instance.
+    type RealtimeId = int // uniquely identifies something in NormCore. I think this is an int?
+    type Dialog = Undefined // a gui dialog
+
+[<AutoOpen>]
+module Interaction =
+
+    type FTKInteractable = Undefined // an object that the FTKInteractor can interact with
+
+    type FTKFarGrabberState = Scanning of Undefined | Grabbing of Undefined | Attracting of Undefined
+    
+    type FTKFarGrabber =
+        { State : FTKFarGrabberState }
+
+    type FTKInteractor =
+        { State : Undefined // TODO: define this as FTKInteractorState by refactoring FTKInteractor.
+          FarGrabber : FTKFarGrabber }
+
+    type FTKPlayer =
+        { LeftInteractor : FTKInteractor
+          RightInteractor : FTKInteractor }
+
+    type CoreShootout =
+        { FTKG : Undefined GlobalRef // TODO: define the FTKG type instead of using Undefined here.
+          FTKPlayer : FTKPlayer
+          FTKPlayers : Dictionary<RealtimeId, FTKPlayer>
+          FTKInteractables : Dictionary<RealtimeId, FTKInteractable>
+          NormCore : Undefined }
+
+[<AutoOpen>]
+module Match =
+
+    type Advent = Kill | FlagCapture | Assist | HealAlly | Defuse
+    type Advents = Dictionary<int, Advent> // TODO: make this RealtimeDictionary.
+    type AdventsManager =
+        { Advents : Advents }
+
+    type MatchPopUpDialog =
+        | ComponentPurchasingUIState | LeaderboardState | MatchOptionsSettingsState
+        | QuickGameOptionsState | PlayerStatsState | Hidden
+
+    type MatchEndDialog = PlayerStats | CurrencyAndResultState
+
+    type DeathMatchMode =
+        { MatchPopUpDialog : MatchPopUpDialog
+          MatchEndDialog : MatchEndDialog }
+
+    type CaptureTheFlagMode =
+        { MatchPopUpDialog : MatchPopUpDialog
+          MatchEndDialog : MatchEndDialog }
+
+    type MatchMode = // NOTE: doesn't exist in game yet.
+        | DeathMatchMode of DeathMatchMode
+        | CaptureTheFlagMode of CaptureTheFlagMode
+        //| ... more modes
+
+[<AutoOpen>]
+module Scene =
+
+    type Realtime = Undefined // normcore scene synchronization component
+    type RealtimeAvatar = Undefined
+    type RealtimeAvatarManager = { Avatars : Dictionary<RealtimeId, RealtimeAvatar> }
+    type SceneLoadManager = Undefined // TODO: attempt to combine SceneLoadManager with SceneManager.
+    type SoundManager = Undefined
+    type ScreenFader = Undefined
+    type Timer = Undefined // not real sure what this is for...?
+    type Team = TeamNeutral | TeamA | TeamB | TeamC | TeamD
+    type Territory = TerritoryNeutral | TerritoryA | TerritoryB | TerritoryC | TerritoryD
+    type MatchState = Lobby | Preperation | Started | PeaceTime | War | End // NOTE: renamed from GameState.
+    type MatchControllerSyncComponent = Undefined // NOTE: renamed from GameManagerSyncComponent.
+
+    type Dispenser =
+        | CurrencyBased of Vector3
+        | Random of Vector3
+        | RareRandom of Vector3
+
+    type SceneManager =
+        { RealtimeAvatarManager : RealtimeAvatarManager // NOTE: moved from MatchController.
+          SpawnPoints : Dictionary<Team, Vector3 list>
+          Dispensers : Dispenser list
+          Bases : Dictionary<Team, Vector3>
+          Flags : Dictionary<Team, Vector3> }
+
+    type ShootoutG =
+        { SceneLoader : SceneLoadManager
+          SceneManager : SceneManager
+          ItemSpawnManager : MFTKItemSpawnManager // TODO: see if we can remove this recursive reference.
+          SoundManager : SoundManager
+          AdventsManager : AdventsManager }
+
+    and MFTKItemSpawnManager = { ShootoutG : ShootoutG GlobalRef }
+    type MFTKItem = { ShootoutG : ShootoutG GlobalRef }
+    type MFTKAgent = { ShootoutG : ShootoutG GlobalRef }
+    type FlagsController = { ShootoutG : ShootoutG GlobalRef }
+    type HillsController = { ShootoutG : ShootoutG GlobalRef }
+    type UIManager = { ShootoutG : ShootoutG GlobalRef } // TODO: attempt to rename this to MatchUIController, extracting any more general UI functionality out to another controller.
+
+    type MatchController = // NOTE: renamed from GameManager.
+        { ShootoutG : ShootoutG GlobalRef
+          MatchControllerSyncComponent : MatchControllerSyncComponent
+          Realtime : Realtime
+          UIManager : UIManager
+          MatchConfigurer : Undefined
+          MatchState : MatchState
+          MatchMode : MatchMode
+          CoreShootout : CoreShootout
+          Advents : Advents
+          FlagsControllerOpt : FlagsController option
+          HillsControllerOpt : HillsController option
+          ScreenFader : ScreenFader
+          Timer : Timer }
+
+[<AutoOpen>]
+module TopLevel =
+
+    type MainMenu = // NOTE: doesn't exist in game yet.
+        | LobbyConfigurer of Undefined
+        | GameOptions of Undefined
+        | CharacterCustomization of Undefined
+        | Social of Undefined
+        | Achievements of Undefined
+        | Store of Undefined
+
+    type ShootoutState = // NOTE: doesn't exist in game yet.
+        | SplashState of Undefined
+        | MainMenuState of MainMenu
+
+    type Shootout = // NOTE: doesn't exist in game yet.
+        { State : ShootoutState }

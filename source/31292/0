@@ -1,0 +1,16 @@
+let separateByThousands (text: string) =
+    let sb = System.Text.StringBuilder ()
+
+    let rec insertSpaceEvery3Chars textPos =
+        if textPos < 0 then
+            ()
+        else if textPos % 3 = 0 && textPos > 0 then
+            sb.Append (" ") |> ignore
+            sb.Append (text.[textPos]) |> ignore
+            insertSpaceEvery3Chars (textPos - 1)
+        else
+            sb.Append (text.[textPos]) |> ignore
+            insertSpaceEvery3Chars (textPos - 1)
+
+    insertSpaceEvery3Chars (text.Length - 1) // Start from the end.
+    sb.ToString ()

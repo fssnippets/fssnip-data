@@ -1,0 +1,40 @@
+let shift l i =
+    let rec shiftInternal la lb len j =
+        match lb with
+        | [] -> 
+            if j > 0 then 
+                // we're rotating further than the size of the list
+                // so let's continue with the modulo and run again
+                let lb = List.rev la
+                shiftInternal List.empty lb 0 (i % len )
+            else
+                // j = 0
+                List.rev la
+
+        | hd::tail when j > 0 -> shiftInternal (hd::la) tail (len + 1) (j - 1)
+        | _ -> lb @ List.rev la
+
+    if i > 0 then
+        shiftInternal List.empty l 0 i
+    elif i = 0 then
+        l
+    else
+        // invalid input
+        List.empty
+
+
+// Running this:
+// > shift [1;2;3;4;5;6;7] 13;;
+// val it: int list = [7; 1; 2; 3; 4; 5; 6]
+// 
+// > shift [1;2;3;4;5;6;7] 14;;
+// val it: int list = [1; 2; 3; 4; 5; 6; 7]
+// 
+// > shift [1;2;3;4;5;6;7] 2;;
+// val it: int list = [3; 4; 5; 6; 7; 1; 2]
+// 
+// > shift [1;2;3;4;5;6;7] 7;;
+// val it: int list = [1; 2; 3; 4; 5; 6; 7]
+// 
+// > shift [1;2;3;4;5;6;7] 8;;
+// val it: int list = [2; 3; 4; 5; 6; 7; 1]

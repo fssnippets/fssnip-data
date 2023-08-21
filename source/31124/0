@@ -1,0 +1,19 @@
+ (*Infinite sequence*)
+    let infiniteSeq start =
+          start
+          |> Seq.unfold (fun state -> Some(state,bigint.Add(state, bigint.One)))
+  
+    (*Prime Sieve*)
+    //removing multiples of numbers from sequence
+    let sift (n:bigint) (sq:seq<bigint>) = sq |> Seq.filter (fun x -> x % n <> 0I)
+    let sieve (sq:seq<bigint>) =
+        let rec loop s =
+          seq{
+                let head = Seq.head s
+                yield head
+                yield! loop (sift head (Seq.tail s))
+            }
+        loop sq
+
+    let getNPrimes num = infiniteSeq 2I |> sieve |> Seq.take num
+     

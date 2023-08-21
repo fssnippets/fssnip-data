@@ -1,0 +1,40 @@
+open FSharpPlus
+
+[<RequireQualifiedAccess>]
+module IReadOnlyDictionary =
+
+    let diffByKey (d1: IReadOnlyDictionary<'Key, 'Value1>) (d2: IReadOnlyDictionary<'Key, 'Value2>) =
+        let common, d1kNotInD2, d2kNotInD1 = HashSet [], HashSet [], HashSet []
+        for k in d1.Keys do
+            if IReadOnlyDictionary.containsKey k d2 then common.Add(k)     |> ignore
+            else                                         d1kNotInD2.Add(k) |> ignore
+        for k in d2.Keys do
+            if IReadOnlyDictionary.containsKey k d1 |> not then d2kNotInD1.Add(k) |> ignore
+        (common, d1kNotInD2, d2kNotInD1) : Common<'Key> ISet * D1Only<'Key> ISet * D2Only<'Key> ISet
+
+    let fullOuterJoin (left: IReadOnlyDictionary<'Key, 'Left>) (right: IReadOnlyDictionary<'Key, 'Right>) =
+        let outcome = Dictionary<'Key, 'Left option * 'Right option> []
+        for KeyValue (leftKey, leftValue) in left do
+            if IReadOnlyDictionary.containsKey leftKey right then
+                outcome.Add(leftKey, (Some leftValue, Some right.[leftKey]))
+            else
+                outcome.Add(leftKey, (Some leftValue, None))
+        for KeyValue (rightKey, _) in right do
+            if IReadOnlyDictionary.containsKey rightKey left |> not then
+                outcome.Add(rightKey, (None, Some right.[rightKey]))
+        outcome :> IReadOnlyDictionary<'Key, 'Left option * 'Right option>
+
+
+[<EntryPoint>]
+let main _ =
+
+    let d1 = [ ("a", 42); ("b", 2) ] |> readOnlyDict
+    let d2 = [ ("a", 24); ("c", 3) ] |> readOnlyDict
+    let common, d1kNotInD2, d2kNotInD1 = IReadOnlyDictionary.diffByKey d1 d2
+
+    let printOpt = function
+    | Some value -> $"\t{value.ToString()}"
+    | None       -> "\tn/a"
+
+    IReadOnlyDictionary.fullOuterJoin d1 d2
+    |> Seq.iter (fun (KeyValue (k, (vl, vr)))-> printfn $"{k}: {printOpt vl} {printOpt vr}" )

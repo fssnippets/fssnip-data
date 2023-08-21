@@ -1,0 +1,72 @@
+type TagComparable =
+    | Int of int
+    | Single of single
+
+type Tag =
+    | Tag of string
+    | Entity of uint64
+    | Comparable of TagComparable
+    | Tags' of Tag list
+
+type Subquery =
+    | Wildcard // matches everything
+    | EqualTo of Tag
+    | Greater of TagComparable
+    | GreaterEqual of TagComparable
+    | Lesser of TagComparable
+    | LesserEqual of TagComparable
+    | And of Subquery list
+    | Or of Subquery list
+
+    static member equalTo term tag =
+        match (term, tag) with
+        | (Tag name, Tag name2) -> name = name2
+        | (Entity entityId, Entity entityId2) -> entityId = entityId2
+        | (Comparable comparable, Comparable comparable2) ->
+            match (comparable, comparable2) with
+            | (Int i, Int i2) -> i = i2
+            | (Single i, Single i2) -> i = i2
+            | _ -> false
+        | (Tags' tags, Tags' tags2) ->
+            if tags.Length = tags2.Length
+            then List.forall2 Subquery.equalTo tags tags2
+            else false
+        | _ -> false
+
+    static member eval tag subquery =
+        match subquery with
+        | Wildcard -> true
+        | EqualTo term  -> Subquery.equalTo term tag
+        | Greater c ->
+            match tag with
+            | Comparable c2 -> match (c, c2) with (Int i, Int i2) -> i > i2 | (Single s, Single s2) -> s > s2 | _ -> false
+            | _ -> false
+        | GreaterEqual c ->
+            match tag with
+            | Comparable c2 ->
+                match (c, c2) with (Int i, Int i2) -> i >= i2 | (Single s, Single s2) -> s >= s2 | _ -> false
+            | _ -> false
+        | Lesser c ->
+            match tag with
+            | Comparable c2 ->
+                match (c, c2) with (Int i, Int i2) -> i < i2 | (Single s, Single s2) -> s < s2 | _ -> false
+            | _ -> false
+        | LesserEqual c ->
+            match tag with
+            | Comparable c2 ->
+                match (c, c2) with (Int i, Int i2) -> i <= i2 | (Single s, Single s2) -> s <= s2 | _ -> false
+            | _ -> false
+        | And subqueries ->
+            match tag with
+            | Tags' tags ->
+                if tags.Length = subqueries.Length
+                then List.forall2 Subquery.eval tags subqueries
+                else false
+            | _ -> false
+        | Or subqueries ->
+            match tag with
+            | Tags' tags ->
+                if tags.Length = subqueries.Length
+                then List.exists2 Subquery.eval tags subqueries
+                else false
+            | _ -> false

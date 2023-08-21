@@ -1,0 +1,74 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">// simple mapping</span>
+<span class="k">let</span> <span class="k">inline</span> <span class="pn">(</span><span class="o">&amp;=&gt;</span><span class="pn">)</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="id">condition</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="id">value</span> <span class="o">=</span> <span class="k">if</span> <span onmouseout="hideTip(event, 'fs1', 3)" onmouseover="showTip(event, 'fs1', 3)" class="id">condition</span> <span class="k">then</span> <span onmouseout="hideTip(event, 'fs3', 4)" onmouseover="showTip(event, 'fs3', 4)" class="uc">Some</span><span class="pn">(</span><span onmouseout="hideTip(event, 'fs2', 5)" onmouseover="showTip(event, 'fs2', 5)" class="id">value</span><span class="pn">)</span> <span class="k">else</span> <span onmouseout="hideTip(event, 'fs4', 6)" onmouseover="showTip(event, 'fs4', 6)" class="uc">None</span>
+<span class="k">false</span> <span class="o">&amp;=&gt;</span> <span class="n">2</span>
+<span class="k">true</span> <span class="o">&amp;=&gt;</span> <span class="n">2</span>
+
+<span class="c">// lazy mapping</span>
+<span class="k">let</span> <span class="k">inline</span> <span class="pn">(</span><span class="o">%=&gt;</span><span class="pn">)</span> <span onmouseout="hideTip(event, 'fs1', 7)" onmouseover="showTip(event, 'fs1', 7)" class="id">condition</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs5', 8)" onmouseover="showTip(event, 'fs5', 8)" class="id">value</span><span class="pn">:</span><span onmouseout="hideTip(event, 'fs6', 9)" onmouseover="showTip(event, 'fs6', 9)" class="rt">Lazy</span><span class="pn">&lt;</span><span class="ta">&#39;</span><span class="id">T</span><span class="pn">&gt;</span><span class="pn">)</span> <span class="o">=</span> <span class="k">if</span> <span onmouseout="hideTip(event, 'fs1', 10)" onmouseover="showTip(event, 'fs1', 10)" class="id">condition</span> <span class="k">then</span> <span onmouseout="hideTip(event, 'fs3', 11)" onmouseover="showTip(event, 'fs3', 11)" class="uc">Some</span><span class="pn">(</span><span onmouseout="hideTip(event, 'fs5', 12)" onmouseover="showTip(event, 'fs5', 12)" class="fn">value</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs7', 13)" onmouseover="showTip(event, 'fs7', 13)" class="id">Force</span><span class="pn">(</span><span class="pn">)</span><span class="pn">)</span> <span class="k">else</span> <span onmouseout="hideTip(event, 'fs4', 14)" onmouseover="showTip(event, 'fs4', 14)" class="uc">None</span>
+<span class="k">false</span> <span class="o">%=&gt;</span> <span class="k">lazy</span><span class="pn">(</span><span class="n">1</span><span class="o">+</span><span class="n">1</span><span class="pn">)</span>
+<span class="k">true</span> <span class="o">%=&gt;</span> <span class="k">lazy</span><span class="pn">(</span><span class="n">1</span><span class="o">+</span><span class="n">1</span><span class="pn">)</span>
+
+<span class="c">// binding</span>
+<span class="k">let</span> <span class="k">inline</span> <span class="pn">(</span><span class="o">@=&gt;</span><span class="pn">)</span> <span onmouseout="hideTip(event, 'fs1', 15)" onmouseover="showTip(event, 'fs1', 15)" class="id">condition</span> <span onmouseout="hideTip(event, 'fs8', 16)" onmouseover="showTip(event, 'fs8', 16)" class="id">value</span> <span class="o">=</span> <span class="k">if</span> <span onmouseout="hideTip(event, 'fs1', 17)" onmouseover="showTip(event, 'fs1', 17)" class="id">condition</span> <span class="k">then</span> <span onmouseout="hideTip(event, 'fs8', 18)" onmouseover="showTip(event, 'fs8', 18)" class="id">value</span> <span class="k">else</span> <span onmouseout="hideTip(event, 'fs4', 19)" onmouseover="showTip(event, 'fs4', 19)" class="uc">None</span>
+<span class="k">false</span> <span class="o">@=&gt;</span> <span onmouseout="hideTip(event, 'fs3', 20)" onmouseover="showTip(event, 'fs3', 20)" class="uc">Some</span> <span class="n">2</span>
+<span class="k">true</span> <span class="o">@=&gt;</span> <span onmouseout="hideTip(event, 'fs3', 21)" onmouseover="showTip(event, 'fs3', 21)" class="uc">Some</span> <span class="n">2</span>
+
+<span class="c">// async mapping</span>
+<span class="k">let</span> <span class="k">inline</span> <span class="pn">(</span><span class="o">!=&gt;</span><span class="pn">)</span> <span onmouseout="hideTip(event, 'fs1', 22)" onmouseover="showTip(event, 'fs1', 22)" class="id">condition</span> <span onmouseout="hideTip(event, 'fs9', 23)" onmouseover="showTip(event, 'fs9', 23)" class="id">value</span> <span class="o">=</span> <span class="k">if</span> <span onmouseout="hideTip(event, 'fs1', 24)" onmouseover="showTip(event, 'fs1', 24)" class="id">condition</span> <span class="k">then</span> <span onmouseout="hideTip(event, 'fs10', 25)" onmouseover="showTip(event, 'fs10', 25)" class="k">async</span><span class="pn">{</span><span class="k">let!</span> <span onmouseout="hideTip(event, 'fs11', 26)" onmouseover="showTip(event, 'fs11', 26)" class="id">a</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs9', 27)" onmouseover="showTip(event, 'fs9', 27)" class="id">value</span> <span class="k">in</span> <span class="k">return</span> <span onmouseout="hideTip(event, 'fs3', 28)" onmouseover="showTip(event, 'fs3', 28)" class="uc">Some</span> <span onmouseout="hideTip(event, 'fs11', 29)" onmouseover="showTip(event, 'fs11', 29)" class="id">a</span><span class="pn">}</span> <span class="k">else</span> <span onmouseout="hideTip(event, 'fs10', 30)" onmouseover="showTip(event, 'fs10', 30)" class="k">async</span><span class="pn">{</span><span class="k">return</span> <span onmouseout="hideTip(event, 'fs4', 31)" onmouseover="showTip(event, 'fs4', 31)" class="uc">None</span><span class="pn">}</span>
+<span onmouseout="hideTip(event, 'fs10', 32)" onmouseover="showTip(event, 'fs10', 32)" class="k">async</span><span class="pn">{</span>
+    <span class="k">return!</span> <span class="k">false</span> <span class="o">!=&gt;</span> <span onmouseout="hideTip(event, 'fs10', 33)" onmouseover="showTip(event, 'fs10', 33)" class="k">async</span> <span class="pn">{</span><span class="k">return</span> <span class="n">2</span><span class="pn">}</span>
+<span class="pn">}</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs12', 34)" onmouseover="showTip(event, 'fs12', 34)" class="rt">Async</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs13', 35)" onmouseover="showTip(event, 'fs13', 35)" class="id">RunSynchronously</span>
+<span onmouseout="hideTip(event, 'fs10', 36)" onmouseover="showTip(event, 'fs10', 36)" class="k">async</span><span class="pn">{</span>
+    <span class="k">return!</span> <span class="k">true</span> <span class="o">!=&gt;</span> <span onmouseout="hideTip(event, 'fs10', 37)" onmouseover="showTip(event, 'fs10', 37)" class="k">async</span> <span class="pn">{</span><span class="k">return</span> <span class="n">2</span><span class="pn">}</span>
+<span class="pn">}</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs12', 38)" onmouseover="showTip(event, 'fs12', 38)" class="rt">Async</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs13', 39)" onmouseover="showTip(event, 'fs13', 39)" class="id">RunSynchronously</span>
+
+<span class="c">// unwrap async mapping </span>
+<span class="k">let</span> <span class="k">inline</span> <span class="pn">(</span><span class="o">-=&gt;</span><span class="pn">)</span> <span onmouseout="hideTip(event, 'fs1', 40)" onmouseover="showTip(event, 'fs1', 40)" class="id">condition</span> <span onmouseout="hideTip(event, 'fs9', 41)" onmouseover="showTip(event, 'fs9', 41)" class="id">value</span> <span class="o">=</span> <span class="k">if</span> <span onmouseout="hideTip(event, 'fs1', 42)" onmouseover="showTip(event, 'fs1', 42)" class="id">condition</span> <span class="k">then</span> <span onmouseout="hideTip(event, 'fs9', 43)" onmouseover="showTip(event, 'fs9', 43)" class="id">value</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs12', 44)" onmouseover="showTip(event, 'fs12', 44)" class="rt">Async</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs13', 45)" onmouseover="showTip(event, 'fs13', 45)" class="id">RunSynchronously</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs3', 46)" onmouseover="showTip(event, 'fs3', 46)" class="uc">Some</span> <span class="k">else</span> <span onmouseout="hideTip(event, 'fs4', 47)" onmouseover="showTip(event, 'fs4', 47)" class="uc">None</span>
+<span class="k">false</span> <span class="o">-=&gt;</span> <span onmouseout="hideTip(event, 'fs10', 48)" onmouseover="showTip(event, 'fs10', 48)" class="k">async</span> <span class="pn">{</span><span class="k">return</span> <span class="n">2</span><span class="pn">}</span>
+<span class="k">true</span> <span class="o">-=&gt;</span> <span onmouseout="hideTip(event, 'fs10', 49)" onmouseover="showTip(event, 'fs10', 49)" class="k">async</span> <span class="pn">{</span><span class="k">return</span> <span class="n">2</span><span class="pn">}</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">val condition : bool</div>
+<div class="tip" id="fs2">val value : &#39;a</div>
+<div class="tip" id="fs3">union case Option.Some: Value: &#39;T -&gt; Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs4">union case Option.None: Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs5">val value : Lazy&lt;&#39;T&gt;</div>
+<div class="tip" id="fs6">Multiple items<br />active recognizer Lazy: Lazy&lt;&#39;T&gt; -&gt; &#39;T<br /><br />--------------------<br />type Lazy&lt;&#39;T&gt; = System.Lazy&lt;&#39;T&gt;</div>
+<div class="tip" id="fs7">member System.Lazy.Force : unit -&gt; &#39;T</div>
+<div class="tip" id="fs8">val value : &#39;a option</div>
+<div class="tip" id="fs9">val value : Async&lt;&#39;a&gt;</div>
+<div class="tip" id="fs10">val async : AsyncBuilder</div>
+<div class="tip" id="fs11">val a : &#39;a</div>
+<div class="tip" id="fs12">Multiple items<br />type Async =<br />&#160;&#160;static member AsBeginEnd : computation:(&#39;Arg -&gt; Async&lt;&#39;T&gt;) -&gt; (&#39;Arg * AsyncCallback * obj -&gt; IAsyncResult) * (IAsyncResult -&gt; &#39;T) * (IAsyncResult -&gt; unit)<br />&#160;&#160;static member AwaitEvent : event:IEvent&lt;&#39;Del,&#39;T&gt; * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt; (requires delegate and &#39;Del :&gt; Delegate)<br />&#160;&#160;static member AwaitIAsyncResult : iar:IAsyncResult * ?millisecondsTimeout:int -&gt; Async&lt;bool&gt;<br />&#160;&#160;static member AwaitTask : task:Task -&gt; Async&lt;unit&gt;<br />&#160;&#160;static member AwaitTask : task:Task&lt;&#39;T&gt; -&gt; Async&lt;&#39;T&gt;<br />&#160;&#160;static member AwaitWaitHandle : waitHandle:WaitHandle * ?millisecondsTimeout:int -&gt; Async&lt;bool&gt;<br />&#160;&#160;static member CancelDefaultToken : unit -&gt; unit<br />&#160;&#160;static member Catch : computation:Async&lt;&#39;T&gt; -&gt; Async&lt;Choice&lt;&#39;T,exn&gt;&gt;<br />&#160;&#160;static member Choice : computations:seq&lt;Async&lt;&#39;T option&gt;&gt; -&gt; Async&lt;&#39;T option&gt;<br />&#160;&#160;static member FromBeginEnd : beginAction:(AsyncCallback * obj -&gt; IAsyncResult) * endAction:(IAsyncResult -&gt; &#39;T) * ?cancelAction:(unit -&gt; unit) -&gt; Async&lt;&#39;T&gt;<br />&#160;&#160;...<br /><br />--------------------<br />type Async&lt;&#39;T&gt; =</div>
+<div class="tip" id="fs13">static member Async.RunSynchronously : computation:Async&lt;&#39;T&gt; * ?timeout:int * ?cancellationToken:System.Threading.CancellationToken -&gt; &#39;T</div>
+

@@ -1,0 +1,11 @@
+let cc amount coins =
+    let rec aux k = function
+    | amount, _ when amount = 0 -> k 1
+    | amount, _ when amount < 0 -> k 0
+    | _, [] -> k 0
+    | amount, hd::tl -> 
+        let k' x =
+            let k'' y = k (x + y)
+            aux k'' (amount - hd, hd::tl)
+        aux k' (amount, tl)
+    aux id (amount, coins)

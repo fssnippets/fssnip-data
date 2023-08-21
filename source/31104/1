@@ -1,0 +1,134 @@
+type Assignments = Map<(int*int),int> // (r,c), d
+type Available = Map<int,Set<int>>
+type Board = Assignments * Available (*row*) * Available (*col*)
+type AssignmentResult = Done of Board | Infeasible
+
+let blockSet = set [1..9]
+let blockCheck (board:Board) =
+    let asgns,_,_ = board
+    let completedBlockSumOk =
+        asgns
+        |> Map.toSeq
+        |> Seq.map (fun ((r,c),d) -> ((r-1)/3,(c-1)/3), d)
+        |> Seq.groupBy fst
+        |> Seq.filter (fun (block,cells) -> Seq.length cells = 9)
+        |> Seq.forall (fun (block,xs) -> xs |> Seq.map snd |> set = blockSet)
+    if completedBlockSumOk then
+        Done board
+    else
+        Infeasible
+
+let available (board:Board) (r,c) =
+    let asgns,ravl,cavl = board
+    Set.intersect ravl.[r] cavl.[c]
+
+let assign ((r,c),d) (board:Board) =
+    let asgn,ravl,cavl = board
+    let asgn' = asgn |> Map.add (r,c) d 
+    let rSet = ravl.[r] |> Set.remove d 
+    let cSet = cavl.[c] |> Set.remove d
+    let ravl' = ravl |> Map.add r rSet
+    let cavl' = cavl |> Map.add c cSet            
+    let board' = (asgn',ravl',cavl')   
+    blockCheck board'
+        
+let assignChecked ((r,c), d) (board:Board) =
+    let asgn,ravl,cavl = board
+    if asgn |> Map.containsKey (r,c) then
+        Infeasible
+    else
+        if available board (r,c) |> Set.contains d then 
+            assign ((r,c),d) board
+        else
+            Infeasible
+
+let newBoard() : Board =
+    Map.empty,
+    [for r in 1 .. 9 -> r, set [1 .. 9]] |> Map.ofList,
+    [for c in 1 .. 9 -> c, set [1 .. 9]] |> Map.ofList
+            
+let initBoard assignments = 
+    (newBoard(),assignments) 
+    ||> Seq.fold (fun board ((r,c),d) -> 
+        match assignChecked ((r,c),d) board with
+        | Done board   -> board
+        | Infeasible -> failwith "invalid assignments"
+        )
+        
+let unassignedCells (board:Board) =
+    let asgn,_,_ = board
+    [for r in 1 .. 9 do
+        for c in 1 .. 9 do 
+            if asgn |> Map.containsKey (r,c) |> not then
+                yield (r,c)]
+
+let solve (board:Board) =
+    let cells = unassignedCells board //cells to fill
+
+    let rec backtrack asgns rem =
+        match asgns with
+        | []                        -> failwith "no solution"
+        | ((r,c),ds,board)::rest    -> tryAssign board rest rem ((r,c),ds)  //backtrack to prev assignment - try next available digit for the cell
+
+    and tryAssign board asgns rem curChoices =
+        match curChoices with
+        | ((r,c),[])          -> backtrack asgns ((r,c)::rem)
+        | ((r,c),d::rest) -> 
+            match assign ((r,c),d) board with
+            | Done board2 -> loop board2 (((r,c),rest,board)::asgns) rem
+            | Infeasible  -> tryAssign board asgns rem ((r,c),rest)
+
+    and loop board asgns rem =
+        match rem with
+        | []             -> board //solution; all empty cells assigned successfully
+        | (r,c)::restRem -> 
+            let avail = available board (r,c) |> Set.toList
+            tryAssign board asgns restRem ((r,c),avail)
+
+    loop board [] cells
+
+(*************
+Test solver
+*************)
+open System
+let cells (ls:string list list) =
+    ls |> List.mapi (fun r cols ->
+        cols |> List.mapi (fun c strd -> 
+            match Int32.TryParse strd with
+            | true,d -> Some((r+1,c+1),d)
+            | _      -> None))
+    |> List.collect (List.choose (fun x->x))
+                
+let boardData1 =
+    [
+        ["5";"3";".";".";"7";".";".";".";"."];
+        ["6";".";".";"1";"9";"5";".";".";"."];
+        [".";"9";"8";".";".";".";".";"6";"."];
+        ["8";".";".";".";"6";".";".";".";"3"];
+        ["4";".";".";"8";".";"3";".";".";"1"];
+        ["7";".";".";".";"2";".";".";".";"6"];
+        [".";"6";".";".";".";".";"2";"8";"."];
+        [".";".";".";"4";"1";"9";".";".";"5"];
+        [".";".";".";".";"8";".";".";"7";"9"]
+    ]
+
+let board1 = initBoard (cells boardData1)
+
+let board1S = solve board1
+
+let board1SolutionData = //there is only 1 solution
+ [
+    ["5";"3";"4";"6";"7";"8";"9";"1";"2"];
+    ["6";"7";"2";"1";"9";"5";"3";"4";"8"];
+    ["1";"9";"8";"3";"4";"2";"5";"6";"7"];
+    ["8";"5";"9";"7";"6";"1";"4";"2";"3"];
+    ["4";"2";"6";"8";"5";"3";"7";"9";"1"];
+    ["7";"1";"3";"9";"2";"4";"8";"5";"6"];
+    ["9";"6";"1";"5";"3";"7";"2";"8";"4"];
+    ["2";"8";"7";"4";"1";"9";"6";"3";"5"];
+    ["3";"4";"5";"2";"8";"6";"1";"7";"9"]
+]
+
+let board1Solution = initBoard (cells board1SolutionData)
+
+board1S = board1Solution //check solution

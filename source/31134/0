@@ -1,0 +1,28 @@
+open FSharp.Reflection
+
+type Keyword =
+    | FOO
+    | BAR
+    | BAZ
+    | BLAH
+    
+let inverseMap (print: 'T -> string) (cases: 'T seq) =
+    let lookup =
+        cases 
+        |> Seq.map (fun case -> print case, case)
+        |> Map.ofSeq
+    
+    fun (line: string) -> Map.tryFind line lookup
+
+let cases<'T> =   
+    FSharpType.GetUnionCases(typeof<'T>)
+    |> Seq.map (fun c -> FSharpValue.MakeUnion(c, Array.empty) :?> 'T)    
+        
+let matchKeyword: string -> Keyword option =
+    inverseMap string cases<Keyword>
+    
+printfn "%A" (matchKeyword "BAR")
+// Some BAR
+
+printfn "%A" (matchKeyword "NOP")
+// None

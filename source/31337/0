@@ -1,0 +1,48 @@
+using System;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Threading.Tasks;
+using Newtonsoft.Json; // Install-Package Newtonsoft.Json
+
+class Program
+{
+    static async Task Main(string[] args)
+    {
+        // Set the URL to send the POST request to
+        string url = "https://api.d7networks.com/messages/v1/send";
+
+        // Create a new HttpClient object
+        HttpClient client = new HttpClient();
+
+        // Set the bearer token authentication header
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "YOUR_API_TOKE"); // Replace YOUR_API_TOKEN with your API token
+
+        // Create a new message object with channel, recipients, and content attributes
+        var message = new
+        {
+            originator = "smsinfo", // Replace smsinfo with your sender ID
+            recipients = new string[] { "+97150900XXXX"}, // Replace +97150900XXXX with your recipient's number
+            content = "Testing multi lined message. \n This is the second line. \n This is the third line."
+        };
+
+        // Nest the message object inside a messages object
+        var messages = new
+        {
+            messages = new[] { message }
+        };
+
+        // Convert the messages object to a JSON string
+        string json = JsonConvert.SerializeObject(messages);
+
+        // Create a new StringContent object with the JSON string
+        var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+        // Send the POST request and get the response
+        HttpResponseMessage response = await client.PostAsync(url, content);
+
+        // Print the response status code and message
+        Console.WriteLine($"Response status code: {response.StatusCode}");
+        Console.WriteLine($"Response message: {await response.Content.ReadAsStringAsync()}");
+    }
+}

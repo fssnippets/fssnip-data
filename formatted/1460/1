@@ -1,0 +1,63 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">/// First, you must open the FSharpx namespace, not the FSharpx.TypeProviders.Regex</span>
+<span class="c">/// namespace or even the FSharpx.TypeProviders namespace. (Or course, if you need</span>
+<span class="c">/// to reference the fully-qualified type name in order to disambiguate the Regex</span>
+<span class="c">/// type, be aware that it&#39;s simply &quot;FSharpx.Regex&quot;)</span>
+
+<span class="k">open</span> <span class="id">FSharpx</span>
+
+<span class="c">/// Next, define your Regex type. Remember that you&#39;re defining a type (duh!), </span>
+<span class="c">/// *not* a let binding:</span>
+
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="rt">NameRegex</span> <span class="o">=</span> <span class="id">Regex</span><span class="pn">&lt;</span> <span class="s">@&quot;(?&lt;firstName&gt;\p{L}+)\s+(?&lt;lastName&gt;\p{L}+)&quot;</span> <span class="pn">&gt;</span>
+
+<span class="c">/// Let&#39;s define a name to test</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="id">name</span> <span class="o">=</span> <span class="s">&quot;Giuseppe Verdi&quot;</span>
+
+<span class="c">/// To test if the name matches the regular expression, use NameRegex without</span>
+<span class="c">/// parentheses to call the IsMatch ( string ) function:</span>
+
+<span onmouseout="hideTip(event, 'fs1', 3)" onmouseover="showTip(event, 'fs1', 3)" class="id">NameRegex</span><span class="pn">.</span><span class="id">IsMatch</span> <span onmouseout="hideTip(event, 'fs2', 4)" onmouseover="showTip(event, 'fs2', 4)" class="id">name</span> 
+<span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs3', 5)" onmouseover="showTip(event, 'fs3', 5)" class="fn">printfn</span> <span class="s">&quot;&quot;&quot;Name.IsMatch &quot;</span><span class="pf">%s</span><span class="s">&quot; = </span><span class="pf">%b</span><span class="s">&quot;&quot;&quot;</span> <span onmouseout="hideTip(event, 'fs2', 6)" onmouseover="showTip(event, 'fs2', 6)" class="id">name</span>
+
+<span class="c">/// To parse the name, use NameRegex *with parentheses* to call the Match function. /// (You&#39;ll be instantiating a NameRegex object when you do so. Since it&#39;s not a</span>
+<span class="c">/// singleton, you may want to bind it to a symbol in order not to have to </span>
+<span class="c">/// re-instantiate it if you use it again):</span>
+
+<span onmouseout="hideTip(event, 'fs1', 7)" onmouseover="showTip(event, 'fs1', 7)" class="rt">NameRegex</span><span class="pn">(</span><span class="pn">)</span><span class="pn">.</span><span class="id">Match</span> <span onmouseout="hideTip(event, 'fs2', 8)" onmouseover="showTip(event, 'fs2', 8)" class="id">name</span>
+<span class="o">|&gt;</span> <span class="pn">(</span><span class="k">fun</span> <span onmouseout="hideTip(event, 'fs4', 9)" onmouseover="showTip(event, 'fs4', 9)" class="id">m</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs3', 10)" onmouseover="showTip(event, 'fs3', 10)" class="fn">printfn</span> <span class="s">&quot;&quot;&quot;firstName: &quot;</span><span class="pf">%s</span><span class="s">&quot;, lastName: &quot;</span><span class="pf">%s</span><span class="s">&quot; &quot;&quot;&quot;</span> <span onmouseout="hideTip(event, 'fs4', 11)" onmouseover="showTip(event, 'fs4', 11)" class="id">m</span><span class="pn">.</span><span class="id">firstName</span><span class="pn">.</span><span class="id">Value</span> <span onmouseout="hideTip(event, 'fs4', 12)" onmouseover="showTip(event, 'fs4', 12)" class="id">m</span><span class="pn">.</span><span class="id">lastName</span><span class="pn">.</span><span class="id">Value</span><span class="pn">)</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">type NameRegex = obj<br /><em><br /><br />&#160;Next, define your Regex type. Remember that you&#39;re defining a type (duh!), <br />&#160;*not* a let binding:</em></div>
+<div class="tip" id="fs2">val name : string<br /><em><br /><br />&#160;Let&#39;s define a name to test</em></div>
+<div class="tip" id="fs3">val printfn : format:Printf.TextWriterFormat&lt;&#39;T&gt; -&gt; &#39;T</div>
+<div class="tip" id="fs4">val m : obj</div>
+

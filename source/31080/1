@@ -1,0 +1,49 @@
+open FSharp.Control.Tasks.V2
+type Message = 
+    | Message of string
+   
+type IActor<'Msg> =
+    abstract Post: 'Msg -> Async<unit>
+
+let start handleMessage =
+    let rec messageLoop (inbox: MailboxProcessor<'Message>) =
+        let msgType: System.Type = typeof<'Message>
+        async {
+            try
+                let! msg = inbox.Receive()
+
+                do! handleMessage msg |> Async.AwaitTask
+
+            with e -> failwith (string e)
+
+            return! messageLoop inbox
+        }
+    messageLoop
+
+let startActorThread2(): IActor<Message> = 
+    let handleMsg msg = 
+        task {
+            match msg with
+            | Message (message) -> printfn "{message}"
+        }
+    let mailbox = MailboxProcessor.Start(start handleMsg)
+
+    { new IActor<Message> with
+        member x.Post(msg) = async { mailbox.Post(msg) }}
+
+let actor = startActorThread2()
+let asyncFunction1 =
+    async {
+        do! Async.Sleep 100
+        do! actor.Post(Message "Hello from 1")
+        do! Async.Sleep 100
+    }
+let asyncFunction2 = 
+    async {
+        do! actor.Post(Message "Hello from 2")
+    }
+let taskFunction =
+    task {
+        do! asyncFunction1 |> Async.StartAsTask
+        do! asyncFunction2 |> Async.StartAsTask
+    }

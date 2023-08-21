@@ -1,0 +1,62 @@
+open System
+open System.Diagnostics
+open System.Threading
+
+type Timed<'T> = { Output: 'T; Elapsed: TimeSpan }
+        
+type TimedBuilder() =
+    member x.Return(value) =
+        { Output = value; Elapsed = TimeSpan.Zero }
+
+    member x.Delay(f) =
+        let stopwatch = Stopwatch.StartNew()
+        let timed = f()
+        stopwatch.Stop()
+        { timed with Elapsed = timed.Elapsed + stopwatch.Elapsed }
+
+type AsyncTimedBuilder() =
+    member b.Zero()                                = async.Zero()
+    member b.Delay(generator)                      =
+        async {
+            let stopwatch = Stopwatch.StartNew()
+            let! timed = async.Delay(generator)
+            stopwatch.Stop()
+            return { timed with Elapsed = timed.Elapsed + stopwatch.Elapsed }
+        }
+    member b.Return(value)                         =
+        async {
+            let! timed = async.Return(value)
+            return { Output = timed; Elapsed = TimeSpan.Zero }
+        }
+        
+    member b.ReturnFrom(computation: Async<_>)     = async.Return(computation)
+    member b.Bind(computation, binder)             = async.Bind(computation, binder)
+    member b.Using(resource, binder)               = async.Using(resource, binder)              
+    member b.While(guard, computation)             = async.While(guard, computation)     
+    member b.For(sequence, body)                   = async.For(sequence, body)         
+    member b.Combine(computation1, computation2)   = async.Combine(computation1, computation2)
+    member b.TryFinally(computation, compensation) = async.TryFinally(computation, compensation)
+    member b.TryWith(computation, catchHandler)    = async.TryWith(computation, catchHandler)
+
+let timed = TimedBuilder()
+let asyncTimed = AsyncTimedBuilder()
+
+
+[<EntryPoint>]
+let main _ =
+    timed {
+        let a = 43
+        Thread.Sleep(2000)
+        return a
+    } |> printfn "%A"
+    
+    asyncTimed {
+        Thread.Sleep(2000)
+        let! _ = Async.Sleep(2500)
+        let! _ = Async.Sleep(500)         
+        return ()
+    }
+    |> Async.RunSynchronously
+    |> printfn "%A"
+    
+    0

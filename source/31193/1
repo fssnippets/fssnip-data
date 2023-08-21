@@ -1,0 +1,16 @@
+// insertionSort xs []
+let rec insertionSort xs k =
+    let rec insert x ys k =
+        match ys with
+        | y :: ys' ->
+            if x <= y then
+                (List.rev (x :: k)) @ ys
+            else
+                insert x ys' (y :: k)
+        | [] -> List.rev (x :: k)
+
+    match xs with
+    | x :: xs' ->
+        let k' = insert x k []
+        insertionSort xs' k'
+    | [] -> k

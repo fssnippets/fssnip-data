@@ -1,0 +1,100 @@
+open System
+open System.IO
+open System.Net
+open System.Text
+open System.Threading
+open System.Net.Http
+open System.Timers
+
+let readFile(filePath:string):string =
+    try
+    let encoding = System.Text.Encoding.UTF8
+    let rr = File.OpenRead(filePath)
+    use reader = new IO.StreamReader(rr,encoding)
+    let content = reader.ReadToEnd()
+    content
+    with error ->  "Error"
+
+let writeFile (filePath:string, fileContent:string):unit =
+    try        
+       let encoding = System.Text.Encoding.UTF8 
+       let rr = File.OpenWrite(filePath) 
+       use writer = new IO.StreamWriter(rr,encoding)  
+       writer.Write(fileContent)        
+    with error -> eprintf "An exception occurred with message %s" error.Message
+
+let getProxiesListFromFile(path:string):string[]=
+   //--------------something like this------------------
+   (*
+        1.10.141.220:54620
+        77.236.236.38:10000
+        185.255.46.121:8000
+        85.195.104.71:80
+        141.98.112.87:8080
+        154.64.211.145:999
+        195.187.63.42:8080
+        109.173.44.42:8000
+        94.180.106.94:32767
+        213.157.47.38:8080   
+   *)
+   let strContent = readFile(path)
+   let strs:string[] = strContent.Split([|"\r\n"|], StringSplitOptions.RemoveEmptyEntries)
+   let sfiltered = strs |>  Array.map (fun x -> x.Replace("=> success","").Replace("=> failure","").Trim())
+   sfiltered
+
+let defaultValue(proxyUrl:string)=
+  async{
+   return (proxyUrl, false,0.)
+  }
+
+let runHttpClient(url: string,urlProxy:string)=
+   async {
+    let stopWatch = System.Diagnostics.Stopwatch.StartNew()
+    try
+        let ur = Uri(url)
+        let proxy = new WebProxy(urlProxy, true, null, null)
+        let handler = new HttpClientHandler()
+        handler.Proxy <- proxy
+        handler.UseCookies <- false        
+        let client = new HttpClient(handler)
+        client.Timeout <- TimeSpan.FromSeconds(4.)
+        let! responseString = Async.AwaitTask <| client.GetStringAsync(ur)  
+        stopWatch.Stop()
+        if responseString <> null && responseString <> "" 
+             then              
+             let ms =Math.Round( stopWatch.Elapsed.TotalSeconds,2)
+             return (urlProxy, true,ms)
+             else return (urlProxy, false,0.)        
+    with  error -> return (urlProxy, false,0.)        
+      }
+
+let runAsyncWithTimeout(urlPoint: string,urlProxy:string)=
+  async {                                      
+   try                                          
+    let! child = Async.Catch (Async.StartChild( runHttpClient(urlPoint,urlProxy), 10000 ))
+    match child with
+        | Choice1Of2 myValue -> return! myValue
+        | Choice2Of2 error -> return! defaultValue(urlPoint)
+   with error ->  return! defaultValue(urlPoint)
+  }
+
+[<EntryPoint>]
+let main argv =  
+    let stopWatch = System.Diagnostics.Stopwatch.StartNew()
+    let sf = getProxiesListFromFile("./proxlist.txt")
+    let tasks = [for urlProxy in sf ->  runAsyncWithTimeout ("https://httpbin.org/get",urlProxy) ]
+    let parallelTasks = Async.Parallel tasks
+    Console.WriteLine("----------------")
+    let str = Async.RunSynchronously parallelTasks    
+    let sm = str |> Array.filter (fun (x,y,z) -> y = true)  |> Array.sortBy (fun (x,y,z) -> z)
+    sm |> Array.iter(fun (x,y,z)-> Console.WriteLine(x+" : "+y.ToString()+" : "+z.ToString()))
+    let results = sm |> Array.map(fun (x,y,z)-> x.ToString()+" "+z.ToString())|> String.concat "\r\n"
+    writeFile("./results.txt",results)
+    stopWatch.Stop()
+    let ms =Math.Round( stopWatch.Elapsed.TotalSeconds,2)
+    let count:int = Array.length sf
+    Console.WriteLine("Total elapsed time in seconds : "+stopWatch.Elapsed.Seconds.ToString())
+    Console.WriteLine("Total count of checked proxies "+count.ToString())
+    Console.WriteLine("--------END--------")
+    Console.ReadLine() |> ignore
+    0

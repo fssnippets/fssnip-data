@@ -1,0 +1,51 @@
+module RobotSimulator
+
+type Direction = North | East | South | West
+type Position = int * int
+type Robot = { direction: Direction; position: Position }
+
+let getDirection turn robot =
+    let newDirection = 
+        match turn, robot.direction with
+        | 'R', North -> East
+        | 'R', East -> South
+        | 'R', South -> West
+        | 'R', West -> North
+        | 'L', North -> West
+        | 'L', West -> South
+        | 'L', South -> East
+        | 'L', East -> North
+        | a,_ -> failwith (sprintf "Unknown turn. Turn: %c" a)
+    { robot with direction = newDirection }
+
+let advancePosition (robot: Robot) =
+    let (x, y) = robot.position
+    let newPosition =
+        match robot.direction with
+        | North -> (x, y+1)
+        | East -> (x+1, y)
+        | South -> (x, y-1)
+        | West -> (x-1, y)
+    { robot with position = newPosition }
+
+let handleInstruction (robot: Robot) instruction  =
+    match instruction with
+    | 'A' -> advancePosition robot
+    | x -> getDirection x robot
+   
+let create direction position = {
+    direction = direction
+    position = position
+}
+
+let move (instructions: string) (robot: Robot) =
+    let singleInstructions = 
+        instructions.ToCharArray()
+        |> List.ofArray
+    
+    let rec move' (instructions': char list) (robot': Robot) =
+        match instructions' with
+        | [] -> robot'
+        | h::tail -> move' tail (handleInstruction robot' h)
+    
+    move' singleInstructions robot

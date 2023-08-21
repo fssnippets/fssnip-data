@@ -1,0 +1,77 @@
+open System
+open System.Collections.Generic
+
+type [<StructuralEquality; NoComparison>] ComparableTerm =
+    | IntTerm of int
+    | SingleTerm of single
+
+type [<StructuralEquality; NoComparison>] Term =
+    | TagTerm
+    | EntityTerm of uint64
+    | ComparableTerm of ComparableTerm
+    | Terms of Term list
+    | TermsValueCollection of Dictionary.ValueCollection<string, Term>
+    static member equals (this : Term) (that : Term) = this.Equals that
+
+type Terms =
+    Dictionary<string, Term>
+
+type [<StructuralEquality; NoComparison>] Subquery =
+    | Wildcard // matches everything
+    | Eq of Term
+    | Gt of ComparableTerm
+    | Ge of ComparableTerm
+    | Lt of ComparableTerm
+    | Le of ComparableTerm
+    | Not
+    | And of Subquery list
+    | Or of Subquery list
+
+    static member private equalTo term term2 =
+        match (term, term2) with
+        | (EntityTerm entityId, EntityTerm entityId2) -> entityId = entityId2
+        | (ComparableTerm comparable, ComparableTerm comparable2) ->
+            match (comparable, comparable2) with
+            | (IntTerm i, IntTerm i2) -> i = i2
+            | (SingleTerm i, SingleTerm i2) -> i = i2
+            | _ -> false
+        | (Terms terms, Terms terms2) ->
+            if terms.Length = terms2.Length
+            then List.forall2 Subquery.equalTo terms terms2
+            else false
+        | _ -> false
+
+    static member eval term subquery =
+        match subquery with
+        | Wildcard -> true
+        | Eq term  -> Subquery.equalTo term term
+        | Gt c ->
+            match term with
+            | ComparableTerm c2 -> match (c, c2) with (IntTerm i, IntTerm i2) -> i > i2 | (SingleTerm s, SingleTerm s2) -> s > s2 | _ -> false
+            | _ -> false
+        | Ge c ->
+            match term with
+            | ComparableTerm c2 -> match (c, c2) with (IntTerm i, IntTerm i2) -> i >= i2 | (SingleTerm s, SingleTerm s2) -> s >= s2 | _ -> false
+            | _ -> false
+        | Lt c ->
+            match term with
+            | ComparableTerm c2 -> match (c, c2) with (IntTerm i, IntTerm i2) -> i < i2 | (SingleTerm s, SingleTerm s2) -> s < s2 | _ -> false
+            | _ -> false
+        | Le c ->
+            match term with
+            | ComparableTerm c2 -> match (c, c2) with (IntTerm i, IntTerm i2) -> i <= i2 | (SingleTerm s, SingleTerm s2) -> s <= s2 | _ -> false
+            | _ -> false
+        | Not ->
+            match term with
+            | TagTerm -> false
+            | _ -> true
+        | And subqueries ->
+            match term with
+            | Terms tags -> if tags.Length = subqueries.Length then List.forall2 Subquery.eval tags subqueries else false
+            | TermsValueCollection tags -> if tags.Count = subqueries.Length then Seq.forall2 Subquery.eval tags subqueries else false
+            | _ -> false
+        | Or subqueries ->
+            match term with
+            | Terms tags -> if tags.Length = subqueries.Length then List.exists2 Subquery.eval tags subqueries else false
+            | TermsValueCollection tags -> if tags.Count = subqueries.Length then Seq.exists2 Subquery.eval tags subqueries else false
+            | _ -> false

@@ -1,0 +1,41 @@
+let distanceSort (d: 't -> 't -> 'd when 'd: comparison) (items: #seq<'t>) =
+    let arr = Array.ofSeq items
+
+    let distancesMap =
+        Map.ofList [ 
+            for i in 0 .. Array.length arr - 2 do
+                for j in i + 1 .. Array.length arr - 1 -> 
+                    (i, j), d arr[i] arr[j] 
+        ]
+
+    let distanceByIndexes i1 i2 =
+        let i1, i2 = if i1 < i2 then i1, i2 else i2, i1
+        distancesMap[i1, i2]
+
+    let farthestIndexes =
+        distancesMap
+        |> Map.toArray
+        |> Array.maxBy (fun (_, dist) -> dist)
+        |> fst
+
+    let startIndex = farthestIndexes |> fst
+
+    let rec loop (sorted: int ResizeArray) (index: int) (unsorted: int ResizeArray) =
+        match unsorted.Count with
+        | 1 -> sorted.Add unsorted[0]
+        | _ ->
+            sorted.Add index
+            unsorted.Remove index |> ignore
+
+            let index' =
+                unsorted.ToArray()
+                |> Array.minBy (distanceByIndexes index)
+
+            loop sorted index' unsorted
+
+    let mutable allIndexes = ResizeArray [| 0 .. Array.length arr - 1 |]
+    let mutable sortedIndexes = ResizeArray()
+    loop sortedIndexes startIndex allIndexes
+
+    sortedIndexes.ToArray()
+    |> Array.map (fun i -> arr[i])

@@ -1,0 +1,78 @@
+open System
+open System.Data
+open System.Windows.Forms
+open System.ComponentModel
+open System.Collections.Generic
+open System.Drawing
+open System.Text
+
+[<AutoOpen>]
+module Globals =
+  let rnd = System.Random(System.DateTime.Now.Millisecond)
+
+type Item(id:int, name:string, surname:string,preference:string) =
+    member this.Id = id
+    member this.Name = name
+    member this.Surname = surname
+    member this.Preference = preference
+
+let getNewRecord(rnd:Random,id:int) =
+         let names = ["John";"James";"Robert";"William";"Michael";"Anthony";"Richard";"Thomas";"Charles";"Gary";"Andrew";"Oliver";"Alexander";"Christopher";"Adrian";]
+         let surnames = ["Smith";"Jones";"Taylor";"Williams";"Wilson";"Johnson";"Davies";"Robinson";"Wright";"Thompson";"Evans";"Walker";"Roberts";"Hall";"Wood";"Jackson";"Clark";"Browning";
+         "Mossberg";"Wahlberg";"Murphy";"Collins";"O'Donnell";"Sheridan";"Griffith";"Higgins";"Foster"]
+         let prefs = ["Apple";"Banana";"Strawberries";"Grapes";"Blueberries";"Clementines";"Raspberries";"Orange";"Pear";"Lemons";]
+         let curName = names.[rnd.Next((names.Length))] 
+         let curSurname = surnames.[rnd.Next((surnames.Length))] 
+         let curPref = prefs.[rnd.Next((prefs.Length))]           
+         let myItem = new Item(id, curName,curSurname,curPref)
+         myItem
+
+let  formM  =  new  Form()
+formM.Size <- new Size(600,400)
+let  input  =  new  TextBox()
+let  bindingSource = new BindingSource()
+let  button  =  new  Button(Left  =  input.Right  +  10,  Text  =  "Go")
+ 
+let  output:System.Windows.Forms.DataGridView  =  new  DataGridView(Top  =  input.Bottom  +  10, Width  =  (formM.Width-10),  Height  =  (formM.Height  -  (input.Bottom  +  40)), Anchor  =  (AnchorStyles.Top  |||  AnchorStyles.Left  |||  AnchorStyles.Right  |||  AnchorStyles.Bottom))
+output.ScrollBars = ScrollBars.Both  |> ignore
+output.RowsDefaultCellStyle.BackColor <- Color.FromArgb(141, 178, 85)
+output.AlternatingRowsDefaultCellStyle.BackColor <- Color.Beige  
+
+let convertToDataTable(data: List<'T>)=
+   let properties = TypeDescriptor.GetProperties(typedefof<'T>)
+   let table = new DataTable()
+   for prop:PropertyDescriptor in properties do
+    table.Columns.Add(prop.Name,  prop.PropertyType) |> ignore 
+   for  item:'T in data do
+      let row = table.NewRow()
+      for prop:PropertyDescriptor in properties do
+          row.[prop.Name] <- prop.GetValue(item)
+      table.Rows.Add(row)
+   table
+
+button.Click.Add(fun  _  ->  
+    let myList = new List<Item>()    
+    let peoplesList = [for number in [1..100] -> getNewRecord(rnd,number)  ] 
+    peoplesList |> List.iter(fun c-> myList.Add(c))
+    let dt:DataTable = convertToDataTable(myList)    
+    bindingSource.DataSource <- dt
+    output.DataSource <- (bindingSource :>(Object) )   
+    ())
+
+let  dc  c  =  c  :>  Control
+formM.Controls.AddRange([|dc  input;  dc  button;  dc  output  |])
+
+let onInpTextChanged(sender:Object,e:EventArgs):unit=
+   let bd:BindingSource = output.DataSource :?> BindingSource
+   let dt:DataTable = bd.DataSource :?> DataTable
+   let str = String.Format("Name like '{0}%' OR Surname like '{0}%' OR Preference like '{0}%' ", input.Text.Trim().Replace("'", "''"))
+   dt.DefaultView.RowFilter <- str
+   output.Refresh()
+   ()
+
+input.TextChanged.AddHandler(new System.EventHandler(fun s e -> onInpTextChanged(s, e))) 
+
+formM.ShowDialog() |> ignore 
+
+[<STAThread()>]
+Application.Run()

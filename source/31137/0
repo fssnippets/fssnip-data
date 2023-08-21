@@ -1,0 +1,12 @@
+let acceptedVowels = [| 'a'; 'e'; 'i'; 'o'; 'u' |]
+let isAcceptedVowel character =
+  acceptedVowels |> Array.exists (fun elm -> elm = character)
+
+let incrementValue character =
+  match character with
+  | character when isAcceptedVowel character -> 1 
+  | _ -> 0
+
+
+let vowelCount text = 
+  text |> Seq.fold (fun acc x -> incrementValue x + acc ) 0

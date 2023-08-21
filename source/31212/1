@@ -1,0 +1,262 @@
+
+open System
+type Interlocked = System.Threading.Interlocked
+
+type Scope<'a> (value:'a) =
+    let queue = Collections.Generic.Queue<IDisposable>()
+    let mutable closed = 0
+    let close () = 
+        let mutable exnList = [] // where we collect errors while inner objects are being disposed
+        for i in queue do
+            try
+                i.Dispose()
+            with 
+                exn ->  exnList <- exn :: exnList 
+        match exnList with
+        | [] -> ()  // no errors occurred
+        | [exn] -> raise exn
+        | _ -> raise (AggregateException exnList)  
+    member _.Value = value
+    member internal _.InnerDisposables = queue
+    member _.Close () =        
+        match Interlocked.CompareExchange(&closed,1,0) with
+        | 0 -> close () // will run at most once
+        | _ -> ()
+
+ 
+
+    interface IDisposable with
+        member this.Dispose () = this.Close()
+
+module UnsafeInternals =
+    let getInnerDisposables (x:Scope<_>) = x.InnerDisposables
+    (*
+        may be useful to provide builder extensions.
+        Note that there is unique instance of Scope inside workflow that is created by 
+        Return function. It is not directly accessible from inside workflow. Other builder functions maintain its mutable state.
+        And they all run eagerly in one thread right now. However, builder extension method may access that instance. Thus, if anyone wants to pass
+        Scope instance between threads he must make a byvalue copy of it.
+    *)
+
+type ScopeBuilder () =
+    member _. Return x = new Scope<_>(x)
+        
+    member _.Using (res ,body) =
+        try
+            let (x:Scope<_>) = body res
+            x.InnerDisposables.Enqueue res
+            x
+        with
+            | exn -> 
+                try
+                    res.Dispose()
+                with
+                    | exn1 ->
+                        raise (AggregateException [|exn ; exn1|])
+                reraise()           
+
+    
+    member this.Bind (scope, body) =
+        let outerbody (scope' : Scope<_>) = body scope'.Value
+        this.Using (scope,outerbody)
+        (*
+            thus, let! x = {expr}
+             -- is equivalent to --
+            use scope = {expr}
+                    // outerbody starts here
+            let x = scope.Value
+                    // body starts here
+        *)
+    member this.ReturnFrom (anotherscope:Scope<_>) = 
+        this.Using(anotherscope,fun thatscope -> this.Return thatscope.Value)
+        (*
+            created current scope using value of another scope 
+            bound another scope to current scope as disposable
+        *)
+
+
+       
+[<AutoOpen>]
+module ScopeBuilderInstance =
+    let scope = ScopeBuilder () 
+
+// example
+open System.IO
+let somescope =
+    scope {
+        let bytes = System.Text.UTF8Encoding().GetBytes "this
+is
+multiline
+text"
+        use ms = new MemoryStream(bytes) 
+        use sr = new StreamReader(ms)
+        return 
+            {|
+                Next = sr.ReadLine
+                MemoryStream =  ms
+            |}
+
+    }
+
+somescope.Value.Next()  // reads text line by line
+
+somescope.Value.MemoryStream // view state of memory stream in fsharp interactive
+
+somescope.Close() // try execute above commands now
+
+// demonstrate what happens on error and also disposing order
+// define 2 helper functions
+let useful name =
+    {
+        new IDisposable with
+            member _.Dispose () = printfn "disposed %s" name            
+    }
+let useless name =
+    {
+        new IDisposable with
+            member _.Dispose () = failwithf "failed to dispose %s" name
+    }
+
+// demo : order  of disposing
+scope {
+    use _ = useful "1"
+    use _ = useful "2"
+    use _ = useful "3"
+    return 4
+}  |> (fun s -> s.Close() ; s.Close((*closing twice takes no effect*)))
+
+// composite scope
+scope {
+    use _ = useful "1"
+    use _ = useful "2"
+    let! v = 
+        scope {
+            use _ = useful "4"
+            use _ = useful "5"
+            return 10
+        }
+    use _ = useful "3"
+    return v + 5
+}  |> (fun s -> printfn "value is %i" s.Value ; s.Close())
+
+
+let sc1 =
+        scope {
+            use _ = useful "4"
+            use _ = useful "5"
+            return 10
+        }
+//sc1.Close()  // try to close sc1 before executing following statements      
+scope {
+    use _ = useful "1"
+    use _ = useful "2"
+    return! sc1
+}  |> (fun s -> printfn "value is %i" s.Value ; s.Close())
+
+
+let throwingscope =
+    scope {
+    use _ = useful "1"
+    use _ = useful "2"
+    use _ = useless "3"
+    use _ = useful "4"
+    use _ = useless "5"
+    return ()
+    }
+
+// now we shall close it
+
+try
+   throwingscope.Close() 
+with
+| :? AggregateException as agexn ->
+    printfn "AggregateException\n%s" <| agexn.Flatten().Message
+| exn ->
+    printfn "just an exception\n %s" exn.Message  
+
+// try execute the same code outside computation expression 
+
+try
+    use _ = useful "1"
+    use _ = useful "2"
+    use _ = useless "3"
+    use _ = useful "4"
+    use _ = useless "5" // exception is lost 
+    ()
+with
+| :? AggregateException as agexn ->
+    printfn "AggregateException\n%s" <| agexn.Flatten().Message
+| exn ->
+    printfn "just an exception\n %s" exn.Message 
+
+// when exception occurs when creating scope  
+
+try    
+    scope {
+    use _ = useful "1"
+    use _ = useful "2"
+    use _ = useless "3"
+    failwith "error!!!"
+    use _ = useful "4"
+    return ()
+    } |> ignore
+with
+| :? AggregateException as agexn ->
+    printfn "AggregateException\n%s" <| agexn.Flatten().Message
+| exn ->
+    printfn "just an exception\n %s" exn.Message  
+
+(*---------some tricks we can use with scopes--------*)
+
+// preparation 1 : helper type
+// we'll use it to construct guarded methods
+type Disposable (?name) =
+    let objectName = defaultArg  name "disposable"
+    let mutable isDisposed = false
+    member _.Close() = isDisposed <- true
+    member _.IsDisposed = isDisposed
+    member _.Check() =
+        if isDisposed then 
+            raise (ObjectDisposedException objectName)
+    interface IDisposable with
+        member this.Dispose () = this.Close()
+
+// preparation 2 : helper function
+// use IDisposable as pattern to autoclean filesystem of temporary files 
+module File =
+    // file at path will be deleted on dispose
+    let autoDelete path =
+            {
+                new IDisposable with
+                member _.Dispose() =
+                    if File.Exists path then                        
+                        File.Delete path
+            }              
+// example
+let notebookScope =
+    scope {
+        use _ = File.autoDelete "tempfile" // tempfile willbe deleted on dispose
+        use guard = new Disposable "notebook"
+        return 
+            {|
+                WriteLine = 
+                    fun line ->
+                    guard.Check()
+                    File.AppendAllLines ("tempfile",[|line|])
+                Print =
+                    fun () ->
+                    guard.Check()
+                    File.ReadAllText "tempfile"
+                    |> printfn "%s"
+
+            |}
+    }
+
+let notebook = notebookScope.Value
+
+notebook.WriteLine "Hello World!" // tempfile appears in your IDE explorer
+notebook.WriteLine "Our experience with scopes"
+notebook.Print()
+
+notebookScope.Close() // tempfile disappeared
+notebook.Print() // ObjectDisposedException thrown by guard

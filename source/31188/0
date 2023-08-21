@@ -1,0 +1,28 @@
+// simple mapping
+let inline (&=>) condition value = if condition then Some(value) else None
+false &=> 2
+true &=> 2
+
+// lazy mapping
+let inline (%=>) condition (value:Lazy<'T>) = if condition then Some(value.Force()) else None
+false %=> lazy(1+1)
+true %=> lazy(1+1)
+
+// binding
+let inline (@=>) condition value = if condition then value else None
+false @=> Some 2
+true @=> Some 2
+
+// async mapping
+let inline (!=>) condition value = if condition then async{let! a = value in return Some a} else async{return None}
+async{
+    return! false !=> async {return 2}
+} |> Async.RunSynchronously
+async{
+    return! true !=> async {return 2}
+} |> Async.RunSynchronously
+
+// unwrap async mapping 
+let inline (-=>) condition value = if condition then value |> Async.RunSynchronously |> Some else None
+false -=> async {return 2}
+true -=> async {return 2}

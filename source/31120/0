@@ -1,0 +1,27 @@
+open System.Text
+
+type Folder<'State> =
+    abstract Invoke<'T> : 'State * 'T -> 'State
+
+type FoldStep<'State> = Folder<'State> -> 'State -> 'State
+
+type FoldBuilder() =
+    member this.Zero(): FoldStep<'State> = 
+        fun _ state -> state
+    
+    member inline this.Combine(
+        [<InlineIfLambda>] f: FoldStep<'State>, 
+        [<InlineIfLambda>] g: FoldStep<'State>)
+        : FoldStep<'State> =
+        fun folder state -> g folder (f folder state)
+    
+    member inline this.Delay([<InlineIfLambda>] f: unit -> FoldStep<'State>) = 
+        f()
+    
+    member inline this.Yield(value: 'T): FoldStep<'State> = 
+        fun folder state -> folder.Invoke(state, value)
+
+let append = { new Folder<StringBuilder> with member _.Invoke(state: StringBuilder, value: 'T) = state.Append(value) }
+let fold = FoldBuilder()
+let f = (fold { 1; "lol"; 42; 'a'; 5.1 }) append (StringBuilder())
+printfn "%s" (f.ToString())

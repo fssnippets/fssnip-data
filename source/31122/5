@@ -1,0 +1,106 @@
+namespace Shootout
+open System.Collections.Generic
+open System.Numerics
+
+[<AutoOpen>]
+module Prelude =
+
+    type Undefined = unit // denotes that a term is 'not defined in this document', usually for brevity.
+    type NormCoreId = int // uniquely identifies something in NormCore. I think this is an int?
+    type Dialog = Undefined // a gui dialog
+
+[<AutoOpen>]
+module Interaction =
+
+    type FTKInteractable = Undefined // an object that the FTKInteractor can interact with
+    type FTKFarGrabberState = Scanning | Grabbing | Attracting
+    
+    type FTKFarGrabber =
+        { State : FTKFarGrabberState }
+    
+    type FTKInteractor =
+        { State : Undefined // TODO: implement this as FTKInteractor state by refactoring FTKInteractor.
+          FarGrabber : FTKFarGrabber }
+
+    type FTKPlayer =
+        { LeftInteractor : FTKInteractor
+          RightInteractor : FTKInteractor }
+
+    type CoreShootout =
+        { FTKG : Undefined
+          FTKPlayer : FTKPlayer
+          FTKPlayers : Dictionary<NormCoreId, FTKPlayer>
+          FTKInteractables : Dictionary<NormCoreId, FTKInteractable>
+          NormCore : Undefined }
+
+[<AutoOpen>]
+module Match =
+
+    type AdventType = Kill | Assist | HealAlly | Defuse
+    type Advents = Dictionary<NormCoreId, Dictionary<AdventType, NormCoreId * int>>
+    type MatchState = Lobby | Preperation | Started | PeaceTime | War | End // NOTE: renamed from GameState.
+    type MatchPopUpDialog = ComponentPurchasingUIState | LeaderboardState | MatchOptionsSettingsState | QuickGameOptionsState | PlayerStatsState | Hidden
+    type MatchEndDialog = PlayerStats | CurrencyAndResultState
+
+    type FreeForAllMode =
+        { Advents : Advents
+          MatchState : MatchState
+          MatchPopUpDialog : MatchPopUpDialog
+          MatchEndDialog : MatchEndDialog }
+
+    type CaptureTheFlagMode =
+        { Advents : Advents
+          MatchState : MatchState
+          MatchPopUpDialog : MatchPopUpDialog
+          MatchEndDialog : MatchEndDialog }
+
+    type MatchMode = // NOTE: doesn't exist in game yet.
+        | FreeForAllMode of FreeForAllMode
+        | CaptureTheFlagMode of CaptureTheFlagMode
+        //| ... more modes
+
+[<AutoOpen>]
+module Scene =
+
+    type Team = TeamA | TeamB | TeamC | TeamD | TeamNeutral
+
+    type Dispenser =
+        | CurrencyBased of Vector3
+        | Random of Vector3
+        | RareRandom of Vector3
+
+    type SceneManager =
+        { SpawnPoints : Dictionary<Team, Vector3 list>
+          Dispensers : Dispenser list
+          Bases : Dictionary<Team, Vector3 list> }
+
+    type Scene = // TODO: add ShootoutG here?
+        { SceneManager : SceneManager }
+
+    type MatchManager = // NOTE: renamed from GameManager.
+        { MatchMode : MatchMode
+          CoreShootout : CoreShootout
+          Map : Scene }
+
+[<AutoOpen>]
+module TopLevel =
+
+    type Session = // NOTE: doesn't exist in game yet.
+        | MatchMaking
+        | MatchManager of MatchManager
+
+    type MainMenu = // NOTE: doesn't exist in game yet.
+        | Session of Session
+        | GameOptions
+        | CharacterCustomization
+        | Social
+        | Achievements
+        | Store
+
+    type ShootoutState = // NOTE: doesn't exist in game yet.
+        | SplashState of Undefined
+        | TitleState of Undefined
+        | MainMenuState of MainMenu
+
+    type Shootout = // NOTE: doesn't exist in game yet.
+        { State : ShootoutState }

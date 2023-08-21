@@ -1,0 +1,167 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+<span class="l">38: </span>
+<span class="l">39: </span>
+<span class="l">40: </span>
+<span class="l">41: </span>
+<span class="l">42: </span>
+<span class="l">43: </span>
+<span class="l">44: </span>
+<span class="l">45: </span>
+<span class="l">46: </span>
+<span class="l">47: </span>
+<span class="l">48: </span>
+<span class="l">49: </span>
+<span class="l">50: </span>
+<span class="l">51: </span>
+<span class="l">52: </span>
+<span class="l">53: </span>
+<span class="l">54: </span>
+<span class="l">55: </span>
+<span class="l">56: </span>
+<span class="l">57: </span>
+<span class="l">58: </span>
+<span class="l">59: </span>
+<span class="l">60: </span>
+<span class="l">61: </span>
+<span class="l">62: </span>
+<span class="l">63: </span>
+<span class="l">64: </span>
+<span class="l">65: </span>
+<span class="l">66: </span>
+<span class="l">67: </span>
+<span class="l">68: </span>
+<span class="l">69: </span>
+<span class="l">70: </span>
+<span class="l">71: </span>
+<span class="l">72: </span>
+<span class="l">73: </span>
+<span class="l">74: </span>
+<span class="l">75: </span>
+<span class="l">76: </span>
+<span class="l">77: </span>
+<span class="l">78: </span>
+<span class="l">79: </span>
+<span class="l">80: </span>
+<span class="l">81: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="pn">;</span><span class="k">with</span>
+  <span class="id">cte_all</span>
+  <span class="k">as</span>
+  <span class="pn">(</span>
+          <span class="id">SELECT</span>
+        <span class="o">--</span><span class="id">w</span><span class="pn">.</span><span class="id">WorkItemTypeId</span><span class="pn">,</span>
+        <span class="o">--</span><span class="id">w</span><span class="pn">.</span><span class="id">WorkItemObjectId</span><span class="pn">,</span>
+        <span class="id">P</span><span class="pn">.</span><span class="id">ProposalId</span>                           
+<span class="pn">,</span> <span class="id">PG</span><span class="pn">.</span><span class="id">RepNumber</span>
+<span class="pn">,</span> <span class="id">a</span><span class="pn">.</span><span class="id">AccountId</span>
+<span class="pn">,</span> <span class="id">PG</span><span class="pn">.</span><span class="id">Title</span>          
+<span class="pn">,</span> <span class="id">pa</span><span class="pn">.</span><span class="id">InvestmentAmount</span>
+<span class="pn">,</span> <span class="id">pa</span><span class="pn">.</span><span class="id">EnvestnetProductName</span>
+<span class="pn">,</span> <span class="id">pa</span><span class="pn">.</span><span class="id">EnvestnetProductTypeName</span>
+<span class="pn">,</span> <span class="id">rtc</span><span class="pn">.</span><span class="id">Display</span> <span class="id">AS</span> <span class="id">RegistrationType</span>
+<span class="pn">,</span> <span class="id">p</span><span class="pn">.</span><span class="id">RiskToleranceId</span> <span class="id">AS</span> <span class="id">ProposalRiskToleranceId</span>
+<span class="pn">,</span> <span class="id">e</span><span class="pn">.</span><span class="id">FirstName</span> <span class="id">AS</span> <span class="id">PrimaryClientFirstName</span>
+<span class="pn">,</span> <span class="id">e</span><span class="pn">.</span><span class="id">LastName</span> <span class="id">AS</span> <span class="id">PrimaryClientLastName</span>
+<span class="pn">,</span> <span class="id">e</span><span class="pn">.</span><span class="id">SsnTin</span> <span class="id">AS</span> <span class="id">PrimaryClientSSN</span>
+<span class="pn">,</span> <span class="id">pg</span><span class="pn">.</span><span class="id">CreatedDate</span>
+<span class="pn">,</span> <span class="n">0</span> <span class="k">as</span> <span class="id">IsNgp</span>
+      <span class="id">From</span> <span class="id">ProposalAccount</span> <span class="id">pa</span>
+        <span class="id">JOIN</span> <span class="id">Proposal</span> <span class="id">p</span> <span class="id">ON</span> <span class="id">pa</span><span class="pn">.</span><span class="id">ProposalId</span> <span class="o">=</span> <span class="id">p</span><span class="pn">.</span><span class="id">ProposalId</span> <span class="id">AND</span> <span class="id">p</span><span class="pn">.</span><span class="id">IsDeleted</span><span class="o">=</span><span class="n">0</span>
+        <span class="id">Join</span> <span class="id">ProposalGroup</span> <span class="id">PG</span> <span class="id">on</span> <span class="id">P</span><span class="pn">.</span><span class="id">ProposalGroupId</span><span class="o">=</span><span class="id">pg</span><span class="pn">.</span><span class="id">ProposalGroupId</span> <span class="k">and</span> <span class="id">PG</span><span class="pn">.</span><span class="id">IsDeleted</span><span class="o">=</span><span class="n">0</span>
+        <span class="id">JOIN</span> <span class="id">Account</span> <span class="id">a</span> <span class="id">ON</span> <span class="id">pa</span><span class="pn">.</span><span class="id">AccountId</span> <span class="o">=</span> <span class="id">a</span><span class="pn">.</span><span class="id">AccountId</span> <span class="id">AND</span> <span class="id">a</span><span class="pn">.</span><span class="id">IsDeleted</span><span class="o">=</span><span class="n">0</span>
+        <span class="id">Join</span> <span class="id">AccountStatus</span> <span class="id">s</span> <span class="id">ON</span> <span class="id">a</span><span class="pn">.</span><span class="id">AccountStatusId</span><span class="o">=</span><span class="id">s</span><span class="pn">.</span><span class="id">AccountStatusId</span>
+        <span class="id">JOIN</span> <span class="id">Registration</span> <span class="id">r</span> <span class="id">ON</span> <span class="id">a</span><span class="pn">.</span><span class="id">RegistrationId</span><span class="o">=</span> <span class="id">r</span><span class="pn">.</span><span class="id">RegistrationId</span>
+        <span class="id">JOIN</span> <span class="id">RegistrationType</span> <span class="id">rt</span> <span class="id">ON</span> <span class="id">r</span><span class="pn">.</span><span class="id">RegistrationTypeId</span><span class="o">=</span><span class="id">rt</span><span class="pn">.</span><span class="id">RegistrationTypeId</span>
+        <span class="id">JOIN</span> <span class="id">RegistrationTypeCode</span> <span class="id">rtc</span> <span class="id">ON</span> <span class="id">rt</span><span class="pn">.</span><span class="id">RegistrationTypeCodeId</span> <span class="o">=</span> <span class="id">rtc</span><span class="pn">.</span><span class="id">RegistrationTypeCodeId</span> <span class="id">AND</span> <span class="id">a</span><span class="pn">.</span><span class="id">IsDeleted</span><span class="o">=</span><span class="n">0</span>
+        <span class="id">LEFT</span> <span class="id">JOIN</span> <span class="id">ClientRegistration</span> <span class="id">cr</span> <span class="id">ON</span> <span class="id">r</span><span class="pn">.</span><span class="id">RegistrationId</span><span class="o">=</span> <span class="id">cr</span><span class="pn">.</span><span class="id">RegistrationId</span> <span class="id">AND</span> <span class="id">cr</span><span class="pn">.</span><span class="id">IsPrimary</span><span class="o">=</span><span class="n">1</span> <span class="id">AND</span> <span class="id">cr</span><span class="pn">.</span><span class="id">IsDeleted</span><span class="o">=</span><span class="n">0</span>
+        <span class="id">LEFT</span> <span class="id">JOIN</span> <span class="id">Entity</span> <span class="id">e</span> <span class="id">ON</span> <span class="id">cr</span><span class="pn">.</span><span class="id">EntityId</span> <span class="o">=</span> <span class="id">e</span><span class="pn">.</span><span class="id">EntityId</span> <span class="id">AND</span> <span class="id">e</span><span class="pn">.</span><span class="id">IsDeleted</span><span class="o">=</span><span class="n">0</span>
+        <span class="id">JOIN</span> <span class="pn">[</span><span class="id">dbo</span><span class="pn">]</span><span class="pn">.</span><span class="pn">[</span><span class="id">Fn_splitnvarcharkeys</span><span class="pn">]</span><span class="pn">(</span><span class="id">@</span><span class="id">repcodes</span><span class="pn">,</span> <span class="s">&#39;,&#39;</span><span class="pn">)</span> <span class="id">rpc</span> <span class="id">ON</span> <span class="id">pg</span><span class="pn">.</span><span class="id">RepNumber</span> <span class="o">=</span> <span class="id">rpc</span><span class="pn">.</span><span class="id">StringKeyValue</span>
+      <span class="id">WHERE</span> <span class="id">pg</span><span class="pn">.</span><span class="id">ProposalTypeId</span> <span class="o">&lt;&gt;</span> <span class="n">3</span> <span class="id">AND</span> <span class="id">s</span><span class="pn">.</span><span class="id">AccountStatusTypeId</span> <span class="id">IN</span> <span class="pn">(</span><span class="n">1</span><span class="pn">)</span>
+      <span class="o">--</span><span class="id">ORDER</span> <span class="id">BY</span> <span class="id">pg</span><span class="pn">.</span><span class="id">CreatedDate</span> <span class="id">DESC</span>
+
+    <span class="id">union</span> <span class="id">all</span>
+
+      <span class="id">SELECT</span>
+        <span class="o">--</span><span class="id">w</span><span class="pn">.</span><span class="id">WorkItemTypeId</span><span class="pn">,</span>
+        <span class="o">--</span><span class="id">w</span><span class="pn">.</span><span class="id">WorkItemObjectId</span><span class="pn">,</span>
+        <span class="id">P</span><span class="pn">.</span><span class="id">ProposalId</span>                           
+<span class="pn">,</span> <span class="id">PG</span><span class="pn">.</span><span class="id">RepNumber</span>
+<span class="pn">,</span> <span class="id">a</span><span class="pn">.</span><span class="id">AccountId</span>
+<span class="pn">,</span> <span class="id">PG</span><span class="pn">.</span><span class="id">Title</span>          
+<span class="pn">,</span> <span class="id">pa</span><span class="pn">.</span><span class="id">InvestmentAmount</span>
+<span class="pn">,</span> <span class="id">pa</span><span class="pn">.</span><span class="id">EnvestnetProductName</span>
+<span class="pn">,</span> <span class="id">pa</span><span class="pn">.</span><span class="id">EnvestnetProductTypeName</span>
+<span class="pn">,</span> <span class="id">rtc</span><span class="pn">.</span><span class="id">Display</span> <span class="id">AS</span> <span class="id">RegistrationType</span>
+<span class="pn">,</span> <span class="id">p</span><span class="pn">.</span><span class="id">RiskToleranceId</span> <span class="id">AS</span> <span class="id">ProposalRiskToleranceId</span>
+<span class="pn">,</span> <span class="id">e</span><span class="pn">.</span><span class="id">FirstName</span> <span class="id">AS</span> <span class="id">PrimaryClientFirstName</span>
+<span class="pn">,</span> <span class="id">e</span><span class="pn">.</span><span class="id">LastName</span> <span class="id">AS</span> <span class="id">PrimaryClientLastName</span>
+<span class="pn">,</span> <span class="id">e</span><span class="pn">.</span><span class="id">SsnTin</span> <span class="id">AS</span> <span class="id">PrimaryClientSSN</span>
+<span class="pn">,</span> <span class="id">pg</span><span class="pn">.</span><span class="id">CreatedDate</span>
+<span class="pn">,</span> <span class="id">@</span><span class="id">isNgp</span> <span class="k">as</span> <span class="id">IsNgp</span>
+      <span class="id">From</span> <span class="id">ProposalAccount</span> <span class="id">pa</span>
+        <span class="id">JOIN</span> <span class="id">Proposal</span> <span class="id">p</span> <span class="id">ON</span> <span class="id">pa</span><span class="pn">.</span><span class="id">ProposalId</span> <span class="o">=</span> <span class="id">p</span><span class="pn">.</span><span class="id">ProposalId</span> <span class="id">AND</span> <span class="id">p</span><span class="pn">.</span><span class="id">IsDeleted</span><span class="o">=</span><span class="n">0</span>
+        <span class="id">Join</span> <span class="id">ProposalGroup</span> <span class="id">PG</span> <span class="id">on</span> <span class="id">P</span><span class="pn">.</span><span class="id">ProposalGroupId</span><span class="o">=</span><span class="id">pg</span><span class="pn">.</span><span class="id">ProposalGroupId</span> <span class="k">and</span> <span class="id">PG</span><span class="pn">.</span><span class="id">IsDeleted</span><span class="o">=</span><span class="n">0</span>
+        <span class="id">JOIN</span> <span class="id">Account</span> <span class="id">a</span> <span class="id">ON</span> <span class="id">pa</span><span class="pn">.</span><span class="id">AccountId</span> <span class="o">=</span> <span class="id">a</span><span class="pn">.</span><span class="id">AccountId</span> <span class="id">AND</span> <span class="id">a</span><span class="pn">.</span><span class="id">IsDeleted</span><span class="o">=</span><span class="n">0</span>
+        <span class="id">JOIN</span> <span class="id">WorkItem</span> <span class="id">w</span> <span class="id">on</span> <span class="id">w</span><span class="pn">.</span><span class="id">WorkItemObjectId</span> <span class="o">=</span> <span class="id">a</span><span class="pn">.</span><span class="id">AccountId</span> <span class="k">and</span> <span class="id">w</span><span class="pn">.</span><span class="id">IsDeleted</span> <span class="o">=</span> <span class="n">0</span>
+          <span class="k">and</span> <span class="id">w</span><span class="pn">.</span><span class="id">WorkItemTypeId</span> <span class="o">=</span> <span class="id">@</span><span class="id">isNgp</span>
+        <span class="id">Join</span> <span class="id">AccountStatus</span> <span class="id">s</span> <span class="id">ON</span> <span class="id">a</span><span class="pn">.</span><span class="id">AccountStatusId</span><span class="o">=</span><span class="id">s</span><span class="pn">.</span><span class="id">AccountStatusId</span>
+        <span class="id">JOIN</span> <span class="id">Registration</span> <span class="id">r</span> <span class="id">ON</span> <span class="id">a</span><span class="pn">.</span><span class="id">RegistrationId</span><span class="o">=</span> <span class="id">r</span><span class="pn">.</span><span class="id">RegistrationId</span>
+        <span class="id">JOIN</span> <span class="id">RegistrationType</span> <span class="id">rt</span> <span class="id">ON</span> <span class="id">r</span><span class="pn">.</span><span class="id">RegistrationTypeId</span><span class="o">=</span><span class="id">rt</span><span class="pn">.</span><span class="id">RegistrationTypeId</span>
+        <span class="id">JOIN</span> <span class="id">RegistrationTypeCode</span> <span class="id">rtc</span> <span class="id">ON</span> <span class="id">rt</span><span class="pn">.</span><span class="id">RegistrationTypeCodeId</span> <span class="o">=</span> <span class="id">rtc</span><span class="pn">.</span><span class="id">RegistrationTypeCodeId</span> <span class="id">AND</span> <span class="id">a</span><span class="pn">.</span><span class="id">IsDeleted</span><span class="o">=</span><span class="n">0</span>
+        <span class="id">LEFT</span> <span class="id">JOIN</span> <span class="id">ClientRegistration</span> <span class="id">cr</span> <span class="id">ON</span> <span class="id">r</span><span class="pn">.</span><span class="id">RegistrationId</span><span class="o">=</span> <span class="id">cr</span><span class="pn">.</span><span class="id">RegistrationId</span> <span class="id">AND</span> <span class="id">cr</span><span class="pn">.</span><span class="id">IsPrimary</span><span class="o">=</span><span class="n">1</span> <span class="id">AND</span> <span class="id">cr</span><span class="pn">.</span><span class="id">IsDeleted</span><span class="o">=</span><span class="n">0</span>
+        <span class="id">LEFT</span> <span class="id">JOIN</span> <span class="id">Entity</span> <span class="id">e</span> <span class="id">ON</span> <span class="id">cr</span><span class="pn">.</span><span class="id">EntityId</span> <span class="o">=</span> <span class="id">e</span><span class="pn">.</span><span class="id">EntityId</span> <span class="id">AND</span> <span class="id">e</span><span class="pn">.</span><span class="id">IsDeleted</span><span class="o">=</span><span class="n">0</span>
+        <span class="id">JOIN</span> <span class="pn">[</span><span class="id">dbo</span><span class="pn">]</span><span class="pn">.</span><span class="pn">[</span><span class="id">Fn_splitnvarcharkeys</span><span class="pn">]</span><span class="pn">(</span><span class="id">@</span><span class="id">repcodes</span><span class="pn">,</span> <span class="s">&#39;,&#39;</span><span class="pn">)</span> <span class="id">rpc</span> <span class="id">ON</span> <span class="id">pg</span><span class="pn">.</span><span class="id">RepNumber</span> <span class="o">=</span> <span class="id">rpc</span><span class="pn">.</span><span class="id">StringKeyValue</span>
+      <span class="id">WHERE</span> <span class="id">pg</span><span class="pn">.</span><span class="id">ProposalTypeId</span> <span class="o">&lt;&gt;</span> <span class="n">3</span> <span class="id">AND</span> <span class="id">s</span><span class="pn">.</span><span class="id">AccountStatusTypeId</span> <span class="id">IN</span> <span class="pn">(</span><span class="n">1</span><span class="pn">)</span>
+  <span class="pn">)</span><span class="pn">,</span>
+  <span class="id">CTE_C</span>
+  <span class="id">asa</span>
+  <span class="o">--</span><span class="id">Contains</span> <span class="id">both</span> <span class="id">queries</span> <span class="k">for</span> <span class="id">ngp</span> <span class="k">and</span> <span class="id">non</span> <span class="id">ngp</span>
+  <span class="pn">(</span>
+    <span class="id">select</span> <span class="pn">*</span>
+    <span class="id">from</span> <span class="id">cte_all</span>
+  <span class="pn">)</span>
+
+<span class="id">select</span> <span class="pn">*</span>
+<span class="id">from</span> <span class="id">CTE_C</span>
+<span class="id">where</span> <span class="id">IsNgp</span> <span class="o">=</span> <span class="id">@</span><span class="id">isNgp</span>
+<span class="id">order</span> <span class="id">by</span> <span class="id">CreatedDate</span>
+</code></pre></td>
+</tr>
+</table>
+

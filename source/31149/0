@@ -1,0 +1,91 @@
+open Microsoft.Extensions.Options
+open Microsoft.Extensions.Caching.Distributed
+open Microsoft.Extensions.Caching.Memory
+open MBrace.FsPickler
+
+type IDistributedCache with
+    member self.SetValue(serializer, key, value, options) =
+        self.Set(key, serializer value, options)
+    member self.GetValue<'T>(deserializer: byte[] -> 'T, key) =
+        match self.Get(key) with
+        | null -> None
+        | obj -> Some (deserializer obj)
+    member self.SetValueAsync(serializer, key, value, options, token) =
+        self.SetAsync(key, serializer value, options, token)
+    member self.GetValueAsync<'T>(deserializer: byte[] -> 'T, key, token) = task {
+        match! self.GetAsync(key, token) with
+        | null -> return None
+        | obj -> return Some (deserializer(obj))
+    }
+    member self.SetAsyncValue(serializer, key, value, options) = async {
+        let! token = Async.CancellationToken
+        return! Async.AwaitTask (self.SetValueAsync(serializer, key, value, options, token))
+    }
+    member self.GetAsyncValue<'T>(deserializer, key) = async {
+        let! token = Async.CancellationToken
+        return! Async.AwaitTask (self.GetValueAsync<'T>(deserializer, key, token))
+    }
+
+type Throttler (cache: IDistributedCache, cacheDuration, maxRequests) =
+    let serializer = FsPickler.CreateBinarySerializer()
+    let agent = MailboxProcessor.Start(fun agent ->
+        let rec loop () = async {
+            let! (cacheKey, reply: AsyncReplyChannel<bool>) = agent.Receive()
+            let! value = cache.GetAsyncValue(serializer.UnPickle, cacheKey)
+            let count, start, expiration =
+                match value with
+                | Some (start: System.DateTimeOffset, count) ->
+                    let count' = count + 1
+                    let expiration = start.Add(cacheDuration)
+                    count', start, expiration
+                | None ->
+                    let now = System.DateTimeOffset.UtcNow
+                    let expiration = now.Add(cacheDuration)
+                    1, now, expiration
+            do! cache.SetAsyncValue(
+                serializer.Pickle,
+                cacheKey,
+                (start, count),
+                DistributedCacheEntryOptions(
+                    AbsoluteExpiration=expiration
+                )
+            )
+            reply.Reply(count > maxRequests)
+            return! loop ()
+        }
+        loop ()
+    )
+    member _.Get(cacheKey) =
+        agent.PostAndReply(fun channel -> (cacheKey, channel))
+    member _.GetAsync(cacheKey) =
+        agent.PostAndAsyncReply(fun channel -> (cacheKey, channel))
+
+(* Example *)
+
+// The cache is normally provided by DI in ASP.NET Core
+let options = Options.Create(MemoryDistributedCacheOptions())
+let cache = new MemoryDistributedCache(options)
+
+let cacheDuration = System.TimeSpan.FromSeconds(1)
+let maxRequests = 4
+
+let throttler = Throttler(cache, cacheDuration, maxRequests)
+
+// The cache key could be the IP address or the username or anything you want to provide as the limiting factor for the request.
+for _ in 0..10 do
+    throttler.Get("hello")
+    |> printfn "%A"
+    System.Threading.Thread.Sleep 120
+
+// Result:
+//false
+//false
+//false
+//false
+//true
+//true
+//true
+//false
+//false
+//false
+//false

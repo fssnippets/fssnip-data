@@ -1,0 +1,31 @@
+/// First, you must open the FSharpx namespace, not the FSharpx.TypeProviders.Regex
+/// namespace or even the FSharpx.TypeProviders namespace. (Or course, if you need
+/// to reference the fully-qualified type name in order to disambiguate the Regex
+/// type, be aware that it's simply "FSharpx.Regex")
+
+open FSharpx
+
+/// Next, define your Regex type. Remember that you're defining a type (duh!), 
+/// *not* a let binding:
+
+type NameRegex = Regex< @"(?<firstName>\p{L}+)\s+(?<lastName>\p{L}+)" >
+
+/// Let's define a name to test
+let name = "Giuseppe Verdi"
+
+/// To test if the name matches the regular expression, use NameRegex without
+/// parentheses to call the IsMatch ( string ) function:
+
+NameRegex.IsMatch name 
+|> printfn """Name.IsMatch "%s" = %b""" name
+
+/// To parse the name, use NameRegex *with parentheses* to call the Match function. /// (You'll be instantiating a NameRegex object when you do so. Since it's not a
+/// singleton, you may want to bind it to a symbol in order not to have to 
+/// re-instantiate it if you use it again):
+
+NameRegex().Match name
+|> (fun m -> printfn """firstName: "%s", lastName: "%s" """ m.firstName.Value m.lastName.Value)
+
+
+
+

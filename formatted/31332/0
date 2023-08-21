@@ -1,0 +1,74 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">let</span> <span class="k">internal</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="fn">binSearch&#39;</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="fn">keySelector</span> <span class="pn">:</span> <span class="ta">&#39;</span><span class="id">a</span> <span class="k">-&gt;</span> <span class="ta">&#39;</span><span class="id">b</span><span class="pn">)</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="fn">selector</span> <span class="pn">:</span> <span class="ta">&#39;</span><span class="id">a</span> <span class="k">-&gt;</span> <span class="ta">&#39;</span><span class="id">c</span><span class="pn">)</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="id">key</span> <span class="pn">:</span> <span class="ta">&#39;</span><span class="id">b</span><span class="pn">)</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="id">arr</span> <span class="pn">:</span> <span class="ta">&#39;</span><span class="id">a</span> <span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="rt">array</span><span class="pn">)</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs7', 7)" onmouseover="showTip(event, 'fs7', 7)" class="mv">r</span> <span class="pn">:</span> <span class="ta">&#39;</span><span class="id">c</span> <span onmouseout="hideTip(event, 'fs8', 8)" onmouseover="showTip(event, 'fs8', 8)" class="rt">byref</span><span class="pn">)</span> <span class="pn">:</span> <span onmouseout="hideTip(event, 'fs9', 9)" onmouseover="showTip(event, 'fs9', 9)" class="vt">bool</span> <span class="o">=</span>
+        <span class="k">let</span> <span class="k">mutable</span> <span onmouseout="hideTip(event, 'fs10', 10)" onmouseover="showTip(event, 'fs10', 10)" class="mv">indexStart</span> <span class="o">=</span> <span class="n">0</span>
+        <span class="k">let</span> <span class="k">mutable</span> <span onmouseout="hideTip(event, 'fs11', 11)" onmouseover="showTip(event, 'fs11', 11)" class="mv">indexEnd</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs5', 12)" onmouseover="showTip(event, 'fs5', 12)" class="id">arr</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs12', 13)" onmouseover="showTip(event, 'fs12', 13)" class="id">Length</span> <span class="o">-</span> <span class="n">1</span>
+        <span class="k">let</span> <span class="k">mutable</span> <span onmouseout="hideTip(event, 'fs13', 14)" onmouseover="showTip(event, 'fs13', 14)" class="mv">result</span> <span class="o">=</span> <span class="k">false</span>
+        <span class="k">let</span> <span class="k">mutable</span> <span onmouseout="hideTip(event, 'fs14', 15)" onmouseover="showTip(event, 'fs14', 15)" class="mv">doContinue</span> <span class="o">=</span> <span class="k">true</span>
+        <span class="k">while</span> <span onmouseout="hideTip(event, 'fs10', 16)" onmouseover="showTip(event, 'fs10', 16)" class="mv">indexStart</span> <span class="o">&lt;=</span> <span onmouseout="hideTip(event, 'fs11', 17)" onmouseover="showTip(event, 'fs11', 17)" class="mv">indexEnd</span> <span class="o">&amp;&amp;</span> <span onmouseout="hideTip(event, 'fs14', 18)" onmouseover="showTip(event, 'fs14', 18)" class="mv">doContinue</span> <span class="k">do</span>
+            <span class="k">let</span> <span onmouseout="hideTip(event, 'fs15', 19)" onmouseover="showTip(event, 'fs15', 19)" class="id">indexMid</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs10', 20)" onmouseover="showTip(event, 'fs10', 20)" class="mv">indexStart</span> <span class="o">+</span> <span class="pn">(</span><span class="pn">(</span><span onmouseout="hideTip(event, 'fs11', 21)" onmouseover="showTip(event, 'fs11', 21)" class="mv">indexEnd</span> <span class="o">-</span> <span onmouseout="hideTip(event, 'fs10', 22)" onmouseover="showTip(event, 'fs10', 22)" class="mv">indexStart</span><span class="pn">)</span> <span class="o">&gt;</span><span class="pn">&gt;</span><span class="pn">&gt;</span> <span class="n">1</span><span class="pn">)</span>
+            <span class="k">let</span> <span onmouseout="hideTip(event, 'fs16', 23)" onmouseover="showTip(event, 'fs16', 23)" class="id">midItem</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs5', 24)" onmouseover="showTip(event, 'fs5', 24)" class="id">arr</span><span class="m">.</span><span class="pn">[</span><span onmouseout="hideTip(event, 'fs15', 25)" onmouseover="showTip(event, 'fs15', 25)" class="id">indexMid</span><span class="pn">]</span>
+            <span class="k">let</span> <span onmouseout="hideTip(event, 'fs17', 26)" onmouseover="showTip(event, 'fs17', 26)" class="id">midKey</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs2', 27)" onmouseover="showTip(event, 'fs2', 27)" class="fn">keySelector</span> <span onmouseout="hideTip(event, 'fs16', 28)" onmouseover="showTip(event, 'fs16', 28)" class="id">midItem</span>
+            <span class="k">let</span> <span onmouseout="hideTip(event, 'fs18', 29)" onmouseover="showTip(event, 'fs18', 29)" class="id">cr</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs19', 30)" onmouseover="showTip(event, 'fs19', 30)" class="fn">sign</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs20', 31)" onmouseover="showTip(event, 'fs20', 31)" class="fn">compare</span> <span onmouseout="hideTip(event, 'fs4', 32)" onmouseover="showTip(event, 'fs4', 32)" class="id">key</span> <span onmouseout="hideTip(event, 'fs17', 33)" onmouseover="showTip(event, 'fs17', 33)" class="id">midKey</span><span class="pn">)</span>
+            <span class="k">match</span> <span onmouseout="hideTip(event, 'fs18', 34)" onmouseover="showTip(event, 'fs18', 34)" class="id">cr</span> <span class="k">with</span>
+            <span class="pn">|</span> <span class="n">0</span>      <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs7', 35)" onmouseover="showTip(event, 'fs7', 35)" class="mv">r</span> <span class="k">&lt;-</span> <span onmouseout="hideTip(event, 'fs3', 36)" onmouseover="showTip(event, 'fs3', 36)" class="fn">selector</span> <span onmouseout="hideTip(event, 'fs16', 37)" onmouseover="showTip(event, 'fs16', 37)" class="id">midItem</span>
+                        <span onmouseout="hideTip(event, 'fs14', 38)" onmouseover="showTip(event, 'fs14', 38)" class="mv">doContinue</span> <span class="k">&lt;-</span> <span class="k">false</span>
+            <span class="pn">|</span> <span class="o">-</span><span class="n">1</span>     <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs11', 39)" onmouseover="showTip(event, 'fs11', 39)" class="mv">indexEnd</span> <span class="k">&lt;-</span> <span onmouseout="hideTip(event, 'fs15', 40)" onmouseover="showTip(event, 'fs15', 40)" class="id">indexMid</span> <span class="o">-</span> <span class="n">1</span>
+            <span class="pn">|</span> <span class="n">1</span> <span class="pn">|</span> <span class="id">_</span>  <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs10', 41)" onmouseover="showTip(event, 'fs10', 41)" class="mv">indexStart</span> <span class="k">&lt;-</span> <span onmouseout="hideTip(event, 'fs15', 42)" onmouseover="showTip(event, 'fs15', 42)" class="id">indexMid</span> <span class="o">+</span> <span class="n">1</span>
+        <span onmouseout="hideTip(event, 'fs13', 43)" onmouseover="showTip(event, 'fs13', 43)" class="mv">result</span>
+
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs21', 44)" onmouseover="showTip(event, 'fs21', 44)" class="fn">binSearch</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs2', 45)" onmouseover="showTip(event, 'fs2', 45)" class="fn">keySelector</span> <span class="pn">:</span> <span class="ta">&#39;</span><span class="id">a</span> <span class="k">-&gt;</span> <span class="ta">&#39;</span><span class="id">b</span><span class="pn">)</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs4', 46)" onmouseover="showTip(event, 'fs4', 46)" class="id">key</span> <span class="pn">:</span> <span class="ta">&#39;</span><span class="id">b</span><span class="pn">)</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs5', 47)" onmouseover="showTip(event, 'fs5', 47)" class="id">arr</span> <span class="pn">:</span> <span class="ta">&#39;</span><span class="id">a</span> <span onmouseout="hideTip(event, 'fs6', 48)" onmouseover="showTip(event, 'fs6', 48)" class="rt">array</span><span class="pn">)</span> <span class="o">=</span>
+        <span class="k">let</span> <span class="k">mutable</span> <span onmouseout="hideTip(event, 'fs22', 49)" onmouseover="showTip(event, 'fs22', 49)" class="mv">r</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs23', 50)" onmouseover="showTip(event, 'fs23', 50)" class="uc">None</span>
+        <span onmouseout="hideTip(event, 'fs1', 51)" onmouseover="showTip(event, 'fs1', 51)" class="fn">binSearch&#39;</span> <span onmouseout="hideTip(event, 'fs2', 52)" onmouseover="showTip(event, 'fs2', 52)" class="fn">keySelector</span> <span onmouseout="hideTip(event, 'fs24', 53)" onmouseover="showTip(event, 'fs24', 53)" class="uc">Some</span> <span onmouseout="hideTip(event, 'fs4', 54)" onmouseover="showTip(event, 'fs4', 54)" class="id">key</span> <span onmouseout="hideTip(event, 'fs5', 55)" onmouseover="showTip(event, 'fs5', 55)" class="id">arr</span> <span class="o">&amp;</span><span onmouseout="hideTip(event, 'fs22', 56)" onmouseover="showTip(event, 'fs22', 56)" class="mv">r</span>
+        <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs25', 57)" onmouseover="showTip(event, 'fs25', 57)" class="fn">ignore</span>
+        <span onmouseout="hideTip(event, 'fs22', 58)" onmouseover="showTip(event, 'fs22', 58)" class="mv">r</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">val internal binSearch&#39; : keySelector:(&#39;a -&gt; &#39;b) -&gt; selector:(&#39;a -&gt; &#39;c) -&gt; key:&#39;b -&gt; arr:&#39;a array -&gt; r:byref&lt;&#39;c&gt; -&gt; bool (requires comparison)</div>
+<div class="tip" id="fs2">val keySelector : (&#39;a -&gt; &#39;b) (requires comparison)</div>
+<div class="tip" id="fs3">val selector : (&#39;a -&gt; &#39;c)</div>
+<div class="tip" id="fs4">val key : &#39;b (requires comparison)</div>
+<div class="tip" id="fs5">val arr : &#39;a array</div>
+<div class="tip" id="fs6">type &#39;T array = &#39;T []</div>
+<div class="tip" id="fs7">val r : byref&lt;&#39;c&gt;</div>
+<div class="tip" id="fs8">type byref&lt;&#39;T&gt; = (# &quot;&lt;Common IL Type Omitted&gt;&quot; #)</div>
+<div class="tip" id="fs9">type bool = System.Boolean</div>
+<div class="tip" id="fs10">val mutable indexStart : int</div>
+<div class="tip" id="fs11">val mutable indexEnd : int</div>
+<div class="tip" id="fs12">property System.Array.Length: int with get</div>
+<div class="tip" id="fs13">val mutable result : bool</div>
+<div class="tip" id="fs14">val mutable doContinue : bool</div>
+<div class="tip" id="fs15">val indexMid : int</div>
+<div class="tip" id="fs16">val midItem : &#39;a</div>
+<div class="tip" id="fs17">val midKey : &#39;b (requires comparison)</div>
+<div class="tip" id="fs18">val cr : int</div>
+<div class="tip" id="fs19">val sign : value:&#39;T -&gt; int (requires member get_Sign)</div>
+<div class="tip" id="fs20">val compare : e1:&#39;T -&gt; e2:&#39;T -&gt; int (requires comparison)</div>
+<div class="tip" id="fs21">val binSearch : keySelector:(&#39;a -&gt; &#39;b) -&gt; key:&#39;b -&gt; arr:&#39;a array -&gt; &#39;a option (requires comparison)</div>
+<div class="tip" id="fs22">val mutable r : &#39;a option</div>
+<div class="tip" id="fs23">union case Option.None: Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs24">union case Option.Some: Value: &#39;T -&gt; Option&lt;&#39;T&gt;</div>
+<div class="tip" id="fs25">val ignore : value:&#39;T -&gt; unit</div>
+

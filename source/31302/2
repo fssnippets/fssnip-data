@@ -1,0 +1,34 @@
+#r @"System.Xml.Linq.dll"
+open System.Xml.Linq
+let parseBindingRedirects (filename:string) =
+    let xn s = XName.Get(s,"urn:schemas-microsoft-com:asm.v1")
+    let xml = XDocument.Load filename
+    let depAssemblies = xml.Descendants(xn "dependentAssembly")
+    seq {
+        for dependentAssembly in depAssemblies do
+            let name =
+                dependentAssembly.Elements()
+                |> Seq.tryFind(fun e -> e.Name.LocalName = "assemblyIdentity")
+                |> Option.map(fun e -> 
+                    e.Attributes()
+                    |> Seq.tryFind(fun a -> a.Name.LocalName = "name") 
+                    |> Option.map(fun v -> v.Value)
+                    ) |> Option.flatten
+            let bd = 
+                dependentAssembly.Elements()
+                |> Seq.tryFind(fun e -> e.Name.LocalName = "bindingRedirect")
+            let oldVersion =
+                bd |> Option.map(fun b -> 
+                    b.Attributes() 
+                    |> Seq.tryFind(fun a -> a.Name.LocalName = "oldVersion") 
+                    |> Option.map(fun v -> v.Value)) |> Option.flatten
+            let newVersion =
+                bd |> Option.map(fun b -> 
+                    b.Attributes() 
+                    |> Seq.tryFind(fun a -> a.Name.LocalName = "newVersion") 
+                    |> Option.map(fun v -> v.Value)) |> Option.flatten
+            match name, oldVersion, newVersion with
+            | Some n, Some ov, Some nv -> yield n, ov, nv
+            | _ -> ()
+    } |> Seq.distinct |> Seq.toList
+

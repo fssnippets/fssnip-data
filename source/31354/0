@@ -1,0 +1,82 @@
+
+;with
+  cte_all
+  as
+  (
+          SELECT
+        --w.WorkItemTypeId,
+        --w.WorkItemObjectId,
+        P.ProposalId                           
+, PG.RepNumber
+, a.AccountId
+, PG.Title          
+, pa.InvestmentAmount
+, pa.EnvestnetProductName
+, pa.EnvestnetProductTypeName
+, rtc.Display AS RegistrationType
+, p.RiskToleranceId AS ProposalRiskToleranceId
+, e.FirstName AS PrimaryClientFirstName
+, e.LastName AS PrimaryClientLastName
+, e.SsnTin AS PrimaryClientSSN
+, pg.CreatedDate
+, 0 as IsNgp
+      From ProposalAccount pa
+        JOIN Proposal p ON pa.ProposalId = p.ProposalId AND p.IsDeleted=0
+        Join ProposalGroup PG on P.ProposalGroupId=pg.ProposalGroupId and PG.IsDeleted=0
+        JOIN Account a ON pa.AccountId = a.AccountId AND a.IsDeleted=0
+        Join AccountStatus s ON a.AccountStatusId=s.AccountStatusId
+        JOIN Registration r ON a.RegistrationId= r.RegistrationId
+        JOIN RegistrationType rt ON r.RegistrationTypeId=rt.RegistrationTypeId
+        JOIN RegistrationTypeCode rtc ON rt.RegistrationTypeCodeId = rtc.RegistrationTypeCodeId AND a.IsDeleted=0
+        LEFT JOIN ClientRegistration cr ON r.RegistrationId= cr.RegistrationId AND cr.IsPrimary=1 AND cr.IsDeleted=0
+        LEFT JOIN Entity e ON cr.EntityId = e.EntityId AND e.IsDeleted=0
+        JOIN [dbo].[Fn_splitnvarcharkeys](@repcodes, ',') rpc ON pg.RepNumber = rpc.StringKeyValue
+      WHERE pg.ProposalTypeId <> 3 AND s.AccountStatusTypeId IN (1)
+      --ORDER BY pg.CreatedDate DESC
+
+    union all
+
+      SELECT
+        --w.WorkItemTypeId,
+        --w.WorkItemObjectId,
+        P.ProposalId                           
+, PG.RepNumber
+, a.AccountId
+, PG.Title          
+, pa.InvestmentAmount
+, pa.EnvestnetProductName
+, pa.EnvestnetProductTypeName
+, rtc.Display AS RegistrationType
+, p.RiskToleranceId AS ProposalRiskToleranceId
+, e.FirstName AS PrimaryClientFirstName
+, e.LastName AS PrimaryClientLastName
+, e.SsnTin AS PrimaryClientSSN
+, pg.CreatedDate
+, @isNgp as IsNgp
+      From ProposalAccount pa
+        JOIN Proposal p ON pa.ProposalId = p.ProposalId AND p.IsDeleted=0
+        Join ProposalGroup PG on P.ProposalGroupId=pg.ProposalGroupId and PG.IsDeleted=0
+        JOIN Account a ON pa.AccountId = a.AccountId AND a.IsDeleted=0
+        JOIN WorkItem w on w.WorkItemObjectId = a.AccountId and w.IsDeleted = 0
+          and w.WorkItemTypeId = @isNgp
+        Join AccountStatus s ON a.AccountStatusId=s.AccountStatusId
+        JOIN Registration r ON a.RegistrationId= r.RegistrationId
+        JOIN RegistrationType rt ON r.RegistrationTypeId=rt.RegistrationTypeId
+        JOIN RegistrationTypeCode rtc ON rt.RegistrationTypeCodeId = rtc.RegistrationTypeCodeId AND a.IsDeleted=0
+        LEFT JOIN ClientRegistration cr ON r.RegistrationId= cr.RegistrationId AND cr.IsPrimary=1 AND cr.IsDeleted=0
+        LEFT JOIN Entity e ON cr.EntityId = e.EntityId AND e.IsDeleted=0
+        JOIN [dbo].[Fn_splitnvarcharkeys](@repcodes, ',') rpc ON pg.RepNumber = rpc.StringKeyValue
+      WHERE pg.ProposalTypeId <> 3 AND s.AccountStatusTypeId IN (1)
+  ),
+  CTE_C
+  asa
+  --Contains both queries for ngp and non ngp
+  (
+    select *
+    from cte_all
+  )
+
+select *
+from CTE_C
+where IsNgp = @isNgp
+order by CreatedDate

@@ -1,0 +1,25 @@
+module Log =
+    open System
+    open System.IO
+    
+    let private logDir = "logs"
+    
+    let private log kind fmt =
+        Printf.kprintf (fun s ->
+            let now = DateTime.Now
+            let msg = sprintf "[%s] [%s] %s" (now.ToString("s")) kind s
+            let filename =
+                Path.Combine (
+                    __SOURCE_DIRECTORY__,
+                    logDir,
+                    sprintf "%s.log" (now.ToString("yyyy-MM-dd")))
+
+            Directory.CreateDirectory (Path.GetDirectoryName(filename)) |> ignore
+
+            File.AppendAllLines (filename, [|msg|])
+
+            printfn "%s" msg) fmt
+
+    let fail fmt = log "Fail" fmt
+
+    let info fmt = log "Info" fmt

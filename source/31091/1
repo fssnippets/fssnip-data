@@ -1,0 +1,324 @@
+// Computations with extensible environment, error handling, and asynchronicity
+
+// I recently reviewed some F# code that turned out to be using
+//
+//   Dependency Interpretation
+//   https://fsharpforfunandprofit.com/posts/dependencies-4/
+//
+// and got thinking about whether one could construct a usable Zio like monad
+//
+//   https://zio.dev/
+//
+// in F# with an extensible environment, error handling, and asynchronicity.
+
+// The way I might put it, a primary motivation for using such a thing is that
+// it allows parts of application code to be parameterized with respect to
+// contextual dependencies, such as database connections or logging facilities,
+// in a relatively convenient manner.  This parameterization then makes it easy
+// to run parts of the application code in various contexts such as actual
+// production and under e.g. a unit testing environment.
+
+// Of course, it has already been known for a long time that we can achieve this
+// kind of extensibility in F# by using type constraints on type variables.
+// Scott Wlaschin explains the technique in
+//
+//   Dependency injection using the Reader monad
+//   https://fsharpforfunandprofit.com/posts/dependencies-3/
+//
+// and there are advanced libraries for F# using (in part) similar techniques
+// such as
+//
+//   Eff
+//   https://github.com/palladin/Eff
+//
+// by Nick Palladinos.
+
+// So, the technicality I'm particular interested in is in how one might make
+// the error handling mechanism extensible.  More specifically, it should be
+// easy to introduce new error types, raise errors of such types, and handle
+// errors.  Furthermore, it would be nice to have the combination of errors
+// potentially raised be inferred by the compiler and it would be nice that
+// errors could be handled and removed from the combination.  Essentially a kind
+// of checked exceptions.  Of course, as argued by Eirik Tsarpalis,
+//
+//   You’re better off using Exceptions
+//   https://eiriktsarpalis.wordpress.com/2017/02/19/youre-better-off-using-exceptions/
+//
+// in most cases, but curiosity got the better of me.
+
+// Without further ado, let's sketch such a Zio style monad!
+
+// First let's the define the `Zio<'r, 'h, 'a>` type:
+
+type Zio<'r, 'h, 'a> =
+  { go: 'r -> 'h -> ('a -> unit) -> unit }
+
+// If you are familiar with Zio, then you might have noticed that I named the
+// second type parameter `'h`, for "handler", rather than `'e`, for "error".
+// That choice of word is the key to the extensible error mechanism.
+
+// So, basically, a value of the `Zio<'r, 'h, 'a>` type is a computation that
+// requires an environment of type `'r` and may either produce a value, or
+// answer, of type `'a` or raise an error that needs a handler of type `'h`.
+
+// The concrete implementation is essentially a function that takes the
+// environment, handler, and a continuation as parameters.  The record wrapper,
+// `{ go: ... }`, is there just to make the inferred types more readable.
+
+// Below is the straightforward computation expression builder definition `zio`:
+
+type ZioBuilder() =
+  member _.Delay(f) = { go = fun r h k -> f().go r h k }
+  member _.ReturnFrom xZ = xZ
+  member _.Return x = { go = fun _ _ k -> k x }
+  member this.Zero() = this.Return()
+  member this.Combine(lZ, rZ) = this.Bind(lZ, (fun _ -> rZ))
+
+  member _.Bind(xZ, xyZ) =
+    { go = fun r h k -> xZ.go r h (fun x -> xyZ(x).go r h k) }
+
+let zio = ZioBuilder()
+
+// We also need a primitive operation for accessing the environment `ask`:
+
+let ask = { go = fun r _ k -> k r }
+
+// And, for convenience, let's define a helper for `call`ing methods of services
+// passed through the environment:
+
+let call fn = zio.Bind(ask, fn)
+
+// So, with the above we can already write application code that is
+// parameterized with respect to their dependencies.
+
+// For example, we could define a service for reading lines of input
+
+type IReadLn =
+  abstract ReadLn : unit -> Zio<'r, 'h, option<string>>
+
+let readLn () = call (fun (s: #IReadLn) -> s.ReadLn())
+
+// and a service for writing lines of output
+
+type IWriteLn =
+  abstract WriteLn : string -> Zio<'r, 'h, unit>
+
+let writeLn t =
+  call (fun (s: #IWriteLn) -> s.WriteLn t)
+
+// An essential detail above is the use of flexibly typed parameters `s:
+// #IReadLn` and `s: #IWriteLn`.  It is a key to make the type inference for the
+// usages work out nicely.
+
+// As an example, we could now write a computation that copies all lines from
+// input to the output:
+
+let rec copyAll () =
+  zio {
+    match! readLn () with
+    | None -> return ()
+    | Some line ->
+      do! writeLn line
+      return! copyAll ()
+  }
+
+// The signature conveniently inferred for the `copyAll` computation
+//
+//   val copyAll:
+//     unit -> Zio<'r, 'h, unit> when 'r :> IWriteLn and 'r :> IReadLn
+//
+// shows that `copyAll` requires the environment `'r` to provide both the
+// `IWriteLn` and `IReadLn` interfaces.
+//
+// Note that the handler type `'h` remains unconstrained.  This means that the
+// `copyAll` computation does not raise errors.
+
+// Of course, things are rarely this simple.  In the above we essentially
+// assumed that neither the `ReadLn` nor the `WriteLn` computation can fail.
+// That is rarely a valid assumption and there are situations where we'd like to
+// write code that is guaranteed to handle some failure conditions at some
+// point.
+
+// Did you react to the wording "handle some failure conditions at some point"?
+// Perhaps it sounds rather vague.  However, the wording is intentional.  Some
+// errors in a program are such that you never want to handle them.  You just
+// let the program crash with a stack trace.  Other "errors" are such that you
+// don't only want to handle them, but they are best expressed as an ordinary
+// case of the result of an operation.  And then there are errors that you'd
+// rather not handle after every operation, but you still want your program to
+// handle them at some point.  Say, when performing a sequence of operations,
+// you just want to make sure that any error from any step of the sequence will
+// stop the sequence and will be handled e.g. by giving a suitable message to
+// the user.  It is the last of these three cases that is of interest here.
+
+// First we introduce a primitive operation to `throw` errors:
+
+let throw e = { go = fun _ h _ -> e h }
+
+// This is the first point where we make use of the `h` or handler.  The handler
+// `h` is passed to the error `e`.
+
+// We also need an operation to `catch` errors:
+
+type ZioRunner<'r, 'h, 'a>(r: 'r, h: 'h, k: 'a -> unit) =
+  inherit ZioBuilder()
+  member _.Run(xZ: Zio<'r, 'h, 'a>) = xZ.go r h k
+
+let catch h' xZ =
+  { go = fun r h k -> xZ.go r (h' (ZioRunner(r, h, k))) k }
+
+// The implementation here is a bit more tricky.  We want to allow error
+// handlers to also perform arbitrary computations in the same monad.  As our
+// monad uses continuation passing we can keep the types simple by passing in a
+// special computation builder when constructing handlers.
+
+// So, how does one use this error mechanism then?
+
+// Well, to define a new error, one defines an interface for the handler of such
+// errors.  As an example, let's define an error for unexpected end of input:
+
+type IUnexpectedEndOfInput =
+  abstract UnexpectedEndOfInput : unit -> unit
+
+let UnexpectedEndOfInput (h: #IUnexpectedEndOfInput) = h.UnexpectedEndOfInput()
+
+// The function `UnexpectedEndOfInput` is helper we use with `throw`.  Its usage
+// looks like an error constructor.  Note again the use of a flexible type for
+// the handler parameter.
+
+// As an example, we could now define a `copy1` operation that copies a line
+// of input to output or throws the error:
+
+let copy1 () =
+  zio {
+    match! readLn () with
+    | None -> return! throw UnexpectedEndOfInput
+    | Some line -> return! writeLn line
+  }
+
+// The signature
+//
+//   val copy1:
+//     unit -> Zio<'r, #IUnexpectedEndOfInput, unit>
+//       when 'r :> IWriteLn and 'r :> IReadLn
+//
+// reflects both the environment and error handling requirements of the
+// operation.
+
+// Let's then define another error for too long lines
+
+type ILineTooLong =
+  abstract LineTooLong : max: int * actual: int -> unit
+
+let LineTooLong e (h: #ILineTooLong) = h.LineTooLong e
+
+// and another operation for copying a line of given maximum length
+
+let copy1Of max =
+  zio {
+    match! readLn () with
+    | None -> return! throw UnexpectedEndOfInput
+    | Some line ->
+      if max < line.Length then
+        return! throw (LineTooLong(max, line.Length))
+
+      return! writeLn line
+  }
+
+// Again, the inferred signature
+//
+//   val copy1Of:
+//     max: int -> Zio<'r, 'h, unit>
+//       when 'r :> IWriteLn and 'r :> IReadLn
+//        and 'h :> ILineTooLong and 'h :> IUnexpectedEndOfInput
+//
+// reflects both the environment and error handling requirements.
+
+// Let's put together the happy path of a little interaction:
+
+let interaction () =
+  zio {
+    do! writeLn "Type me max 10 characters:"
+    do! copy1Of 10
+    do! writeLn "Thank you for your co-operation!"
+  }
+
+// Can you guess the signature of `interaction`?
+
+// Alright, let's then figure out how we can actually run these kinds of
+// computations.  For that purpose let's first define a primitive `startIn`
+// operation:
+
+let startIn r (uZ: Zio<'r, unit, unit>) = uZ.go r () id
+
+// Notice that while the environment is allowed to be of any type, the handler
+// (and the answer type) are required to be of type `unit`.  The effect of that
+// is to ensure that no errors can be left unhandled and no (interesting) result
+// may be ignored implicitly.
+
+// How do we handle the errors?  First we need to define an interface that
+// inherits all the handlers that our program requires.
+
+type IHandler =
+  inherit IUnexpectedEndOfInput
+  inherit ILineTooLong
+
+// Now we can define a `program` that performs the `interaction` and also
+// catches the errors:
+
+let program () =
+  interaction ()
+  |> catch (fun zio ->
+    { new IHandler with
+        member _.UnexpectedEndOfInput() =
+          zio { return! writeLn "You gave me nothing!" }
+
+        member _.LineTooLong(max, actual) =
+          zio {
+            return!
+              writeLn (
+                sprintf
+                  "You gave me %d characters more than I asked!"
+                  (actual - max)
+              )
+          } })
+
+// What is the signature of `program`?
+//
+// Using `catch` allows handler constraints to be changed.  The old constraints
+// are dropped and the new constraints are based on the error handling
+// requirements of the handlers and following computation.  In this case the
+// following computation has no further error handling requirements and the
+// signature of `program`
+//
+//   val program:
+//     unit -> Zio<'r, 'h, unit> when 'r :> IWriteLn and 'r :> IReadLn
+//
+// shows that.
+
+// The next thing we need is to implement the environment.  We similarly need to
+// define the combined environment signature:
+
+type IEnv =
+  inherit IReadLn
+  inherit IWriteLn
+
+// And finally we can implement the environment
+
+let env =
+  { new IEnv with
+      member _.ReadLn() =
+        zio {
+          match System.Console.ReadLine() with
+          | null -> return None
+          | line -> return Some(line)
+        }
+
+      member _.WriteLn line = zio { System.Console.WriteLine line } }
+
+// and start our program
+
+do program () |> startIn env
+
+// This is, of course, just a sketch and a toy program, but, who knows, maybe
+// you found some inspiration from this.

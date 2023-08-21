@@ -1,0 +1,51 @@
+module Day5
+
+open System.IO
+open System.Text.RegularExpressions
+
+type Coordinate = { x : int32; y : int32}
+type Line = { start : Coordinate; finish : Coordinate }
+
+let line_coordinates line = 
+    let x_inc = 
+        match line.start.x, line.finish.x with 
+        | x1, x2 when x1 < x2 -> 1
+        | x1, x2 when x1 > x2 -> -1
+        | _ -> 0
+    let y_inc = 
+        match line.start.y, line.finish.y with 
+        | x1, x2 when x1 < x2 -> 1
+        | x1, x2 when x1 > x2 -> -1
+        | _ -> 0
+    let count = 
+        [   System.Math.Abs(line.start.x - line.finish.x);
+            System.Math.Abs(line.start.y - line.finish.y) ] 
+        |> List.max
+    [|0..count|] |> Array.map( fun i -> { x = line.start.x + x_inc*i; y = line.start.y + y_inc*i })
+
+let parse input =
+    let m = Regex.Match(input, "(\\d+),(\\d+) -> (\\d+),(\\d+)")
+    if (m.Success) then 
+        { start = { x = int32 m.Groups.[1].Value; y = int32 m.Groups.[2].Value }
+          finish = { x = int32 m.Groups.[3].Value; y = int32 m.Groups.[4].Value } } 
+    else 
+        failwithf "unexpected input %s" input
+
+let partOne () = 
+    File.ReadAllLines "inputs/day5.txt" 
+        |> Array.map parse
+        |> Array.where (fun line -> line.start.x = line.finish.x || line.start.y = line.finish.y)
+        |> Array.collect line_coordinates
+        |> Array.groupBy id
+        |> Array.where (fun (coordinate, coordinate_instances) -> coordinate_instances |> Array.length > 1)
+        |> Array.length
+// 8060
+
+let partTwo () = 
+    File.ReadAllLines "inputs/day5.txt" 
+        |> Array.map parse
+        |> Array.collect line_coordinates
+        |> Array.groupBy id
+        |> Array.where (fun (c, cs) -> cs.Length > 1)
+        |> Array.length
+// 21577

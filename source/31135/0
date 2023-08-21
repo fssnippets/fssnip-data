@@ -1,0 +1,70 @@
+open System
+
+type SpanReader<'T, 'TState, 'TRet> = delegate of span: Span<'T> * state: byref<'TState> -> 'TRet
+
+[<Struct; NoComparison; NoEquality>]
+type StringAllocatorState<'TCtx> = 
+    {
+        mutable Position: int
+        Ctx: 'TCtx
+    }
+
+type StringAllocatorReader<'TCtx, 'TRet> = SpanReader<char, StringAllocatorState<'TCtx>, 'TRet>
+
+let inline getContext() =
+    StringAllocatorReader(fun _ state -> state.Ctx)
+
+type StringAllocator() =  
+    member inline this.Zero() = StringAllocatorReader(fun _ _ -> ())
+    
+    member inline _.Combine(
+        [<InlineIfLambda>] f: StringAllocatorReader<'TCtx, unit>, 
+        [<InlineIfLambda>] g: StringAllocatorReader<'TCtx, unit>) =
+        StringAllocatorReader(fun chars state -> 
+            f.Invoke(chars, &state)
+            g.Invoke(chars, &state))
+    
+    member inline _.Delay(
+        [<InlineIfLambda>] f: unit -> StringAllocatorReader<'TCtx, unit>) = 
+        StringAllocatorReader(fun chars state -> (f()).Invoke(chars, &state))
+    
+    member inline _.Bind(
+        [<InlineIfLambda>] reader: StringAllocatorReader<'TCtx, 'TRet>,
+        [<InlineIfLambda>] cont: 'TRet -> StringAllocatorReader<'TCtx, unit>) =
+        StringAllocatorReader(fun chars state ->
+            let ret = reader.Invoke(chars, &state)
+            (cont ret).Invoke(chars, &state))
+    
+    member inline _.Yield(ch: char) = 
+        StringAllocatorReader(fun chars state -> 
+            chars[state.Position] <- ch; 
+            state.Position <- state.Position + 1)
+
+    member inline _.Yield(str: string) =
+        StringAllocatorReader(fun chars state -> 
+            str.AsSpan().CopyTo(chars.Slice(state.Position))
+            state.Position <- state.Position + str.Length)
+
+let stringAlloc = StringAllocator()
+
+let inline run 
+    (length: int)
+    (ctx: 'TCtx)
+    ([<InlineIfLambda>] action: StringAllocatorReader<'TCtx, unit>) =
+    String.Create(
+        length, 
+        ctx, 
+        System.Buffers.SpanAction(fun chars ctx -> 
+            let mutable state = { Position = 0; Ctx = ctx }
+            action.Invoke(chars, &state)))
+            
+let s = 
+    run 5 [| "ab"; "cd"; "e" |]
+        (stringAlloc {
+            let! xs = getContext()
+            yield xs[0]
+            yield xs[1]
+            yield xs[2]
+        })
+    
+Console.WriteLine(s)

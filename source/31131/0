@@ -1,0 +1,38 @@
+// Used to wrap errors that happen inside for loop body
+exception ForLoopException of exn * seq<obj>
+
+// Basic computation builder - the only clever logic is in "for"
+type AutoSeqBuilder() = 
+  member x.For(s:seq<'a>, f) =
+    use en = s.GetEnumerator() 
+    let rec loop() = 
+      if en.MoveNext() then
+        // If an exception happens during the evaluation of the body,
+        // capture it alognside with the unused part of the input sequence 
+        try f en.Current
+        with e ->
+          let rest = seq {
+            yield box en.Current 
+            while en.MoveNext() do yield box en.Current }
+          raise(ForLoopException(e, rest))
+        loop ()
+    loop()
+  member x.Zero() = ()
+  member x.Combine(a, b) = a; b()
+  member x.Delay(f) = f
+  member x.Run(f) = f()
+  member x.Return(v) = v
+  member x.TryWith(f, g) =
+    try f() with e -> g e
+
+let serr = AutoSeqBuilder()
+
+// Example - the exception handler can access the unused part of the sequence!
+serr { 
+  try 
+    for i in 0 .. 10 do
+      if i > 5 then failwith "Too much" 
+      printfn "Processing %d" i
+  with ForLoopException(e, rest) ->
+    for v in rest do
+      printfn "Failed or skipped %O" v }

@@ -1,0 +1,21 @@
+let gameBoard (columns: Nat , rows: Nat): GameBoard =
+ let board: Array <Array <Option <PlayerId >>> =
+  [| for i in 0N..( columns - 1N) do Array. zeroCreate (int rows) |]
+ { new GameBoard with
+  member self. NumColumns with get () =
+   columns
+  member self.NumRows with get () =
+   rows
+  member self.Field with get (column: Nat , row: Nat) =
+   board .[ int column ].[ int row]
+  member self.PutCoin (column: Nat , player: PlayerId): Unit =
+   if column >= columns then
+    raise ( IllegalMoveException "Illegal column id!")
+   match board .[ int column ].[ int rows - 1] with
+   | Some _ -> raise ( IllegalMoveException "Column is full!")
+   | None ->
+     let mutable i = 0
+     while (board .[ int column ].[i] <> None) do
+     i <- i + 1
+     board .[ int column ].[i] <- Some player
+}

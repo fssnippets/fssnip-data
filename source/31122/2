@@ -1,0 +1,91 @@
+namespace Shootout
+open System.Collections.Generic
+
+type Undefined = unit // denotes that a term is 'not defined in this document'.
+
+type Dialog = Undefined // a Gui Dialog
+type Button = Undefined // a Gui Button
+type Scene = Undefined // a Unity Scene
+type FTKInteractable = Undefined // an object that the FTKInteractor can interact with
+
+type NormCoreId = int // uniquely identifies something in NormCore. I think this is an int?
+
+type FTKFarGrabberState =
+    | Scanning
+    | Grabbing
+    | Attracting
+
+type FTKFarGrabber =
+    { State : FTKFarGrabberState }
+
+type FTKInteractor =
+    { State : Undefined // TODO: implement this as FTKInteractor state by refactoring FTKInteractor.
+      FarGrabber : FTKFarGrabber }
+
+type FTKPlayer =
+    { LeftInteractor : FTKInteractor
+      RightInteractor : FTKInteractor }
+
+type MatchEndDialog =
+    { PlayerStats : Dialog
+      CurrencyAndResultState : Dialog
+      Requeue : Button
+      Exit : Button }
+
+type MatchPopUpDialog =
+    | ComponentPurchasingUIState
+    | LeaderboardState
+    | MatchOptionsSettingsState
+    | QuickGameOptionsState
+    | PlayerStatsState
+    | NoPopUp
+
+type CoreShootout =
+    { FTKG : Undefined
+      FTKPlayer : FTKPlayer
+      FTKPlayers : Dictionary<NormCoreId, FTKPlayer>
+      FTKInteractables : Dictionary<NormCoreId, FTKInteractable>
+      NormCore : Undefined }
+
+type GameState = // TODO: rename this to MatchState.
+    | Lobby
+    | Preperation
+    | Started
+    | PeaceTime
+    | War
+    | End
+
+type GameManager = // TODO: rename this to MatchManager.
+    { GameState : GameState
+      CoreShootout : CoreShootout
+      GameMapOpt : Scene option }
+
+type MatchMode = // NOTE: doesn't exist in game yet.
+    | FreeForAllMode
+    | CaptureTheFlagMode
+    //| ... more modes
+
+type Match = // NOTE: doesn't exist in game yet.
+    { MatchMode : MatchMode
+      MatchPopUpDialog : MatchPopUpDialog
+      MatchEndDialog : MatchEndDialog }
+
+type Session = // NOTE: doesn't exist in game yet.
+    | MatchMaking
+    | Match of Match
+
+type MainMenu = // NOTE: doesn't exist in game yet.
+    | Session
+    | GameOptions
+    | CharacterCustomization
+    | Social
+    | Achievements
+    | Store
+
+type ShootoutState = // NOTE: doesn't exist in game yet.
+    | SplashState of Undefined
+    | TitleState of Undefined
+    | MainMenuState of MainMenu
+
+type Shootout = // NOTE: doesn't exist in game yet.
+    { State : ShootoutState }

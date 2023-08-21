@@ -1,0 +1,31 @@
+type tree<'a> =
+    | Leaf
+    | Branch of 'a * tree<'a> * tree<'a>
+
+// naive preorder: preordernaive t
+let rec preordernaive t =
+    match t with
+    | Leaf -> []
+    | Branch(v, l, r) -> [v] @ (preordernaive l) @ (preordernaive r)
+
+// with memoization (not tail recursive): preordermem (t, [])
+let rec preordermem (t, vs) =
+    match t with
+    | Leaf -> vs
+    | Branch (v, l, r) -> v :: preordermem (l, preordermem (r, vs))
+
+// with continuation (tail recursive): preordercps t id
+let rec preordercps t k =
+    match t with
+    | Leaf -> k []
+    | Branch (v, l, r) -> preordercps r (fun r -> k <| (preordercps l (fun l -> v :: l) @ r))
+
+// with continuation and defunctionalization: preorderdefun t ([], [])
+let rec preorderdefun t (k, vs) =
+    match t with
+    | Branch (v, l, _) -> preorderdefun l (t :: k, v :: vs)
+    | Leaf ->
+        match k with
+        | Branch (_, _, r) :: k' -> preorderdefun r (k', vs)
+        | Leaf :: _
+        | [] -> List.rev vs

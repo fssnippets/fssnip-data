@@ -1,0 +1,40 @@
+// this kind of debouncer is part of the awesome F# Fabulous Library
+// source: https://github.com/fsprojects/Fabulous/issues/161
+// but modified for use in F# Fable
+
+open System.Collections.Generic
+
+let debounce<'T> =
+    let mutable memoizations = Dictionary<string, int>(HashIdentity.Structural)
+
+    fun (timeout: int) (fn: 'T -> unit) value ->
+        let key = fn.ToString()
+        // Cancel previous debouncer
+        match memoizations.TryGetValue(key) with
+        | true, timeoutId -> Fable.Core.JS.clearTimeout timeoutId
+        | _ -> ()
+
+        // Create a new timeout and memoize it
+        let timeoutId = 
+            Fable.Core.JS.setTimeout 
+                (fun () -> 
+                    memoizations.Remove(key) |> ignore
+                    fn value
+                ) 
+                timeout
+        memoizations.[key] <- timeoutId
+
+open Fable.Core.JS
+open Fable.Core.JsInterop
+
+open Browser.Types
+
+let input:HTMLInputElement = Browser.Dom.document.createElement("input") :?> HTMLInputElement
+input.``type`` <- "text"
+input.oninput <- debounce 1250 (fun e -> console.log(e.target?value))
+Browser.Dom.document.body.appendChild(input) |> ignore
+
+let input2:HTMLInputElement = Browser.Dom.document.createElement("input") :?> HTMLInputElement
+input2.``type`` <- "text"
+input2.oninput <- debounce 1000 (fun e -> console.log(e.target?value))
+Browser.Dom.document.body.appendChild(input2) |> ignore

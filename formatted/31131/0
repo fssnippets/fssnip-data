@@ -1,0 +1,110 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+<span class="l">38: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">// Used to wrap errors that happen inside for loop body</span>
+<span class="k">exception</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="rt">ForLoopException</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="rt">exn</span> <span class="pn">*</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="if">seq</span><span class="pn">&lt;</span><span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="rt">obj</span><span class="pn">&gt;</span>
+
+<span class="c">// Basic computation builder - the only clever logic is in &quot;for&quot;</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="rt">AutoSeqBuilder</span><span class="pn">(</span><span class="pn">)</span> <span class="o">=</span> 
+  <span class="k">member</span> <span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="id">x</span><span class="pn">.</span><span class="fn">For</span><span class="pn">(</span><span onmouseout="hideTip(event, 'fs7', 7)" onmouseover="showTip(event, 'fs7', 7)" class="id">s</span><span class="pn">:</span><span onmouseout="hideTip(event, 'fs3', 8)" onmouseover="showTip(event, 'fs3', 8)" class="if">seq</span><span class="pn">&lt;</span><span class="ta">&#39;</span><span class="id">a</span><span class="pn">&gt;</span><span class="pn">,</span> <span onmouseout="hideTip(event, 'fs8', 9)" onmouseover="showTip(event, 'fs8', 9)" class="fn">f</span><span class="pn">)</span> <span class="o">=</span>
+    <span class="k">use</span> <span onmouseout="hideTip(event, 'fs9', 10)" onmouseover="showTip(event, 'fs9', 10)" class="id">en</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs7', 11)" onmouseover="showTip(event, 'fs7', 11)" class="fn">s</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs10', 12)" onmouseover="showTip(event, 'fs10', 12)" class="id">GetEnumerator</span><span class="pn">(</span><span class="pn">)</span> 
+    <span class="k">let</span> <span class="k">rec</span> <span onmouseout="hideTip(event, 'fs11', 13)" onmouseover="showTip(event, 'fs11', 13)" class="fn">loop</span><span class="pn">(</span><span class="pn">)</span> <span class="o">=</span> 
+      <span class="k">if</span> <span onmouseout="hideTip(event, 'fs9', 14)" onmouseover="showTip(event, 'fs9', 14)" class="fn">en</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs12', 15)" onmouseover="showTip(event, 'fs12', 15)" class="id">MoveNext</span><span class="pn">(</span><span class="pn">)</span> <span class="k">then</span>
+        <span class="c">// If an exception happens during the evaluation of the body,</span>
+        <span class="c">// capture it alognside with the unused part of the input sequence </span>
+        <span class="k">try</span> <span onmouseout="hideTip(event, 'fs8', 16)" onmouseover="showTip(event, 'fs8', 16)" class="fn">f</span> <span onmouseout="hideTip(event, 'fs9', 17)" onmouseover="showTip(event, 'fs9', 17)" class="id">en</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs13', 18)" onmouseover="showTip(event, 'fs13', 18)" class="id">Current</span>
+        <span class="k">with</span> <span onmouseout="hideTip(event, 'fs14', 19)" onmouseover="showTip(event, 'fs14', 19)" class="id">e</span> <span class="k">-&gt;</span>
+          <span class="k">let</span> <span onmouseout="hideTip(event, 'fs15', 20)" onmouseover="showTip(event, 'fs15', 20)" class="id">rest</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs3', 21)" onmouseover="showTip(event, 'fs3', 21)" class="k">seq</span> <span class="pn">{</span>
+            <span class="k">yield</span> <span onmouseout="hideTip(event, 'fs16', 22)" onmouseover="showTip(event, 'fs16', 22)" class="fn">box</span> <span onmouseout="hideTip(event, 'fs9', 23)" onmouseover="showTip(event, 'fs9', 23)" class="id">en</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs13', 24)" onmouseover="showTip(event, 'fs13', 24)" class="id">Current</span> 
+            <span class="k">while</span> <span onmouseout="hideTip(event, 'fs9', 25)" onmouseover="showTip(event, 'fs9', 25)" class="fn">en</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs12', 26)" onmouseover="showTip(event, 'fs12', 26)" class="id">MoveNext</span><span class="pn">(</span><span class="pn">)</span> <span class="k">do</span> <span class="k">yield</span> <span onmouseout="hideTip(event, 'fs16', 27)" onmouseover="showTip(event, 'fs16', 27)" class="fn">box</span> <span onmouseout="hideTip(event, 'fs9', 28)" onmouseover="showTip(event, 'fs9', 28)" class="id">en</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs13', 29)" onmouseover="showTip(event, 'fs13', 29)" class="id">Current</span> <span class="pn">}</span>
+          <span onmouseout="hideTip(event, 'fs17', 30)" onmouseover="showTip(event, 'fs17', 30)" class="k">raise</span><span class="pn">(</span><span onmouseout="hideTip(event, 'fs1', 31)" onmouseover="showTip(event, 'fs1', 31)" class="rt">ForLoopException</span><span class="pn">(</span><span onmouseout="hideTip(event, 'fs14', 32)" onmouseover="showTip(event, 'fs14', 32)" class="id">e</span><span class="pn">,</span> <span onmouseout="hideTip(event, 'fs15', 33)" onmouseover="showTip(event, 'fs15', 33)" class="id">rest</span><span class="pn">)</span><span class="pn">)</span>
+        <span onmouseout="hideTip(event, 'fs11', 34)" onmouseover="showTip(event, 'fs11', 34)" class="fn">loop</span> <span class="pn">(</span><span class="pn">)</span>
+    <span onmouseout="hideTip(event, 'fs11', 35)" onmouseover="showTip(event, 'fs11', 35)" class="fn">loop</span><span class="pn">(</span><span class="pn">)</span>
+  <span class="k">member</span> <span onmouseout="hideTip(event, 'fs6', 36)" onmouseover="showTip(event, 'fs6', 36)" class="id">x</span><span class="pn">.</span><span class="fn">Zero</span><span class="pn">(</span><span class="pn">)</span> <span class="o">=</span> <span class="pn">(</span><span class="pn">)</span>
+  <span class="k">member</span> <span onmouseout="hideTip(event, 'fs6', 37)" onmouseover="showTip(event, 'fs6', 37)" class="id">x</span><span class="pn">.</span><span class="fn">Combine</span><span class="pn">(</span><span onmouseout="hideTip(event, 'fs18', 38)" onmouseover="showTip(event, 'fs18', 38)" class="id">a</span><span class="pn">,</span> <span onmouseout="hideTip(event, 'fs19', 39)" onmouseover="showTip(event, 'fs19', 39)" class="fn">b</span><span class="pn">)</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs18', 40)" onmouseover="showTip(event, 'fs18', 40)" class="id">a</span><span class="pn">;</span> <span onmouseout="hideTip(event, 'fs19', 41)" onmouseover="showTip(event, 'fs19', 41)" class="fn">b</span><span class="pn">(</span><span class="pn">)</span>
+  <span class="k">member</span> <span onmouseout="hideTip(event, 'fs6', 42)" onmouseover="showTip(event, 'fs6', 42)" class="id">x</span><span class="pn">.</span><span class="fn">Delay</span><span class="pn">(</span><span onmouseout="hideTip(event, 'fs20', 43)" onmouseover="showTip(event, 'fs20', 43)" class="id">f</span><span class="pn">)</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs20', 44)" onmouseover="showTip(event, 'fs20', 44)" class="id">f</span>
+  <span class="k">member</span> <span onmouseout="hideTip(event, 'fs6', 45)" onmouseover="showTip(event, 'fs6', 45)" class="id">x</span><span class="pn">.</span><span class="fn">Run</span><span class="pn">(</span><span onmouseout="hideTip(event, 'fs21', 46)" onmouseover="showTip(event, 'fs21', 46)" class="fn">f</span><span class="pn">)</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs21', 47)" onmouseover="showTip(event, 'fs21', 47)" class="fn">f</span><span class="pn">(</span><span class="pn">)</span>
+  <span class="k">member</span> <span onmouseout="hideTip(event, 'fs6', 48)" onmouseover="showTip(event, 'fs6', 48)" class="id">x</span><span class="pn">.</span><span class="fn">Return</span><span class="pn">(</span><span onmouseout="hideTip(event, 'fs22', 49)" onmouseover="showTip(event, 'fs22', 49)" class="id">v</span><span class="pn">)</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs22', 50)" onmouseover="showTip(event, 'fs22', 50)" class="id">v</span>
+  <span class="k">member</span> <span onmouseout="hideTip(event, 'fs6', 51)" onmouseover="showTip(event, 'fs6', 51)" class="id">x</span><span class="pn">.</span><span class="fn">TryWith</span><span class="pn">(</span><span onmouseout="hideTip(event, 'fs23', 52)" onmouseover="showTip(event, 'fs23', 52)" class="fn">f</span><span class="pn">,</span> <span onmouseout="hideTip(event, 'fs24', 53)" onmouseover="showTip(event, 'fs24', 53)" class="fn">g</span><span class="pn">)</span> <span class="o">=</span>
+    <span class="k">try</span> <span onmouseout="hideTip(event, 'fs23', 54)" onmouseover="showTip(event, 'fs23', 54)" class="fn">f</span><span class="pn">(</span><span class="pn">)</span> <span class="k">with</span> <span onmouseout="hideTip(event, 'fs14', 55)" onmouseover="showTip(event, 'fs14', 55)" class="id">e</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs24', 56)" onmouseover="showTip(event, 'fs24', 56)" class="fn">g</span> <span onmouseout="hideTip(event, 'fs14', 57)" onmouseover="showTip(event, 'fs14', 57)" class="id">e</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs25', 58)" onmouseover="showTip(event, 'fs25', 58)" class="id">serr</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs5', 59)" onmouseover="showTip(event, 'fs5', 59)" class="rt">AutoSeqBuilder</span><span class="pn">(</span><span class="pn">)</span>
+
+<span class="c">// Example - the exception handler can access the unused part of the sequence!</span>
+<span onmouseout="hideTip(event, 'fs25', 60)" onmouseover="showTip(event, 'fs25', 60)" class="k">serr</span> <span class="pn">{</span> 
+  <span class="k">try</span> 
+    <span class="k">for</span> <span onmouseout="hideTip(event, 'fs26', 61)" onmouseover="showTip(event, 'fs26', 61)" class="id">i</span> <span class="k">in</span> <span class="n">0</span> <span class="o">..</span> <span class="n">10</span> <span class="k">do</span>
+      <span class="k">if</span> <span onmouseout="hideTip(event, 'fs26', 62)" onmouseover="showTip(event, 'fs26', 62)" class="id">i</span> <span class="o">&gt;</span> <span class="n">5</span> <span class="k">then</span> <span onmouseout="hideTip(event, 'fs27', 63)" onmouseover="showTip(event, 'fs27', 63)" class="fn">failwith</span> <span class="s">&quot;Too much&quot;</span> 
+      <span onmouseout="hideTip(event, 'fs28', 64)" onmouseover="showTip(event, 'fs28', 64)" class="fn">printfn</span> <span class="s">&quot;Processing </span><span class="pf">%d</span><span class="s">&quot;</span> <span onmouseout="hideTip(event, 'fs26', 65)" onmouseover="showTip(event, 'fs26', 65)" class="id">i</span>
+  <span class="k">with</span> <span onmouseout="hideTip(event, 'fs1', 66)" onmouseover="showTip(event, 'fs1', 66)" class="rt">ForLoopException</span><span class="pn">(</span><span onmouseout="hideTip(event, 'fs14', 67)" onmouseover="showTip(event, 'fs14', 67)" class="id">e</span><span class="pn">,</span> <span onmouseout="hideTip(event, 'fs15', 68)" onmouseover="showTip(event, 'fs15', 68)" class="id">rest</span><span class="pn">)</span> <span class="k">-&gt;</span>
+    <span class="k">for</span> <span onmouseout="hideTip(event, 'fs29', 69)" onmouseover="showTip(event, 'fs29', 69)" class="id">v</span> <span class="k">in</span> <span onmouseout="hideTip(event, 'fs15', 70)" onmouseover="showTip(event, 'fs15', 70)" class="id">rest</span> <span class="k">do</span>
+      <span onmouseout="hideTip(event, 'fs28', 71)" onmouseover="showTip(event, 'fs28', 71)" class="fn">printfn</span> <span class="s">&quot;Failed or skipped </span><span class="pf">%O</span><span class="s">&quot;</span> <span onmouseout="hideTip(event, 'fs29', 72)" onmouseover="showTip(event, 'fs29', 72)" class="id">v</span> <span class="pn">}</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">exception ForLoopException of exn * seq&lt;obj&gt;</div>
+<div class="tip" id="fs2">type exn = System.Exception</div>
+<div class="tip" id="fs3">Multiple items<br />val seq : sequence:seq&lt;&#39;T&gt; -&gt; seq&lt;&#39;T&gt;<br /><br />--------------------<br />type seq&lt;&#39;T&gt; = System.Collections.Generic.IEnumerable&lt;&#39;T&gt;</div>
+<div class="tip" id="fs4">type obj = System.Object</div>
+<div class="tip" id="fs5">Multiple items<br />type AutoSeqBuilder =<br />&#160;&#160;new : unit -&gt; AutoSeqBuilder<br />&#160;&#160;member Combine : a:unit * b:(unit -&gt; &#39;e) -&gt; &#39;e<br />&#160;&#160;member Delay : f:&#39;d -&gt; &#39;d<br />&#160;&#160;member For : s:seq&lt;&#39;a&gt; * f:(&#39;a -&gt; unit) -&gt; unit<br />&#160;&#160;member Return : v:&#39;b -&gt; &#39;b<br />&#160;&#160;member Run : f:(unit -&gt; &#39;c) -&gt; &#39;c<br />&#160;&#160;member TryWith : f:(unit -&gt; &#39;a) * g:(exn -&gt; &#39;a) -&gt; &#39;a<br />&#160;&#160;member Zero : unit -&gt; unit<br /><br />--------------------<br />new : unit -&gt; AutoSeqBuilder</div>
+<div class="tip" id="fs6">val x : AutoSeqBuilder</div>
+<div class="tip" id="fs7">val s : seq&lt;&#39;a&gt;</div>
+<div class="tip" id="fs8">val f : (&#39;a -&gt; unit)</div>
+<div class="tip" id="fs9">val en : System.Collections.Generic.IEnumerator&lt;&#39;a&gt;</div>
+<div class="tip" id="fs10">System.Collections.Generic.IEnumerable.GetEnumerator() : System.Collections.Generic.IEnumerator&lt;&#39;a&gt;</div>
+<div class="tip" id="fs11">val loop : (unit -&gt; unit)</div>
+<div class="tip" id="fs12">System.Collections.IEnumerator.MoveNext() : bool</div>
+<div class="tip" id="fs13">property System.Collections.Generic.IEnumerator.Current: &#39;a with get</div>
+<div class="tip" id="fs14">val e : exn</div>
+<div class="tip" id="fs15">val rest : seq&lt;obj&gt;</div>
+<div class="tip" id="fs16">val box : value:&#39;T -&gt; obj</div>
+<div class="tip" id="fs17">val raise : exn:System.Exception -&gt; &#39;T</div>
+<div class="tip" id="fs18">val a : unit</div>
+<div class="tip" id="fs19">val b : (unit -&gt; &#39;e)</div>
+<div class="tip" id="fs20">val f : &#39;d</div>
+<div class="tip" id="fs21">val f : (unit -&gt; &#39;c)</div>
+<div class="tip" id="fs22">val v : &#39;b</div>
+<div class="tip" id="fs23">val f : (unit -&gt; &#39;a)</div>
+<div class="tip" id="fs24">val g : (exn -&gt; &#39;a)</div>
+<div class="tip" id="fs25">val serr : AutoSeqBuilder</div>
+<div class="tip" id="fs26">val i : int</div>
+<div class="tip" id="fs27">val failwith : message:string -&gt; &#39;T</div>
+<div class="tip" id="fs28">val printfn : format:Printf.TextWriterFormat&lt;&#39;T&gt; -&gt; &#39;T</div>
+<div class="tip" id="fs29">val v : obj</div>
+

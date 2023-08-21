@@ -1,0 +1,131 @@
+namespace Shootout
+open System.Collections.Generic
+open System.Numerics
+
+[<AutoOpen>]
+module Prelude =
+
+    type Undefined = unit // denotes that a term is 'not defined in this document', usually for brevity.
+    type RealtimeId = int // uniquely identifies something in NormCore. I think this is an int?
+    type Dialog = Undefined // a gui dialog
+
+[<AutoOpen>]
+module Interaction =
+
+    type FTKInteractable = Undefined // an object that the FTKInteractor can interact with
+
+    type FTKFarGrabberState = Scanning of Undefined | Grabbing of Undefined | Attracting of Undefined
+    
+    type FTKFarGrabber =
+        { State : FTKFarGrabberState }
+    
+    type FTKInteractor =
+        { State : Undefined // TODO: define this as FTKInteractorState by refactoring FTKInteractor.
+          FarGrabber : FTKFarGrabber }
+
+    type FTKPlayer =
+        { LeftInteractor : FTKInteractor
+          RightInteractor : FTKInteractor }
+
+    type CoreShootout =
+        { FTKG : Undefined // TODO: give this a definition.
+          FTKPlayer : FTKPlayer
+          FTKPlayers : Dictionary<RealtimeId, FTKPlayer>
+          FTKInteractables : Dictionary<RealtimeId, FTKInteractable>
+          NormCore : Undefined }
+
+[<AutoOpen>]
+module Match =
+
+    type AdventType = Kill | Assist | HealAlly | Defuse
+    type Advents = Dictionary<RealtimeId, Dictionary<AdventType, RealtimeId * int>>
+    type MatchState = Lobby | Preperation | Started | PeaceTime | War | End // NOTE: renamed from GameState.
+    type MatchPopUpDialog =
+        | ComponentPurchasingUIState | LeaderboardState | MatchOptionsSettingsState
+        | QuickGameOptionsState | PlayerStatsState | Hidden
+    type MatchEndDialog = PlayerStats | CurrencyAndResultState
+
+    type FreeForAllMode =
+        { Advents : Advents
+          MatchState : MatchState
+          MatchPopUpDialog : MatchPopUpDialog
+          MatchEndDialog : MatchEndDialog }
+
+    type CaptureTheFlagMode =
+        { Advents : Advents
+          MatchState : MatchState
+          MatchPopUpDialog : MatchPopUpDialog
+          MatchEndDialog : MatchEndDialog }
+
+    type MatchMode = // NOTE: doesn't exist in game yet.
+        | FreeForAllMode of FreeForAllMode
+        | CaptureTheFlagMode of CaptureTheFlagMode
+        //| ... more modes
+
+[<AutoOpen>]
+module Scene =
+
+    type Realtime = Undefined // normcore scene synchronization component
+    type RealtimeAvatarManager = Undefined
+    type MatchManagerSyncComponent = Undefined // NOTE: renamed from GameManagerSyncComponent.
+    type SceneLoadManager = Undefined
+    type MFTKItemSpawnManager = Undefined
+    type UIManager = Undefined
+    type SoundManager = Undefined
+    type ScreenFader = Undefined
+    type Timer = Undefined // not real sure what this is for...?
+
+    type Team = TeamA | TeamB | TeamC | TeamD | TeamNeutral
+
+    type Dispenser =
+        | CurrencyBased of Vector3
+        | Random of Vector3
+        | RareRandom of Vector3
+
+    type SceneManager =
+        { SpawnPoints : Dictionary<Team, Vector3 list>
+          Dispensers : Dispenser list
+          Bases : Dictionary<Team, Vector3 list> }
+
+    type ShootoutG =
+        { SceneLoader : SceneLoadManager
+          SceneManager : SceneManager
+          ItemSpawnManager : MFTKItemSpawnManager
+          UIManager : UIManager // TODO: can we move this to MatchManager?
+          SoundManger : SoundManager }
+
+    type Scene =
+        { SceneManager : SceneManager }
+
+    type MatchManager = // NOTE: renamed from GameManager.
+        { Realtime : Realtime
+          RealtimeAvatarManager : RealtimeAvatarManager
+          MatchManagerSyncComponent : MatchManagerSyncComponent
+          MatchMode : MatchMode
+          CoreShootout : CoreShootout
+          ScreenFader : ScreenFader
+          Timer : Timer
+          Map : Scene }
+
+[<AutoOpen>]
+module TopLevel =
+
+    type Session = // NOTE: doesn't exist in game yet.
+        | MatchMaking of Undefined
+        | MatchManager of MatchManager
+
+    type MainMenu = // NOTE: doesn't exist in game yet.
+        | Session of Session
+        | GameOptions of Undefined
+        | CharacterCustomization of Undefined
+        | Social of Undefined
+        | Achievements of Undefined
+        | Store of Undefined
+
+    type ShootoutState = // NOTE: doesn't exist in game yet.
+        | SplashState of Undefined
+        | TitleState of Undefined
+        | MainMenuState of MainMenu
+
+    type Shootout = // NOTE: doesn't exist in game yet.
+        { State : ShootoutState }

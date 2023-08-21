@@ -1,0 +1,43 @@
+open System.Collections.Generic
+open System.Runtime.CompilerServices
+
+type Folder<'State, 'T> = 'State -> 'T -> 'State
+type FoldParams<'State, 'T> = Folder<'State, 'T> * 'State
+type FoldStep<'State, 'T> = ('State -> 'T -> 'State) -> 'State -> 'State
+
+[<Extension>]
+type Ext =
+    [<Extension>]
+    static member Zero(_: FoldParams<'State, 'T>): FoldStep<'State, 'T> = 
+        fun _ state -> state
+    
+    [<Extension>]
+    static member inline Combine(
+        (folder: Folder<'State, 'T>, _: 'State),
+        [<InlineIfLambda>] f: FoldStep<'State, 'T>, 
+        [<InlineIfLambda>] g: FoldStep<'State, 'T>)
+        : FoldStep<'State, 'T> =
+        fun folder state -> g folder (f folder state)
+    
+    [<Extension>]
+    static member inline Delay(
+        _: FoldParams<'State, 'T>,
+        [<InlineIfLambda>] f: unit -> FoldStep<'State, 'T>) = 
+        f()
+    
+    [<Extension>]
+    static member inline Yield(
+        (folder: Folder<'State, 'T>, _: 'State),
+        value: 'T)
+        : FoldStep<'State, 'T> = 
+        fun folder state -> folder state value
+    
+    [<Extension>]
+    static member inline Run(
+        (folder: Folder<'State, 'T>, initialState: 'State),
+        f: FoldStep<'State, 'T>) =
+        f folder initialState
+
+let fold' folder initialState = (folder, initialState)
+let f = fold' (+) 0 { 1; 2; 3; 4; 5 }
+printfn "%d" f

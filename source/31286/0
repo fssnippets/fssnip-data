@@ -1,0 +1,22 @@
+module RobotSimulator
+
+type Direction = North | East | South | West
+type Position = int * int
+type Robot = { direction: Direction; position: Position }
+
+let create direction position = { direction = direction; position = position }
+
+let (|Dir2vec|) = function North -> 0,1 | East -> 1,0 | South -> 0,-1 | West -> -1,0
+let vec2dir = function (0,1) -> North | (1,0) -> East | (0,-1) -> South | (-1,0) -> West
+                     | x -> failwithf "Unknown direction vector %A" x 
+
+let move instructions robot = 
+    Seq.fold 
+        (fun { direction = Dir2vec (dx, dy); position = (x,y) } ->
+            function
+            | 'R' -> { direction = vec2dir (dy, - dx); position = (x,y) }
+            | 'L' -> { direction = vec2dir (- dy, dx); position = (x,y) }
+            | 'A' -> { direction = vec2dir (dx, dy)  ; position = (x + dx, y + dy) } 
+            | c   -> failwithf "Unknown instruction: %A" c)
+        robot 
+        instructions 

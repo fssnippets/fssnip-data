@@ -1,0 +1,206 @@
+// v8
+module TiraxTech.Foundation
+
+open System.Threading.Tasks
+
+let inline sideEffect ([<InlineIfLambda>] f) x = (f x); x
+
+let inline flip f a b = f b a
+let inline constant x = fun _ -> x
+
+let inline cast<'t> (x :obj) = x :?> 't
+let inline tryCast<'a> (x:obj) =
+    match x with
+    | :? 'a as s -> Some s
+    | _ -> None
+
+type System.Object with
+  member inline o.cast<'T>() = o |> cast<'T>
+  member inline o.tryCast<'T>() = o |> tryCast<'T>
+
+module Itor =
+  open System.Collections.Generic
+  let fold :('b -> 'a -> 'b) -> 'b -> IEnumerator<'a> -> 'b = fun reducer init itor ->
+    if itor.MoveNext() then
+      let mutable v = init
+      while itor.MoveNext() do
+        v <- reducer v itor.Current
+      v
+    else
+      init
+
+module Seq =
+  open System.Collections.Generic
+  let fromIterator :IEnumerator<'a> -> 'a seq = fun itor ->
+    seq {
+      while itor.MoveNext() do
+        yield itor.Current
+    }
+
+  let tryMin :'a seq -> 'a option = fun ss ->
+    let itor = ss.GetEnumerator()
+    if itor.MoveNext() then
+      Some (itor |> Itor.fold min itor.Current)
+    else
+      None
+  let tryMax :'a seq -> 'a option = fun s ->
+    let itor = s.GetEnumerator()
+    if itor.MoveNext() then
+      Some (itor |> Itor.fold max itor.Current)
+    else
+      None
+
+module Option =
+  let inline then' ([<InlineIfLambda>] fsome) ([<InlineIfLambda>] fnone) = function
+  | Some x -> fsome x
+  | None -> fnone()
+
+  let inline filter ([<InlineIfLambda>] predicate) = then' (fun v -> if predicate v then Some v else None) (constant None)
+  
+  let inline getOrDefault def = function
+  | Some x -> x
+  | None -> def
+    
+  let inline getOrElse ([<InlineIfLambda>] def) = function
+  | Some x -> x
+  | None -> def()
+
+  let join = function
+  | None -> None
+  | Some x -> x
+
+  let inline do' ([<InlineIfLambda>] fsome) = then' fsome id
+  let inline orTry ([<InlineIfLambda>] fnone: unit -> 'a option) = function
+  | None -> fnone()
+  | x -> x
+
+  let inline ap other = function
+  | None -> None
+  | Some f -> other |> Option.map f
+
+  let inline call x = function
+  | None -> None
+  | Some f -> Some (f x)
+    
+  let inline mapTask (f: 'a -> Task<'b>) = function
+  | Some x -> task {
+                let! result = f x
+                return Some result
+              }
+  | None -> Task.FromResult None
+    
+  let inline bindTask ([<InlineIfLambda>] f: 'a -> Task<'b option>) = function
+  | Some x -> f x
+  | None -> Task.FromResult None
+    
+  let inline mapAsync (f: 'a -> Async<'b>) = function
+  | Some x -> async {
+                let! result = f x
+                return Some result
+              }
+  | None -> async { return None }
+    
+  let inline bindAsync ([<InlineIfLambda>] f: 'a -> Async<'b option>) = function
+  | Some x -> f x
+  | None -> async { return None }
+
+
+open System.Runtime.CompilerServices
+[<Extension>]
+type OptionExtension =
+  [<Extension>] static member inline ap(x: Option<'a -> 'b>, other) = x |> Option.ap other
+  [<Extension>] static member inline call(x: Option<'a -> 'b>, p) = x |> Option.call p
+  [<Extension>] static member inline join(x: 'a option option) = x |> Option.join
+  
+type Option<'a> with
+  member inline x.do'([<InlineIfLambda>] fsome) = x |> Option.do' fsome
+  member inline x.then' ([<InlineIfLambda>] fsome) ([<InlineIfLambda>] fnone) = x |> Option.then' fsome fnone
+  member inline x.filter([<InlineIfLambda>] predicate) = x |> Option.filter predicate
+  member inline x.get() = Option.get x
+  member inline x.getOrDefault(def) = x |> Option.getOrDefault def
+  member inline x.getOrElse([<InlineIfLambda>] f) = x |> Option.getOrElse f
+  member inline x.orTry([<InlineIfLambda>] fnone) = x |> Option.orTry fnone
+  member inline x.defaultWith ([<InlineIfLambda>] v) = x |> Option.defaultWith v
+  member inline x.bind ([<InlineIfLambda>] y) = x |> Option.bind y
+  member inline x.map ([<InlineIfLambda>] f) = x |> Option.map f
+  member inline x.mapTask ([<InlineIfLambda>] f) = x |> Option.mapTask f
+  member inline x.bindTask ([<InlineIfLambda>] f) = x |> Option.bindTask f
+  member inline x.mapAsync ([<InlineIfLambda>] f) = x |> Option.mapAsync f
+  member inline x.bindAsync ([<InlineIfLambda>] f) = x |> Option.bindAsync f
+  
+module Result =
+  let inline get ([<InlineIfLambda>] right) ([<InlineIfLambda>] wrong) = function
+  | Ok y -> right y
+  | Error x -> wrong x
+    
+  let inline mapAll ([<InlineIfLambda>] fright) ([<InlineIfLambda>] fwrong) = get (Ok << fright) (Error << fwrong)
+  let inline ap other ([<InlineIfLambda>] fwrong) = get (fun f -> other |> Result.map f) (Error << fwrong)
+  let inline isError x = x |> get (constant false) (constant true)
+  let inline isOk x = x |> get (constant true) (constant false)
+  let inline join r = r |> get id Error
+  let inline bindAll ([<InlineIfLambda>] f: 'a -> Result<'c,'d>) ([<InlineIfLambda>] fwrong: 'b -> Result<'c,'d>) = get f fwrong
+  let inline getOrDefault def = get id (constant def)
+  let inline getOrElse ([<InlineIfLambda>] def) = get id def
+  
+  let inline mapTask ([<InlineIfLambda>] f: 'a -> Task<'c>) ([<InlineIfLambda>] fwrong: 'b -> 'd) = function
+  | Ok x -> task {
+              let! result = f x
+              return Ok result
+            }
+  | Error y -> Task.FromResult <| Error (fwrong y)
+
+  let inline bindTask ([<InlineIfLambda>] f: 'a -> Task<Result<'c,'d>>) ([<InlineIfLambda>] fwrong: 'b -> 'd) = function
+  | Ok x -> f x
+  | Error y -> Task.FromResult <| Error (fwrong y)
+  
+  let inline mapAsync ([<InlineIfLambda>] f: 'a -> Async<'c>) ([<InlineIfLambda>] fwrong: 'b -> 'd) = function
+  | Ok x -> async {
+              let! result = f x
+              return Ok result
+            }
+  | Error y -> async { return Error (fwrong y) }
+
+  let inline bindAsync ([<InlineIfLambda>] f: 'a -> Async<Result<'c,'d>>) ([<InlineIfLambda>] fwrong: 'b -> 'd) = function
+  | Ok x -> f x
+  | Error y -> async { return Error (fwrong y) }
+
+
+type ResultBuilder() =
+  member inline _.Bind(x: Result<'a,'b>, f: 'a -> Result<'c,'b>) = Result.bind f x
+  member inline _.Return(v: 'c) = Ok v 
+  member inline _.ReturnFrom(v: Result<'a,'b>) = v
+  member inline _.Using(v: 'a, f: 'a -> Result<'b,'c>) :Result<'b,'c> = f v
+  member inline _.Delay(f: unit -> Result<'a,'b>) = f
+  member inline _.Run(f: unit -> Result<'a,'b>) = f()
+  member inline _.TryWith(f: unit -> Result<'a,'b>, catch: exn -> Result<'a,'b>) = 
+    try
+      f()
+    with
+    | e -> catch e
+
+let result = ResultBuilder()
+
+
+// from http://stackoverflow.com/questions/3363184/f-how-to-elegantly-select-and-group-discriminated-unions/11798829#11798829
+// let isUnionCase (c : Expr<_ -> 'T>)  = 
+//   match c with
+//   | Lambda (_, NewUnionCase(uci, _)) ->
+//       let tagReader = Microsoft.FSharp.Reflection.FSharpValue.PreComputeUnionTagReader(uci.DeclaringType)
+//       fun (v : 'T) -> (tagReader v) = uci.Tag
+//   | _ -> failwith "Invalid expression"
+
+/// memoizeWithKey: ('input -> 'key) -> ('input -> 'output) -> ('input -> 'output)
+let memoizeWithKey (keyGetter: 'input -> 'key) (f: 'input -> 'output) =
+  let dict = System.Collections.Concurrent.ConcurrentDictionary<'key,'output>()
+
+  let memoizedFunc input =
+    let key = keyGetter input
+    match dict.TryGetValue key with
+    | true, x -> x
+    | false, _ ->
+      let answer = f input
+      dict.TryAdd(key, answer) |> ignore
+      answer
+  memoizedFunc
+
+let memoize (f: 'a -> 'b) = memoizeWithKey id f

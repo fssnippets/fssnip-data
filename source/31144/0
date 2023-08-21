@@ -1,0 +1,26 @@
+#r "nuget:PgpCore"
+open System.IO
+use pgp = new PgpCore.PGP()
+
+// Generate keys
+pgp.GenerateKey(@"C:\TEMP\keys\public.asc", @"C:\TEMP\keys\private.asc", "email@email.com", "password")
+// Encrypt file
+pgp.EncryptFile(@"C:\TEMP\keys\content.txt", @"C:\TEMP\keys\content__encrypted.pgp", @"C:\TEMP\keys\public.asc", true, true)
+// Encrypt and sign file
+pgp.EncryptFileAndSign(@"C:\TEMP\keys\content.txt", @"C:\TEMP\keys\content__encrypted_signed.pgp", @"C:\TEMP\keys\public.asc", @"C:\TEMP\keys\private.asc", "password", true, true)
+// Decrypt file
+pgp.DecryptFile(@"C:\TEMP\keys\content__encrypted.pgp", @"C:\TEMP\keys\content__decrypted.txt", @"C:\TEMP\keys\private.asc", "password")
+// Decrypt signed file
+pgp.DecryptFile(@"C:\TEMP\keys\content__encrypted_signed.pgp", @"C:\TEMP\keys\content__decrypted_signed.txt", @"C:\TEMP\keys\private.asc", "password")
+
+// Encrypt stream
+use inputFileStream = new FileStream(@"C:\TEMP\keys\content.txt", FileMode.Open)
+use outputFileStream = File.Create(@"C:\TEMP\keys\content__encrypted2.pgp")
+use publicKeyStream = new FileStream(@"C:\TEMP\keys\public.asc", FileMode.Open)
+pgp.EncryptStream(inputFileStream, outputFileStream, publicKeyStream, true, true)
+
+// Decrypt stream
+use inputFileStream = new FileStream(@"C:\TEMP\keys\content__encrypted2.pgp", FileMode.Open)
+use outputFileStream = File.Create(@"C:\TEMP\keys\content__decrypted2.txt")
+use privateKeyStream = new FileStream(@"C:\TEMP\keys\private.asc", FileMode.Open)
+let _ = pgp.DecryptStream(inputFileStream, outputFileStream, privateKeyStream, "password")
