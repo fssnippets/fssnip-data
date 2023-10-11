@@ -1,0 +1,86 @@
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+<span class="l">20: </span>
+<span class="l">21: </span>
+<span class="l">22: </span>
+<span class="l">23: </span>
+<span class="l">24: </span>
+<span class="l">25: </span>
+<span class="l">26: </span>
+<span class="l">27: </span>
+<span class="l">28: </span>
+<span class="l">29: </span>
+<span class="l">30: </span>
+<span class="l">31: </span>
+<span class="l">32: </span>
+<span class="l">33: </span>
+<span class="l">34: </span>
+<span class="l">35: </span>
+<span class="l">36: </span>
+<span class="l">37: </span>
+<span class="l">38: </span>
+<span class="l">39: </span>
+<span class="l">40: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="m">#</span><span class="id">Following</span> <span class="id">code</span> <span class="id">is</span> <span class="id">plastic</span> <span class="id">fruit</span><span class="pn">;</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="id">not</span> <span class="id">t</span><span class="pn">[</span><span class="id">ae</span><span class="pn">]</span><span class="id">sted</span><span class="o">..</span><span class="pn">.</span>
+ 
+<span class="id">mmap</span> <span class="o">=</span> <span class="id">require</span> <span class="s">&quot;mmap-io&quot;</span>
+<span class="id">fs</span> <span class="o">=</span> <span class="id">require</span> <span class="s">&quot;fs&quot;</span>
+ 
+<span class="id">some</span><span class="o">-</span><span class="id">file</span> <span class="o">=</span> <span class="s">&quot;./foo.bar&quot;</span>
+ 
+<span class="id">fd</span> <span class="o">=</span> <span class="id">fs</span><span class="pn">.</span><span class="k">open</span><span class="o">-</span><span class="id">sync</span> <span class="id">some</span><span class="o">-</span><span class="id">file</span><span class="pn">,</span> <span class="s">&quot;r&quot;</span>
+<span class="id">fd</span><span class="o">-</span><span class="id">w</span> <span class="o">=</span> <span class="id">fs</span><span class="pn">.</span><span class="k">open</span><span class="o">-</span><span class="id">sync</span> <span class="id">some</span><span class="o">-</span><span class="id">file</span><span class="pn">,</span> <span class="s">&quot;r+&quot;</span>
+ 
+<span class="pn">#</span><span class="id">In</span> <span class="id">the</span> <span class="id">following</span> <span class="id">comments</span><span class="pn">:</span>
+<span class="pn">#</span><span class="o">-</span> <span class="k">`</span><span class="pn">[</span><span class="id">blah</span><span class="pn">]</span><span class="k">`</span> <span class="id">denotes</span> <span class="id">optional</span> <span class="id">argument</span>
+<span class="pn">#</span><span class="o">-</span> <span class="k">`</span><span class="id">foo</span> <span class="o">=</span> <span class="id">x</span><span class="k">`</span> <span class="id">denotes</span> <span class="k">default</span> <span class="id">value</span> <span class="k">for</span> <span class="id">argument</span>
+ 
+<span class="id">size</span> <span class="o">=</span> <span class="id">fs</span><span class="pn">.</span><span class="id">fstat</span><span class="o">-</span><span class="id">sync</span><span class="pn">(</span><span class="id">fd</span><span class="pn">)</span><span class="pn">.</span><span class="id">size</span>
+<span class="id">rx</span><span class="o">-</span><span class="id">prot</span> <span class="o">=</span> <span class="id">mmap</span><span class="pn">.</span><span class="id">PROT_READ</span> <span class="pn">.</span><span class="o">|.</span> <span class="id">mmap</span><span class="pn">.</span><span class="id">PROT_EXECUTE</span>
+<span class="id">priv</span> <span class="o">=</span> <span class="id">mmap</span><span class="pn">.</span><span class="id">MAP_SHARED</span>
+ 
+<span class="pn">#</span><span class="id">map</span><span class="pn">(</span> <span class="id">size</span><span class="pn">,</span> <span class="id">protection</span><span class="pn">,</span> <span class="id">privacy</span><span class="pn">,</span> <span class="id">fd</span> <span class="pn">[</span><span class="pn">,</span> <span class="id">offset</span> <span class="o">=</span> <span class="n">0</span> <span class="pn">[</span><span class="pn">,</span> <span class="id">advise</span> <span class="o">=</span> <span class="n">0</span><span class="pn">]</span><span class="pn">]</span> <span class="pn">)</span> <span class="k">-&gt;</span> <span class="id">Buffer</span>
+<span class="id">buffer</span> <span class="o">=</span> <span class="id">mmap</span><span class="pn">.</span><span class="id">map</span> <span class="id">size</span><span class="pn">,</span> <span class="id">rx</span><span class="o">-</span><span class="id">prot</span><span class="pn">,</span> <span class="id">priv</span><span class="pn">,</span> <span class="id">fd</span>
+<span class="id">buffer2</span> <span class="o">=</span> <span class="id">mmap</span><span class="pn">.</span><span class="id">map</span> <span class="id">size</span><span class="pn">,</span> <span class="id">mmap</span><span class="pn">.</span><span class="id">PROT_READ</span><span class="pn">,</span> <span class="id">priv</span><span class="pn">,</span> <span class="id">fd</span><span class="pn">,</span> <span class="n">0</span><span class="pn">,</span> <span class="id">mmap</span><span class="pn">.</span><span class="id">MADV_SEQUENTIAL</span>
+<span class="id">w</span><span class="o">-</span><span class="id">buffer</span> <span class="o">=</span> <span class="id">mmap</span><span class="pn">.</span><span class="id">map</span> <span class="id">size</span><span class="pn">,</span> <span class="id">mmap</span><span class="pn">.</span><span class="id">PROT_WRITE</span><span class="pn">,</span> <span class="id">priv</span><span class="pn">,</span> <span class="id">fd</span><span class="o">-</span><span class="id">w</span>
+ 
+<span class="pn">#</span><span class="id">advise</span><span class="pn">(</span> <span class="id">buffer</span><span class="pn">,</span> <span class="id">advise</span> <span class="pn">)</span> <span class="k">-&gt;</span> <span class="k">void</span>
+<span class="pn">#</span><span class="id">advise</span><span class="pn">(</span> <span class="id">buffer</span><span class="pn">,</span> <span class="id">offset</span><span class="pn">,</span> <span class="id">length</span><span class="pn">,</span> <span class="id">advise</span> <span class="pn">)</span> <span class="k">-&gt;</span> <span class="k">void</span>
+<span class="id">mmap</span><span class="pn">.</span><span class="id">advise</span> <span class="id">w</span><span class="o">-</span><span class="id">buffer</span><span class="pn">,</span> <span class="id">mmap</span><span class="pn">.</span><span class="id">MADV_RANDOM</span>
+ 
+<span class="pn">#</span><span class="id">sync</span><span class="pn">(</span> <span class="id">buffer</span> <span class="pn">)</span> <span class="k">-&gt;</span> <span class="k">void</span>
+<span class="pn">#</span><span class="id">sync</span><span class="pn">(</span> <span class="id">buffer</span><span class="pn">,</span> <span class="id">offset</span><span class="pn">,</span> <span class="id">length</span> <span class="pn">)</span> <span class="k">-&gt;</span> <span class="k">void</span>
+<span class="pn">#</span><span class="id">sync</span><span class="pn">(</span> <span class="id">buffer</span><span class="pn">,</span> <span class="id">is</span><span class="o">-</span><span class="id">blocking</span><span class="o">-</span><span class="id">sync</span><span class="pn">[</span><span class="pn">,</span> <span class="k">do</span><span class="o">-</span><span class="id">page</span><span class="o">-</span><span class="id">invalidation</span> <span class="o">=</span> <span class="k">false</span><span class="pn">]</span> <span class="pn">)</span> <span class="k">-&gt;</span> <span class="k">void</span>
+<span class="pn">#</span><span class="id">sync</span><span class="pn">(</span> <span class="id">buffer</span><span class="pn">,</span> <span class="id">offset</span> <span class="o">=</span> <span class="n">0</span><span class="pn">,</span> <span class="id">length</span> <span class="o">=</span> <span class="id">buffer</span><span class="pn">.</span><span class="id">length</span> <span class="pn">[</span><span class="pn">,</span> <span class="id">is</span><span class="o">-</span><span class="id">blocking</span><span class="o">-</span><span class="id">sync</span> <span class="o">=</span> <span class="k">false</span> <span class="pn">[</span><span class="pn">,</span> <span class="k">do</span><span class="o">-</span><span class="id">page</span><span class="o">-</span><span class="id">invalidation</span> <span class="o">=</span> <span class="k">false</span><span class="pn">]</span><span class="pn">]</span> <span class="pn">)</span> <span class="k">-&gt;</span> <span class="k">void</span>
+ 
+<span class="id">mmap</span><span class="pn">.</span><span class="id">sync</span> <span class="id">w</span><span class="o">-</span><span class="id">buffer</span>
+<span class="id">mmap</span><span class="pn">.</span><span class="id">sync</span> <span class="id">w</span><span class="o">-</span><span class="id">buffer</span><span class="pn">,</span> <span class="k">true</span>
+<span class="id">mmap</span><span class="pn">.</span><span class="id">sync</span> <span class="id">w</span><span class="o">-</span><span class="id">buffer</span><span class="pn">,</span> <span class="n">0</span><span class="pn">,</span> <span class="id">size</span>
+<span class="id">mmap</span><span class="pn">.</span><span class="id">sync</span> <span class="id">w</span><span class="o">-</span><span class="id">buffer</span><span class="pn">,</span> <span class="n">0</span><span class="pn">,</span> <span class="id">size</span><span class="pn">,</span> <span class="k">true</span>
+<span class="id">mmap</span><span class="pn">.</span><span class="id">sync</span> <span class="id">w</span><span class="o">-</span><span class="id">buffer</span><span class="pn">,</span> <span class="n">0</span><span class="pn">,</span> <span class="id">size</span><span class="pn">,</span> <span class="k">true</span><span class="pn">,</span> <span class="k">false</span>
+ 
+<span class="pn">#</span><span class="id">incore</span><span class="pn">(</span> <span class="id">buffer</span> <span class="pn">)</span> <span class="k">-&gt;</span> <span class="pn">[</span> <span class="id">unmapped</span><span class="o">-</span><span class="id">pages</span> <span class="id">Int</span><span class="pn">,</span> <span class="id">mapped</span><span class="o">-</span><span class="id">pages</span> <span class="id">Int</span> <span class="pn">]</span>
+<span class="id">core</span><span class="o">-</span><span class="id">stats</span> <span class="o">=</span> <span class="id">mmap</span><span class="pn">.</span><span class="id">incore</span> <span class="id">buffer</span>
+</code></pre></td>
+</tr>
+</table>
+<div class="tip" id="fs1">val not : value:bool -&gt; bool</div>
+

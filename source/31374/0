@@ -1,0 +1,40 @@
+# Following code is plastic fruit; not t[ae]sted...
+ 
+mmap = require "mmap-io"
+fs = require "fs"
+ 
+some-file = "./foo.bar"
+ 
+fd = fs.open-sync some-file, "r"
+fd-w = fs.open-sync some-file, "r+"
+ 
+# In the following comments:
+# - `[blah]` denotes optional argument
+# - `foo = x` denotes default value for argument
+ 
+size = fs.fstat-sync(fd).size
+rx-prot = mmap.PROT_READ .|. mmap.PROT_EXECUTE
+priv = mmap.MAP_SHARED
+ 
+# map( size, protection, privacy, fd [, offset = 0 [, advise = 0]] ) -> Buffer
+buffer = mmap.map size, rx-prot, priv, fd
+buffer2 = mmap.map size, mmap.PROT_READ, priv, fd, 0, mmap.MADV_SEQUENTIAL
+w-buffer = mmap.map size, mmap.PROT_WRITE, priv, fd-w
+ 
+# advise( buffer, advise ) -> void
+# advise( buffer, offset, length, advise ) -> void
+mmap.advise w-buffer, mmap.MADV_RANDOM
+ 
+# sync( buffer ) -> void
+# sync( buffer, offset, length ) -> void
+# sync( buffer, is-blocking-sync[, do-page-invalidation = false] ) -> void
+# sync( buffer, offset = 0, length = buffer.length [, is-blocking-sync = false [, do-page-invalidation = false]] ) -> void
+ 
+mmap.sync w-buffer
+mmap.sync w-buffer, true
+mmap.sync w-buffer, 0, size
+mmap.sync w-buffer, 0, size, true
+mmap.sync w-buffer, 0, size, true, false
+ 
+# incore( buffer ) -> [ unmapped-pages Int, mapped-pages Int ]
+core-stats = mmap.incore buffer

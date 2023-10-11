@@ -1,0 +1,35 @@
+open Microsoft.FSharp.Quotations
+
+type A = 
+  static member Foo([<ReflectedDefinition(true)>]x:Expr<'a>) =
+    x
+
+type Data = { age:int; name:string }
+
+let e = A.Foo(fun x -> x.age)
+
+let (Patterns.WithValue(f, _, Patterns.Lambda(_, Patterns.PropertyGet(_, n, _)))) = e
+
+(f :?> Data -> int) { age = 10; name="" }
+n.Name
+
+type Builder() = 
+  [<CustomOperation("aes",MaintainsVariableSpace=true)>]
+  member x.AesNum(t:seq<'a>, aa:string, [<ProjectionParameter>] z:'a -> 'x) = t
+  [<CustomOperation("facet",MaintainsVariableSpace=true)>]
+  member x.Facet(t, [<ProjectionParameter>] z) = t
+  member x.For(a:seq<'a>, b:'a -> seq<'b>) : seq<'b> = failwith "!"
+  member x.Yield(_:'a) : seq<'a> = failwith "!"
+  member y.Quote(x) = x
+
+let b = Builder ()
+
+let sample = [ { age = 10; name="xx" }]
+
+b {
+  for s in sample do
+  aes "abc" s.age
+  aes "abc" (System.Random())
+  facet (s.name.Substring(0, 1))
+}
+
